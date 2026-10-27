@@ -100,22 +100,39 @@ int reveal(boolean[] answers) {
 }
 
 void main() {
-    IO.println("Think of a number from 0 to 63. Is it on each card?");
+    IO.println("Think of one number from 0 to 63. Keep that same number for all six cards.");
+    IO.println("For each card, type y if it contains your number, otherwise n. Enter sends an answer; /r starts over; /q quits.");
     boolean[] answers = new boolean[6];
-    for (int bit = 0; bit < 6; ) {
-        IO.println(card(bit));
-        String input = IO.readln("On this card? y/n (q to quit): ");
-        if (input == null || input.equalsIgnoreCase("q")) {
-            return;
+    int bit = 0;
+    boolean showCard = true;
+    while (true) {
+        if (showCard) {
+            IO.println("Card " + (bit + 1) + "/6:");
+            IO.println(card(bit));
+            showCard = false;
+        }
+        String input = IO.readln(bit < 6 ? "Is your number on this card? y/n, /r, /q: " : "Enter or /r: new number; /q: quit: ");
+        if (input == null) return;
+        input = input.strip();
+        if (input.equalsIgnoreCase("/q") || input.equalsIgnoreCase("q")) return;
+        if (input.equalsIgnoreCase("/r") || input.equalsIgnoreCase("r") || (bit == 6 && input.isEmpty())) {
+            Arrays.fill(answers, false); bit = 0; showCard = true;
+            IO.println("Choose a new number from 0 to 63 and keep it for all six cards.");
+            continue;
+        }
+        if (bit == 6) {
+            IO.println("The number was revealed. Press Enter or /r for another number; /q quits.");
+            continue;
         }
         if (!input.equalsIgnoreCase("y") && !input.equalsIgnoreCase("n")) {
-            IO.println("Please enter y or n.");
+            IO.println("Please type y for present or n for absent, then press Enter. The card above is still current.");
             continue;
         }
         answers[bit] = yesAnswer(input);
         bit++;
+        if (bit == 6) IO.println("Your number is " + reveal(answers) + ".");
+        else showCard = true;
     }
-    IO.println("Your number is " + reveal(answers) + ".");
 }
 
 /// Prepared entry points: main.
@@ -151,7 +168,6 @@ void main() {
 /// - `++` — Increases a numeric value by one.
 /// - `+=` — Adds to the old value and stores the result back under the same name.
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
 /// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
@@ -167,6 +183,6 @@ void main() {
 /// - `null` — No object is present. IO.readln returns null when the input stream ends.
 /// - `throw` — Reports a failure by creating or passing an exception.
 /// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 // </editor-fold>
 

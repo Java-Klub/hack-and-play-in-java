@@ -86,6 +86,8 @@ int tries;
 int score;
 String scrambled;
 String outcome;
+String message;
+String[] clues = {"Use your ears", "A small rock", "Our planet", "A winged figure in stories", "The time after sunset"};
 
 void scramble() {
     var letters = new ArrayList<Character>();
@@ -102,6 +104,7 @@ void scramble() {
 void reset() {
     round = tries = score = 0;
     outcome = "";
+    message = "Rearrange every shown letter into an English word. Example: TAC becomes CAT.";
     scramble();
 }
 
@@ -119,51 +122,75 @@ void command(String input) {
     require(outcome.isEmpty());
     String word = normalize(input);
     if (word.equals("SKIP")) {
+        message = "Skipped. One accepted answer was " + answers[round][0] + ".";
         advance();
         return;
     }
-    require(word.matches("[A-Z]+"));
+    if (!word.matches("[A-Z]+")) {
+        throw new IllegalArgumentException("Use letters A-Z after cleanup. If a lowercase English answer is rejected, that is the normalize mission's fault; uppercase input still lets you play.");
+    }
     if (List.of(answers[round]).contains(word)) {
+        message = "Accepted: " + word + ". One point!";
         score++;
         advance();
     } else {
-        if (++tries == 3) {
+        tries++;
+        message = word.length() != answers[round][0].length()
+            ? "Use all " + answers[round][0].length() + " letters exactly once; " + word + " has " + word.length() + "."
+            : "That is not an accepted rearrangement. The word list is small; /words shows the accepted options.";
+        message += " Guess used: " + tries + "/3.";
+        if (tries == 3) {
+            message += " One accepted answer was " + answers[round][0] + ".";
             advance();
         }
     }
 }
 
 void display() {
+    IO.println(message);
     if (round < 5) {
-        IO.println("Round " + (round + 1) + "/5: " + scrambled + "; tries " + tries + "/3. Score " + score);
+        IO.println("Round " + (round + 1) + "/5: " + scrambled + "; guesses used " + tries + "/3; score " + score);
+        IO.println("Clue for one possible answer: " + clues[round] + ". Other accepted anagrams can count too.");
     }
 }
 
 void main() {
     reset();
     IO.println("Anagram Rounds");
-    IO.println("Unscramble five words, three guesses each; skip moves on. Accepted alternatives are curated. /r restarts; /q quits.");
+    IO.println("Use every shown letter once to make one English word. Example: TAC becomes CAT. Three guesses per word, five rounds. SKIP reveals an answer; /words lists accepted words without a guess; /r restarts; /q quits.");
+    boolean showState = true;
     while (true) {
-        display();
-        if (!outcome.isEmpty()) {
-            IO.println(outcome);
+        if (showState) {
+            display();
+            if (!outcome.isEmpty()) IO.println(outcome);
+            showState = false;
         }
-        String input = IO.readln("> ");
+        String input = IO.readln(outcome.isEmpty() ? "Your word, SKIP or /words: " : "Enter or /r: new round; /q: quit: ");
         if (input == null || input.strip().equalsIgnoreCase("/q")) {
             return;
         }
-        if (input.strip().equalsIgnoreCase("/r")) {
+        if (input.strip().equalsIgnoreCase("/r") || (!outcome.isEmpty() && input.isBlank())) {
             reset();
+            showState = true;
+            continue;
+        }
+        if (input.strip().equalsIgnoreCase("/words") && outcome.isEmpty()) {
+            IO.println("Accepted words: " + String.join(", ", answers[round]));
             continue;
         }
         if (!outcome.isEmpty()) {
-            IO.println("Round finished. /r restarts; /q quits.");
+            IO.println("Round finished. Press Enter or /r for a new round; /q quits.");
+            continue;
+        }
+        if (input.isBlank()) {
+            IO.println("Type a word using the shown letters, SKIP for the next puzzle, or /words for choices. No guess spent.");
             continue;
         }
         try {
             command(input.strip());
+            showState = true;
         } catch (IllegalArgumentException invalid) {
-            IO.println("Invalid move or command. Unscramble five words, three guesses each; skip moves on. Accepted alternatives are curated. /r restarts; /q quits.");
+            IO.println(invalid.getMessage());
         }
     }
 }
@@ -207,8 +234,6 @@ void require(boolean valid) {
 /// - `++` — Increases a numeric value by one.
 /// - `+=` — Adds to the old value and stores the result back under the same name.
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
 /// - `:` — In for (int value : values), reads each element in turn. It also separates the two
@@ -226,6 +251,6 @@ void require(boolean valid) {
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
 /// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 // </editor-fold>
 

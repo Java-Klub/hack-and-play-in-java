@@ -1,13 +1,12 @@
 // <editor-fold defaultstate="collapsed" desc="Prepared tools">
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L01.09 · PixelMonsters
 ///
-/// Generate a tiny symmetric pixel monster and compare different seeds to collect a few favourites. The
-/// transparent background lets its blocky shape stand out.
+/// Generate a symmetric pixel monster and explore how one colour changes its expression. The
+/// transparent background makes its blocky shape stand out.
 ///
 /// **Your mission:** The monster has lost its bright eyes. Repair the one shared eyeColour so both eye
 /// blocks become white without editing each eye separately.
@@ -15,9 +14,8 @@ import javax.imageio.ImageIO;
 /// **Today you learn:** One named value, several readers: both eyes receive the same stored colour. A
 /// single deliberate change should therefore affect two places in the picture.
 ///
-/// Use Run File, accept monster.png and enter seed 42, then refresh Files and open monster.png; reuse
-/// that seed to compare the repaired eyes.
-/// After your repair: Save → Test File → play again.
+/// Use Run File: the picture appears immediately in a Java window. After editing the source, close
+/// the window and Run File again; Test File checks the calculation separately.
 ///
 /// Need an explanation? Recall · F03 explains the Java skill; Read this code explains these lines.
 /// Hints 1 and 2 open separately; Repair outline reveals the direction.
@@ -60,18 +58,14 @@ int eyeColour = Color.WHITE.getRGB();
 ///
 /// ### What the prepared part already does
 ///
-/// render uses the same eyeColour for the left and right eye, while a prepared random routine makes the
-/// symmetric body. write saves the transparent PNG; main asks for its file name and seed.
+/// render uses the same eyeColour for the left and right eye, while a prepared random routine makes
+/// the symmetric body. main renders seed 42 and shows the picture in the prepared window.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="For this game">
-/// When the path prompt appears in Output, press Enter to accept its default filename; then type the
-/// seed number and press Enter again. A seed is an input controlling the prepared random body, not
-/// the eye colour. Use the same seed for both pictures so a changed body does not distract from your
-/// edit. `Color` supplies named palette values such as `BLACK`, `WHITE`, `RED` and `YELLOW`; the
-/// names are case-sensitive. `getRGB()` obtains the integer encoding needed by pixels. You are
-/// choosing a supplied colour, not inventing its numeric encoding or editing two separate eye
-/// positions.
+/// The picture always uses seed 42, allowing a direct comparison of the eyes before and after an
+/// edit. Color supplies named colours such as BLACK, WHITE, RED and YELLOW; getRGB() returns their
+/// pixel encoding. You change one shared colour, not two eye positions.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -119,29 +113,31 @@ BufferedImage render(long seed) {
     return image;
 }
 
-void write(long seed, Path path) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    ImageIO.write(render(seed), "png", path.toFile());
-}
-
-void main(String[] args) throws Exception {
-    String target = args.length > 0 ? args[0] : IO.readln("Output PNG path (Enter for monster.png, q to quit): ");
-    if (target == null || target.equalsIgnoreCase("q")) return;
-    if (target.isBlank()) target = "monster.png";
-    String seedText = args.length > 1 ? args[1] : IO.readln("Integer seed (q to quit): ");
-    if (seedText == null || seedText.equalsIgnoreCase("q")) return;
-    try {
-        long seed = Long.parseLong(seedText.strip());
-        Path path = Path.of(target);
-        write(seed, path);
-        IO.println("Saved: " + path.toAbsolutePath());
-        IO.println("Seed: " + seed + ". The image has a transparent background.");
-    } catch (NumberFormatException invalidSeed) {
-        IO.println("Use an integer seed.");
+// Prepared display of the picture calculated above.
+void showPicture() {
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        IO.println("Image preview needs a graphical display.");
+        return;
     }
+    var image = render(42);
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame("PixelMonsters");
+        var picture = new javax.swing.JLabel(new javax.swing.ImageIcon(image));
+        picture.setOpaque(true);
+        picture.setBackground(new java.awt.Color(35, 39, 48));
+        frame.add(picture);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
 }
 
-/// Prepared entry points: main, render, write.
+void main() {
+    showPicture();
+}
+
+/// Prepared entry points: main, render.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
@@ -161,15 +157,12 @@ void main(String[] args) throws Exception {
 /// - `main` — Java starts the program here. Other method declarations do not run just because they appear
 ///   earlier in the file.
 /// - `int` — A type for whole numbers within a fixed range.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
 /// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
 /// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
 /// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
 ///   type.
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
 /// - `!=` — Checks that two values differ.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
 /// - `!` — In front of a boolean expression, reverses true and false.
 /// - `++` — Increases a numeric value by one.
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
@@ -178,23 +171,14 @@ void main(String[] args) throws Exception {
 ///   available.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
 /// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
 ///   count.
 /// - `new` — Creates a fresh value or object, such as a new array or window.
 /// - `return` — Ends this method call, optionally handing a result back to its caller.
 /// - `if` — Runs its body only when the condition in parentheses is true.
 /// - `for` — Repeats a block over a range or a sequence of values.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
 /// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `IO` — Console input and output. println writes a line.
 // </editor-fold>
 

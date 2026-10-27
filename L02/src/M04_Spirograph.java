@@ -5,9 +5,6 @@ import javax.swing.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L02.04 · Spirograph
@@ -68,9 +65,9 @@ double radiusRatio(int outer, int innerRadius) {
 ///
 /// ### What the prepared part already does
 ///
-/// point turns the ratio into pen positions. period and gcd determine when the curve closes; render joins
-/// positions into lines, while the later keyboard and saving code provide parameter changes and a PNG
-/// export.
+/// point turns the ratio into pen positions. period and gcd determine when the curve closes; render
+/// joins positions into lines, while the prepared keyboard controls change the two shape
+/// parameters.
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="For this game">
@@ -97,9 +94,8 @@ double radiusRatio(int outer, int innerRadius) {
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
 final int WIDTH = 640, HEIGHT = 440;
 
-int inner, pen, colour;
+int inner, pen;
 BufferedImage canvas;
-String message;
 int gcd(int a, int b) {
     while (b != 0) {
         int next = a % b;
@@ -127,7 +123,7 @@ void render() {
     var g = canvas.createGraphics();
     g.setColor(Color.WHITE);
     g.fillRect(0, 0, WIDTH, HEIGHT);
-    g.setColor(Color.getHSBColor(colour / 8f, .75f, .75f));
+    g.setColor(Color.getHSBColor(0, .75f, .75f));
     double scale = (HEIGHT - 65) / 2.0 / Math.max(1, 120 - inner + pen), period = period();
     var previous = point(0);
     int n = samples();
@@ -142,8 +138,6 @@ void render() {
 void restart() {
     inner = 45;
     pen = 65;
-    colour = 0;
-    message = "Change parameters to draw another closed curve";
     render();
 }
 
@@ -153,23 +147,10 @@ void adjust(int r, int d) {
     render();
 }
 
-void save(File file) throws IOException {
-    ImageIO.write(canvas, "png", file);
-}
-
-void save() {
-    try {
-        save(new File("spirograph.png"));
-        message = "Saved spirograph.png";
-    } catch (IOException e) {
-        message = "Save failed: " + e.getMessage();
-    }
-}
-
 void draw(Graphics2D g) {
     g.drawImage(canvas, 0, 0, null);
     g.setColor(Color.BLACK);
-    g.drawString("Inner radius: " + inner + "  Pen distance: " + pen + "  " + message, 10, 22);
+    g.drawString("Inner radius: " + inner + "  Pen distance: " + pen, 10, 22);
 }
 
 void key(int code, boolean pressed) {
@@ -182,11 +163,6 @@ void key(int code, boolean pressed) {
             case KeyEvent.VK_RIGHT -> adjust(5, 0);
             case KeyEvent.VK_UP -> adjust(0, 5);
             case KeyEvent.VK_DOWN -> adjust(0, -5);
-            case KeyEvent.VK_C -> {
-                colour = (colour + 1) % 8;
-                render();
-            }
-            case KeyEvent.VK_S -> save();
         }
     }
 }
@@ -213,7 +189,7 @@ void showWindow() {
     });
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.add(panel);
-    var help = new JLabel("<html><div style=\"text-align:center\">Left/Right: inner radius   Up/Down: pen distance   C: colour   S: save PNG   R: reset</div></html>", SwingConstants.CENTER);
+    var help = new JLabel("<html><div style=\"text-align:center\">Left/Right: inner radius   Up/Down: pen distance   R: reset</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
     frame.add(help, BorderLayout.SOUTH);
     frame.pack();
@@ -224,11 +200,15 @@ void showWindow() {
 }
 
 void main() {
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        IO.println("This game needs a graphical display; model checks still work headlessly.");
+        return;
+    }
     restart();
     SwingUtilities.invokeLater(this::showWindow);
 }
 
-/// Prepared entry points: main, restart, draw, render, save, showWindow.
+/// Prepared entry points: main, restart, draw, render, showWindow.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
@@ -250,7 +230,6 @@ void main() {
 /// - `int` — A type for whole numbers within a fixed range.
 /// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
 /// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
 /// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
 /// - `\` — Inside quoted text, starts an escape such as \n for a new line or \" for a quote.
 /// - `final` — The named value cannot be assigned another value afterwards. A referenced mutable object
@@ -288,10 +267,7 @@ void main() {
 /// - `protected` — A visibility keyword used by supplied library callbacks, such as paintComponent.
 /// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
 ///   background first.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
+/// - `null` — No object is present.
 /// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
 /// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
 /// - `JPanel` — A window area that can display the game’s drawing or controls.

@@ -19,8 +19,7 @@ import javax.swing.Timer;
 /// **Today you learn:** Input and simulation time are separate. A key event proposes a direction; the
 /// next tick applies the proposal once, so reversal checks still refer to the last real movement.
 ///
-/// After Run File, guide the snake with arrow keys toward food and press R to restart when the round
-/// ends.
+/// After Run File, an arrow key starts the snake; use arrows toward food. A crash or full board ends the round; R resets and waits for your next arrow.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F30 explains the Java skill; Read this code explains these lines.
@@ -170,29 +169,35 @@ void draw(Graphics g) {
 /// Supplied Swing UI: create it on the EDT; timer cleanup stays with the window.
 void showWindow() {
     var frame = new JFrame("Snake - Snack Snake");
+    boolean[] launched = {false};
     var panel = new JPanel() {
         @Override protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 /// Supplied drawing: reads model values; repainting is not another turn.
             draw(g);
+            if (!launched[0]) {
+                g.setColor(Color.WHITE);
+                g.drawString("Arrow key to start", 20, 65);
+            }
         }
     };
     panel.setPreferredSize(new Dimension(COLUMNS * TILE, ROWS * TILE + 50));
     panel.setFocusable(true);
     panel.addKeyListener(new KeyAdapter() {
         @Override public void keyPressed(KeyEvent event) {
+            if (event.getKeyCode() >= KeyEvent.VK_LEFT && event.getKeyCode() <= KeyEvent.VK_DOWN) launched[0] = true;
             switch (event.getKeyCode()) {
                 case KeyEvent.VK_LEFT -> turn(-1, 0);
                 case KeyEvent.VK_RIGHT -> turn(1, 0);
                 case KeyEvent.VK_UP -> turn(0, -1);
                 case KeyEvent.VK_DOWN -> turn(0, 1);
-                case KeyEvent.VK_R -> restart();
+                case KeyEvent.VK_R -> { restart(); launched[0] = false; }
             }
         }
     });
     var timer = new Timer(125, event -> {
 /// Supplied bounded update: one call means one model step; the active repair is described above.
-        step();
+        if (launched[0]) step();
         panel.repaint();
     });
     frame.addWindowListener(new WindowAdapter() {
@@ -209,8 +214,7 @@ void showWindow() {
 }
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// turn is the active boundary; the model exposes it for deterministic checks without a window.
-/// restart restores initial fields; draw reads state; showWindow supplies listeners, one timer and window-close cleanup.
+/// The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();
@@ -275,7 +279,7 @@ void main() {
 /// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
 ///   background first.
 /// - `record` — A small named bundle of values. Its component accessors use the component names with ().
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
+/// - `null` — No object is present.
 /// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
 /// - `JFrame` — A desktop window supplied by the JDK’s Swing library.

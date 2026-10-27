@@ -1,7 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Prepared tools">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L09.10 · ImageToASCII
@@ -15,8 +14,7 @@ import javax.imageio.ImageIO;
 /// **Today you learn:** A narrow parsing boundary separates unrecognisable text from valid integers with
 /// invalid values. Only the expected conversion exception should select the fallback width.
 ///
-/// After Run File, enter an image width from 4 to 160 or try oops, then inspect the character picture in
-/// Output and portrait.txt.
+/// After Run File, enter a width from 4 to 160 or try oops; inspect the labelled ASCII picture directly in Output and Run File again to compare another width.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F31 explains the Java skill; Read this code explains these lines.
@@ -70,8 +68,9 @@ int readWidth(String text) {
 ///
 /// ### What the prepared part already does
 ///
-/// main asks for width and prints the chosen value. The supplied converter samples brightness, chooses a
-/// character from its palette and saves the same text in portrait.txt.
+/// main passes the typed width through readWidth, then convert samples the fixed demo through a
+/// prepared character ramp. The result appears only in Output; another Run File supplies another
+/// width.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="For this game">
@@ -126,32 +125,16 @@ String convert(BufferedImage image, int width) {
 }
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// convert samples image brightness through a supplied ASCII ramp.
-/// main reads this option; save/export and rendering stay supplied.
-void main(String[] args) throws Exception {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
-    String enteredOption = "";
-    if (args.length <= 2) {
-        enteredOption = IO.readln("width 4..160 (blank/default 80, q quits): ");
-        if (enteredOption == null || enteredOption.strip().equalsIgnoreCase("q")) return;
-    }
+/// The supplied part supports only the main game or experiment described above.
+void main() {
+    String input = IO.readln("Width 4..160 (blank/default 80, q quits): ");
+    if (input == null || input.strip().equalsIgnoreCase("q")) return;
     try {
-        var input = args.length == 0 || args[0].equals("-") ? demo() : ImageIO.read(Path.of(args[0]).toFile());
-        if (input == null) {
-            throw new IllegalArgumentException("Input must be a readable image.");
-        }
-        Path output = Path.of(args.length > 1 ? args[1] : "portrait.txt");
-        int option = readWidth(args.length > 2 ? args[2] : enteredOption);
-        IO.println("width: " + option);
-        Files.createDirectories(output.toAbsolutePath().getParent());
-        String text = convert(input, option);
-        Files.writeString(output, text);
-        IO.print(text);
-        IO.println("Saved: " + output.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
+        int width = readWidth(input);
+        IO.println("ASCII picture, width " + width + ":");
+        IO.print(convert(demo(), width));
+    } catch (IllegalArgumentException failure) {
+        IO.println("Invalid width: " + failure.getMessage());
     }
 }
 // </editor-fold>
@@ -181,10 +164,8 @@ void main(String[] args) throws Exception {
 ///   type.
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
 /// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
 /// - `||` — At least one condition must be true; if the first is true, Java skips the second.
 /// - `++` — Increases a numeric value by one.
-/// - `%` — The remainder after division; useful for repeated positions or turns.
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
 /// - `-` — Subtracts numbers; in front of one number, changes its sign.
 /// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
@@ -192,12 +173,6 @@ void main(String[] args) throws Exception {
 /// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
 /// - `new` — Creates a fresh value or object, such as a new array or window.
 /// - `return` — Ends this method call, optionally handing a result back to its caller.
 /// - `if` — Runs its body only when the condition in parentheses is true.
@@ -206,9 +181,7 @@ void main(String[] args) throws Exception {
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `IO` — Console input and output. println writes a line. print writes text without adding a newline.
+///   readln waits for a whole line of input.
 // </editor-fold>
 

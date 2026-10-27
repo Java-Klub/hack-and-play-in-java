@@ -144,7 +144,7 @@ void show() {
             button.addActionListener(event -> {
                 boolean accepted = place(row, col, (Integer) number.getSelectedItem());
                 refresh();
-                if (!accepted) status.setText("That number conflicts with the board.");
+                if (!accepted) status.setText("Move rejected. Check the row, column and box; the starter guard may also need repair.");
             });
             grid.add(button);
         }
@@ -169,6 +169,10 @@ void show() {
 }
 
 void main() {
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        IO.println("This game needs a graphical display; model checks still work headlessly.");
+        return;
+    }
     reset();
     SwingUtilities.invokeLater(this::show);
 }

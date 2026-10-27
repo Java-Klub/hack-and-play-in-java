@@ -1,9 +1,4 @@
 // <editor-fold defaultstate="collapsed" desc="Prepared tools">
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioSystem;
-import java.io.ByteArrayInputStream;
 // </editor-fold>
 
 /// # L12.11 · SecretBeeps
@@ -18,8 +13,8 @@ import java.io.ByteArrayInputStream;
 /// and mark timing stable while one new parameter controls word separation; compatibility is a behaviour
 /// to check, not a reason to duplicate the whole algorithm.
 ///
-/// After Run File, press Enter for E E, choose a word gap of 7 or 10 and open the matching
-/// secret-beeps-gap7.wav or secret-beeps-gap10.wav.
+/// After Run File, type a message or press Enter for E E; compare Play gap 10 with Play gap 7 in
+/// Java, and use Stop or replay to hear word separation.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F36 explains the Java skill; Read this code explains these lines.
@@ -81,9 +76,8 @@ List<Integer> units(String text, int wordGap) {
 ///
 /// ### What the prepared part already does
 ///
-/// code supplies the Morse symbols and separators. units turns them into signed sound/silence durations,
-/// signal builds the samples and write exports WAV; the original one-argument units call keeps its
-/// seven-unit default.
+/// code supplies Morse marks, units determines their lengths and signal produces samples. The two
+/// Play choices compare the required ten-unit word gap with the original seven-unit rule.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -102,20 +96,7 @@ List<Integer> units(String text, int wordGap) {
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
 final int RATE = 22050;
 
-/// Supplied WAV encoding: bounded PCM samples and try-with-resources own the stream.
-void write(Path path, double[] signal) throws Exception {
-    byte[] pcm = new byte[signal.length * 2];
-    for (int i = 0; i < signal.length; i++) {
-        int value = (int)(Math.max(-0.8, Math.min(0.8, signal[i])) * 32767);
-        pcm[i * 2] = (byte)value;
-        pcm[i * 2 + 1] = (byte)(value >> 8);
-    }
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    var format = new AudioFormat(RATE, 16, 1, true, false);
-    try (var stream = new AudioInputStream(new ByteArrayInputStream(pcm), format, signal.length)) {
-        AudioSystem.write(stream, AudioFileFormat.Type.WAVE, path.toFile());
-    }
-}
+
 String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 String[] morse = {
     ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..",
@@ -139,7 +120,7 @@ String code(String text) {
     return words.toString();
 }
 
-/// Supplied synthesis: bounded sample loops build audio; there is no autoplay.
+/// Prepared bounded loops build the audio samples.
 double[] signal(String text, int milliseconds) {
     if (milliseconds < 20 || milliseconds > 100) {
         throw new IllegalArgumentException("Unit duration: 20..100 ms.");
@@ -167,33 +148,114 @@ List<Integer> units(String text) {
 }
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// code maps ASCII letters/digits to Morse; units owns signed tone/silence lengths.
-/// signal expands those lengths to samples using wordGap; main optionally selects the new fourth argument and write exports WAV.
-void main(String[] args) throws Exception {
-    if (args.length == 0) {
-        String entered = IO.readln("Message (blank E E, q quits): ");
-        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
-        String message = entered.isBlank() ? "E E" : entered;
-        String gap = IO.readln("Word gap 3..12 (blank 10, q quits): ");
-        if (gap == null || gap.strip().equalsIgnoreCase("q")) return;
-        gap = gap.isBlank() ? "10" : gap.strip();
-        args = new String[]{"secret-beeps-gap" + gap + ".wav", message, "60", gap};
-    }
+/// The supplied part supports only the main game or experiment described above.
+volatile javax.sound.sampled.SourceDataLine playingLine;
+volatile int playbackVersion;
 
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
+/// Supplied Java Sound: a worker owns the line; Stop and window closing release it.
+/// Play/Stop use a separate Java Sound worker; closing releases it.
+void stopAudio() {
+    playbackVersion++;
+    var line = playingLine;
+    playingLine = null;
+    if (line != null) {
+        line.stop();
+        line.flush();
+        line.close();
     }
+}
+
+void playAudio(double[] samples, javax.swing.JLabel status) {
+    stopAudio();
+    int ticket = playbackVersion;
+    status.setText("Playing in Java; Stop interrupts playback.");
+    var worker = new Thread(() -> {
+        javax.sound.sampled.SourceDataLine line = null;
+        try {
+            byte[] pcm = new byte[samples.length * 2];
+            for (int i = 0; i < samples.length; i++) {
+                int value = (int)(Math.max(-0.8, Math.min(0.8, samples[i])) * 32767);
+                pcm[i * 2] = (byte)value;
+                pcm[i * 2 + 1] = (byte)(value >> 8);
+            }
+            var format = new javax.sound.sampled.AudioFormat(RATE, 16, 1, true, false);
+            line = javax.sound.sampled.AudioSystem.getSourceDataLine(format);
+            line.open(format);
+            if (ticket != playbackVersion) return;
+            playingLine = line;
+            line.start();
+            int offset = 0;
+            while (offset < pcm.length && ticket == playbackVersion) {
+                int written = line.write(pcm, offset, Math.min(4096, pcm.length - offset));
+                if (written <= 0) break;
+                offset += written;
+            }
+            if (ticket == playbackVersion) {
+                line.drain();
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    if (ticket == playbackVersion) status.setText("Finished; Play replays the same sound.");
+                });
+            }
+        } catch (Exception failure) {
+            if (ticket == playbackVersion) {
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    if (ticket == playbackVersion) status.setText("Audio unavailable: " + failure.getMessage());
+                });
+            }
+        } finally {
+            if (line != null) {
+                line.stop();
+                line.close();
+                if (playingLine == line) playingLine = null;
+            }
+        }
+    }, "java-sound-player");
+    worker.setDaemon(true);
+    worker.start();
+}
+
+void showAudio(String title, String detail, String[] captions, double[][] sounds) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var status = new javax.swing.JLabel(detail);
+        var controls = new javax.swing.JPanel();
+        for (int i = 0; i < sounds.length; i++) {
+            int index = i;
+            var play = new javax.swing.JButton("Play " + captions[i]);
+            play.addActionListener(event -> playAudio(sounds[index], status));
+            controls.add(play);
+        }
+        var stop = new javax.swing.JButton("Stop");
+        stop.addActionListener(event -> {
+            stopAudio();
+            status.setText("Stopped; choose Play to listen again.");
+        });
+        controls.add(stop);
+        frame.add(status, java.awt.BorderLayout.NORTH);
+        frame.add(controls, java.awt.BorderLayout.SOUTH);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override public void windowClosed(java.awt.event.WindowEvent event) { stopAudio(); }
+        });
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
+
+void main() {
+    String input = IO.readln("Message (blank E E, q quits): ");
+    if (input == null || input.strip().equalsIgnoreCase("q")) return;
+    String text = input.isBlank() ? "E E" : input;
     try {
-        Path path = Path.of(args.length > 0 ? args[0] : "secret-beeps.wav");
-        String text = args.length > 1 ? args[1] : "SOS JAVA";
-        int unit = args.length > 2 ? Integer.parseInt(args[2]) : 60;
-        if (args.length > 3) wordGap = Integer.parseInt(args[3]);
-        IO.println(code(text));
-/// Supplied WAV encoding: bounded PCM samples and try-with-resources own the stream.
-        write(path, signal(text, unit));
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println(invalid.getMessage());
+        wordGap = 10;
+        var changed = signal(text, 60);
+        wordGap = 7;
+        var original = signal(text, 60);
+        showAudio("Secret Beeps", "Message: " + text + " | " + code(text), new String[]{"gap 10", "gap 7"}, new double[][]{changed, original});
+    } catch (IllegalArgumentException failure) {
+        IO.println(failure.getMessage());
     }
 }
 // </editor-fold>
@@ -204,7 +266,6 @@ void main(String[] args) throws Exception {
 /// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
 ///
 /// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
 /// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
 ///   parts.
 /// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
@@ -254,10 +315,7 @@ void main(String[] args) throws Exception {
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
 /// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 // </editor-fold>
 

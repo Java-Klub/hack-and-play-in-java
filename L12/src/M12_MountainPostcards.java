@@ -1,7 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Prepared tools">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L12.12 · MountainPostcards
@@ -16,8 +15,8 @@ import javax.imageio.ImageIO;
 /// Extracting ridge reversal gives the new option one responsibility and keeps generation independent
 /// from presentation.
 ///
-/// After Run File, enter n for mountain-old.png, then rerun and press Enter for the mirrored
-/// mountain-new.png.
+/// After Run File, compare New rule with Original rule from the same seed; after the repair they
+/// should show the intended difference. Close the window before replaying.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F36 explains the Java skill; Read this code explains these lines.
@@ -60,9 +59,9 @@ double[] reverseRidge(double[] heights) {
 ///
 /// ### What the prepared part already does
 ///
-/// The supplied midpoint generator builds the ridge once from a seed. render chooses the old ridge or
-/// reverseRidge’s result and paints it; main asks for mirror mode and saves a separately named PNG for
-/// comparison.
+/// ridge generates five layers; render optionally applies the required reverseRidge transformation.
+/// main compares new and original rules from the same seed, without additional generation or export
+/// controls.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -124,40 +123,42 @@ BufferedImage render(long seed, double roughness) {
     return image;
 }
 
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
-        throw new IllegalStateException("PNG writer missing.");
-    }
-}
 
 boolean mirrored = true;
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// ridge creates seeded heights; reverseRidge owns only the new mirror capability.
-/// render composes five layers and calls the transform; save/main keep local PNG export.
-void main(String[] args) throws Exception {
-    if (args.length == 0) {
-        String entered = IO.readln("Mirror ridge? y/n (blank y, q quits): ");
-        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
-        mirrored = !entered.strip().equalsIgnoreCase("n");
-        args = new String[]{"mountain-" + (mirrored ? "new" : "old") + ".png"};
-    }
+/// The supplied part supports only the main game or experiment described above.
+void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var pictures = new javax.swing.JPanel(new java.awt.GridLayout(1, images.length, 8, 8));
+        for (int i = 0; i < images.length; i++) {
+            var picture = new javax.swing.JPanel(new java.awt.BorderLayout());
+            picture.add(new javax.swing.JLabel(captions[i], javax.swing.SwingConstants.CENTER), java.awt.BorderLayout.NORTH);
+            double scale = Math.min(1, Math.min(900.0 / images.length / images[i].getWidth(), 550.0 / images[i].getHeight()));
+            var icon = new javax.swing.ImageIcon(images[i].getScaledInstance(
+                    Math.max(1, (int)(images[i].getWidth() * scale)),
+                    Math.max(1, (int)(images[i].getHeight() * scale)), java.awt.Image.SCALE_FAST));
+            picture.add(new javax.swing.JLabel(icon), java.awt.BorderLayout.CENTER);
+            pictures.add(picture);
+        }
+        frame.add(pictures);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
 
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
-    try {
-        Path path = Path.of(args.length > 0 ? args[0] : "mountain-postcards.png");
-        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
-        double option = args.length > 2 ? Double.parseDouble(args[2]) : 0.65;
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-        save(path, seed, option);
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
-    }
+
+void main() {
+    mirrored = true;
+    var changed = render(42, 0.65);
+    mirrored = false;
+    var original = render(42, 0.65);
+    mirrored = true;
+    showImages("Mountain Postcards", new String[]{"New rule", "Original rule"}, new java.awt.image.BufferedImage[]{changed, original});
 }
 // </editor-fold>
 
@@ -186,8 +187,6 @@ void main(String[] args) throws Exception {
 /// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
 ///   type.
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
 /// - `||` — At least one condition must be true; if the first is true, Java skips the second.
 /// - `!` — In front of a boolean expression, reverses true and false.
 /// - `++` — Increases a numeric value by one.
@@ -199,24 +198,14 @@ void main(String[] args) throws Exception {
 /// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
 /// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
 ///   count.
 /// - `new` — Creates a fresh value or object, such as a new array or window.
 /// - `return` — Ends this method call, optionally handing a result back to its caller.
 /// - `if` — Runs its body only when the condition in parentheses is true.
 /// - `for` — Repeats a block over a range or a sequence of values.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
 /// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
 // </editor-fold>
 

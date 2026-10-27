@@ -215,8 +215,7 @@ void showWindow() {
 }
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// restart positions two Pipe objects; flap changes the bird velocity.
-/// step handles bounded physics; draw reads it; showWindow owns the supplied timer and close cleanup.
+/// The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

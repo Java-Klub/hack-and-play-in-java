@@ -323,7 +323,6 @@ void main() {
 /// - `-` — Subtracts numbers; in front of one number, changes its sign.
 /// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
 ///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
 /// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise

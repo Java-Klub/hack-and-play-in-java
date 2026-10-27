@@ -201,8 +201,7 @@ void showWindow() {
 java.util.function.BiConsumer<Integer, Integer> lightCallback = lightAction();
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// moveLight is the model rule; press and drag use the same lightCallback.
-/// shadow extrudes obstacle edges into a supplied Area; draw reads it; no shadow mathematics belongs in this repair.
+/// The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

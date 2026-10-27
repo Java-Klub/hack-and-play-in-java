@@ -71,9 +71,9 @@ int total() {
 ///
 /// ### What the prepared part already does
 ///
-/// value already calculates the thirteen category scores from the five dice. command handles rerolls and
-/// fills a chosen category only once; display shows each available score and calls total. The supplied
-/// rules include the upper bonus, but no Joker or repeated-Yatzy bonus.
+/// value already calculates the thirteen category scores from the five dice. command handles
+/// rerolls and fills a chosen category only once; display shows each available score and calls
+/// total. The supplied rules add a 35-point bonus when the first six categories reach 63.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -177,38 +177,54 @@ void command(String input) {
 }
 
 void display() {
-    IO.println("Dice " + Arrays.toString(dice) + "; roll " + rolls + "/3; total " + total());
+    IO.println("Dice positions:  1  2  3  4  5");
+    IO.println("Dice values:    " + Arrays.toString(dice));
+    IO.println("Hand " + Math.min(13, turn + 1) + "/13; rerolls left " + (3 - rolls) + "; total " + total());
     for (int i = 0; i < 13; i++) {
-        IO.println((i + 1) + " " + names[i] + ": " + (scores[i] >= 0 ? scores[i] : "open; now " + value(i)));
+        IO.println((i + 1) + " " + names[i] + ": " + (scores[i] >= 0 ? scores[i] + " points saved" : "open; this hand would score " + value(i)));
     }
-    IO.println("Upper sum63 earns35. FullHouse25, SmallStraight30, Large40, Yatzy50. No Joker or repeat bonuses.");
+    IO.println(rolls < 3 ? "Example: roll 4 5 changes only dice 4 and 5; the others stay. Or bank an open category." : "No rerolls left. Bank an open category to continue.");
+    IO.println("Example: bank 2 saves the Twos score in category 2. Each category can be filled once. /help explains scoring.");
 }
 
 void main() {
     reset();
     IO.println("Yatzy Scorecard");
-    IO.println("roll positions(1-5), at most two rerolls; bank category(1-13) fills it once. /r restarts; /q quits.");
+    IO.println("Each hand starts with five dice. Reroll selected positions up to twice, then save one open scoring category. /help explains scores; /r restarts; /q quits.");
+    boolean showState = true;
     while (true) {
-        display();
-        if (!outcome.isEmpty()) {
-            IO.println(outcome);
+        if (showState) {
+            display();
+            if (!outcome.isEmpty()) IO.println(outcome);
+            showState = false;
         }
-        String input = IO.readln("> ");
+        String input = IO.readln(outcome.isEmpty() ? (rolls < 3 ? "roll 4 5, bank category, /help, /r, /q: " : "bank category, /help, /r, /q: ") : "Enter or /r: new round; /q: quit: ");
         if (input == null || input.strip().equalsIgnoreCase("/q")) {
             return;
         }
-        if (input.strip().equalsIgnoreCase("/r")) {
+        if (input.strip().equalsIgnoreCase("/r") || (!outcome.isEmpty() && input.isBlank())) {
             reset();
+            showState = true;
+            continue;
+        }
+        if (input.strip().equalsIgnoreCase("/help")) {
+            IO.println("Categories 1-6: add only dice showing that number. Example: Twos adds all the 2s.");
+            IO.println("Three-kind or Four-kind: at least three or four equal dice; score the sum of all five dice.");
+            IO.println("Full-house: a triple and a pair, 25 points. Small-straight: four consecutive values, 30 points.");
+            IO.println("Large-straight: five consecutive values, 40 points. Yatzy: five equal dice, 50 points.");
+            IO.println("Chance: sum all five dice. A category whose condition is not met scores zero.");
+            IO.println("If categories 1-6 total at least 63, add a 35-point bonus. Bank fills a category even when it scores zero.");
             continue;
         }
         if (!outcome.isEmpty()) {
-            IO.println("Round finished. /r restarts; /q quits.");
+            IO.println("Round finished. Press Enter or /r for a new round; /q quits.");
             continue;
         }
         try {
             command(input.strip());
+            showState = true;
         } catch (IllegalArgumentException invalid) {
-            IO.println("Invalid move or command. roll positions(1-5), at most two rerolls; bank category(1-13) fills it once. /r restarts; /q quits.");
+            IO.println("Move rejected. Try roll 4 5 while rerolls remain, or bank 2 if category 2 is open. /help explains scoring.");
         }
     }
 }
@@ -255,7 +271,6 @@ void require(boolean valid) {
 /// - `-` — Subtracts numbers; in front of one number, changes its sign.
 /// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
 ///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
 /// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
@@ -279,6 +294,6 @@ void require(boolean valid) {
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 // </editor-fold>
 

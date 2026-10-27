@@ -144,31 +144,42 @@ void display() {
 }
 
 /// main(): Starts the real game loop: display, read a command, validate, replay or quit.
+/// Prepared console flow: type a command and press Enter. A valid command redraws the board.
+/// Rejected input leaves the display alone; after a round, Enter or /r starts again and /q quits.
 void main() {
     reset();
     IO.println("Dominosa");
+    IO.println("Cover every cell with an adjacent pair. Use each unordered number pair from 0 to 3 exactly once.");
     IO.println("Pair with row col row col; erase row col removes a domino. Use every unordered pair0-3 once. /r restarts; /q quits.");
+    IO.println("Example: 1 1 1 2 pairs the first two cells of the first row. erase 1 1 removes that pair.");
+    display();
     while (true) {
-        display();
-        if (!outcome.isEmpty()) {
-            IO.println(outcome);
-        }
-        String input = IO.readln("> ");
-        if (input == null || input.strip().equalsIgnoreCase("/q")) {
+        String input = IO.readln(outcome.isEmpty() ? "> " : "Enter or /r: new round; /q: quit: ");
+        if (input == null) {
             return;
         }
-        if (input.strip().equalsIgnoreCase("/r")) {
+        input = input.strip();
+        if (input.equalsIgnoreCase("/q") || input.equalsIgnoreCase("q")) {
+            return;
+        }
+        if (input.equalsIgnoreCase("/r") || input.equalsIgnoreCase("r")
+                || (!outcome.isEmpty() && input.isEmpty())) {
             reset();
+            display();
             continue;
         }
         if (!outcome.isEmpty()) {
-            IO.println("Round finished. /r restarts; /q quits.");
+            IO.println("That round is over. Press Enter to play again, or /q to quit.");
             continue;
         }
         try {
-            command(input.strip());
+            command(input);
+            display();
+            if (!outcome.isEmpty()) {
+                IO.println(outcome);
+            }
         } catch (IllegalArgumentException invalid) {
-            IO.println("Invalid move or command. Pair with row col row col; erase row col removes a domino. Use every unordered pair0-3 once. /r restarts; /q quits.");
+            IO.println("Invalid move. " + "Pair with row col row col; erase row col removes a domino. Use every unordered pair0-3 once. /r restarts; /q quits.");
         }
     }
 }
@@ -231,6 +242,6 @@ void require(boolean valid) {
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
 /// - `Set` — Stores distinct values; the same value is present at most once.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 // </editor-fold>
 

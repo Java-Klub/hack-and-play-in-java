@@ -1,7 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Prepared tools">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L11.06 · ColourFilterSecrets
@@ -15,8 +14,8 @@ import javax.imageio.ImageIO;
 /// **Today you learn:** One seeded Random should supply the noise across the whole image. Its
 /// repeatability is useful for comparison, while a different seed should change the distracting channels.
 ///
-/// After Run File, enter seed 42 and open colour-filter-secrets-42.png, compare its noisy top and
-/// revealed bottom halves, then rerun with 43.
+/// After Run File, type a seed or press Enter for 42; inspect the Java picture, then close it and
+/// repeat the same seed or try 43 to compare.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F27 explains the Java skill; Read this code explains these lines.
@@ -66,9 +65,8 @@ BufferedImage hide(BufferedImage mask, long seed) {
 ///
 /// ### What the prepared part already does
 ///
-/// The supplied mask contains the text. hide combines that mask with noise, and render places the
-/// disguised and channel-revealed views in the top and bottom halves of one saved picture; changing
-/// randomness must not rewrite the mask.
+/// hide uses the chosen seed to build colour noise over the message mask. render puts the hidden
+/// view above its red-filter reveal in one Java image.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -128,40 +126,41 @@ BufferedImage render(long seed, double option) {
     return image;
 }
 
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
-        throw new IllegalStateException("PNG writer missing.");
-    }
-}
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// mask draws the supplied text; hide adds coloured camouflage; reveal reads the red channel.
-/// render shows hidden and revealed halves; save/main export the local PNG.
-void main(String[] args) throws Exception {
-    if (args.length == 0) {
-        String entered = IO.readln("Seed (blank 42, q quits): ");
-        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
-        String seedText = entered.isBlank() ? "42" : entered.strip();
-        args = new String[]{"colour-filter-secrets-" + seedText + ".png", seedText};
-    }
-
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
-    try {
-        Path path = Path.of(args.length > 0 ? args[0] : "colour-filter-secrets.png");
-        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
-        double option = 1;
-        if (args.length > 2) {
-            message = args[2];
+/// The supplied part supports only the main game or experiment described above.
+void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var pictures = new javax.swing.JPanel(new java.awt.GridLayout(1, images.length, 8, 8));
+        for (int i = 0; i < images.length; i++) {
+            var picture = new javax.swing.JPanel(new java.awt.BorderLayout());
+            picture.add(new javax.swing.JLabel(captions[i], javax.swing.SwingConstants.CENTER), java.awt.BorderLayout.NORTH);
+            double scale = Math.min(1, Math.min(900.0 / images.length / images[i].getWidth(), 550.0 / images[i].getHeight()));
+            var icon = new javax.swing.ImageIcon(images[i].getScaledInstance(
+                    Math.max(1, (int)(images[i].getWidth() * scale)),
+                    Math.max(1, (int)(images[i].getHeight() * scale)), java.awt.Image.SCALE_FAST));
+            picture.add(new javax.swing.JLabel(icon), java.awt.BorderLayout.CENTER);
+            pictures.add(picture);
         }
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-        save(path, seed, option);
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
+        frame.add(pictures);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
+
+
+void main() {
+    String input = IO.readln("Seed (blank 42, q quits): ");
+    if (input == null || input.strip().equalsIgnoreCase("q")) return;
+    try {
+        long seed = input.isBlank() ? 42 : Long.parseLong(input.strip());
+        showImages("Colour Filter Secrets", new String[]{"Seed " + seed}, new java.awt.image.BufferedImage[]{render(seed, 1)});
+    } catch (IllegalArgumentException failure) {
+        IO.println("Use a whole-number seed: " + failure.getMessage());
     }
 }
 // </editor-fold>
@@ -191,9 +190,7 @@ void main(String[] args) throws Exception {
 ///   type.
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
 /// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
 /// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
 /// - `++` — Increases a numeric value by one.
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
 /// - `-` — Subtracts numbers; in front of one number, changes its sign.
@@ -215,10 +212,7 @@ void main(String[] args) throws Exception {
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 // </editor-fold>
 

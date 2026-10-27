@@ -1,7 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Prepared tools">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L12.09 · CrystalGrowth
@@ -16,8 +15,8 @@ import javax.imageio.ImageIO;
 /// contact operation should explain the difference between four and eight neighbours while leaving the
 /// growth algorithm unchanged.
 ///
-/// After Run File, press Enter for diagonal growth and crystal-new.png, then rerun with n to compare
-/// crystal-old.png.
+/// After Run File, compare New rule with Original rule from the same seed; after the repair they
+/// should show the intended difference. Close the window before replaying.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Learn · F36 explains the Java skill; Read this code explains these lines.
@@ -68,9 +67,8 @@ boolean touching(boolean[][] grid, int x, int y, boolean diagonals) {
 ///
 /// ### What the prepared part already does
 ///
-/// main asks which contact mode to use. The supplied bounded random walk calls touching before sticking a
-/// particle; drawing and PNG export are prepared. Explain the extracted responsibility yourself: checks
-/// establish behaviour, not code clarity.
+/// grow performs bounded particle walks and asks touching when a particle joins the crystal. main
+/// compares the new diagonal rule with the original rule using the same seed.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -142,40 +140,42 @@ BufferedImage render(long seed, double option) {
     return image;
 }
 
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
-        throw new IllegalStateException("PNG writer missing.");
-    }
-}
 
 boolean diagonalGrowth = true;
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// touching owns the four/eight-neighbour rule; grow owns bounded random walks and sticking.
-/// render colours the resulting cluster; save/main keep the existing local PNG workflow.
-void main(String[] args) throws Exception {
-    if (args.length == 0) {
-        String entered = IO.readln("Allow diagonal growth? y/n (blank y, q quits): ");
-        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
-        diagonalGrowth = !entered.strip().equalsIgnoreCase("n");
-        args = new String[]{"crystal-" + (diagonalGrowth ? "new" : "old") + ".png"};
-    }
+/// The supplied part supports only the main game or experiment described above.
+void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var pictures = new javax.swing.JPanel(new java.awt.GridLayout(1, images.length, 8, 8));
+        for (int i = 0; i < images.length; i++) {
+            var picture = new javax.swing.JPanel(new java.awt.BorderLayout());
+            picture.add(new javax.swing.JLabel(captions[i], javax.swing.SwingConstants.CENTER), java.awt.BorderLayout.NORTH);
+            double scale = Math.min(1, Math.min(900.0 / images.length / images[i].getWidth(), 550.0 / images[i].getHeight()));
+            var icon = new javax.swing.ImageIcon(images[i].getScaledInstance(
+                    Math.max(1, (int)(images[i].getWidth() * scale)),
+                    Math.max(1, (int)(images[i].getHeight() * scale)), java.awt.Image.SCALE_FAST));
+            picture.add(new javax.swing.JLabel(icon), java.awt.BorderLayout.CENTER);
+            pictures.add(picture);
+        }
+        frame.add(pictures);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
 
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
-    try {
-        Path path = Path.of(args.length > 0 ? args[0] : "crystal-growth.png");
-        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
-        double option = args.length > 2 ? Double.parseDouble(args[2]) : 600;
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-        save(path, seed, option);
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
-    }
+
+void main() {
+    diagonalGrowth = true;
+    var changed = render(42, 600);
+    diagonalGrowth = false;
+    var original = render(42, 600);
+    diagonalGrowth = true;
+    showImages("Crystal Growth", new String[]{"New rule", "Original rule"}, new java.awt.image.BufferedImage[]{changed, original});
 }
 // </editor-fold>
 
@@ -218,24 +218,14 @@ void main(String[] args) throws Exception {
 /// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
 /// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
 ///   count.
 /// - `new` — Creates a fresh value or object, such as a new array or window.
 /// - `return` — Ends this method call, optionally handing a result back to its caller.
 /// - `if` — Runs its body only when the condition in parentheses is true.
 /// - `for` — Repeats a block over a range or a sequence of values.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
 /// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
 // </editor-fold>
 

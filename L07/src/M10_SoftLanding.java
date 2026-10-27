@@ -274,7 +274,6 @@ void main() {
 /// - `||` — At least one condition must be true; if the first is true, Java skips the second.
 /// - `!` — In front of a boolean expression, reverses true and false.
 /// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `%` — The remainder after division; useful for repeated positions or turns.
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
 /// - `-` — Subtracts numbers; in front of one number, changes its sign.
 /// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names

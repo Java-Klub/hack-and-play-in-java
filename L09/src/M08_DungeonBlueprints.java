@@ -1,8 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Prepared tools">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
-import java.util.List;
 // </editor-fold>
 
 /// # L09.08 · DungeonBlueprints
@@ -16,8 +14,8 @@ import java.util.List;
 /// **Today you learn:** A Map groups many individual rooms under shared category keys. Classification
 /// chooses the key; accumulation updates that key’s total without erasing earlier rooms.
 ///
-/// Use Run File to save dungeon-blueprints.png, then open it and compare the rooms with the SMALL and
-/// LARGE legend.
+/// After Run File, inspect the Java picture; close its window, edit the active rule, Save and Test
+/// File, then Run File again to compare.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F24 explains the Java skill; Read this code explains these lines.
@@ -58,8 +56,8 @@ void countRoom(Room room) {
 ///
 /// ### What the prepared part already does
 ///
-/// The placement routine checks overlap and calls countRoom only for accepted rooms. Corridors, drawing
-/// and export are supplied; the caption reads the resulting category totals.
+/// generate proposes bounded rooms, asks countRoom to remember accepted sizes, and joins the rooms
+/// by corridors. render draws the map and its SMALL/LARGE totals directly in Java.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -150,32 +148,40 @@ BufferedImage render(long seed, double option) {
     return image;
 }
 
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
-        throw new IllegalStateException("PNG writer missing.");
-    }
-}
 
 Map<String, Integer> roomCounts = new HashMap<>();
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// generate keeps a room List and connects consecutive centres with L-shaped corridors.
-/// countRoom drives the real image legend; render/save retain the supplied drawing and PNG boundaries.
-void main(String[] args) throws Exception {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
+/// The supplied part supports only the main game or experiment described above.
+void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var pictures = new javax.swing.JPanel(new java.awt.GridLayout(1, images.length, 8, 8));
+        for (int i = 0; i < images.length; i++) {
+            var picture = new javax.swing.JPanel(new java.awt.BorderLayout());
+            picture.add(new javax.swing.JLabel(captions[i], javax.swing.SwingConstants.CENTER), java.awt.BorderLayout.NORTH);
+            double scale = Math.min(1, Math.min(900.0 / images.length / images[i].getWidth(), 550.0 / images[i].getHeight()));
+            var icon = new javax.swing.ImageIcon(images[i].getScaledInstance(
+                    Math.max(1, (int)(images[i].getWidth() * scale)),
+                    Math.max(1, (int)(images[i].getHeight() * scale)), java.awt.Image.SCALE_FAST));
+            picture.add(new javax.swing.JLabel(icon), java.awt.BorderLayout.CENTER);
+            pictures.add(picture);
+        }
+        frame.add(pictures);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
+
+
+void main() {
     try {
-        Path path = Path.of(args.length > 0 ? args[0] : "dungeon-blueprints.png");
-        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
-        double option = args.length > 2 ? Double.parseDouble(args[2]) : 8;
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-        save(path, seed, option);
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
+        showImages("Dungeon Blueprints", new String[]{"Result"}, new java.awt.image.BufferedImage[]{render(42, 8)});
+    } catch (Exception failure) {
+        IO.println("Cannot draw this result; check the editable rule: " + failure);
     }
 }
 // </editor-fold>
@@ -230,16 +236,12 @@ void main(String[] args) throws Exception {
 /// - `for` — Repeats a block over a range or a sequence of values.
 /// - `while` — Keeps repeating its body while its condition stays true.
 /// - `record` — A small named bundle of values. Its component accessors use the component names with ().
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
+/// - `null` — No object is present.
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
-/// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
 /// - `Map` — Associates keys with values. A missing key needs an explicit fallback or decision.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `IO` — Console input and output. println writes a line.
 // </editor-fold>
 

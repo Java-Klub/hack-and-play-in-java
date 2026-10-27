@@ -244,7 +244,7 @@ void showWindow() {
     panel.addMouseListener(mouse);
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.add(panel);
-    var help = new JLabel("<html><div style=\"text-align:center\">Click a faint edge: 0 / 1 / 2 bridges   R: reset</div></html>", SwingConstants.CENTER);
+    var help = new JLabel("<html><div style=\"text-align:center\">Click a faint edge: 0 / 1 / 2 bridges<br>U: undo one change   R: reset</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
     frame.add(help, BorderLayout.SOUTH);
     frame.pack();
@@ -255,6 +255,7 @@ void showWindow() {
 }
 
 /// main(): Starts the model, then schedules the supplied window on Swing’s event thread.
+/// The prepared Undo control is U: it restores one previous edit. R starts this puzzle again.
 void main() {
     restart();
     SwingUtilities.invokeLater(this::showWindow);
@@ -309,7 +310,6 @@ void undo() {
 /// - `-` — Subtracts numbers; in front of one number, changes its sign.
 /// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
 ///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
 /// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
@@ -329,7 +329,7 @@ void undo() {
 /// - `protected` — A visibility keyword used by supplied library callbacks, such as paintComponent.
 /// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
 ///   background first.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
+/// - `null` — No object is present.
 /// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
 /// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
 /// - `JPanel` — A window area that can display the game’s drawing or controls.

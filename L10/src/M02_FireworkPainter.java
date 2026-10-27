@@ -4,11 +4,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
-import javax.imageio.ImageIO;
 import javax.swing.Timer;
 // </editor-fold>
 
@@ -23,8 +20,8 @@ import javax.swing.Timer;
 /// **Today you learn:** A two-argument callback carries click coordinates into a later action. Creating
 /// the callback must leave particles alone; invoking it must use that particular click once.
 ///
-/// After Run File, click different canvas positions to launch fireworks and use Space to pause or C to
-/// clear the sky.
+/// After Run File, click the canvas to launch fireworks; Space pauses the motion and R clears and
+/// restarts the sky.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F28 explains the Java skill; Read this code explains these lines.
@@ -63,8 +60,8 @@ java.util.function.BiConsumer<Integer, Integer> burstAction() {
 ///
 /// ### What the prepared part already does
 ///
-/// press passes the click to the stored burst callback. The supplied burst routine creates particles,
-/// step advances their bounded lives and draw paints them; pause, reset and export already work.
+/// press calls the actual burstAction callback with the clicked position. step advances finite
+/// particles and draw shows their trails; Space pauses and R clears and restarts.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -139,21 +136,6 @@ void step() {
     g.dispose();
 }
 
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-void save(File file) throws IOException {
-    ImageIO.write(canvas, "png", file);
-}
-
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-void save() {
-    try {
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-        save(new File("fireworks.png"));
-        message = "Saved fireworks.png";
-    } catch (IOException e) {
-        message = "Save failed: " + e.getMessage();
-    }
-}
 
 /// Supplied drawing: reads model values; repainting is not another turn.
 void draw(Graphics2D g) {
@@ -170,8 +152,6 @@ void key(int code, boolean pressed) {
     if (pressed) {
         switch (code) {
             case KeyEvent.VK_SPACE -> paused = !paused;
-            case KeyEvent.VK_C -> clear();
-            case KeyEvent.VK_S -> save();
         }
     }
 }
@@ -222,7 +202,7 @@ void showWindow() {
     });
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.add(panel);
-    var help = new JLabel("<html><div style=\"text-align:center\">Click: burst   Space: pause   C: clear   S: save PNG   R: reset</div></html>", SwingConstants.CENTER);
+    var help = new JLabel("<html><div style=\"text-align:center\">Click: burst   Space: pause   R: reset</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
     frame.add(help, BorderLayout.SOUTH);
     frame.pack();
@@ -236,8 +216,7 @@ void showWindow() {
 java.util.function.BiConsumer<Integer, Integer> burstCallback = burstAction();
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// press invokes burstCallback; burst creates particles at those exact coordinates.
-/// step ages particles and paints trails; draw only displays the canvas; existing export and timer cleanup are supplied.
+/// The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();
@@ -303,10 +282,7 @@ void main() {
 /// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
 ///   background first.
 /// - `record` — A small named bundle of values. Its component accessors use the component names with ().
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
+/// - `null` — No object is present.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
 /// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
 /// - `JFrame` — A desktop window supplied by the JDK’s Swing library.

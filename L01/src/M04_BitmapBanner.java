@@ -112,14 +112,13 @@ String banner(String message, char ink) {
     return result.toString();
 }
 
-void main(String[] args) {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
+void main() {
     try {
-        String message = args.length > 0 ? args[0] : bannerMessage();
-        char ink = args.length > 1 && !args[1].isEmpty() ? args[1].charAt(0) : '#';
-        IO.print(banner(message, ink));
+        String message = bannerMessage();
+        IO.println("Banner preview: [" + message + "]");
+        IO.println("--- five picture rows below ---");
+        IO.print(banner(message, '#'));
+        IO.println("--- end of banner; spaces in the starter make blank rows ---");
     } catch (IllegalArgumentException invalid) {
         IO.println(invalid.getMessage());
     }
@@ -154,12 +153,9 @@ void main(String[] args) {
 ///   type.
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
 /// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
 /// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
 /// - `++` — Increases a numeric value by one.
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
 /// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
@@ -172,11 +168,11 @@ void main(String[] args) {
 /// - `return` — Ends this method call, optionally handing a result back to its caller.
 /// - `if` — Runs its body only when the condition in parentheses is true.
 /// - `for` — Repeats a block over a range or a sequence of values.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
+/// - `null` — No object is present.
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
 /// - `Map` — Associates keys with values. A missing key needs an explicit fallback or decision.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line. print writes text without adding a newline.
 // </editor-fold>
 

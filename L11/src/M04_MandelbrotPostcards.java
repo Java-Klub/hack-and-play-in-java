@@ -1,7 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Prepared tools">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L11.04 · MandelbrotPostcards
@@ -16,8 +15,8 @@ import javax.imageio.ImageIO;
 /// run. Here one drawn hue controls the palette: equal seeds should agree and different seeds should be
 /// able to differ.
 ///
-/// After Run File, enter seed 42 and open mandelbrot-postcards-42.png, then rerun with 43 to compare
-/// palettes.
+/// After Run File, type a seed or press Enter for 42; inspect the Java picture, then close it and
+/// repeat the same seed or try 43 to compare.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Learn · F27 explains the Java skill; Read this code explains these lines.
@@ -70,9 +69,8 @@ BufferedImage render(long seed, double span) {
 ///
 /// ### What the prepared part already does
 ///
-/// main asks for a seed and save calls render. The supplied escape routine performs the bounded
-/// complex-number iteration, while the pixel loop combines its iteration count with the chosen hue and
-/// writes PNG.
+/// main reads one seed and calls render. The supplied escape calculation chooses the picture shape;
+/// the editable seeded colour rule determines its palette.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -103,43 +101,41 @@ int escape(double x, double y) {
 double centerX = -0.6;
 double centerY = 0;
 
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
-        throw new IllegalStateException("PNG writer missing.");
-    }
-}
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// escape is the supplied bounded Mandelbrot calculation.
-/// render chooses one seeded hue and maps escape counts to colour; save/main export the local postcard.
-void main(String[] args) throws Exception {
-    if (args.length == 0) {
-        String entered = IO.readln("Seed (blank 42, q quits): ");
-        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
-        String seedText = entered.isBlank() ? "42" : entered.strip();
-        args = new String[]{"mandelbrot-postcards-" + seedText + ".png", seedText};
-    }
+/// The supplied part supports only the main game or experiment described above.
+void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var pictures = new javax.swing.JPanel(new java.awt.GridLayout(1, images.length, 8, 8));
+        for (int i = 0; i < images.length; i++) {
+            var picture = new javax.swing.JPanel(new java.awt.BorderLayout());
+            picture.add(new javax.swing.JLabel(captions[i], javax.swing.SwingConstants.CENTER), java.awt.BorderLayout.NORTH);
+            double scale = Math.min(1, Math.min(900.0 / images.length / images[i].getWidth(), 550.0 / images[i].getHeight()));
+            var icon = new javax.swing.ImageIcon(images[i].getScaledInstance(
+                    Math.max(1, (int)(images[i].getWidth() * scale)),
+                    Math.max(1, (int)(images[i].getHeight() * scale)), java.awt.Image.SCALE_FAST));
+            picture.add(new javax.swing.JLabel(icon), java.awt.BorderLayout.CENTER);
+            pictures.add(picture);
+        }
+        frame.add(pictures);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
 
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
+
+void main() {
+    String input = IO.readln("Seed (blank 42, q quits): ");
+    if (input == null || input.strip().equalsIgnoreCase("q")) return;
     try {
-        Path path = Path.of(args.length > 0 ? args[0] : "mandelbrot-postcards.png");
-        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
-        double option = args.length > 2 ? Double.parseDouble(args[2]) : 3.2;
-        if (args.length > 3) {
-            centerX = Double.parseDouble(args[3]);
-        }
-        if (args.length > 4) {
-            centerY = Double.parseDouble(args[4]);
-        }
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-        save(path, seed, option);
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
+        long seed = input.isBlank() ? 42 : Long.parseLong(input.strip());
+        showImages("Mandelbrot Postcards", new String[]{"Seed " + seed}, new java.awt.image.BufferedImage[]{render(seed, 3.2)});
+    } catch (IllegalArgumentException failure) {
+        IO.println("Use a whole-number seed: " + failure.getMessage());
     }
 }
 // </editor-fold>
@@ -195,10 +191,7 @@ void main(String[] args) throws Exception {
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 // </editor-fold>
 

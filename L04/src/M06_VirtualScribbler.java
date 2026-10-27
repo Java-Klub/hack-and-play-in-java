@@ -4,17 +4,14 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Random;
-import javax.imageio.ImageIO;
 import javax.swing.Timer;
 // </editor-fold>
 
 /// # L04.06 · VirtualScribbler
 ///
-/// Let a restless pen grow a drawing across the canvas, then steer its drift and jitter. Pause at an
-/// interesting pattern or save a picture before clearing the canvas for another experiment.
+/// Let a restless pen grow a drawing across the canvas, then steer its drift and jitter. Pause at
+/// an interesting pattern to examine it before clearing the canvas for another experiment.
 ///
 /// **Your mission:** Each requested burst draws one step too few. Repair burst so count requests exactly
 /// that many calls to step, including zero and one, while retaining the bounds and pause rules.
@@ -74,9 +71,9 @@ void burst(int count) {
 ///
 /// ### What the prepared part already does
 ///
-/// step supplies noisy pen movement, boundary reflections, ink and the pause check. A timer regularly
-/// asks burst for four steps; draw shows the canvas and actual Steps counter without moving the pen. The
-/// supplied controls handle drift, jitter, reset and scribble.png export.
+/// step supplies noisy pen movement, boundary reflections, ink and the pause check. A timer
+/// regularly asks burst for four steps; draw shows the canvas and actual Steps counter without
+/// moving the pen. The supplied controls handle drift, jitter, pausing and reset.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="For this game">
@@ -108,7 +105,6 @@ Random random;
 double x, y, angle;
 int drift, jitter, steps;
 boolean paused;
-String message;
 void clear() {
     var g = canvas.createGraphics();
     g.setColor(Color.WHITE);
@@ -127,7 +123,6 @@ void restart() {
     jitter = 4;
     steps = 0;
     paused = true;
-    message = "Space starts the pen";
 }
 
 void adjust(int d, int j) {
@@ -158,19 +153,6 @@ void step() {
     y = ny;
 }
 
-void save(File file) throws IOException {
-    ImageIO.write(canvas, "png", file);
-}
-
-void save() {
-    try {
-        save(new File("scribble.png"));
-        message = "Saved scribble.png";
-    } catch (IOException e) {
-        message = "Save failed: " + e.getMessage();
-    }
-}
-
 void draw(Graphics2D g) {
     g.drawImage(canvas, 0, 0, null);
     g.setColor(Color.RED);
@@ -178,7 +160,7 @@ void draw(Graphics2D g) {
     g.setColor(new Color(245, 245, 245));
     g.fillRect(0, 0, WIDTH, 28);
     g.setColor(Color.BLACK);
-    g.drawString("Steps: " + steps + "  Drift: " + drift + "  Jitter: " + jitter + "  " + (paused ? "Paused" : "Drawing") + "  " + message, 10, 20);
+    g.drawString("Steps: " + steps + "  Drift: " + drift + "  Jitter: " + jitter + "  " + (paused ? "Paused" : "Drawing"), 10, 20);
 }
 
 void key(int code, boolean pressed) {
@@ -193,7 +175,6 @@ void key(int code, boolean pressed) {
             case KeyEvent.VK_UP -> adjust(0, 1);
             case KeyEvent.VK_DOWN -> adjust(0, -1);
             case KeyEvent.VK_C -> clear();
-            case KeyEvent.VK_S -> save();
         }
     }
 }
@@ -229,7 +210,7 @@ void showWindow() {
     });
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.add(panel);
-    var help = new JLabel("<html><div style=\"text-align:center\">Space: play / pause   Arrows: drift / jitter   C: clear   S: save PNG   R: reset</div></html>", SwingConstants.CENTER);
+    var help = new JLabel("<html><div style=\"text-align:center\">Space: play / pause   Arrows: drift / jitter   C: clear   R: reset</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
     frame.add(help, BorderLayout.SOUTH);
     frame.pack();
@@ -241,11 +222,15 @@ void showWindow() {
 }
 
 void main() {
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        IO.println("This game needs a graphical display; model checks still work headlessly.");
+        return;
+    }
     restart();
     SwingUtilities.invokeLater(this::showWindow);
 }
 
-/// Prepared entry points: main, restart, draw, save, showWindow.
+/// Prepared entry points: main, restart, draw, showWindow.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
@@ -267,7 +252,6 @@ void main() {
 /// - `int` — A type for whole numbers within a fixed range.
 /// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
 /// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
 /// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
 /// - `\` — Inside quoted text, starts an escape such as \n for a new line or \" for a quote.
 /// - `final` — The named value cannot be assigned another value afterwards. A referenced mutable object
@@ -307,10 +291,7 @@ void main() {
 /// - `protected` — A visibility keyword used by supplied library callbacks, such as paintComponent.
 /// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
 ///   background first.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
+/// - `null` — No object is present.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
 /// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
 /// - `JFrame` — A desktop window supplied by the JDK’s Swing library.

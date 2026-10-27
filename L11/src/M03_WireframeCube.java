@@ -88,7 +88,7 @@ double angle;
 boolean running = true;
 int[][] edges = {{0, 1}, {0, 2}, {0, 4}, {1, 3}, {1, 5}, {2, 3}, {2, 6}, {3, 7}, {4, 5}, {4, 6}, {5, 7}, {6, 7}, {1, 0}};
 
-/// Supplied restart: create the initial model; no native window is created here.
+/// Restore the starting game state.
 void reset(long seed) {
     angle = 0;
 }
@@ -135,7 +135,7 @@ void showWindow() {
     pause.addActionListener(event -> running = !running);
     var restart = new JButton("Reset angle");
     restart.addActionListener(event -> {
-/// Supplied restart: create the initial model; no native window is created here.
+/// Restore the starting game state.
         reset(42);
         canvas.repaint();
     });
@@ -164,13 +164,9 @@ void showWindow() {
 record Edge(int a, int b) {}
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// uniqueEdges normalises editable edge data; project computes eight screen points.
-/// The canvas draws uniqueEdges and its count; showWindow owns rotation/pause and timer cleanup.
-void main(String[] args) {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
-/// Supplied restart: create the initial model; no native window is created here.
+/// The supplied part supports only the main game or experiment described above.
+void main() {
+/// Restore the starting game state.
     reset(42);
     SwingUtilities.invokeLater(this::showWindow);
 }
@@ -195,14 +191,12 @@ void main(String[] args) {
 /// - `int` — A type for whole numbers within a fixed range.
 /// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
 /// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
 /// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
 /// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
 /// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
 ///   type.
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
 /// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
 /// - `||` — At least one condition must be true; if the first is true, Java skips the second.
 /// - `!` — In front of a boolean expression, reverses true and false.
 /// - `++` — Increases a numeric value by one.

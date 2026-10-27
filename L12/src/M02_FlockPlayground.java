@@ -88,7 +88,7 @@ double obstacleX = 300;
 double obstacleY = 200;
 boolean running = true;
 
-/// Supplied restart: create the initial model; no native window is created here.
+/// Restore the starting game state.
 void reset(long seed) {
     var random = new Random(seed);
     for (int i = 0; i < COUNT; i++) {
@@ -189,7 +189,7 @@ void showWindow() {
     pause.addActionListener(event -> running = !running);
     var restart = new JButton("New flock");
     restart.addActionListener(event -> {
-/// Supplied restart: create the initial model; no native window is created here.
+/// Restore the starting game state.
         reset(System.nanoTime());
         canvas.repaint();
     });
@@ -220,13 +220,9 @@ interface Avoidance { double strength(double distance); }
 Avoidance avoidance = distance -> distance > 0 && distance < 75 ? 0.2 : 0;
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// obstaclePush supplies the actual obstacle terms inside step.
-/// reset makes repeatable birds; showWindow moves the obstacle and cleans up the supplied timer.
-void main(String[] args) {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
-/// Supplied restart: create the initial model; no native window is created here.
+/// The supplied part supports only the main game or experiment described above.
+void main() {
+/// Restore the starting game state.
     reset(42);
     SwingUtilities.invokeLater(this::showWindow);
 }
@@ -251,7 +247,6 @@ void main(String[] args) {
 /// - `int` — A type for whole numbers within a fixed range.
 /// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
 /// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
 /// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
 /// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
 /// - `final` — The named value cannot be assigned another value afterwards. A referenced mutable object

@@ -236,8 +236,7 @@ void showWindow() {
 }
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// draw calls drawNode for the real eight nodes.
-/// crossings compares unrelated edges; pick/moveSelected handle drag input; showWindow supplies Swing events.
+/// The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

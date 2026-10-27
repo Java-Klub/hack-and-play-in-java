@@ -9,9 +9,9 @@
 /// **Today you learn:** Combining boolean conditions: OR accepts either part, while AND requires both.
 /// Work out the two truth values separately for a triple without a pair before combining them.
 ///
-/// Use Run File to inspect the training hand and its points, then use a command such as roll 4 5 to
-/// reroll only those two dice before bank.
-/// After your repair: Save → Test File → play again.
+/// Use Run File: dice are numbered and clicking selects them for reroll. In the opening hand, keep
+/// the three twos, select dice 4 and 5 and press Reroll selected. Bank points keeps the score and
+/// prepares the next round; Scoring help explains the hands.
 ///
 /// Need an explanation? Recall · F06 explains the Java skill; Read this code explains these lines.
 /// Hints 1 and 2 open separately; Repair outline reveals the direction.
@@ -145,38 +145,69 @@ void command(String input) {
     }
 }
 
-void display() {
-    IO.println("Round " + (round + 1) + "/5; dice " + Arrays.toString(dice) + "; roll " + rolls + "/3; current points " + points() + "; total " + total);
-    IO.println("Five50 Four40 FullHouse35 Straight30 Three20 TwoPairs10 Pair5 High0. Equal categories tie.");
-}
-
 void main() {
     reset();
-    IO.println("Poker Dice");
-    IO.println("roll positions(1-5) rerolls those dice, at most twice; bank scores the hand. Five rounds. /r restarts; /q quits.");
-    while (true) {
-        display();
-        if (!outcome.isEmpty()) {
-            IO.println(outcome);
-        }
-        String input = IO.readln("> ");
-        if (input == null || input.strip().equalsIgnoreCase("/q")) {
-            return;
-        }
-        if (input.strip().equalsIgnoreCase("/r")) {
-            reset();
-            continue;
-        }
-        if (!outcome.isEmpty()) {
-            IO.println("Round finished. /r restarts; /q quits.");
-            continue;
-        }
-        try {
-            command(input.strip());
-        } catch (IllegalArgumentException invalid) {
-            IO.println("Invalid move or command. roll positions(1-5) rerolls those dice, at most twice; bank scores the hand. Five rounds. /r restarts; /q quits.");
-        }
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        IO.println("Poker Dice needs a graphical display; the model remains headless-testable.");
+        return;
     }
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame("Poker Dice");
+        var dicePanel = new javax.swing.JPanel(new java.awt.GridLayout(1, 5, 8, 8));
+        var picks = new javax.swing.JToggleButton[5];
+        for (int i = 0; i < picks.length; i++) {
+            picks[i] = new javax.swing.JToggleButton();
+            picks[i].setPreferredSize(new java.awt.Dimension(95, 100));
+            dicePanel.add(picks[i]);
+        }
+        var status = new javax.swing.JLabel();
+        var feedback = new javax.swing.JLabel("Opening: keep the three 2s; try selecting dice 4 and 5, then Reroll selected.");
+        var reroll = new javax.swing.JButton("Reroll selected");
+        var bank = new javax.swing.JButton("Bank points / next round");
+        var restart = new javax.swing.JButton("New game");
+        var rules = new javax.swing.JButton("Scoring help");
+        Runnable refresh = () -> {
+            boolean selected = false;
+            for (int i = 0; i < picks.length; i++) {
+                picks[i].setText("<html><center>Die " + (i + 1) + "<br><span style='font-size:30px'>" + dice[i] + "</span><br>" + (picks[i].isSelected() ? "REROLL" : "keep") + "</center></html>");
+                picks[i].setEnabled(outcome.isEmpty() && rolls < 3);
+                selected |= picks[i].isSelected();
+            }
+            status.setText(outcome.isEmpty() ? "Round " + (round + 1) + "/5. Rerolls left: " + (3 - rolls) + ". This hand: " + points() + " points. Banked total: " + total : outcome);
+            reroll.setEnabled(outcome.isEmpty() && rolls < 3 && selected);
+            bank.setEnabled(outcome.isEmpty());
+        };
+        for (var pick : picks) pick.addActionListener(event -> refresh.run());
+        reroll.addActionListener(event -> {
+            String request = "roll";
+            for (int i = 0; i < picks.length; i++) if (picks[i].isSelected()) request += " " + (i + 1);
+            command(request);
+            for (var pick : picks) pick.setSelected(false);
+            feedback.setText(rolls < 3 ? "Select dice to change, or bank the current points." : "No rerolls left. Bank this hand to continue.");
+            refresh.run();
+        });
+        bank.addActionListener(event -> {
+            int earned = points();
+            command("bank");
+            for (var pick : picks) pick.setSelected(false);
+            feedback.setText(outcome.isEmpty() ? "Banked " + earned + " points. A new hand is ready." : "Finished. Use New game to play again.");
+            refresh.run();
+        });
+        restart.addActionListener(event -> { reset(); for (var pick : picks) pick.setSelected(false); feedback.setText("Select the dice you want to change; unselected dice stay."); refresh.run(); });
+        rules.addActionListener(event -> javax.swing.JOptionPane.showMessageDialog(frame,
+            "Only the highest matching hand scores.\nFive equal dice: 50. Four equal: 40.\nFull house: a triple AND a pair, 35.\nStraight 1-2-3-4-5 or 2-3-4-5-6: 30.\nThree equal: 20. Two pairs: 10. One pair: 5. Otherwise: 0.\nBank keeps those points and advances one of five rounds.", "Scoring help", javax.swing.JOptionPane.INFORMATION_MESSAGE));
+        var buttons = new javax.swing.JPanel();
+        buttons.add(reroll); buttons.add(bank); buttons.add(restart); buttons.add(rules);
+        var content = new javax.swing.JPanel(new java.awt.BorderLayout(8, 8));
+        content.setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 12, 12, 12));
+        content.add(new javax.swing.JLabel("Click a die to select it for reroll. You may reroll twice, or bank at any time."), java.awt.BorderLayout.NORTH);
+        content.add(dicePanel);
+        var bottom = new javax.swing.JPanel(new java.awt.GridLayout(3, 1));
+        bottom.add(status); bottom.add(feedback); bottom.add(buttons);
+        content.add(bottom, java.awt.BorderLayout.SOUTH);
+        frame.add(content); frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        refresh.run(); frame.pack(); frame.setLocationByPlatform(true); frame.setVisible(true);
+    });
 }
 
 void require(boolean valid) {
@@ -219,7 +250,6 @@ void require(boolean valid) {
 /// - `+=` — Adds to the old value and stores the result back under the same name.
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
 /// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
 /// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
@@ -233,12 +263,8 @@ void require(boolean valid) {
 /// - `if` — Runs its body only when the condition in parentheses is true.
 /// - `else` — The alternative when the preceding if condition is false.
 /// - `for` — Repeats a block over a range or a sequence of values.
-/// - `while` — Keeps repeating its body while its condition stays true.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line.
 // </editor-fold>
 

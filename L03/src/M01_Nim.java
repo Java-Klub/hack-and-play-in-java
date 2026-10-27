@@ -123,27 +123,38 @@ boolean take(int amount) {
 void main() {
     IO.println("NIM: take 1-3 stones. Taking the last stone wins.");
     IO.println("You play first against the bot. r restarts; q quits.");
+    boolean showState = true;
     while (true) {
-        if (winner == 0 && !humanTurn) {
-            int amount = botMove();
-            IO.println("Bot takes " + amount + ".");
-            take(amount);
+        if (showState) {
+            if (winner == 0 && !humanTurn) {
+                int amount = botMove();
+                IO.println("Bot takes " + amount + ".");
+                take(amount);
+            }
+            IO.println("Stones: " + stones + " " + "|".repeat(stones));
+            if (winner != 0) {
+                IO.println(winner == 1 ? "You win!" : "Bot wins!");
+            }
+            showState = false;
         }
-        IO.println("Stones: " + stones + " " + "|".repeat(stones));
-        if (winner != 0) {
-            IO.println(winner == 1 ? "You win!" : "Bot wins!");
-        }
-        String input = IO.readln(winner == 0 ? "Take 1-3, r, q: " : "r replay, q quit: ");
-        if (input == null || input.trim().equalsIgnoreCase("q")) {
+        String input = IO.readln(winner == 0 ? "Take 1-3, r, q: " : "Enter or /r: new round; /q: quit: ");
+        if (input == null || (input.trim().equalsIgnoreCase("q") || input.trim().equalsIgnoreCase("/q"))) {
             return;
         }
         input = input.trim();
-        if (input.equalsIgnoreCase("r")) {
+        if ((input.equalsIgnoreCase("r") || input.equalsIgnoreCase("/r") || (winner != 0 && input.isBlank()))) {
             reset();
+            showState = true;
+            continue;
+        }
+        if (winner != 0) {
+            IO.println("Round finished. Press Enter or /r for a new round; /q quits.");
             continue;
         }
         try {
-            if (!take(Integer.parseInt(input))) {
+            if (take(Integer.parseInt(input))) {
+                showState = true;
+            } else {
                 IO.println("Illegal move. Take 1-3 available stones during your turn.");
             }
         } catch (NumberFormatException exception) {
@@ -196,6 +207,6 @@ void main() {
 /// - `null` — No object is present. IO.readln returns null when the input stream ends.
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 // </editor-fold>
 

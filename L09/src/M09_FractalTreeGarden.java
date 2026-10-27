@@ -1,7 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Prepared tools">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L09.09 · FractalTreeGarden
@@ -15,8 +14,8 @@ import javax.imageio.ImageIO;
 /// **Today you learn:** Parsing turns text into a number and can fail before range checking begins. Catch
 /// the specific text-conversion failure; an out-of-range number is a different problem.
 ///
-/// After Run File, enter a branching angle from 10 to 70 or try oops, then open the PNG at the printed
-/// Saved path.
+/// After Run File, enter an angle 10–70 or try oops; read Chosen value and inspect the Java
+/// picture. Close it and Run File again for another input.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Learn · F31 explains the Java skill; Read this code explains these lines.
@@ -71,8 +70,9 @@ double readAngle(String text) {
 ///
 /// ### What the prepared part already does
 ///
-/// main asks for the angle and calls readAngle before drawing. The supplied recursive branch routine
-/// shortens each branch, and the export code writes the resulting PNG locally.
+/// main sends the one typed angle to readAngle, then render draws the bounded branch pattern. A
+/// valid value gives a Java picture; malformed text and a numeric range violation are separate
+/// cases.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="For this game">
@@ -131,39 +131,42 @@ BufferedImage render(long seed, double angle) {
     return image;
 }
 
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
-        throw new IllegalStateException("PNG writer missing.");
-    }
-}
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// branches recursively draws a bounded tree; angle and shortening are explained controls.
-/// main reads this option; save/export and rendering stay supplied.
-void main(String[] args) throws Exception {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
-    String enteredOption = "";
-    if (args.length <= 2) {
-        enteredOption = IO.readln("angle 10..70 (blank/default 28, q quits): ");
-        if (enteredOption == null || enteredOption.strip().equalsIgnoreCase("q")) return;
-    }
-    try {
-        Path path = Path.of(args.length > 0 ? args[0] : "fractal-tree-garden.png");
-        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
-        double option = readAngle(args.length > 2 ? args[2] : enteredOption);
-        IO.println("angle: " + option);
-        if (args.length > 3) {
-            shortening = Double.parseDouble(args[3]);
+/// The supplied part supports only the main game or experiment described above.
+void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var pictures = new javax.swing.JPanel(new java.awt.GridLayout(1, images.length, 8, 8));
+        for (int i = 0; i < images.length; i++) {
+            var picture = new javax.swing.JPanel(new java.awt.BorderLayout());
+            picture.add(new javax.swing.JLabel(captions[i], javax.swing.SwingConstants.CENTER), java.awt.BorderLayout.NORTH);
+            double scale = Math.min(1, Math.min(900.0 / images.length / images[i].getWidth(), 550.0 / images[i].getHeight()));
+            var icon = new javax.swing.ImageIcon(images[i].getScaledInstance(
+                    Math.max(1, (int)(images[i].getWidth() * scale)),
+                    Math.max(1, (int)(images[i].getHeight() * scale)), java.awt.Image.SCALE_FAST));
+            picture.add(new javax.swing.JLabel(icon), java.awt.BorderLayout.CENTER);
+            pictures.add(picture);
         }
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-        save(path, seed, option);
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
+        frame.add(pictures);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
+
+
+void main() {
+    String input = IO.readln("Angle 10..70 (blank/default 28, q quits): ");
+    if (input == null || input.strip().equalsIgnoreCase("q")) return;
+    try {
+        var option = readAngle(input);
+        IO.println("Chosen value: " + option);
+        showImages("Fractal Tree Garden", new String[]{"Value " + option}, new java.awt.image.BufferedImage[]{render(42, option)});
+    } catch (IllegalArgumentException failure) {
+        IO.println("Invalid input: " + failure.getMessage());
     }
 }
 // </editor-fold>
@@ -193,7 +196,6 @@ void main(String[] args) throws Exception {
 ///   type.
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
 /// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
 /// - `||` — At least one condition must be true; if the first is true, Java skips the second.
 /// - `!` — In front of a boolean expression, reverses true and false.
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
@@ -203,10 +205,6 @@ void main(String[] args) throws Exception {
 /// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
 /// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
 ///   count.
 /// - `new` — Creates a fresh value or object, such as a new array or window.
@@ -216,11 +214,8 @@ void main(String[] args) throws Exception {
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 /// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
 // </editor-fold>
 

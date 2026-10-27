@@ -113,29 +113,39 @@ boolean bank() {
 }
 
 void main() {
-    Random random = new Random();
+    reset();
+    var random = new Random();
     IO.println("PIG: two players race to 50 banked points.");
-    IO.println("Roll 1: lose this turn's points. Bank: keep them and pass the die.");
+    IO.println("d rolls, b banks. A 1 should lose this turn's points; banking keeps them and passes play. /r restarts; /q quits.");
+    boolean showState = true;
     while (true) {
-        IO.println("Scores: P1 " + scores[0] + ", P2 " + scores[1] + "; turn total " + turnTotal);
+        if (showState) {
+            IO.println("Scores: P1 " + scores[0] + ", P2 " + scores[1] + "; turn total " + turnTotal);
+            if (winner != -1) IO.println("Player " + (winner + 1) + " wins!");
+            showState = false;
+        }
+        String input = IO.readln(winner == -1 ? "Player " + (player + 1) + ": d roll, b bank, /r, /q: " : "Enter or /r: new round; /q: quit: ");
+        if (input == null) return;
+        input = input.strip().toLowerCase(Locale.ROOT);
+        if (input.equals("q") || input.equals("/q")) return;
+        if (input.equals("r") || input.equals("/r") || (winner != -1 && input.isEmpty())) {
+            reset(); showState = true; continue;
+        }
         if (winner != -1) {
-            IO.println("Player " + (winner + 1) + " wins!");
+            IO.println("Round finished. Press Enter or /r for a new round; /q quits.");
+            continue;
         }
-        String input = IO.readln(winner == -1 ? "Player " + (player + 1) + ": d roll, b bank, r restart, q quit: " : "r replay, q quit: ");
-        if (input == null || input.trim().equalsIgnoreCase("q")) {
-            return;
-        }
-        input = input.trim().toLowerCase(Locale.ROOT);
-        if (input.equals("r")) {
-            reset();
-        } else if (input.equals("d") && winner == -1) {
+        if (input.equals("d")) {
+            int before = player;
             int die = random.nextInt(1, 7);
             roll(die);
-            IO.println(die == 1 ? "Rolled 1. Turn lost!" : "Rolled " + die + ".");
+            IO.println("Player " + (before + 1) + " rolled " + die + ". " + (player != before ? "Turn passed; the turn total is now " + turnTotal + "." : "The same player continues."));
+            showState = true;
         } else if (input.equals("b") && bank()) {
-            IO.println("Points banked.");
+            IO.println("Turn points banked.");
+            showState = true;
         } else {
-            IO.println("Use d to roll, b to bank a positive turn total, r or q.");
+            IO.println("Use d to roll, b to bank a positive turn total, /r or /q.");
         }
     }
 }
@@ -162,7 +172,6 @@ void main() {
 /// - `boolean` — A value that is either true or false.
 /// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
 /// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `'` — Single quotes enclose one character, such as a board marker.
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
 /// - `==` — Compares primitive values. For text contents, use equals instead.
 /// - `!=` — Checks that two values differ.
@@ -187,6 +196,6 @@ void main() {
 /// - `while` — Keeps repeating its body while its condition stays true.
 /// - `null` — No object is present. IO.readln returns null when the input stream ends.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 // </editor-fold>
 

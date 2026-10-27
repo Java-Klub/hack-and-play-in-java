@@ -84,19 +84,28 @@ String story(String name, String creature, String place, String object) {
         + "By midnight, the " + creature + " had promoted the " + object + " to manager.\n";
 }
 
-void main(String[] args) {
+void main() {
     String[] labels = {"A name", "A creature", "A place", "An object"};
-    String[] words = new String[4];
-    for (int i = 0; i < 4; i++) {
-        words[i] = args.length > i ? args[i] : IO.readln(labels[i] + " (q to quit): ");
-        if (words[i] == null || words[i].equalsIgnoreCase("q")) {
-            return;
+    IO.println("Build a strange story. Each answer may be a complete phrase; /q quits.");
+    while (true) {
+        String[] words = new String[4];
+        for (int i = 0; i < words.length;) {
+            String input = IO.readln(labels[i] + " (/q to quit): ");
+            if (input == null || input.equalsIgnoreCase("/q")) return;
+            String cleaned = cleanWord(input);
+            if (cleaned.isBlank() || cleaned.length() > 40) {
+                IO.println("Use a nonblank phrase of at most 40 characters. This answer has not been accepted.");
+                continue;
+            }
+            words[i++] = input;
         }
-    }
-    try {
         IO.print(story(words[0], words[1], words[2], words[3]));
-    } catch (IllegalArgumentException invalid) {
-        IO.println(invalid.getMessage());
+        while (true) {
+            String input = IO.readln("Enter or /r: new story; /q: quit: ");
+            if (input == null || input.strip().equalsIgnoreCase("/q")) return;
+            if (input.isBlank() || input.strip().equalsIgnoreCase("/r")) break;
+            IO.println("The story is finished. Press Enter or /r for a new story; /q quits.");
+        }
     }
 }
 
@@ -129,8 +138,6 @@ void main(String[] args) {
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
 /// - `:` — In for (int value : values), reads each element in turn. It also separates the two
 ///   alternatives of ? : or follows a switch label.
 /// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
@@ -140,10 +147,9 @@ void main(String[] args) {
 /// - `if` — Runs its body only when the condition in parentheses is true.
 /// - `for` — Repeats a block over a range or a sequence of values.
 /// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
 /// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line. print writes text without adding a newline.
+///   readln waits for a whole line of input.
 // </editor-fold>
 

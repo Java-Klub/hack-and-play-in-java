@@ -17,8 +17,8 @@ import javax.swing.Timer;
 /// accelerationNow connects current state to that rule, allowing an alternative rule without rewriting
 /// integration or drawing.
 ///
-/// After Run File, adjust Length and Gravity, use Pause/Run to stop motion and Clear or Reset to restart
-/// your trace experiment.
+/// After Run File, adjust Length and Gravity to explore the pendulum trace; Pause/Run controls
+/// motion and Reset clears and restarts it.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F34 explains the Java skill; Read this code explains these lines.
@@ -62,9 +62,9 @@ double accelerationNow() {
 ///
 /// ### What the prepared part already does
 ///
-/// step applies accelerationNow, damping and a fixed time increment, then draws between old and new bob
-/// positions. The supplied Acceleration interface, default rule, sliders and trace canvas keep those
-/// other responsibilities separate.
+/// step obtains the current acceleration through accelerationNow and paints the bob trace. Length
+/// and Gravity are the experiment inputs; Pause/Run controls motion and Reset clears and restarts
+/// it.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -92,7 +92,7 @@ Point bob() {
     return new Point(300 + (int)(length * Math.sin(angle)), 70 + (int)(length * Math.cos(angle)));
 }
 
-/// Supplied restart: create the initial model; no native window is created here.
+/// Restore the starting game state.
 void reset(long seed) {
     angle = 0.9;
     velocity = 0;
@@ -134,21 +134,19 @@ void showWindow() {
         }
     };
     canvas.setPreferredSize(new Dimension(600, 450));
+    canvas.setBackground(Color.BLACK);
     var controls = new JPanel();
     var lengthControl = new JSlider(80, 230, 180);
+    lengthControl.setPreferredSize(new Dimension(110, 25));
     lengthControl.addChangeListener(event -> length = lengthControl.getValue());
     var gravityControl = new JSlider(50, 600, 300);
+    gravityControl.setPreferredSize(new Dimension(110, 25));
     gravityControl.addChangeListener(event -> gravity = gravityControl.getValue());
     var pause = new JButton("Pause / Run");
     pause.addActionListener(event -> running = !running);
-    var clear = new JButton("Clear");
-    clear.addActionListener(event -> {
-        trace = new java.awt.image.BufferedImage(600, 450, java.awt.image.BufferedImage.TYPE_INT_RGB);
-        canvas.repaint();
-    });
     var reset = new JButton("Reset");
     reset.addActionListener(event -> {
-/// Supplied restart: create the initial model; no native window is created here.
+/// Restore the starting game state.
         reset(42);
         canvas.repaint();
     });
@@ -157,7 +155,6 @@ void showWindow() {
     controls.add(new JLabel("Gravity"));
     controls.add(gravityControl);
     controls.add(pause);
-    controls.add(clear);
     controls.add(reset);
     var timer = new Timer(20, event -> {
         if (running) {
@@ -184,13 +181,9 @@ interface Acceleration { double at(double angle, double length); }
 Acceleration acceleration = (a, len) -> -gravity / len * Math.sin(a);
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// accelerationNow supplies the real angular acceleration used by step.
-/// reset restores motion; bob/drawing and sliders are supplied; the window owns timer cleanup.
-void main(String[] args) {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
-/// Supplied restart: create the initial model; no native window is created here.
+/// The supplied part supports only the main game or experiment described above.
+void main() {
+/// Restore the starting game state.
     reset(42);
     SwingUtilities.invokeLater(this::showWindow);
 }
@@ -215,13 +208,11 @@ void main(String[] args) {
 /// - `int` — A type for whole numbers within a fixed range.
 /// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
 /// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
 /// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
 /// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
 /// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
 ///   type.
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
 /// - `!` — In front of a boolean expression, reverses true and false.
 /// - `++` — Increases a numeric value by one.
 /// - `+=` — Adds to the old value and stores the result back under the same name.
@@ -232,8 +223,6 @@ void main(String[] args) {
 /// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `:` — In for (int value : values), reads each element in turn. It also separates the two
 ///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
 /// - `new` — Creates a fresh value or object, such as a new array or window.
 /// - `return` — Ends this method call, optionally handing a result back to its caller.
 /// - `if` — Runs its body only when the condition in parentheses is true.
@@ -247,7 +236,7 @@ void main(String[] args) {
 ///   background first.
 /// - `interface` — Describes a role that different implementations can fulfil. The caller can use that
 ///   role without choosing its internals.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
+/// - `null` — No object is present.
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
 /// - `JFrame` — A desktop window supplied by the JDK’s Swing library.

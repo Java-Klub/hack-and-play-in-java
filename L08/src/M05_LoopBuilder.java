@@ -190,31 +190,42 @@ void display() {
 }
 
 /// main(): Starts the real game loop: display, read a command, validate, replay or quit.
+/// Prepared console flow: type a command and press Enter. A valid command redraws the board.
+/// Rejected input leaves the display alone; after a round, Enter or /r starts again and /q quits.
 void main() {
     reset();
     IO.println("Loop Builder");
+    IO.println("Choose edges to make exactly one closed loop. Each cell's number counts the chosen edges around it.");
     IO.println("Enter edge1-24 to toggle it. One closed loop must match all numbered cells. /r restarts; /q quits.");
+    IO.println("Example: enter 1 to toggle edge 01. ## means chosen; enter the same edge again to remove it.");
+    display();
     while (true) {
-        display();
-        if (!outcome.isEmpty()) {
-            IO.println(outcome);
-        }
-        String input = IO.readln("> ");
-        if (input == null || input.strip().equalsIgnoreCase("/q")) {
+        String input = IO.readln(outcome.isEmpty() ? "> " : "Enter or /r: new round; /q: quit: ");
+        if (input == null) {
             return;
         }
-        if (input.strip().equalsIgnoreCase("/r")) {
+        input = input.strip();
+        if (input.equalsIgnoreCase("/q") || input.equalsIgnoreCase("q")) {
+            return;
+        }
+        if (input.equalsIgnoreCase("/r") || input.equalsIgnoreCase("r")
+                || (!outcome.isEmpty() && input.isEmpty())) {
             reset();
+            display();
             continue;
         }
         if (!outcome.isEmpty()) {
-            IO.println("Round finished. /r restarts; /q quits.");
+            IO.println("That round is over. Press Enter to play again, or /q to quit.");
             continue;
         }
         try {
-            command(input.strip());
+            command(input);
+            display();
+            if (!outcome.isEmpty()) {
+                IO.println(outcome);
+            }
         } catch (IllegalArgumentException invalid) {
-            IO.println("Invalid move or command. Enter edge1-24 to toggle it. One closed loop must match all numbered cells. /r restarts; /q quits.");
+            IO.println("Invalid move. " + "Enter edge1-24 to toggle it. One closed loop must match all numbered cells. /r restarts; /q quits.");
         }
     }
 }
@@ -280,6 +291,6 @@ void require(boolean valid) {
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
 /// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 // </editor-fold>
 

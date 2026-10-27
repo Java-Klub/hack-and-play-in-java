@@ -131,7 +131,10 @@ void refresh() {
         buttons[i].setText(value == 0 ? "?" : Integer.toString(value));
         buttons[i].setEnabled(!matched[i] && pairs < 6);
     }
-    status.setText((pairs == 6 ? "All pairs found! " : "Pairs: " + pairs + "/6. ") + "Attempts: " + attempts);
+    String guidance = pairs == 6 ? "All pairs found!" : second != -1
+            ? "Not a match: click another covered card." : first != -1
+            ? "Choose a second card." : "Find matching pairs.";
+    status.setText("<html>" + guidance + "<br>Pairs: " + pairs + "/6. Attempts: " + attempts + "</html>");
 }
 
 /// show(): Supplied later topic: Swing button callbacks invoke the model and refresh its visible
@@ -204,7 +207,6 @@ void main() {
 /// - `-` — Subtracts numbers; in front of one number, changes its sign.
 /// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
 ///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
 /// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise

@@ -189,6 +189,10 @@ void showWindow() {
 }
 
 void main() {
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        IO.println("This game needs a graphical display; model checks still work headlessly.");
+        return;
+    }
     restart();
     SwingUtilities.invokeLater(this::showWindow);
 }
@@ -231,11 +235,8 @@ void main() {
 /// - `-` — Subtracts numbers; in front of one number, changes its sign.
 /// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
 ///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
 /// - `:` — In for (int value : values), reads each element in turn. It also separates the two
 ///   alternatives of ? : or follows a switch label.
 /// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element

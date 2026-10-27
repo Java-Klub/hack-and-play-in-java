@@ -20,8 +20,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Projection converts a model position and depth into a screen point. A smaller
 /// safe depth produces a larger offset; the conversion should use the supplied request consistently.
 ///
-/// After Run File, click or drag to start and steer the star tunnel, change speed with Up/Down and press
-/// Space to pause.
+/// After Run File, click or drag to start and steer the star tunnel; Space pauses and R restores
+/// its starting view.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F29 explains the Java skill; Read this code explains these lines.
@@ -62,8 +62,8 @@ Point2D.Double project(Star star, double depth) {
 ///
 /// ### What the prepared part already does
 ///
-/// step moves stars toward the viewer and respawns those that pass the camera. The supplied renderer
-/// calls project for visible positions and trails; input controls speed, steering, pause and reset.
+/// step moves stars at one fixed speed and draw uses project for the perspective. Click/drag steers
+/// and starts; Space pauses and R restores the view.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -111,9 +111,6 @@ void aim(int x, int y) {
     centreY = Math.max(0, Math.min(HEIGHT, y));
 }
 
-void adjust(double amount) {
-    speed = Math.max(1, Math.min(12, speed + amount));
-}
 
 /// Supplied bounded update: one call means one model step; the active repair is described above.
 void step() {
@@ -150,8 +147,6 @@ void key(int code, boolean pressed) {
     if (pressed) {
         switch (code) {
             case KeyEvent.VK_SPACE -> paused = !paused;
-            case KeyEvent.VK_UP -> adjust(1);
-            case KeyEvent.VK_DOWN -> adjust(-1);
         }
     }
 }
@@ -212,7 +207,7 @@ void showWindow() {
     });
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.add(panel);
-    var help = new JLabel("<html><div style=\"text-align:center\">Click/drag: steer + start   Space: pause   Up/Down: speed   R: reset</div></html>", SwingConstants.CENTER);
+    var help = new JLabel("<html><div style=\"text-align:center\">Click/drag: steer + start   Space: pause   R: reset</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
     frame.add(help, BorderLayout.SOUTH);
     frame.pack();
@@ -224,8 +219,7 @@ void showWindow() {
 }
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// project turns model values into screen points and is called by the real drawing path.
-/// Input changes model parameters; draw only reads them; the supplied UI owns timer and close behaviour.
+/// The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

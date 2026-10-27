@@ -16,8 +16,7 @@ import javax.swing.Timer;
 /// **Today you learn:** A lifecycle guard must describe when an update is permitted, including every stop
 /// state. One tick should not alter a game already marked won or over.
 ///
-/// After Run File, move the mouse to aim the bat and bounce the ball into bricks; press R for a new
-/// round.
+/// After Run File, read the board, then press Space or click to start; move the mouse to aim the bat. Clear all 18 bricks before three misses; R resets and waits for another start.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F30 explains the Java skill; Read this code explains these lines.
@@ -176,11 +175,16 @@ void draw(Graphics g) {
 /// Supplied Swing UI: create it on the EDT; timer cleanup stays with the window.
 void showWindow() {
     var frame = new JFrame("Breakout - Brick Bash");
+    boolean[] launched = {false};
     var panel = new JPanel() {
         @Override protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 /// Supplied drawing: reads model values; repainting is not another turn.
             draw(g);
+            if (!launched[0]) {
+                g.setColor(Color.WHITE);
+                g.drawString("Space or click to start", 20, 65);
+            }
         }
     };
     panel.setPreferredSize(new Dimension(WIDTH, HEIGHT + 42));
@@ -191,12 +195,19 @@ void showWindow() {
     });
     panel.addKeyListener(new KeyAdapter() {
         @Override public void keyPressed(KeyEvent event) {
-            if (event.getKeyCode() == KeyEvent.VK_R) restart();
+            if (event.getKeyCode() == KeyEvent.VK_SPACE) launched[0] = true;
+            if (event.getKeyCode() == KeyEvent.VK_R) { restart(); launched[0] = false; }
+        }
+    });
+    panel.addMouseListener(new MouseAdapter() {
+        @Override public void mousePressed(MouseEvent event) {
+            launched[0] = true;
+            panel.requestFocusInWindow();
         }
     });
     var timer = new Timer(16, event -> {
 /// Supplied bounded update: one call means one model step; the active repair is described above.
-        step();
+        if (launched[0]) step();
         panel.repaint();
     });
     frame.addWindowListener(new WindowAdapter() {
@@ -213,8 +224,7 @@ void showWindow() {
 }
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// step is the active boundary; the model exposes it for deterministic checks without a window.
-/// restart restores initial fields; draw reads state; showWindow supplies listeners, one timer and window-close cleanup.
+/// The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();
