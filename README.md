@@ -27,7 +27,7 @@ Začni tady a postupně se propracuj k bludištím, arkádám, generovaným obr�
 
 ## Co se naučíš
 
-| Tvoje rostoucí výbava | Java skills (dovednosti), které využiješ |
+| Co budeš dělat | Java skills (dovednosti), které využiješ |
 | --- | --- |
 | Čti a rozhoduj se | Execution order (pořadí provádění), variables (proměnné), strings (řetězce), arithmetic (výpočty), conditions (podmínky), methods (metody) a loops (smyčky) |
 | Postav svět | Arrays (pole), grids (mřížky), records (datové záznamy), enums (výčtové typy), `List`, `Map`, `Set` a independent copies (nezávislé kopie) |
@@ -38,15 +38,8 @@ Průvodce najdeš **přímo v kódu**: krátká vysvětlení, vyložené příkl
 
 ## Začni hrát
 
-1. Připrav si **NetBeans a JDK 26 nebo novější**. Projekty cílí na Javu 26 bez preview features (předběžných prvků).
+1. Připrav si **NetBeans a JDK 26 nebo novější**.
 2. Stáhni si svou jazykovou větev z odkazů nahoře. Přes **File → Open Project** otevři **[L01](L01/)** a v **Source Packages** najdi `M01_CafeWallLab.java`.
 3. Zvol **Run → Run File**. Přečti misi, uprav kód, použij **Save → Test File** a hraj znovu. První neúspěšná check (kontrola) je záměrná stopa; `PASS` znamená shodu s ověřenými případy.
 
 Pro zvídavé začátečníky, programátorské kluby i společné lekce s učitelem. Když nějaký nápad potřebuje další kolo, vyber si další hru.
-
-<details>
-<summary>Pro učitele · hotová řešení</summary>
-
-[English solutions](https://github.com/Java-Klub/hack-and-play-in-java/tree/solution) · [Česká řešení](https://github.com/Java-Klub/hack-and-play-in-java/tree/reseni)
-
-</details>
