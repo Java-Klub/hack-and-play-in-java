@@ -12,9 +12,33 @@
 /// Use Run File and look in Output for the five-line sign; after repairing it, try reading it from
 /// farther away.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F02 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 String bannerMessage() {
     return "     ";
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F02">
+/// A String literal is text written between double quotes. Those outside quotes tell Java where the
+/// text begins and ends; they are not printed. Digits inside quotes are text too. An expression, by
+/// contrast, can calculate a value before printing it.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// IO.println("Shelf 4");
+/// IO.println(4 + 2);
+/// IO.println("Shelf \"B\"");
+/// ```
+///
+/// Predict the three lines. They are `Shelf 4`, `6`, and `Shelf "B"`. In the last literal, each `\"`
+/// represents one quote belonging to the text. Its backslash is notation, not another printed
+/// character. `IO.println` prints its argument and ends the line. A space inside a literal remains a
+/// real space; changing comments does not change the printed message.
+///
+/// Now predict `IO.println(4 + 5);` and `IO.println("4 + 5");`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -33,12 +57,24 @@ String bannerMessage() {
 /// default message and prints the result. This font supports A B C J L U V ! and spaces.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Spaces are real characters, but this font leaves them blank.
-/// 2. Keep the text inside one pair of double quotes.
-/// 3. The complete return statement is return "JAVA CLUB!";
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// This time the result is text in NetBeans **Output**, not a separate window or file. The starter
+/// prints five rows of spaces and then finishes normally; blank output is the fault you are
+/// investigating. Keep the output's fixed-width lettering visible by widening the panel. The supplied
+/// font supports only the listed letters, `!` and spaces, so arbitrary text may be rejected. A
+/// comment describing a new sign cannot change the message returned by bannerMessage.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Spaces are real characters, but this font leaves them blank.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Keep the text inside one pair of double quotes.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// The complete return statement is return "JAVA CLUB!";
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

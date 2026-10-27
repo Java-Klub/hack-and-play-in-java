@@ -18,9 +18,34 @@ import javax.imageio.ImageIO;
 /// Use Run File to save truchet-tile-lab.png, then open it and compare its winding tiles with the LEFT
 /// and RIGHT counts at the top.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F24 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void countOrientation(String orientation) {
     orientationCounts.put(orientation, 1);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F24">
+/// ### Map: look up a value by its key
+///
+/// A `Map<String, Integer>` associates text keys with integer values. Each key has at most one stored
+/// value.
+///
+/// ```java
+/// Map<String, Integer> badges = new HashMap<>();
+/// badges.put("moon", 4);
+/// IO.println(badges.getOrDefault("moon", 0));
+/// IO.println(badges.getOrDefault("sun", 0));
+/// ```
+///
+/// The output is `4`, then `0`. `getOrDefault(key, fallback)` reads an existing value, or returns the
+/// fallback when the key is absent. This lookup does not insert anything. `put(key, value)` stores a
+/// value and replaces any previous value for that key; it does not add numbers automatically. Use
+/// `containsKey(key)` when you need to distinguish absence explicitly. These examples do not store
+/// null values.
+///
+/// Predict: after `badges.put("moon", 9)`, what will the same two lookups return?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -35,12 +60,16 @@ void countOrientation(String orientation) {
 /// final image caption reads the same map; seed handling and PNG output are prepared.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. LEFT and RIGHT are separate keys.
-/// 2. A missing key means zero previous tiles.
-/// 3. Store previous count plus one, not a constant one.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// LEFT and RIGHT are separate keys.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// A missing key means zero previous tiles.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Store previous count plus one, not a constant one.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

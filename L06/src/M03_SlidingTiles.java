@@ -17,6 +17,9 @@ import java.awt.GridLayout;
 ///
 /// Run File and click a numbered tile immediately beside the gap to slide it into the empty space.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F14 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void reset(long seed) {
     for (int i = 0; i < 9; i++) {
         tiles[i] = (i + 1) % 9;
@@ -37,6 +40,27 @@ void reset(long seed) {
     int moves = 0;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Recall · F14">
+/// ### Scope: which storage does this name mean?
+///
+/// A field belongs to the current object and can survive between method calls. A local variable
+/// belongs to one call or block. A declaration includes a type; assignment to an existing name does
+/// not declare another variable. A local name can shadow a field with the same spelling.
+///
+/// ```java
+/// int volume = 7;
+///
+/// void whisper() {
+///     int volume = 2;
+///     IO.println(volume);
+/// }
+/// ```
+///
+/// `whisper()` prints two while the field stays seven: the local declaration created separate
+/// storage. Predict a later field read; `this.volume` explicitly names the field when needed. Which
+/// value should survive several calls, and which value belongs to only one temporary calculation?
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
 ///
@@ -51,12 +75,16 @@ void reset(long seed) {
 /// through legal moves so the puzzle stays solvable; button callbacks and drawing are supplied.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The seed controls tile order, not the move counter.
-/// 2. The counter shown by refresh() is the field declared above the methods.
-/// 3. Remove the local int declaration from the reset assignment.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The seed controls tile order, not the move counter.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The counter shown by refresh() is the field declared above the methods.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Remove the local int declaration from the reset assignment.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

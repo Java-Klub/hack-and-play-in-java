@@ -10,9 +10,30 @@
 ///
 /// Run File, then take turns typing an unclaimed edge number from 1 to 12 and pressing Enter.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F16 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int[] box(int n) {
     return new int[]{0, 1, 6, 7};
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F16">
+/// ### Arrays: the position matters
+///
+/// An array keeps a fixed number of values of one element type. Square brackets select a position:
+/// the first index is zero, and `length` is the count. Reading one element does not alter the others.
+/// An index must exist before it is used; an empty array has no first element.
+///
+/// ```java
+/// String[] tools = {"pen", "tape", "chalk"};
+/// int chosen = 1;
+/// IO.println(tools[chosen]);
+/// IO.println(tools.length);
+/// ```
+///
+/// These statements belong inside a method. Index one selects `tape`; the count is three. What
+/// changes if `chosen` becomes two? Which index would be the first invalid one?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -28,12 +49,26 @@ int[] box(int n) {
 /// handles scores and extra turns; those rules are already supplied.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Edges are values too
 ///
-/// 1. A box number gives row n / 2 and column n % 2.
-/// 2. Horizontal edges occupy slots 0-5; vertical edges start at 6.
-/// 3. Return top, bottom, left and right in one new int[].
+/// The returned int array lists four edge indices; it does not list the four corners. Draw the
+/// displayed board and label its edges with internal indices, one less than the printed numbers. For
+/// a chosen box, find its top, bottom, left and right edges separately. A `new int[]{...}` groups
+/// those four numbers into a result. Predict one box away from the top-left before writing a general
+/// expression for n.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// A box number gives row n / 2 and column n % 2.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Horizontal edges occupy slots 0-5; vertical edges start at 6.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Return top, bottom, left and right in one new int[].
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

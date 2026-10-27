@@ -12,6 +12,9 @@
 /// Use Run File and take 2 stones; compare the bot’s next move from 19 stones, then use r to try the same
 /// opening again.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F07 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int botMove() {
     if (stones == 0) {
         return 0;
@@ -23,6 +26,32 @@ int botMove() {
         return 1;
     }
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F07">
+/// An `if` asks a boolean question. Its body runs only when that question is true. An `else if` asks
+/// another question only after earlier ones failed; the final `else` covers everything remaining.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// int temperature = 10;
+/// if (temperature < 0) {
+///     IO.println("Frozen");
+/// } else if (temperature < 20) {
+///     IO.println("Cool");
+/// } else {
+///     IO.println("Warm");
+/// }
+/// ```
+///
+/// With ten, this prints `Cool`: the first comparison fails and the second succeeds. Predict the
+/// messages for `-3` and `20`. Each run prints exactly one message. Order matters: a broad earlier
+/// branch can prevent a later one from being reached. Inside a calculation, a branch may `return` a
+/// result instead of printing. That immediately finishes this method call; it does not merely leave
+/// the branch.
+///
+/// Now predict the message at exactly zero degrees.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -45,12 +74,26 @@ int botMove() {
 /// move, not remove stones itself.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Trace seven stones: the remainder is three.
-/// 2. The else branch should differ from the zero-remainder branch.
-/// 3. In else, return remainder instead of 1.
+// <editor-fold defaultstate="expanded" desc="For this game">
+/// The last stone wins; each turn removes one, two or three. Think backwards: a player facing four
+/// stones cannot prevent the other player from taking the rest on the next turn. The same idea
+/// repeats in groups of four: after an opponent takes some, a reply can make the pair of turns remove
+/// four together. For a non-multiple of four, aim to leave the opponent a multiple of four. From an
+/// exact positive multiple, no move guarantees a win against perfect replies; this bot uses the legal
+/// fallback of one. An empty pile has no move. Translate that rule into the two existing branches
+/// without removing stones inside botMove.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Trace seven stones: the remainder is three.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The else branch should differ from the zero-remainder branch.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// In else, return remainder instead of 1.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

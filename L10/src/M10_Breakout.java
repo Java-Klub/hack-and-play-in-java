@@ -19,6 +19,9 @@ import javax.swing.Timer;
 /// After Run File, move the mouse to aim the bat and bounce the ball into bricks; press R for a new
 /// round.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F30 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void step() {
     if (state.equals("PAUSE")) return;
     double previousX = ballX, previousY = ballY;
@@ -63,6 +66,32 @@ void step() {
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Recall · F30">
+/// ### Input requests; a tick advances time
+///
+/// An event can record an intention without changing the whole simulation immediately. A tick
+/// performs one bounded update. Keep drawing separate from both.
+///
+/// ```java
+/// int height = 0;
+/// int pending = 0;
+/// void press() {
+///     pending = 2;
+/// }
+/// void tick() {
+///     height += pending;
+///     pending = 0;
+/// }
+/// ```
+///
+/// After `press()`, height is still 0. One `tick()` changes it to 2 and consumes the request; another
+/// tick leaves it at 2. Repeating the input before that tick still records one request, rather than
+/// two updates. A supplied timer can call tick, but paused or finished games should reject further
+/// advancement. Restart must restore the initial state.
+///
+/// Predict: from the initial state, what happens after press, tick, press, tick?
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
 ///
@@ -79,12 +108,16 @@ void step() {
 /// state.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The game uses PLAY, YOU WIN and GAME OVER.
-/// 2. Allow exactly PLAY rather than guessing one forbidden label.
-/// 3. Put the guard before all updates, including life loss.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The game uses PLAY, YOU WIN and GAME OVER.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Allow exactly PLAY rather than guessing one forbidden label.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Put the guard before all updates, including life loss.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

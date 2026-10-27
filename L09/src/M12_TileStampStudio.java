@@ -19,6 +19,9 @@ import javax.imageio.ImageIO;
 /// After Run File, paint a tile, type 3 into the Repeats box and click Repeats to change the pattern
 /// density.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F31 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean applyRepeats(String text) {
     try {
         int candidate = Integer.parseInt(text.strip());
@@ -29,6 +32,34 @@ boolean applyRepeats(String text) {
         return false;
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F31">
+/// ### Parse, validate, then commit
+///
+/// Parsing converts text; validation checks whether the resulting number is allowed. These can fail
+/// differently.
+///
+/// ```java
+/// int readCopies(String text) {
+///     try {
+///         int n = Integer.parseInt(text.strip());
+///         if (n < 1 || n > 5) {
+///             throw new IllegalArgumentException("Copies: 1..5");
+///         }
+///         return n;
+///     } catch (NumberFormatException invalid) {
+///         return 3;
+///     }
+/// }
+/// ```
+///
+/// `readCopies(" 2 ")` returns `2`: conversion and validation succeed. `"oops"` fails during
+/// conversion and reaches `catch`, returning `3`. A numeric `"8"` converts successfully, then throws
+/// a different exception; this narrow catch does not handle it. `return` ends the method; `throw`
+/// leaves the normal path. Change stored game state only after validation succeeds.
+///
+/// Predict the path for `"five"`, `"5"` and `"0"`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -45,12 +76,27 @@ boolean applyRepeats(String text) {
 /// assembly and PNG export are supplied, so the repair concerns one setting boundary.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Validate before changing the stamp
 ///
-/// 1. Parse into a temporary candidate, not directly into the field.
-/// 2. Both range checks must happen before assignment.
-/// 3. On success assign the candidate rather than the original default.
+/// Parsing and changing the model are different steps. If repeats was 4, malformed `"oops"` must
+/// return false and leave 4 stored. Numeric `"13"` also leaves 4, because it fails the range check;
+/// this rejection uses return false rather than throwing. For accepted `"3"`, the stored repeat count
+/// must reflect that accepted request. Trace the current code: which line stores a constant after the
+/// candidate has already passed validation? Predict the stored value after valid input followed by a
+/// typo; a failed second attempt must not erase the first success.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Parse into a temporary candidate, not directly into the field.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Both range checks must happen before assignment.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// On success assign the candidate rather than the original default.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

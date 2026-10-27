@@ -12,6 +12,9 @@
 /// Use Run File, choose cell 9 and then try it again; compare an accepted empty square with a rejected
 /// occupied square.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F08 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean play(int cell) {
     if (winner != '.' || cell < 1 || cell >= 9 || board[cell - 1] != '.') {
         return false;
@@ -27,6 +30,30 @@ boolean play(int cell) {
     }
     return true;
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F08">
+/// A guard rejects a request before protected work happens. Read the rejected cases first, then ask
+/// what remains allowed. Short-circuit evaluation matters: in `A || B`, Java skips B when A is
+/// already true.
+///
+/// ```java
+/// boolean useSlot(int slot) {
+///     if (slot < 0 || slot >= 4) {
+///         return false;
+///     }
+///     IO.println("Using slot " + slot);
+///     return true;
+/// }
+/// ```
+///
+/// Predict what is printed and returned for `-1`, `3` and `4`. Only three reaches the print. A
+/// rejection must happen before any state change that should not occur. A board access may itself
+/// need a range guard before it is safe to evaluate. `return false` ends this method call; it does
+/// not automatically undo work already performed.
+///
+/// `useSlot(3)` passes three into `slot`; `boolean` declares a true/false result. Now predict slot
+/// zero.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -48,12 +75,16 @@ boolean play(int cell) {
 /// prints numbered cells and reads moves. You repair the gate before these already prepared effects.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The last legal input is nine, not eight.
-/// 2. The range guard must run before board[cell - 1].
-/// 3. Reject cell > 9 rather than cell >= 9.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The last legal input is nine, not eight.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The range guard must run before board[cell - 1].
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Reject cell > 9 rather than cell >= 9.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

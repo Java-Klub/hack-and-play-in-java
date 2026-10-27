@@ -12,12 +12,39 @@
 /// Run File and enter 1 2 3 2 to make the first jump in the short peg puzzle, then use Test File to
 /// challenge your examples.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F33 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 record JumpExample(int row, int column, int toRow, int toColumn, boolean expected) {
 }
 
 JumpExample[] learnerChecks() {
     return new JumpExample[]{new JumpExample(0, 1, 2, 1, true)};
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F33">
+/// ### Checks: choose an example that could disagree
+///
+/// A functional check needs an input and an independently predicted result. A passing example is weak
+/// if a plausible wrong rule gives the same answer. Read this separate calculation and its example;
+/// the equality produces a boolean that reports agreement.
+///
+/// ```java
+/// int twice(int value) {
+///     return value + value;
+/// }
+///
+/// void main() {
+///     boolean agrees = twice(0) == 0;
+///     IO.println(agrees);
+/// }
+/// ```
+///
+/// This prints true: twice zero is zero. An implementation always returning zero also passes. Choose
+/// a different input and derive its expected result yourself. What mistake does your new example
+/// expose? Keep each check's starting data independent so one example cannot accidentally prepare
+/// another.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -35,12 +62,26 @@ JumpExample[] learnerChecks() {
 /// destination. Test File runs your examples on it and on deliberately wrong jump rules.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Permission is a result too
 ///
-/// 1. One valid jump proves that true is possible, not that illegal moves are rejected.
-/// 2. On the start board, (2,0)->(2,2) lacks a middle peg; (0,1)->(1,2) is diagonal.
-/// 3. Add those false cases and an outside coordinate; keep the valid (0,1)->(2,1) case.
+/// Every JumpExample asks about the same fixed starting board, rather than continuing the previous
+/// example's move. Read `expected` as permission, not success at solving the puzzle. A legal move
+/// needs a peg at the start, a jumped peg between the endpoints, and an empty destination in a
+/// straight line. Predict both an accepted and a refused request from that opening. Which single part
+/// of the contract would a rule accepting every request ignore?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// One valid jump proves that true is possible, not that illegal moves are rejected.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// On the start board, (2,0)->(2,2) lacks a middle peg; (0,1)->(1,2) is diagonal.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Add those false cases and an outside coordinate; keep the valid (0,1)->(2,1) case.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

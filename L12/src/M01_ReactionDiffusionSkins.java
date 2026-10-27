@@ -19,9 +19,38 @@ import javax.imageio.ImageIO;
 /// Use Run File to generate reaction-diffusion-skins.png, then open the Saved path when the finite
 /// chemical simulation finishes.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F34 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 double reactionAt(int x, int y) {
     return 0;
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F34">
+/// ### Interface: ask a role to do its job
+///
+/// An interface names an operation its implementations provide. The caller can use that role without
+/// choosing the implementation's formula.
+///
+/// ```java
+/// interface Points {
+///     int award(int n);
+/// }
+/// record DoublePoints() implements Points {
+///     public int award(int n) {
+///         return n * 2;
+///     }
+/// }
+/// ```
+///
+/// With `Points rule = new DoublePoints();`, `rule.award(3)` returns 6. `implements Points` promises
+/// the operation; the implementation must supply its public method. The variable rule refers to the
+/// selected object, so call its operation with the current input rather than repeating a fixed
+/// formula in the caller. Another implementation can supply another rule through the same interface.
+///
+/// Predict: what does this implementation return for `rule.award(5)`, and which code would change to
+/// award three times the input?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -37,12 +66,16 @@ double reactionAt(int x, int y) {
 /// already prepared.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Chemistry names a two-value calculation role.
-/// 2. Read a[y][x] and b[y][x], then pass both to the field’s reaction method.
-/// 3. Do not hard-code one formula; the caller must also work when chemistry is replaced.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Chemistry names a two-value calculation role.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Read a[y][x] and b[y][x], then pass both to the field’s reaction method.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Do not hard-code one formula; the caller must also work when chemistry is replaced.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

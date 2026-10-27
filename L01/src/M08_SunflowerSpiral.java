@@ -18,7 +18,32 @@ import javax.imageio.ImageIO;
 /// Use Run File, refresh the project in NetBeans Files and open sunflower-spiral.png to compare the
 /// generated arrangement.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F03 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 double defaultAngle = 180;
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F03">
+/// A variable gives a stored value a name. Its type describes the values it can hold: `int` holds
+/// whole numbers and `double` can hold a fractional part. Initialization supplies the first value;
+/// later assignment replaces it.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// int charge = 4;
+/// charge = charge + 3;
+/// IO.println(charge);
+/// ```
+///
+/// Predict the output. First `charge` stores four. On the second line, Java reads the old value to
+/// calculate the right-hand expression, then stores seven under the same name. `=` is assignment, not
+/// a mathematical claim that both sides remain equal forever. Other statements reading the name now
+/// obtain seven. A name does not update itself: some executed assignment must change its value. A
+/// `final` variable cannot be assigned again.
+///
+/// Now predict the final charge if its initialization uses six instead of four.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -36,12 +61,25 @@ double defaultAngle = 180;
 /// formula.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The current 180-degree turn alternates between two directions.
-/// 2. A decimal point in Java is a dot.
-/// 3. Set double defaultAngle = 137.5; then generate the PNG again.
+// <editor-fold defaultstate="expanded" desc="For this game">
+/// This is the first PNG exporter: Run File finishes after writing the image; it need not open a game
+/// window. Read `Saved:` in Output, open **Window → Files**, expand L01 and refresh its file list if
+/// needed, then open `sunflower-spiral.png`. If an older preview stays visible, close it and reopen
+/// the newly written file. After editing, use Run File to regenerate the image; Test File alone is
+/// not that visual comparison. Java uses a decimal point in source even if your regional number
+/// format uses a comma. The chosen angle is measured in degrees.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The current 180-degree turn alternates between two directions.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// A decimal point in Java is a dot.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Set double defaultAngle = 137.5; then generate the PNG again.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

@@ -20,9 +20,33 @@ import java.io.ByteArrayInputStream;
 /// Use Run File, locate melody.wav in the project’s Files tab and open the saved file in an audio player
 /// to hear your message.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F02 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 String defaultMessage() {
     return "1234";
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F02">
+/// A String literal is text written between double quotes. Those outside quotes tell Java where the
+/// text begins and ends; they are not printed. Digits inside quotes are text too. An expression, by
+/// contrast, can calculate a value before printing it.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// IO.println("Shelf 4");
+/// IO.println(4 + 2);
+/// IO.println("Shelf \"B\"");
+/// ```
+///
+/// Predict the three lines. They are `Shelf 4`, `6`, and `Shelf "B"`. In the last literal, each `\"`
+/// represents one quote belonging to the text. Its backslash is notation, not another printed
+/// character. `IO.println` prints its argument and ends the line. A space inside a literal remains a
+/// real space; changing comments does not change the printed message.
+///
+/// Now predict `IO.println(4 + 5);` and `IO.println("4 + 5");`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -42,12 +66,26 @@ String defaultMessage() {
 /// sound player inside this program.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Only the text between the quotation marks is your message.
-/// 2. This ready-made synthesizer gives digits silent time slots.
-/// 3. Use return "JAVA"; then export and open melody.wav again.
+// <editor-fold defaultstate="expanded" desc="For this game">
+/// This program exports sound instead of opening a game window. After Run File, read the `Saved:`
+/// location in Output. Switch to **Window → Files**, expand L01 and refresh its file list if needed;
+/// find `melody.wav`. Open that saved file with the system's audio player. If NetBeans cannot play
+/// it, locate the printed path in the system file manager and open it there. The four silent slots in
+/// the starter are an intended observation, not a failed sound card. After a source edit, Run File
+/// again to replace the WAV, then reopen it; Test File checks behaviour but does not perform this
+/// listening step.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Only the text between the quotation marks is your message.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// This ready-made synthesizer gives digits silent time slots.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Use return "JAVA"; then export and open melody.wav again.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

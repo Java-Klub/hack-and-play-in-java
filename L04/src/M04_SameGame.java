@@ -13,6 +13,9 @@
 /// Use Run File and look for two same-colour blocks that share an edge despite the early “No groups
 /// remain” message; after your repair, enter the row and column of a block in that group.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F10 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 List<int[]> group(int row, int col) {
     var result = new ArrayList<int[]>();
     if (row < 0 || row >= 5 || col < 0 || col >= 5 || board[row][col] == 0) {
@@ -37,6 +40,30 @@ List<int[]> group(int row, int col) {
     return result;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Recall · F10">
+/// A `while` checks its condition before every pass, including the first. If the condition is false
+/// immediately, its body runs zero times. Something must make progress towards stopping, or
+/// deliberately wait for new input.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// int energy = 5;
+/// while (energy > 0) {
+///     IO.println(energy);
+///     energy -= 2;
+/// }
+/// ```
+///
+/// Predict the printed numbers and the final stored value. The output is `5`, `3`, `1`; afterwards
+/// energy is `-1`, so the next condition fails. The condition is not checked halfway through the
+/// body. `energy -= 2` subtracts two and stores the result; without it, the loop repeats forever.
+/// `return` ends the method; `break` ends the loop. Trace the condition and changing values
+/// separately, especially when the data being searched can grow.
+///
+/// Now predict the trace if energy starts at four.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
 ///
@@ -59,12 +86,26 @@ List<int[]> group(int row, int col) {
 /// gravity, and reset checks whether play can continue; that check also calls your group.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. result becomes nonempty after the first processed cell.
-/// 2. That does not mean the queue has finished.
-/// 3. The while condition should be only !queue.isEmpty().
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// Keep three prepared roles separate: queue holds discovered cells still waiting for a visit; result
+/// holds cells already collected; seen remembers cells already scheduled so two routes cannot add
+/// them twice. queue.remove() takes one waiting coordinate pair out, while result.add adds that cell
+/// to the answer. An answer containing one cell does not imply that the waiting work is empty. The
+/// initial “No groups remain” message comes from the game's own group search before any move; it is
+/// an intended symptom, not a console-input problem. Repair the source and start a new run rather
+/// than trying to restart away the fault.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// result becomes nonempty after the first processed cell.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// That does not mean the queue has finished.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// The while condition should be only !queue.isEmpty().
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

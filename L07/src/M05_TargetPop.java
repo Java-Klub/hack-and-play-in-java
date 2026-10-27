@@ -20,6 +20,9 @@ import javax.swing.Timer;
 /// Run File and click a circle to begin the timed round, then keep clicking targets until the clock
 /// expires.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F21 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 enum Phase {
     READY, RUNNING, FINISHED
 }
@@ -30,6 +33,28 @@ Phase afterTime(long now) {
     }
     return phase;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F21">
+/// ### Enum: one of the named choices
+///
+/// An enum defines a finite set of values of one type. The type name and dot qualify a particular
+/// value. Unlike arbitrary text, a misspelled enum value is a compiler error. A variable holds one
+/// choice at a time; comparing enum values with `==` is appropriate.
+///
+/// ```java
+/// enum Voice {
+///     WHISPER, SING, SHOUT
+/// }
+///
+/// Voice voice = Voice.SING;
+/// IO.println(voice == Voice.SHOUT);
+/// ```
+///
+/// The declaration belongs beside methods; the statements can be read inside a method. The comparison
+/// prints false because SING and SHOUT are distinct values. Predict it after assigning SHOUT. Can
+/// this single variable simultaneously claim SING and SHOUT? Explain what contradictory combinations
+/// separate booleans might allow.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -45,12 +70,16 @@ Phase afterTime(long now) {
 /// the update path; drawing and input both read phase to agree on what is allowed.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. afterTime() receives time explicitly, so the boundary can be tested without waiting.
-/// 2. Only RUNNING can expire; READY and FINISHED must remain unchanged.
-/// 3. At now >= deadline return FINISHED, not READY.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// afterTime() receives time explicitly, so the boundary can be tested without waiting.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Only RUNNING can expire; READY and FINISHED must remain unchanged.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// At now >= deadline return FINISHED, not READY.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

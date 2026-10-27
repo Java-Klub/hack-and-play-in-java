@@ -20,10 +20,34 @@ import javax.swing.Timer;
 /// After Run File, rotate with Left/Right, change grid spacing with Up/Down and press Space to animate
 /// the overlap.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F29 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 Point2D.Double gridPoint(int column, int row, double a) {
     double x = column * spacing, y = row * spacing;
     return new Point2D.Double(WIDTH / 2 + x * Math.cos(a) - y * Math.sin(a), x * Math.sin(a) + y * Math.cos(a));
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F29">
+/// ### Rendering: translate state into pixels
+///
+/// Rendering reads the model and draws what it describes. Screen x increases rightward; screen y
+/// increases downward. Drawing methods often accept the upper-left corner and a size, rather than a
+/// centre.
+///
+/// ```java
+/// int tileX = 3;
+/// int tileY = 2;
+/// int size = 10;
+/// g.fillRect(tileX * size, tileY * size, size, size);
+/// ```
+///
+/// Here `g` is the supplied `Graphics2D` drawing tool. This paints a 10-by-10 square with upper-left
+/// corner `(30, 20)`. The model coordinates stay `(3, 2)`. Repainting should not move objects or
+/// advance a round: a window may request painting many times.
+///
+/// Predict: if only tileY becomes 4, which screen coordinate changes, and by how much?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -40,12 +64,16 @@ Point2D.Double gridPoint(int column, int row, double a) {
 /// optional ticks animate the angle; gridPoint is the shared conversion used for actual drawing.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The local point (0,0) should land at the canvas centre.
-/// 2. The y result needs its centre offset just as x does.
-/// 3. Check (1,0) at a quarter turn to expose axis/sign mistakes.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The local point (0,0) should land at the canvas centre.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The y result needs its centre offset just as x does.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Check (1,0) at a quarter turn to expose axis/sign mistakes.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

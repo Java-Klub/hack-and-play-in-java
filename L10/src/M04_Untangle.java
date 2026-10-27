@@ -18,12 +18,36 @@ import java.awt.geom.Line2D;
 ///
 /// After Run File, drag numbered nodes to uncross the web, or press R to scramble it again.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F29 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void drawNode(Graphics2D g, Point point, int label) {
     g.setColor(new Color(35, 55, 90));
     g.fillOval(point.y - 13, point.x - 13, 26, 26);
     g.setColor(Color.WHITE);
     g.drawString("" + label, point.x - 4, point.y + 4);
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F29">
+/// ### Rendering: translate state into pixels
+///
+/// Rendering reads the model and draws what it describes. Screen x increases rightward; screen y
+/// increases downward. Drawing methods often accept the upper-left corner and a size, rather than a
+/// centre.
+///
+/// ```java
+/// int tileX = 3;
+/// int tileY = 2;
+/// int size = 10;
+/// g.fillRect(tileX * size, tileY * size, size, size);
+/// ```
+///
+/// Here `g` is the supplied `Graphics2D` drawing tool. This paints a 10-by-10 square with upper-left
+/// corner `(30, 20)`. The model coordinates stay `(3, 2)`. Repainting should not move objects or
+/// advance a round: a window may request painting many times.
+///
+/// Predict: if only tileY becomes 4, which screen coordinate changes, and by how much?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -39,12 +63,16 @@ void drawNode(Graphics2D g, Point point, int label) {
 /// points. drawNode only paints one node, so its repair should not change layout or game rules.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. fillOval takes the top-left corner, not the centre.
-/// 2. Subtract the radius from x and y independently.
-/// 3. Use an asymmetric point such as (120,70), not a diagonal point that hides swapped axes.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// fillOval takes the top-left corner, not the centre.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Subtract the radius from x and y independently.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Use an asymmetric point such as (120,70), not a diagonal point that hides swapped axes.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

@@ -11,6 +11,9 @@
 ///
 /// Run File and enter 1 to toggle the first numbered edge, then add other edges to build a single loop.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F18 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int[] vertices(int edge) {
     if (edge < 12) {
         int r = edge / 3;
@@ -22,6 +25,25 @@ int[] vertices(int edge) {
     int c = n % 4;
     return new int[]{r * 4 + c, r * 4 + c + 1};
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F18">
+/// ### Grids: choose the row before the column
+///
+/// In an array of rows, the first index selects a row and the second selects a position within it.
+/// Rows can have different lengths. A neighbour is a displacement from a cell, not another absolute
+/// position. Define the permitted directions before checking whether a candidate exists.
+///
+/// ```java
+/// int[][] mosaic = {{3, 6, 9}, {2, 4, 8}};
+/// int row = 0;
+/// int column = 1;
+/// IO.println(mosaic[row][column + 1]);
+/// ```
+///
+/// The output is nine: row zero and column two select that element. Moving down changes row; moving
+/// right changes column. From the top-right cell, which of those two moves stays inside? For a
+/// diagonal both coordinates change; bounds must be checked before accessing the candidate.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -37,12 +59,26 @@ int[] vertices(int edge) {
 /// check degrees and connectivity; the numbered-cell counts are checked separately.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Cells and their corners use different grids
 ///
-/// 1. Cell rows are width 3, but vertex rows are width 4.
-/// 2. Moving down one vertex row adds 4 to its linear index.
-/// 3. Return r*4+c and (r+1)*4+c for a vertical edge.
+/// A row of two adjacent cells has three corner vertices across it. Similarly, a cell grid needs one
+/// extra vertex row and column. In an unrelated vertex grid of width three, index one lies above
+/// index four: moving down preserves the column and skips three positions. A horizontal edge changes
+/// column; a vertical edge changes row. Draw the vertex indices separately from the cell clues before
+/// predicting each endpoint pair.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Cell rows are width 3, but vertex rows are width 4.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Moving down one vertex row adds 4 to its linear index.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Return r*4+c and (r+1)*4+c for a vertical edge.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

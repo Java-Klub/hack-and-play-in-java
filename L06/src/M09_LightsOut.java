@@ -19,12 +19,39 @@ import java.awt.Color;
 /// Run File and click cells to try extinguishing every light, then use Test File to see which wrong rule
 /// your examples still miss.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F33 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 record CrossExample(int row, int column, int expected) {
 }
 
 CrossExample[] learnerChecks() {
     return new CrossExample[]{new CrossExample(2, 2, 5)};
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F33">
+/// ### Checks: choose an example that could disagree
+///
+/// A functional check needs an input and an independently predicted result. A passing example is weak
+/// if a plausible wrong rule gives the same answer. Read this separate calculation and its example;
+/// the equality produces a boolean that reports agreement.
+///
+/// ```java
+/// int twice(int value) {
+///     return value + value;
+/// }
+///
+/// void main() {
+///     boolean agrees = twice(0) == 0;
+///     IO.println(agrees);
+/// }
+/// ```
+///
+/// This prints true: twice zero is zero. An implementation always returning zero also passes. Choose
+/// a different input and derive its expected result yourself. What mistake does your new example
+/// expose? Keep each check's starting data independent so one example cannot accidentally prepare
+/// another.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -42,12 +69,39 @@ CrossExample[] learnerChecks() {
 /// Test File also tries named wrong rules and reports which one your examples failed to reject.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Derive the expectation before constructing the check
 ///
-/// 1. Start from an all-off board for each example; expected counts lit cells after one flip.
-/// 2. A centre has five cells, an edge has four and a corner has three.
-/// 3. Keep the centre case and add (0,0,3) and (0,2,4); explain which mutant each catches.
+/// Use a different toy to practise: on a three-row, two-column panel, a press lights itself and the
+/// cell immediately below, when present.
+///
+/// ```java
+/// record Probe(int row, int column, int expectedLit) {}
+/// Probe sample = new Probe(0, 1, 2);
+/// ```
+///
+/// Both coordinates are internal indices. That sample's two cells can be listed on paper
+/// independently of any implementation. Now return to the actual cross rule. Each CrossExample starts
+/// from a fresh all-off five-by-five board and makes one click; `expected` counts lit cells
+/// afterwards. Array entries are separated by commas. Draw your own boundary click and list its
+/// distinct affected cells. Which plausible wrong cross would disagree with your expectation? Supply
+/// your own counterexample and explain it before Test File.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Draw an all-off board and mark exactly which cells one chosen click should toggle. Derive the
+/// expected count from those marks before calling the implementation.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The existing click is far from every border. Choose another legal position where the border
+/// changes the shape; name a wrong rule that your new expectation would reject.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Try a corner, counting the clicked cell and only its existing cardinal neighbours. Construct its
+/// CrossExample from your own coordinates and count, then derive a different boundary case that the
+/// corner alone cannot replace.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

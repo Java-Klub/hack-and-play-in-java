@@ -12,6 +12,9 @@
 /// Run File, type 90 and press Enter to grow a pattern, then run again with another rule number from 0 to
 /// 255.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F26 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean[] nextRow(boolean[] current, int rule) {
     boolean[] next = current;
     for (int column = 0; column < current.length; column++) {
@@ -26,6 +29,29 @@ boolean[] nextRow(boolean[] current, int rule) {
     }
     return next;
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F26">
+/// ### Simultaneous updates: read one moment, build another
+///
+/// A simultaneous step gives every calculation the same old data. Write results into separate storage
+/// and publish that storage after finishing the whole pass. Otherwise an earlier write can silently
+/// become a later input, making traversal order part of the rule.
+///
+/// ```java
+/// int[] tones = {2, 5, 9};
+/// int[] shifted = new int[tones.length];
+/// for (int i = 0; i < tones.length; i++) {
+///     shifted[i] = tones[(i + 1) % tones.length];
+/// }
+/// ```
+///
+/// The result is `[5,9,2]`; tones stays `[2,5,9]` because every read uses it unchanged. Would
+/// visiting the indices in reverse order change the result? The new array starts with zero values, so
+/// every required output must be deliberately computed. A copied snapshot and a new output buffer
+/// serve different roles.
+///
+/// Here `% tones.length` wraps the index after the last element back to zero.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -43,14 +69,18 @@ boolean[] nextRow(boolean[] current, int rule) {
 /// each finished generation and then uses nextRow() for the next one; outside cells stay off.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. next=current makes two names for one array; an early write changes a later cell’s input.
-/// 2. A shallow clone would separate one-dimensional boolean values, but a new output array makes
-///   read/write roles clearest.
-/// 3. Allocate new boolean[current.length]; keep every pattern read on current and return next after the
-///   loop.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// next=current makes two names for one array; an early write changes a later cell’s input.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// A shallow clone would separate one-dimensional boolean values, but a new output array makes
+/// read/write roles clearest.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Allocate new boolean[current.length]; keep every pattern read on current and return next after the
+/// loop.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

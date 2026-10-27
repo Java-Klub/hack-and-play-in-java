@@ -13,6 +13,9 @@
 /// Use Run File and enter s to stand on the training total 20, then compare the reported result against
 /// the dealer’s 19.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F07 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 String compareTotals(int human, int house) {
     if (human > 21) {
         return "You bust";
@@ -20,6 +23,32 @@ String compareTotals(int human, int house) {
         return "Dealer wins";
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F07">
+/// An `if` asks a boolean question. Its body runs only when that question is true. An `else if` asks
+/// another question only after earlier ones failed; the final `else` covers everything remaining.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// int temperature = 10;
+/// if (temperature < 0) {
+///     IO.println("Frozen");
+/// } else if (temperature < 20) {
+///     IO.println("Cool");
+/// } else {
+///     IO.println("Warm");
+/// }
+/// ```
+///
+/// With ten, this prints `Cool`: the first comparison fails and the second succeeds. Predict the
+/// messages for `-3` and `20`. Each run prints exactly one message. Order matters: a broad earlier
+/// branch can prevent a later one from being reached. Inside a calculation, a branch may `return` a
+/// result instead of printing. That immediately finishes this method call; it does not merely leave
+/// the branch.
+///
+/// Now predict the message at exactly zero degrees.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -40,12 +69,31 @@ String compareTotals(int human, int house) {
 /// and display are ready.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="expanded" desc="For this game">
+/// Return one of these exact English result strings; the prepared caller prints it:
 ///
-/// 1. Check player bust before comparing which number is larger.
-/// 2. The win condition is house > 21 OR human > house.
-/// 3. Use else if for the win and draw cases before the final else.
+/// - Player above 21: `You bust`, including when both totals exceed 21.
+/// - Otherwise, dealer above 21 or player above dealer: `You win`.
+/// - Otherwise, equal totals: `Draw`.
+/// - Otherwise: `Dealer wins`.
+///
+/// These are priorities, not four independent announcements. For example, player 22 versus dealer 25
+/// is still `You bust`; comparing the larger number first would get this wrong. Predict results for
+/// 20 versus 22, 18 versus 18, and 18 versus 20 before writing branches. Keep the original
+/// capitalization and spaces: a returned message is part of this method's contract. Do not move card
+/// drawing or printing into compareTotals.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Check player bust before comparing which number is larger.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The win condition is house > 21 OR human > house.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Use else if for the win and draw cases before the final else.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

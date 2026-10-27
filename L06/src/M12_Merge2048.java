@@ -12,12 +12,39 @@
 /// Run File and type A followed by Enter to slide left, then try other directions and use Test File to
 /// challenge your row examples.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F33 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 record MergeExample(int[] input, int[] expected, int score) {
 }
 
 MergeExample[] learnerChecks() {
     return new MergeExample[]{new MergeExample(new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}, 0)};
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F33">
+/// ### Checks: choose an example that could disagree
+///
+/// A functional check needs an input and an independently predicted result. A passing example is weak
+/// if a plausible wrong rule gives the same answer. Read this separate calculation and its example;
+/// the equality produces a boolean that reports agreement.
+///
+/// ```java
+/// int twice(int value) {
+///     return value + value;
+/// }
+///
+/// void main() {
+///     boolean agrees = twice(0) == 0;
+///     IO.println(agrees);
+/// }
+/// ```
+///
+/// This prints true: twice zero is zero. An implementation always returning zero also passes. Choose
+/// a different input and derive its expected result yourself. What mistake does your new example
+/// expose? Keep each check's starting data independent so one example cannot accidentally prepare
+/// another.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -34,12 +61,26 @@ MergeExample[] learnerChecks() {
 /// File tries five wrong variants, including one that merges only the first available pair.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Check the whole observable result
 ///
-/// 1. Every example is one four-cell row sliding left; score is the sum of created tile values.
-/// 2. [2,0,2,0] becomes [4,0,0,0], but [2,2,4,0] becomes [4,4,0,0].
-/// 3. Also test [4,4,4,4] -> [8,8,0,0] with score 16; justify each expectation.
+/// A MergeExample contains an input row, an expected row and awarded points. The supplied checker
+/// compares array contents. For orientation, sliding `[0,8,0,2]` left compresses it to `[8,2,0,0]`
+/// without a merge or points. A newly merged tile cannot merge again in the same move. Draw a
+/// different row to test that rule, then choose another that separates moving tiles from awarding
+/// points. Predict both parts before constructing the record.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Every example is one four-cell row sliding left; score is the sum of created tile values.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// [2,0,2,0] becomes [4,0,0,0], but [2,2,4,0] becomes [4,4,0,0].
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Also test [4,4,4,4] -> [8,8,0,0] with score 16; justify each expectation.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

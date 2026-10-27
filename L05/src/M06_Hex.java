@@ -12,6 +12,9 @@
 /// Run File and take the upper-left hex by entering 1 1, then alternate row-and-column choices with a
 /// friend.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F17 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean connected(int who) {
     boolean[][] seen = new boolean[5][5];
     var queue = new ArrayDeque<int[]>();
@@ -41,6 +44,29 @@ boolean connected(int who) {
     return false;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Recall · F17">
+/// ### Traversal: one question at a time
+///
+/// A traversal visits values; a search may stop at the first match, while a count must examine every
+/// relevant value. In a for-each loop, the name before the colon receives one value from the sequence
+/// after it. Keep a running count outside the repeated body so earlier matches survive.
+///
+/// ```java
+/// int[] pulses = {2, 0, 4};
+/// int strong = 0;
+/// for (int pulse : pulses) {
+///     if (pulse > 1) {
+///         strong++;
+///     }
+/// }
+/// IO.println(strong);
+/// ```
+///
+/// The result is two because pulses two and four satisfy the condition. If the question were merely
+/// whether any strong pulse exists, when could you already answer? What should the count be for an
+/// empty array?
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
 ///
@@ -55,12 +81,26 @@ boolean connected(int who) {
 /// calls connected(), and announces a win if the search reaches the far border.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Hex adjacency and the supplied work queue
 ///
-/// 1. The printed rows are staggered, not square cells.
-/// 2. Besides four straight offsets, cells touch at (+1,-1) and (-1,+1).
-/// 3. Add those two directions; keep seen[][] and the queue logic unchanged.
+/// The printed rows slant right. A cell has six touching neighbours: sketch two neighbouring
+/// staggered rows and follow shared sides rather than square-grid diagonals. A direction pair is a
+/// row offset followed by a column offset. The supplied `ArrayDeque` is a work queue: `add` schedules
+/// a cell, `remove` takes the next one, and `seen` prevents repeated scheduling. You only change the
+/// neighbourhood definition. Predict a connection that crosses between staggered rows.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The printed rows are staggered, not square cells.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Besides four straight offsets, cells touch at (+1,-1) and (-1,+1).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Add those two directions; keep seen[][] and the queue logic unchanged.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

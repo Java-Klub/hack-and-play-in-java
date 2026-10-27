@@ -13,6 +13,9 @@
 /// After Run File, press Enter for Vigenere and again for LEMON, then type ATTACK AT DAWN! to make an
 /// encoded postcard.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F35 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 String transform(String text, Cipher cipher, boolean decode) {
     return switch (cipher) {
         case Caesar(var shift) -> applyText(text, "caesar", Integer.toString(shift), decode);
@@ -20,6 +23,30 @@ String transform(String text, Cipher cipher, boolean decode) {
         case Vigenere(var keyword) -> applyText(text, "caesar", "0", decode);
     };
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F35">
+/// ### Record patterns: choose a shape and unpack its data
+///
+/// ```java
+/// sealed interface Badge permits Name, Stars {}
+/// record Name(String text) implements Badge {}
+/// record Stars(int count) implements Badge {}
+/// String label(Badge badge) {
+///     return switch (badge) {
+///         case Name(var text) -> text;
+///         case Stars(var n) when n > 0 -> n + " stars";
+///         case Stars(var n) -> "none";
+///     };
+/// }
+/// ```
+///
+/// `label(new Stars(2))` returns `"2 stars"`. Sealed closes the alternatives; permits lists them. A
+/// record pattern matches its record type and gives component values local names, in declaration
+/// order. `var` infers their types. The `when` guard must also pass; otherwise matching continues.
+/// The last Stars case handles nonpositive counts. Every permitted alternative needs handling here.
+///
+/// Predict: which case handles `new Stars(0)`, and what text does `new Name("Nova")` produce?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -36,12 +63,27 @@ String transform(String text, Cipher cipher, boolean decode) {
 /// secure messaging.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Match the card, then use its own data
 ///
-/// 1. The matched keyword belongs to this Vigenere value.
-/// 2. Use that component, rather than a fixed key or another cipher mode.
-/// 3. applyText already handles letter case, punctuation, key validation and reverse transformation.
+/// For a Vigenere record carrying `"CAT"`, the matched keyword is CAT, regardless of the local
+/// variable's name. Predict whether changing that card to `"DOG"` should change the encoded letters.
+/// Compare two calls with the same message and key but opposite decode values; forwarding the
+/// caller's choice is part of the contract. The prepared applyText accepts a message, a mode name,
+/// its key text and the decode flag. The matching case chooses which prepared algorithm receives
+/// those values. Punctuation should survive that routing choice.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The matched keyword belongs to this Vigenere value.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Use that component, rather than a fixed key or another cipher mode.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// applyText already handles letter case, punctuation, key validation and reverse transformation.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

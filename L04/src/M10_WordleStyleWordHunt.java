@@ -15,6 +15,9 @@
 /// Use Run File and enter ALLEY against the training word LEVEL; compare the printed clue with the two L
 /// letters that can both match elsewhere.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F12 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int[] leftoverLetters(String guess, char[] result) {
     int[] counts = new int[26];
     for (int i = 0; i < 5; i++) {
@@ -27,6 +30,28 @@ int[] leftoverLetters(String guess, char[] result) {
     }
     return counts;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F12">
+/// An accumulator remembers a growing result across passes. Its starting value belongs before the
+/// loop; putting it inside would start the result again for every item. The remembered result can be
+/// text, not only a number.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// String receipt = "Items:";
+/// for (String item : List.of("tea", "cake")) {
+///     receipt += " " + item;
+/// }
+/// ```
+///
+/// Predict receipt after each pass: `Items: tea`, then `Items: tea cake`. `+=` combines the old value
+/// with the new contribution and stores the result. Plain `=` replaces the stored value.
+/// `List.of(...)` supplies the fixed sequence of listed values; the colon visits one item per pass.
+/// Trace the current item and accumulator in two columns to discover whether earlier work survives.
+///
+/// Now predict receipt when the supplied list contains only `"rice"`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -49,12 +74,16 @@ int[] leftoverLetters(String guess, char[] result) {
 /// explains G, Y and the dot. The first round uses LEVEL, while /r chooses a random word.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. For LEVEL versus ALLEY, both L letters remain unmatched initially.
-/// 2. counts[letter] is one prepared counter for that letter.
-/// 3. Use counts[letter] += 1 instead of = 1.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// For LEVEL versus ALLEY, both L letters remain unmatched initially.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// counts[letter] is one prepared counter for that letter.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Use counts[letter] += 1 instead of = 1.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

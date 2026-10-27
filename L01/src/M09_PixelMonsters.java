@@ -18,7 +18,32 @@ import javax.imageio.ImageIO;
 /// Use Run File, accept monster.png and enter seed 42, then refresh Files and open monster.png; reuse
 /// that seed to compare the repaired eyes.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F03 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int eyeColour = Color.BLACK.getRGB();
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F03">
+/// A variable gives a stored value a name. Its type describes the values it can hold: `int` holds
+/// whole numbers and `double` can hold a fractional part. Initialization supplies the first value;
+/// later assignment replaces it.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// int charge = 4;
+/// charge = charge + 3;
+/// IO.println(charge);
+/// ```
+///
+/// Predict the output. First `charge` stores four. On the second line, Java reads the old value to
+/// calculate the right-hand expression, then stores seven under the same name. `=` is assignment, not
+/// a mathematical claim that both sides remain equal forever. Other statements reading the name now
+/// obtain seven. A name does not update itself: some executed assignment must change its value. A
+/// `final` variable cannot be assigned again.
+///
+/// Now predict the final charge if its initialization uses six instead of four.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -39,12 +64,26 @@ int eyeColour = Color.BLACK.getRGB();
 /// symmetric body. write saves the transparent PNG; main asks for its file name and seed.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The two eye pixels already read eyeColour.
-/// 2. Color.WHITE.getRGB() is a prepared way to obtain the white colour value.
-/// 3. Replace Color.BLACK with Color.WHITE in the initialization.
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// When the path prompt appears in Output, press Enter to accept its default filename; then type the
+/// seed number and press Enter again. A seed is an input controlling the prepared random body, not
+/// the eye colour. Use the same seed for both pictures so a changed body does not distract from your
+/// edit. `Color` supplies named palette values such as `BLACK`, `WHITE`, `RED` and `YELLOW`; the
+/// names are case-sensitive. `getRGB()` obtains the integer encoding needed by pixels. You are
+/// choosing a supplied colour, not inventing its numeric encoding or editing two separate eye
+/// positions.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The two eye pixels already read eyeColour.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Color.WHITE.getRGB() is a prepared way to obtain the white colour value.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Replace Color.BLACK with Color.WHITE in the initialization.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

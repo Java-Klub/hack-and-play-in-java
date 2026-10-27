@@ -13,9 +13,37 @@
 /// Use Run File and enter 1 S, 2 O, 3 S and 4 S as separate moves; compare the reward for the final move,
 /// which creates no new SOS.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F13 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int gainedPoints(int before, int after) {
     return after + before;
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F13">
+/// A method packages an operation under one name. Parameters are local names for the information
+/// received on each call; arguments are the actual supplied values. `return` gives one result back to
+/// the caller.
+///
+/// ```java
+/// int remaining(int capacity, int used) {
+///     return capacity - used;
+/// }
+///
+/// void main() {
+///     IO.println(remaining(12, 5));
+///     IO.println(remaining(9, 4));
+/// }
+/// ```
+///
+/// Predict both printed values: seven and five. The comma separates the parameters or arguments, and
+/// their order decides which value each name receives. The names describe roles; they do not fetch
+/// information by magic. This method calculates without printing or changing the supplied program
+/// state. When repairing a calculation, try a second pair of arguments so an accidental fixed answer
+/// cannot hide.
+///
+/// Now predict remaining(10, 6).
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -34,12 +62,25 @@ int gainedPoints(int before, int after) {
 /// supplied.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The parameters are counts from two moments, not two rewards.
-/// 2. An unchanged count must return zero.
-/// 3. Return after - before.
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// before and after count complete SOS lines on the whole board; they are not the two players'
+/// existing scores. If both counts are equal, this move earned no new line. The prepared caller will
+/// add your returned reward to the current player's score. Optional transfer: invent two different
+/// before/after pairs that should give the same reward, then one pair that must give a different
+/// reward. Explain why your rule should handle all three without knowing the board or printing
+/// anything.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The parameters are counts from two moments, not two rewards.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// An unchanged count must return zero.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Return after - before.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

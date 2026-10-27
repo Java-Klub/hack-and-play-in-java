@@ -19,6 +19,9 @@ import javax.swing.Timer;
 /// Run File, choose Fire and click a tree to ignite it, then click Step to inspect how the front moves
 /// before trying Run/Pause.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F26 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int[][] nextForest(int[][] before) {
     int[][] next = before;
     int[][] offsets = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
@@ -39,6 +42,29 @@ int[][] nextForest(int[][] before) {
     return next;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Recall · F26">
+/// ### Simultaneous updates: read one moment, build another
+///
+/// A simultaneous step gives every calculation the same old data. Write results into separate storage
+/// and publish that storage after finishing the whole pass. Otherwise an earlier write can silently
+/// become a later input, making traversal order part of the rule.
+///
+/// ```java
+/// int[] tones = {2, 5, 9};
+/// int[] shifted = new int[tones.length];
+/// for (int i = 0; i < tones.length; i++) {
+///     shifted[i] = tones[(i + 1) % tones.length];
+/// }
+/// ```
+///
+/// The result is `[5,9,2]`; tones stays `[2,5,9]` because every read uses it unchanged. Would
+/// visiting the indices in reverse order change the result? The new array starts with zero values, so
+/// every required output must be deliberately computed. A copied snapshot and a new output buffer
+/// serve different roles.
+///
+/// Here `% tones.length` wraps the index after the last element back to zero.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
 ///
@@ -55,13 +81,27 @@ int[][] nextForest(int[][] before) {
 /// wildfire predictor.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Decide every output cell's next meaning
 ///
-/// 1. Writing into before lets a new fire immediately ignite the next tree in traversal order.
-/// 2. A new zero-filled matrix also makes old fire disappear naturally.
-/// 3. Allocate a fresh 40×60 next matrix; read only before and publish next once after every cell is
-///   computed.
+/// This toy uses zero for empty, one for a tree and two for fire. A new int grid begins empty because
+/// its cells start at zero. The transition contract is: old empty cells stay empty; old fire
+/// disappears; an old tree stays a tree unless an old cardinal neighbour was burning. New fire can
+/// influence only the following generation. Draw a three-tree line with fire at one end and predict
+/// two separate steps. Which data must remain unchanged while the first step is being computed?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Writing into before lets a new fire immediately ignite the next tree in traversal order.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// A new zero-filled matrix also makes old fire disappear naturally.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Allocate a fresh 40×60 next matrix; read only before and publish next once after every cell is
+/// computed.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

@@ -19,11 +19,35 @@ import java.util.HashSet;
 ///
 /// Run File, click a mirror to rotate it, and press Space to trace the beam through your arrangement.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F19 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 record RayState(int x, int y, int dx, int dy) {
     RayState advance() {
         return new RayState(x + dy, y + dx, dx, dy);
     }
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F19">
+/// ### Records: one named value
+///
+/// A record groups related components. Its constructor receives them in declaration order; accessors
+/// such as `ink()` read them. Inside the record, its own methods can use the component names
+/// directly. Making a new value leaves the original components unchanged. Generated `equals` compares
+/// the component values.
+///
+/// ```java
+/// record Frame(String ink, int dots) {
+///     Frame recoloured(String nextInk) {
+///         return new Frame(nextInk, dots);
+///     }
+/// }
+/// ```
+///
+/// Calling `recoloured("gold")` on `new Frame("violet", 6)` returns gold and six; the original stays
+/// violet and six. Would another recolouring back to violet compare equal to the original? The same
+/// names now explain what two otherwise anonymous values mean.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -39,12 +63,26 @@ record RayState(int x, int y, int dx, int dy) {
 /// calls advance() between cells. The supplied painter draws that resulting path.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Predict a value, not a moving object
 ///
-/// 1. A record bundles position and direction into one named value.
-/// 2. advance() must return a new value; it cannot mutate this record.
-/// 3. Pass x+dx, y+dy, dx, dy to the RayState constructor in that order.
+/// Before editing, write the four components of a ray at `(7,3)` whose direction is `(-1,0)`. Predict
+/// the components after one advance: which describe the new position and which still describe
+/// direction? The constructor's argument order follows the record declaration. Then explain why
+/// another variable still referring to the earlier RayState must retain its original components. No
+/// field mutation is needed to describe the next value.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// A record bundles position and direction into one named value.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// advance() must return a new value; it cannot mutate this record.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Pass x+dx, y+dy, dx, dy to the RayState constructor in that order.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

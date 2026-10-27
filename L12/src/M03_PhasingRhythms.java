@@ -21,9 +21,38 @@ import java.io.ByteArrayInputStream;
 /// Use Run File to save phasing.wav, then open it in an audio player and listen for changing accents
 /// between the two rhythms.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F34 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 double mix(double time) {
     return 0.17 * first.sample(time);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F34">
+/// ### Interface: ask a role to do its job
+///
+/// An interface names an operation its implementations provide. The caller can use that role without
+/// choosing the implementation's formula.
+///
+/// ```java
+/// interface Points {
+///     int award(int n);
+/// }
+/// record DoublePoints() implements Points {
+///     public int award(int n) {
+///         return n * 2;
+///     }
+/// }
+/// ```
+///
+/// With `Points rule = new DoublePoints();`, `rule.award(3)` returns 6. `implements Points` promises
+/// the operation; the implementation must supply its public method. The variable rule refers to the
+/// selected object, so call its operation with the current input rather than repeating a fixed
+/// formula in the caller. Another implementation can supply another rule through the same interface.
+///
+/// Predict: what does this implementation return for `rule.award(5)`, and which code would change to
+/// award three times the input?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -38,12 +67,16 @@ double mix(double time) {
 /// tap builds finite pulses, and write saves the bounded result without automatic playback.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Voice describes a time-to-sample role.
-/// 2. Do not call only the first field or use two different times.
-/// 3. Keep the gain outside the sum so both replaceable voices get the same treatment.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Voice describes a time-to-sample role.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Do not call only the first field or use two different times.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Keep the gain outside the sum so both replaceable voices get the same treatment.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

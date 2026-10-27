@@ -19,11 +19,35 @@ import java.util.Arrays;
 /// Run File and repeatedly click a free cell to cycle its number while checking the inequality signs
 /// beside it.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F19 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 record Rule(int x, int y) {
     boolean satisfiedBy(int[][] values) {
         return values[y][x] > values[y][x + 1];
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F19">
+/// ### Records: one named value
+///
+/// A record groups related components. Its constructor receives them in declaration order; accessors
+/// such as `ink()` read them. Inside the record, its own methods can use the component names
+/// directly. Making a new value leaves the original components unchanged. Generated `equals` compares
+/// the component values.
+///
+/// ```java
+/// record Frame(String ink, int dots) {
+///     Frame recoloured(String nextInk) {
+///         return new Frame(nextInk, dots);
+///     }
+/// }
+/// ```
+///
+/// Calling `recoloured("gold")` on `new Frame("violet", 6)` returns gold and six; the original stays
+/// violet and six. Would another recolouring back to violet compare equal to the original? The same
+/// names now explain what two otherwise anonymous values mean.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -39,12 +63,16 @@ record Rule(int x, int y) {
 /// The drawing code places the clue from the same record coordinates.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. x and y belong to this Rule record, not to a global cursor.
-/// 2. A row is values[y]; the neighbour on its right has column x+1.
-/// 3. Return values[y][x] < values[y][x+1], including a false result for equality.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// x and y belong to this Rule record, not to a global cursor.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// A row is values[y]; the neighbour on its right has column x+1.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Return values[y][x] < values[y][x+1], including a false result for equality.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

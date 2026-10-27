@@ -19,6 +19,9 @@ import javax.swing.Timer;
 /// Run File, steer the falling piece with Left and Right, and press Up to try a rotation near the stack
 /// or wall.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F15 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean fits(int[][] cells, int x, int y) {
     px = x;
     py = y;
@@ -30,6 +33,25 @@ boolean fits(int[][] cells, int x, int y) {
     }
     return true;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F15">
+/// ### Contracts: ask without changing the world
+///
+/// A contract describes accepted inputs and the meaning of a result. A pure calculation uses its
+/// inputs without changing other state. A query may read the current model, but it should still leave
+/// that model untouched. Reading an answer and committing an action are separate responsibilities.
+///
+/// ```java
+/// int contrast(int light, int dark) {
+///     return Math.abs(light - dark);
+/// }
+/// ```
+///
+/// `Math.abs` gives the nonnegative magnitude, removing a negative sign. This method can be called
+/// repeatedly without consuming anything. Arguments `(9, 4)` give five: the difference is five.
+/// Predict `(4, 9)`. Which stored values would you compare before and after a query to show that it
+/// caused no side effect? A rejected candidate deserves the same protection.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -45,12 +67,16 @@ boolean fits(int[][] cells, int x, int y) {
 /// falling pieces; clearRows() compacts completed rows. These mechanisms already own the actual changes.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Read the callers: each checks fits before changing position or shape.
-/// 2. A query can run many times while searching a hard drop.
-/// 3. Remove the px/py assignments inside fits; preserve its bounds and occupied-cell checks.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Read the callers: each checks fits before changing position or shape.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// A query can run many times while searching a hard drop.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Remove the px/py assignments inside fits; preserve its bounds and occupied-cell checks.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

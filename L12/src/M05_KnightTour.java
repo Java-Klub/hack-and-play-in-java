@@ -19,6 +19,9 @@ import javax.swing.*;
 /// After Run File, click a green knight move such as zero-based column 1, row 2 from the start, and press
 /// R to restart the tour.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F35 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean apply(Command command) {
     return switch (command) {
         case Move(var xx, var yy) when xx >= 0 && yy >= 0 && xx < 5 && yy < 5 -> move(yy, xx);
@@ -26,6 +29,30 @@ boolean apply(Command command) {
         case Restart() -> { restart(); yield true; }
     };
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F35">
+/// ### Record patterns: choose a shape and unpack its data
+///
+/// ```java
+/// sealed interface Badge permits Name, Stars {}
+/// record Name(String text) implements Badge {}
+/// record Stars(int count) implements Badge {}
+/// String label(Badge badge) {
+///     return switch (badge) {
+///         case Name(var text) -> text;
+///         case Stars(var n) when n > 0 -> n + " stars";
+///         case Stars(var n) -> "none";
+///     };
+/// }
+/// ```
+///
+/// `label(new Stars(2))` returns `"2 stars"`. Sealed closes the alternatives; permits lists them. A
+/// record pattern matches its record type and gives component values local names, in declaration
+/// order. `var` infers their types. The `when` guard must also pass; otherwise matching continues.
+/// The last Stars case handles nonpositive counts. Every permitted alternative needs handling here.
+///
+/// Predict: which case handles `new Stars(0)`, and what text does `new Name("Nova")` produce?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -43,12 +70,28 @@ boolean apply(Command command) {
 /// move routine checks knight distance and visited squares, while drawing highlights legal choices.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Component order carries meaning
 ///
-/// 1. The two var names are components, not a primitive-pattern preview.
-/// 2. Move(1,2) must arrive at x=1,y=2 even though the swapped knight move is also legal.
-/// 3. Keep every closed alternative handled; a bad coordinate returns false before moving.
+/// The declaration `Move(int x, int y)` gives its components an order. Matching a Move created with
+/// values 2 and 1 binds xx to 2 and yy to 1; the local names do not exchange those values. Before
+/// running, predict the requested square and compare it with the square passed to move. On this
+/// board, exchanging the coordinates can still be a legal knight jump, so merely accepting a move is
+/// not enough evidence. Also trace an off-board Move: it should reach the rejecting alternative
+/// without changing the board. Restart is a different alternative, not a pair of coordinates.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Read the Move record declaration: the first component is x and the second is y. The pattern names
+/// receive values in that order.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Move(1,2) must arrive at x=1,y=2 even though the swapped knight move is also legal.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Keep every closed alternative handled; a bad coordinate returns false before moving.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

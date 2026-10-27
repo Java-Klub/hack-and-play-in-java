@@ -11,6 +11,9 @@
 ///
 /// Use Run File and enter d to roll or b to bank your turn; watch what happens when a 1 or a 6 appears.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F07 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean roll(int die) {
     if (winner != -1 || die < 1 || die > 6) {
         return false;
@@ -23,6 +26,32 @@ boolean roll(int die) {
     }
     return true;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F07">
+/// An `if` asks a boolean question. Its body runs only when that question is true. An `else if` asks
+/// another question only after earlier ones failed; the final `else` covers everything remaining.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// int temperature = 10;
+/// if (temperature < 0) {
+///     IO.println("Frozen");
+/// } else if (temperature < 20) {
+///     IO.println("Cool");
+/// } else {
+///     IO.println("Warm");
+/// }
+/// ```
+///
+/// With ten, this prints `Cool`: the first comparison fails and the second succeeds. Predict the
+/// messages for `-3` and `20`. Each run prints exactly one message. Order matters: a broad earlier
+/// branch can prevent a later one from being reached. Inside a calculation, a branch may `return` a
+/// result instead of printing. That immediately finishes this method call; it does not merely leave
+/// the branch.
+///
+/// Now predict the message at exactly zero degrees.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -43,12 +72,16 @@ boolean roll(int die) {
 /// scores remain separate.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Trace die = 1 through the current condition.
-/// 2. The two branch bodies are ready; their selecting condition is wrong.
-/// 3. The if comparison must be die == 1.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Trace die = 1 through the current condition.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The two branch bodies are ready; their selecting condition is wrong.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// The if comparison must be die == 1.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

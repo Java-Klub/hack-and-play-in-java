@@ -25,6 +25,9 @@ import javax.swing.Timer;
 /// Use Run File, press Space to start the pen and use the arrow keys to change the drawing; watch Steps,
 /// then use Test File to examine exact bursts of zero, one and four.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F11 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void burst(int count) {
     if (count < 0 || count > 60) {
         return;
@@ -33,6 +36,28 @@ void burst(int count) {
         step();
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F11">
+/// A counted `for` puts initialization, a continue condition and progress in one header.
+/// Initialization happens once. Then Java checks the condition, runs the body if true, performs
+/// progress, and checks again.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// for (int floor = 2; floor <= 4; floor++) {
+///     IO.println(floor);
+/// }
+/// ```
+///
+/// Predict the visited values: `2`, `3`, `4`. There are three passes, even though the last printed
+/// number is four. The two semicolons separate the header’s three parts; `floor++` adds one after a
+/// pass. The braces group the repeated statements. If the starting value already fails the condition,
+/// no pass occurs. Count positions and gaps separately: three positions have two gaps. Write down a
+/// tiny trace before changing a bound.
+///
+/// Now predict the output if floor starts at five.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -54,12 +79,25 @@ void burst(int count) {
 /// supplied controls handle drift, jitter, reset and scribble.png export.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Try count = 1 with the current starting i.
-/// 2. Counting from zero with i < count gives count passes.
-/// 3. Start int i = 0; keep i < count and i++.
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// Trace the current loop before editing. For count 1, i starts at 1 and the comparison is already
+/// false: zero calls. For count 4, the body runs with i equal to 1, 2 and 3: three calls. Now predict
+/// count 0, then choose a range that meets the stated request for all three cases. Count calls to
+/// step separately from actual pen moves: the supplied step does no movement while paused. Press
+/// Space before judging the visible Steps counter. A timer asks for four calls per burst; repainting
+/// only shows the result. Preserve rejection of counts outside 0–60.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Try count = 1 with the current starting i.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Counting from zero with i < count gives count passes.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Start int i = 0; keep i < count and i++.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

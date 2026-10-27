@@ -12,6 +12,9 @@
 /// Use Run File and enter 4 5 to bite the visible bottom-right piece, then try the same coordinates again
 /// after it is gone.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F08 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean bite(int row, int column) {
     if (winner != 0 || row < 1 || row >= 4 || column < 1 || column > widths[row - 1]) {
         return false;
@@ -26,6 +29,30 @@ boolean bite(int row, int column) {
     }
     return true;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F08">
+/// A guard rejects a request before protected work happens. Read the rejected cases first, then ask
+/// what remains allowed. Short-circuit evaluation matters: in `A || B`, Java skips B when A is
+/// already true.
+///
+/// ```java
+/// boolean useSlot(int slot) {
+///     if (slot < 0 || slot >= 4) {
+///         return false;
+///     }
+///     IO.println("Using slot " + slot);
+///     return true;
+/// }
+/// ```
+///
+/// Predict what is printed and returned for `-1`, `3` and `4`. Only three reaches the print. A
+/// rejection must happen before any state change that should not occur. A board access may itself
+/// need a range guard before it is safe to evaluate. `return false` ends this method call; it does
+/// not automatically undo work already performed.
+///
+/// `useSlot(3)` passes three into `slot`; `boolean` declares a true/false result. Now predict slot
+/// zero.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -46,12 +73,16 @@ boolean bite(int row, int column) {
 /// the entry boundary.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Row four belongs to the bar.
-/// 2. Do not remove the bounds guard: it also protects widths[row - 1].
-/// 3. The row rejection is row < 1 || row > 4.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Row four belongs to the bar.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Do not remove the bounds guard: it also protects widths[row - 1].
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// The row rejection is row < 1 || row > 4.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

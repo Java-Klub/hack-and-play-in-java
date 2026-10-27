@@ -11,6 +11,9 @@
 ///
 /// Run File and request a rank shown in your hand by typing its number from 2 to 14 and pressing Enter.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F25 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void collect(int who) {
     for (int rank = 2; rank <= 14; rank++) {
         if (Collections.frequency(hands.get(who), rank) == 4) {
@@ -21,6 +24,29 @@ void collect(int who) {
         }
     }
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F25">
+/// ### Invariant: a promise after every action
+///
+/// An invariant is a relationship that must remain true across accepted actions. Some actions move a
+/// quantity between places rather than creating more. Validate the complete request before making
+/// changes, then apply it once. Rejection should preserve the earlier state.
+///
+/// ```java
+/// int violet = 6;
+/// int gold = 2;
+/// int amount = 3;
+/// if (amount >= 0 && amount <= violet) {
+///     violet -= amount;
+///     gold += amount;
+/// }
+/// IO.println(violet + gold);
+/// ```
+///
+/// The containers become three and five; the printed total remains eight because the transfer
+/// balances. Now consider nine units: what must remain unchanged? Explain why moving only one side
+/// would violate the total even if both individual values looked legal.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -38,12 +64,27 @@ void collect(int who) {
 /// deck and hand logic are complete; your change concerns the conversion into books.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Count what a book represents
 ///
-/// 1. Count hands + stock + four times all books before and after collection.
-/// 2. The loop currently removes only three matching cards.
-/// 3. Remove four copies, then increment books once; leave other ranks untouched.
+/// A book is one score entry but represents four removed cards. Compare physical cards in both hands
+/// and the deck with the cards represented by books before and after collection. For a neutral
+/// example, replacing six loose tokens by two sealed packs of three still represents six tokens. Pack
+/// counts need the weight of their contents. What quantity does the game need to preserve? The
+/// supplied `remove(Integer.valueOf(rank))` removes a card value, whereas removing an int index would
+/// select a position.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Count hands + stock + four times all books before and after collection.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The loop currently removes only three matching cards.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Remove four copies, then increment books once; leave other ranks untouched.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

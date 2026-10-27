@@ -19,10 +19,35 @@ import javax.swing.Timer;
 /// Use Run File, press M to show the shared position, then Space to move; C switches between striped and
 /// plain backgrounds.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F03 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void startingPosition() {
     x = 20;
     x = -80;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F03">
+/// A variable gives a stored value a name. Its type describes the values it can hold: `int` holds
+/// whole numbers and `double` can hold a fractional part. Initialization supplies the first value;
+/// later assignment replaces it.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// int charge = 4;
+/// charge = charge + 3;
+/// IO.println(charge);
+/// ```
+///
+/// Predict the output. First `charge` stores four. On the second line, Java reads the old value to
+/// calculate the right-hand expression, then stores seven under the same name. `=` is assignment, not
+/// a mathematical claim that both sides remain equal forever. Other statements reading the name now
+/// obtain seven. A name does not update itself: some executed assignment must change its value. A
+/// `final` variable cannot be assigned again.
+///
+/// Now predict the final charge if its initialization uses six instead of four.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -43,12 +68,25 @@ void startingPosition() {
 /// twice, and the ready-made keyboard code changes stripes, the marker and pause.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Read both assignments in order: the second replaces the first result.
-/// 2. The right side can read the current x before storing a new x.
-/// 3. Use x = x + 60; for the second assignment.
+// <editor-fold defaultstate="expanded" desc="For this game">
+/// The second assignment must express a relative change: take the current x and increase it by 60.
+/// Keep the first assignment intact. With its present starting value of 20, the result is 80; if the
+/// starting value changed, the second calculation should follow it rather than use an unrelated fixed
+/// answer. Read the right-hand expression using the old x, then store the result. This is why
+/// assignment can mention the same name on both sides. The prepared x is shared by both feet, so
+/// there is only one position to repair.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Read both assignments in order: the second replaces the first result.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The right side can read the current x before storing a new x.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Use x = x + 60; for the second assignment.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

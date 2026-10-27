@@ -13,6 +13,9 @@
 /// Use Run File and guess E to see the chosen clue, then use Test File to compare a three-word family
 /// with a one-word family.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F12 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int familySize(List<String> family) {
     int total = 0;
     for (int i = 0; i < family.size(); i++) {
@@ -20,6 +23,28 @@ int familySize(List<String> family) {
     }
     return total;
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F12">
+/// An accumulator remembers a growing result across passes. Its starting value belongs before the
+/// loop; putting it inside would start the result again for every item. The remembered result can be
+/// text, not only a number.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// String receipt = "Items:";
+/// for (String item : List.of("tea", "cake")) {
+///     receipt += " " + item;
+/// }
+/// ```
+///
+/// Predict receipt after each pass: `Items: tea`, then `Items: tea cake`. `+=` combines the old value
+/// with the new contribution and stores the result. Plain `=` replaces the stored value.
+/// `List.of(...)` supplies the fixed sequence of listed values; the colon visits one item per pass.
+/// Trace the current item and accumulator in two columns to discover whether earlier work survives.
+///
+/// Now predict receipt when the supplied list contains only `"rice"`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -39,12 +64,16 @@ int familySize(List<String> family) {
 /// and counts misses. display and main supply guesses, restart and quit.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. total = 1 replaces the previous count.
-/// 2. The accumulator must remember earlier members.
-/// 3. Use total += 1, leaving total = 0 before the loop.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// total = 1 replaces the previous count.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The accumulator must remember earlier members.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Use total += 1, leaving total = 0 before the loop.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

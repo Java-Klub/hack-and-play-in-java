@@ -12,9 +12,33 @@
 /// Use Run File and answer the name prompt with spaces around Red Fox, then supply the other three
 /// phrases and inspect the finished story.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F05 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 String cleanWord(String word) {
     return word;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F05">
+/// `IO.readln` receives a whole line, including internal spaces. String operations return text rather
+/// than changing the original String. Keep the returned result when you need it.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// String raw = "  Quiet Room  ";
+/// String cleaned = raw.strip();
+/// String loud = cleaned.toUpperCase(Locale.ROOT);
+/// ```
+///
+/// Predict all three values. `raw` still has its outside spaces, `cleaned` is `Quiet Room`, and
+/// `loud` is `QUIET ROOM`. `strip()` removes edge whitespace, not the space between words. The dot
+/// selects an operation on the value to its left; parentheses pass its arguments. `Locale.ROOT` asks
+/// for language-neutral case conversion rather than the computer’s regional default. The prepared
+/// input code handles `null` at end of input; an empty line is a different value.
+///
+/// Now predict cleaned and loud for raw text `"  Soft Sky  "`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -32,12 +56,16 @@ String cleanWord(String word) {
 /// story’s input machinery.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Do not split at spaces: a name may contain several words.
-/// 2. String.strip returns a cleaned copy.
-/// 3. Use return word.strip();
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Do not split at spaces: a name may contain several words.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// String.strip returns a cleaned copy.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Use return word.strip();
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

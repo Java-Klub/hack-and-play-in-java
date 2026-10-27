@@ -18,9 +18,35 @@ import javax.imageio.ImageIO;
 /// After Run File, press Enter to read seed.txt, created with 42 only if absent, then open
 /// magic-eye-strip.png.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F32 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 long readSeed(Path path) throws IOException {
     return Long.parseLong(path.toString());
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F32">
+/// ### Files: a destination and a resource lifetime
+///
+/// A `Path` describes a location; constructing it does not create a file. Inside a method that
+/// declares `throws IOException`, this writes a note:
+///
+/// ```java
+/// Path file = Path.of("exports", "note.txt");
+/// Files.createDirectories(file.getParent());
+/// try (var writer = Files.newBufferedWriter(file)) {
+///     writer.write("Hi");
+/// }
+/// ```
+///
+/// The result is exports/note.txt containing `Hi`. `getParent()` selects exports; `getFileName()`
+/// selects only note.txt and loses the directory. Try-with-resources closes writer when the block
+/// ends, including when writing fails. `throws` lets the caller handle an I/O failure; it does not
+/// handle it here. Image and audio encoders likewise need the actual destination, not an unrelated
+/// memory buffer.
+///
+/// Predict: if file becomes `Path.of("cards", "one.txt")`, where is the note written?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -36,12 +62,16 @@ long readSeed(Path path) throws IOException {
 /// repeatable dots and copies them at depth-dependent intervals; save writes magic-eye-strip.png.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. A Path is a location, not the stored content.
-/// 2. Use Files.readString before numeric conversion.
-/// 3. Whitespace is allowed; bad content and a missing file stay distinct failures.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// A Path is a location, not the stored content.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Use Files.readString before numeric conversion.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Whitespace is allowed; bad content and a missing file stay distinct failures.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

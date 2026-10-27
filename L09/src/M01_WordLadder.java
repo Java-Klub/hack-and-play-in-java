@@ -11,6 +11,9 @@
 ///
 /// After Run File, type CORD and then CARD to climb from COLD; use /r to restart and /q to quit.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F22 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void command(String input) {
     require(outcome.isEmpty());
     String word = input.toUpperCase(Locale.ROOT);
@@ -21,6 +24,28 @@ void command(String input) {
         outcome = "Reached WARM in " + (history.size() - 1) + " moves!";
     }
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F22">
+/// ### List: a sequence you can change
+///
+/// A `List<String>` holds text in order. `new ArrayList<>()` makes a mutable list: its contents can
+/// change without replacing the list itself.
+///
+/// ```java
+/// List<String> snacks = new ArrayList<>();
+/// snacks.add("apple");
+/// snacks.add("nuts");
+/// IO.println(snacks.get(0));
+/// IO.println(snacks.size());
+/// ```
+///
+/// The output is `apple`, then `2`. `add(value)` appends one item; `get(index)` reads without
+/// removing it. Indexes start at zero. `isEmpty()` checks for no items. `removeLast()` removes and
+/// returns the final item; call it only on a nonempty list. A list made directly by `List.of(...)`
+/// cannot be changed, but `new ArrayList<>(List.of(...))` can.
+///
+/// Predict: after `snacks.removeLast()`, what are its size and first item?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -36,12 +61,30 @@ void command(String input) {
 /// display prints the same history, and reset creates the initial COLD route.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="expanded" desc="For this game">
+/// ### The history operation is available here
 ///
-/// 1. Inspect what assigning a new ArrayList does to the earlier words.
-/// 2. Use the mutating operation that appends one word to the existing sequence.
-/// 3. Trace COLD → CORD → CARD, then reject WARM without appending it.
+/// You do not need another optional word game to discover this API. For a mutable list,
+/// `list.add(item)` appends one item while preserving earlier items. It changes that same list. `list
+/// = new ArrayList<>(...)` instead changes which list the variable names. `List.of(...)` itself is
+/// unmodifiable; the supplied history is an `ArrayList`.
+///
+/// Trace accepted and rejected commands separately: start at COLD, accept CORD, then attempt WARM,
+/// which differs by more than one letter. The rejected command must leave both the current word and
+/// every history item unchanged. Inspect where validation ends before deciding where the history
+/// operation belongs.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Inspect what assigning a new ArrayList does to the earlier words.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Use the mutating operation that appends one word to the existing sequence.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Trace COLD → CORD → CARD, then reject WARM without appending it.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

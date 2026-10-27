@@ -26,9 +26,32 @@ import javax.swing.Timer;
 /// After Run File, click different canvas positions to launch fireworks and use Space to pause or C to
 /// clear the sky.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F28 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 java.util.function.BiConsumer<Integer, Integer> burstAction() {
     return (x, y) -> {};
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F28">
+/// ### Callback: give an action for later
+///
+/// A callback is an action another part of the program calls later, perhaps after a click. A
+/// `Runnable` is an action with no supplied arguments and no returned result.
+///
+/// ```java
+/// Runnable cheer = () -> IO.println("Hooray!");
+/// IO.println("Ready");
+/// cheer.run();
+/// ```
+///
+/// The output is `Ready`, then `Hooray!`. Creating the lambda `() -> ...` does not execute its body.
+/// Calling `run()` does. Braces allow several statements inside one callback. A method reference such
+/// as `this::wave` similarly supplies this object's `wave` method without calling it yet; `wave()`
+/// calls it immediately. The prepared UI decides when to invoke a callback.
+///
+/// Predict: what prints if the last line becomes two consecutive calls to `cheer.run()`?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -44,12 +67,16 @@ java.util.function.BiConsumer<Integer, Integer> burstAction() {
 /// step advances their bounded lives and draw paints them; pause, reset and export already work.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. BiConsumer accepts two values later.
-/// 2. Forward the values in x/y order; do not invoke burst while creating the callback.
-/// 3. The supplied burst method already adds sixty particles and starts motion.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// BiConsumer accepts two values later.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Forward the values in x/y order; do not invoke burst while creating the callback.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// The supplied burst method already adds sixty particles and starts motion.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

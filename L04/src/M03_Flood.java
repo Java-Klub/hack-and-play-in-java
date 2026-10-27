@@ -22,6 +22,9 @@ import java.util.Random;
 /// Use Run File and choose a colour by clicking its palette square or pressing 1–4; watch which connected
 /// cells change and use R to restore the board.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F10 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void spread(ArrayList<Point> queue, int old, int colour) {
     int index = 0;
     while (index < queue.size() && index < 1) {
@@ -30,6 +33,30 @@ void spread(ArrayList<Point> queue, int old, int colour) {
         index++;
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F10">
+/// A `while` checks its condition before every pass, including the first. If the condition is false
+/// immediately, its body runs zero times. Something must make progress towards stopping, or
+/// deliberately wait for new input.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// int energy = 5;
+/// while (energy > 0) {
+///     IO.println(energy);
+///     energy -= 2;
+/// }
+/// ```
+///
+/// Predict the printed numbers and the final stored value. The output is `5`, `3`, `1`; afterwards
+/// energy is `-1`, so the next condition fails. The condition is not checked halfway through the
+/// body. `energy -= 2` subtracts two and stores the result; without it, the loop repeats forever.
+/// `return` ends the method; `break` ends the loop. Trace the condition and changing values
+/// separately, especially when the data being searched can grow.
+///
+/// Now predict the trace if energy starts at four.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -51,12 +78,26 @@ void spread(ArrayList<Point> queue, int old, int colour) {
 /// cell. draw, key and the window code are supplied.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. visitNeighbours can append more cells to queue.
-/// 2. Recheck the current queue.size() after every iteration.
-/// 3. Use while (index < queue.size()); keep index++ after the visit.
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// Here queue is a prepared work list of discovered cell coordinates. index counts how many entries
+/// have already been processed; queue.size() reports how many have been discovered so far. For
+/// example, a pass starting with index 0 and size 1 can discover two neighbours: after index
+/// advances, it is 1 while size is 3, so work remains. The size is deliberately checked again.
+/// visitNeighbours recolours each new cell before adding it, preventing repeated discovery of that
+/// same cell. There are only 64 board cells. You own the loop's continuation, not the coordinate or
+/// neighbour machinery.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// visitNeighbours can append more cells to queue.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Recheck the current queue.size() after every iteration.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Use while (index < queue.size()); keep index++ after the visit.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

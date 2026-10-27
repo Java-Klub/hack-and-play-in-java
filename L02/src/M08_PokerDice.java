@@ -12,9 +12,35 @@
 /// Use Run File to inspect the training hand and its points, then use a command such as roll 4 5 to
 /// reroll only those two dice before bank.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F06 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean fullHouse(int largestGroup, int pairs) {
     return largestGroup == 3 || pairs == 1;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F06">
+/// A boolean expression produces `true` or `false`. `&&` requires both conditions, `||` needs at
+/// least one, and `!` reverses a boolean result. Comparisons such as `>=` include equality; `>` does
+/// not.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// int age = 14;
+/// boolean hasTicket = false;
+/// boolean enter = age >= 12 && hasTicket;
+/// boolean recognised = "open".equals("OPEN");
+/// ```
+///
+/// Predict both results: each is `false`. The age is sufficient, but the ticket condition is not.
+/// `equals` compares String contents and is case-sensitive; `equalsIgnoreCase` deliberately ignores
+/// letter case. For objects, `==` asks whether two references identify the same object, not whether
+/// their text matches. A content comparison and a range comparison answer different questions. Check
+/// values exactly at a boundary and just beyond it before trusting a condition.
+///
+/// Now predict enter for age twelve with a ticket.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -34,12 +60,16 @@ boolean fullHouse(int largestGroup, int pairs) {
 /// training hand; later deal calls roll random hands, and command handles rerolls and banking.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Write down whether each half is true for three-kind without a pair.
-/// 2. OR accepts either half; this rule needs both.
-/// 3. Join the two comparisons with &&.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Write down whether each half is true for three-kind without a pair.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// OR accepts either half; this rule needs both.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Join the two comparisons with &&.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

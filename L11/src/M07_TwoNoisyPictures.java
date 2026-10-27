@@ -19,6 +19,9 @@ import java.util.List;
 /// After Run File, press Enter for seed 42 and open two-noisy-pictures-42.png together with its
 /// .share1.png and .share2.png images.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F27 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 BufferedImage[] shares(BufferedImage secret, long seed) {
     var images = new BufferedImage[3];
     for (int i = 0; i < 3; i++) {
@@ -44,6 +47,29 @@ BufferedImage[] shares(BufferedImage secret, long seed) {
     return images;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Recall · F27">
+/// ### Seeded randomness: repeat an experiment
+///
+/// A pseudorandom generator produces a sequence. A seed chooses its starting state; equal seeds and
+/// equal calls reproduce equal results.
+///
+/// ```java
+/// var first = new Random(9);
+/// var second = new Random(9);
+/// int a = first.nextInt(4);
+/// int b = second.nextInt(4);
+/// IO.println(a == b);
+/// ```
+///
+/// This prints `true`. Each nextInt call advances that generator. `nextInt(4)` chooses an integer
+/// from 0 through 3; the upper bound is excluded. Reuse one generator across a generated picture so
+/// later choices use later positions in the sequence. Recreating it with the same seed inside a loop
+/// repeatedly returns its first choice. Different seeds can still occasionally give equal individual
+/// choices.
+///
+/// Predict: which integers can `nextInt(3)` return, and can it return 3?
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
 ///
@@ -61,12 +87,16 @@ BufferedImage[] shares(BufferedImage secret, long seed) {
 /// what each picture reveals.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. new Random(seed) restarts at the beginning of the sequence.
-/// 2. The method already creates one Random before the pixel loops.
-/// 3. Pass that existing object to every Collections.shuffle call.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// new Random(seed) restarts at the beginning of the sequence.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The method already creates one Random before the pixel loops.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Pass that existing object to every Collections.shuffle call.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

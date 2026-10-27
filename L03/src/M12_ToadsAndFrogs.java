@@ -19,9 +19,37 @@ import java.util.Arrays;
 /// Use Run File and press 5 to ask the frog beside the initial gap to move left; R restores the starting
 /// arrangement.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F13 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int direction(int piece) {
     return 1;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F13">
+/// A method packages an operation under one name. Parameters are local names for the information
+/// received on each call; arguments are the actual supplied values. `return` gives one result back to
+/// the caller.
+///
+/// ```java
+/// int remaining(int capacity, int used) {
+///     return capacity - used;
+/// }
+///
+/// void main() {
+///     IO.println(remaining(12, 5));
+///     IO.println(remaining(9, 4));
+/// }
+/// ```
+///
+/// Predict both printed values: seven and five. The comma separates the parameters or arguments, and
+/// their order decides which value each name receives. The names describe roles; they do not fetch
+/// information by magic. This method calculates without printing or changing the supplied program
+/// state. When repairing a calculation, try a second pair of arguments so an accidental fixed answer
+/// cannot hide.
+///
+/// Now predict remaining(10, 6).
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -40,12 +68,16 @@ int direction(int piece) {
 /// won checks the group swap; draw and the supplied input code let you select a creature.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The result is a direction, not a new board position.
-/// 2. The caller adds this result to the selected position.
-/// 3. If piece == 1 return 1; otherwise return -1.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The result is a direction, not a new board position.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The caller adds this result to the selected position.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// If piece == 1 return 1; otherwise return -1.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

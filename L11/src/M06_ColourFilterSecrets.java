@@ -18,6 +18,9 @@ import javax.imageio.ImageIO;
 /// After Run File, enter seed 42 and open colour-filter-secrets-42.png, compare its noisy top and
 /// revealed bottom halves, then rerun with 43.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F27 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 BufferedImage hide(BufferedImage mask, long seed) {
     var random = new Random(0);
     var image = new BufferedImage(mask.getWidth(), mask.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -29,6 +32,29 @@ BufferedImage hide(BufferedImage mask, long seed) {
     }
     return image;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F27">
+/// ### Seeded randomness: repeat an experiment
+///
+/// A pseudorandom generator produces a sequence. A seed chooses its starting state; equal seeds and
+/// equal calls reproduce equal results.
+///
+/// ```java
+/// var first = new Random(9);
+/// var second = new Random(9);
+/// int a = first.nextInt(4);
+/// int b = second.nextInt(4);
+/// IO.println(a == b);
+/// ```
+///
+/// This prints `true`. Each nextInt call advances that generator. `nextInt(4)` chooses an integer
+/// from 0 through 3; the upper bound is excluded. Reuse one generator across a generated picture so
+/// later choices use later positions in the sequence. Recreating it with the same seed inside a loop
+/// repeatedly returns its first choice. Different seeds can still occasionally give equal individual
+/// choices.
+///
+/// Predict: which integers can `nextInt(3)` return, and can it return 3?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -45,12 +71,16 @@ BufferedImage hide(BufferedImage mask, long seed) {
 /// randomness must not rewrite the mask.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The mask determines the red channel; randomness changes green/blue.
-/// 2. Do not change the channel encoding or message.
-/// 3. Replace the hard-coded seed with the parameter; reuse that Random in the pixel loops.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The mask determines the red channel; randomness changes green/blue.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Do not change the channel encoding or message.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Replace the hard-coded seed with the parameter; reuse that Random in the pixel loops.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

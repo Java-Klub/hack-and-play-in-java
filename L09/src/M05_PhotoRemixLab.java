@@ -22,9 +22,34 @@ import javax.imageio.ImageIO;
 /// After Run File, press M to change the moon picture’s remix mode, adjust it with arrow keys and read
 /// the pixel counter above the image.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F24 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void countColour(int rgb) {
     colourCounts.put(rgb, 1);
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F24">
+/// ### Map: look up a value by its key
+///
+/// A `Map<String, Integer>` associates text keys with integer values. Each key has at most one stored
+/// value.
+///
+/// ```java
+/// Map<String, Integer> badges = new HashMap<>();
+/// badges.put("moon", 4);
+/// IO.println(badges.getOrDefault("moon", 0));
+/// IO.println(badges.getOrDefault("sun", 0));
+/// ```
+///
+/// The output is `4`, then `0`. `getOrDefault(key, fallback)` reads an existing value, or returns the
+/// fallback when the key is absent. This lookup does not insert anything. `put(key, value)` stores a
+/// value and replaces any previous value for that key; it does not add numbers automatically. Use
+/// `containsKey(key)` when you need to distinguish absence explicitly. These examples do not store
+/// null values.
+///
+/// Predict: after `badges.put("moon", 9)`, what will the same two lookups return?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -39,12 +64,29 @@ void countColour(int rgb) {
 /// the visible caption; the supplied demo includes repeated colours so the mistake is visible.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="expanded" desc="For this game">
+/// ### Read before you replace
 ///
-/// 1. put replaces the previous value.
-/// 2. Read the existing count, using zero when the key is missing.
-/// 3. Add one to that old count before storing it under the same key.
+/// The needed lookup is `map.getOrDefault(key, fallback)`. With this `Map<Integer, Integer>`, the key
+/// is a packed colour integer and the returned value is its count. For example, if key 17 stores 6,
+/// `map.getOrDefault(17, 0)` returns 6; for absent key 23 it returns 0 without inserting 23.
+/// `map.put(key, value)` then stores exactly the value supplied, replacing any previous count.
+///
+/// Predict the required totals after three pixels with the same colour and one different pixel.
+/// Explain why clearing the map once before a new remix is useful, while clearing it inside
+/// countColour would forget earlier pixels.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// put replaces the previous value.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Read the existing count, using zero when the key is missing.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Add one to that old count before storing it under the same key.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

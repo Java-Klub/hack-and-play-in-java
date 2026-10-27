@@ -12,6 +12,9 @@
 /// Run File and type 1 1 1 2 to pair the first two adjacent cells, then continue with other neighbouring
 /// cells.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F19 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 record Domino(int low, int high) {
 }
 
@@ -19,6 +22,27 @@ Domino pairKey(int a, int b) {
     int x = numbers[a / 10][a % 10], y = numbers[b / 10][b % 10];
     return new Domino(x, y);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F19">
+/// ### Records: one named value
+///
+/// A record groups related components. Its constructor receives them in declaration order; accessors
+/// such as `ink()` read them. Inside the record, its own methods can use the component names
+/// directly. Making a new value leaves the original components unchanged. Generated `equals` compares
+/// the component values.
+///
+/// ```java
+/// record Frame(String ink, int dots) {
+///     Frame recoloured(String nextInk) {
+///         return new Frame(nextInk, dots);
+///     }
+/// }
+/// ```
+///
+/// Calling `recoloured("gold")` on `new Frame("violet", 6)` returns gold and six; the original stays
+/// violet and six. Would another recolouring back to violet compare equal to the original? The same
+/// names now explain what two otherwise anonymous values mean.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -36,12 +60,26 @@ Domino pairKey(int a, int b) {
 /// collection prevents repeats only when pairKey() gives equivalent pieces equal values.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Values and canonical representation
 ///
-/// 1. Record equality compares both named components by value.
-/// 2. Domino(0,1) and Domino(1,0) are different records unless you normalize input.
-/// 3. Construct Domino(min(x,y), max(x,y)); the supplied Set then rejects repeats.
+/// `Math.min(a,b)` selects the smaller number and `Math.max(a,b)` the larger. These queries do not
+/// change either input. A Domino compares the ordered components low and high, not the physical way a
+/// player turned it. First read the two domino values from `numbers`; the selected cell indices are
+/// not those values. Predict a consistent component pair for values three and eight presented in
+/// either order, and also for two equal values.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Record equality compares both named components by value.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Domino(0,1) and Domino(1,0) are different records unless you normalize input.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Construct Domino(min(x,y), max(x,y)); the supplied Set then rejects repeats.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

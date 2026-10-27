@@ -12,6 +12,9 @@
 /// Run File, type 4 and press Enter to drop a disc in the middle column, then alternate column choices
 /// with a friend.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F14 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void reset() {
     for (char[] row : board) {
         Arrays.fill(row, '.');
@@ -20,6 +23,27 @@ void reset() {
     winner = '.';
     int moves = 0;
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F14">
+/// ### Scope: which storage does this name mean?
+///
+/// A field belongs to the current object and can survive between method calls. A local variable
+/// belongs to one call or block. A declaration includes a type; assignment to an existing name does
+/// not declare another variable. A local name can shadow a field with the same spelling.
+///
+/// ```java
+/// int volume = 7;
+///
+/// void whisper() {
+///     int volume = 2;
+///     IO.println(volume);
+/// }
+/// ```
+///
+/// `whisper()` prints two while the field stays seven: the local declaration created separate
+/// storage. Predict a later field read; `this.volume` explicitly names the field when needed. Which
+/// value should survive several calls, and which value belongs to only one temporary calculation?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -36,12 +60,16 @@ void reset() {
 /// r and calls reset(); board clearing and win detection are already present.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Find the field declared outside reset().
-/// 2. int moves inside a method creates a different local variable.
-/// 3. Assign moves = 0 without redeclaring its type.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Find the field declared outside reset().
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// int moves inside a method creates a different local variable.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Assign moves = 0 without redeclaring its type.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

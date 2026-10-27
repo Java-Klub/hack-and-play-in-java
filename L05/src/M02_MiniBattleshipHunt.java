@@ -12,6 +12,9 @@
 /// Run File and fire your first shot by typing 1 1 and pressing Enter, then try other row-and-column
 /// pairs.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F16 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void layout(int n) {
     board = new int[6][6];
     int[][][] maps = {{{0, 0}, {0, 1}, {3, 2}, {3, 3}, {3, 4}}, {{1, 4}, {2, 4}, {5, 0}, {5, 1}, {5, 2}}, {{4, 0}, {4, 1}, {0, 5}, {1, 5}, {2, 5}}};
@@ -19,6 +22,24 @@ void layout(int n) {
         board[maps[n][i][0]][maps[n][i][1]] = i < 2 ? 1 : 2;
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F16">
+/// ### Arrays: the position matters
+///
+/// An array keeps a fixed number of values of one element type. Square brackets select a position:
+/// the first index is zero, and `length` is the count. Reading one element does not alter the others.
+/// An index must exist before it is used; an empty array has no first element.
+///
+/// ```java
+/// String[] tools = {"pen", "tape", "chalk"};
+/// int chosen = 1;
+/// IO.println(tools[chosen]);
+/// IO.println(tools.length);
+/// ```
+///
+/// These statements belong inside a method. Index one selects `tape`; the count is three. What
+/// changes if `chosen` becomes two? Which index would be the first invalid one?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -34,12 +55,26 @@ void layout(int n) {
 /// the resulting board for any surviving part of that ship.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Reading nested data
 ///
-/// 1. maps[n] is the selected list of positions.
-/// 2. Each maps[n][i] holds row and column; i is not a board coordinate.
-/// 3. Iterate while i < maps[n].length; keep the supplied ship-number assignment.
+/// `maps` contains layouts; `maps[n]` selects one layout. That layout contains coordinate pairs, so
+/// `maps[n][i]` selects pair i. The final `[0]` and `[1]` read its row and column. `maps.length`
+/// counts layouts, whereas `maps[n].length` counts pairs in the selected layout. Predict what each
+/// length measures before choosing the loop boundary. The pair values are internal coordinates
+/// starting at zero.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// maps[n] is the selected list of positions.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Each maps[n][i] holds row and column; i is not a board coordinate.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Iterate while i < maps[n].length; keep the supplied ship-number assignment.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

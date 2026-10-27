@@ -19,9 +19,34 @@ import java.util.Arrays;
 /// Run File and click a non-orange cell repeatedly to switch between unknown, black, and white while
 /// following the balance rules.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F20 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int[][] copyBoard(int[][] original) {
     return original.clone();
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F20">
+/// ### References: another name or another object?
+///
+/// An array variable stores a reference. Assignment can give two names access to one array; writing
+/// through either name affects that shared object. Calling `clone()` on a one-dimensional int array
+/// creates another array with copied values. The original and copy can then change independently.
+///
+/// ```java
+/// int[] wave = {4, 1};
+/// int[] shared = wave;
+/// int[] saved = wave.clone();
+/// wave[1] = 7;
+/// IO.println(shared[1]);
+/// IO.println(saved[1]);
+/// ```
+///
+/// The output is seven, then one: shared sees the write, saved retains its copied value. After
+/// `saved[0] = 8`, predict `wave[0]` and `saved[0]`. `clone()` copies one layer: for a grid, its
+/// elements are row references, so copying the outside still shares rows. Ask which objects remain
+/// shared, not merely whether a new outer object exists.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -37,12 +62,35 @@ int[][] copyBoard(int[][] original) {
 /// supplied.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="expanded" desc="For this game">
+/// ### Copying rows as well as the outside
 ///
-/// 1. int[][] is an array of row references.
-/// 2. original.clone() copies those row references, leaving cells shared.
-/// 3. Allocate copy[original.length][] and clone each original[row] before returning.
+/// A grid's outer array stores row references. An outer clone therefore copies references to the same
+/// rows. Here is a separate two-row example with independent rows:
+///
+/// ```java
+/// int[][] original = {{1}, {2}};
+/// int[][] copied = {original[0].clone(), original[1].clone()};
+/// copied[0][0] = 9;
+/// IO.println(original[0][0]);
+/// ```
+///
+/// The output stays one because the changed row belongs to copied. Predict the result if its first
+/// row were merely `original[0]`. Your board has more rows: use the actual row count to repeat the
+/// copying operation. Each row's clone preserves its current elements. Explain which layer would
+/// remain shared if only the outside were copied.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// int[][] is an array of row references.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// original.clone() copies those row references, leaving cells shared.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Allocate copy[original.length][] and clone each original[row] before returning.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

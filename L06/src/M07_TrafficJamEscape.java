@@ -12,6 +12,9 @@
 /// Run File and request a car move by entering B 2, then use a car letter and signed step count to clear
 /// A’s exit.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F15 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean fits(int car, int x, int y) {
     xs[car] = x;
     ys[car] = y;
@@ -34,6 +37,25 @@ boolean fits(int car, int x, int y) {
     return true;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Recall · F15">
+/// ### Contracts: ask without changing the world
+///
+/// A contract describes accepted inputs and the meaning of a result. A pure calculation uses its
+/// inputs without changing other state. A query may read the current model, but it should still leave
+/// that model untouched. Reading an answer and committing an action are separate responsibilities.
+///
+/// ```java
+/// int contrast(int light, int dark) {
+///     return Math.abs(light - dark);
+/// }
+/// ```
+///
+/// `Math.abs` gives the nonnegative magnitude, removing a negative sign. This method can be called
+/// repeatedly without consuming anything. Arguments `(9, 4)` give five: the difference is five.
+/// Predict `(4, 9)`. Which stored values would you compare before and after a query to show that it
+/// caused no side effect? A rejected candidate deserves the same protection.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
 ///
@@ -49,12 +71,16 @@ boolean fits(int car, int x, int y) {
 /// already present.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. x and y are proposed arguments, not new field values yet.
-/// 2. command() checks every intermediate square before assigning xs and ys.
-/// 3. Delete the assignments to xs[car] and ys[car] from fits(); keep collision checks.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// x and y are proposed arguments, not new field values yet.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// command() checks every intermediate square before assigning xs and ys.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Delete the assignments to xs[car] and ys[car] from fits(); keep collision checks.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

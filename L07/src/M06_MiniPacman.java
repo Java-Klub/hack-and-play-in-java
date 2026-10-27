@@ -21,6 +21,9 @@ import javax.swing.Timer;
 /// Run File and press an arrow key to start moving through the maze, steering toward dots while avoiding
 /// the ghost.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F21 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 enum RoundState {
     PLAY, CAUGHT, WON
 }
@@ -34,6 +37,28 @@ RoundState afterContact(boolean caught, int dotsLeft) {
     }
     return RoundState.PLAY;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F21">
+/// ### Enum: one of the named choices
+///
+/// An enum defines a finite set of values of one type. The type name and dot qualify a particular
+/// value. Unlike arbitrary text, a misspelled enum value is a compiler error. A variable holds one
+/// choice at a time; comparing enum values with `==` is appropriate.
+///
+/// ```java
+/// enum Voice {
+///     WHISPER, SING, SHOUT
+/// }
+///
+/// Voice voice = Voice.SING;
+/// IO.println(voice == Voice.SHOUT);
+/// ```
+///
+/// The declaration belongs beside methods; the statements can be read inside a method. The comparison
+/// prints false because SING and SHOUT are distinct values. Predict it after assigning SHOUT. Can
+/// this single variable simultaneously claim SING and SHOUT? Explain what contradictory combinations
+/// separate booleans might allow.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -50,12 +75,26 @@ RoundState afterContact(boolean caught, int dotsLeft) {
 /// moveGhost() already chooses legal neighbours, and drawing uses the returned RoundState.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### One event can satisfy two conditions
 ///
-/// 1. Named terminal states cannot be combined into contradictory flags.
-/// 2. The collision and final dot can occur in the same step.
-/// 3. Check caught before dotsLeft==0, then return PLAY as the remaining case.
+/// Enum values make the final result exclusive, but conditions can still overlap. The stated contract
+/// gives capture priority over collecting the last dot. Predict the result for caught with no dots,
+/// uncaught with no dots, and uncaught with some dots. These are distinct input situations, not three
+/// states to assign in sequence. Explain which earlier return prevents a later condition from
+/// replacing the intended result.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Named terminal states cannot be combined into contradictory flags.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The collision and final dot can occur in the same step.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Check caught before dotsLeft==0, then return PLAY as the remaining case.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

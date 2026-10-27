@@ -12,12 +12,37 @@
 /// Run File, read your numbered hand, and enter p followed by a card index to play it, adding a suit
 /// number when playing an eight.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F09 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean legal(int card) {
     return switch (rank(card)) {
         case 1 -> true;
         default -> rank(card) == rank(top) || card / 13 == suit;
     };
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F09">
+/// ### Switch: choose one value
+///
+/// A switch expression selects a result from its selector. Each arrow case handles a matching value;
+/// it does not continue into the next case. `default` handles remaining values. The closing semicolon
+/// belongs to the surrounding assignment or return statement.
+///
+/// ```java
+/// String weather = "mist";
+/// String colour = switch (weather) {
+///     case "mist" -> "silver";
+///     case "sun" -> "gold";
+///     default -> "indigo";
+/// };
+/// IO.println(colour);
+/// ```
+///
+/// The mist case selects `silver`. Predict the output for `"sun"`, then for `"snow"`. The selector is
+/// compared with case labels; the text after the arrow is the result. Changing one special case
+/// should leave the fallback's meaning intact.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -33,12 +58,16 @@ boolean legal(int card) {
 /// and checks for an empty hand; dealing and console input are already supplied.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. rank(card) converts the encoded card to a value 1-13.
-/// 2. A switch expression returns one boolean value.
-/// 3. Use case 8 -> true; let default evaluate the supplied rank/suit condition.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// rank(card) converts the encoded card to a value 1-13.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// A switch expression returns one boolean value.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Use case 8 -> true; let default evaluate the supplied rank/suit condition.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
