@@ -1,9 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
-import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import java.io.ByteArrayInputStream;
 // </editor-fold>
 
 /// # L01.03 · TypeMelody
@@ -11,15 +8,14 @@ import java.io.ByteArrayInputStream;
 /// Proměň krátkou napsanou zprávu v malou melodii. Každé písmeno dostane tón, zatímco jiné znaky nechají
 /// tichý úsek, takže různé zprávy vytvářejí různé rytmy.
 ///
-/// **Tvoje mise:** První WAV obsahuje čtyři tiché úseky. Změň zprávu poskytovanou defaultMessage tak, aby
-/// úvodní melodie vyjadřovala JAVA.
+/// **Tvoje mise:** První zpráva obsahuje čtyři tiché úseky. Změň zprávu poskytovanou defaultMessage
+/// tak, aby úvodní melodie vyjadřovala JAVA.
 ///
 /// **Dnes trénuješ:** Text literal (doslovný text): dvojité uvozovky označí svůj obsah jako textová data.
 /// Číslice v uvozovkách například zůstane znakem zprávy; nestane se výpočtem.
 ///
-/// Použij Run File, v kartě Files projektu najdi melody.wav a otevři uložený soubor ve zvukovém
-/// přehrávači, abys zprávu slyšel.
-/// Po opravě: Save → Test File → zahraj si znovu.
+/// Použij Run File: otevře se Java přehrávač se zprávou. Stiskni Play / Replay; číslice tvoří tiché
+/// pauzy, takže výchozí 1234 má být tiché. Stop přehrávání ukončí.
 ///
 /// Potřebuješ výklad? Nová dovednost · F02 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
 /// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
@@ -62,19 +58,16 @@ String defaultMessage() {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// main zavolá defaultMessage, aby získala text, a zapíše melody.wav. synthesize převede písmena na
-/// zvukové vzorky a write uloží přehratelný WAV. Tato zvuková část je připravená; přehrávání obstará
-/// samostatný přehrávač.
+/// main zavolá defaultMessage, aby získala text, a otevře připravený Java přehrávač. synthesize
+/// převede písmena na zvukové vzorky a připravený přehrávač je přehraje. Tato zvuková část je
+/// připravená; připravený Java přehrávač vlastní a uzavírá zvukový prostředek.
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Pro tuto hru">
-/// Tento program exportuje zvuk místo otevření herního okna. Po Run File přečti umístění za `Saved:`
-/// v Output. Přepni na **Window → Files**, rozbal L01 a podle potřeby obnov seznam souborů; najdi
-/// `melody.wav`. Uložený soubor otevři systémovým zvukovým přehrávačem. Pokud jej NetBeans
-/// nepřehraje, najdi vypsanou cestu v systémovém správci souborů a otevři jej tam. Čtyři tiché úseky
-/// výchozí verze jsou záměrné pozorování, nikoli selhání zvukové karty. Po úpravě source (zdrojového
-/// textu) znovu použij Run File k nahrazení WAV a znovu jej otevři; Test File kontroluje chování, ale
-/// tento poslech neprovádí.
+/// Zvuk přehrává přímo Java. Není třeba hledat soubor ani jiný přehrávač. Panel ukáže skutečnou
+/// zprávu; výchozí číslice jsou pauzy, nikoli porucha zvuku. Po úpravě defaultMessage ulož source
+/// (zdrojový text), zavři okno a znovu použij Run File. Nové okno načte upravenou zprávu; Play /
+/// Replay opakuje zprávu současného okna.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -86,7 +79,7 @@ String defaultMessage() {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Použij return "JAVA"; potom znovu vytvoř a otevři melody.wav.
+/// Použij return "JAVA"; potom zavři přehrávač a znovu použij Run File.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
@@ -118,23 +111,104 @@ byte[] synthesize(String text, long seed) {
     return pcm;
 }
 
-void write(String text, long seed, Path path) throws Exception {
-    byte[] pcm = synthesize(text, seed);
-    var format = new AudioFormat(SAMPLE_RATE, 16, 1, true, false);
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    try (var stream = new AudioInputStream(new ByteArrayInputStream(pcm), format, pcm.length / 2)) {
-        AudioSystem.write(stream, AudioFileFormat.Type.WAVE, path.toFile());
+// Prepared Java audio: a bounded worker owns the line; Stop and window close cancel it.
+volatile int playbackGeneration;
+javax.sound.sampled.SourceDataLine soundLine;
+
+synchronized void stopSound() {
+    playbackGeneration++;
+    if (soundLine != null) {
+        soundLine.stop();
+        soundLine.close();
+        soundLine = null;
     }
 }
 
-void main() throws Exception {
-    Path path = Path.of("melody.wav");
-    write(defaultMessage(), 42, path);
-    IO.println("Saved: " + path.toAbsolutePath());
-    IO.println("Open the WAV to hear the message; digits are rests.");
+void playSound(byte[] pcm, javax.swing.JLabel status) {
+    stopSound();
+    int generation = playbackGeneration;
+    status.setText("Playing the current message. Digits are silent rests.");
+    var worker = new Thread(() -> {
+        var format = new AudioFormat(SAMPLE_RATE, 16, 1, true, false);
+        try (var line = AudioSystem.getSourceDataLine(format)) {
+            line.open(format);
+            synchronized (this) {
+                if (generation != playbackGeneration) return;
+                soundLine = line;
+            }
+            line.start();
+            int offset = 0;
+            while (generation == playbackGeneration && offset < pcm.length) {
+                int written = line.write(pcm, offset, Math.min(4096, pcm.length - offset));
+                if (written <= 0) break;
+                offset += written;
+            }
+            if (generation == playbackGeneration) {
+                line.drain();
+                boolean finished = offset == pcm.length;
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    if (generation == playbackGeneration) status.setText(finished
+                        ? "Finished. Play / Replay starts the message again."
+                        : "Playback ended early. Play / Replay tries again.");
+                });
+            }
+        } catch (Exception unavailable) {
+            if (generation == playbackGeneration) {
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    if (generation == playbackGeneration) status.setText("Audio unavailable: " + unavailable.getMessage());
+                });
+            }
+        } finally {
+            synchronized (this) {
+                if (generation == playbackGeneration) soundLine = null;
+            }
+        }
+    }, "melody-player");
+    worker.setDaemon(true);
+    worker.start();
 }
 
-/// Připravené vstupní body: main, write.
+void showPlayer() {
+    String message = defaultMessage();
+    byte[] pcm = synthesize(message, 42);
+    boolean allRests = message.matches("[^A-Za-z]*");
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        IO.println("Message: " + message + ". Letters make notes; digits are silent rests.");
+        return;
+    }
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame("Type Melody");
+        var description = new javax.swing.JLabel("<html>Message: <b>" + message.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            + "</b><br>Letters A-Z make notes. Digits and other characters are silent rests.<br>"
+            + (allRests ? "This message is all rests: 1234 has four silent slots.<br>" : "This message contains notes. Press Play to listen.<br>")
+            + "Edit defaultMessage, save, close this window and Run File again.</html>");
+        var status = new javax.swing.JLabel("Click Play to hear this message. Stop ends playback.");
+        var buttons = new javax.swing.JPanel();
+        var play = new javax.swing.JButton("Play / Replay");
+        play.addActionListener(event -> playSound(pcm, status));
+        var stop = new javax.swing.JButton("Stop");
+        stop.addActionListener(event -> { stopSound(); status.setText("Stopped. Play replays the current message."); });
+        buttons.add(play);
+        buttons.add(stop);
+        var content = new javax.swing.JPanel(new java.awt.BorderLayout(10, 10));
+        content.setBorder(javax.swing.BorderFactory.createEmptyBorder(14, 14, 14, 14));
+        content.add(description, java.awt.BorderLayout.NORTH);
+        content.add(status);
+        content.add(buttons, java.awt.BorderLayout.SOUTH);
+        frame.add(content);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override public void windowClosed(java.awt.event.WindowEvent event) { stopSound(); }
+        });
+        frame.pack(); frame.setLocationByPlatform(true); frame.setVisible(true);
+    });
+}
+
+void main() {
+    showPlayer();
+}
+
+/// Připravené vstupní body: main.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
@@ -189,13 +263,8 @@ void main() throws Exception {
 /// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
-/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
-///   zpracovat.
 /// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
 ///   zopakuje stejnou posloupnost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
-/// - `Path` — Umístění v souborech, nikoli obsah souboru.
-/// - `Files` — JDK operace pro čtení a zápis místních souborů.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek.
 // </editor-fold>
 

@@ -119,24 +119,35 @@ String cell(int index) {
 void main() {
     reset();
     IO.println("TIC-TAC-TOE: two players, three in a row wins.");
+    boolean showState = true;
     while (true) {
-        for (int row = 0; row < 3; row++) {
-            IO.println(cell(row * 3) + " | " + cell(row * 3 + 1) + " | " + cell(row * 3 + 2));
+        if (showState) {
+            for (int row = 0; row < 3; row++) {
+                IO.println(cell(row * 3) + " | " + cell(row * 3 + 1) + " | " + cell(row * 3 + 2));
+            }
+            if (winner != '.') {
+                IO.println(winner == 'D' ? "Draw!" : winner + " wins!");
+            }
+            showState = false;
         }
-        if (winner != '.') {
-            IO.println(winner == 'D' ? "Draw!" : winner + " wins!");
-        }
-        String input = IO.readln(winner == '.' ? player + ": cell 1-9, r restart, q quit: " : "r replay, q quit: ");
-        if (input == null || input.trim().equalsIgnoreCase("q")) {
+        String input = IO.readln(winner == '.' ? player + ": cell 1-9, r restart, q quit: " : "Enter or /r: new round; /q: quit: ");
+        if (input == null || (input.trim().equalsIgnoreCase("q") || input.trim().equalsIgnoreCase("/q"))) {
             return;
         }
         input = input.trim();
-        if (input.equalsIgnoreCase("r")) {
+        if ((input.equalsIgnoreCase("r") || input.equalsIgnoreCase("/r") || (winner != '.' && input.isBlank()))) {
             reset();
+            showState = true;
+            continue;
+        }
+        if (winner != '.') {
+            IO.println("Round finished. Press Enter or /r for a new round; /q quits.");
             continue;
         }
         try {
-            if (!play(Integer.parseInt(input))) {
+            if (play(Integer.parseInt(input))) {
+                showState = true;
+            } else {
                 IO.println("Illegal move. Choose an empty cell during an unfinished round.");
             }
         } catch (NumberFormatException exception) {
@@ -199,7 +210,7 @@ void main() {
 /// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
 /// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek. readln čeká na celý
+///   řádek vstupu.
 // </editor-fold>
 

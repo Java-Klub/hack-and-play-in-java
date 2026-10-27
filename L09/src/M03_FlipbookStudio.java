@@ -3,10 +3,6 @@ import java.awt.*;
 import java.util.List;
 import java.awt.event.*;
 import javax.swing.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 import javax.swing.Timer;
 // </editor-fold>
 
@@ -22,8 +18,8 @@ import javax.swing.Timer;
 /// přicházejí v časovém pořadí a vracejí se opačně. Každý Edit uchovává původní data pro obnovení jednoho
 /// pixel (obrazového bodu).
 ///
-/// Po Run File namaluj políčko, změň barvu klávesou C, namaluj je znovu a stiskni Z pro vrácení;
-/// klávesami 1–4 přepínej snímky animace.
+/// Po Run File namaluj dvě různá políčka a stiskni Z pro vrácení posledního; pravé kliknutí maže,
+/// 1–4 mění snímek, Space přehrává animaci a R obnoví začátek.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Připomenutí · F22 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -69,8 +65,8 @@ boolean undo() {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Kreslicí akce uloží Edit před změnou pixel (obrazového bodu). Undo obnoví původní barvu; přepínání
-/// snímků, přehrávání náhledu i místní uložení obrázku jsou připravené.
+/// paintCell zaznamená každou změnu pro undo (vrácení); draw ukáže zvolený snímek a animovaný
+/// náhled. Levá/pravá myš kreslí/maže, 1–4 volí snímek, Space přehrává a R obnoví začátek.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -89,16 +85,14 @@ boolean undo() {
 final int WIDTH = 600, HEIGHT = 430;
 
 int[][][] frames;
-int edited, played, colour, paintColour;
+int edited, played, paintColour;
 boolean playing, drawing;
-Color[] palette = {Color.WHITE, Color.BLACK, new Color(225, 75, 75), new Color(60, 130, 220), new Color(55, 175, 105)};
 String message;
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
 void restart() {
     frames = new int[4][16][16];
     history.clear();
     edited = played = 0;
-    colour = 1;
     playing = drawing = false;
     message = "Draw four frames; Space previews them";
 }
@@ -117,29 +111,6 @@ void step() {
     }
 }
 
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-void save(File file) throws IOException {
-    var strip = new BufferedImage(64, 16, BufferedImage.TYPE_INT_RGB);
-    for (int frame = 0; frame < 4; frame++) {
-        for (int y = 0; y < 16; y++) {
-            for (int x = 0; x < 16; x++) {
-                strip.setRGB(frame * 16 + x, y, palette[frames[frame][y][x]].getRGB());
-            }
-        }
-    }
-    ImageIO.write(strip, "png", file);
-}
-
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-void save() {
-    try {
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-        save(new File("flipbook.png"));
-        message = "Saved flipbook.png (64 x 16 sprite strip)";
-    } catch (IOException e) {
-        message = "Save failed: " + e.getMessage();
-    }
-}
 
 void paintAt(int x, int y) {
     if (x >= 25 && x < 281 && y >= 55 && y < 311) {
@@ -151,7 +122,7 @@ void paintAt(int x, int y) {
 void draw(Graphics2D g) {
     for (int y = 0; y < 16; y++) {
         for (int x = 0; x < 16; x++) {
-            g.setColor(palette[frames[edited][y][x]]);
+            g.setColor(frames[edited][y][x] == 0 ? Color.WHITE : Color.BLACK);
             g.fillRect(25 + x * 16, 55 + y * 16, 16, 16);
             g.setColor(new Color(205, 205, 205));
             g.drawRect(25 + x * 16, 55 + y * 16, 16, 16);
@@ -159,7 +130,7 @@ void draw(Graphics2D g) {
     }
     for (int y = 0; y < 16; y++) {
         for (int x = 0; x < 16; x++) {
-            g.setColor(palette[frames[played][y][x]]);
+            g.setColor(frames[played][y][x] == 0 ? Color.WHITE : Color.BLACK);
             g.fillRect(350 + x * 12, 75 + y * 12, 12, 12);
         }
     }
@@ -173,11 +144,6 @@ void draw(Graphics2D g) {
         g.setColor(Color.BLACK);
         g.drawString("" + (i + 1), 48 + i * 65, 356);
     }
-    g.setColor(palette[colour]);
-    g.fillRect(360, 310, 30, 30);
-    g.setColor(Color.BLACK);
-    g.drawRect(360, 310, 30, 30);
-    g.drawString("Current ink", 400, 330);
     g.drawString(message, 20, 405);
 }
 
@@ -192,9 +158,7 @@ void key(int code, boolean pressed) {
     if (pressed) {
         switch (code) {
             case KeyEvent.VK_Z -> undo();
-            case KeyEvent.VK_C -> colour = colour % 4 + 1;
             case KeyEvent.VK_SPACE -> playing = !playing;
-            case KeyEvent.VK_S -> save();
         }
     }
 }
@@ -205,7 +169,7 @@ void press(int x, int y, int button) {
     }
     else {
         drawing = true;
-        paintColour = button == MouseEvent.BUTTON3 ? 0 : colour;
+        paintColour = button == MouseEvent.BUTTON3 ? 0 : 1;
         paintAt(x, y);
     }
 }
@@ -271,7 +235,7 @@ void showWindow() {
     });
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.add(panel);
-    var help = new JLabel("<html><div style=\"text-align:center\">Draw: left mouse   Erase: right mouse   1-4: frame   C: ink   Space: play   S: PNG<br>R: reset</div></html>", SwingConstants.CENTER);
+    var help = new JLabel("<html><div style=\"text-align:center\">Draw: left mouse   Erase: right mouse   1-4: frame   Space: play   Z: undo<br>R: reset</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
     frame.add(help, BorderLayout.SOUTH);
     frame.pack();
@@ -286,8 +250,7 @@ record Edit(int frame, int x, int y, int oldColour) {}
 List<Edit> history = new ArrayList<>();
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// PaintCell uloží starou barvu; přidaná klávesa Z volá undo.
-/// Step posune jen náhled; draw ukáže editor i náhled; save uloží připravený sprite strip (pruh snímků).
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();
@@ -358,10 +321,6 @@ void main() {
 ///   implementaci), aby nejprve vykreslila běžné pozadí.
 /// - `record` — Malý pojmenovaný balíček hodnot. Component accessor (přístupová metoda složky) má jméno
 ///   složky a závorky ().
-/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
-/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
-/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
-///   zpracovat.
 /// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
 ///   měnit velikost.
 /// - `Graphics2D` — Kreslicí nástroj dodaný při vykreslování okna nebo obrázku.

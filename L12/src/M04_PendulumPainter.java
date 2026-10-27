@@ -17,8 +17,8 @@ import javax.swing.Timer;
 /// AccelerationNow propojí aktuální state (stav) s pravidlem, takže jej lze vyměnit bez přepisování
 /// časového kroku či kreslení.
 ///
-/// Po Run File měň Length a Gravity, pomocí Pause/Run zastav pohyb a tlačítky Clear či Reset obnov pokus
-/// se stopou.
+/// Po Run File měň Length a Gravity pro zkoumání stopy kyvadla; Pause/Run ovládá pohyb a Reset
+/// stopu vymaže a obnoví pokus.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Připomenutí · F34 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -63,9 +63,8 @@ double accelerationNow() {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Step použije accelerationNow, tlumení a pevný přírůstek času a potom kreslí mezi starou a novou pozicí
-/// závaží. Připravené Acceleration interface (rozhraní), výchozí pravidlo, posuvníky a plátno stopy
-/// oddělují ostatní odpovědnosti.
+/// step získá současné zrychlení přes accelerationNow a kreslí stopu závaží. Length a Gravity jsou
+/// vstupy pokusu; Pause/Run ovládá pohyb a Reset pokus vyčistí a obnoví.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -135,18 +134,16 @@ void showWindow() {
         }
     };
     canvas.setPreferredSize(new Dimension(600, 450));
+    canvas.setBackground(Color.BLACK);
     var controls = new JPanel();
     var lengthControl = new JSlider(80, 230, 180);
+    lengthControl.setPreferredSize(new Dimension(110, 25));
     lengthControl.addChangeListener(event -> length = lengthControl.getValue());
     var gravityControl = new JSlider(50, 600, 300);
+    gravityControl.setPreferredSize(new Dimension(110, 25));
     gravityControl.addChangeListener(event -> gravity = gravityControl.getValue());
     var pause = new JButton("Pause / Run");
     pause.addActionListener(event -> running = !running);
-    var clear = new JButton("Clear");
-    clear.addActionListener(event -> {
-        trace = new java.awt.image.BufferedImage(600, 450, java.awt.image.BufferedImage.TYPE_INT_RGB);
-        canvas.repaint();
-    });
     var reset = new JButton("Reset");
     reset.addActionListener(event -> {
 /// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
@@ -158,7 +155,6 @@ void showWindow() {
     controls.add(new JLabel("Gravity"));
     controls.add(gravityControl);
     controls.add(pause);
-    controls.add(clear);
     controls.add(reset);
     var timer = new Timer(20, event -> {
         if (running) {
@@ -185,12 +181,8 @@ interface Acceleration { double at(double angle, double length); }
 Acceleration acceleration = (a, len) -> -gravity / len * Math.sin(a);
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// AccelerationNow dodává skutečné úhlové zrychlení pro step.
-/// Reset obnoví pohyb; bob/kreslení i posuvníky jsou připravené; okno spravuje úklid timer (časovače).
-void main(String[] args) {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
+void main() {
 /// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
     reset(42);
     SwingUtilities.invokeLater(this::showWindow);
@@ -217,14 +209,12 @@ void main(String[] args) {
 /// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
 /// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
 /// - `boolean` — Hodnota true nebo false: ano nebo ne.
-/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
 /// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
 ///   textu nepatří.
 /// - `long` — Whole-number type (typ pro celá čísla) s větším rozsahem než int. Koncové L označuje long
 ///   literal (přímo zapsanou hodnotu).
 /// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
 /// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
-/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
 /// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
 /// - `++` — Zvětší číselnou hodnotu o jedna.
 /// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
@@ -235,8 +225,6 @@ void main(String[] args) {
 /// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
 ///   možnosti ? : nebo následuje za značkou switch.
-/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
-///   (prvek); length je počet prvků.
 /// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
 /// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
 /// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
@@ -251,7 +239,7 @@ void main(String[] args) {
 ///   implementaci), aby nejprve vykreslila běžné pozadí.
 /// - `interface` — Popisuje role (roli), kterou mohou plnit různé implementation (implementace). Volající
 ///   používá roli bez znalosti jejích vnitřností.
-/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `null` — Žádný object (objekt) tu není.
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
 /// - `Graphics2D` — Kreslicí nástroj dodaný při vykreslování okna nebo obrázku.
 /// - `JFrame` — Okno dodané JDK knihovnou Swing.

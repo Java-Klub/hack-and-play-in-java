@@ -1,7 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 import java.util.List;
 // </editor-fold>
 
@@ -16,8 +15,8 @@ import java.util.List;
 /// **Dnes trénuješ:** List (seznam) popisuje přístup v pořadí, ale ne každý List dovoluje mutation
 /// (změnu). Tato method (metoda) sestavuje výsledek postupně, proto její implementace musí přijímat add.
 ///
-/// Pomocí Run File vytvoř voronoi-stained-glass.png a po opravě kolekce semínek otevři cestu vypsanou za
-/// Saved.
+/// Run File sestaví obrázek. Pokud seedList odmítne přidat první barevný bod, čti Output.
+/// Po opravě Run File otevře barevný obrázek.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Připomenutí · F22 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -63,8 +62,8 @@ List<Seed> seedList(Random random, int count) {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Render požádá o semínka, porovná vzdálenosti a obarví každý pixel (obrazový bod) podle nejbližšího
-/// semínka. Připravené Random, Seed record i PNG export zůstávají viditelné bez další knihovny.
+/// render požádá seedList o středy a přiřadí každý bod nejbližšímu středu; showImages zobrazí
+/// obrázek z paměti přímo v Javě.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -122,30 +121,38 @@ BufferedImage render(long seed, double option) {
     return image;
 }
 
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
-        throw new IllegalStateException("PNG writer missing.");
-    }
-}
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// SeedList tvoří uspořádaná data; nearest hledá nejbližší bod.
-/// Render kreslí hranice; save/main zajišťují PNG export a místní argument (argumenty).
-void main(String[] args) throws Exception {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
+void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var pictures = new javax.swing.JPanel(new java.awt.GridLayout(1, images.length, 8, 8));
+        for (int i = 0; i < images.length; i++) {
+            var picture = new javax.swing.JPanel(new java.awt.BorderLayout());
+            picture.add(new javax.swing.JLabel(captions[i], javax.swing.SwingConstants.CENTER), java.awt.BorderLayout.NORTH);
+            double scale = Math.min(1, Math.min(900.0 / images.length / images[i].getWidth(), 550.0 / images[i].getHeight()));
+            var icon = new javax.swing.ImageIcon(images[i].getScaledInstance(
+                    Math.max(1, (int)(images[i].getWidth() * scale)),
+                    Math.max(1, (int)(images[i].getHeight() * scale)), java.awt.Image.SCALE_FAST));
+            picture.add(new javax.swing.JLabel(icon), java.awt.BorderLayout.CENTER);
+            pictures.add(picture);
+        }
+        frame.add(pictures);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
+
+
+void main() {
     try {
-        Path path = Path.of(args.length > 0 ? args[0] : "voronoi-stained-glass.png");
-        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
-        double option = args.length > 2 ? Double.parseDouble(args[2]) : 20;
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-        save(path, seed, option);
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
+        showImages("Voronoi Stained Glass", new String[]{"Result"}, new java.awt.image.BufferedImage[]{render(42, 20)});
+    } catch (Exception failure) {
+        IO.println("Cannot build the picture. Check seedList; Save, Test File, then Run File.");
     }
 }
 // </editor-fold>
@@ -203,15 +210,10 @@ void main(String[] args) throws Exception {
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
 /// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
-/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
-///   zpracovat.
 /// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
 ///   měnit velikost.
 /// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
 ///   zopakuje stejnou posloupnost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
-/// - `Path` — Umístění v souborech, nikoli obsah souboru.
-/// - `Files` — JDK operace pro čtení a zápis místních souborů.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek.
 // </editor-fold>
 

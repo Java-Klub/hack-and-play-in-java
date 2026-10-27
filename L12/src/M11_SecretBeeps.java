@@ -1,9 +1,4 @@
 // <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioSystem;
-import java.io.ByteArrayInputStream;
 // </editor-fold>
 
 /// # L12.11 · SecretBeeps
@@ -18,8 +13,8 @@ import java.io.ByteArrayInputStream;
 /// (operace s parametrem). Zachovej časování písmen a značek, zatímco nový parameter (parametr) řídí
 /// oddělení slov; původní chování ověř, ale nekopíruj kvůli němu celý postup.
 ///
-/// Po Run File stiskni Enter pro E E, vyber mezeru slov 7 či 10 a otevři odpovídající
-/// secret-beeps-gap7.wav nebo secret-beeps-gap10.wav.
+/// Po Run File napiš zprávu nebo stiskni Enter pro E E; v Java okně porovnej Play gap 10 s Play gap
+/// 7 a pomocí Stop či dalšího přehrání prozkoumej mezery mezi slovy.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Připomenutí · F36 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -80,9 +75,8 @@ List<Integer> units(String text, int wordGap) {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Code dodává Morseovy značky a oddělovače. Units je mění v kladné a záporné délky zvuku a ticha, signal
-/// tvoří sample (vzorky) a write uloží WAV; původní units s jedním argument (argumentem) zachovává
-/// výchozích sedm jednotek.
+/// code vytvoří Morse značky, units určí jejich délky a signal vytvoří samples (vzorky). Dvě volby
+/// Play porovnají požadovanou desetijednotkovou mezeru mezi slovy s původními sedmi jednotkami.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -100,20 +94,7 @@ List<Integer> units(String text, int wordGap) {
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int RATE = 22050;
 
-/// Připravený WAV encoding (kódování): omezené PCM sample (vzorky) a try-with-resources spravují stream (proud).
-void write(Path path, double[] signal) throws Exception {
-    byte[] pcm = new byte[signal.length * 2];
-    for (int i = 0; i < signal.length; i++) {
-        int value = (int)(Math.max(-0.8, Math.min(0.8, signal[i])) * 32767);
-        pcm[i * 2] = (byte)value;
-        pcm[i * 2 + 1] = (byte)(value >> 8);
-    }
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    var format = new AudioFormat(RATE, 16, 1, true, false);
-    try (var stream = new AudioInputStream(new ByteArrayInputStream(pcm), format, signal.length)) {
-        AudioSystem.write(stream, AudioFileFormat.Type.WAVE, path.toFile());
-    }
-}
+
 String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 String[] morse = {
     ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..",
@@ -165,33 +146,114 @@ List<Integer> units(String text) {
 }
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// Code mapuje ASCII písmena/číslice na Morse; units vlastní podepsané délky tónu/ticha.
-/// Signal rozvine délky na sample (vzorky) pomocí wordGap; main případně volí nový čtvrtý argument (argument) a write uloží WAV.
-void main(String[] args) throws Exception {
-    if (args.length == 0) {
-        String entered = IO.readln("Message (blank E E, q quits): ");
-        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
-        String message = entered.isBlank() ? "E E" : entered;
-        String gap = IO.readln("Word gap 3..12 (blank 10, q quits): ");
-        if (gap == null || gap.strip().equalsIgnoreCase("q")) return;
-        gap = gap.isBlank() ? "10" : gap.strip();
-        args = new String[]{"secret-beeps-gap" + gap + ".wav", message, "60", gap};
-    }
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
+volatile javax.sound.sampled.SourceDataLine playingLine;
+volatile int playbackVersion;
 
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
+/// Připravený Java Sound: worker (pracovní vlákno) vlastní kanál; Stop a zavření jej uvolní.
+/// Play/Stop používají oddělený Java Sound worker (pracovní vlákno); zavření jej uvolní.
+void stopAudio() {
+    playbackVersion++;
+    var line = playingLine;
+    playingLine = null;
+    if (line != null) {
+        line.stop();
+        line.flush();
+        line.close();
     }
+}
+
+void playAudio(double[] samples, javax.swing.JLabel status) {
+    stopAudio();
+    int ticket = playbackVersion;
+    status.setText("Playing in Java; Stop interrupts playback.");
+    var worker = new Thread(() -> {
+        javax.sound.sampled.SourceDataLine line = null;
+        try {
+            byte[] pcm = new byte[samples.length * 2];
+            for (int i = 0; i < samples.length; i++) {
+                int value = (int)(Math.max(-0.8, Math.min(0.8, samples[i])) * 32767);
+                pcm[i * 2] = (byte)value;
+                pcm[i * 2 + 1] = (byte)(value >> 8);
+            }
+            var format = new javax.sound.sampled.AudioFormat(RATE, 16, 1, true, false);
+            line = javax.sound.sampled.AudioSystem.getSourceDataLine(format);
+            line.open(format);
+            if (ticket != playbackVersion) return;
+            playingLine = line;
+            line.start();
+            int offset = 0;
+            while (offset < pcm.length && ticket == playbackVersion) {
+                int written = line.write(pcm, offset, Math.min(4096, pcm.length - offset));
+                if (written <= 0) break;
+                offset += written;
+            }
+            if (ticket == playbackVersion) {
+                line.drain();
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    if (ticket == playbackVersion) status.setText("Finished; Play replays the same sound.");
+                });
+            }
+        } catch (Exception failure) {
+            if (ticket == playbackVersion) {
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    if (ticket == playbackVersion) status.setText("Audio unavailable: " + failure.getMessage());
+                });
+            }
+        } finally {
+            if (line != null) {
+                line.stop();
+                line.close();
+                if (playingLine == line) playingLine = null;
+            }
+        }
+    }, "java-sound-player");
+    worker.setDaemon(true);
+    worker.start();
+}
+
+void showAudio(String title, String detail, String[] captions, double[][] sounds) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var status = new javax.swing.JLabel(detail);
+        var controls = new javax.swing.JPanel();
+        for (int i = 0; i < sounds.length; i++) {
+            int index = i;
+            var play = new javax.swing.JButton("Play " + captions[i]);
+            play.addActionListener(event -> playAudio(sounds[index], status));
+            controls.add(play);
+        }
+        var stop = new javax.swing.JButton("Stop");
+        stop.addActionListener(event -> {
+            stopAudio();
+            status.setText("Stopped; choose Play to listen again.");
+        });
+        controls.add(stop);
+        frame.add(status, java.awt.BorderLayout.NORTH);
+        frame.add(controls, java.awt.BorderLayout.SOUTH);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override public void windowClosed(java.awt.event.WindowEvent event) { stopAudio(); }
+        });
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
+
+void main() {
+    String input = IO.readln("Message (blank E E, q quits): ");
+    if (input == null || input.strip().equalsIgnoreCase("q")) return;
+    String text = input.isBlank() ? "E E" : input;
     try {
-        Path path = Path.of(args.length > 0 ? args[0] : "secret-beeps.wav");
-        String text = args.length > 1 ? args[1] : "SOS JAVA";
-        int unit = args.length > 2 ? Integer.parseInt(args[2]) : 60;
-        if (args.length > 3) wordGap = Integer.parseInt(args[3]);
-        IO.println(code(text));
-/// Připravený WAV encoding (kódování): omezené PCM sample (vzorky) a try-with-resources spravují stream (proud).
-        write(path, signal(text, unit));
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println(invalid.getMessage());
+        wordGap = 10;
+        var changed = signal(text, 60);
+        wordGap = 7;
+        var original = signal(text, 60);
+        showAudio("Secret Beeps", "Message: " + text + " | " + code(text), new String[]{"gap 10", "gap 7"}, new double[][]{changed, original});
+    } catch (IllegalArgumentException failure) {
+        IO.println(failure.getMessage());
     }
 }
 // </editor-fold>
@@ -203,7 +265,6 @@ void main(String[] args) throws Exception {
 /// dopředu.
 ///
 /// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
-/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
 /// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
 ///   části.
 /// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
@@ -253,13 +314,9 @@ void main(String[] args) throws Exception {
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
 /// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
-/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
-///   zpracovat.
 /// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
 ///   měnit velikost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
-/// - `Path` — Umístění v souborech, nikoli obsah souboru.
-/// - `Files` — JDK operace pro čtení a zápis místních souborů.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek. readln čeká na celý
+///   řádek vstupu.
 // </editor-fold>
 

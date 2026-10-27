@@ -2,12 +2,6 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.Timer;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioSystem;
-import java.io.ByteArrayInputStream;
 // </editor-fold>
 
 /// # L11.01 · TinyStepSequencer
@@ -21,8 +15,8 @@ import java.io.ByteArrayInputStream;
 /// **Dnes trénuješ:** Set (množina) říká, zda obsahuje danou odlišnou hodnotu. Toggle (přepnutí) má dvě
 /// cesty: dosud nepřítomný Note přibude, přítomný Note má naopak přestat patřit do Set.
 ///
-/// Po Run File klikáním zapínej a vypínej noty, vyber BPM a pomocí Export WAV ulož rytmus, který můžeš
-/// otevřít v přehrávači.
+/// Po Run File klikáním přepínej tóny, zvol BPM a tlačítkem Play si čtyři opakování přehraj přímo v
+/// Javě; Stop přeruší zvuk, Restart obnoví začátek.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Nová dovednost · F23 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -64,8 +58,9 @@ boolean toggle(int row, int step) {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Každé tlačítko volá toggle a obnoví výběr podle notes. Připravená syntéza čte stejnou Set (množinu),
-/// spojuje konečné zvuky nástrojů a zapíše WAV ve zvoleném tempu; sama jej nepřehrává.
+/// toggle mění stejný Note Set (množinu tónů), který čtou refresh i sequence. Play přehraje
+/// současné tóny při zvoleném BPM; Stop a zavření uvolní Java Sound a Restart obnoví počáteční
+/// tóny.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -83,20 +78,7 @@ boolean toggle(int row, int step) {
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int RATE = 22050;
 
-/// Připravený WAV encoding (kódování): omezené PCM sample (vzorky) a try-with-resources spravují stream (proud).
-void write(Path path, double[] signal) throws Exception {
-    byte[] pcm = new byte[signal.length * 2];
-    for (int i = 0; i < signal.length; i++) {
-        int value = (int)(Math.max(-0.8, Math.min(0.8, signal[i])) * 32767);
-        pcm[i * 2] = (byte)value;
-        pcm[i * 2 + 1] = (byte)(value >> 8);
-    }
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    var format = new AudioFormat(RATE, 16, 1, true, false);
-    try (var stream = new AudioInputStream(new ByteArrayInputStream(pcm), format, signal.length)) {
-        AudioSystem.write(stream, AudioFileFormat.Type.WAVE, path.toFile());
-    }
-}
+
 record Note(int row, int step) {}
 Set<Note> notes = new HashSet<>();
 JToggleButton[][] buttons = new JToggleButton[4][8];
@@ -162,33 +144,25 @@ void showWindow() {
     var controls = new JPanel();
     var tempo = new JSpinner(new SpinnerNumberModel(120, 40, 240, 5));
     tempo.addChangeListener(event -> bpm = (Integer)tempo.getValue());
-    var clear = new JButton("Clear");
-    clear.addActionListener(event -> {
-        notes.clear();
-        refresh();
-    });
-    var restore = new JButton("Restore");
+    var restore = new JButton("Restart");
     restore.addActionListener(event -> {
 /// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
         reset();
         refresh();
     });
-    var status = new JLabel("Export four loops; open the WAV to play or stop.");
-    var export = new JButton("Export WAV");
-    export.addActionListener(event -> {
-        try {
-/// Připravený WAV encoding (kódování): omezené PCM sample (vzorky) a try-with-resources spravují stream (proud).
-            write(Path.of("tiny-sequencer.wav"), sequence(4));
-            status.setText("Saved tiny-sequencer.wav");
-        } catch (Exception failure) {
-            status.setText(failure.getMessage());
-        }
+    var status = new JLabel("Click cells, then Play to hear four loops in Java.");
+    var play = new JButton("Play");
+    play.addActionListener(event -> playAudio(sequence(4), status));
+    var stop = new JButton("Stop");
+    stop.addActionListener(event -> { stopAudio(); status.setText("Stopped; Play starts the current notes again."); });
+    frame.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override public void windowClosed(java.awt.event.WindowEvent event) { stopAudio(); }
     });
     controls.add(new JLabel("BPM:"));
     controls.add(tempo);
-    controls.add(clear);
     controls.add(restore);
-    controls.add(export);
+    controls.add(play);
+    controls.add(stop);
     frame.add(status, BorderLayout.NORTH);
     frame.add(grid, BorderLayout.CENTER);
     frame.add(controls, BorderLayout.SOUTH);
@@ -199,25 +173,76 @@ void showWindow() {
 }
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// Toggle je skutečná akce tlačítka; notes obsahuje immutable Note (neměnné hodnoty Note).
-/// Sequence tvoří čtyři hlasy ve zvoleném tempu; write je uloží bez automatického přehrání; zavření uvolní okno.
-void main(String[] args) throws Exception {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
+volatile javax.sound.sampled.SourceDataLine playingLine;
+volatile int playbackVersion;
+
+/// Připravený Java Sound: worker (pracovní vlákno) vlastní kanál; Stop a zavření jej uvolní.
+/// Play/Stop používají oddělený Java Sound worker (pracovní vlákno); zavření jej uvolní.
+void stopAudio() {
+    playbackVersion++;
+    var line = playingLine;
+    playingLine = null;
+    if (line != null) {
+        line.stop();
+        line.flush();
+        line.close();
     }
-/// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
-    reset();
-    if (args.length > 0 && args[0].equals("export")) {
-        if (args.length > 2) {
-            bpm = Integer.parseInt(args[2]);
+}
+
+void playAudio(double[] samples, javax.swing.JLabel status) {
+    stopAudio();
+    int ticket = playbackVersion;
+    status.setText("Playing in Java; Stop interrupts playback.");
+    var worker = new Thread(() -> {
+        javax.sound.sampled.SourceDataLine line = null;
+        try {
+            byte[] pcm = new byte[samples.length * 2];
+            for (int i = 0; i < samples.length; i++) {
+                int value = (int)(Math.max(-0.8, Math.min(0.8, samples[i])) * 32767);
+                pcm[i * 2] = (byte)value;
+                pcm[i * 2 + 1] = (byte)(value >> 8);
+            }
+            var format = new javax.sound.sampled.AudioFormat(RATE, 16, 1, true, false);
+            line = javax.sound.sampled.AudioSystem.getSourceDataLine(format);
+            line.open(format);
+            if (ticket != playbackVersion) return;
+            playingLine = line;
+            line.start();
+            int offset = 0;
+            while (offset < pcm.length && ticket == playbackVersion) {
+                int written = line.write(pcm, offset, Math.min(4096, pcm.length - offset));
+                if (written <= 0) break;
+                offset += written;
+            }
+            if (ticket == playbackVersion) {
+                line.drain();
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    if (ticket == playbackVersion) status.setText("Finished; Play replays the same sound.");
+                });
+            }
+        } catch (Exception failure) {
+            if (ticket == playbackVersion) {
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    if (ticket == playbackVersion) status.setText("Audio unavailable: " + failure.getMessage());
+                });
+            }
+        } finally {
+            if (line != null) {
+                line.stop();
+                line.close();
+                if (playingLine == line) playingLine = null;
+            }
         }
-        Path path = Path.of(args.length > 1 ? args[1] : "tiny-sequencer.wav");
-/// Připravený WAV encoding (kódování): omezené PCM sample (vzorky) a try-with-resources spravují stream (proud).
-        write(path, sequence(4));
-        IO.println("Saved: " + path.toAbsolutePath());
-    } else {
-        SwingUtilities.invokeLater(this::showWindow);
-    }
+    }, "java-sound-player");
+    worker.setDaemon(true);
+    worker.start();
+}
+
+
+void main() {
+    reset();
+    SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
 
@@ -261,8 +286,6 @@ void main(String[] args) throws Exception {
 /// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
-/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
-///   druhou.
 /// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
 ///   možnosti ? : nebo následuje za značkou switch.
 /// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
@@ -270,7 +293,6 @@ void main(String[] args) throws Exception {
 /// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
 /// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
 /// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
-/// - `else` — Alternativní větev pro případ, že předchozí if condition (podmínka) neplatí.
 /// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
 /// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
 ///   až při pozdějším volání.
@@ -281,13 +303,7 @@ void main(String[] args) throws Exception {
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
 /// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
-/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
-///   zpracovat.
 /// - `Set` — Uchovává různé hodnoty; stejná hodnota je přítomná nejvýše jednou.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
-/// - `Path` — Umístění v souborech, nikoli obsah souboru.
-/// - `Files` — JDK operace pro čtení a zápis místních souborů.
 /// - `JFrame` — Okno dodané JDK knihovnou Swing.
 /// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.
 /// - `SwingUtilities.invokeLater` — Naplánuje práci s oknem na Swing event thread (vlákno událostí); akce

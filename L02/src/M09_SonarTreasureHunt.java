@@ -1,3 +1,11 @@
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import javax.swing.*;
+// </editor-fold>
+
 /// # L02.09 · SonarTreasureHunt
 ///
 /// Prohledej moře 8×8 a najdi tři ukryté poklady pouze osmi sondami. Každé minutí oznámí vzdálenost tehdy
@@ -10,8 +18,8 @@
 /// obdélníkovou oblast. Řádek i sloupec musejí být mezi svými dolními a horními hranicemi; osm pozic
 /// začínajících nulou končí sedmičkou.
 ///
-/// Použij Run File, zadáním 9 1 prozkoumej sondu mimo mapu a sleduj počet Probes; /r obnoví kolo před
-/// skutečným hledáním pokladů.
+/// Run File otevře moře. Kliknutím prozkoumej políčko. Zkus obě tlačítka Try outside: ani jedno
+/// nemá spotřebovat sondu. Po opravě obou mezí začne New sea nový lov pokladů.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Připomenutí · F06 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -60,6 +68,19 @@ boolean insideSea(int row, int column) {
 ///
 /// command přečte hráčovy souřadnice, odečte od nich jednu a volá insideSea před záznamem sondy. distance
 /// vypočítá stopu a připravená historie uchovává každou starou stopu spojenou s původním okamžikem.
+// </editor-fold>
+
+// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
+/// Klikni na políčko moře. Číslo označí vzdálenost k nejbližšímu pokladu, který byl v tu chvíli
+/// ještě schovaný. Počítej kroky po řádcích a sloupcích, nikoli šikmo: jeden krok nahoru a dva doprava
+/// znamenají vzdálenost tři. Clue log (záznam měření) uchová původní výsledek; po nalezení jiného pokladu
+/// se stará čísla nepřepočítají. FOUND znamená nález, po osmi sondách X odhalí přehlédnuté poklady.
+/// New sea začne nové kolo.
+///
+/// Obě tlačítka Try outside záměrně žádají řádek nebo sloupec devět. Sleduj počítadlo: chybný guard
+/// (kontrola mezí) je přijme, správný je odmítne bez spotřebování sondy. Tlačítka volají stejnou command
+/// a insideSea jako běžná kliknutí. Souřadnice hráče začínají jedničkou; command od nich před voláním
+/// tvého pravidla odečte jedničku. Platný index (pořadové číslo) tak sahá od nuly do sedmi.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -123,41 +144,134 @@ void command(String input) {
     }
 }
 
-void display() {
-    IO.println("Probes " + probes + "/8. Manhattan distance to nearest unfound treasure at that time.");
-    IO.println("Old timestamped clues never change after a find.");
-    for (String s : history) {
-        IO.println(s);
+// Připravené Swing controls (ovládací prvky) volají stejnou command a insideSea jako testy.
+JButton[][] seaButtons = new JButton[8][8];
+JLabel scoreLabel = new JLabel();
+JLabel feedbackLabel = new JLabel("Click any sea square to send your first probe.");
+JTextArea clueLog = new JTextArea(5, 44);
+
+void refreshSea() {
+    scoreLabel.setText("Probes: " + probes + " / 8     Treasures left: " + treasures.size());
+    clueLog.setText(String.join("\n", history));
+    clueLog.setCaretPosition(clueLog.getDocument().getLength());
+    for (int row = 0; row < 8; row++) {
+        for (int column = 0; column < 8; column++) {
+            int cell = row * 8 + column;
+            var button = seaButtons[row][column];
+            button.setEnabled(outcome.isEmpty() && !probed.contains(cell));
+            if (!outcome.isEmpty() && treasures.contains(cell)) {
+                button.setText("X");
+                button.setToolTipText("A treasure you did not find.");
+                button.setBackground(new Color(255, 210, 130));
+            }
+        }
     }
+}
+
+void probeAt(int row, int column) {
+    if (!outcome.isEmpty()) {
+        feedbackLabel.setText("Round finished. Click New sea to play again.");
+        return;
+    }
+    boolean onMap = row >= 1 && row <= 8 && column >= 1 && column <= 8;
+    int cell = (row - 1) * 8 + column - 1;
+    if (onMap && probed.contains(cell)) {
+        feedbackLabel.setText("You already explored that square; no probe spent.");
+        return;
+    }
+    boolean hit = treasures.contains(cell);
+    try {
+        command(row + " " + column);
+        if (onMap) {
+            var button = seaButtons[row - 1][column - 1];
+            button.setText(hit ? "FOUND" : "" + distance(cell));
+            button.setBackground(hit ? new Color(255, 220, 100) : new Color(210, 230, 245));
+            button.setToolTipText(history.getLast());
+            feedbackLabel.setText(hit ? "Treasure found! Old distances still describe the earlier probes."
+                : "Distance " + distance(cell) + ": count row steps + column steps to the nearest hidden treasure.");
+        } else {
+            feedbackLabel.setText("BUG: (" + row + ", " + column + ") is outside the sea, but spent a probe.");
+        }
+        if (!outcome.isEmpty()) feedbackLabel.setText(treasures.isEmpty()
+            ? "You found all three treasures! Click New sea for another round."
+            : "Eight probes used. X marks the missed treasures. Click New sea to retry.");
+    } catch (IllegalArgumentException invalid) {
+        feedbackLabel.setText(onMap ? "That probe was refused; no probe spent."
+            : "Outside the sea: refused correctly; no probe spent.");
+    }
+    refreshSea();
+}
+
+void showWindow() {
+    var frame = new JFrame("Sonar Treasure Hunt");
+    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    var board = new JPanel(new GridLayout(9, 9, 3, 3));
+    board.add(new JLabel("Row / Col"));
+    for (int column = 1; column <= 8; column++) {
+        board.add(new JLabel("" + column, SwingConstants.CENTER));
+    }
+    for (int row = 0; row < 8; row++) {
+        board.add(new JLabel("" + (row + 1), SwingConstants.CENTER));
+        for (int column = 0; column < 8; column++) {
+            int r = row + 1, c = column + 1;
+            var button = new JButton("~");
+            button.setPreferredSize(new Dimension(54, 40));
+            button.setFont(button.getFont().deriveFont(12f));
+            button.setToolTipText("Probe row " + r + ", column " + c);
+            button.addActionListener(event -> probeAt(r, c));
+            seaButtons[row][column] = button;
+            board.add(button);
+        }
+    }
+    var instructions = new JLabel("<html><b>Find 3 treasures with 8 probes.</b> Click a sea square.<br>"
+        + "A number is the distance at that time: row steps + column steps.<br>"
+        + "For example: one square up and two right is distance 3.</html>");
+    var top = new JPanel(new BorderLayout(0, 8));
+    top.add(instructions, BorderLayout.NORTH);
+    top.add(scoreLabel, BorderLayout.SOUTH);
+    var controls = new JPanel();
+    var outsideRow = new JButton("Try outside: row 9, col 1");
+    outsideRow.addActionListener(event -> probeAt(9, 1));
+    var outsideColumn = new JButton("Try outside: row 1, col 9");
+    outsideColumn.addActionListener(event -> probeAt(1, 9));
+    var restart = new JButton("New sea");
+    restart.addActionListener(event -> {
+        reset();
+        for (var row : seaButtons) for (var button : row) {
+            button.setText("~");
+            button.setToolTipText("Unexplored sea square");
+            button.setBackground(null);
+        }
+        feedbackLabel.setText("New sea. Click a square; the treasures have moved.");
+        refreshSea();
+    });
+    controls.add(outsideRow);
+    controls.add(outsideColumn);
+    controls.add(restart);
+    clueLog.setEditable(false);
+    var bottom = new JPanel(new BorderLayout(0, 8));
+    bottom.add(feedbackLabel, BorderLayout.NORTH);
+    bottom.add(new JScrollPane(clueLog), BorderLayout.CENTER);
+    bottom.add(controls, BorderLayout.SOUTH);
+    var content = new JPanel(new BorderLayout(8, 8));
+    content.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+    content.add(top, BorderLayout.NORTH);
+    content.add(board, BorderLayout.CENTER);
+    content.add(bottom, BorderLayout.SOUTH);
+    frame.add(content);
+    refreshSea();
+    frame.pack();
+    frame.setLocationByPlatform(true);
+    frame.setVisible(true);
 }
 
 void main() {
     reset();
-    IO.println("Sonar Treasure Hunt");
-    IO.println("Enter probe row column (1-8). Eight probes to find three treasures. /r restarts; /q quits.");
-    while (true) {
-        display();
-        if (!outcome.isEmpty()) {
-            IO.println(outcome);
-        }
-        String input = IO.readln("> ");
-        if (input == null || input.strip().equalsIgnoreCase("/q")) {
-            return;
-        }
-        if (input.strip().equalsIgnoreCase("/r")) {
-            reset();
-            continue;
-        }
-        if (!outcome.isEmpty()) {
-            IO.println("Round finished. /r restarts; /q quits.");
-            continue;
-        }
-        try {
-            command(input.strip());
-        } catch (IllegalArgumentException invalid) {
-            IO.println("Invalid move or command. Enter probe row column (1-8). Eight probes to find three treasures. /r restarts; /q quits.");
-        }
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        IO.println("Sonar Treasure Hunt needs a graphical display. Test File checks insideSea without a window.");
+        return;
     }
+    SwingUtilities.invokeLater(this::showWindow);
 }
 
 void require(boolean valid) {
@@ -166,7 +280,7 @@ void require(boolean valid) {
     }
 }
 
-/// Připravené vstupní body: main, reset, command.
+/// Připravené vstupní body: main, reset, command, probeAt, showWindow.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
@@ -195,7 +309,6 @@ void require(boolean valid) {
 /// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
 /// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
 /// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
-/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
 /// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
 /// - `++` — Zvětší číselnou hodnotu o jedna.
 /// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
@@ -217,17 +330,15 @@ void require(boolean valid) {
 /// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
 /// - `else` — Alternativní větev pro případ, že předchozí if condition (podmínka) neplatí.
 /// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
-/// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
 /// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
 ///   až při pozdějším volání.
-/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `null` — Žádný object (objekt) tu není.
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
 /// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
 /// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
 ///   měnit velikost.
 /// - `Set` — Uchovává různé hodnoty; stejná hodnota je přítomná nejvýše jednou.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek.
 // </editor-fold>
 

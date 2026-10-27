@@ -1,7 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 import java.util.List;
 // </editor-fold>
 
@@ -16,8 +15,8 @@ import java.util.List;
 /// **Dnes trénuješ:** Členství v Set (množině) a vložení jsou různé operace. Boolean result (logický
 /// výsledek) vložení může oznámit nový střed a současně jej zaznamenat pro další pokusy.
 ///
-/// Pomocí Run File vytvoř circle-packing.png a po dokončení omezeného skládání otevři cestu vypsanou za
-/// Saved.
+/// Po Run File prohlédni Java obrázek; zavři okno, uprav aktivní pravidlo, použij Save a Test File
+/// a dalším Run File porovnej výsledek.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Připomenutí · F23 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -57,8 +56,8 @@ boolean claimCentre(Set<Centre> seen, int x, int y) {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Omezený pack loop (cyklus skládání) volá claimCentre před zkoumáním dostupného poloměru. Vzdálenosti
-/// pro srážky, růst poloměru až do dotyku, barvy i závěrečný circle-packing.png jsou připravené.
+/// pack navrhuje středy, přes claimCentre zjišťuje nové pozice a zvětšuje kruhy do dotyku. render
+/// zobrazí omezené skládání; další režim obrázku není potřeba.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -139,32 +138,40 @@ BufferedImage render(long seed, double option) {
     return image;
 }
 
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
-        throw new IllegalStateException("PNG writer missing.");
-    }
-}
 
 record Centre(int x, int y) {}
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// ClaimCentre uchovává stabilní record key (klíče) místo mutable object (měnitelných objektů) souřadnic.
-/// Pack provede nejvýše 10 000 návrhů a nechá růst nepřekrývající se bubliny; render/save výsledek ukážou.
-void main(String[] args) throws Exception {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
+void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var pictures = new javax.swing.JPanel(new java.awt.GridLayout(1, images.length, 8, 8));
+        for (int i = 0; i < images.length; i++) {
+            var picture = new javax.swing.JPanel(new java.awt.BorderLayout());
+            picture.add(new javax.swing.JLabel(captions[i], javax.swing.SwingConstants.CENTER), java.awt.BorderLayout.NORTH);
+            double scale = Math.min(1, Math.min(900.0 / images.length / images[i].getWidth(), 550.0 / images[i].getHeight()));
+            var icon = new javax.swing.ImageIcon(images[i].getScaledInstance(
+                    Math.max(1, (int)(images[i].getWidth() * scale)),
+                    Math.max(1, (int)(images[i].getHeight() * scale)), java.awt.Image.SCALE_FAST));
+            picture.add(new javax.swing.JLabel(icon), java.awt.BorderLayout.CENTER);
+            pictures.add(picture);
+        }
+        frame.add(pictures);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
+
+
+void main() {
     try {
-        Path path = Path.of(args.length > 0 ? args[0] : "circle-packing.png");
-        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
-        double option = args.length > 2 ? Double.parseDouble(args[2]) : 80;
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-        save(path, seed, option);
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
+        showImages("Circle Packing", new String[]{"Result"}, new java.awt.image.BufferedImage[]{render(42, 80)});
+    } catch (Exception failure) {
+        IO.println("Cannot draw this result; check the editable rule: " + failure);
     }
 }
 // </editor-fold>
@@ -207,8 +214,6 @@ void main(String[] args) throws Exception {
 ///   (balíčku).
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
-/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
-///   druhou.
 /// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
 ///   možnosti ? : nebo následuje za značkou switch.
 /// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
@@ -223,16 +228,11 @@ void main(String[] args) throws Exception {
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
 /// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
-/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
-///   zpracovat.
 /// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
 ///   měnit velikost.
 /// - `Set` — Uchovává různé hodnoty; stejná hodnota je přítomná nejvýše jednou.
 /// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
 ///   zopakuje stejnou posloupnost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
-/// - `Path` — Umístění v souborech, nikoli obsah souboru.
-/// - `Files` — JDK operace pro čtení a zápis místních souborů.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek.
 // </editor-fold>
 

@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.geom.Point2D;
-import javax.swing.Timer;
 // </editor-fold>
 
 /// # L10.07 · Moire
@@ -17,8 +16,8 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Grid coordinate (souřadnice mřížky) a screen coordinate (souřadnice obrazovky) mají
 /// různé počátky. Vzorec otáčení je připravený; obě výsledné osy musí ležet kolem stejného středu plátna.
 ///
-/// Po Run File otáčej pomocí Left/Right, měň rozestupy mřížky pomocí Up/Down a klávesou Space rozhýbej
-/// překrytí.
+/// Po Run File pomocí Left/Right otáčej jednu grid (mřížku) a Up/Down měň rozestupy pro zkoumání
+/// překrytí; R obnoví počáteční vzor.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Připomenutí · F29 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -59,8 +58,8 @@ Point2D.Double gridPoint(int column, int row, double a) {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Připravené kreslení mřížky spojuje převedené koncové body. Klávesy mění úhel a rozestupy, volitelné
-/// tick (časové kroky) otáčení animují; gridPoint je společný převod pro skutečné kreslení.
+/// draw překryje dvě bodové grids (mřížky) pomocí gridPoint. Left/Right otáčí jednu grid a Up/Down
+/// mění rozestup; R obnoví počáteční geometrii.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -80,13 +79,10 @@ final int WIDTH = 640, HEIGHT = 440;
 
 double angle;
 int spacing;
-boolean paused, third;
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
 void restart() {
     angle = .07;
     spacing = 22;
-    paused = true;
-    third = false;
 }
 
 void adjust(int amount) {
@@ -97,21 +93,15 @@ int extent() {
     return (int)Math.ceil(Math.hypot(WIDTH, HEIGHT) / 2 / spacing) + 1;
 }
 
-/// Připravený omezený update (aktualizace): jedno volání znamená jeden krok; aktivní oprava je popsaná výše.
-void step() {
-    if (!paused) {
-        angle = (angle + .0015) % (2 * Math.PI);
-    }
-}
 
 /// Připravené kreslení: čte hodnoty model (modelu pravidel); repaint (překreslení) není další tah.
 void draw(Graphics2D g) {
     g.setColor(Color.WHITE);
     g.fillRect(0, 0, WIDTH, HEIGHT);
     int limit = extent();
-    for (int layer = 0; layer < (third ? 3 : 2); layer++) {
-        double a = layer == 0 ? 0 : layer == 1 ? angle : -angle;
-        g.setColor(layer == 0 ? new Color(20, 20, 20, 200) : layer == 1 ? new Color(40, 80, 170, 170) : new Color(180, 60, 80, 150));
+    for (int layer = 0; layer < 2; layer++) {
+        double a = layer == 0 ? 0 : angle;
+        g.setColor(layer == 0 ? new Color(20, 20, 20, 200) : new Color(40, 80, 170, 170));
         for (int y = -limit; y <= limit; y++) {
             for (int x = -limit; x <= limit; x++) {
                 var p = gridPoint(x, y, a);
@@ -122,7 +112,7 @@ void draw(Graphics2D g) {
     g.setColor(Color.WHITE);
     g.fillRect(0, 0, WIDTH, 28);
     g.setColor(Color.BLACK);
-    g.drawString(String.format("Angle %.2f degrees   Spacing %d   %s", Math.toDegrees(angle), spacing, paused ? "Paused" : "Rotating"), 10, 20);
+    g.drawString(String.format("Angle %.2f degrees   Spacing %d", Math.toDegrees(angle), spacing), 10, 20);
 }
 
 void key(int code, boolean pressed) {
@@ -132,12 +122,10 @@ void key(int code, boolean pressed) {
     }
     if (pressed) {
         switch (code) {
-            case KeyEvent.VK_SPACE -> paused = !paused;
             case KeyEvent.VK_LEFT -> angle -= .01;
             case KeyEvent.VK_RIGHT -> angle += .01;
             case KeyEvent.VK_UP -> adjust(1);
             case KeyEvent.VK_DOWN -> adjust(-1);
-            case KeyEvent.VK_T -> third = !third;
         }
     }
 }
@@ -164,19 +152,9 @@ void showWindow() {
             panel.repaint();
         }
     });
-    var timer = new Timer(20, e -> {
-/// Připravený omezený update (aktualizace): jedno volání znamená jeden krok; aktivní oprava je popsaná výše.
-        step();
-        panel.repaint();
-    });
-    frame.addWindowListener(new WindowAdapter() {
-        @Override public void windowClosed(WindowEvent e) {
-            timer.stop();
-        }
-    });
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.add(panel);
-    var help = new JLabel("<html><div style=\"text-align:center\">Space: play/pause   Left/Right: rotate   Up/Down: spacing   T: third grid   R: reset</div></html>", SwingConstants.CENTER);
+    var help = new JLabel("<html><div style=\"text-align:center\">Left/Right: rotate   Up/Down: spacing   R: reset</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
     frame.add(help, BorderLayout.SOUTH);
     frame.pack();
@@ -184,12 +162,10 @@ void showWindow() {
     frame.setLocationByPlatform(true);
     frame.setVisible(true);
     panel.requestFocusInWindow();
-    timer.start();
 }
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// gridPoint mění hodnoty modelu na body obrazovky a volá ji skutečné kreslení.
-/// Input (vstup) mění hodnoty modelu; draw je jen čte; připravené UI (rozhraní) řídí timer (časovač) i zavření.
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();
@@ -227,10 +203,8 @@ void main() {
 /// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
 /// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
 /// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
-/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
 /// - `++` — Zvětší číselnou hodnotu o jedna.
 /// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
-/// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
 /// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
 /// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
 /// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package

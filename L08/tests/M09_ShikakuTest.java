@@ -16,8 +16,12 @@ public class M09_ShikakuTest {
         var g = new M09_Shikaku();
         g.restart();
         expect(g.add(0, 0, 1, 2), "I094/F20: valid rectangle added");
+        g.startX = 2;
+        g.message = "Rejected: earlier drag";
         g.undo();
         equal(0, g.boxes.size(), "I094/F20: undo restores an independent list");
+        equal("Previous layout restored", g.message, "I094/F20: undo feedback describes the restored board");
+        equal(-1, g.startX, "I094/F20: undo leaves no unfinished drag outline");
         g.add(0, 0, 1, 2);
         g.remove(0, 0);
         g.undo();

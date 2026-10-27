@@ -1,7 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L11.06 · ColourFilterSecrets
@@ -15,8 +14,8 @@ import javax.imageio.ImageIO;
 /// **Dnes trénuješ:** Jeden Random se seed (počáteční hodnotou) má dodávat šum pro celý obrázek.
 /// Opakovatelnost pomáhá s porovnáním, zatímco jiný seed má změnit rušivé barevné složky.
 ///
-/// Po Run File zadej seed (počáteční hodnotu) 42, otevři colour-filter-secrets-42.png a porovnej
-/// zašuměnou horní a odhalenou spodní polovinu, potom spusť 43.
+/// Po Run File napiš seed (počáteční číslo) nebo stiskni Enter pro 42; prohlédni Java obrázek,
+/// potom jej zavři a zopakuj stejný seed nebo porovnej 43.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Připomenutí · F27 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -67,8 +66,8 @@ BufferedImage hide(BufferedImage mask, long seed) {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Připravená maska obsahuje nápis. Hide ji spojí se šumem a render umístí maskovaný i odhalený pohled do
-/// horní a spodní poloviny jediného uloženého obrázku; změna náhody nesmí přepsat masku.
+/// hide použije zvolený seed (počáteční číslo) pro barevný šum nad message mask (maskou zprávy).
+/// render vloží skrytý pohled nad odhalenou verzi s červeným filtrem do jednoho Java obrázku.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -129,40 +128,41 @@ BufferedImage render(long seed, double option) {
     return image;
 }
 
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
-        throw new IllegalStateException("PNG writer missing.");
-    }
-}
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// Mask kreslí připravený text; hide přidá barevné maskování; reveal čte červený channel (kanál).
-/// Render ukáže skrytou a odhalenou půlku; save/main uloží místní PNG.
-void main(String[] args) throws Exception {
-    if (args.length == 0) {
-        String entered = IO.readln("Seed (blank 42, q quits): ");
-        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
-        String seedText = entered.isBlank() ? "42" : entered.strip();
-        args = new String[]{"colour-filter-secrets-" + seedText + ".png", seedText};
-    }
-
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
-    try {
-        Path path = Path.of(args.length > 0 ? args[0] : "colour-filter-secrets.png");
-        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
-        double option = 1;
-        if (args.length > 2) {
-            message = args[2];
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
+void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var pictures = new javax.swing.JPanel(new java.awt.GridLayout(1, images.length, 8, 8));
+        for (int i = 0; i < images.length; i++) {
+            var picture = new javax.swing.JPanel(new java.awt.BorderLayout());
+            picture.add(new javax.swing.JLabel(captions[i], javax.swing.SwingConstants.CENTER), java.awt.BorderLayout.NORTH);
+            double scale = Math.min(1, Math.min(900.0 / images.length / images[i].getWidth(), 550.0 / images[i].getHeight()));
+            var icon = new javax.swing.ImageIcon(images[i].getScaledInstance(
+                    Math.max(1, (int)(images[i].getWidth() * scale)),
+                    Math.max(1, (int)(images[i].getHeight() * scale)), java.awt.Image.SCALE_FAST));
+            picture.add(new javax.swing.JLabel(icon), java.awt.BorderLayout.CENTER);
+            pictures.add(picture);
         }
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-        save(path, seed, option);
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
+        frame.add(pictures);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
+
+
+void main() {
+    String input = IO.readln("Seed (blank 42, q quits): ");
+    if (input == null || input.strip().equalsIgnoreCase("q")) return;
+    try {
+        long seed = input.isBlank() ? 42 : Long.parseLong(input.strip());
+        showImages("Colour Filter Secrets", new String[]{"Seed " + seed}, new java.awt.image.BufferedImage[]{render(seed, 1)});
+    } catch (IllegalArgumentException failure) {
+        IO.println("Use a whole-number seed: " + failure.getMessage());
     }
 }
 // </editor-fold>
@@ -194,9 +194,7 @@ void main(String[] args) throws Exception {
 /// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
 /// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
 /// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
-/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
 /// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
-/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
 /// - `++` — Zvětší číselnou hodnotu o jedna.
 /// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
 /// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
@@ -218,13 +216,9 @@ void main(String[] args) throws Exception {
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
 /// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
-/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
-///   zpracovat.
 /// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
 ///   zopakuje stejnou posloupnost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
-/// - `Path` — Umístění v souborech, nikoli obsah souboru.
-/// - `Files` — JDK operace pro čtení a zápis místních souborů.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek. readln čeká na celý
+///   řádek vstupu.
 // </editor-fold>
 

@@ -144,7 +144,11 @@ void draw(Graphics2D g) {
     g.setColor(new Color(65, 75, 200));
     g.drawOval(105 + x * 60, 40 + y * 60, 50, 50);
     g.setColor(Color.BLACK);
-    g.drawString(won() ? "All 25 squares visited!" : "Visited " + count + " / 25. Green dots are legal next moves.", 20, 380);
+    boolean canContinue = false;
+    for (int row = 0; row < 5; row++) {
+        for (int column = 0; column < 5; column++) canContinue |= legal(column, row);
+    }
+    g.drawString(won() ? "All 25 squares visited! R: replay" : !canContinue ? "No legal moves remain. R: try a new tour" : "Visited " + count + " / 25. Green dots are legal next moves.", 20, 380);
 }
 
 void key(int code, boolean pressed) {
@@ -206,8 +210,7 @@ record Move(int x, int y) implements Command {}
 record Restart() implements Command {}
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// Press vytváří Move; key vytváří Restart; apply zpracuje uzavřenou rodinu.
-/// Move ověřuje vzdálenost jezdce a navštívené cell (buňky); draw a Swing input (vstup) jsou připravené.
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

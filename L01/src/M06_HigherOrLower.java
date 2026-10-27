@@ -9,9 +9,8 @@
 /// **Dnes trénuješ:** Named value (pojmenovaná hodnota): target uchovává jediný údaj, který může číst
 /// několik částí. Změna jedné initialization (inicializace) má udržet soulad vypsaného a skutečného cíle.
 ///
-/// Použij Run File, zadej h pro vyšší nebo l pro nižší kartu a sleduj počet správných odhadů potřebných
-/// pro vypsané kolo.
-/// Po opravě: Save → Test File → zahraj si znovu.
+/// Použij Run File, prohlédni Current card a klikni Higher pro vyšší nebo Lower pro nižší příští
+/// kartu. Výsledek i cíl zůstanou vidět; New round obnoví kolo.
 ///
 /// Potřebuješ výklad? Nová dovednost · F03 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
 /// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
@@ -50,17 +49,15 @@ int target = 10;
 ///
 /// ### Co už obstarává připravená část
 ///
-/// reset sestaví a zamíchá balíček. command provede odhad a čte target při rozhodnutí o výhře; display
-/// čte stejný target pro popisek skóre. main dodává input (vstup) a opakování kola.
+/// reset sestaví a zamíchá balíček. command provede odhad a čte target při rozhodnutí o výhře;
+/// Připravené okno čte stejný target pro popisek skóre. main poskytuje tlačítka a restart.
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Pro tuto hru">
-/// Toto je první hra čekající na psaný console input (vstup do konzole). Po Run File klikni v
-/// **Output k aktuální výzvě**, napiš `h` nebo `l` a stiskem **Enter** odešli celý řádek. Piš do
-/// Output, nikoli do Java editoru. Vypsané `/r` restartuje kolo a `/q` ukončí program. Změnu source
-/// (zdrojového textu) ulož a načti novým spuštěním; restart již běžícího kola upravenou Javu nenačte.
-/// Náhodné karty mohou kolo ukončit před deseti správnými tipy, proto sdílený target (cíl) ověř i
-/// pomocí Test File.
+/// Defaultní main poskytuje karty a tlačítka přímo v Javě. Vyšší karta má větší hodnotu; Jack je
+/// 11, Queen 12, King 13 a Ace 14. Shodná karta nepočítá správný tip ani neprohrává. Cíl i počet
+/// správných tipů čtou stejný target. Po změně target ulož soubor, zavři staré okno a znovu použij
+/// Run File; New round samo upravenou Javu nenačte.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -101,7 +98,7 @@ void command(String input) {
     require(input.matches("(?i)[hl]"));
     require(!deck.isEmpty());
     int next = deck.remove();
-    message = "Next card: " + next;
+    message = "Next card: " + cardName(next);
     if (next == current) {
         message += "; tie, no penalty.";
     } else {
@@ -121,38 +118,55 @@ void command(String input) {
     }
 }
 
-void display() {
-    IO.println(message);
-    IO.println("Current card " + current + " (Jack11 Queen12 King13 Ace14). Correct " + correct + "/" + target + "; deck " + deck.size());
+// Prepared display names; ranks remain numeric in the game rules.
+String cardName(int rank) {
+    return switch (rank) {
+        case 11 -> "Jack";
+        case 12 -> "Queen";
+        case 13 -> "King";
+        case 14 -> "Ace";
+        default -> Integer.toString(rank);
+    };
 }
 
 void main() {
     reset();
-    IO.println("Higher or Lower");
-    IO.println("h predicts higher, l lower. Ace is high; equal rank is a free tie. /r restarts; /q quits.");
-    while (true) {
-        display();
-        if (!outcome.isEmpty()) {
-            IO.println(outcome);
-        }
-        String input = IO.readln("> ");
-        if (input == null || input.strip().equalsIgnoreCase("/q")) {
-            return;
-        }
-        if (input.strip().equalsIgnoreCase("/r")) {
-            reset();
-            continue;
-        }
-        if (!outcome.isEmpty()) {
-            IO.println("Round finished. /r restarts; /q quits.");
-            continue;
-        }
-        try {
-            command(input.strip());
-        } catch (IllegalArgumentException invalid) {
-            IO.println("Invalid move or command. h predicts higher, l lower. Ace is high; equal rank is a free tie. /r restarts; /q quits.");
-        }
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        IO.println("Higher or Lower needs a graphical display; the model remains headless-testable.");
+        return;
     }
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame("Higher or Lower");
+        var card = new javax.swing.JLabel("", javax.swing.SwingConstants.CENTER);
+        card.setOpaque(true); card.setBackground(java.awt.Color.WHITE);
+        card.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.DARK_GRAY, 2));
+        card.setPreferredSize(new java.awt.Dimension(190, 170));
+        var score = new javax.swing.JLabel();
+        var feedback = new javax.swing.JLabel("Choose whether the next card will be higher or lower.");
+        var higher = new javax.swing.JButton("Higher");
+        var lower = new javax.swing.JButton("Lower");
+        var restart = new javax.swing.JButton("New round");
+        Runnable refresh = () -> {
+            card.setText("<html><center>Current card<br><span style='font-size:32px'>" + cardName(current) + "</span></center></html>");
+            score.setText("Correct guesses: " + correct + " / " + target + "    Cards left: " + deck.size());
+            feedback.setText(outcome.isEmpty() ? (message.isEmpty() ? "Choose Higher or Lower. Equal cards give another chance." : message) : outcome + " Use New round to play again.");
+            higher.setEnabled(outcome.isEmpty()); lower.setEnabled(outcome.isEmpty());
+        };
+        higher.addActionListener(event -> { command("h"); refresh.run(); });
+        lower.addActionListener(event -> { command("l"); refresh.run(); });
+        restart.addActionListener(event -> { reset(); refresh.run(); });
+        var buttons = new javax.swing.JPanel();
+        buttons.add(higher); buttons.add(lower); buttons.add(restart);
+        var content = new javax.swing.JPanel(new java.awt.BorderLayout(10, 10));
+        content.setBorder(javax.swing.BorderFactory.createEmptyBorder(14, 14, 14, 14));
+        content.add(new javax.swing.JLabel("Guess the next rank. Ace is highest; an equal rank does not count or lose."), java.awt.BorderLayout.NORTH);
+        content.add(card);
+        var bottom = new javax.swing.JPanel(new java.awt.GridLayout(3, 1));
+        bottom.add(score); bottom.add(feedback); bottom.add(buttons);
+        content.add(bottom, java.awt.BorderLayout.SOUTH);
+        frame.add(content); frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        refresh.run(); frame.pack(); frame.setLocationByPlatform(true); frame.setVisible(true);
+    });
 }
 
 void require(boolean valid) {
@@ -189,12 +203,10 @@ void require(boolean valid) {
 /// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
 /// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
 /// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
-/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
 /// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
 /// - `++` — Zvětší číselnou hodnotu o jedna.
 /// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
 /// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
-/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
 /// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
@@ -206,12 +218,7 @@ void require(boolean valid) {
 /// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
 /// - `else` — Alternativní větev pro případ, že předchozí if condition (podmínka) neplatí.
 /// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
-/// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
-/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
-/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
-/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek.
 // </editor-fold>
 

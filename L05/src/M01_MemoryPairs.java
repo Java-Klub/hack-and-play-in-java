@@ -132,7 +132,10 @@ void refresh() {
         buttons[i].setText(value == 0 ? "?" : Integer.toString(value));
         buttons[i].setEnabled(!matched[i] && pairs < 6);
     }
-    status.setText((pairs == 6 ? "All pairs found! " : "Pairs: " + pairs + "/6. ") + "Attempts: " + attempts);
+    String guidance = pairs == 6 ? "All pairs found!" : second != -1
+            ? "Not a match: click another covered card." : first != -1
+            ? "Choose a second card." : "Find matching pairs.";
+    status.setText("<html>" + guidance + "<br>Pairs: " + pairs + "/6. Attempts: " + attempts + "</html>");
 }
 
 /// show(): Dodané pozdější téma: Swing callbacks tlačítek volají model a obnovují jeho zobrazení.
@@ -206,7 +209,6 @@ void main() {
 /// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
 /// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
 ///   (balíčku).
-/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
 /// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak

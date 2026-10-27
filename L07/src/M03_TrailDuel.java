@@ -277,7 +277,6 @@ record Direction(int dx, int dy) {
 /// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
 /// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
 ///   (balíčku).
-/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
 /// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
@@ -303,7 +302,7 @@ record Direction(int dx, int dy) {
 ///   implementaci), aby nejprve vykreslila běžné pozadí.
 /// - `record` — Malý pojmenovaný balíček hodnot. Component accessor (přístupová metoda složky) má jméno
 ///   složky a závorky ().
-/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `null` — Žádný object (objekt) tu není.
 /// - `Graphics2D` — Kreslicí nástroj dodaný při vykreslování okna nebo obrázku.
 /// - `JFrame` — Okno dodané JDK knihovnou Swing.
 /// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.

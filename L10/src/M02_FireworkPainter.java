@@ -4,11 +4,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
-import javax.imageio.ImageIO;
 import javax.swing.Timer;
 // </editor-fold>
 
@@ -24,8 +21,8 @@ import javax.swing.Timer;
 /// do pozdější akce. Vytvoření callback nesmí změnit částice; spuštění má použít právě dané kliknutí
 /// jednou.
 ///
-/// Po Run File klikej na různá místa plátna pro ohňostroje, pomocí Space zastav pohyb a klávesou C vymaž
-/// oblohu.
+/// Po Run File klikáním do plochy vypouštěj ohňostroj; Space pozastaví pohyb a R vyčistí oblohu a
+/// obnoví začátek.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Připomenutí · F28 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -64,8 +61,8 @@ java.util.function.BiConsumer<Integer, Integer> burstAction() {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Press předá kliknutí uloženému burst callback (předané akci výbuchu). Připravený burst vytvoří
-/// částice, step posune jejich omezené životy a draw je vykreslí; pause, reset i uložení jsou připravené.
+/// press volá skutečný burstAction callback (předanou akci) s pozicí kliknutí. step posune konečné
+/// particles (částice) a draw ukáže stopy; Space pozastaví a R vyčistí a obnoví začátek.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -140,21 +137,6 @@ void step() {
     g.dispose();
 }
 
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-void save(File file) throws IOException {
-    ImageIO.write(canvas, "png", file);
-}
-
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-void save() {
-    try {
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-        save(new File("fireworks.png"));
-        message = "Saved fireworks.png";
-    } catch (IOException e) {
-        message = "Save failed: " + e.getMessage();
-    }
-}
 
 /// Připravené kreslení: čte hodnoty model (modelu pravidel); repaint (překreslení) není další tah.
 void draw(Graphics2D g) {
@@ -171,8 +153,6 @@ void key(int code, boolean pressed) {
     if (pressed) {
         switch (code) {
             case KeyEvent.VK_SPACE -> paused = !paused;
-            case KeyEvent.VK_C -> clear();
-            case KeyEvent.VK_S -> save();
         }
     }
 }
@@ -223,7 +203,7 @@ void showWindow() {
     });
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.add(panel);
-    var help = new JLabel("<html><div style=\"text-align:center\">Click: burst   Space: pause   C: clear   S: save PNG   R: reset</div></html>", SwingConstants.CENTER);
+    var help = new JLabel("<html><div style=\"text-align:center\">Click: burst   Space: pause   R: reset</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
     frame.add(help, BorderLayout.SOUTH);
     frame.pack();
@@ -237,8 +217,7 @@ void showWindow() {
 java.util.function.BiConsumer<Integer, Integer> burstCallback = burstAction();
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// Press spustí burstCallback; burst vytvoří částice přesně v těchto coordinate (souřadnicích).
-/// Step nechá částice stárnout a kreslí stopu; draw jen zobrazí plátno; export i úklid timer (časovače) jsou připravené.
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();
@@ -307,11 +286,7 @@ void main() {
 ///   implementaci), aby nejprve vykreslila běžné pozadí.
 /// - `record` — Malý pojmenovaný balíček hodnot. Component accessor (přístupová metoda složky) má jméno
 ///   složky a závorky ().
-/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
-/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
-/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
-/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
-///   zpracovat.
+/// - `null` — Žádný object (objekt) tu není.
 /// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
 ///   zopakuje stejnou posloupnost.
 /// - `Graphics2D` — Kreslicí nástroj dodaný při vykreslování okna nebo obrázku.

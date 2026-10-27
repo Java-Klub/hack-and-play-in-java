@@ -174,31 +174,42 @@ void display() {
 }
 
 /// main(): Spouští skutečnou herní smyčku: zobrazit, načíst, ověřit, opakovat nebo ukončit.
+/// Připravený console flow (konzolový průběh): napiš příkaz a stiskni Enter. Platný příkaz obnoví desku.
+/// Odmítnutý vstup neopakuje staré události; po konci Enter či /r začne znovu a /q ukončí hru.
 void main() {
     reset();
     IO.println("Set-style Triple Hunt");
+    IO.println("Find three cards whose four attributes are each all equal or all different.");
     IO.println("Enter three card numbers, or more when no set exists. /r restarts; /q quits.");
+    IO.println("Example format: 1 2 3 selects three displayed card numbers. Use more only when no triple exists.");
+    display();
     while (true) {
-        display();
-        if (!outcome.isEmpty()) {
-            IO.println(outcome);
-        }
-        String input = IO.readln("> ");
-        if (input == null || input.strip().equalsIgnoreCase("/q")) {
+        String input = IO.readln(outcome.isEmpty() ? "> " : "Enter or /r: new round; /q: quit: ");
+        if (input == null) {
             return;
         }
-        if (input.strip().equalsIgnoreCase("/r")) {
+        input = input.strip();
+        if (input.equalsIgnoreCase("/q") || input.equalsIgnoreCase("q")) {
+            return;
+        }
+        if (input.equalsIgnoreCase("/r") || input.equalsIgnoreCase("r")
+                || (!outcome.isEmpty() && input.isEmpty())) {
             reset();
+            display();
             continue;
         }
         if (!outcome.isEmpty()) {
-            IO.println("Round finished. /r restarts; /q quits.");
+            IO.println("That round is over. Press Enter to play again, or /q to quit.");
             continue;
         }
         try {
-            command(input.strip());
+            command(input);
+            display();
+            if (!outcome.isEmpty()) {
+                IO.println(outcome);
+            }
         } catch (IllegalArgumentException invalid) {
-            IO.println("Invalid move or command. Enter three card numbers, or more when no set exists. /r restarts; /q quits.");
+            IO.println("Invalid move. " + "Enter three card numbers, or more when no set exists. /r restarts; /q quits.");
         }
     }
 }
@@ -265,7 +276,7 @@ void require(boolean valid) {
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
 /// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
 ///   měnit velikost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek. readln čeká na celý
+///   řádek vstupu.
 // </editor-fold>
 

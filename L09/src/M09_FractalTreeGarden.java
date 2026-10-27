@@ -1,7 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L09.09 · FractalTreeGarden
@@ -15,8 +14,8 @@ import javax.imageio.ImageIO;
 /// **Dnes trénuješ:** Parsing (rozbor vstupu) mění text v číslo a může selhat ještě před kontrolou
 /// rozmezí. Zachyť konkrétní chybu převodu textu; číslo mimo rozmezí je jiný problém.
 ///
-/// Po Run File zadej úhel větvení od 10 do 70 nebo zkus oops a potom otevři PNG na cestě vypsané za
-/// Saved.
+/// Po Run File napiš úhel 10–70 nebo zkus oops; přečti Chosen value a prohlédni Java obrázek. Pro
+/// další vstup zavři okno a znovu použij Run File.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Nová dovednost · F31 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -70,8 +69,8 @@ double readAngle(String text) {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Main se zeptá na úhel a před kreslením volá readAngle. Připravená recursive routine (rekurzivní část)
-/// zkracuje větve a ukládací část zapíše výsledné PNG místně.
+/// main předá jediný zadaný úhel do readAngle a render nakreslí omezené větvení. Platná hodnota
+/// vytvoří Java obrázek; překlep a číslo mimo range (povolený rozsah) jsou různé případy.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
@@ -130,39 +129,42 @@ BufferedImage render(long seed, double angle) {
     return image;
 }
 
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
-        throw new IllegalStateException("PNG writer missing.");
-    }
-}
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// Branches rekurzivně kreslí omezený strom; úhel a zkrácení jsou vysvětlené ovládání.
-/// Main čte tuto volbu; save/export a rendering (vykreslení) jsou připravené.
-void main(String[] args) throws Exception {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
-    String enteredOption = "";
-    if (args.length <= 2) {
-        enteredOption = IO.readln("angle 10..70 (blank/default 28, q quits): ");
-        if (enteredOption == null || enteredOption.strip().equalsIgnoreCase("q")) return;
-    }
-    try {
-        Path path = Path.of(args.length > 0 ? args[0] : "fractal-tree-garden.png");
-        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
-        double option = readAngle(args.length > 2 ? args[2] : enteredOption);
-        IO.println("angle: " + option);
-        if (args.length > 3) {
-            shortening = Double.parseDouble(args[3]);
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
+void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var pictures = new javax.swing.JPanel(new java.awt.GridLayout(1, images.length, 8, 8));
+        for (int i = 0; i < images.length; i++) {
+            var picture = new javax.swing.JPanel(new java.awt.BorderLayout());
+            picture.add(new javax.swing.JLabel(captions[i], javax.swing.SwingConstants.CENTER), java.awt.BorderLayout.NORTH);
+            double scale = Math.min(1, Math.min(900.0 / images.length / images[i].getWidth(), 550.0 / images[i].getHeight()));
+            var icon = new javax.swing.ImageIcon(images[i].getScaledInstance(
+                    Math.max(1, (int)(images[i].getWidth() * scale)),
+                    Math.max(1, (int)(images[i].getHeight() * scale)), java.awt.Image.SCALE_FAST));
+            picture.add(new javax.swing.JLabel(icon), java.awt.BorderLayout.CENTER);
+            pictures.add(picture);
         }
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-        save(path, seed, option);
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
+        frame.add(pictures);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
+
+
+void main() {
+    String input = IO.readln("Angle 10..70 (blank/default 28, q quits): ");
+    if (input == null || input.strip().equalsIgnoreCase("q")) return;
+    try {
+        var option = readAngle(input);
+        IO.println("Chosen value: " + option);
+        showImages("Fractal Tree Garden", new String[]{"Value " + option}, new java.awt.image.BufferedImage[]{render(42, option)});
+    } catch (IllegalArgumentException failure) {
+        IO.println("Invalid input: " + failure.getMessage());
     }
 }
 // </editor-fold>
@@ -194,7 +196,6 @@ void main(String[] args) throws Exception {
 /// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
 /// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
 /// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
-/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
 /// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
 /// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
 /// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
@@ -204,10 +205,6 @@ void main(String[] args) throws Exception {
 /// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
-/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
-///   druhou.
-/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
-///   možnosti ? : nebo následuje za značkou switch.
 /// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
 ///   (prvek); length je počet prvků.
 /// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
@@ -217,14 +214,10 @@ void main(String[] args) throws Exception {
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
 /// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
-/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
-///   zpracovat.
 /// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
 ///   zopakuje stejnou posloupnost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
-/// - `Path` — Umístění v souborech, nikoli obsah souboru.
-/// - `Files` — JDK operace pro čtení a zápis místních souborů.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek. readln čeká na celý
+///   řádek vstupu.
 /// - `Graphics2D` — Kreslicí nástroj dodaný při vykreslování okna nebo obrázku.
 // </editor-fold>
 

@@ -1,7 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L11.04 · MandelbrotPostcards
@@ -16,8 +15,8 @@ import javax.imageio.ImageIO;
 /// pokaždé novou. Jeden vybraný hue (barevný tón) zde řídí paletu: stejné seed mají souhlasit a různé se
 /// mají umět lišit.
 ///
-/// Po Run File zadej seed (počáteční hodnotu) 42 a otevři mandelbrot-postcards-42.png, potom spuštění
-/// zopakuj s 43 pro porovnání palet.
+/// Po Run File napiš seed (počáteční číslo) nebo stiskni Enter pro 42; prohlédni Java obrázek,
+/// potom jej zavři a zopakuj stejný seed nebo porovnej 43.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Nová dovednost · F27 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -70,9 +69,8 @@ BufferedImage render(long seed, double span) {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Main se zeptá na seed (počáteční hodnotu) a save volá render. Připravený escape provádí omezené
-/// opakování s komplexními čísly; pixel loop (cyklus obrazových bodů) spojí počet opakování s barvou a
-/// uloží PNG.
+/// main načte jediný seed (počáteční číslo) a zavolá render. Připravený výpočet určí tvar obrázku;
+/// upravované pravidlo náhodných barev podle seed určí palette (paletu).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -103,43 +101,41 @@ int escape(double x, double y) {
 double centerX = -0.6;
 double centerY = 0;
 
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
-        throw new IllegalStateException("PNG writer missing.");
-    }
-}
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// Escape je připravený omezený výpočet Mandelbrota.
-/// Render vybere jeden odstín ze seed (počáteční hodnoty) a obarví počty kroků; save/main uloží místní pohlednici.
-void main(String[] args) throws Exception {
-    if (args.length == 0) {
-        String entered = IO.readln("Seed (blank 42, q quits): ");
-        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
-        String seedText = entered.isBlank() ? "42" : entered.strip();
-        args = new String[]{"mandelbrot-postcards-" + seedText + ".png", seedText};
-    }
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
+void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var pictures = new javax.swing.JPanel(new java.awt.GridLayout(1, images.length, 8, 8));
+        for (int i = 0; i < images.length; i++) {
+            var picture = new javax.swing.JPanel(new java.awt.BorderLayout());
+            picture.add(new javax.swing.JLabel(captions[i], javax.swing.SwingConstants.CENTER), java.awt.BorderLayout.NORTH);
+            double scale = Math.min(1, Math.min(900.0 / images.length / images[i].getWidth(), 550.0 / images[i].getHeight()));
+            var icon = new javax.swing.ImageIcon(images[i].getScaledInstance(
+                    Math.max(1, (int)(images[i].getWidth() * scale)),
+                    Math.max(1, (int)(images[i].getHeight() * scale)), java.awt.Image.SCALE_FAST));
+            picture.add(new javax.swing.JLabel(icon), java.awt.BorderLayout.CENTER);
+            pictures.add(picture);
+        }
+        frame.add(pictures);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
 
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
+
+void main() {
+    String input = IO.readln("Seed (blank 42, q quits): ");
+    if (input == null || input.strip().equalsIgnoreCase("q")) return;
     try {
-        Path path = Path.of(args.length > 0 ? args[0] : "mandelbrot-postcards.png");
-        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
-        double option = args.length > 2 ? Double.parseDouble(args[2]) : 3.2;
-        if (args.length > 3) {
-            centerX = Double.parseDouble(args[3]);
-        }
-        if (args.length > 4) {
-            centerY = Double.parseDouble(args[4]);
-        }
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-        save(path, seed, option);
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
+        long seed = input.isBlank() ? 42 : Long.parseLong(input.strip());
+        showImages("Mandelbrot Postcards", new String[]{"Seed " + seed}, new java.awt.image.BufferedImage[]{render(seed, 3.2)});
+    } catch (IllegalArgumentException failure) {
+        IO.println("Use a whole-number seed: " + failure.getMessage());
     }
 }
 // </editor-fold>
@@ -197,13 +193,9 @@ void main(String[] args) throws Exception {
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
 /// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
-/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
-///   zpracovat.
 /// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
 ///   zopakuje stejnou posloupnost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
-/// - `Path` — Umístění v souborech, nikoli obsah souboru.
-/// - `Files` — JDK operace pro čtení a zápis místních souborů.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek. readln čeká na celý
+///   řádek vstupu.
 // </editor-fold>
 

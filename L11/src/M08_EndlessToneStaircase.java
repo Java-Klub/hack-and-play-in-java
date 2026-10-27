@@ -8,7 +8,7 @@ import java.io.ByteArrayInputStream;
 
 /// # L11.08 · EndlessToneStaircase
 ///
-/// Vytvoř zvukové schodiště, které díky vrstvám oktáv zdánlivě stále stoupá. Porovnej konečný WAV s
+/// Vytvoř zvukové schodiště, které díky vrstvám oktáv zdánlivě stále stoupá. Porovnej konečný zvuk s
 /// obyčejně stoupajícím tónem a poslouchej, kde začne působit iluze.
 ///
 /// **Tvoje mise:** WAV se zapíše do pracovního adresáře, i když požádáš o vnořený cíl. Zachovej úplný
@@ -17,8 +17,8 @@ import java.io.ByteArrayInputStream;
 /// **Dnes trénuješ:** Path (cesta) nese adresáře i název souboru. Ponechání jen posledního názvu změní
 /// cíl; příprava nadřazených adresářů neopraví pozdější zápis jinam.
 ///
-/// Po Run File stiskni Enter pro uložení exports/shepard.wav a otevři jej v přehrávači spolu se
-/// srovnávacím .plain.wav.
+/// Run File zapíše exports/shepard.wav přes write a načte právě tento WAV pro Java Play/Stop.
+/// Chybný cíl vyvolá jasnou zprávu v Output; jiný soubor se nepřehraje.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Nová dovednost · F32 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -71,8 +71,8 @@ void write(Path path, double[] signal) throws Exception {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Připravená syntéza míchá tóny po oktávách s měnícími se vahami, samostatný plain signal dává srovnání.
-/// Write převádí sample (vzorky) na PCM a JDK zapíše WAV hlavičku; main vypíše, kde oba soubory otevřít.
+/// signal vytvoří jeden konečný vrstvený tón. main jej pomocí write zapíše do exports/shepard.wav,
+/// ověří tentýž požadovaný WAV a nabídne Java Play/Stop pro skutečná data souboru.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -91,7 +91,7 @@ void write(Path path, double[] signal) throws Exception {
 final int RATE = 22050;
 
 /// Připravená syntéza: omezené sample loop (cykly vzorků) tvoří zvuk; automatické přehrávání zde není.
-double[] signal(int layers, boolean plain) {
+double[] signal(int layers) {
     if (layers < 2 || layers > 8) {
         throw new IllegalArgumentException("Octave layers: 2..8.");
     }
@@ -103,10 +103,10 @@ double[] signal(int layers, boolean plain) {
         double fade = Math.min(1, Math.min(within, noteLength - 1 - within) / 200.0);
         double sum = 0;
         double weightSum = 0;
-        for (int octave = 0; octave < (plain ? 1 : layers); octave++) {
+        for (int octave = 0; octave < layers; octave++) {
             double pitch = octave + step / 12.0;
-            double weight = plain ? 1 : Math.exp(-Math.pow((pitch - layers / 2.0) / 1.3, 2));
-            double frequency = (plain ? 220 : 27.5) * Math.pow(2, pitch);
+            double weight = Math.exp(-Math.pow((pitch - layers / 2.0) / 1.3, 2));
+            double frequency = 27.5 * Math.pow(2, pitch);
             sum += weight * Math.sin(2 * Math.PI * frequency * within / RATE);
             weightSum += weight;
         }
@@ -116,28 +116,43 @@ double[] signal(int layers, boolean plain) {
 }
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// Signal tvoří tři konečné melodické loop (cykly); nepokouší se o automatické přehrání.
-/// Write kóduje zvolené sample (vzorky); main uloží obě WAV verze a vypíše umístění.
-void main(String[] args) throws Exception {
-    if (args.length == 0) {
-        String entered = IO.readln("Output path (blank exports/shepard.wav, q quits): ");
-        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
-        String destination = entered.isBlank() ? "exports/shepard.wav" : entered.strip();
-        args = new String[]{destination};
-    }
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
+/// Připravený Java Sound: worker (pracovní vlákno) vlastní kanál; Stop a zavření jej uvolní.
+/// Play/Stop používají oddělený Java Sound worker (pracovní vlákno); zavření jej uvolní.
+
+
+void main() {
+    Path path = Path.of("exports", "shepard.wav");
     try {
-        Path path = Path.of(args.length > 0 ? args[0] : "shepard.wav");
-        int layers = args.length > 1 ? Integer.parseInt(args[1]) : 6;
-        write(path, signal(layers, false));
-        write(Path.of(path + ".plain.wav"), signal(layers, true));
-        IO.println("Saved layered and plain comparison: " + path.toAbsolutePath());
-        IO.println("Three finite twelve-step loops. Use your player's Stop control.");
-    } catch (IllegalArgumentException invalid) {
-        IO.println(invalid.getMessage());
+        Files.deleteIfExists(path);
+        write(path, signal(6));
+        try (var check = AudioSystem.getAudioInputStream(path.toFile())) {
+            IO.println("Loaded " + path + ": " + check.getFrameLength() + " frames.");
+        }
+        if (java.awt.GraphicsEnvironment.isHeadless()) return;
+        var clip = AudioSystem.getClip();
+        try (var input = AudioSystem.getAudioInputStream(path.toFile())) { clip.open(input); }
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            var frame = new javax.swing.JFrame("Endless Tone Staircase: " + path);
+            frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+            var controls = new javax.swing.JPanel();
+            var play = new javax.swing.JButton("Play");
+            play.addActionListener(event -> { clip.setFramePosition(0); clip.start(); });
+            var stop = new javax.swing.JButton("Stop");
+            stop.addActionListener(event -> clip.stop());
+            controls.add(play);
+            controls.add(stop);
+            frame.add(controls);
+            frame.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override public void windowClosed(java.awt.event.WindowEvent event) { clip.close(); }
+            });
+            frame.pack();
+            frame.setLocationByPlatform(true);
+            frame.setVisible(true);
+        });
+    } catch (Exception failure) {
+        IO.println("Cannot load requested WAV " + path + ": " + failure.getMessage() + ". Check write; Save, Test File, Run File.");
     }
 }
 // </editor-fold>
@@ -161,17 +176,12 @@ void main(String[] args) throws Exception {
 ///   proto, že jsou v souboru výše.
 /// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
 /// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
-/// - `boolean` — Hodnota true nebo false: ano nebo ne.
-/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
 /// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
 ///   textu nepatří.
-/// - `'` — Jednoduché uvozovky ohraničují jeden character (znak), například značku na desce.
 /// - `final` — Pojmenované hodnotě už nelze přiřadit jinou. Odkazovaný mutable object (měnitelný objekt)
 ///   se ale dál měnit může.
 /// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
 /// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
-/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
-/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
 /// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
 /// - `++` — Zvětší číselnou hodnotu o jedna.
 /// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
@@ -183,24 +193,18 @@ void main(String[] args) throws Exception {
 /// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
-/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
-///   druhou.
-/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
-///   možnosti ? : nebo následuje za značkou switch.
 /// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
 ///   (prvek); length je počet prvků.
 /// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
 /// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
 /// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
 /// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
-/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
 /// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
 /// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
 ///   zpracovat.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek.
 /// - `Path` — Umístění v souborech, nikoli obsah souboru.
 /// - `Files` — JDK operace pro čtení a zápis místních souborů.
 // </editor-fold>

@@ -213,8 +213,7 @@ void showWindow() {
 }
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// Restart umístí dvě Pipe; flap změní rychlost ptáka.
-/// Step řeší omezený pohyb; draw jej čte; showWindow spravuje připravený timer (časovač) i úklid po zavření.
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

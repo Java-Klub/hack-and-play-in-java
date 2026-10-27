@@ -14,14 +14,14 @@ public class M06_AntHighwayTest {
     }
     public static void main(String[] args) throws Exception {
         var g = new M06_AntHighway();
-        g.reset(1);
+        g.reset();
         g.x = 0;
         g.y = 0;
         g.direction = 2;
         g.step();
         equal(80, g.x, "I124/F18: west neighbour wraps to the final column");
         equal(0, g.y, "I124/F18: horizontal step does not change row");
-        g.reset(1);
+        g.reset();
         g.x = 0;
         g.y = 0;
         g.direction = 1;

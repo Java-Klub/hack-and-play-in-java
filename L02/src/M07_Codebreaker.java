@@ -139,20 +139,30 @@ void main() {
     IO.println("Training opening: code 1234. Restart deals a random code.");
     IO.println("CODEBREAKER: guess four digits 1-6 in ten attempts. Repeats are allowed.");
     IO.println("Exact = right digit and position; elsewhere = right digit, different position.");
+    boolean showState = true;
     while (true) {
-        if (over()) {
-            IO.println((won ? "You win!" : "Out of attempts!") + " Code: " + secret);
+        if (showState) {
+            if (over()) {
+                IO.println((won ? "You win!" : "Out of attempts!") + " Code: " + secret);
+            }
+            showState = false;
         }
-        String input = IO.readln(over() ? "r replay, q quit: " : "Attempt " + (attempts + 1) + "/10, r restart, q quit: ");
-        if (input == null || input.trim().equalsIgnoreCase("q")) {
+        String input = IO.readln(over() ? "Enter or /r: new round; /q: quit: " : "Attempt " + (attempts + 1) + "/10, r restart, q quit: ");
+        if (input == null || (input.trim().equalsIgnoreCase("q") || input.trim().equalsIgnoreCase("/q"))) {
             return;
         }
         input = input.trim();
-        if (input.equalsIgnoreCase("r")) {
+        if ((input.equalsIgnoreCase("r") || input.equalsIgnoreCase("/r") || (over() && input.isBlank()))) {
             reset();
+            showState = true;
+            continue;
+        }
+        if (over()) {
+            IO.println("Round finished. Press Enter or /r for a new round; /q quits.");
             continue;
         }
         if (submit(input)) {
+            showState = true;
             IO.println(input + " -> exact " + feedback[0] + ", elsewhere " + feedback[1]);
         } else {
             IO.println("Enter exactly four digits 1-6 during an unfinished round.");
@@ -192,8 +202,6 @@ void main() {
 /// - `++` — Zvětší číselnou hodnotu o jedna.
 /// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
 /// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
-/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
-/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
 /// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
@@ -208,12 +216,10 @@ void main() {
 /// - `else` — Alternativní větev pro případ, že předchozí if condition (podmínka) neplatí.
 /// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
 /// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
-/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
-///   až při pozdějším volání.
 /// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
 /// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
 ///   zopakuje stejnou posloupnost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek. readln čeká na celý
+///   řádek vstupu.
 // </editor-fold>
 

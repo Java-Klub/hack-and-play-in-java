@@ -199,8 +199,7 @@ void showWindow() {
 java.util.function.BiConsumer<Integer, Integer> lightCallback = lightAction();
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// MoveLight je pravidlo modelu; press a drag používají stejný lightCallback.
-/// Shadow protahuje hrany překážek do připravené Area; draw ji čte; matematika stínů do opravy nepatří.
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

@@ -87,7 +87,7 @@ long steps;
 boolean running;
 
 /// reset(): Obnovuje počáteční kolo Ant Highway a maže stav patřící starému kolu.
-void reset(long seed) {
+void reset() {
     black = new boolean[61][81];
     x = 40;
     y = 30;
@@ -122,11 +122,15 @@ void showWindow() {
     canvas.setPreferredSize(new Dimension(648, 488));
     var controls = new JPanel();
     var label = new JLabel("Steps: 0");
-    var run = new JButton("Run / Pause");
-    run.addActionListener(event -> running = !running);
+    var run = new JButton("Run");
+    run.addActionListener(event -> {
+        running = !running;
+        run.setText(running ? "Pause" : "Run");
+    });
     var single = new JButton("One step");
     single.addActionListener(event -> {
         running = false;
+        run.setText("Run");
         step();
         label.setText("Steps: " + steps);
         canvas.repaint();
@@ -134,7 +138,8 @@ void showWindow() {
     var restart = new JButton("Reset");
     restart.addActionListener(event -> {
         running = false;
-        reset(42);
+        run.setText("Run");
+        reset();
         label.setText("Steps: 0");
         canvas.repaint();
     });
@@ -166,11 +171,8 @@ void showWindow() {
 }
 
 /// main(): Spouští model a potom plánuje dodané okno na Swing event thread.
-void main(String[] args) {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
-    reset(42);
+void main() {
+    reset();
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
@@ -194,21 +196,18 @@ void main(String[] args) {
 ///   proto, že jsou v souboru výše.
 /// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
 /// - `boolean` — Hodnota true nebo false: ano nebo ne.
-/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
 /// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
 ///   textu nepatří.
 /// - `long` — Whole-number type (typ pro celá čísla) s větším rozsahem než int. Koncové L označuje long
 ///   literal (přímo zapsanou hodnotu).
 /// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
 /// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
-/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
 /// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
 /// - `++` — Zvětší číselnou hodnotu o jedna.
 /// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
 /// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
 /// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
 ///   (balíčku).
-/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
 /// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
@@ -218,7 +217,6 @@ void main(String[] args) {
 /// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
 ///   (prvek); length je počet prvků.
 /// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
-/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
 /// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
 /// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
 /// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede

@@ -1,14 +1,14 @@
 // <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 import java.util.List;
 // </editor-fold>
 
 /// # L04.08 · DragonCurve
 ///
-/// Nech z posloupnosti levých a pravých odbočení vyrůst papírového draka. Opakování malého skládacího
-/// receptu vytváří překvapivě složitou křivku, kterou program uloží jako barevný obrázek.
+/// Nech z posloupnosti levých a pravých odbočení vyrůst papírového draka. Opakování malého
+/// skládacího receptu vytváří překvapivě složitou křivku, kterou program zobrazí jako barevný
+/// obrázek.
 ///
 /// **Tvoje mise:** Křivka dostane o jeden přehyb méně, než bylo požadováno. Oprav pouze vnější smyčku ve
 /// foldTurns tak, aby nula přehybů neudělala nic a kladný požadavek provedl právě tolik průchodů
@@ -18,9 +18,8 @@ import java.util.List;
 /// již uložená odbočení. Než začneš uvažovat o podrobném obrázku s jedenácti přehyby, ověř drobné
 /// požadavky nula a jedna.
 ///
-/// Použij Run File, obnov NetBeans Files a otevři dragon-curve.png; potom pomocí Test File porovnej
-/// přesné případy nuly a jednoho přehybu.
-/// Po opravě: Save → Test File → zahraj si znovu.
+/// Použij Run File: obrázek se ihned objeví v Java okně. Po úpravě source (zdrojového textu) okno
+/// zavři a znovu použij Run File; Test File ověřuje výpočet odděleně.
 ///
 /// Potřebuješ výklad? Připomenutí · F11 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
 /// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
@@ -75,8 +74,9 @@ List<Integer> foldTurns(int folds) {
 /// ### Co už obstarává připravená část
 ///
 /// Připravená vnitřní smyčka dodává jeden celý přehyb obrácením dřívějších odbočení a jejich směrů.
-/// Pozdější method (metody) převedou posloupnost na pozice, přizpůsobí ji plátnu, obarví ji a zapíší
-/// dragon-curve.png. Tento export neobsahuje okno ani posuvník přehybů.
+/// Pozdější method (metody) převedou posloupnost na pozice, přizpůsobí ji plátnu, obarví ji a
+/// zobrazí obrázek v připraveném okně. Připravené Java okno ukazuje křivku přímo; skládací recept
+/// zůstává stejný.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -141,29 +141,31 @@ BufferedImage render(long seed, double option) {
     return image;
 }
 
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
-        throw new IllegalStateException("PNG writer missing.");
-    }
-}
-
-void main(String[] args) throws Exception {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
+// Prepared display of the picture calculated above.
+void showPicture() {
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        IO.println("Image preview needs a graphical display.");
         return;
     }
-    try {
-        Path path = Path.of(args.length > 0 ? args[0] : "dragon-curve.png");
-        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
-        double option = args.length > 2 ? Double.parseDouble(args[2]) : 11;
-        save(path, seed, option);
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
-    }
+    var image = render(42, 11);
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame("DragonCurve");
+        var picture = new javax.swing.JLabel(new javax.swing.ImageIcon(image));
+        picture.setOpaque(true);
+        picture.setBackground(new java.awt.Color(35, 39, 48));
+        frame.add(picture);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
 }
 
-/// Připravené vstupní body: main, render, save.
+void main() {
+    showPicture();
+}
+
+/// Připravené vstupní body: main, render.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
@@ -185,14 +187,12 @@ void main(String[] args) throws Exception {
 ///   proto, že jsou v souboru výše.
 /// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
 /// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
-/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
 /// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
 ///   textu nepatří.
 /// - `long` — Whole-number type (typ pro celá čísla) s větším rozsahem než int. Koncové L označuje long
 ///   literal (přímo zapsanou hodnotu).
 /// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
 /// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
-/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
 /// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
 /// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
 /// - `++` — Zvětší číselnou hodnotu o jedna.
@@ -205,8 +205,6 @@ void main(String[] args) throws Exception {
 /// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
-/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
-///   druhou.
 /// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
 ///   možnosti ? : nebo následuje za značkou switch.
 /// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
@@ -218,15 +216,9 @@ void main(String[] args) throws Exception {
 /// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
 ///   až při pozdějším volání.
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
-/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
-/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
-///   zpracovat.
 /// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
 ///   měnit velikost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
-/// - `Path` — Umístění v souborech, nikoli obsah souboru.
-/// - `Files` — JDK operace pro čtení a zápis místních souborů.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek.
 // </editor-fold>
 

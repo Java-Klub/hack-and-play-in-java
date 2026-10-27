@@ -154,10 +154,12 @@ void show() {
         }
         play(a == 0, b == 0);
         refresh();
+        play.setEnabled(outcome.isEmpty());
     });
     var restart = new JButton("Restart");
     restart.addActionListener((e) -> {
         reset();
+        play.setEnabled(true);
         refresh();
     });
     frame.add(status, BorderLayout.CENTER);
@@ -215,7 +217,6 @@ void require(boolean valid) {
 /// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
 /// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
 ///   (balíčku).
-/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
 /// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
@@ -233,7 +234,7 @@ void require(boolean valid) {
 ///   až při pozdějším volání.
 /// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
 /// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
-/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `null` — Žádný object (objekt) tu není.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
 /// - `JFrame` — Okno dodané JDK knihovnou Swing.
 /// - `SwingUtilities.invokeLater` — Naplánuje práci s oknem na Swing event thread (vlákno událostí); akce

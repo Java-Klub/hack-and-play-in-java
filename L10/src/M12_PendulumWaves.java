@@ -179,8 +179,7 @@ void showWindow() {
 }
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// step je aktivní hranice; model (model pravidel) ji zpřístupňuje pro opakovatelné check (kontroly) bez okna.
-/// Restart obnoví počáteční field (položky objektu); draw čte state (stav); showWindow dodává listener (obsluhy), jeden timer (časovač) a úklid po zavření.
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();
@@ -221,7 +220,6 @@ void main() {
 /// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
 /// - `++` — Zvětší číselnou hodnotu o jedna.
 /// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
-/// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
 /// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
 /// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
 /// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package

@@ -190,31 +190,42 @@ void display() {
 }
 
 /// main(): Spouští skutečnou herní smyčku: zobrazit, načíst, ověřit, opakovat nebo ukončit.
+/// Připravený console flow (konzolový průběh): napiš příkaz a stiskni Enter. Platný příkaz obnoví desku.
+/// Odmítnutý vstup neopakuje staré události; po konci Enter či /r začne znovu a /q ukončí hru.
 void main() {
     reset();
     IO.println("Loop Builder");
+    IO.println("Choose edges to make exactly one closed loop. Each cell's number counts the chosen edges around it.");
     IO.println("Enter edge1-24 to toggle it. One closed loop must match all numbered cells. /r restarts; /q quits.");
+    IO.println("Example: enter 1 to toggle edge 01. ## means chosen; enter the same edge again to remove it.");
+    display();
     while (true) {
-        display();
-        if (!outcome.isEmpty()) {
-            IO.println(outcome);
-        }
-        String input = IO.readln("> ");
-        if (input == null || input.strip().equalsIgnoreCase("/q")) {
+        String input = IO.readln(outcome.isEmpty() ? "> " : "Enter or /r: new round; /q: quit: ");
+        if (input == null) {
             return;
         }
-        if (input.strip().equalsIgnoreCase("/r")) {
+        input = input.strip();
+        if (input.equalsIgnoreCase("/q") || input.equalsIgnoreCase("q")) {
+            return;
+        }
+        if (input.equalsIgnoreCase("/r") || input.equalsIgnoreCase("r")
+                || (!outcome.isEmpty() && input.isEmpty())) {
             reset();
+            display();
             continue;
         }
         if (!outcome.isEmpty()) {
-            IO.println("Round finished. /r restarts; /q quits.");
+            IO.println("That round is over. Press Enter to play again, or /q to quit.");
             continue;
         }
         try {
-            command(input.strip());
+            command(input);
+            display();
+            if (!outcome.isEmpty()) {
+                IO.println(outcome);
+            }
         } catch (IllegalArgumentException invalid) {
-            IO.println("Invalid move or command. Enter edge1-24 to toggle it. One closed loop must match all numbered cells. /r restarts; /q quits.");
+            IO.println("Invalid move. " + "Enter edge1-24 to toggle it. One closed loop must match all numbered cells. /r restarts; /q quits.");
         }
     }
 }
@@ -282,7 +293,7 @@ void require(boolean valid) {
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
 /// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
 ///   měnit velikost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek. readln čeká na celý
+///   řádek vstupu.
 // </editor-fold>
 

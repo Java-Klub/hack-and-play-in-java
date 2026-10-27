@@ -1,9 +1,4 @@
 // <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioSystem;
-import java.io.ByteArrayInputStream;
 // </editor-fold>
 
 /// # L12.03 · PhasingRhythms
@@ -18,8 +13,8 @@ import java.io.ByteArrayInputStream;
 /// Voice odpovídají na převod času na sample (vzorek); mix spojuje odpovědi a nemusí znát vznik
 /// jednotlivých rytmů.
 ///
-/// Pomocí Run File ulož phasing.wav, potom jej otevři v přehrávači a poslouchej měnící se důrazy mezi
-/// oběma rytmy.
+/// Po Run File v Java okně porovnej Play two voices s Play one voice; poslouchej proměnlivé
+/// překrývání, použij Stop a po opravě mix si zvuk přehraj znovu.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Připomenutí · F34 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -64,9 +59,8 @@ double mix(double time) {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Signal žádá mix o každý WAV sample (vzorek). Připravené Voice field (položky objektu) volají tap se
-/// dvěma různými rozestupy; tap tvoří konečné pulzy a write uloží omezený výsledek bez automatického
-/// přehrávání.
+/// signal žádá mix o každý sample (vzorek); first a second dodají dva rytmické intervaly. Přehrání
+/// porovná současný mix obou rolí s jediným hlasem, aby bylo možné slyšet chybějící roli.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -84,20 +78,7 @@ double mix(double time) {
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int RATE = 22050;
 
-/// Připravený WAV encoding (kódování): omezené PCM sample (vzorky) a try-with-resources spravují stream (proud).
-void write(Path path, double[] signal) throws Exception {
-    byte[] pcm = new byte[signal.length * 2];
-    for (int i = 0; i < signal.length; i++) {
-        int value = (int)(Math.max(-0.8, Math.min(0.8, signal[i])) * 32767);
-        pcm[i * 2] = (byte)value;
-        pcm[i * 2 + 1] = (byte)(value >> 8);
-    }
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    var format = new AudioFormat(RATE, 16, 1, true, false);
-    try (var stream = new AudioInputStream(new ByteArrayInputStream(pcm), format, signal.length)) {
-        AudioSystem.write(stream, AudioFileFormat.Type.WAVE, path.toFile());
-    }
-}
+
 boolean[] rhythm = {true, false, true, false, true, true, false, true, false, true, false, true};
 
 double tap(double time, double beat) {
@@ -127,22 +108,107 @@ Voice first = time -> tap(time, 0.12);
 Voice second = time -> tap(time, 0.13);
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// Mix spojuje dvě skutečné Voice field (položky objektu); signal jej volá pro každý WAV sample (vzorek).
-/// Tap definuje připravené vzory 0.12/0.13 sekundy; write/main uloží konečný fázující zvuk.
-void main(String[] args) throws Exception {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
+volatile javax.sound.sampled.SourceDataLine playingLine;
+volatile int playbackVersion;
+
+/// Připravený Java Sound: worker (pracovní vlákno) vlastní kanál; Stop a zavření jej uvolní.
+/// Play/Stop používají oddělený Java Sound worker (pracovní vlákno); zavření jej uvolní.
+void stopAudio() {
+    playbackVersion++;
+    var line = playingLine;
+    playingLine = null;
+    if (line != null) {
+        line.stop();
+        line.flush();
+        line.close();
     }
-    try {
-        Path path = Path.of(args.length > 0 ? args[0] : "phasing.wav");
-        double seconds = args.length > 1 ? Double.parseDouble(args[1]) : 18.72;
-/// Připravený WAV encoding (kódování): omezené PCM sample (vzorky) a try-with-resources spravují stream (proud).
-        write(path, signal(seconds));
-        IO.println("Saved: " + path.toAbsolutePath());
-        IO.println("Identical twelve-beat patterns use 0.12 and 0.13 second beats; both align again at 18.72 seconds.");
-    } catch (IllegalArgumentException invalid) {
-        IO.println(invalid.getMessage());
-    }
+}
+
+void playAudio(double[] samples, javax.swing.JLabel status) {
+    stopAudio();
+    int ticket = playbackVersion;
+    status.setText("Playing in Java; Stop interrupts playback.");
+    var worker = new Thread(() -> {
+        javax.sound.sampled.SourceDataLine line = null;
+        try {
+            byte[] pcm = new byte[samples.length * 2];
+            for (int i = 0; i < samples.length; i++) {
+                int value = (int)(Math.max(-0.8, Math.min(0.8, samples[i])) * 32767);
+                pcm[i * 2] = (byte)value;
+                pcm[i * 2 + 1] = (byte)(value >> 8);
+            }
+            var format = new javax.sound.sampled.AudioFormat(RATE, 16, 1, true, false);
+            line = javax.sound.sampled.AudioSystem.getSourceDataLine(format);
+            line.open(format);
+            if (ticket != playbackVersion) return;
+            playingLine = line;
+            line.start();
+            int offset = 0;
+            while (offset < pcm.length && ticket == playbackVersion) {
+                int written = line.write(pcm, offset, Math.min(4096, pcm.length - offset));
+                if (written <= 0) break;
+                offset += written;
+            }
+            if (ticket == playbackVersion) {
+                line.drain();
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    if (ticket == playbackVersion) status.setText("Finished; Play replays the same sound.");
+                });
+            }
+        } catch (Exception failure) {
+            if (ticket == playbackVersion) {
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    if (ticket == playbackVersion) status.setText("Audio unavailable: " + failure.getMessage());
+                });
+            }
+        } finally {
+            if (line != null) {
+                line.stop();
+                line.close();
+                if (playingLine == line) playingLine = null;
+            }
+        }
+    }, "java-sound-player");
+    worker.setDaemon(true);
+    worker.start();
+}
+
+void showAudio(String title, String detail, String[] captions, double[][] sounds) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var status = new javax.swing.JLabel(detail);
+        var controls = new javax.swing.JPanel();
+        for (int i = 0; i < sounds.length; i++) {
+            int index = i;
+            var play = new javax.swing.JButton("Play " + captions[i]);
+            play.addActionListener(event -> playAudio(sounds[index], status));
+            controls.add(play);
+        }
+        var stop = new javax.swing.JButton("Stop");
+        stop.addActionListener(event -> {
+            stopAudio();
+            status.setText("Stopped; choose Play to listen again.");
+        });
+        controls.add(stop);
+        frame.add(status, java.awt.BorderLayout.NORTH);
+        frame.add(controls, java.awt.BorderLayout.SOUTH);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override public void windowClosed(java.awt.event.WindowEvent event) { stopAudio(); }
+        });
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
+
+void main() {
+    var both = signal(18.72);
+    double[] solo = new double[both.length];
+    for (int i = 0; i < solo.length; i++) solo[i] = 0.17 * first.sample(i / (double)RATE);
+    showAudio("Phasing Rhythms", "Compare the changing overlap with one voice.", new String[]{"two voices", "one voice"}, new double[][]{both, solo});
 }
 // </editor-fold>
 
@@ -153,7 +219,6 @@ void main(String[] args) throws Exception {
 /// dopředu.
 ///
 /// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
-/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
 /// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
 ///   části.
 /// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
@@ -185,10 +250,6 @@ void main(String[] args) throws Exception {
 /// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
-/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
-///   druhou.
-/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
-///   možnosti ? : nebo následuje za značkou switch.
 /// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
 ///   (prvek); length je počet prvků.
 /// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
@@ -202,11 +263,5 @@ void main(String[] args) throws Exception {
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
 /// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
-/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
-///   zpracovat.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
-/// - `Path` — Umístění v souborech, nikoli obsah souboru.
-/// - `Files` — JDK operace pro čtení a zápis místních souborů.
 // </editor-fold>
 

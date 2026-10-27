@@ -1,7 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L01.08 · SunflowerSpiral
@@ -15,9 +14,8 @@ import javax.imageio.ImageIO;
 /// **Dnes trénuješ:** Named numeric value (pojmenovaná číselná hodnota): srozumitelné jméno spojuje
 /// jediný zvolený úhel s pozdějším obrázkem. double dokáže uložit i část stupně, například polovinu.
 ///
-/// Použij Run File, obnov projekt v NetBeans Files a otevři sunflower-spiral.png, abys porovnal vzniklé
-/// uspořádání.
-/// Po opravě: Save → Test File → zahraj si znovu.
+/// Použij Run File: obrázek se ihned objeví v Java okně. Po úpravě source (zdrojového textu) okno
+/// zavři a znovu použij Run File; Test File ověřuje výpočet odděleně.
 ///
 /// Potřebuješ výklad? Připomenutí · F03 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
 /// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
@@ -56,17 +54,14 @@ double defaultAngle = 137.5;
 ///
 /// ### Co už obstarává připravená část
 ///
-/// position vypočítá polohu každého bodu, render je obarví a save zapíše sunflower-spiral.png. main předá
-/// tvou výchozí hodnotu připravené matematice; vzorec spirály nemusíš přepisovat.
+/// position vypočítá polohu každého bodu, render je obarví a připravené okno ukáže výsledek přímo.
+/// main předá tvou výchozí hodnotu připravené matematice; vzorec spirály nemusíš přepisovat.
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Pro tuto hru">
-/// Toto je první PNG export: Run File skončí po zápisu obrázku; nemusí otevírat herní okno. Přečti
-/// `Saved:` v Output, otevři **Window → Files**, rozbal L01 a podle potřeby obnov seznam souborů,
-/// potom otevři `sunflower-spiral.png`. Pokud zůstane vidět starší náhled, zavři jej a znovu otevři
-/// nově zapsaný soubor. Po úpravě vytvoř obrázek znovu pomocí Run File; samotné Test File není tímto
-/// vizuálním porovnáním. Java používá ve source (zdrojovém textu) desetinnou tečku, i když místní
-/// číselný formát používá čárku. Zvolený úhel je ve stupních.
+/// Run File vytvoří obrázek v paměti a zobrazí jej přímo v Javě. Zvolený úhel je ve stupních; Java
+/// zapisuje desetinná čísla tečkou. Po změně defaultAngle znovu spusť soubor, aby se nová hodnota
+/// načetla. Test File kontroluje chování, nikoli zastaralý obrázek v dřívějším okně.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -78,7 +73,7 @@ double defaultAngle = 137.5;
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Nastav double defaultAngle = 137.5; a znovu vytvoř PNG.
+/// Nastav double defaultAngle = 137.5; a znovu použij Run File pro nový obrázek.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
@@ -107,29 +102,31 @@ BufferedImage render(long seed, double degrees) {
     return image;
 }
 
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
-        throw new IllegalStateException("PNG writer missing.");
-    }
-}
-
-void main(String[] args) throws Exception {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
+// Prepared display of the picture calculated above.
+void showPicture() {
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        IO.println("Image preview needs a graphical display.");
         return;
     }
-    try {
-        Path path = Path.of(args.length > 0 ? args[0] : "sunflower-spiral.png");
-        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
-        double option = args.length > 2 ? Double.parseDouble(args[2]) : defaultAngle;
-        save(path, seed, option);
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
-    }
+    var image = render(42, defaultAngle);
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame("SunflowerSpiral");
+        var picture = new javax.swing.JLabel(new javax.swing.ImageIcon(image));
+        picture.setOpaque(true);
+        picture.setBackground(new java.awt.Color(35, 39, 48));
+        frame.add(picture);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
 }
 
-/// Připravené vstupní body: main, render, save.
+void main() {
+    showPicture();
+}
+
+/// Připravené vstupní body: main, render.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
@@ -151,14 +148,12 @@ void main(String[] args) throws Exception {
 ///   proto, že jsou v souboru výše.
 /// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
 /// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
-/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
 /// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
 ///   textu nepatří.
 /// - `long` — Whole-number type (typ pro celá čísla) s větším rozsahem než int. Koncové L označuje long
 ///   literal (přímo zapsanou hodnotu).
 /// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
 /// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
-/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
 /// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
 /// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
 /// - `++` — Zvětší číselnou hodnotu o jedna.
@@ -169,10 +164,6 @@ void main(String[] args) throws Exception {
 /// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
-/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
-///   druhou.
-/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
-///   možnosti ? : nebo následuje za značkou switch.
 /// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
 ///   (prvek); length je počet prvků.
 /// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
@@ -180,15 +171,9 @@ void main(String[] args) throws Exception {
 /// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
 /// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
-/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
-/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
-///   zpracovat.
 /// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
 ///   zopakuje stejnou posloupnost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
-/// - `Path` — Umístění v souborech, nikoli obsah souboru.
-/// - `Files` — JDK operace pro čtení a zápis místních souborů.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek.
 // </editor-fold>
 

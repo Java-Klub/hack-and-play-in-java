@@ -220,12 +220,8 @@ interface Avoidance { double strength(double distance); }
 Avoidance avoidance = distance -> distance > 0 && distance < 75 ? 0.2 : 0;
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// ObstaclePush dodává skutečný příspěvek překážky uvnitř step.
-/// Reset tvoří opakovatelné hejno; showWindow posouvá překážku a uklidí připravený timer (časovač).
-void main(String[] args) {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
+void main() {
 /// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
     reset(42);
     SwingUtilities.invokeLater(this::showWindow);
@@ -252,7 +248,6 @@ void main(String[] args) {
 /// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
 /// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
 /// - `boolean` — Hodnota true nebo false: ano nebo ne.
-/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
 /// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
 ///   textu nepatří.
 /// - `long` — Whole-number type (typ pro celá čísla) s větším rozsahem než int. Koncové L označuje long

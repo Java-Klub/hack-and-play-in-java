@@ -114,26 +114,37 @@ void main() {
     IO.println("HANOI: move all three discs from A to C.");
     IO.println("Move only the top disc, never a larger disc onto a smaller one.");
     IO.println("The top disc is the rightmost number on each peg.");
+    boolean showState = true;
     while (true) {
-        for (int i = 0; i < 3; i++) {
-            IO.println((char) ('A' + i) + ": " + Arrays.toString(Arrays.copyOf(pegs[i], sizes[i])));
+        if (showState) {
+            for (int i = 0; i < 3; i++) {
+                IO.println((char) ('A' + i) + ": " + Arrays.toString(Arrays.copyOf(pegs[i], sizes[i])));
+            }
+            IO.println("Moves: " + moves);
+            if (won()) {
+                IO.println("Solved! The minimum for three discs is 7 moves.");
+            }
+            showState = false;
         }
-        IO.println("Moves: " + moves);
-        if (won()) {
-            IO.println("Solved! The minimum for three discs is 7 moves.");
-        }
-        String input = IO.readln(won() ? "r replay, q quit: " : "From to, e.g. A C; r restart, q quit: ");
-        if (input == null || input.trim().equalsIgnoreCase("q")) {
+        String input = IO.readln(won() ? "Enter or /r: new round; /q: quit: " : "From to, e.g. A C; r restart, q quit: ");
+        if (input == null || (input.trim().equalsIgnoreCase("q") || input.trim().equalsIgnoreCase("/q"))) {
             return;
         }
         input = input.trim().toUpperCase(Locale.ROOT);
-        if (input.equals("R")) {
+        if ((input.equals("R") || input.equals("/R") || (won() && input.isBlank()))) {
             reset();
+            showState = true;
+            continue;
+        }
+        if (won()) {
+            IO.println("Round finished. Press Enter or /r for a new round; /q quits.");
             continue;
         }
         String[] parts = input.split("\\s+");
-        if (parts.length != 2 || parts[0].length() != 1 || parts[1].length() != 1
-                || !move(parts[0].charAt(0) - 'A', parts[1].charAt(0) - 'A')) {
+        if (parts.length == 2 && parts[0].length() == 1 && parts[1].length() == 1
+                && move(parts[0].charAt(0) - 'A', parts[1].charAt(0) - 'A')) {
+            showState = true;
+        } else {
             IO.println("Illegal move. Use two different pegs A-C with a legal top disc.");
         }
     }
@@ -169,10 +180,8 @@ void main() {
 ///   String.
 /// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
 /// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
-/// - `!=` — Ověří, že se dvě hodnoty liší.
 /// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
 /// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
-/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
 /// - `++` — Zvětší číselnou hodnotu o jedna.
 /// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
 /// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
@@ -189,7 +198,7 @@ void main() {
 /// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
 /// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
 /// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek. readln čeká na celý
+///   řádek vstupu.
 // </editor-fold>
 

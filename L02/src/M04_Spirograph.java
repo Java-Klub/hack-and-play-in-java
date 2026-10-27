@@ -5,9 +5,6 @@ import javax.swing.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L02.04 · Spirograph
@@ -68,8 +65,8 @@ double radiusRatio(int outer, int innerRadius) {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// point převede poměr na pozice pera. period a gcd určí uzavření křivky; render spojí pozice čarami a
-/// pozdější klávesnice a ukládání dodávají změny nastavení i export PNG.
+/// point převede poměr na pozice pera. period a gcd určí uzavření křivky; render spojí pozice
+/// čarami a připravená klávesnice mění dva parametry tvaru.
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Pro tuto hru">
@@ -96,9 +93,8 @@ double radiusRatio(int outer, int innerRadius) {
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int WIDTH = 640, HEIGHT = 440;
 
-int inner, pen, colour;
+int inner, pen;
 BufferedImage canvas;
-String message;
 int gcd(int a, int b) {
     while (b != 0) {
         int next = a % b;
@@ -126,7 +122,7 @@ void render() {
     var g = canvas.createGraphics();
     g.setColor(Color.WHITE);
     g.fillRect(0, 0, WIDTH, HEIGHT);
-    g.setColor(Color.getHSBColor(colour / 8f, .75f, .75f));
+    g.setColor(Color.getHSBColor(0, .75f, .75f));
     double scale = (HEIGHT - 65) / 2.0 / Math.max(1, 120 - inner + pen), period = period();
     var previous = point(0);
     int n = samples();
@@ -141,8 +137,6 @@ void render() {
 void restart() {
     inner = 45;
     pen = 65;
-    colour = 0;
-    message = "Change parameters to draw another closed curve";
     render();
 }
 
@@ -152,23 +146,10 @@ void adjust(int r, int d) {
     render();
 }
 
-void save(File file) throws IOException {
-    ImageIO.write(canvas, "png", file);
-}
-
-void save() {
-    try {
-        save(new File("spirograph.png"));
-        message = "Saved spirograph.png";
-    } catch (IOException e) {
-        message = "Save failed: " + e.getMessage();
-    }
-}
-
 void draw(Graphics2D g) {
     g.drawImage(canvas, 0, 0, null);
     g.setColor(Color.BLACK);
-    g.drawString("Inner radius: " + inner + "  Pen distance: " + pen + "  " + message, 10, 22);
+    g.drawString("Inner radius: " + inner + "  Pen distance: " + pen, 10, 22);
 }
 
 void key(int code, boolean pressed) {
@@ -181,11 +162,6 @@ void key(int code, boolean pressed) {
             case KeyEvent.VK_RIGHT -> adjust(5, 0);
             case KeyEvent.VK_UP -> adjust(0, 5);
             case KeyEvent.VK_DOWN -> adjust(0, -5);
-            case KeyEvent.VK_C -> {
-                colour = (colour + 1) % 8;
-                render();
-            }
-            case KeyEvent.VK_S -> save();
         }
     }
 }
@@ -212,7 +188,7 @@ void showWindow() {
     });
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.add(panel);
-    var help = new JLabel("<html><div style=\"text-align:center\">Left/Right: inner radius   Up/Down: pen distance   C: colour   S: save PNG   R: reset</div></html>", SwingConstants.CENTER);
+    var help = new JLabel("<html><div style=\"text-align:center\">Left/Right: inner radius   Up/Down: pen distance   R: reset</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
     frame.add(help, BorderLayout.SOUTH);
     frame.pack();
@@ -223,11 +199,15 @@ void showWindow() {
 }
 
 void main() {
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        IO.println("This game needs a graphical display; model checks still work headlessly.");
+        return;
+    }
     restart();
     SwingUtilities.invokeLater(this::showWindow);
 }
 
-/// Připravené vstupní body: main, restart, draw, render, save, showWindow.
+/// Připravené vstupní body: main, restart, draw, render, showWindow.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
@@ -250,7 +230,6 @@ void main() {
 /// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
 /// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
 /// - `boolean` — Hodnota true nebo false: ano nebo ne.
-/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
 /// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
 ///   textu nepatří.
 /// - `\` — Uvnitř textu začíná escape (zvláštní zápis), například \n pro nový řádek nebo \" pro uvozovku.
@@ -289,11 +268,7 @@ void main() {
 ///   (knihovním zpětným voláním), například paintComponent.
 /// - `super` — V super.paintComponent(g) požádá připravenou parent implementation (nadřazenou
 ///   implementaci), aby nejprve vykreslila běžné pozadí.
-/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
-/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
-/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
-/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
-///   zpracovat.
+/// - `null` — Žádný object (objekt) tu není.
 /// - `Graphics2D` — Kreslicí nástroj dodaný při vykreslování okna nebo obrázku.
 /// - `JFrame` — Okno dodané JDK knihovnou Swing.
 /// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.

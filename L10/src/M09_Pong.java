@@ -16,8 +16,7 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Tick (časový krok) závisí na lifecycle state (stavu životního cyklu) hry. Značka
 /// winner rozhoduje, zda krok smí posunout pálky a míček; kreslení má zůstat možné i po konci hry.
 ///
-/// Po Run File ovládej levou pálku pomocí W/S a pravou pomocí Up/Down, hraj do pěti bodů a klávesou R
-/// začni znovu.
+/// Po Run File stiskni Space nebo klikni pro start; levou pálku ovládej W/S a pravou Up/Down. První s pěti body vyhrává; R obnoví začátek a čeká na další start.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Nová dovednost · F30 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -168,31 +167,43 @@ void draw(Graphics g) {
 /// Připravené Swing UI (rozhraní): vytváří se na EDT; úklid timer (časovače) patří k oknu.
 void showWindow() {
     var frame = new JFrame("Pong - Paddle Duel");
+    boolean[] launched = {false};
     var panel = new JPanel() {
         @Override protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 /// Připravené kreslení: čte hodnoty model (modelu pravidel); repaint (překreslení) není další tah.
             draw(g);
+            if (!launched[0]) {
+                g.setColor(Color.WHITE);
+                g.drawString("Space or click to start", 20, 65);
+            }
         }
     };
     panel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
     panel.setFocusable(true);
     panel.addKeyListener(new KeyAdapter() {
         void change(KeyEvent event, boolean pressed) {
+            if (pressed && event.getKeyCode() == KeyEvent.VK_SPACE) launched[0] = true;
             switch (event.getKeyCode()) {
                 case KeyEvent.VK_W -> leftUp = pressed;
                 case KeyEvent.VK_S -> leftDown = pressed;
                 case KeyEvent.VK_UP -> rightUp = pressed;
                 case KeyEvent.VK_DOWN -> rightDown = pressed;
-                case KeyEvent.VK_R -> { if (pressed) restart(); }
+                case KeyEvent.VK_R -> { if (pressed) { restart(); launched[0] = false; } }
             }
         }
         @Override public void keyPressed(KeyEvent event) { change(event, true); }
         @Override public void keyReleased(KeyEvent event) { change(event, false); }
     });
+    panel.addMouseListener(new MouseAdapter() {
+        @Override public void mousePressed(MouseEvent event) {
+            launched[0] = true;
+            panel.requestFocusInWindow();
+        }
+    });
     var timer = new Timer(16, event -> {
 /// Připravený omezený update (aktualizace): jedno volání znamená jeden krok; aktivní oprava je popsaná výše.
-        step();
+        if (launched[0]) step();
         panel.repaint();
     });
     frame.addWindowFocusListener(new WindowAdapter() {
@@ -212,8 +223,7 @@ void showWindow() {
 }
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// step je aktivní hranice; model (model pravidel) ji zpřístupňuje pro opakovatelné check (kontroly) bez okna.
-/// Restart obnoví počáteční field (položky objektu); draw čte state (stav); showWindow dodává listener (obsluhy), jeden timer (časovač) a úklid po zavření.
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

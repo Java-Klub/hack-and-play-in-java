@@ -15,8 +15,8 @@ import javax.imageio.ImageIO;
 /// **Dnes trénuješ:** Path (cesta) je součást export contract (smlouvy ukládání), včetně názvu. Úprava
 /// obrázku a cíl jsou dvě oddělené volby; zápis má respektovat obě a nevymýšlet sousední soubor.
 ///
-/// Po Run File stiskni Enter pro úpravu připraveného obrázku do exports/pixel-sorted.png a potom otevři
-/// právě tento cíl.
+/// Run File zapíše exports/pixel-sorted.png přes saveSorted a načte právě tento soubor do Java
+/// okna. Pokud požadovaný soubor chybí, přečti Output a oprav jeho cíl.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Připomenutí · F32 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -62,8 +62,8 @@ void saveSorted(Path path, BufferedImage input, int threshold) throws IOExceptio
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Připravený sort kopíruje input (vstup) a řadí omezené úseky podle jasu. Main může použít vestavěný
-/// obrázek, zeptá se na cíl a volá saveSorted; ImageIO dodá PNG encoding (kódování).
+/// main zavolá saveSorted s jediným pevným vnořeným Path (cestou) a potom načte právě tento PNG.
+/// Java obrázek vznikne pouze při skutečném přečtení požadovaného souboru.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -126,30 +126,42 @@ BufferedImage sort(BufferedImage input, int threshold) {
 }
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// Sort zachová tmavé hranice i vstupní obraz; řazení úseků je připravené.
-/// Main volá saveSorted pro skutečný zvolený výstup; ImageIO kóduje PNG přes zadaný Path.
-void main(String[] args) throws Exception {
-    if (args.length == 0) {
-        String entered = IO.readln("Output path (blank exports/pixel-sorted.png, q quits): ");
-        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
-        String destination = entered.isBlank() ? "exports/pixel-sorted.png" : entered.strip();
-        args = new String[]{"-", destination};
-    }
-
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
-    try {
-        var input = args.length == 0 || args[0].equals("-") ? demo() : ImageIO.read(Path.of(args[0]).toFile());
-        if (input == null) {
-            throw new IllegalArgumentException("Input must be a readable image.");
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
+void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var pictures = new javax.swing.JPanel(new java.awt.GridLayout(1, images.length, 8, 8));
+        for (int i = 0; i < images.length; i++) {
+            var picture = new javax.swing.JPanel(new java.awt.BorderLayout());
+            picture.add(new javax.swing.JLabel(captions[i], javax.swing.SwingConstants.CENTER), java.awt.BorderLayout.NORTH);
+            double scale = Math.min(1, Math.min(900.0 / images.length / images[i].getWidth(), 550.0 / images[i].getHeight()));
+            var icon = new javax.swing.ImageIcon(images[i].getScaledInstance(
+                    Math.max(1, (int)(images[i].getWidth() * scale)),
+                    Math.max(1, (int)(images[i].getHeight() * scale)), java.awt.Image.SCALE_FAST));
+            picture.add(new javax.swing.JLabel(icon), java.awt.BorderLayout.CENTER);
+            pictures.add(picture);
         }
-        Path output = Path.of(args.length > 1 ? args[1] : "pixel-sorted.png");
-        int option = args.length > 2 ? Integer.parseInt(args[2]) : 110;
-        saveSorted(output, input, option);
-        IO.println("Saved: " + output.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
+        frame.add(pictures);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
+
+
+void main() {
+    Path output = Path.of("exports", "pixel-sorted.png");
+    try {
+        Files.deleteIfExists(output);
+        saveSorted(output, demo(), 110);
+        var image = ImageIO.read(output.toFile());
+        if (image == null) throw new IOException("The requested PNG is empty or invalid.");
+        IO.println("Loaded requested file: " + output.toAbsolutePath());
+        showImages("Pixel Sorting Glitch", new String[]{output.toString()}, new java.awt.image.BufferedImage[]{image});
+    } catch (IOException failure) {
+        IO.println("Cannot load requested file " + output + ": " + failure.getMessage() + ". Repair saveSorted; Save, Test File, Run File.");
     }
 }
 // </editor-fold>
@@ -189,8 +201,6 @@ void main(String[] args) throws Exception {
 /// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
-/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
-///   druhou.
 /// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
 ///   možnosti ? : nebo následuje za značkou switch.
 /// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
@@ -202,14 +212,13 @@ void main(String[] args) throws Exception {
 /// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
 /// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
 /// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
-/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `null` — Žádný object (objekt) tu není.
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
 /// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
 /// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
 ///   zpracovat.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek.
 /// - `Path` — Umístění v souborech, nikoli obsah souboru.
 /// - `Files` — JDK operace pro čtení a zápis místních souborů.
 // </editor-fold>

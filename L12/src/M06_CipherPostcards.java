@@ -10,8 +10,7 @@
 /// data. Switch má předat rozpoznaná data správnému připravenému postupu, ne považovat každou kartu za
 /// stejnou operaci.
 ///
-/// Po Run File stiskni Enter pro Vigenere a znovu pro LEMON, potom napiš ATTACK AT DAWN! pro vytvoření
-/// zašifrované pohlednice.
+/// Po Run File stiskni Enter pro vigenere a ORANGE, potom napiš ATTACK AT DAWN!; přečti zvolený cipher (šifru) a porovnej Result s původní zprávou: Vigenere branch (větev) má změnit její písmena.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Připomenutí · F35 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -59,9 +58,9 @@ String transform(String text, Cipher cipher, boolean decode) {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Main se zeptá na šifru, klíč a zprávu a chooseCipher vytvoří typovanou kartu. ApplyText už řeší
-/// výpočty písmen, velikost, interpunkci i ověření klíče; tyto hračkové šifry jsou hádanky, ne bezpečné
-/// zprávy.
+/// chooseCipher vytvoří zvolenou typovanou alternativu; transform předá record components (složky
+/// záznamu) do applyText. Jediný console flow (průběh v konzoli) vypíše zvolený cipher (šifru) a
+/// zakódovanou zprávu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
@@ -137,28 +136,23 @@ Cipher chooseCipher(String mode, String key) {
 }
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// ChooseCipher převede režim/klíč na typovaná data; transform rozpozná jejich component (složky).
-/// ApplyText dodává výpočty písmen a ověření; main čte místní text s q/EOF.
-void main(String[] args) {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
-    String mode = args.length > 0 ? args[0] : IO.readln("Cipher caesar/substitution/vigenere (blank vigenere, q quits): ");
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
+void main() {
+    String mode = IO.readln("Cipher caesar/substitution/vigenere (blank vigenere, q quits): ");
     if (mode == null || mode.strip().equalsIgnoreCase("q")) return;
     mode = mode.isBlank() ? "vigenere" : mode.strip().toLowerCase(Locale.ROOT);
-    String key = args.length > 1 ? args[1] : IO.readln("Key (blank uses 3 / reversed alphabet / LEMON; q quits): ");
+    String key = IO.readln("Key (blank 3 / reversed alphabet / ORANGE; q quits): ");
     if (key == null || key.strip().equalsIgnoreCase("q")) return;
-    if (key.isBlank()) key = mode.equals("caesar") ? "3" : mode.equals("substitution") ? "ZYXWVUTSRQPONMLKJIHGFEDCBA" : "LEMON";
-    String text = args.length > 2 ? args[2] : IO.readln("Message (q to quit): ");
-    if (text == null || text.equalsIgnoreCase("q")) {
-        return;
-    }
+    if (key.isBlank()) key = mode.equals("caesar") ? "3" : mode.equals("substitution") ? "ZYXWVUTSRQPONMLKJIHGFEDCBA" : "ORANGE";
+    String text = IO.readln("Message (q quits): ");
+    if (text == null || text.equalsIgnoreCase("q")) return;
     try {
-        IO.println(transform(text, chooseCipher(mode, key), args.length > 3 && args[3].equals("decode")));
-    } catch (IllegalArgumentException invalid) {
-        IO.println(invalid.getMessage());
+        Cipher cipher = chooseCipher(mode, key);
+        IO.println("Selected cipher: " + cipher);
+        IO.println("Result: " + transform(text, cipher, false));
+    } catch (IllegalArgumentException failure) {
+        IO.println(failure.getMessage());
     }
-    IO.println("Toy ciphers are puzzles, not modern secure encryption.");
 }
 // </editor-fold>
 
@@ -197,15 +191,12 @@ void main(String[] args) {
 /// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
 /// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
 /// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
-/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
 /// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
 ///   druhou.
 /// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
 ///   možnosti ? : nebo následuje za značkou switch.
-/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
-///   (prvek); length je počet prvků.
 /// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
 /// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
 /// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
@@ -227,7 +218,7 @@ void main(String[] args) {
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
 /// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
 ///   měnit velikost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek. readln čeká na celý
+///   řádek vstupu.
 // </editor-fold>
 
