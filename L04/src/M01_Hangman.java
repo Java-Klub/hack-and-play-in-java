@@ -128,21 +128,32 @@ void main() {
     IO.println("HANGMAN: reveal the word before six wrong letters.");
     IO.println("Repeated letters cost nothing. Every letter accepts either case.");
     IO.println("/r chooses a new word; /q quits.");
+    boolean showState = true;
     while (true) {
-        IO.println(mask() + "    Tried: " + tried + "    Misses: " + misses + "/6");
-        if (over()) {
-            IO.println((won() ? "You win!" : "Out of guesses!") + " Word: " + word);
+        if (showState) {
+            IO.println(mask() + "    Tried: " + tried + "    Misses: " + misses + "/6");
+            if (over()) {
+                IO.println((won() ? "You win!" : "Out of guesses!") + " Word: " + word);
+            }
+            showState = false;
         }
-        String input = IO.readln(over() ? "/r replay, /q quit: " : "Guess A-Z, /r restart, /q quit: ");
+        String input = IO.readln(over() ? "Enter or /r: new round; /q: quit: " : "Guess A-Z, /r restart, /q quit: ");
         if (input == null || input.trim().equalsIgnoreCase("/q")) {
             return;
         }
         input = input.trim();
-        if (input.equalsIgnoreCase("/r")) {
+        if ((input.equalsIgnoreCase("/r") || (over() && input.isBlank()))) {
             reset();
+            showState = true;
             continue;
         }
-        if (!guess(input)) {
+        if (over()) {
+            IO.println("Round finished. Press Enter or /r for a new round; /q quits.");
+            continue;
+        }
+        if (guess(input)) {
+            showState = true;
+        } else {
             IO.println("Enter one new letter A-Z during an unfinished round.");
         }
     }
@@ -177,8 +188,6 @@ void main() {
 /// - `++` — Increases a numeric value by one.
 /// - `+=` — Adds to the old value and stores the result back under the same name.
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
 /// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
@@ -194,6 +203,6 @@ void main() {
 /// - `while` — Keeps repeating its body while its condition stays true.
 /// - `null` — No object is present. IO.readln returns null when the input stream ends.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 // </editor-fold>
 

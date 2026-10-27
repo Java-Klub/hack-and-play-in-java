@@ -157,6 +157,7 @@ void showWindow() {
     var controls = new JPanel();
     var brushes = new JComboBox<>(new String[]{"Tree", "Fire", "Erase"});
     brushes.addActionListener(event -> brush = new int[]{1, 2, 0}[brushes.getSelectedIndex()]);
+    brushes.setSelectedIndex(1);
     canvas.addMouseListener(new MouseAdapter() {
 
         public void mousePressed(MouseEvent event) {
@@ -164,16 +165,22 @@ void showWindow() {
             canvas.repaint();
         }
     });
+    var run = new JButton("Run");
     var single = new JButton("Step");
     single.addActionListener(event -> {
+        running = false;
+        run.setText("Run");
         step();
         canvas.repaint();
     });
-    var run = new JButton("Run / Pause");
-    run.addActionListener(event -> running = !running);
+    run.addActionListener(event -> {
+        running = !running;
+        run.setText(running ? "Pause" : "Run");
+    });
     var restart = new JButton("New forest");
     restart.addActionListener(event -> {
         running = false;
+        run.setText("Run");
         reset(System.nanoTime());
         canvas.repaint();
     });
@@ -194,6 +201,7 @@ void showWindow() {
         }
     });
     timer.start();
+    frame.add(new JLabel("Choose Fire and click a tree to ignite it; Step pauses and advances once."), BorderLayout.NORTH);
     frame.add(canvas, BorderLayout.CENTER);
     frame.add(controls, BorderLayout.SOUTH);
     frame.pack();
@@ -202,10 +210,7 @@ void showWindow() {
 }
 
 /// main(): Starts the model, then schedules the supplied window on Swing’s event thread.
-void main(String[] args) {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
+void main() {
     reset(42);
     SwingUtilities.invokeLater(this::showWindow);
 }

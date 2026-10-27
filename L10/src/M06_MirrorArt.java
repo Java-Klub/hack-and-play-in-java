@@ -5,9 +5,6 @@ import javax.swing.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L10.06 · MirrorArt
@@ -22,8 +19,8 @@ import javax.imageio.ImageIO;
 /// to screen coordinates. The supplied trigonometry handles rotation; check which centre offsets are
 /// still missing.
 ///
-/// After Run File, drag a stroke, change mirror axes with Up/Down, change ink with C and press S to
-/// export your picture.
+/// After Run File, drag a stroke to inspect its reflections, use Up/Down to change mirror axes and
+/// R to clear and restart.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F29 explains the Java skill; Read this code explains these lines.
@@ -64,8 +61,8 @@ Point2D.Double transform(int x, int y, int copy, boolean reflect) {
 ///
 /// ### What the prepared part already does
 ///
-/// The drag handler asks transform for each rotated and reflected copy, then paints those positions on a
-/// persistent canvas. Axis controls, colour changes, clearing and PNG export are supplied.
+/// stroke calls the editable transform for each reflected copy and stores the strokes on one
+/// canvas. Up/Down changes axes; R clears the picture and restores the starting experiment.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -84,10 +81,9 @@ Point2D.Double transform(int x, int y, int copy, boolean reflect) {
 final int WIDTH = 640, HEIGHT = 440;
 
 BufferedImage canvas;
-int axes, colour, lastX, lastY;
+int axes, lastX, lastY;
 boolean drawing;
 String message;
-Color[] colours = {new Color(40, 80, 170), new Color(200, 65, 120), new Color(30, 150, 120), new Color(220, 140, 30)};
 void clear() {
     var g = canvas.createGraphics();
     g.setColor(Color.WHITE);
@@ -100,7 +96,6 @@ void restart() {
     canvas = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
     clear();
     axes = 6;
-    colour = 0;
     drawing = false;
     message = "Draw with the mouse";
 }
@@ -111,7 +106,7 @@ void adjust(int amount) {
 
 void stroke(int x1, int y1, int x2, int y2) {
     var g = canvas.createGraphics();
-    g.setColor(colours[colour]);
+    g.setColor(new Color(40, 80, 170));
     g.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
     for (int i = 0; i < axes; i++) {
         for (boolean reflected : new boolean[]{false, true}) {
@@ -121,21 +116,6 @@ void stroke(int x1, int y1, int x2, int y2) {
     g.dispose();
 }
 
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-void save(File file) throws IOException {
-    ImageIO.write(canvas, "png", file);
-}
-
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-void save() {
-    try {
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-        save(new File("mirror-art.png"));
-        message = "Saved mirror-art.png";
-    } catch (IOException e) {
-        message = "Save failed: " + e.getMessage();
-    }
-}
 
 /// Supplied drawing: reads model values; repainting is not another turn.
 void draw(Graphics2D g) {
@@ -156,9 +136,6 @@ void key(int code, boolean pressed) {
         switch (code) {
             case KeyEvent.VK_UP -> adjust(1);
             case KeyEvent.VK_DOWN -> adjust(-1);
-            case KeyEvent.VK_C -> colour = (colour + 1) % colours.length;
-            case KeyEvent.VK_BACK_SPACE -> clear();
-            case KeyEvent.VK_S -> save();
         }
     }
 }
@@ -222,7 +199,7 @@ void showWindow() {
     panel.addMouseMotionListener(mouse);
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.add(panel);
-    var help = new JLabel("<html><div style=\"text-align:center\">Drag: draw   Up/Down: axes   C: colour   Backspace: clear   S: save PNG   R: reset</div></html>", SwingConstants.CENTER);
+    var help = new JLabel("<html><div style=\"text-align:center\">Drag: draw   Up/Down: axes   R: reset</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
     frame.add(help, BorderLayout.SOUTH);
     frame.pack();
@@ -233,8 +210,7 @@ void showWindow() {
 }
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// transform turns model values into screen points and is called by the real drawing path.
-/// Input changes model parameters; draw only reads them; the supplied UI owns timer and close behaviour.
+/// The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();
@@ -272,7 +248,6 @@ void main() {
 /// - `==` — Compares primitive values. For text contents, use equals instead.
 /// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
 /// - `++` — Increases a numeric value by one.
-/// - `%` — The remainder after division; useful for repeated positions or turns.
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
 /// - `-` — Subtracts numbers; in front of one number, changes its sign.
 /// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
@@ -300,10 +275,7 @@ void main() {
 /// - `protected` — A visibility keyword used by supplied library callbacks, such as paintComponent.
 /// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
 ///   background first.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
+/// - `null` — No object is present.
 /// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
 /// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
 /// - `JPanel` — A window area that can display the game’s drawing or controls.

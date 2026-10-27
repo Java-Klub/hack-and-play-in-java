@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.geom.Point2D;
-import javax.swing.Timer;
 // </editor-fold>
 
 /// # L10.07 · Moire
@@ -17,8 +16,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Grid coordinates and screen coordinates use different origins. The rotation
 /// formula is supplied; both resulting axes must be placed around the same canvas centre.
 ///
-/// After Run File, rotate with Left/Right, change grid spacing with Up/Down and press Space to animate
-/// the overlap.
+/// After Run File, rotate one grid with Left/Right and change spacing with Up/Down to explore the
+/// overlap; R restores the starting pattern.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F29 explains the Java skill; Read this code explains these lines.
@@ -60,8 +59,8 @@ Point2D.Double gridPoint(int column, int row, double a) {
 ///
 /// ### What the prepared part already does
 ///
-/// The supplied grid painter joins transformed endpoints. Keyboard input changes angle and spacing, while
-/// optional ticks animate the angle; gridPoint is the shared conversion used for actual drawing.
+/// draw overlaps two dot grids through gridPoint. Left/Right rotates one grid and Up/Down changes
+/// spacing; R restores the starting geometry. There is no automatic animation or third-grid mode.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -81,13 +80,10 @@ final int WIDTH = 640, HEIGHT = 440;
 
 double angle;
 int spacing;
-boolean paused, third;
 /// Supplied restart: restore the initial model before the UI uses it.
 void restart() {
     angle = .07;
     spacing = 22;
-    paused = true;
-    third = false;
 }
 
 void adjust(int amount) {
@@ -98,21 +94,15 @@ int extent() {
     return (int)Math.ceil(Math.hypot(WIDTH, HEIGHT) / 2 / spacing) + 1;
 }
 
-/// Supplied bounded update: one call means one model step; the active repair is described above.
-void step() {
-    if (!paused) {
-        angle = (angle + .0015) % (2 * Math.PI);
-    }
-}
 
 /// Supplied drawing: reads model values; repainting is not another turn.
 void draw(Graphics2D g) {
     g.setColor(Color.WHITE);
     g.fillRect(0, 0, WIDTH, HEIGHT);
     int limit = extent();
-    for (int layer = 0; layer < (third ? 3 : 2); layer++) {
-        double a = layer == 0 ? 0 : layer == 1 ? angle : -angle;
-        g.setColor(layer == 0 ? new Color(20, 20, 20, 200) : layer == 1 ? new Color(40, 80, 170, 170) : new Color(180, 60, 80, 150));
+    for (int layer = 0; layer < 2; layer++) {
+        double a = layer == 0 ? 0 : angle;
+        g.setColor(layer == 0 ? new Color(20, 20, 20, 200) : new Color(40, 80, 170, 170));
         for (int y = -limit; y <= limit; y++) {
             for (int x = -limit; x <= limit; x++) {
                 var p = gridPoint(x, y, a);
@@ -123,7 +113,7 @@ void draw(Graphics2D g) {
     g.setColor(Color.WHITE);
     g.fillRect(0, 0, WIDTH, 28);
     g.setColor(Color.BLACK);
-    g.drawString(String.format("Angle %.2f degrees   Spacing %d   %s", Math.toDegrees(angle), spacing, paused ? "Paused" : "Rotating"), 10, 20);
+    g.drawString(String.format("Angle %.2f degrees   Spacing %d", Math.toDegrees(angle), spacing), 10, 20);
 }
 
 void key(int code, boolean pressed) {
@@ -133,12 +123,10 @@ void key(int code, boolean pressed) {
     }
     if (pressed) {
         switch (code) {
-            case KeyEvent.VK_SPACE -> paused = !paused;
             case KeyEvent.VK_LEFT -> angle -= .01;
             case KeyEvent.VK_RIGHT -> angle += .01;
             case KeyEvent.VK_UP -> adjust(1);
             case KeyEvent.VK_DOWN -> adjust(-1);
-            case KeyEvent.VK_T -> third = !third;
         }
     }
 }
@@ -165,19 +153,9 @@ void showWindow() {
             panel.repaint();
         }
     });
-    var timer = new Timer(20, e -> {
-/// Supplied bounded update: one call means one model step; the active repair is described above.
-        step();
-        panel.repaint();
-    });
-    frame.addWindowListener(new WindowAdapter() {
-        @Override public void windowClosed(WindowEvent e) {
-            timer.stop();
-        }
-    });
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.add(panel);
-    var help = new JLabel("<html><div style=\"text-align:center\">Space: play/pause   Left/Right: rotate   Up/Down: spacing   T: third grid   R: reset</div></html>", SwingConstants.CENTER);
+    var help = new JLabel("<html><div style=\"text-align:center\">Left/Right: rotate   Up/Down: spacing   R: reset</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
     frame.add(help, BorderLayout.SOUTH);
     frame.pack();
@@ -185,12 +163,10 @@ void showWindow() {
     frame.setLocationByPlatform(true);
     frame.setVisible(true);
     panel.requestFocusInWindow();
-    timer.start();
 }
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// gridPoint turns model values into screen points and is called by the real drawing path.
-/// Input changes model parameters; draw only reads them; the supplied UI owns timer and close behaviour.
+/// The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();
@@ -227,10 +203,8 @@ void main() {
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
 /// - `==` — Compares primitive values. For text contents, use equals instead.
 /// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
 /// - `++` — Increases a numeric value by one.
 /// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `%` — The remainder after division; useful for repeated positions or turns.
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
 /// - `-` — Subtracts numbers; in front of one number, changes its sign.
 /// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names

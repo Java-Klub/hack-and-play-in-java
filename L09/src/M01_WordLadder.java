@@ -9,7 +9,7 @@
 /// **Today you learn:** A mutable List remembers items in order. Here one accepted word should extend an
 /// existing journey; replacing the whole list changes what the player remembers.
 ///
-/// After Run File, type CORD and then CARD to climb from COLD; use /r to restart and /q to quit.
+/// After Run File, type CORD and then CARD to climb from COLD; use /r to restart and /q to quit. After winning, Enter starts a new trail.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Learn · F22 explains the Java skill; Read this code explains these lines.
@@ -93,7 +93,7 @@ String current;
 String outcome;
 List<String> history;
 
-/// Supplied restart: create the initial model; no native window is created here.
+/// Restore the starting game state.
 void reset() {
     current = "COLD";
     history = new ArrayList<>(List.of(current));
@@ -119,35 +119,30 @@ void display() {
 }
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// adjacent counts differing letters; the supplied dictionary keeps this puzzle finite.
-/// reset creates the starting history; display prints it and main handles input/EOF.
+/// The supplied part supports only the main game or experiment described above.
 void main() {
-/// Supplied restart: create the initial model; no native window is created here.
     reset();
-    IO.println("Word Ladder");
-    IO.println("Change exactly one letter to a listed word. Transform COLD to WARM. /r restarts; /q quits.");
+    IO.println("Word Ladder: transform COLD to WARM using the listed words. /r restarts; /q quits.");
+    display();
     while (true) {
-        display();
-        if (!outcome.isEmpty()) {
-            IO.println(outcome);
-        }
-        String input = IO.readln("> ");
-        if (input == null || input.strip().equalsIgnoreCase("/q")) {
-            return;
-        }
-        if (input.strip().equalsIgnoreCase("/r")) {
-/// Supplied restart: create the initial model; no native window is created here.
+        boolean finished = !outcome.isEmpty();
+        String input = IO.readln(finished ? "Enter or /r: new round; /q: quit > " : "> ");
+        if (input == null || input.strip().equalsIgnoreCase("/q")) return;
+        if (input.strip().equalsIgnoreCase("/r") || finished && input.isBlank()) {
             reset();
+            display();
             continue;
         }
-        if (!outcome.isEmpty()) {
-            IO.println("Round finished. /r restarts; /q quits.");
+        if (finished) {
+            IO.println("This round is finished. Enter or /r starts a fresh trail; /q quits.");
             continue;
         }
         try {
             command(input.strip());
+            display();
+            if (!outcome.isEmpty()) IO.println(outcome);
         } catch (IllegalArgumentException invalid) {
-            IO.println("Invalid move or command. Change exactly one letter to a listed word. Transform COLD to WARM. /r restarts; /q quits.");
+            IO.println("Invalid move. Change one letter to a listed word; the trail has not changed.");
         }
     }
 }
@@ -187,7 +182,6 @@ void require(boolean valid) {
 /// - `++` — Increases a numeric value by one.
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
 /// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
 /// - `:` — In for (int value : values), reads each element in turn. It also separates the two
@@ -199,13 +193,11 @@ void require(boolean valid) {
 /// - `if` — Runs its body only when the condition in parentheses is true.
 /// - `for` — Repeats a block over a range or a sequence of values.
 /// - `while` — Keeps repeating its body while its condition stays true.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
 /// - `null` — No object is present. IO.readln returns null when the input stream ends.
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
 /// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 // </editor-fold>
 

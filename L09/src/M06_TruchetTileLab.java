@@ -1,7 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Prepared tools">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L09.06 · TruchetTileLab
@@ -15,8 +14,8 @@ import javax.imageio.ImageIO;
 /// **Today you learn:** A Map can keep a separate tally for each named category. Updating one orientation
 /// must retain its previous count and leave the other category untouched.
 ///
-/// Use Run File to save truchet-tile-lab.png, then open it and compare its winding tiles with the LEFT
-/// and RIGHT counts at the top.
+/// After Run File, inspect the Java picture; close its window, edit the active rule, Save and Test
+/// File, then Run File again to compare.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F24 explains the Java skill; Read this code explains these lines.
@@ -56,8 +55,8 @@ void countOrientation(String orientation) {
 ///
 /// ### What the prepared part already does
 ///
-/// render chooses tile orientations, calls the tally and draws the supplied quarter-circle arcs. The
-/// final image caption reads the same map; seed handling and PNG output are prepared.
+/// render chooses tile orientations and calls countOrientation for each tile. Both the curved
+/// picture and its LEFT/RIGHT caption use those real counts.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -110,32 +109,40 @@ BufferedImage render(long seed, double option) {
     return image;
 }
 
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
-        throw new IllegalStateException("PNG writer missing.");
-    }
-}
 
 Map<String, Integer> orientationCounts = new HashMap<>();
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// render chooses an orientation, records it and draws two arcs.
-/// save writes the complete image; main reads local options and handles expected option errors.
-void main(String[] args) throws Exception {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
+/// The supplied part supports only the main game or experiment described above.
+void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var pictures = new javax.swing.JPanel(new java.awt.GridLayout(1, images.length, 8, 8));
+        for (int i = 0; i < images.length; i++) {
+            var picture = new javax.swing.JPanel(new java.awt.BorderLayout());
+            picture.add(new javax.swing.JLabel(captions[i], javax.swing.SwingConstants.CENTER), java.awt.BorderLayout.NORTH);
+            double scale = Math.min(1, Math.min(900.0 / images.length / images[i].getWidth(), 550.0 / images[i].getHeight()));
+            var icon = new javax.swing.ImageIcon(images[i].getScaledInstance(
+                    Math.max(1, (int)(images[i].getWidth() * scale)),
+                    Math.max(1, (int)(images[i].getHeight() * scale)), java.awt.Image.SCALE_FAST));
+            picture.add(new javax.swing.JLabel(icon), java.awt.BorderLayout.CENTER);
+            pictures.add(picture);
+        }
+        frame.add(pictures);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
+
+
+void main() {
     try {
-        Path path = Path.of(args.length > 0 ? args[0] : "truchet-tile-lab.png");
-        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
-        double option = args.length > 2 ? Double.parseDouble(args[2]) : 12;
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-        save(path, seed, option);
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
+        showImages("Truchet Tile Lab", new String[]{"Result"}, new java.awt.image.BufferedImage[]{render(42, 12)});
+    } catch (Exception failure) {
+        IO.println("Cannot draw this result; check the editable rule: " + failure);
     }
 }
 // </editor-fold>
@@ -164,7 +171,6 @@ void main(String[] args) throws Exception {
 /// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
 ///   type.
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
 /// - `||` — At least one condition must be true; if the first is true, Java skips the second.
 /// - `!` — In front of a boolean expression, reverses true and false.
 /// - `++` — Increases a numeric value by one.
@@ -175,10 +181,6 @@ void main(String[] args) throws Exception {
 /// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
 /// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
 ///   count.
 /// - `new` — Creates a fresh value or object, such as a new array or window.
@@ -189,11 +191,8 @@ void main(String[] args) throws Exception {
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
 /// - `Map` — Associates keys with values. A missing key needs an explicit fallback or decision.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `IO` — Console input and output. println writes a line.
 // </editor-fold>
 

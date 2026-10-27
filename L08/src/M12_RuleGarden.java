@@ -9,8 +9,8 @@
 /// **Today you learn:** Simultaneous updates: separate the snapshot being read from the generation being
 /// written. The result should not depend on whether columns are visited left-to-right or right-to-left.
 ///
-/// Run File, type 90 and press Enter to grow a pattern, then run again with another rule number from 0 to
-/// 255.
+/// Run File immediately shows rule 30 in Output. Enter 90 at the next prompt to compare,
+/// press Enter to repeat the current rule, or q to quit.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Learn · F26 explains the Java skill; Read this code explains these lines.
@@ -102,22 +102,41 @@ List<String> grow(int rule, int width, int rows) {
     return result;
 }
 
-/// main(): Reads one rule or optional arguments, prints a finite pattern, then returns.
-void main(String[] args) {
-    String text = args.length > 0 ? args[0] : IO.readln("Rule 0..255 (q to quit): ");
-    if (text == null || text.equalsIgnoreCase("q")) {
-        return;
+/// displayRule(): Prints the finite pattern for the selected rule.
+void displayRule(int rule, int width, int rows) {
+    IO.println("Rule " + rule + "; # is on, . is off; cells outside the width stay off.");
+    for (String line : grow(rule, width, rows)) {
+        IO.println(line);
     }
-    try {
-        int rule = Integer.parseInt(text.strip());
-        int width = args.length > 1 ? Integer.parseInt(args[1]) : 61;
-        int rows = args.length > 2 ? Integer.parseInt(args[2]) : 31;
-        IO.println("Rule " + rule + "; cells outside the printed width stay off.");
-        for (String line : grow(rule, width, rows)) {
-            IO.println(line);
+}
+
+/// Run File immediately prints rule 30. Read # as on and . as off; every line is one generation.
+/// At the next prompt try another rule, repeat with Enter, or quit with q. No file needs opening.
+void main() {
+    int rule = 30;
+    IO.println("RULE GARDEN: watch one starting cell grow into a pattern.");
+    IO.println("Each printed line is a new generation. Try 90 or 110 to compare with rule 30.");
+    displayRule(rule, 61, 31);
+    while (true) {
+        String input = IO.readln("New rule 0..255; Enter or r: repeat; q: quit: ");
+        if (input == null) {
+            return;
         }
-    } catch (IllegalArgumentException invalidInput) {
-        IO.println("Use rule 0..255, width 3..121 and rows 1..60.");
+        input = input.strip();
+        if (input.equalsIgnoreCase("q") || input.equalsIgnoreCase("/q")) {
+            return;
+        }
+        try {
+            int requested = input.isEmpty() || input.equalsIgnoreCase("r") || input.equalsIgnoreCase("/r")
+                    ? rule : Integer.parseInt(input);
+            if (requested < 0 || requested > 255) {
+                throw new IllegalArgumentException("Rule: 0..255.");
+            }
+            rule = requested;
+            displayRule(rule, 61, 31);
+        } catch (IllegalArgumentException invalidInput) {
+            IO.println("Enter a rule number from 0 to 255, or q to quit.");
+        }
     }
 }
 // </editor-fold>
@@ -172,6 +191,6 @@ void main(String[] args) {
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
 /// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 // </editor-fold>
 

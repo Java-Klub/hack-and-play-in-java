@@ -10,8 +10,7 @@
 /// should forward that matched data to the correct supplied algorithm, rather than treating every card as
 /// the same operation.
 ///
-/// After Run File, press Enter for Vigenere and again for LEMON, then type ATTACK AT DAWN! to make an
-/// encoded postcard.
+/// After Run File, press Enter for vigenere and ORANGE, then type ATTACK AT DAWN!; read the selected cipher and compare Result with your original message: the Vigenere branch should change its letters.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F35 explains the Java skill; Read this code explains these lines.
@@ -58,9 +57,8 @@ String transform(String text, Cipher cipher, boolean decode) {
 ///
 /// ### What the prepared part already does
 ///
-/// main asks for cipher, key and message, then chooseCipher constructs the typed card. applyText already
-/// handles letter arithmetic, case, punctuation and key validation; these toy ciphers are puzzles, not
-/// secure messaging.
+/// chooseCipher creates the selected typed alternative; transform passes its record components to
+/// applyText. The single console flow prints the selected cipher and encoded message.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="For this game">
@@ -136,28 +134,23 @@ Cipher chooseCipher(String mode, String key) {
 }
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// chooseCipher turns the selected mode/key into typed data; transform matches its components.
-/// applyText supplies character arithmetic and validation; main reads local text with q/EOF handling.
-void main(String[] args) {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
-    String mode = args.length > 0 ? args[0] : IO.readln("Cipher caesar/substitution/vigenere (blank vigenere, q quits): ");
+/// The supplied part supports only the main game or experiment described above.
+void main() {
+    String mode = IO.readln("Cipher caesar/substitution/vigenere (blank vigenere, q quits): ");
     if (mode == null || mode.strip().equalsIgnoreCase("q")) return;
     mode = mode.isBlank() ? "vigenere" : mode.strip().toLowerCase(Locale.ROOT);
-    String key = args.length > 1 ? args[1] : IO.readln("Key (blank uses 3 / reversed alphabet / LEMON; q quits): ");
+    String key = IO.readln("Key (blank 3 / reversed alphabet / ORANGE; q quits): ");
     if (key == null || key.strip().equalsIgnoreCase("q")) return;
-    if (key.isBlank()) key = mode.equals("caesar") ? "3" : mode.equals("substitution") ? "ZYXWVUTSRQPONMLKJIHGFEDCBA" : "LEMON";
-    String text = args.length > 2 ? args[2] : IO.readln("Message (q to quit): ");
-    if (text == null || text.equalsIgnoreCase("q")) {
-        return;
-    }
+    if (key.isBlank()) key = mode.equals("caesar") ? "3" : mode.equals("substitution") ? "ZYXWVUTSRQPONMLKJIHGFEDCBA" : "ORANGE";
+    String text = IO.readln("Message (q quits): ");
+    if (text == null || text.equalsIgnoreCase("q")) return;
     try {
-        IO.println(transform(text, chooseCipher(mode, key), args.length > 3 && args[3].equals("decode")));
-    } catch (IllegalArgumentException invalid) {
-        IO.println(invalid.getMessage());
+        Cipher cipher = chooseCipher(mode, key);
+        IO.println("Selected cipher: " + cipher);
+        IO.println("Result: " + transform(text, cipher, false));
+    } catch (IllegalArgumentException failure) {
+        IO.println(failure.getMessage());
     }
-    IO.println("Toy ciphers are puzzles, not modern secure encryption.");
 }
 // </editor-fold>
 
@@ -195,15 +188,12 @@ void main(String[] args) {
 /// - `%` — The remainder after division; useful for repeated positions or turns.
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
 /// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
 /// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
 ///   the second.
 /// - `:` — In for (int value : values), reads each element in turn. It also separates the two
 ///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
 /// - `new` — Creates a fresh value or object, such as a new array or window.
 /// - `return` — Ends this method call, optionally handing a result back to its caller.
 /// - `if` — Runs its body only when the condition in parentheses is true.
@@ -223,6 +213,6 @@ void main(String[] args) {
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
 /// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 // </editor-fold>
 

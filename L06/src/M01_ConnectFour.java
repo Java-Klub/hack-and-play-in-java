@@ -134,33 +134,49 @@ boolean drop(int column) {
     return true;
 }
 
-/// main(): Starts the real game loop: display, read a command, validate, replay or quit.
+/// display(): Prints the current board and a completed round's result.
+void display() {
+    IO.println("1 2 3 4 5 6 7");
+    for (char[] row : board) {
+        String line = "";
+        for (char mark : row) {
+            line += mark + " ";
+        }
+        IO.println(line);
+    }
+    if (winner != '.') {
+        IO.println(winner == 'D' ? "Draw!" : winner + " wins!");
+    }
+}
+
 void main() {
     reset();
     IO.println("CONNECT FOUR: two players; four connected pieces win.");
+    IO.println("Drop a disc into a column; it falls to the lowest empty cell. Connect four in any direction.");
+    IO.println("Example: 4 drops into the middle column. r or /r restarts; q or /q quits.");
+    display();
     while (true) {
-        IO.println("1 2 3 4 5 6 7");
-        for (char[] row : board) {
-            String line = "";
-            for (char mark : row) {
-                line += mark + " ";
-            }
-            IO.println(line);
-        }
-        if (winner != '.') {
-            IO.println(winner == 'D' ? "Draw!" : winner + " wins!");
-        }
-        String input = IO.readln(winner == '.' ? player + ": column 1-7, r restart, q quit: " : "r replay, q quit: ");
-        if (input == null || input.trim().equalsIgnoreCase("q")) {
+        String input = IO.readln(winner == '.' ? player + ": column 1-7, r restart, q quit: " : "Enter: replay, r restart, q quit: ");
+        if (input == null) {
             return;
         }
-        input = input.trim();
-        if (input.equalsIgnoreCase("r")) {
+        input = input.strip();
+        if (input.equalsIgnoreCase("q") || input.equalsIgnoreCase("/q")) {
+            return;
+        }
+        if (input.equalsIgnoreCase("r") || input.equalsIgnoreCase("/r") || (winner != '.' && input.isEmpty())) {
             reset();
+            display();
+            continue;
+        }
+        if (winner != '.') {
+            IO.println("That round is over. Press Enter to play again, or q to quit.");
             continue;
         }
         try {
-            if (!drop(Integer.parseInt(input))) {
+            if (drop(Integer.parseInt(input))) {
+                display();
+            } else {
                 IO.println("Illegal move. Choose a column with space during an unfinished round.");
             }
         } catch (NumberFormatException exception) {
@@ -218,6 +234,6 @@ void main() {
 /// - `null` — No object is present. IO.readln returns null when the input stream ends.
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 // </editor-fold>
 

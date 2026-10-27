@@ -280,8 +280,7 @@ void showWindow() {
 Runnable fireCallback = firingAction();
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// fire creates a bounded-lifetime shot; its existing guards enforce cooldown and finish.
-/// step calls fireCallback for held Space, then updates ship/rocks/shots; showWindow owns the supplied EDT/timer cleanup.
+/// The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

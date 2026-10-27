@@ -3,9 +3,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L09.05 · PhotoRemixLab
@@ -19,8 +16,8 @@ import javax.imageio.ImageIO;
 /// **Today you learn:** A Map associates each colour key with its current count. A repeated key needs an
 /// updated total; put replaces the old value rather than adding to it automatically.
 ///
-/// After Run File, press M to change the moon picture’s remix mode, adjust it with arrow keys and read
-/// the pixel counter above the image.
+/// After Run File, compare Pixels counted with the image total; Up/Down changes the poster
+/// threshold and R restores the demo.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Learn · F24 explains the Java skill; Read this code explains these lines.
@@ -60,8 +57,8 @@ void countColour(int rgb) {
 ///
 /// ### What the prepared part already does
 ///
-/// The remix loop calls countColour for the original source pixels. countedPixels adds the map values for
-/// the visible caption; the supplied demo includes repeated colours so the mistake is visible.
+/// remix calls countColour for each demo pixel and creates one two-colour poster. draw reads the
+/// real total from the same map; Up/Down changes the threshold and R restarts the fixed demo.
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="For this game">
@@ -93,9 +90,7 @@ void countColour(int rgb) {
 final int WIDTH = 640, HEIGHT = 440;
 
 BufferedImage source, result;
-boolean pixelated, original;
-int threshold, block;
-String message;
+int threshold;
 /// Supplied restart: restore the initial model before the UI uses it.
 void restart() {
     source = new BufferedImage(400, 300, BufferedImage.TYPE_INT_RGB);
@@ -109,145 +104,43 @@ void restart() {
     moon.fillOval(120, 70, 150, 150);
     moon.dispose();
     threshold = 128;
-    block = 12;
-    pixelated = original = false;
-    message = "O: load a personal image";
     remix();
 }
 
 void remix() {
-    int w = source.getWidth(), h = source.getHeight();
+    int width = source.getWidth(), height = source.getHeight();
     colourCounts.clear();
-    for (int yy = 0; yy < h; yy++) {
-        for (int xx = 0; xx < w; xx++) countColour(source.getRGB(xx, yy));
-    }
-    result = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-    if (!pixelated) {
-        for (int y = 0; y < h; y++) {
-            for (int x = 0; x < w; x++) {
-                var c = new Color(source.getRGB(x, y));
-                int light = (c.getRed() * 2126 + c.getGreen() * 7152 + c.getBlue() * 722) / 10000;
-                result.setRGB(x, y, (light < threshold ? new Color(25, 45, 80) : new Color(255, 205, 120)).getRGB());
-            }
-        }
-    }
-    else {
-        for (int y = 0; y < h; y += block) {
-            for (int x = 0; x < w; x += block) {
-                long r = 0, g = 0, b = 0, count = 0;
-                for (int yy = y; yy < Math.min(h, y + block); yy++) {
-                    for (int xx = x; xx < Math.min(w, x + block); xx++) {
-                        var c = new Color(source.getRGB(xx, yy));
-                        r += c.getRed();
-                        g += c.getGreen();
-                        b += c.getBlue();
-                        count++;
-                    }
-                }
-                int rgb = new Color((int)(r / count), (int)(g / count), (int)(b / count)).getRGB();
-                for (int yy = y; yy < Math.min(h, y + block); yy++) {
-                    for (int xx = x; xx < Math.min(w, x + block); xx++) {
-                        result.setRGB(xx, yy, rgb);
-                    }
-                }
-            }
+    result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            countColour(source.getRGB(x, y));
+            var colour = new Color(source.getRGB(x, y));
+            int brightness = (colour.getRed() * 2126 + colour.getGreen() * 7152 + colour.getBlue() * 722) / 10000;
+            result.setRGB(x, y, (brightness < threshold ? new Color(25, 45, 80) : new Color(255, 205, 120)).getRGB());
         }
     }
 }
 
-void adjust(int t, int size) {
-    threshold = Math.max(16, Math.min(240, threshold + t));
-    block = Math.max(2, Math.min(40, block + size));
+void adjust(int amount) {
+    threshold = Math.max(16, Math.min(240, threshold + amount));
     remix();
 }
 
-void load(File file) throws IOException {
-    try(var input = ImageIO.createImageInputStream(file)) {
-        if (input == null) {
-            throw new IOException("Cannot read this file");
-        }
-        var readers = ImageIO.getImageReaders(input);
-        if (!readers.hasNext()) {
-            throw new IOException("Unsupported image");
-        }
-        var reader = readers.next();
-        try {
-            reader.setInput(input);
-            int w = reader.getWidth(0), h = reader.getHeight(0);
-            if ((long)w * h > 20000000) {
-                throw new IOException("Image is too large (maximum 20 million pixels)");
-            }
-            var loaded = reader.read(0);
-            double scale = Math.min(1, Math.min(600.0 / w, 350.0 / h));
-            source = new BufferedImage(Math.max(1, (int)(w * scale)), Math.max(1, (int)(h * scale)), BufferedImage.TYPE_INT_RGB);
-            var g = source.createGraphics();
-            g.setColor(Color.WHITE);
-            g.fillRect(0, 0, source.getWidth(), source.getHeight());
-            g.drawImage(loaded, 0, 0, source.getWidth(), source.getHeight(), null);
-            g.dispose();
-            remix();
-        } finally {
-            reader.dispose();
-        }
-    }
-}
-
-void choose() {
-    var chooser = new JFileChooser();
-    if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-        try {
-            load(chooser.getSelectedFile());
-            message = "Loaded " + chooser.getSelectedFile().getName();
-        } catch (IOException e) {
-            message = e.getMessage();
-        }
-    }
-}
-
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-void save(File file) throws IOException {
-    ImageIO.write(result, "png", file);
-}
-
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-void save() {
-    try {
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-        save(new File("photo-remix.png"));
-        message = "Saved photo-remix.png";
-    } catch (IOException e) {
-        message = "Save failed: " + e.getMessage();
-    }
-}
 
 /// Supplied drawing: reads model values; repainting is not another turn.
 void draw(Graphics2D g) {
-    var image = original ? source : result;
-    g.drawImage(image, (WIDTH - image.getWidth()) / 2, 45, null);
+    g.drawImage(result, (WIDTH - result.getWidth()) / 2, 45, null);
     g.setColor(Color.BLACK);
-    g.drawString((original ? "Original" : pixelated ? "Pixel portrait" : "Two-colour poster") + "   Threshold " + threshold + "   Block " + block, 12, 22);
-    g.drawString(message + " | Pixels counted: " + countedPixels() + " / " + source.getWidth() * source.getHeight(), 12, 420);
+    g.drawString("Two-colour poster | Threshold " + threshold, 12, 22);
+    g.drawString("Pixels counted: " + countedPixels() + " / " + source.getWidth() * source.getHeight(), 12, 420);
 }
 
 void key(int code, boolean pressed) {
-    if (pressed && code == KeyEvent.VK_R) {
-/// Supplied restart: restore the initial model before the UI uses it.
-        restart();
-    }
-    if (pressed) {
-        switch (code) {
-            case KeyEvent.VK_O -> choose();
-            case KeyEvent.VK_M -> {
-                pixelated = !pixelated;
-                remix();
-            }
-            case KeyEvent.VK_SPACE -> original = !original;
-            case KeyEvent.VK_UP -> adjust(8, 0);
-            case KeyEvent.VK_DOWN -> adjust(-8, 0);
-            case KeyEvent.VK_LEFT -> adjust(0, -2);
-            case KeyEvent.VK_RIGHT -> adjust(0, 2);
-            case KeyEvent.VK_S -> save();
-        }
+    if (!pressed) return;
+    switch (code) {
+        case KeyEvent.VK_R -> restart();
+        case KeyEvent.VK_UP -> adjust(8);
+        case KeyEvent.VK_DOWN -> adjust(-8);
     }
 }
 
@@ -275,7 +168,7 @@ void showWindow() {
     });
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.add(panel);
-    var help = new JLabel("<html><div style=\"text-align:center\">O: open image   M: poster/pixels   Arrows: threshold/block   Space: original   S: save   R:<br>reset</div></html>", SwingConstants.CENTER);
+    var help = new JLabel("<html><div style=\"text-align:center\">Up/Down: poster threshold   R: restart</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
     frame.add(help, BorderLayout.SOUTH);
     frame.pack();
@@ -294,8 +187,7 @@ int countedPixels() {
 }
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// remix clears colourCounts and counts source pixels, then creates the transformed image.
-/// draw shows the real tally; load/save and Swing input are supplied boundaries.
+/// The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();
@@ -320,19 +212,14 @@ void main() {
 /// - `main` — Java starts the program here. Other method declarations do not run just because they appear
 ///   earlier in the file.
 /// - `int` — A type for whole numbers within a fixed range.
-/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
 /// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
 /// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
 /// - `\` — Inside quoted text, starts an escape such as \n for a new line or \" for a quote.
-/// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
 /// - `final` — The named value cannot be assigned another value afterwards. A referenced mutable object
 ///   can still change.
 /// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
 ///   type.
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
 /// - `!` — In front of a boolean expression, reverses true and false.
 /// - `++` — Increases a numeric value by one.
 /// - `+=` — Adds to the old value and stores the result back under the same name.
@@ -350,7 +237,6 @@ void main() {
 /// - `new` — Creates a fresh value or object, such as a new array or window.
 /// - `return` — Ends this method call, optionally handing a result back to its caller.
 /// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `else` — The alternative when the preceding if condition is false.
 /// - `for` — Repeats a block over a range or a sequence of values.
 /// - `switch` — Selects one case from a set of alternatives. It can also produce a result.
 /// - `case` — One alternative of a switch; the arrow points to what it does or returns.
@@ -362,11 +248,7 @@ void main() {
 /// - `protected` — A visibility keyword used by supplied library callbacks, such as paintComponent.
 /// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
 ///   background first.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
+/// - `null` — No object is present.
 /// - `Map` — Associates keys with values. A missing key needs an explicit fallback or decision.
 /// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
 /// - `JFrame` — A desktop window supplied by the JDK’s Swing library.

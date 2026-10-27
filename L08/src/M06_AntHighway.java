@@ -86,7 +86,7 @@ boolean running;
 
 /// reset(): Restores the starting Ant Highway round, clearing the state that belongs to the old
 /// round.
-void reset(long seed) {
+void reset() {
     black = new boolean[61][81];
     x = 40;
     y = 30;
@@ -121,11 +121,15 @@ void showWindow() {
     canvas.setPreferredSize(new Dimension(648, 488));
     var controls = new JPanel();
     var label = new JLabel("Steps: 0");
-    var run = new JButton("Run / Pause");
-    run.addActionListener(event -> running = !running);
+    var run = new JButton("Run");
+    run.addActionListener(event -> {
+        running = !running;
+        run.setText(running ? "Pause" : "Run");
+    });
     var single = new JButton("One step");
     single.addActionListener(event -> {
         running = false;
+        run.setText("Run");
         step();
         label.setText("Steps: " + steps);
         canvas.repaint();
@@ -133,7 +137,8 @@ void showWindow() {
     var restart = new JButton("Reset");
     restart.addActionListener(event -> {
         running = false;
-        reset(42);
+        run.setText("Run");
+        reset();
         label.setText("Steps: 0");
         canvas.repaint();
     });
@@ -165,11 +170,8 @@ void showWindow() {
 }
 
 /// main(): Starts the model, then schedules the supplied window on Swing’s event thread.
-void main(String[] args) {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
-    reset(42);
+void main() {
+    reset();
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
@@ -192,20 +194,17 @@ void main(String[] args) {
 ///   earlier in the file.
 /// - `int` — A type for whole numbers within a fixed range.
 /// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
 /// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
 /// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
 /// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
 ///   type.
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
 /// - `!` — In front of a boolean expression, reverses true and false.
 /// - `++` — Increases a numeric value by one.
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
 /// - `-` — Subtracts numbers; in front of one number, changes its sign.
 /// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
 ///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
 /// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
@@ -215,7 +214,6 @@ void main(String[] args) {
 /// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
 ///   count.
 /// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
 /// - `if` — Runs its body only when the condition in parentheses is true.
 /// - `for` — Repeats a block over a range or a sequence of values.
 /// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called

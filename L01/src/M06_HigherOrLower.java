@@ -9,9 +9,8 @@
 /// **Today you learn:** Named values: target stores one fact that several parts can read. Changing one
 /// initialization should keep the displayed goal and the actual goal in agreement.
 ///
-/// Use Run File, enter h for higher or l for lower, and watch how many correct guesses the displayed
-/// round requires.
-/// After your repair: Save → Test File → play again.
+/// Use Run File, read Current card and click Higher or Lower to predict the next rank. The result
+/// and target stay visible; New round restarts play.
 ///
 /// Need an explanation? Learn · F03 explains the Java skill; Read this code explains these lines.
 /// Hints 1 and 2 open separately; Repair outline reveals the direction.
@@ -51,17 +50,16 @@ int target = 1;
 ///
 /// ### What the prepared part already does
 ///
-/// reset builds and shuffles the deck. command applies a prediction and reads target when deciding a win;
-/// display reads the same target for the score label. main supplies the input and restart loop.
+/// reset builds and shuffles the deck. command applies a prediction and reads target when deciding
+/// a win; The prepared window reads the same target for the score label. main supplies the buttons
+/// and restart.
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="For this game">
-/// This is your first game that waits for typed console input. After Run File, click in **Output at
-/// the current prompt**, type `h` or `l`, and press **Enter** to send the whole line. Type into
-/// Output, not into the Java editor. The printed `/r` restarts a round and `/q` ends the program.
-/// Save your source change and start a new run to load it; restarting the already running round does
-/// not reload edited Java. Random cards can end a round before ten correct guesses, so use Test File
-/// as well as playing to check the shared target.
+/// The default main provides cards and buttons directly in Java. Jack is 11, Queen 12, King 13 and
+/// Ace 14. An equal card does not count a correct guess or lose. Both the target display and win
+/// rule read the same target. After changing target, save, close the old window and Run File again;
+/// New round does not reload edited Java.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -102,7 +100,7 @@ void command(String input) {
     require(input.matches("(?i)[hl]"));
     require(!deck.isEmpty());
     int next = deck.remove();
-    message = "Next card: " + next;
+    message = "Next card: " + cardName(next);
     if (next == current) {
         message += "; tie, no penalty.";
     } else {
@@ -122,38 +120,55 @@ void command(String input) {
     }
 }
 
-void display() {
-    IO.println(message);
-    IO.println("Current card " + current + " (Jack11 Queen12 King13 Ace14). Correct " + correct + "/" + target + "; deck " + deck.size());
+// Prepared display names; ranks remain numeric in the game rules.
+String cardName(int rank) {
+    return switch (rank) {
+        case 11 -> "Jack";
+        case 12 -> "Queen";
+        case 13 -> "King";
+        case 14 -> "Ace";
+        default -> Integer.toString(rank);
+    };
 }
 
 void main() {
     reset();
-    IO.println("Higher or Lower");
-    IO.println("h predicts higher, l lower. Ace is high; equal rank is a free tie. /r restarts; /q quits.");
-    while (true) {
-        display();
-        if (!outcome.isEmpty()) {
-            IO.println(outcome);
-        }
-        String input = IO.readln("> ");
-        if (input == null || input.strip().equalsIgnoreCase("/q")) {
-            return;
-        }
-        if (input.strip().equalsIgnoreCase("/r")) {
-            reset();
-            continue;
-        }
-        if (!outcome.isEmpty()) {
-            IO.println("Round finished. /r restarts; /q quits.");
-            continue;
-        }
-        try {
-            command(input.strip());
-        } catch (IllegalArgumentException invalid) {
-            IO.println("Invalid move or command. h predicts higher, l lower. Ace is high; equal rank is a free tie. /r restarts; /q quits.");
-        }
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        IO.println("Higher or Lower needs a graphical display; the model remains headless-testable.");
+        return;
     }
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame("Higher or Lower");
+        var card = new javax.swing.JLabel("", javax.swing.SwingConstants.CENTER);
+        card.setOpaque(true); card.setBackground(java.awt.Color.WHITE);
+        card.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.DARK_GRAY, 2));
+        card.setPreferredSize(new java.awt.Dimension(190, 170));
+        var score = new javax.swing.JLabel();
+        var feedback = new javax.swing.JLabel("Choose whether the next card will be higher or lower.");
+        var higher = new javax.swing.JButton("Higher");
+        var lower = new javax.swing.JButton("Lower");
+        var restart = new javax.swing.JButton("New round");
+        Runnable refresh = () -> {
+            card.setText("<html><center>Current card<br><span style='font-size:32px'>" + cardName(current) + "</span></center></html>");
+            score.setText("Correct guesses: " + correct + " / " + target + "    Cards left: " + deck.size());
+            feedback.setText(outcome.isEmpty() ? (message.isEmpty() ? "Choose Higher or Lower. Equal cards give another chance." : message) : outcome + " Use New round to play again.");
+            higher.setEnabled(outcome.isEmpty()); lower.setEnabled(outcome.isEmpty());
+        };
+        higher.addActionListener(event -> { command("h"); refresh.run(); });
+        lower.addActionListener(event -> { command("l"); refresh.run(); });
+        restart.addActionListener(event -> { reset(); refresh.run(); });
+        var buttons = new javax.swing.JPanel();
+        buttons.add(higher); buttons.add(lower); buttons.add(restart);
+        var content = new javax.swing.JPanel(new java.awt.BorderLayout(10, 10));
+        content.setBorder(javax.swing.BorderFactory.createEmptyBorder(14, 14, 14, 14));
+        content.add(new javax.swing.JLabel("Guess the next rank. Ace is highest; an equal rank does not count or lose."), java.awt.BorderLayout.NORTH);
+        content.add(card);
+        var bottom = new javax.swing.JPanel(new java.awt.GridLayout(3, 1));
+        bottom.add(score); bottom.add(feedback); bottom.add(buttons);
+        content.add(bottom, java.awt.BorderLayout.SOUTH);
+        frame.add(content); frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        refresh.run(); frame.pack(); frame.setLocationByPlatform(true); frame.setVisible(true);
+    });
 }
 
 void require(boolean valid) {
@@ -189,12 +204,10 @@ void require(boolean valid) {
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
 /// - `==` — Compares primitive values. For text contents, use equals instead.
 /// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
 /// - `!` — In front of a boolean expression, reverses true and false.
 /// - `++` — Increases a numeric value by one.
 /// - `+=` — Adds to the old value and stores the result back under the same name.
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
 /// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
@@ -206,11 +219,7 @@ void require(boolean valid) {
 /// - `if` — Runs its body only when the condition in parentheses is true.
 /// - `else` — The alternative when the preceding if condition is false.
 /// - `for` — Repeats a block over a range or a sequence of values.
-/// - `while` — Keeps repeating its body while its condition stays true.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line.
 // </editor-fold>
 

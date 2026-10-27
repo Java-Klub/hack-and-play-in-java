@@ -257,8 +257,7 @@ void showWindow() {
 }
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// step calculates the spring and appends a trail point once.
-/// draw paints the existing trail and mass; showWindow separates timer updates from repainting.
+/// The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

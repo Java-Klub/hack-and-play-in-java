@@ -2,18 +2,12 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.Timer;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioSystem;
-import java.io.ByteArrayInputStream;
 // </editor-fold>
 
 /// # L11.01 · TinyStepSequencer
 ///
 /// Build a tiny drum pattern by switching cells on and off. Four rows and eight beats are enough to make
-/// a loop worth exporting and comparing with a friend’s.
+/// a loop worth replaying and comparing with a friend’s.
 ///
 /// **Your mission:** A note can be switched on but not off; the second click leaves it selected. Repair
 /// toggling while preserving invalid-coordinate handling.
@@ -21,8 +15,8 @@ import java.io.ByteArrayInputStream;
 /// **Today you learn:** A Set answers whether a distinct value is present. A toggle has two paths: a
 /// previously absent Note becomes present, while an already present Note must stop belonging to the set.
 ///
-/// After Run File, click cells to switch notes on and off, choose BPM and click Export WAV to save a
-/// rhythm you can open in a player.
+/// After Run File, click note cells, choose BPM and click Play to hear four loops directly in Java;
+/// Stop interrupts, Restart brings the starting pattern back.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Learn · F23 explains the Java skill; Read this code explains these lines.
@@ -66,9 +60,9 @@ boolean toggle(int row, int step) {
 ///
 /// ### What the prepared part already does
 ///
-/// Each button calls toggle and refreshes its selection from notes. The supplied synthesiser reads that
-/// same set, combines finite instrument sounds and writes a WAV at the selected tempo; it does not
-/// autoplay.
+/// toggle changes the same Note set read by refresh and sequence. Play synthesises the current
+/// notes at the chosen BPM; Stop and window closing release Java Sound, and Restart restores the
+/// starting notes.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -86,26 +80,13 @@ boolean toggle(int row, int step) {
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
 final int RATE = 22050;
 
-/// Supplied WAV encoding: bounded PCM samples and try-with-resources own the stream.
-void write(Path path, double[] signal) throws Exception {
-    byte[] pcm = new byte[signal.length * 2];
-    for (int i = 0; i < signal.length; i++) {
-        int value = (int)(Math.max(-0.8, Math.min(0.8, signal[i])) * 32767);
-        pcm[i * 2] = (byte)value;
-        pcm[i * 2 + 1] = (byte)(value >> 8);
-    }
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    var format = new AudioFormat(RATE, 16, 1, true, false);
-    try (var stream = new AudioInputStream(new ByteArrayInputStream(pcm), format, signal.length)) {
-        AudioSystem.write(stream, AudioFileFormat.Type.WAVE, path.toFile());
-    }
-}
+
 record Note(int row, int step) {}
 Set<Note> notes = new HashSet<>();
 JToggleButton[][] buttons = new JToggleButton[4][8];
 int bpm = 120;
 
-/// Supplied restart: create the initial model; no native window is created here.
+/// Restore the starting game state.
 void reset() {
     notes.clear();
     for (int step = 0; step < 8; step++) {
@@ -165,33 +146,25 @@ void showWindow() {
     var controls = new JPanel();
     var tempo = new JSpinner(new SpinnerNumberModel(120, 40, 240, 5));
     tempo.addChangeListener(event -> bpm = (Integer)tempo.getValue());
-    var clear = new JButton("Clear");
-    clear.addActionListener(event -> {
-        notes.clear();
-        refresh();
-    });
-    var restore = new JButton("Restore");
+    var restore = new JButton("Restart");
     restore.addActionListener(event -> {
-/// Supplied restart: create the initial model; no native window is created here.
+/// Restore the starting game state.
         reset();
         refresh();
     });
-    var status = new JLabel("Export four loops; open the WAV to play or stop.");
-    var export = new JButton("Export WAV");
-    export.addActionListener(event -> {
-        try {
-/// Supplied WAV encoding: bounded PCM samples and try-with-resources own the stream.
-            write(Path.of("tiny-sequencer.wav"), sequence(4));
-            status.setText("Saved tiny-sequencer.wav");
-        } catch (Exception failure) {
-            status.setText(failure.getMessage());
-        }
+    var status = new JLabel("Click cells, then Play to hear four loops in Java.");
+    var play = new JButton("Play");
+    play.addActionListener(event -> playAudio(sequence(4), status));
+    var stop = new JButton("Stop");
+    stop.addActionListener(event -> { stopAudio(); status.setText("Stopped; Play starts the current notes again."); });
+    frame.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override public void windowClosed(java.awt.event.WindowEvent event) { stopAudio(); }
     });
     controls.add(new JLabel("BPM:"));
     controls.add(tempo);
-    controls.add(clear);
     controls.add(restore);
-    controls.add(export);
+    controls.add(play);
+    controls.add(stop);
     frame.add(status, BorderLayout.NORTH);
     frame.add(grid, BorderLayout.CENTER);
     frame.add(controls, BorderLayout.SOUTH);
@@ -202,25 +175,76 @@ void showWindow() {
 }
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// toggle is the real button action; notes contains immutable Note values.
-/// sequence builds four voices at the chosen tempo; write exports them without autoplay; close disposes the window.
-void main(String[] args) throws Exception {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
+/// The supplied part supports only the main game or experiment described above.
+volatile javax.sound.sampled.SourceDataLine playingLine;
+volatile int playbackVersion;
+
+/// Supplied Java Sound: a worker owns the line; Stop and window closing release it.
+/// Play/Stop use a separate Java Sound worker; closing releases it.
+void stopAudio() {
+    playbackVersion++;
+    var line = playingLine;
+    playingLine = null;
+    if (line != null) {
+        line.stop();
+        line.flush();
+        line.close();
     }
-/// Supplied restart: create the initial model; no native window is created here.
-    reset();
-    if (args.length > 0 && args[0].equals("export")) {
-        if (args.length > 2) {
-            bpm = Integer.parseInt(args[2]);
+}
+
+void playAudio(double[] samples, javax.swing.JLabel status) {
+    stopAudio();
+    int ticket = playbackVersion;
+    status.setText("Playing in Java; Stop interrupts playback.");
+    var worker = new Thread(() -> {
+        javax.sound.sampled.SourceDataLine line = null;
+        try {
+            byte[] pcm = new byte[samples.length * 2];
+            for (int i = 0; i < samples.length; i++) {
+                int value = (int)(Math.max(-0.8, Math.min(0.8, samples[i])) * 32767);
+                pcm[i * 2] = (byte)value;
+                pcm[i * 2 + 1] = (byte)(value >> 8);
+            }
+            var format = new javax.sound.sampled.AudioFormat(RATE, 16, 1, true, false);
+            line = javax.sound.sampled.AudioSystem.getSourceDataLine(format);
+            line.open(format);
+            if (ticket != playbackVersion) return;
+            playingLine = line;
+            line.start();
+            int offset = 0;
+            while (offset < pcm.length && ticket == playbackVersion) {
+                int written = line.write(pcm, offset, Math.min(4096, pcm.length - offset));
+                if (written <= 0) break;
+                offset += written;
+            }
+            if (ticket == playbackVersion) {
+                line.drain();
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    if (ticket == playbackVersion) status.setText("Finished; Play replays the same sound.");
+                });
+            }
+        } catch (Exception failure) {
+            if (ticket == playbackVersion) {
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    if (ticket == playbackVersion) status.setText("Audio unavailable: " + failure.getMessage());
+                });
+            }
+        } finally {
+            if (line != null) {
+                line.stop();
+                line.close();
+                if (playingLine == line) playingLine = null;
+            }
         }
-        Path path = Path.of(args.length > 1 ? args[1] : "tiny-sequencer.wav");
-/// Supplied WAV encoding: bounded PCM samples and try-with-resources own the stream.
-        write(path, sequence(4));
-        IO.println("Saved: " + path.toAbsolutePath());
-    } else {
-        SwingUtilities.invokeLater(this::showWindow);
-    }
+    }, "java-sound-player");
+    worker.setDaemon(true);
+    worker.start();
+}
+
+
+void main() {
+    reset();
+    SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
 
@@ -263,8 +287,6 @@ void main(String[] args) throws Exception {
 /// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
 /// - `:` — In for (int value : values), reads each element in turn. It also separates the two
 ///   alternatives of ? : or follows a switch label.
 /// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
@@ -272,7 +294,6 @@ void main(String[] args) throws Exception {
 /// - `new` — Creates a fresh value or object, such as a new array or window.
 /// - `return` — Ends this method call, optionally handing a result back to its caller.
 /// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `else` — The alternative when the preceding if condition is false.
 /// - `for` — Repeats a block over a range or a sequence of values.
 /// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
 ///   later.
@@ -282,11 +303,7 @@ void main(String[] args) throws Exception {
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
 /// - `Set` — Stores distinct values; the same value is present at most once.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
 /// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
 /// - `JPanel` — A window area that can display the game’s drawing or controls.
 /// - `SwingUtilities.invokeLater` — Schedules window work for Swing’s event thread; the action runs

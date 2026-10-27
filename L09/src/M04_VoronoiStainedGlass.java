@@ -1,7 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Prepared tools">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 import java.util.List;
 // </editor-fold>
 
@@ -16,8 +15,8 @@ import java.util.List;
 /// **Today you learn:** List describes ordered access, but not every List permits mutation. This method
 /// builds its result incrementally, so its chosen implementation must accept add.
 ///
-/// Use Run File to generate voronoi-stained-glass.png, then open the Saved path once the seed collection
-/// works.
+/// Run File tries to build the picture. If seedList refuses to add a seed, read Output. After your
+/// repair, Run File opens the coloured picture.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F22 explains the Java skill; Read this code explains these lines.
@@ -63,8 +62,8 @@ List<Seed> seedList(Random random, int count) {
 ///
 /// ### What the prepared part already does
 ///
-/// render requests seeds, compares distances and paints each pixel with its nearest seed’s colour. The
-/// supplied Random, Seed record and PNG export stay visible but need no new framework.
+/// render asks seedList for the centres and assigns each picture point to its nearest centre;
+/// showImages presents the memory image in Java.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -121,30 +120,38 @@ BufferedImage render(long seed, double option) {
     return image;
 }
 
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
-        throw new IllegalStateException("PNG writer missing.");
-    }
-}
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// seedList builds the ordered data; nearest scans it for the closest point.
-/// render draws boundaries; save/main handle PNG export and local arguments.
-void main(String[] args) throws Exception {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
+/// The supplied part supports only the main game or experiment described above.
+void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var pictures = new javax.swing.JPanel(new java.awt.GridLayout(1, images.length, 8, 8));
+        for (int i = 0; i < images.length; i++) {
+            var picture = new javax.swing.JPanel(new java.awt.BorderLayout());
+            picture.add(new javax.swing.JLabel(captions[i], javax.swing.SwingConstants.CENTER), java.awt.BorderLayout.NORTH);
+            double scale = Math.min(1, Math.min(900.0 / images.length / images[i].getWidth(), 550.0 / images[i].getHeight()));
+            var icon = new javax.swing.ImageIcon(images[i].getScaledInstance(
+                    Math.max(1, (int)(images[i].getWidth() * scale)),
+                    Math.max(1, (int)(images[i].getHeight() * scale)), java.awt.Image.SCALE_FAST));
+            picture.add(new javax.swing.JLabel(icon), java.awt.BorderLayout.CENTER);
+            pictures.add(picture);
+        }
+        frame.add(pictures);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
+
+
+void main() {
     try {
-        Path path = Path.of(args.length > 0 ? args[0] : "voronoi-stained-glass.png");
-        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
-        double option = args.length > 2 ? Double.parseDouble(args[2]) : 20;
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-        save(path, seed, option);
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
+        showImages("Voronoi Stained Glass", new String[]{"Result"}, new java.awt.image.BufferedImage[]{render(42, 20)});
+    } catch (Exception failure) {
+        IO.println("Cannot build the picture. Check seedList; Save, Test File, then Run File.");
     }
 }
 // </editor-fold>
@@ -199,11 +206,8 @@ void main(String[] args) throws Exception {
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
 /// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `IO` — Console input and output. println writes a line.
 // </editor-fold>
 

@@ -1,9 +1,4 @@
 // <editor-fold defaultstate="collapsed" desc="Prepared tools">
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioSystem;
-import java.io.ByteArrayInputStream;
 // </editor-fold>
 
 /// # L12.03 · PhasingRhythms
@@ -18,8 +13,8 @@ import java.io.ByteArrayInputStream;
 /// values answer a time-to-sample question; the mixer combines their answers rather than knowing how each
 /// rhythm works.
 ///
-/// Use Run File to save phasing.wav, then open it in an audio player and listen for changing accents
-/// between the two rhythms.
+/// After Run File, compare Play two voices with Play one voice in Java; listen for changing
+/// overlap, use Stop and replay after repairing mix.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F34 explains the Java skill; Read this code explains these lines.
@@ -63,8 +58,9 @@ double mix(double time) {
 ///
 /// ### What the prepared part already does
 ///
-/// signal asks mix for every WAV sample. The supplied Voice fields call tap with two different intervals;
-/// tap builds finite pulses, and write saves the bounded result without automatic playback.
+/// signal asks mix for each sample; first and second provide the two beat intervals. The only
+/// playback choices compare the current two-role mix with one voice, making the missing role
+/// audible.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -82,20 +78,7 @@ double mix(double time) {
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
 final int RATE = 22050;
 
-/// Supplied WAV encoding: bounded PCM samples and try-with-resources own the stream.
-void write(Path path, double[] signal) throws Exception {
-    byte[] pcm = new byte[signal.length * 2];
-    for (int i = 0; i < signal.length; i++) {
-        int value = (int)(Math.max(-0.8, Math.min(0.8, signal[i])) * 32767);
-        pcm[i * 2] = (byte)value;
-        pcm[i * 2 + 1] = (byte)(value >> 8);
-    }
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    var format = new AudioFormat(RATE, 16, 1, true, false);
-    try (var stream = new AudioInputStream(new ByteArrayInputStream(pcm), format, signal.length)) {
-        AudioSystem.write(stream, AudioFileFormat.Type.WAVE, path.toFile());
-    }
-}
+
 boolean[] rhythm = {true, false, true, false, true, true, false, true, false, true, false, true};
 
 double tap(double time, double beat) {
@@ -107,7 +90,7 @@ double tap(double time, double beat) {
     return Math.sin(2 * Math.PI * 1200 * within) * Math.exp(-within * 120);
 }
 
-/// Supplied synthesis: bounded sample loops build audio; there is no autoplay.
+/// Prepared bounded loops build the audio samples.
 double[] signal(double seconds) {
     if (!Double.isFinite(seconds) || seconds < 1 || seconds > 40) {
         throw new IllegalArgumentException("Duration: 1..40 seconds.");
@@ -125,22 +108,107 @@ Voice first = time -> tap(time, 0.12);
 Voice second = time -> tap(time, 0.13);
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// mix combines the two real Voice fields; signal calls it for every WAV sample.
-/// tap defines the supplied 0.12/0.13-second patterns; write/main export the finite phasing sound.
-void main(String[] args) throws Exception {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
+/// The supplied part supports only the main game or experiment described above.
+volatile javax.sound.sampled.SourceDataLine playingLine;
+volatile int playbackVersion;
+
+/// Supplied Java Sound: a worker owns the line; Stop and window closing release it.
+/// Play/Stop use a separate Java Sound worker; closing releases it.
+void stopAudio() {
+    playbackVersion++;
+    var line = playingLine;
+    playingLine = null;
+    if (line != null) {
+        line.stop();
+        line.flush();
+        line.close();
     }
-    try {
-        Path path = Path.of(args.length > 0 ? args[0] : "phasing.wav");
-        double seconds = args.length > 1 ? Double.parseDouble(args[1]) : 18.72;
-/// Supplied WAV encoding: bounded PCM samples and try-with-resources own the stream.
-        write(path, signal(seconds));
-        IO.println("Saved: " + path.toAbsolutePath());
-        IO.println("Identical twelve-beat patterns use 0.12 and 0.13 second beats; both align again at 18.72 seconds.");
-    } catch (IllegalArgumentException invalid) {
-        IO.println(invalid.getMessage());
-    }
+}
+
+void playAudio(double[] samples, javax.swing.JLabel status) {
+    stopAudio();
+    int ticket = playbackVersion;
+    status.setText("Playing in Java; Stop interrupts playback.");
+    var worker = new Thread(() -> {
+        javax.sound.sampled.SourceDataLine line = null;
+        try {
+            byte[] pcm = new byte[samples.length * 2];
+            for (int i = 0; i < samples.length; i++) {
+                int value = (int)(Math.max(-0.8, Math.min(0.8, samples[i])) * 32767);
+                pcm[i * 2] = (byte)value;
+                pcm[i * 2 + 1] = (byte)(value >> 8);
+            }
+            var format = new javax.sound.sampled.AudioFormat(RATE, 16, 1, true, false);
+            line = javax.sound.sampled.AudioSystem.getSourceDataLine(format);
+            line.open(format);
+            if (ticket != playbackVersion) return;
+            playingLine = line;
+            line.start();
+            int offset = 0;
+            while (offset < pcm.length && ticket == playbackVersion) {
+                int written = line.write(pcm, offset, Math.min(4096, pcm.length - offset));
+                if (written <= 0) break;
+                offset += written;
+            }
+            if (ticket == playbackVersion) {
+                line.drain();
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    if (ticket == playbackVersion) status.setText("Finished; Play replays the same sound.");
+                });
+            }
+        } catch (Exception failure) {
+            if (ticket == playbackVersion) {
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    if (ticket == playbackVersion) status.setText("Audio unavailable: " + failure.getMessage());
+                });
+            }
+        } finally {
+            if (line != null) {
+                line.stop();
+                line.close();
+                if (playingLine == line) playingLine = null;
+            }
+        }
+    }, "java-sound-player");
+    worker.setDaemon(true);
+    worker.start();
+}
+
+void showAudio(String title, String detail, String[] captions, double[][] sounds) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var status = new javax.swing.JLabel(detail);
+        var controls = new javax.swing.JPanel();
+        for (int i = 0; i < sounds.length; i++) {
+            int index = i;
+            var play = new javax.swing.JButton("Play " + captions[i]);
+            play.addActionListener(event -> playAudio(sounds[index], status));
+            controls.add(play);
+        }
+        var stop = new javax.swing.JButton("Stop");
+        stop.addActionListener(event -> {
+            stopAudio();
+            status.setText("Stopped; choose Play to listen again.");
+        });
+        controls.add(stop);
+        frame.add(status, java.awt.BorderLayout.NORTH);
+        frame.add(controls, java.awt.BorderLayout.SOUTH);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override public void windowClosed(java.awt.event.WindowEvent event) { stopAudio(); }
+        });
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
+
+void main() {
+    var both = signal(18.72);
+    double[] solo = new double[both.length];
+    for (int i = 0; i < solo.length; i++) solo[i] = 0.17 * first.sample(i / (double)RATE);
+    showAudio("Phasing Rhythms", "Compare the changing overlap with one voice.", new String[]{"two voices", "one voice"}, new double[][]{both, solo});
 }
 // </editor-fold>
 
@@ -150,7 +218,6 @@ void main(String[] args) throws Exception {
 /// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
 ///
 /// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
 /// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
 ///   parts.
 /// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
@@ -182,10 +249,6 @@ void main(String[] args) throws Exception {
 /// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
 /// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
 ///   count.
 /// - `new` — Creates a fresh value or object, such as a new array or window.
@@ -199,9 +262,5 @@ void main(String[] args) throws Exception {
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
 // </editor-fold>
 

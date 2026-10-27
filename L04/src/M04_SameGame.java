@@ -195,25 +195,29 @@ void main() {
     reset();
     IO.println("Same Game");
     IO.println("Enter a row column (1-5) in a group of at least two equal colours. Blocks fall and columns close. /r restarts; /q quits.");
+    boolean showState = true;
     while (true) {
-        display();
-        if (!outcome.isEmpty()) {
-            IO.println(outcome);
+        if (showState) {
+            display();
+            if (!outcome.isEmpty()) IO.println(outcome);
+            showState = false;
         }
-        String input = IO.readln("> ");
+        String input = IO.readln(outcome.isEmpty() ? "> " : "Enter or /r: new round; /q: quit: ");
         if (input == null || input.strip().equalsIgnoreCase("/q")) {
             return;
         }
-        if (input.strip().equalsIgnoreCase("/r")) {
+        if (input.strip().equalsIgnoreCase("/r") || (!outcome.isEmpty() && input.isBlank())) {
             reset();
+            showState = true;
             continue;
         }
         if (!outcome.isEmpty()) {
-            IO.println("Round finished. /r restarts; /q quits.");
+            IO.println("Round finished. Press Enter or /r for a new round; /q quits.");
             continue;
         }
         try {
             command(input.strip());
+            showState = true;
         } catch (IllegalArgumentException invalid) {
             IO.println("Invalid move or command. Enter a row column (1-5) in a group of at least two equal colours. Blocks fall and columns close. /r restarts; /q quits.");
         }
@@ -263,7 +267,6 @@ void require(boolean valid) {
 /// - `-` — Subtracts numbers; in front of one number, changes its sign.
 /// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
 ///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
 /// - `:` — In for (int value : values), reads each element in turn. It also separates the two
@@ -282,6 +285,6 @@ void require(boolean valid) {
 /// - `throw` — Reports a failure by creating or passing an exception.
 /// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 // </editor-fold>
 

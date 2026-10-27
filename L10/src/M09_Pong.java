@@ -16,8 +16,7 @@ import javax.swing.Timer;
 /// **Today you learn:** A tick is conditional on the game’s lifecycle state. The winner marker decides
 /// whether one step may move paddles and ball; drawing should still be allowed after play ends.
 ///
-/// After Run File, play the left paddle with W/S and the right with Up/Down, aiming for five points
-/// before restarting with R.
+/// After Run File, press Space or click to start; play the left paddle with W/S and the right with Up/Down. First to five wins; R resets and waits for another start.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Learn · F30 explains the Java skill; Read this code explains these lines.
@@ -168,31 +167,43 @@ void draw(Graphics g) {
 /// Supplied Swing UI: create it on the EDT; timer cleanup stays with the window.
 void showWindow() {
     var frame = new JFrame("Pong - Paddle Duel");
+    boolean[] launched = {false};
     var panel = new JPanel() {
         @Override protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 /// Supplied drawing: reads model values; repainting is not another turn.
             draw(g);
+            if (!launched[0]) {
+                g.setColor(Color.WHITE);
+                g.drawString("Space or click to start", 20, 65);
+            }
         }
     };
     panel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
     panel.setFocusable(true);
     panel.addKeyListener(new KeyAdapter() {
         void change(KeyEvent event, boolean pressed) {
+            if (pressed && event.getKeyCode() == KeyEvent.VK_SPACE) launched[0] = true;
             switch (event.getKeyCode()) {
                 case KeyEvent.VK_W -> leftUp = pressed;
                 case KeyEvent.VK_S -> leftDown = pressed;
                 case KeyEvent.VK_UP -> rightUp = pressed;
                 case KeyEvent.VK_DOWN -> rightDown = pressed;
-                case KeyEvent.VK_R -> { if (pressed) restart(); }
+                case KeyEvent.VK_R -> { if (pressed) { restart(); launched[0] = false; } }
             }
         }
         @Override public void keyPressed(KeyEvent event) { change(event, true); }
         @Override public void keyReleased(KeyEvent event) { change(event, false); }
     });
+    panel.addMouseListener(new MouseAdapter() {
+        @Override public void mousePressed(MouseEvent event) {
+            launched[0] = true;
+            panel.requestFocusInWindow();
+        }
+    });
     var timer = new Timer(16, event -> {
 /// Supplied bounded update: one call means one model step; the active repair is described above.
-        step();
+        if (launched[0]) step();
         panel.repaint();
     });
     frame.addWindowFocusListener(new WindowAdapter() {
@@ -212,8 +223,7 @@ void showWindow() {
 }
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// step is the active boundary; the model exposes it for deterministic checks without a window.
-/// restart restores initial fields; draw reads state; showWindow supplies listeners, one timer and window-close cleanup.
+/// The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

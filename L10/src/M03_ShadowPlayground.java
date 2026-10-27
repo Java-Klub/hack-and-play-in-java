@@ -201,8 +201,7 @@ void showWindow() {
 java.util.function.BiConsumer<Integer, Integer> lightCallback = lightAction();
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// moveLight is the model rule; press and drag use the same lightCallback.
-/// shadow extrudes obstacle edges into a supplied Area; draw reads it; no shadow mathematics belongs in this repair.
+/// The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();
@@ -257,8 +256,6 @@ void main() {
 /// - `return` — Ends this method call, optionally handing a result back to its caller.
 /// - `if` — Runs its body only when the condition in parentheses is true.
 /// - `for` — Repeats a block over a range or a sequence of values.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
 /// - `::` — A method reference: supplies an action without calling it yet.
 /// - `this` — The current game object: this particular run and its stored state.
 /// - `public` — Makes this declaration accessible to other code.

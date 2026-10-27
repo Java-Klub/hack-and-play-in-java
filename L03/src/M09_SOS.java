@@ -151,25 +151,29 @@ void main() {
     reset();
     IO.println("SOS");
     IO.println("Enter cell 1-9 and S or O, e.g. 5 O. Each new SOS scores. /r restarts; /q quits.");
+    boolean showState = true;
     while (true) {
-        display();
-        if (!outcome.isEmpty()) {
-            IO.println(outcome);
+        if (showState) {
+            display();
+            if (!outcome.isEmpty()) IO.println(outcome);
+            showState = false;
         }
-        String input = IO.readln("> ");
+        String input = IO.readln(outcome.isEmpty() ? "> " : "Enter or /r: new round; /q: quit: ");
         if (input == null || input.strip().equalsIgnoreCase("/q")) {
             return;
         }
-        if (input.strip().equalsIgnoreCase("/r")) {
+        if (input.strip().equalsIgnoreCase("/r") || (!outcome.isEmpty() && input.isBlank())) {
             reset();
+            showState = true;
             continue;
         }
         if (!outcome.isEmpty()) {
-            IO.println("Round finished. /r restarts; /q quits.");
+            IO.println("Round finished. Press Enter or /r for a new round; /q quits.");
             continue;
         }
         try {
             command(input.strip());
+            showState = true;
         } catch (IllegalArgumentException invalid) {
             IO.println("Invalid move or command. Enter cell 1-9 and S or O, e.g. 5 O. Each new SOS scores. /r restarts; /q quits.");
         }
@@ -219,7 +223,6 @@ void require(boolean valid) {
 /// - `-` — Subtracts numbers; in front of one number, changes its sign.
 /// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
 ///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
 /// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
@@ -237,6 +240,6 @@ void require(boolean valid) {
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 // </editor-fold>
 

@@ -202,8 +202,7 @@ void showWindow() {
 }
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// tap is the active boundary; the model exposes it for deterministic checks without a window.
-/// restart restores initial fields; draw reads state; showWindow supplies listeners, one timer and window-close cleanup.
+/// The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

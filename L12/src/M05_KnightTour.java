@@ -145,7 +145,11 @@ void draw(Graphics2D g) {
     g.setColor(new Color(65, 75, 200));
     g.drawOval(105 + x * 60, 40 + y * 60, 50, 50);
     g.setColor(Color.BLACK);
-    g.drawString(won() ? "All 25 squares visited!" : "Visited " + count + " / 25. Green dots are legal next moves.", 20, 380);
+    boolean canContinue = false;
+    for (int row = 0; row < 5; row++) {
+        for (int column = 0; column < 5; column++) canContinue |= legal(column, row);
+    }
+    g.drawString(won() ? "All 25 squares visited! R: replay" : !canContinue ? "No legal moves remain. R: try a new tour" : "Visited " + count + " / 25. Green dots are legal next moves.", 20, 380);
 }
 
 void key(int code, boolean pressed) {
@@ -207,8 +211,7 @@ record Move(int x, int y) implements Command {}
 record Restart() implements Command {}
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// press constructs Move; key constructs Restart; apply handles the sealed family.
-/// move checks knight distance and visited cells; draw and Swing input are supplied.
+/// The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

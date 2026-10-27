@@ -1,7 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Prepared tools">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L04.07 · KochSnowflakeCards
@@ -9,15 +8,14 @@ import javax.imageio.ImageIO;
 /// Make a snowflake postcard whose three sides grow smaller zigzags. The supplied edge builder can add
 /// intricate detail, while your part decides whether the shape closes all the way around.
 ///
-/// **Your mission:** The saved snowflake is missing a whole side. Repair the side loop in snowflake so
-/// corner indices 0, 1 and 2 are each visited once; keep the prepared edge builder.
+/// **Your mission:** The displayed snowflake is missing a whole side. Repair the side loop in
+/// snowflake so corner indices 0, 1 and 2 are each visited once; keep the prepared edge builder.
 ///
 /// **Today you learn:** For ranges over positions: three stored corners have indices 0, 1 and 2. The
 /// loop’s initial value and stopping comparison together decide which sides exist in the picture.
 ///
-/// Use Run File, refresh the project in NetBeans Files and open koch-snowflake-cards.png to inspect the
-/// missing side.
-/// After your repair: Save → Test File → play again.
+/// Use Run File: the picture appears immediately in a Java window. After editing the source, close
+/// the window and Run File again; Test File checks the calculation separately.
 ///
 /// Need an explanation? Recall · F11 explains the Java skill; Read this code explains these lines.
 /// Hints 1 and 2 open separately; Repair outline reveals the direction.
@@ -71,8 +69,8 @@ int snowflake(Graphics2D g, int level) {
 /// ### What the prepared part already does
 ///
 /// xs and ys contain the three corner positions. edge already breaks a side into smaller zigzags,
-/// repeatedly when the level is higher; you need not change that recursive machinery. render supplies the
-/// canvas and colours, while save and main write koch-snowflake-cards.png.
+/// repeatedly when the level is higher; you need not change that recursive machinery. render
+/// supplies the canvas and colours, while the prepared window shows the generated picture.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -123,29 +121,31 @@ BufferedImage render(long seed, double option) {
     return image;
 }
 
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
-        throw new IllegalStateException("PNG writer missing.");
-    }
-}
-
-void main(String[] args) throws Exception {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
+// Prepared display of the picture calculated above.
+void showPicture() {
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        IO.println("Image preview needs a graphical display.");
         return;
     }
-    try {
-        Path path = Path.of(args.length > 0 ? args[0] : "koch-snowflake-cards.png");
-        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
-        double option = args.length > 2 ? Double.parseDouble(args[2]) : 4;
-        save(path, seed, option);
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
-    }
+    var image = render(42, 4);
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame("KochSnowflakeCards");
+        var picture = new javax.swing.JLabel(new javax.swing.ImageIcon(image));
+        picture.setOpaque(true);
+        picture.setBackground(new java.awt.Color(35, 39, 48));
+        frame.add(picture);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
 }
 
-/// Prepared entry points: main, render, save.
+void main() {
+    showPicture();
+}
+
+/// Prepared entry points: main, render.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
@@ -166,14 +166,12 @@ void main(String[] args) throws Exception {
 ///   earlier in the file.
 /// - `int` — A type for whole numbers within a fixed range.
 /// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
 /// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
 /// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
 /// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
 ///   type.
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
 /// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
 /// - `||` — At least one condition must be true; if the first is true, Java skips the second.
 /// - `!` — In front of a boolean expression, reverses true and false.
 /// - `++` — Increases a numeric value by one.
@@ -186,10 +184,6 @@ void main(String[] args) throws Exception {
 /// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
 /// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
 ///   count.
 /// - `new` — Creates a fresh value or object, such as a new array or window.
@@ -197,13 +191,9 @@ void main(String[] args) throws Exception {
 /// - `if` — Runs its body only when the condition in parentheses is true.
 /// - `for` — Repeats a block over a range or a sequence of values.
 /// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `IO` — Console input and output. println writes a line.
 /// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
 // </editor-fold>
 

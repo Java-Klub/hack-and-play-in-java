@@ -101,7 +101,7 @@ double[] frequency = new double[40];
 double coupling = 1;
 boolean running = true;
 
-/// Supplied restart: create the initial model; no native window is created here.
+/// Restore the starting game state.
 void reset(long seed) {
     var random = new Random(seed);
     for (int i = 0; i < phase.length; i++) {
@@ -194,13 +194,9 @@ record Toggle() implements Control {}
 record Restart(long seed) implements Control {}
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// Slider/buttons construct Control records; apply pattern-matches their components.
-/// reset is seeded, step computes a next snapshot, order measures synchrony; the supplied window owns the timer.
-void main(String[] args) {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
-/// Supplied restart: create the initial model; no native window is created here.
+/// The supplied part supports only the main game or experiment described above.
+void main() {
+/// Restore the starting game state.
     reset(42);
     SwingUtilities.invokeLater(this::showWindow);
 }

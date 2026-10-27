@@ -23,6 +23,14 @@ public class M03_BlackBoxTest {
         box[0][0] = true;
         equal("HIT", g.trace(box, "N1"), "I084/F18: direct hit retains priority");
         equal("REFLECT", g.trace(box, "N2"), "I084/F18: entry-edge diagonal reflects");
+        g.command("mark 1 1");
+        g.command("mark 1 2");
+        g.command("check");
+        expect(g.message.contains("disagree"), "I084/F18: incorrect guesses give a current disagreement");
+        g.command("ray N1");
+        equal("Probe recorded", g.message, "I084/F18: a new probe replaces the earlier failed-check event");
+        g.command("mark 1 1");
+        equal("Guess removed", g.message, "I084/F18: a changed guess reports its own event");
         System.out.println("PASS " + checks + " checks");
     }
 }

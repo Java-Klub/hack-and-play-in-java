@@ -1,14 +1,13 @@
 // <editor-fold defaultstate="collapsed" desc="Prepared tools">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 import java.util.List;
 // </editor-fold>
 
 /// # L04.08 · DragonCurve
 ///
-/// Grow a paper-folding dragon from a trail of left and right turns. Repeating a small folding recipe
-/// creates a surprisingly elaborate curve, which the program saves as a coloured picture.
+/// Grow a paper-folding dragon from a trail of left and right turns. Repeating a small folding
+/// recipe creates a surprisingly elaborate curve, which the program displays as a coloured picture.
 ///
 /// **Your mission:** The curve receives one fold fewer than requested. Repair only the outer loop in
 /// foldTurns so zero folds does no work and every positive request runs that many folding passes.
@@ -17,9 +16,8 @@ import java.util.List;
 /// already stored. Check the tiny requests zero and one before reasoning about a detailed eleven-fold
 /// picture.
 ///
-/// Use Run File, refresh NetBeans Files and open dragon-curve.png; then use Test File to compare the
-/// exact zero-fold and one-fold cases.
-/// After your repair: Save → Test File → play again.
+/// Use Run File: the picture appears immediately in a Java window. After editing the source, close
+/// the window and Run File again; Test File checks the calculation separately.
 ///
 /// Need an explanation? Recall · F11 explains the Java skill; Read this code explains these lines.
 /// Hints 1 and 2 open separately; Repair outline reveals the direction.
@@ -74,8 +72,9 @@ List<Integer> foldTurns(int folds) {
 /// ### What the prepared part already does
 ///
 /// The prepared inner loop supplies one complete fold by reversing earlier turns and changing their
-/// directions. Later methods convert the sequence to positions, fit it on the canvas, colour it and write
-/// dragon-curve.png. No window or fold slider is part of this exporter.
+/// directions. Later methods convert the sequence to positions, fit it on the canvas, colour it and
+/// show the picture in the prepared window. The prepared Java window shows the curve directly; its
+/// folding recipe stays unchanged.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -140,29 +139,31 @@ BufferedImage render(long seed, double option) {
     return image;
 }
 
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
-        throw new IllegalStateException("PNG writer missing.");
-    }
-}
-
-void main(String[] args) throws Exception {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
+// Prepared display of the picture calculated above.
+void showPicture() {
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        IO.println("Image preview needs a graphical display.");
         return;
     }
-    try {
-        Path path = Path.of(args.length > 0 ? args[0] : "dragon-curve.png");
-        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
-        double option = args.length > 2 ? Double.parseDouble(args[2]) : 11;
-        save(path, seed, option);
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
-    }
+    var image = render(42, 11);
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame("DragonCurve");
+        var picture = new javax.swing.JLabel(new javax.swing.ImageIcon(image));
+        picture.setOpaque(true);
+        picture.setBackground(new java.awt.Color(35, 39, 48));
+        frame.add(picture);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
 }
 
-/// Prepared entry points: main, render, save.
+void main() {
+    showPicture();
+}
+
+/// Prepared entry points: main, render.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
@@ -183,13 +184,11 @@ void main(String[] args) throws Exception {
 ///   earlier in the file.
 /// - `int` — A type for whole numbers within a fixed range.
 /// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
 /// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
 /// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
 /// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
 ///   type.
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
 /// - `||` — At least one condition must be true; if the first is true, Java skips the second.
 /// - `!` — In front of a boolean expression, reverses true and false.
 /// - `++` — Increases a numeric value by one.
@@ -202,8 +201,6 @@ void main(String[] args) throws Exception {
 /// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
 /// - `:` — In for (int value : values), reads each element in turn. It also separates the two
 ///   alternatives of ? : or follows a switch label.
 /// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
@@ -215,12 +212,8 @@ void main(String[] args) throws Exception {
 /// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
 ///   later.
 /// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
 /// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `IO` — Console input and output. println writes a line.
 // </editor-fold>
 

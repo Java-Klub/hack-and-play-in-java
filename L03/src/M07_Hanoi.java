@@ -115,26 +115,37 @@ void main() {
     IO.println("HANOI: move all three discs from A to C.");
     IO.println("Move only the top disc, never a larger disc onto a smaller one.");
     IO.println("The top disc is the rightmost number on each peg.");
+    boolean showState = true;
     while (true) {
-        for (int i = 0; i < 3; i++) {
-            IO.println((char) ('A' + i) + ": " + Arrays.toString(Arrays.copyOf(pegs[i], sizes[i])));
+        if (showState) {
+            for (int i = 0; i < 3; i++) {
+                IO.println((char) ('A' + i) + ": " + Arrays.toString(Arrays.copyOf(pegs[i], sizes[i])));
+            }
+            IO.println("Moves: " + moves);
+            if (won()) {
+                IO.println("Solved! The minimum for three discs is 7 moves.");
+            }
+            showState = false;
         }
-        IO.println("Moves: " + moves);
-        if (won()) {
-            IO.println("Solved! The minimum for three discs is 7 moves.");
-        }
-        String input = IO.readln(won() ? "r replay, q quit: " : "From to, e.g. A C; r restart, q quit: ");
-        if (input == null || input.trim().equalsIgnoreCase("q")) {
+        String input = IO.readln(won() ? "Enter or /r: new round; /q: quit: " : "From to, e.g. A C; r restart, q quit: ");
+        if (input == null || (input.trim().equalsIgnoreCase("q") || input.trim().equalsIgnoreCase("/q"))) {
             return;
         }
         input = input.trim().toUpperCase(Locale.ROOT);
-        if (input.equals("R")) {
+        if ((input.equals("R") || input.equals("/R") || (won() && input.isBlank()))) {
             reset();
+            showState = true;
+            continue;
+        }
+        if (won()) {
+            IO.println("Round finished. Press Enter or /r for a new round; /q quits.");
             continue;
         }
         String[] parts = input.split("\\s+");
-        if (parts.length != 2 || parts[0].length() != 1 || parts[1].length() != 1
-                || !move(parts[0].charAt(0) - 'A', parts[1].charAt(0) - 'A')) {
+        if (parts.length == 2 && parts[0].length() == 1 && parts[1].length() == 1
+                && move(parts[0].charAt(0) - 'A', parts[1].charAt(0) - 'A')) {
+            showState = true;
+        } else {
             IO.println("Illegal move. Use two different pegs A-C with a legal top disc.");
         }
     }
@@ -168,10 +179,8 @@ void main() {
 ///   String.
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
 /// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `!=` — Checks that two values differ.
 /// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
 /// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
 /// - `++` — Increases a numeric value by one.
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
 /// - `-` — Subtracts numbers; in front of one number, changes its sign.
@@ -188,6 +197,6 @@ void main() {
 /// - `for` — Repeats a block over a range or a sequence of values.
 /// - `while` — Keeps repeating its body while its condition stays true.
 /// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 // </editor-fold>
 

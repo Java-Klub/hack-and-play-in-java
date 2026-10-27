@@ -9,8 +9,8 @@ import javax.swing.Timer;
 
 /// # L02.03 · BouncingBalls
 ///
-/// Throw several coloured balls into a room and watch gravity and wall rebounds shape their motion. You
-/// can compare gentle and fast throws; the balls pass through one another.
+/// Throw several coloured balls into a room and watch gravity and wall rebounds shape their motion.
+/// You can compare gentle and fast throws.
 ///
 /// **Your mission:** Balls lose their horizontal speed at a side wall instead of bouncing back. Repair
 /// bounceSpeed so a wall retains three quarters of the incoming speed magnitude.
@@ -152,7 +152,7 @@ void draw(Graphics2D g) {
         g.drawLine(startX, startY, aimX, aimY);
     }
     g.setColor(Color.BLACK);
-    g.drawString("Balls: " + balls.size() + " / 60   " + (paused ? "Paused" : "Gravity on") + "   No ball-to-ball collisions", 12, 23);
+    g.drawString("Balls: " + balls.size() + " / 60   " + (paused ? "Paused" : "Gravity on") + "   Drag to throw a ball; Space pauses; R clears", 12, 23);
 }
 
 void key(int code, boolean pressed) {
@@ -241,7 +241,12 @@ void showWindow() {
     timer.start();
 }
 
+
 void main() {
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        IO.println("This game needs a graphical display; model checks still work headlessly.");
+        return;
+    }
     restart();
     SwingUtilities.invokeLater(this::showWindow);
 }

@@ -1,9 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Prepared tools">
-import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import java.io.ByteArrayInputStream;
 // </editor-fold>
 
 /// # L01.03 · TypeMelody
@@ -11,15 +8,14 @@ import java.io.ByteArrayInputStream;
 /// Turn a short written message into a tiny melody. Each letter gets a note, while other characters leave
 /// a quiet time slot, so different messages have different rhythms.
 ///
-/// **Your mission:** The first WAV contains four silent slots. Change the message supplied by
+/// **Your mission:** The first message contains four silent slots. Change the message supplied by
 /// defaultMessage so the opening melody spells JAVA.
 ///
 /// **Today you learn:** Text literals: double quotes make their contents text data. For example, a quoted
 /// digit stays a character in the message; it does not become a calculation.
 ///
-/// Use Run File, locate melody.wav in the project’s Files tab and open the saved file in an audio player
-/// to hear your message.
-/// After your repair: Save → Test File → play again.
+/// Use Run File to open the Java player showing the message. Press Play / Replay; digits are silent
+/// rests, so the starter 1234 should be silent. Stop ends playback.
 ///
 /// Need an explanation? Learn · F02 explains the Java skill; Read this code explains these lines.
 /// Hints 1 and 2 open separately; Repair outline reveals the direction.
@@ -61,19 +57,16 @@ String defaultMessage() {
 ///
 /// ### What the prepared part already does
 ///
-/// main calls defaultMessage to get the text and writes melody.wav. synthesize turns its letters into
-/// sound samples, and write saves a playable WAV. That audio machinery is supplied; there is no live
-/// sound player inside this program.
+/// main calls defaultMessage to get the text and opens the prepared Java audio player. synthesize
+/// turns its letters into sound samples, and the prepared player plays them. That audio machinery
+/// is supplied; the prepared player owns and closes its Java audio line.
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="For this game">
-/// This program exports sound instead of opening a game window. After Run File, read the `Saved:`
-/// location in Output. Switch to **Window → Files**, expand L01 and refresh its file list if needed;
-/// find `melody.wav`. Open that saved file with the system's audio player. If NetBeans cannot play
-/// it, locate the printed path in the system file manager and open it there. The four silent slots in
-/// the starter are an intended observation, not a failed sound card. After a source edit, Run File
-/// again to replace the WAV, then reopen it; Test File checks behaviour but does not perform this
-/// listening step.
+/// Java plays the sound directly; no file or separate player is needed. The panel shows the actual
+/// message. The starter digits are rests, not an audio failure. After editing defaultMessage, save,
+/// close the window and Run File again. The new window loads the edited message; Play / Replay
+/// repeats the current window's message.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -85,7 +78,7 @@ String defaultMessage() {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Use return "JAVA"; then export and open melody.wav again.
+/// Use return "JAVA"; then close the player and Run File again.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
@@ -117,23 +110,104 @@ byte[] synthesize(String text, long seed) {
     return pcm;
 }
 
-void write(String text, long seed, Path path) throws Exception {
-    byte[] pcm = synthesize(text, seed);
-    var format = new AudioFormat(SAMPLE_RATE, 16, 1, true, false);
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    try (var stream = new AudioInputStream(new ByteArrayInputStream(pcm), format, pcm.length / 2)) {
-        AudioSystem.write(stream, AudioFileFormat.Type.WAVE, path.toFile());
+// Prepared Java audio: a bounded worker owns the line; Stop and window close cancel it.
+volatile int playbackGeneration;
+javax.sound.sampled.SourceDataLine soundLine;
+
+synchronized void stopSound() {
+    playbackGeneration++;
+    if (soundLine != null) {
+        soundLine.stop();
+        soundLine.close();
+        soundLine = null;
     }
 }
 
-void main() throws Exception {
-    Path path = Path.of("melody.wav");
-    write(defaultMessage(), 42, path);
-    IO.println("Saved: " + path.toAbsolutePath());
-    IO.println("Open the WAV to hear the message; digits are rests.");
+void playSound(byte[] pcm, javax.swing.JLabel status) {
+    stopSound();
+    int generation = playbackGeneration;
+    status.setText("Playing the current message. Digits are silent rests.");
+    var worker = new Thread(() -> {
+        var format = new AudioFormat(SAMPLE_RATE, 16, 1, true, false);
+        try (var line = AudioSystem.getSourceDataLine(format)) {
+            line.open(format);
+            synchronized (this) {
+                if (generation != playbackGeneration) return;
+                soundLine = line;
+            }
+            line.start();
+            int offset = 0;
+            while (generation == playbackGeneration && offset < pcm.length) {
+                int written = line.write(pcm, offset, Math.min(4096, pcm.length - offset));
+                if (written <= 0) break;
+                offset += written;
+            }
+            if (generation == playbackGeneration) {
+                line.drain();
+                boolean finished = offset == pcm.length;
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    if (generation == playbackGeneration) status.setText(finished
+                        ? "Finished. Play / Replay starts the message again."
+                        : "Playback ended early. Play / Replay tries again.");
+                });
+            }
+        } catch (Exception unavailable) {
+            if (generation == playbackGeneration) {
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    if (generation == playbackGeneration) status.setText("Audio unavailable: " + unavailable.getMessage());
+                });
+            }
+        } finally {
+            synchronized (this) {
+                if (generation == playbackGeneration) soundLine = null;
+            }
+        }
+    }, "melody-player");
+    worker.setDaemon(true);
+    worker.start();
 }
 
-/// Prepared entry points: main, write.
+void showPlayer() {
+    String message = defaultMessage();
+    byte[] pcm = synthesize(message, 42);
+    boolean allRests = message.matches("[^A-Za-z]*");
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        IO.println("Message: " + message + ". Letters make notes; digits are silent rests.");
+        return;
+    }
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame("Type Melody");
+        var description = new javax.swing.JLabel("<html>Message: <b>" + message.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            + "</b><br>Letters A-Z make notes. Digits and other characters are silent rests.<br>"
+            + (allRests ? "This message is all rests: 1234 has four silent slots.<br>" : "This message contains notes. Press Play to listen.<br>")
+            + "Edit defaultMessage, save, close this window and Run File again.</html>");
+        var status = new javax.swing.JLabel("Click Play to hear this message. Stop ends playback.");
+        var buttons = new javax.swing.JPanel();
+        var play = new javax.swing.JButton("Play / Replay");
+        play.addActionListener(event -> playSound(pcm, status));
+        var stop = new javax.swing.JButton("Stop");
+        stop.addActionListener(event -> { stopSound(); status.setText("Stopped. Play replays the current message."); });
+        buttons.add(play);
+        buttons.add(stop);
+        var content = new javax.swing.JPanel(new java.awt.BorderLayout(10, 10));
+        content.setBorder(javax.swing.BorderFactory.createEmptyBorder(14, 14, 14, 14));
+        content.add(description, java.awt.BorderLayout.NORTH);
+        content.add(status);
+        content.add(buttons, java.awt.BorderLayout.SOUTH);
+        frame.add(content);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override public void windowClosed(java.awt.event.WindowEvent event) { stopSound(); }
+        });
+        frame.pack(); frame.setLocationByPlatform(true); frame.setVisible(true);
+    });
+}
+
+void main() {
+    showPlayer();
+}
+
+/// Prepared entry points: main.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
@@ -186,10 +260,7 @@ void main() throws Exception {
 /// - `for` — Repeats a block over a range or a sequence of values.
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `IO` — Console input and output. println writes a line.
 // </editor-fold>
 

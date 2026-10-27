@@ -218,7 +218,7 @@ void showWindow() {
     panel.addMouseListener(mouse);
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.add(panel);
-    var help = new JLabel("<html><div style=\"text-align:center\">Click a domino: +\u2212 / \u2212+ / neutral / ?   R: reset</div></html>", SwingConstants.CENTER);
+    var help = new JLabel("<html><div style=\"text-align:center\">Click a domino: +\u2212 / \u2212+ / neutral / ?<br>U: undo one change   R: reset</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
     frame.add(help, BorderLayout.SOUTH);
     frame.pack();
@@ -229,6 +229,7 @@ void showWindow() {
 }
 
 /// main(): Starts the model, then schedules the supplied window on Swing’s event thread.
+/// The prepared Undo control is U: it restores one previous edit. R starts this puzzle again.
 void main() {
     restart();
     SwingUtilities.invokeLater(this::showWindow);
@@ -300,7 +301,7 @@ void undo() {
 /// - `protected` — A visibility keyword used by supplied library callbacks, such as paintComponent.
 /// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
 ///   background first.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
+/// - `null` — No object is present.
 /// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
 /// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
 /// - `JPanel` — A window area that can display the game’s drawing or controls.

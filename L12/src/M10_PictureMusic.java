@@ -1,9 +1,4 @@
 // <editor-fold defaultstate="collapsed" desc="Prepared tools">
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioSystem;
-import java.io.ByteArrayInputStream;
 // </editor-fold>
 
 /// # L12.10 · PictureMusic
@@ -18,8 +13,8 @@ import java.io.ByteArrayInputStream;
 /// caller’s job. pitchFrequency combines a familiar row-to-note rule with a semitone shift; zero remains
 /// the compatibility case.
 ///
-/// After Run File, enter 0 and then rerun with 12, opening picture-music-0.wav and picture-music-12.wav
-/// in a player to compare pitch.
+/// After Run File, inspect the Java picture and compare Play shift 12 with Play original; Stop
+/// interrupts playback, and the repaired shift should change pitch while preserving rhythm.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F36 explains the Java skill; Read this code explains these lines.
@@ -64,9 +59,8 @@ double pitchFrequency(int row, int shift) {
 ///
 /// ### What the prepared part already does
 ///
-/// The supplied picture-to-sound loop turns brightness into note strength and calls pitchFrequency for
-/// row pitches. main asks for transpose and write saves the WAV; explain why that new rule belongs in the
-/// small operation rather than in every caller.
+/// demo supplies the picture; signal reads its brightness as volume and asks pitchFrequency for
+/// each row. The two Play choices compare shift 12 with zero using the same picture and rhythm.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -84,20 +78,6 @@ double pitchFrequency(int row, int shift) {
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
 final int RATE = 22050;
 
-/// Supplied WAV encoding: bounded PCM samples and try-with-resources own the stream.
-void write(Path path, double[] signal) throws Exception {
-    byte[] pcm = new byte[signal.length * 2];
-    for (int i = 0; i < signal.length; i++) {
-        int value = (int)(Math.max(-0.8, Math.min(0.8, signal[i])) * 32767);
-        pcm[i * 2] = (byte)value;
-        pcm[i * 2 + 1] = (byte)(value >> 8);
-    }
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    var format = new AudioFormat(RATE, 16, 1, true, false);
-    try (var stream = new AudioInputStream(new ByteArrayInputStream(pcm), format, signal.length)) {
-        AudioSystem.write(stream, AudioFileFormat.Type.WAVE, path.toFile());
-    }
-}
 
 java.awt.image.BufferedImage demo() {
     var image = new java.awt.image.BufferedImage(32, 12, java.awt.image.BufferedImage.TYPE_INT_RGB);
@@ -107,7 +87,7 @@ java.awt.image.BufferedImage demo() {
     return image;
 }
 
-/// Supplied synthesis: bounded sample loops build audio; there is no autoplay.
+/// Prepared bounded loops build the audio samples.
 double[] signal(java.awt.image.BufferedImage image) {
     int step = RATE / 10;
     double[] signal = new double[32 * step];
@@ -130,30 +110,110 @@ double[] signal(java.awt.image.BufferedImage image) {
 int transpose = 0;
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// pitchFrequency owns row/transpose mathematics; signal owns brightness and time-column sampling.
-/// demo gives an original image; main can use a local image and optional transpose argument; write exports WAV.
-void main(String[] args) throws Exception {
-    if (args.length == 0) {
-        String entered = IO.readln("Transpose -12..12 (blank 12, q quits): ");
-        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
-        String shift = entered.isBlank() ? "12" : entered.strip();
-        args = new String[]{"picture-music-" + shift + ".wav", "-", shift};
-    }
+/// The supplied part supports only the main game or experiment described above.
+volatile javax.sound.sampled.SourceDataLine playingLine;
+volatile int playbackVersion;
 
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
+/// Supplied Java Sound: a worker owns the line; Stop and window closing release it.
+/// Play/Stop use a separate Java Sound worker; closing releases it.
+void stopAudio() {
+    playbackVersion++;
+    var line = playingLine;
+    playingLine = null;
+    if (line != null) {
+        line.stop();
+        line.flush();
+        line.close();
     }
-    Path path = Path.of(args.length > 0 ? args[0] : "picture-music.wav");
-    var image = args.length > 1 && !args[1].equals("-") ? javax.imageio.ImageIO.read(Path.of(args[1]).toFile()) : demo();
-    if (image == null) {
-        IO.println("Use a readable local image.");
-        return;
-    }
-    if (args.length > 2) transpose = Integer.parseInt(args[2]);
-/// Supplied WAV encoding: bounded PCM samples and try-with-resources own the stream.
-    write(path, signal(image));
-    IO.println("Saved sonification: " + path.toAbsolutePath());
-    IO.println("32 columns become time; 12 rows become pitches; brightness sets volume. This is not recorded space sound.");
+}
+
+void playAudio(double[] samples, javax.swing.JLabel status) {
+    stopAudio();
+    int ticket = playbackVersion;
+    status.setText("Playing in Java; Stop interrupts playback.");
+    var worker = new Thread(() -> {
+        javax.sound.sampled.SourceDataLine line = null;
+        try {
+            byte[] pcm = new byte[samples.length * 2];
+            for (int i = 0; i < samples.length; i++) {
+                int value = (int)(Math.max(-0.8, Math.min(0.8, samples[i])) * 32767);
+                pcm[i * 2] = (byte)value;
+                pcm[i * 2 + 1] = (byte)(value >> 8);
+            }
+            var format = new javax.sound.sampled.AudioFormat(RATE, 16, 1, true, false);
+            line = javax.sound.sampled.AudioSystem.getSourceDataLine(format);
+            line.open(format);
+            if (ticket != playbackVersion) return;
+            playingLine = line;
+            line.start();
+            int offset = 0;
+            while (offset < pcm.length && ticket == playbackVersion) {
+                int written = line.write(pcm, offset, Math.min(4096, pcm.length - offset));
+                if (written <= 0) break;
+                offset += written;
+            }
+            if (ticket == playbackVersion) {
+                line.drain();
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    if (ticket == playbackVersion) status.setText("Finished; Play replays the same sound.");
+                });
+            }
+        } catch (Exception failure) {
+            if (ticket == playbackVersion) {
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    if (ticket == playbackVersion) status.setText("Audio unavailable: " + failure.getMessage());
+                });
+            }
+        } finally {
+            if (line != null) {
+                line.stop();
+                line.close();
+                if (playingLine == line) playingLine = null;
+            }
+        }
+    }, "java-sound-player");
+    worker.setDaemon(true);
+    worker.start();
+}
+
+void showAudio(java.awt.image.BufferedImage picture, String title, String detail, String[] captions, double[][] sounds) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var status = new javax.swing.JLabel(detail);
+        var controls = new javax.swing.JPanel();
+        for (int i = 0; i < sounds.length; i++) {
+            int index = i;
+            var play = new javax.swing.JButton("Play " + captions[i]);
+            play.addActionListener(event -> playAudio(sounds[index], status));
+            controls.add(play);
+        }
+        var stop = new javax.swing.JButton("Stop");
+        stop.addActionListener(event -> {
+            stopAudio();
+            status.setText("Stopped; choose Play to listen again.");
+        });
+        controls.add(stop);
+        frame.add(status, java.awt.BorderLayout.NORTH);
+        frame.add(new javax.swing.JLabel(new javax.swing.ImageIcon(picture.getScaledInstance(640, 240, java.awt.Image.SCALE_FAST))), java.awt.BorderLayout.CENTER);
+        frame.add(controls, java.awt.BorderLayout.SOUTH);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override public void windowClosed(java.awt.event.WindowEvent event) { stopAudio(); }
+        });
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
+
+void main() {
+    var image = demo();
+    transpose = 12;
+    var shifted = signal(image);
+    transpose = 0;
+    var original = signal(image);
+    showAudio(image, "Picture Music", "The same image: shifted notes keep the original rhythm.", new String[]{"shift 12", "original"}, new double[][]{shifted, original});
 }
 // </editor-fold>
 
@@ -163,7 +223,6 @@ void main(String[] args) throws Exception {
 /// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
 ///
 /// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
 /// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
 ///   parts.
 /// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
@@ -195,22 +254,14 @@ void main(String[] args) throws Exception {
 /// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
 /// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
 ///   count.
 /// - `new` — Creates a fresh value or object, such as a new array or window.
 /// - `return` — Ends this method call, optionally handing a result back to its caller.
 /// - `if` — Runs its body only when the condition in parentheses is true.
 /// - `for` — Repeats a block over a range or a sequence of values.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
+/// - `null` — No object is present.
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
 // </editor-fold>
 

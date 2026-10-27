@@ -67,8 +67,8 @@ Map<String, List<String>> train(String text) {
 ///
 /// ### What the prepared part already does
 ///
-/// main reads your corpus and train builds the links. The supplied generator repeatedly draws a follower
-/// from the matching list; keeping duplicates gives repeated examples more weight.
+/// main offers one small corpus and passes the chosen text to generate. train supplies its
+/// word-successor map; the generated remix is printed beside the original corpus.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="For this game">
@@ -119,27 +119,16 @@ String generate(String text, long seed, int count) {
 }
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// train builds a LinkedHashMap whose values are mutable follower Lists.
-/// generate follows links with the supplied seed; main optionally reads a local corpus.
-void main(String[] args) throws Exception {
-    if (args.length == 0) {
-        String entered = IO.readln("Corpus (blank moon cat moon dog moon cat, q quits): ");
-        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
-        corpus = entered.isBlank() ? "moon cat moon dog moon cat" : entered;
-    }
-
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
+/// The supplied part supports only the main game or experiment described above.
+void main() {
+    String input = IO.readln("Corpus (blank moon cat moon dog moon cat, q quits): ");
+    if (input == null || input.strip().equalsIgnoreCase("q")) return;
+    corpus = input.isBlank() ? "moon cat moon dog moon cat" : input;
     try {
-        long seed = args.length > 0 ? Long.parseLong(args[0]) : 42;
-        int count = args.length > 1 ? Integer.parseInt(args[1]) : 50;
-        if (args.length > 2) {
-            corpus = Files.readString(Path.of(args[2]));
-        }
-        IO.println(generate(corpus, seed, count));
-    } catch (IllegalArgumentException invalid) {
-        IO.println(invalid.getMessage());
+        IO.println("Corpus: " + corpus);
+        IO.println("Generated remix: " + generate(corpus, 42, 50));
+    } catch (IllegalArgumentException failure) {
+        IO.println(failure.getMessage());
     }
 }
 // </editor-fold>
@@ -168,7 +157,6 @@ void main(String[] args) throws Exception {
 ///   type.
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
 /// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
 /// - `||` — At least one condition must be true; if the first is true, Java skips the second.
 /// - `++` — Increases a numeric value by one.
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
@@ -188,12 +176,9 @@ void main(String[] args) throws Exception {
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
 /// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
 /// - `Map` — Associates keys with values. A missing key needs an explicit fallback or decision.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 // </editor-fold>
 

@@ -1,7 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Prepared tools">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L11.12 · MagicEyeStrip
@@ -15,8 +14,8 @@ import javax.imageio.ImageIO;
 /// **Today you learn:** A Path names a location; its text is not that location’s contents. Read the file
 /// before numeric conversion so missing data and malformed data remain distinct failures.
 ///
-/// After Run File, press Enter to read seed.txt, created with 42 only if absent, then open
-/// magic-eye-strip.png.
+/// Run File loads the number stored in seed.txt and uses it for the Java dot picture. If absent,
+/// seed.txt is created with 42; existing contents stay untouched. A bad read reports failure.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F32 explains the Java skill; Read this code explains these lines.
@@ -58,8 +57,8 @@ long readSeed(Path path) throws IOException {
 ///
 /// ### What the prepared part already does
 ///
-/// main uses seed.txt by default and creates it with 42 only when absent. The supplied renderer builds
-/// repeatable dots and copies them at depth-dependent intervals; save writes magic-eye-strip.png.
+/// main creates a default seed.txt only when absent, then readSeed loads its text number. render
+/// uses that actual seed for the dot picture; a bad read is reported without a substitute seed.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -92,47 +91,42 @@ BufferedImage render(long seed, double option) {
     return image;
 }
 
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
-        throw new IllegalStateException("PNG writer missing.");
-    }
-}
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// readSeed loads the optional text input; render uses it to initialise dot noise.
-/// The supplied period/depth rule makes the central shape; save/main export PNG without a network dependency.
-void main(String[] args) throws Exception {
-    if (args.length == 0) {
-        String entered = IO.readln("Seed text path (blank seed.txt, created with 42 if absent; q quits): ");
-        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
-        Path seedPath = Path.of(entered.isBlank() ? "seed.txt" : entered.strip());
-        try {
-            if (entered.isBlank() && !Files.exists(seedPath)) Files.writeString(seedPath, "42");
-            long seed = readSeed(seedPath);
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-            save(Path.of("magic-eye-strip.png"), seed, 16);
-            IO.println("Loaded seed: " + seed + "; saved magic-eye-strip.png");
-        } catch (IOException | IllegalArgumentException failure) {
-            IO.println("Seed input failed: " + failure.getMessage());
+/// The supplied part supports only the main game or experiment described above.
+void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var pictures = new javax.swing.JPanel(new java.awt.GridLayout(1, images.length, 8, 8));
+        for (int i = 0; i < images.length; i++) {
+            var picture = new javax.swing.JPanel(new java.awt.BorderLayout());
+            picture.add(new javax.swing.JLabel(captions[i], javax.swing.SwingConstants.CENTER), java.awt.BorderLayout.NORTH);
+            double scale = Math.min(1, Math.min(900.0 / images.length / images[i].getWidth(), 550.0 / images[i].getHeight()));
+            var icon = new javax.swing.ImageIcon(images[i].getScaledInstance(
+                    Math.max(1, (int)(images[i].getWidth() * scale)),
+                    Math.max(1, (int)(images[i].getHeight() * scale)), java.awt.Image.SCALE_FAST));
+            picture.add(new javax.swing.JLabel(icon), java.awt.BorderLayout.CENTER);
+            pictures.add(picture);
         }
-        return;
-    }
+        frame.add(pictures);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
 
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
+
+void main() {
+    Path input = Path.of("seed.txt");
     try {
-        Path path = Path.of(args.length > 0 ? args[0] : "magic-eye-strip.png");
-        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
-        double option = args.length > 2 ? Double.parseDouble(args[2]) : 16;
-        if (args.length > 3) seed = readSeed(Path.of(args[3]));
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-        save(path, seed, option);
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
+        if (!Files.exists(input)) Files.writeString(input, "42");
+        long seed = readSeed(input);
+        IO.println("Loaded seed from seed.txt: " + seed);
+        showImages("Magic Eye Strip", new String[]{"Seed " + seed}, new java.awt.image.BufferedImage[]{render(seed, 16)});
+    } catch (IOException | IllegalArgumentException failure) {
+        IO.println("Cannot load seed.txt: " + failure.getMessage() + ". Repair readSeed; Save, Test File, Run File.");
     }
 }
 // </editor-fold>
@@ -161,7 +155,6 @@ void main(String[] args) throws Exception {
 /// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
 ///   type.
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
 /// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
 /// - `||` — At least one condition must be true; if the first is true, Java skips the second.
 /// - `!` — In front of a boolean expression, reverses true and false.
@@ -182,13 +175,12 @@ void main(String[] args) throws Exception {
 /// - `return` — Ends this method call, optionally handing a result back to its caller.
 /// - `if` — Runs its body only when the condition in parentheses is true.
 /// - `for` — Repeats a block over a range or a sequence of values.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
 /// - `throws` — In a method declaration: tells callers which failure they may need to handle.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line.
 /// - `Path` — A file-system location, not the file’s contents.
 /// - `Files` — JDK operations for reading and writing local files.
 // </editor-fold>

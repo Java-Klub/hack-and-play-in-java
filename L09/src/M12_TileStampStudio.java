@@ -2,7 +2,6 @@
 import java.awt.*;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L09.12 · TileStampStudio
@@ -16,8 +15,8 @@ import javax.imageio.ImageIO;
 /// **Today you learn:** Parse and validate a candidate before committing it to shared state. Returning
 /// success should mean the requested setting was actually applied, not merely that parsing worked.
 ///
-/// After Run File, paint a tile, type 3 into the Repeats box and click Repeats to change the pattern
-/// density.
+/// After Run File, click tile cells to switch ink on or off; enter 3 and click Repeats to change
+/// the pattern density. Clear resets the tile.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F31 explains the Java skill; Read this code explains these lines.
@@ -72,8 +71,8 @@ boolean applyRepeats(String text) {
 ///
 /// ### What the prepared part already does
 ///
-/// The repeat input calls applyRepeats, then the preview uses the repeats field. Tile editing, pattern
-/// assembly and PNG export are supplied, so the repair concerns one setting boundary.
+/// Each click switches one source tile cell between ink and blank. render repeats that tile, and
+/// the Repeats button calls applyRepeats for the actual preview; Clear resets the tile.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="For this game">
@@ -101,8 +100,7 @@ boolean applyRepeats(String text) {
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
 int[][] tile = new int[8][8];
-int[] palette = {0xFFFFFF, 0x182030, 0xE94B8A, 0x36BDD6, 0xF7CB43};
-int brush = 1;
+int[] palette = {0xFFFFFF, 0x182030};
 JButton[][] buttons = new JButton[8][8];
 
 boolean paint(int row, int col, int colour) {
@@ -158,7 +156,7 @@ void showWindow() {
             var button = new JButton();
             buttons[row][col] = button;
             button.addActionListener(event -> {
-                paint(r, c, brush);
+                paint(r, c, tile[r][c] == 0 ? 1 : 0);
                 refresh();
                 preview.repaint();
             });
@@ -166,9 +164,6 @@ void showWindow() {
         }
     }
     var controls = new JPanel();
-    var colours = new JComboBox<>(new String[]{"White", "Ink", "Pink", "Cyan", "Gold"});
-    colours.setSelectedIndex(1);
-    colours.addActionListener(event -> brush = colours.getSelectedIndex());
     var clear = new JButton("Clear");
     clear.addActionListener(event -> {
         tile = new int[8][8];
@@ -176,15 +171,6 @@ void showWindow() {
         preview.repaint();
     });
     var status = new JLabel("Repeated preview");
-    var save = new JButton("Export PNG");
-    save.addActionListener(event -> {
-        try {
-            ImageIO.write(render(repeats), "png", Path.of("tile-stamp.png").toFile());
-            status.setText("Saved tile-stamp.png");
-        } catch (Exception failure) {
-            status.setText(failure.getMessage());
-        }
-    });
     var repeatText = new JTextField("6", 3);
     var apply = new JButton("Repeats");
     apply.addActionListener(event -> {
@@ -194,9 +180,7 @@ void showWindow() {
     });
     controls.add(repeatText);
     controls.add(apply);
-    controls.add(colours);
     controls.add(clear);
-    controls.add(save);
     frame.add(grid, BorderLayout.WEST);
     frame.add(preview, BorderLayout.CENTER);
     frame.add(controls, BorderLayout.SOUTH);
@@ -210,12 +194,8 @@ void showWindow() {
 int repeats = 6;
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// paint edits one tile cell; render reads it repeatedly.
-/// The new Repeats field calls applyRepeats; the same value drives preview and PNG save.
-void main(String[] args) {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
+/// The supplied part supports only the main game or experiment described above.
+void main() {
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
@@ -243,7 +223,6 @@ void main(String[] args) {
 /// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
 ///   type.
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
 /// - `||` — At least one condition must be true; if the first is true, Java skips the second.
 /// - `++` — Increases a numeric value by one.
 /// - `%` — The remainder after division; useful for repeated positions or turns.
@@ -271,11 +250,10 @@ void main(String[] args) {
 /// - `protected` — A visibility keyword used by supplied library callbacks, such as paintComponent.
 /// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
 ///   background first.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
+/// - `null` — No object is present.
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `Path` — A file-system location, not the file’s contents.
 /// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
 /// - `JPanel` — A window area that can display the game’s drawing or controls.
 /// - `SwingUtilities.invokeLater` — Schedules window work for Swing’s event thread; the action runs

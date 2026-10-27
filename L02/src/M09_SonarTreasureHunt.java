@@ -1,3 +1,11 @@
+// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import javax.swing.*;
+// </editor-fold>
+
 /// # L02.09 · SonarTreasureHunt
 ///
 /// Search an 8×8 sea for three hidden treasures with only eight probes. Each miss reports how far the
@@ -10,8 +18,8 @@
 /// row and the column must stay within their own lower and upper bounds; eight positions starting at zero
 /// end at seven.
 ///
-/// Use Run File, enter 9 1 to investigate the off-map probe and watch the Probes count; /r restores the
-/// round before a real treasure search.
+/// Run File opens the sea. Click a square to probe it. Try the two outside-map buttons: neither
+/// should spend a probe. After fixing both bounds, New sea starts a treasure hunt.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F06 explains the Java skill; Read this code explains these lines.
@@ -60,6 +68,19 @@ boolean insideSea(int row, int column) {
 /// command reads player coordinates, subtracts one from them and calls insideSea before recording a
 /// probe. distance computes a clue, and the supplied history keeps each old clue tied to its original
 /// moment.
+// </editor-fold>
+
+// <editor-fold defaultstate="expanded" desc="For this game">
+/// Click a sea square; a number marks its distance to the nearest treasure that was still
+/// hidden at that moment. Count horizontal plus vertical steps, not a diagonal shortcut: one row up
+/// and two columns right is distance three. The clue log keeps each earlier measurement, so a number
+/// does not change after another treasure is found. FOUND marks a discovery; after eight probes,
+/// X reveals the treasures you missed. New sea starts another round.
+///
+/// The two Try outside buttons deliberately request row nine or column nine. Watch the probe counter:
+/// the broken guard accepts them, but a correct guard refuses them without spending a probe. These
+/// buttons call the same command and insideSea rule as normal clicks. Their player coordinates start
+/// at one; command subtracts one before calling your rule, whose valid indices run from zero to seven.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -123,41 +144,134 @@ void command(String input) {
     }
 }
 
-void display() {
-    IO.println("Probes " + probes + "/8. Manhattan distance to nearest unfound treasure at that time.");
-    IO.println("Old timestamped clues never change after a find.");
-    for (String s : history) {
-        IO.println(s);
+// Prepared Swing controls call the same command and insideSea rule as the tests.
+JButton[][] seaButtons = new JButton[8][8];
+JLabel scoreLabel = new JLabel();
+JLabel feedbackLabel = new JLabel("Click any sea square to send your first probe.");
+JTextArea clueLog = new JTextArea(5, 44);
+
+void refreshSea() {
+    scoreLabel.setText("Probes: " + probes + " / 8     Treasures left: " + treasures.size());
+    clueLog.setText(String.join("\n", history));
+    clueLog.setCaretPosition(clueLog.getDocument().getLength());
+    for (int row = 0; row < 8; row++) {
+        for (int column = 0; column < 8; column++) {
+            int cell = row * 8 + column;
+            var button = seaButtons[row][column];
+            button.setEnabled(outcome.isEmpty() && !probed.contains(cell));
+            if (!outcome.isEmpty() && treasures.contains(cell)) {
+                button.setText("X");
+                button.setToolTipText("A treasure you did not find.");
+                button.setBackground(new Color(255, 210, 130));
+            }
+        }
     }
+}
+
+void probeAt(int row, int column) {
+    if (!outcome.isEmpty()) {
+        feedbackLabel.setText("Round finished. Click New sea to play again.");
+        return;
+    }
+    boolean onMap = row >= 1 && row <= 8 && column >= 1 && column <= 8;
+    int cell = (row - 1) * 8 + column - 1;
+    if (onMap && probed.contains(cell)) {
+        feedbackLabel.setText("You already explored that square; no probe spent.");
+        return;
+    }
+    boolean hit = treasures.contains(cell);
+    try {
+        command(row + " " + column);
+        if (onMap) {
+            var button = seaButtons[row - 1][column - 1];
+            button.setText(hit ? "FOUND" : "" + distance(cell));
+            button.setBackground(hit ? new Color(255, 220, 100) : new Color(210, 230, 245));
+            button.setToolTipText(history.getLast());
+            feedbackLabel.setText(hit ? "Treasure found! Old distances still describe the earlier probes."
+                : "Distance " + distance(cell) + ": count row steps + column steps to the nearest hidden treasure.");
+        } else {
+            feedbackLabel.setText("BUG: (" + row + ", " + column + ") is outside the sea, but spent a probe.");
+        }
+        if (!outcome.isEmpty()) feedbackLabel.setText(treasures.isEmpty()
+            ? "You found all three treasures! Click New sea for another round."
+            : "Eight probes used. X marks the missed treasures. Click New sea to retry.");
+    } catch (IllegalArgumentException invalid) {
+        feedbackLabel.setText(onMap ? "That probe was refused; no probe spent."
+            : "Outside the sea: refused correctly; no probe spent.");
+    }
+    refreshSea();
+}
+
+void showWindow() {
+    var frame = new JFrame("Sonar Treasure Hunt");
+    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    var board = new JPanel(new GridLayout(9, 9, 3, 3));
+    board.add(new JLabel("Row / Col"));
+    for (int column = 1; column <= 8; column++) {
+        board.add(new JLabel("" + column, SwingConstants.CENTER));
+    }
+    for (int row = 0; row < 8; row++) {
+        board.add(new JLabel("" + (row + 1), SwingConstants.CENTER));
+        for (int column = 0; column < 8; column++) {
+            int r = row + 1, c = column + 1;
+            var button = new JButton("~");
+            button.setPreferredSize(new Dimension(54, 40));
+            button.setFont(button.getFont().deriveFont(12f));
+            button.setToolTipText("Probe row " + r + ", column " + c);
+            button.addActionListener(event -> probeAt(r, c));
+            seaButtons[row][column] = button;
+            board.add(button);
+        }
+    }
+    var instructions = new JLabel("<html><b>Find 3 treasures with 8 probes.</b> Click a sea square.<br>"
+        + "A number is the distance at that time: row steps + column steps.<br>"
+        + "For example: one square up and two right is distance 3.</html>");
+    var top = new JPanel(new BorderLayout(0, 8));
+    top.add(instructions, BorderLayout.NORTH);
+    top.add(scoreLabel, BorderLayout.SOUTH);
+    var controls = new JPanel();
+    var outsideRow = new JButton("Try outside: row 9, col 1");
+    outsideRow.addActionListener(event -> probeAt(9, 1));
+    var outsideColumn = new JButton("Try outside: row 1, col 9");
+    outsideColumn.addActionListener(event -> probeAt(1, 9));
+    var restart = new JButton("New sea");
+    restart.addActionListener(event -> {
+        reset();
+        for (var row : seaButtons) for (var button : row) {
+            button.setText("~");
+            button.setToolTipText("Unexplored sea square");
+            button.setBackground(null);
+        }
+        feedbackLabel.setText("New sea. Click a square; the treasures have moved.");
+        refreshSea();
+    });
+    controls.add(outsideRow);
+    controls.add(outsideColumn);
+    controls.add(restart);
+    clueLog.setEditable(false);
+    var bottom = new JPanel(new BorderLayout(0, 8));
+    bottom.add(feedbackLabel, BorderLayout.NORTH);
+    bottom.add(new JScrollPane(clueLog), BorderLayout.CENTER);
+    bottom.add(controls, BorderLayout.SOUTH);
+    var content = new JPanel(new BorderLayout(8, 8));
+    content.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+    content.add(top, BorderLayout.NORTH);
+    content.add(board, BorderLayout.CENTER);
+    content.add(bottom, BorderLayout.SOUTH);
+    frame.add(content);
+    refreshSea();
+    frame.pack();
+    frame.setLocationByPlatform(true);
+    frame.setVisible(true);
 }
 
 void main() {
     reset();
-    IO.println("Sonar Treasure Hunt");
-    IO.println("Enter probe row column (1-8). Eight probes to find three treasures. /r restarts; /q quits.");
-    while (true) {
-        display();
-        if (!outcome.isEmpty()) {
-            IO.println(outcome);
-        }
-        String input = IO.readln("> ");
-        if (input == null || input.strip().equalsIgnoreCase("/q")) {
-            return;
-        }
-        if (input.strip().equalsIgnoreCase("/r")) {
-            reset();
-            continue;
-        }
-        if (!outcome.isEmpty()) {
-            IO.println("Round finished. /r restarts; /q quits.");
-            continue;
-        }
-        try {
-            command(input.strip());
-        } catch (IllegalArgumentException invalid) {
-            IO.println("Invalid move or command. Enter probe row column (1-8). Eight probes to find three treasures. /r restarts; /q quits.");
-        }
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        IO.println("Sonar Treasure Hunt needs a graphical display. Test File checks insideSea without a window.");
+        return;
     }
+    SwingUtilities.invokeLater(this::showWindow);
 }
 
 void require(boolean valid) {
@@ -166,7 +280,7 @@ void require(boolean valid) {
     }
 }
 
-/// Prepared entry points: main, reset, command.
+/// Prepared entry points: main, reset, command, probeAt, showWindow.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
@@ -194,7 +308,6 @@ void require(boolean valid) {
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
 /// - `==` — Compares primitive values. For text contents, use equals instead.
 /// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
 /// - `!` — In front of a boolean expression, reverses true and false.
 /// - `++` — Increases a numeric value by one.
 /// - `%` — The remainder after division; useful for repeated positions or turns.
@@ -216,15 +329,14 @@ void require(boolean valid) {
 /// - `if` — Runs its body only when the condition in parentheses is true.
 /// - `else` — The alternative when the preceding if condition is false.
 /// - `for` — Repeats a block over a range or a sequence of values.
-/// - `while` — Keeps repeating its body while its condition stays true.
 /// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
 ///   later.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
+/// - `null` — No object is present.
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
 /// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
 /// - `Set` — Stores distinct values; the same value is present at most once.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line.
 // </editor-fold>
 

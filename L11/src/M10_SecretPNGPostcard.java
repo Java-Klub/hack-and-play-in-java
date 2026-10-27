@@ -15,8 +15,8 @@ import javax.imageio.ImageIO;
 /// **Today you learn:** A Path identifies the actual resource to open, not just a decorative name.
 /// try-with-resources owns the input stream; image decoding and hidden-message decoding are later steps.
 ///
-/// After Run File, type a secret or press Enter for Pixel moon, then read the recovered text from
-/// exports/secret-course.png in Output.
+/// Run File reads data/postcard.png through readMessage and displays the recovered message with the
+/// postcard. A sample postcard is created only when this file is absent.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F32 explains the Java skill; Read this code explains these lines.
@@ -63,9 +63,9 @@ String readMessage(Path path) throws IOException {
 ///
 /// ### What the prepared part already does
 ///
-/// main asks for a message, saves exports/secret-course.png and immediately calls readMessage. The
-/// supplied encoder and decoder handle message length and pixel bits; the active method owns only loading
-/// the selected image.
+/// A sample data/postcard.png is created only when absent. main calls readMessage on that full path
+/// and displays the actual postcard with its recovered message; existing postcard contents are
+/// preserved.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -158,47 +158,42 @@ void save(Path path, long seed, double option) throws Exception {
 }
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// encode/decode implement the bounded image payload format.
-/// readMessage owns the file stream; main’s decode command uses it for the real selected PNG.
-void main(String[] args) throws Exception {
-    if (args.length == 0) {
-        String entered = IO.readln("Secret message (blank Pixel moon, q quits): ");
-        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
-        message = entered.isBlank() ? "Pixel moon" : entered;
-        Path postcard = Path.of("exports/secret-course.png");
-        try {
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-            save(postcard, 42, 1);
-            IO.println("Saved: " + postcard.toAbsolutePath());
-            IO.println("Recovered: " + readMessage(postcard));
-        } catch (IOException failure) {
-            IO.println("Read/write failed: " + failure.getMessage());
+/// The supplied part supports only the main game or experiment described above.
+void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var pictures = new javax.swing.JPanel(new java.awt.GridLayout(1, images.length, 8, 8));
+        for (int i = 0; i < images.length; i++) {
+            var picture = new javax.swing.JPanel(new java.awt.BorderLayout());
+            picture.add(new javax.swing.JLabel(captions[i], javax.swing.SwingConstants.CENTER), java.awt.BorderLayout.NORTH);
+            double scale = Math.min(1, Math.min(900.0 / images.length / images[i].getWidth(), 550.0 / images[i].getHeight()));
+            var icon = new javax.swing.ImageIcon(images[i].getScaledInstance(
+                    Math.max(1, (int)(images[i].getWidth() * scale)),
+                    Math.max(1, (int)(images[i].getHeight() * scale)), java.awt.Image.SCALE_FAST));
+            picture.add(new javax.swing.JLabel(icon), java.awt.BorderLayout.CENTER);
+            pictures.add(picture);
         }
-        return;
-    }
+        frame.add(pictures);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
 
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
-    if (args.length > 0 && args[0].equals("decode")) {
-        if (args.length != 2) {
-            throw new IllegalArgumentException("Use decode input.png.");
-        }
-        IO.println(readMessage(Path.of(args[1])));
-        return;
-    }
+
+void main() {
+    Path input = Path.of("data", "postcard.png");
     try {
-        Path path = Path.of(args.length > 0 ? args[0] : "secret-png-postcard.png");
-        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
-        double option = 1;
-        if (args.length > 2) {
-            message = args[2];
-        }
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-        save(path, seed, option);
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
+        if (!Files.exists(input)) save(input, 42, 1);
+        String recovered = readMessage(input);
+        var image = ImageIO.read(input.toFile());
+        if (image == null) throw new IOException("The postcard is not a readable PNG.");
+        IO.println("Recovered from " + input + ": " + recovered);
+        showImages("Secret PNG Postcard", new String[]{recovered}, new java.awt.image.BufferedImage[]{image});
+    } catch (Exception failure) {
+        IO.println("Cannot read requested postcard " + input + ": " + failure.getMessage() + ". Repair readMessage; Save, Test File, Run File.");
     }
 }
 // </editor-fold>
@@ -228,8 +223,6 @@ void main(String[] args) throws Exception {
 ///   type.
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
 /// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `!=` — Checks that two values differ.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
 /// - `||` — At least one condition must be true; if the first is true, Java skips the second.
 /// - `!` — In front of a boolean expression, reverses true and false.
 /// - `++` — Increases a numeric value by one.
@@ -241,23 +234,19 @@ void main(String[] args) throws Exception {
 /// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
 /// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
 ///   count.
 /// - `new` — Creates a fresh value or object, such as a new array or window.
 /// - `return` — Ends this method call, optionally handing a result back to its caller.
 /// - `if` — Runs its body only when the condition in parentheses is true.
 /// - `for` — Repeats a block over a range or a sequence of values.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
+/// - `null` — No object is present.
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
 /// - `throws` — In a method declaration: tells callers which failure they may need to handle.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line.
 /// - `Path` — A file-system location, not the file’s contents.
 /// - `Files` — JDK operations for reading and writing local files.
 // </editor-fold>

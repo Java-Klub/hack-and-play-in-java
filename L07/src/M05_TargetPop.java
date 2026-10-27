@@ -176,6 +176,7 @@ void showWindow() {
     panel.setFocusable(true);
     panel.addMouseListener(new MouseAdapter() {
         @Override public void mousePressed(MouseEvent event) {
+            panel.requestFocusInWindow();
             if (event.getY() < HEIGHT) {
                 click(event.getX(), event.getY(), System.nanoTime());
             }

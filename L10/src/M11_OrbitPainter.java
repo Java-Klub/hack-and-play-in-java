@@ -4,9 +4,6 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 import javax.swing.Timer;
 // </editor-fold>
 
@@ -21,8 +18,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Pause is a promise that a tick changes nothing. The boolean guard must match that
 /// promise before the supplied physics or persistent drawing begins.
 ///
-/// After Run File, press Space to start the default orbit, drag to choose another launch and press C to
-/// clear its trail.
+/// After Run File, press Space to start the orbit or drag a new launch; Space pauses and R clears
+/// and restores the starting experiment.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F30 explains the Java skill; Read this code explains these lines.
@@ -82,9 +79,8 @@ void step() {
 ///
 /// ### What the prepared part already does
 ///
-/// Dragging sets a new launch and the timer requests steps. The supplied softened attraction formula
-/// updates velocity, draws one segment and pauses an escaped particle; clearing only removes the existing
-/// canvas.
+/// step advances the orbit and paints its trail. Drag chooses a launch, Space starts/pauses and R
+/// clears the trace and restores the starting experiment.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -143,21 +139,6 @@ void launch(double xx, double yy, double endX, double endY) {
     message = "Painting orbit";
 }
 
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-void save(File file) throws IOException {
-    ImageIO.write(canvas, "png", file);
-}
-
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-void save() {
-    try {
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-        save(new File("orbit.png"));
-        message = "Saved orbit.png";
-    } catch (IOException e) {
-        message = "Save failed: " + e.getMessage();
-    }
-}
 
 /// Supplied drawing: reads model values; repainting is not another turn.
 void draw(Graphics2D g) {
@@ -182,8 +163,6 @@ void key(int code, boolean pressed) {
     if (pressed) {
         switch (code) {
             case KeyEvent.VK_SPACE -> paused = !paused;
-            case KeyEvent.VK_C -> clear();
-            case KeyEvent.VK_S -> save();
         }
     }
 }
@@ -261,7 +240,7 @@ void showWindow() {
     });
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.add(panel);
-    var help = new JLabel("<html><div style=\"text-align:center\">Drag: position + launch velocity   Space: pause   C: clear   S: save PNG   R: reset</div></html>", SwingConstants.CENTER);
+    var help = new JLabel("<html><div style=\"text-align:center\">Drag: position + launch velocity   Space: pause   R: reset</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
     frame.add(help, BorderLayout.SOUTH);
     frame.pack();
@@ -273,8 +252,7 @@ void showWindow() {
 }
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// step is the active boundary; the model exposes it for deterministic checks without a window.
-/// restart restores initial fields; draw reads state; showWindow supplies listeners, one timer and window-close cleanup.
+/// The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();
@@ -338,10 +316,7 @@ void main() {
 /// - `protected` — A visibility keyword used by supplied library callbacks, such as paintComponent.
 /// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
 ///   background first.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
+/// - `null` — No object is present.
 /// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
 /// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
 /// - `JPanel` — A window area that can display the game’s drawing or controls.

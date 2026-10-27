@@ -122,11 +122,13 @@ void show() {
         if (answer >= 0) {
             choose(answer == 1);
             refresh();
+            play.setEnabled(false);
         }
     });
     var restart = new JButton("Restart");
     restart.addActionListener((e) -> {
         reset();
+        play.setEnabled(true);
         refresh();
     });
     frame.add(play, BorderLayout.NORTH);
@@ -181,9 +183,6 @@ void require(boolean valid) {
 /// - `-` — Subtracts numbers; in front of one number, changes its sign.
 /// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
 ///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
 /// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
 ///   the second.
 /// - `:` — In for (int value : values), reads each element in turn. It also separates the two
@@ -198,7 +197,7 @@ void require(boolean valid) {
 /// - `::` — A method reference: supplies an action without calling it yet.
 /// - `this` — The current game object: this particular run and its stored state.
 /// - `enum` — A type whose values are a fixed named set, such as READY, PLAYING and FINISHED.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
+/// - `null` — No object is present.
 /// - `throw` — Reports a failure by creating or passing an exception.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
 /// - `JFrame` — A desktop window supplied by the JDK’s Swing library.

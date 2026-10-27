@@ -152,31 +152,42 @@ void display() {
 }
 
 /// main(): Starts the real game loop: display, read a command, validate, replay or quit.
+/// Prepared console flow: type a command and press Enter. A valid command redraws the board.
+/// Rejected input leaves the display alone; after a round, Enter or /r starts again and /q quits.
 void main() {
     reset();
     IO.println("Quarto");
+    IO.println("Give a piece to your opponent, then place the piece they gave you. Four in a line sharing any attribute wins.");
     IO.println("Choose unused piece 0-15, then its receiver places in cell 1-16 (row order). -1 is empty. /r restarts; /q quits.");
+    IO.println("Example: choose piece 0; the next player can enter 1 to place it in the first cell. Read the current phase above.");
+    display();
     while (true) {
-        display();
-        if (!outcome.isEmpty()) {
-            IO.println(outcome);
-        }
-        String input = IO.readln("> ");
-        if (input == null || input.strip().equalsIgnoreCase("/q")) {
+        String input = IO.readln(outcome.isEmpty() ? "> " : "Enter or /r: new round; /q: quit: ");
+        if (input == null) {
             return;
         }
-        if (input.strip().equalsIgnoreCase("/r")) {
+        input = input.strip();
+        if (input.equalsIgnoreCase("/q") || input.equalsIgnoreCase("q")) {
+            return;
+        }
+        if (input.equalsIgnoreCase("/r") || input.equalsIgnoreCase("r")
+                || (!outcome.isEmpty() && input.isEmpty())) {
             reset();
+            display();
             continue;
         }
         if (!outcome.isEmpty()) {
-            IO.println("Round finished. /r restarts; /q quits.");
+            IO.println("That round is over. Press Enter to play again, or /q to quit.");
             continue;
         }
         try {
-            command(input.strip());
+            command(input);
+            display();
+            if (!outcome.isEmpty()) {
+                IO.println(outcome);
+            }
         } catch (IllegalArgumentException invalid) {
-            IO.println("Invalid move or command. Choose unused piece 0-15, then its receiver places in cell 1-16 (row order). -1 is empty. /r restarts; /q quits.");
+            IO.println("Invalid move. " + "Choose unused piece 0-15, then its receiver places in cell 1-16 (row order). -1 is empty. /r restarts; /q quits.");
         }
     }
 }
@@ -217,12 +228,10 @@ void require(boolean valid) {
 /// - `!` — In front of a boolean expression, reverses true and false.
 /// - `++` — Increases a numeric value by one.
 /// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `%` — The remainder after division; useful for repeated positions or turns.
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
 /// - `-` — Subtracts numbers; in front of one number, changes its sign.
 /// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
 ///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
 ///   direction. In List<String>, angle brackets describe the element type.
 /// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
@@ -241,6 +250,6 @@ void require(boolean valid) {
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 // </editor-fold>
 

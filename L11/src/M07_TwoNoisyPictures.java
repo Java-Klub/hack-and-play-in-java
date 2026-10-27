@@ -1,7 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Prepared tools">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 import java.util.List;
 // </editor-fold>
 
@@ -16,8 +15,8 @@ import java.util.List;
 /// **Today you learn:** A seeded Random is a continuing source of choices. Recreating it with the same
 /// seed repeats its first choice; reusing one instance lets later blocks receive later choices.
 ///
-/// After Run File, press Enter for seed 42 and open two-noisy-pictures-42.png together with its
-/// .share1.png and .share2.png images.
+/// After Run File, type a seed or press Enter for 42; inspect the Java picture, then close it and
+/// repeat the same seed or try 43 to compare.
 /// After your repair: Save → Test File → play again.
 ///
 /// Need an explanation? Recall · F27 explains the Java skill; Read this code explains these lines.
@@ -82,9 +81,8 @@ BufferedImage[] shares(BufferedImage secret, long seed) {
 ///
 /// ### What the prepared part already does
 ///
-/// The supplied black/white rule builds complementary or matching two-by-two patterns from the secret
-/// mask. main writes the two shares, then save calls render to export their overlay, so you can inspect
-/// what each picture reveals.
+/// shares creates two noisy pictures from the message mask. render combines them; main shows the
+/// overlay and both shares together, so the message can be compared with its ingredients.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -123,44 +121,43 @@ BufferedImage render(long seed, double option) {
     return shares(mask(), seed)[2];
 }
 
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
-        throw new IllegalStateException("PNG writer missing.");
-    }
-}
 
 /// Start the real program with Run File. Test File checks the rule without opening a window.
-/// shares makes two two-black-dot masks and their ink overlay.
-/// The supplied complement rule hides white/black message pixels; main exports both shares and the overlay.
-void main(String[] args) throws Exception {
-    if (args.length == 0) {
-        String entered = IO.readln("Seed (blank 42, q quits): ");
-        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
-        String seedText = entered.isBlank() ? "42" : entered.strip();
-        args = new String[]{"two-noisy-pictures-" + seedText + ".png", seedText};
-    }
-
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
-    try {
-        Path path = Path.of(args.length > 0 ? args[0] : "two-noisy-pictures.png");
-        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
-        double option = 1;
-        if (args.length > 2) {
-            message = args[2];
+/// The supplied part supports only the main game or experiment described above.
+void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var pictures = new javax.swing.JPanel(new java.awt.GridLayout(1, images.length, 8, 8));
+        for (int i = 0; i < images.length; i++) {
+            var picture = new javax.swing.JPanel(new java.awt.BorderLayout());
+            picture.add(new javax.swing.JLabel(captions[i], javax.swing.SwingConstants.CENTER), java.awt.BorderLayout.NORTH);
+            double scale = Math.min(1, Math.min(900.0 / images.length / images[i].getWidth(), 550.0 / images[i].getHeight()));
+            var icon = new javax.swing.ImageIcon(images[i].getScaledInstance(
+                    Math.max(1, (int)(images[i].getWidth() * scale)),
+                    Math.max(1, (int)(images[i].getHeight() * scale)), java.awt.Image.SCALE_FAST));
+            picture.add(new javax.swing.JLabel(icon), java.awt.BorderLayout.CENTER);
+            pictures.add(picture);
         }
-        Files.createDirectories(path.toAbsolutePath().getParent());
-        var images = shares(mask(), seed);
-        ImageIO.write(images[0], "png", Path.of(path + ".share1.png").toFile());
-        ImageIO.write(images[1], "png", Path.of(path + ".share2.png").toFile());
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-        save(path, seed, option);
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
+        frame.add(pictures);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
+
+
+void main() {
+    String input = IO.readln("Seed (blank 42, q quits): ");
+    if (input == null || input.strip().equalsIgnoreCase("q")) return;
+    try {
+        long seed = input.isBlank() ? 42 : Long.parseLong(input.strip());
+        var pair = shares(mask(), seed);
+        showImages("Two Noisy Pictures", new String[]{"Overlay", "Share 1", "Share 2"},
+                new java.awt.image.BufferedImage[]{render(seed, 1), pair[0], pair[1]});
+    } catch (IllegalArgumentException failure) {
+        IO.println("Use a whole-number seed: " + failure.getMessage());
     }
 }
 // </editor-fold>
@@ -191,7 +188,6 @@ void main(String[] args) throws Exception {
 ///   type.
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
 /// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
 /// - `||` — At least one condition must be true; if the first is true, Java skips the second.
 /// - `!` — In front of a boolean expression, reverses true and false.
 /// - `++` — Increases a numeric value by one.
@@ -217,11 +213,8 @@ void main(String[] args) throws Exception {
 /// - `try` — A block whose possible failures can be handled by the following catch.
 /// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
 /// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
 /// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
 /// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
 // </editor-fold>
 
