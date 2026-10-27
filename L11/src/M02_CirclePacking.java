@@ -19,9 +19,35 @@ import java.util.List;
 /// Use Run File to generate circle-packing.png, then open the Saved path after the bounded packing run
 /// finishes.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F23 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean claimCentre(Set<Centre> seen, int x, int y) {
     return seen.add(new Centre(x, y));
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F23">
+/// ### Set: membership without duplicates
+///
+/// A `Set` answers whether a value belongs to a collection. It does not reserve an indexed place for
+/// each insertion.
+///
+/// ```java
+/// Set<String> stickers = new HashSet<>();
+/// IO.println(stickers.add("moon"));
+/// IO.println(stickers.add("moon"));
+/// IO.println(stickers.size());
+/// ```
+///
+/// The output is `true`, `false`, then `1`. The first add changes membership; the second finds an
+/// equal value already present. `contains(value)` asks without changing the set. `remove(value)`
+/// removes that value and reports whether it was present. A record's generated equality compares its
+/// component values, so two separately created equal records represent the same set member. Do not
+/// depend on HashSet iteration order.
+///
+/// Predict: after removing moon and adding sun, what are the size and the result of
+/// `contains("moon")`?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -37,12 +63,16 @@ boolean claimCentre(Set<Centre> seen, int x, int y) {
 /// already supplied.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. contains only asks; it does not remember a new centre.
-/// 2. A record with the same x/y is equal to the earlier value.
-/// 3. Set.add both stores the value and reports whether it was new.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// contains only asks; it does not remember a new centre.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// A record with the same x/y is equal to the earlier value.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Set.add both stores the value and reports whether it was new.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

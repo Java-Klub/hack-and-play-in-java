@@ -19,12 +19,41 @@ import javax.swing.Timer;
 /// After Run File, click inside the water to make ripples, press Space to pause and R to restore a still
 /// tank.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F30 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void tap(int x, int y) {
     if (x > 0 && y > 0 && x < COLUMNS - 1 && y < ROWS - 1) {
         height[y][x] = Math.min(120, height[y][x] + 60);
         paused = false;
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F30">
+/// ### Input requests; a tick advances time
+///
+/// An event can record an intention without changing the whole simulation immediately. A tick
+/// performs one bounded update. Keep drawing separate from both.
+///
+/// ```java
+/// int height = 0;
+/// int pending = 0;
+/// void press() {
+///     pending = 2;
+/// }
+/// void tick() {
+///     height += pending;
+///     pending = 0;
+/// }
+/// ```
+///
+/// After `press()`, height is still 0. One `tick()` changes it to 2 and consumes the request; another
+/// tick leaves it at 2. Repeating the input before that tick still records one request, rather than
+/// two updates. A supplied timer can call tick, but paused or finished games should reject further
+/// advancement. Restart must restore the initial state.
+///
+/// Predict: from the initial state, what happens after press, tick, press, tick?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -42,12 +71,16 @@ void tap(int x, int y) {
 /// still water.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The input handler should activate the existing clock, not calculate the wave.
-/// 2. Change the paused value only after a valid interior tap.
-/// 3. Keep the old height cap and let step read the supplied double buffer.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The input handler should activate the existing clock, not calculate the wave.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Change the paused value only after a valid interior tap.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Keep the old height cap and let step read the supplied double buffer.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

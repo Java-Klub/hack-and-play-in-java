@@ -24,12 +24,37 @@ import javax.swing.Timer;
 /// After Run File, paint a cell, change ink with C, paint it again and press Z to undo; use 1–4 to switch
 /// animation frames.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F22 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean undo() {
     if (history.isEmpty()) return false;
     Edit edit = history.removeLast();
     frames[edit.frame()][edit.y()][edit.x()] = edit.oldColour();
     return true;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F22">
+/// ### List: a sequence you can change
+///
+/// A `List<String>` holds text in order. `new ArrayList<>()` makes a mutable list: its contents can
+/// change without replacing the list itself.
+///
+/// ```java
+/// List<String> snacks = new ArrayList<>();
+/// snacks.add("apple");
+/// snacks.add("nuts");
+/// IO.println(snacks.get(0));
+/// IO.println(snacks.size());
+/// ```
+///
+/// The output is `apple`, then `2`. `add(value)` appends one item; `get(index)` reads without
+/// removing it. Indexes start at zero. `isEmpty()` checks for no items. `removeLast()` removes and
+/// returns the final item; call it only on a nonempty list. A list made directly by `List.of(...)`
+/// cannot be changed, but `new ArrayList<>(List.of(...))` can.
+///
+/// Predict: after `snacks.removeLast()`, what are its size and first item?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -47,12 +72,16 @@ boolean undo() {
 /// navigation, preview playback and local image export are already supplied.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Successive edits go to the end of history.
-/// 2. Undo needs the last element and must remove that same element.
-/// 3. Restore the recorded frame/x/y/colour, not the currently selected frame.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Successive edits go to the end of history.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Undo needs the last element and must remove that same element.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Restore the recorded frame/x/y/colour, not the currently selected frame.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

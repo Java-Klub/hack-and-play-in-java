@@ -18,6 +18,9 @@ import javax.swing.Timer;
 ///
 /// Run File and click One step to inspect one ant move before using Run/Pause to grow a longer trail.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F18 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void step() {
     direction = Math.floorMod(direction + (black[y][x] ? -1 : 1), 4);
     black[y][x] = !black[y][x];
@@ -27,6 +30,25 @@ void step() {
     y = Math.floorMod(y + dy[direction], 61);
     steps++;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F18">
+/// ### Grids: choose the row before the column
+///
+/// In an array of rows, the first index selects a row and the second selects a position within it.
+/// Rows can have different lengths. A neighbour is a displacement from a cell, not another absolute
+/// position. Define the permitted directions before checking whether a candidate exists.
+///
+/// ```java
+/// int[][] mosaic = {{3, 6, 9}, {2, 4, 8}};
+/// int row = 0;
+/// int column = 1;
+/// IO.println(mosaic[row][column + 1]);
+/// ```
+///
+/// The output is nine: row zero and column two select that element. Moving down changes row; moving
+/// right changes column. From the top-right cell, which of those two moves stays inside? For a
+/// diagonal both coordinates change; bounds must be checked before accessing the candidate.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -42,12 +64,16 @@ void step() {
 /// painting shows stored tile colours and the current ant; step() is the whole movement rule.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Directions 0,1,2,3 mean north,east,south,west.
-/// 2. West changes x by -1 and leaves y unchanged.
-/// 3. Use dx={0,1,0,-1}; dy already supplies {-1,0,1,0}.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Directions 0,1,2,3 mean north,east,south,west.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// West changes x by -1 and leaves y unchanged.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Use dx={0,1,0,-1}; dy already supplies {-1,0,1,0}.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

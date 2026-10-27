@@ -19,6 +19,9 @@ import javax.swing.Timer;
 /// Run File, press Up to begin braking the fall, and use Left and Right thrust to line up with the
 /// landing pad.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F25 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void step() {
     if (!state.equals("FLYING")) {
         return;
@@ -50,6 +53,29 @@ void step() {
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Recall · F25">
+/// ### Invariant: a promise after every action
+///
+/// An invariant is a relationship that must remain true across accepted actions. Some actions move a
+/// quantity between places rather than creating more. Validate the complete request before making
+/// changes, then apply it once. Rejection should preserve the earlier state.
+///
+/// ```java
+/// int violet = 6;
+/// int gold = 2;
+/// int amount = 3;
+/// if (amount >= 0 && amount <= violet) {
+///     violet -= amount;
+///     gold += amount;
+/// }
+/// IO.println(violet + gold);
+/// ```
+///
+/// The containers become three and five; the printed total remains eight because the transfer
+/// balances. Now consider nine units: what must remain unchanged? Explain why moving only one side
+/// would violate the total even if both individual values looked legal.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
 ///
@@ -65,12 +91,16 @@ void step() {
 /// pad. clearKeys() releases held inputs on restart or focus loss; the timer and painter are supplied.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Gravity always acts, even with no fuel.
-/// 2. The existing single decrement already handles combined keys correctly.
-/// 3. Put fuel>0 back around the entire thrust block; do not merely clamp the number afterward.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Gravity always acts, even with no fuel.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The existing single decrement already handles combined keys correctly.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Put fuel>0 back around the entire thrust block; do not merely clamp the number afterward.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

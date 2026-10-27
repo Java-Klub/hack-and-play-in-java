@@ -20,6 +20,9 @@ import java.util.List;
 /// Use Run File, refresh NetBeans Files and open dragon-curve.png; then use Test File to compare the
 /// exact zero-fold and one-fold cases.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F11 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 List<Integer> foldTurns(int folds) {
     var turns = new ArrayList<Integer>();
     for (int fold = 0; fold < folds; fold++) {
@@ -31,6 +34,28 @@ List<Integer> foldTurns(int folds) {
     }
     return turns;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F11">
+/// A counted `for` puts initialization, a continue condition and progress in one header.
+/// Initialization happens once. Then Java checks the condition, runs the body if true, performs
+/// progress, and checks again.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// for (int floor = 2; floor <= 4; floor++) {
+///     IO.println(floor);
+/// }
+/// ```
+///
+/// Predict the visited values: `2`, `3`, `4`. There are three passes, even though the last printed
+/// number is four. The two semicolons separate the header’s three parts; `floor++` adds one after a
+/// pass. The braces group the repeated statements. If the starting value already fails the condition,
+/// no pass occurs. Count positions and gaps separately: three positions have two gaps. Write down a
+/// tiny trace before changing a bound.
+///
+/// Now predict the output if floor starts at five.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -53,12 +78,16 @@ List<Integer> foldTurns(int folds) {
 /// dragon-curve.png. No window or fold slider is part of this exporter.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Try folds = 1 with the current starting fold.
-/// 2. The outer counter should visit 0 through folds - 1.
-/// 3. Initialize fold to 0; keep fold < folds.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Try folds = 1 with the current starting fold.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The outer counter should visit 0 through folds - 1.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Initialize fold to 0; keep fold < folds.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

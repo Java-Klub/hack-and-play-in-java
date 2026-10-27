@@ -19,6 +19,9 @@ import java.util.List;
 /// Use Run File to generate voronoi-stained-glass.png, then open the Saved path once the seed collection
 /// works.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F22 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 List<Seed> seedList(Random random, int count) {
     if (count < 0 || count > 100) throw new IllegalArgumentException("Seeds: 0..100.");
     List<Seed> seeds = new ArrayList<>();
@@ -27,6 +30,28 @@ List<Seed> seedList(Random random, int count) {
     }
     return seeds;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F22">
+/// ### List: a sequence you can change
+///
+/// A `List<String>` holds text in order. `new ArrayList<>()` makes a mutable list: its contents can
+/// change without replacing the list itself.
+///
+/// ```java
+/// List<String> snacks = new ArrayList<>();
+/// snacks.add("apple");
+/// snacks.add("nuts");
+/// IO.println(snacks.get(0));
+/// IO.println(snacks.size());
+/// ```
+///
+/// The output is `apple`, then `2`. `add(value)` appends one item; `get(index)` reads without
+/// removing it. Indexes start at zero. `isEmpty()` checks for no items. `removeLast()` removes and
+/// returns the final item; call it only on a nonempty list. A list made directly by `List.of(...)`
+/// cannot be changed, but `new ArrayList<>(List.of(...))` can.
+///
+/// Predict: after `snacks.removeLast()`, what are its size and first item?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -42,12 +67,16 @@ List<Seed> seedList(Random random, int count) {
 /// supplied Random, Seed record and PNG export stay visible but need no new framework.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. List.of makes a fixed unmodifiable result.
-/// 2. Choose a mutable implementation while retaining the List<Seed> role.
-/// 3. Append inside the counted loop; an empty loop must return an empty mutable list.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// List.of makes a fixed unmodifiable result.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Choose a mutable implementation while retaining the List<Seed> role.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Append inside the counted loop; an empty loop must return an empty mutable list.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

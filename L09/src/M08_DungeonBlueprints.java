@@ -19,10 +19,35 @@ import java.util.List;
 /// Use Run File to save dungeon-blueprints.png, then open it and compare the rooms with the SMALL and
 /// LARGE legend.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F24 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void countRoom(Room room) {
     String kind = room.width() * room.height() <= 42 ? "SMALL" : "LARGE";
     roomCounts.put(kind, roomCounts.getOrDefault(kind, 0) + 1);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F24">
+/// ### Map: look up a value by its key
+///
+/// A `Map<String, Integer>` associates text keys with integer values. Each key has at most one stored
+/// value.
+///
+/// ```java
+/// Map<String, Integer> badges = new HashMap<>();
+/// badges.put("moon", 4);
+/// IO.println(badges.getOrDefault("moon", 0));
+/// IO.println(badges.getOrDefault("sun", 0));
+/// ```
+///
+/// The output is `4`, then `0`. `getOrDefault(key, fallback)` reads an existing value, or returns the
+/// fallback when the key is absent. This lookup does not insert anything. `put(key, value)` stores a
+/// value and replaces any previous value for that key; it does not add numbers automatically. Use
+/// `containsKey(key)` when you need to distinguish absence explicitly. These examples do not store
+/// null values.
+///
+/// Predict: after `badges.put("moon", 9)`, what will the same two lookups return?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -37,12 +62,16 @@ void countRoom(Room room) {
 /// and export are supplied; the caption reads the resulting category totals.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The area boundary includes exactly 42.
-/// 2. Different room objects can have the same kind key.
-/// 3. Use the old count or zero, then add one.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The area boundary includes exactly 42.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Different room objects can have the same kind key.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Use the old count or zero, then add one.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

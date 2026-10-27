@@ -18,9 +18,30 @@ import java.awt.GridLayout;
 /// Run File and click two covered cards; after a mismatch, clicking another covered card begins your next
 /// attempt.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F16 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int visible(int index) {
     return matched[index] || index == first || index == second ? cards[index] : 0;
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F16">
+/// ### Arrays: the position matters
+///
+/// An array keeps a fixed number of values of one element type. Square brackets select a position:
+/// the first index is zero, and `length` is the count. Reading one element does not alter the others.
+/// An index must exist before it is used; an empty array has no first element.
+///
+/// ```java
+/// String[] tools = {"pen", "tape", "chalk"};
+/// int chosen = 1;
+/// IO.println(tools[chosen]);
+/// IO.println(tools.length);
+/// ```
+///
+/// These statements belong inside a method. Index one selects `tape`; the count is three. What
+/// changes if `chosen` becomes two? Which index would be the first invalid one?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -37,12 +58,16 @@ int visible(int index) {
 /// label; the supplied Swing callbacks connect clicks to those two methods.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. cards and matched describe the same numbered positions.
-/// 2. index is the position requested by refresh().
-/// 3. Use cards[index] only on the visible branch of the conditional.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// cards and matched describe the same numbered positions.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// index is the position requested by refresh().
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Use cards[index] only on the visible branch of the conditional.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

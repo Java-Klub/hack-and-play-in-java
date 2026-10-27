@@ -23,10 +23,34 @@ import javax.swing.Timer;
 /// After Run File, click or drag to start and steer the star tunnel, change speed with Up/Down and press
 /// Space to pause.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F29 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 Point2D.Double project(Star star, double depth) {
     double z = Math.max(5, depth);
     return new Point2D.Double(centreX + star.x * 260 / z, centreY + star.y * 260 / z);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F29">
+/// ### Rendering: translate state into pixels
+///
+/// Rendering reads the model and draws what it describes. Screen x increases rightward; screen y
+/// increases downward. Drawing methods often accept the upper-left corner and a size, rather than a
+/// centre.
+///
+/// ```java
+/// int tileX = 3;
+/// int tileY = 2;
+/// int size = 10;
+/// g.fillRect(tileX * size, tileY * size, size, size);
+/// ```
+///
+/// Here `g` is the supplied `Graphics2D` drawing tool. This paints a 10-by-10 square with upper-left
+/// corner `(30, 20)`. The model coordinates stay `(3, 2)`. Repainting should not move objects or
+/// advance a round: a window may request painting many times.
+///
+/// Predict: if only tileY becomes 4, which screen coordinate changes, and by how much?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -42,12 +66,16 @@ Point2D.Double project(Star star, double depth) {
 /// calls project for visible positions and trails; input controls speed, steering, pause and reset.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Perspective divides the x/y offset by depth.
-/// 2. The clamp protects zero or negative test depths.
-/// 3. Use max(5, depth), without an extra distance.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Perspective divides the x/y offset by depth.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The clamp protects zero or negative test depths.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Use max(5, depth), without an extra distance.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

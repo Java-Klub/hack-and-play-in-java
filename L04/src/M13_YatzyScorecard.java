@@ -14,6 +14,9 @@
 /// Use Run File, enter bank 13, then bank another open category showing nonzero points and compare the
 /// printed total with both filled scores.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F12 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int total() {
     int sum = 0;
     int upper = 0;
@@ -27,6 +30,28 @@ int total() {
     }
     return sum + (upper >= 63 ? 35 : 0);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F12">
+/// An accumulator remembers a growing result across passes. Its starting value belongs before the
+/// loop; putting it inside would start the result again for every item. The remembered result can be
+/// text, not only a number.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// String receipt = "Items:";
+/// for (String item : List.of("tea", "cake")) {
+///     receipt += " " + item;
+/// }
+/// ```
+///
+/// Predict receipt after each pass: `Items: tea`, then `Items: tea cake`. `+=` combines the old value
+/// with the new contribution and stores the result. Plain `=` replaces the stored value.
+/// `List.of(...)` supplies the fixed sequence of listed values; the colon visits one item per pass.
+/// Trace the current item and accumulator in two columns to discover whether earlier work survives.
+///
+/// Now predict receipt when the supplied list contains only `"rice"`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -51,12 +76,16 @@ int total() {
 /// rules include the upper bonus, but no Joker or repeated-Yatzy bonus.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. sum = scores[i] replaces the total on every filled category.
-/// 2. sum must retain earlier scores; upper already accumulates correctly.
-/// 3. Use sum += scores[i].
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// sum = scores[i] replaces the total on every filled category.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// sum must retain earlier scores; upper already accumulates correctly.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Use sum += scores[i].
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

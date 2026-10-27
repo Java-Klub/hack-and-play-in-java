@@ -12,6 +12,9 @@
 /// Use Run File and enter 1 1 1 3 to select CAT in the first row; the starter reads only CA and rejects
 /// the find.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F11 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 String read(int r, int c, int nr, int nc) {
     require(r >= 0 && r < 5 && c >= 0 && c < 5 && nr >= 0 && nr < 5 && nc >= 0 && nc < 5);
     int dr = Integer.signum(nr - r);
@@ -24,6 +27,28 @@ String read(int r, int c, int nr, int nc) {
     }
     return word;
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F11">
+/// A counted `for` puts initialization, a continue condition and progress in one header.
+/// Initialization happens once. Then Java checks the condition, runs the body if true, performs
+/// progress, and checks again.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// for (int floor = 2; floor <= 4; floor++) {
+///     IO.println(floor);
+/// }
+/// ```
+///
+/// Predict the visited values: `2`, `3`, `4`. There are three passes, even though the last printed
+/// number is four. The two semicolons separate the header’s three parts; `floor++` adds one after a
+/// pass. The braces group the repeated statements. If the starting value already fails the condition,
+/// no pass occurs. Count positions and gaps separately: three positions have two gaps. Write down a
+/// tiny trace before changing a bound.
+///
+/// Now predict the output if floor starts at five.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -44,12 +69,16 @@ String read(int r, int c, int nr, int nc) {
 /// the grid and main reads four player coordinates numbered from one.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The distance n counts gaps, not selected cells.
-/// 2. Indices 0, 1 and 2 contain three letters.
-/// 3. Run i from 0 while i <= n.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The distance n counts gaps, not selected cells.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Indices 0, 1 and 2 contain three letters.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Run i from 0 while i <= n.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

@@ -17,6 +17,9 @@ import java.awt.BorderLayout;
 /// Run File, click Look, bluff, then choose, let the first player peek privately, and let the other
 /// decide whether to keep or swap.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F21 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 enum Holder {
     PLAYER_ONE, PLAYER_TWO
 }
@@ -24,6 +27,28 @@ enum Holder {
 Holder holderAfterSwap(boolean swap) {
     return prizeA != swap ? Holder.PLAYER_ONE : Holder.PLAYER_TWO;
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F21">
+/// ### Enum: one of the named choices
+///
+/// An enum defines a finite set of values of one type. The type name and dot qualify a particular
+/// value. Unlike arbitrary text, a misspelled enum value is a compiler error. A variable holds one
+/// choice at a time; comparing enum values with `==` is appropriate.
+///
+/// ```java
+/// enum Voice {
+///     WHISPER, SING, SHOUT
+/// }
+///
+/// Voice voice = Voice.SING;
+/// IO.println(voice == Voice.SHOUT);
+/// ```
+///
+/// The declaration belongs beside methods; the statements can be read inside a method. The comparison
+/// prints false because SING and SHOUT are distinct values. Predict it after assigning SHOUT. Can
+/// this single variable simultaneously claim SING and SHOUT? Explain what contradictory combinations
+/// separate booleans might allow.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -40,12 +65,16 @@ Holder holderAfterSwap(boolean swap) {
 /// the public reveal; prizeA already records where the carrot started.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. prizeA says where the carrot started; swap says whether boxes changed hands.
-/// 2. Keeping preserves the owner; swapping reverses it.
-/// 3. Player one holds the prize exactly when prizeA != swap.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// prizeA says where the carrot started; swap says whether boxes changed hands.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Keeping preserves the owner; swapping reverses it.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Player one holds the prize exactly when prizeA != swap.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

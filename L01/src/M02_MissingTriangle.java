@@ -20,10 +20,37 @@ import javax.swing.*;
 /// After your repair: Save → Test File → play again.
 ///
 /// Lines starting with `///` are your guide; they do not run as Java instructions.
+///
+/// Need an explanation? Recall · F01 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void paintDisc(Graphics2D g, int i) {
     darkDisc(g, i);
     whiteBite(g, i);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F01">
+/// A method is a named action. Defining it makes the action available; a call asks it to run. Java
+/// starts this compact program at `main`, even though another method could be written first.
+///
+/// ```java
+/// void announce() {
+///     IO.println("Before");
+/// }
+///
+/// void main() {
+///     announce();
+///     IO.println("After");
+/// }
+/// ```
+///
+/// Predict the two output lines before reading on. The call `announce();` enters that method, prints
+/// `Before`, then returns to the next statement in `main`, which prints `After`. Inside a called
+/// method, these statements run in order. `void` means no result value is returned; `()` supplies no
+/// arguments here. Braces surround a body and a semicolon ends each call. Comments explain the
+/// program but do not run.
+///
+/// Now predict what happens if main calls announce twice before its final print.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -44,12 +71,16 @@ void paintDisc(Graphics2D g, int i) {
 /// contain the shapes, while rotate and the remaining code handle turning and clicks.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Find the two ready-made drawing actions.
-/// 2. The white shape must be the last layer.
-/// 3. Call darkDisc(g, i) before whiteBite(g, i).
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Find the two ready-made drawing actions.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The white shape must be the last layer.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Call darkDisc(g, i) before whiteBite(g, i).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

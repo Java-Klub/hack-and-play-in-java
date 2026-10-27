@@ -21,10 +21,61 @@ import javax.swing.*;
 /// After your repair: Save → Test File → play again.
 ///
 /// Lines starting with `///` are your guide; they do not run as Java instructions.
+///
+/// Need an explanation? Learn · F01 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+///
+/// **First run:** choose Run → Run File. The grey window is the prepared fault. Close it, then work
+/// on the two lines below. Expand Start here · NetBeans with the + or triangle in the left margin for
+/// the first clicks and checks.
+// <editor-fold defaultstate="collapsed" desc="Start here · NetBeans">
+/// - If needed, use **File → Open Project**, select folder **L01**, then open **Projects → Source
+///   Packages → default package → M01_CafeWallLab.java**. Later, open the next numbered Java file
+///   there.
+/// - Keep this source active. **Run → Run File** starts this game; **Run Project** starts the
+///   project's configured program and may choose another game. Close the game window before starting
+///   it again.
+/// - Expand a labelled section with the small **+ or triangle in the editor's left margin**. Fold
+///   marker lines only organise the editor; they do not run.
+/// - After editing: **File → Save**, then **Run → Test File** with this game's source active. Checks
+///   run separately from playing. Read **Output**: `PASS` means those checks passed. The starter's
+///   initial `AssertionError` is expected: a check detected its deliberate rule fault.
+/// - **Test Project** checks the whole level, including games you have not repaired yet. Click a
+///   reported file/line in Output: an assertion leads to a failing expectation; a compiler diagnostic
+///   points to a source problem.
+/// - A compiler error is different: Java could not start. Read the first diagnostic and its line;
+///   check punctuation near your edit, or use **Edit → Undo** to return to the compiling version.
+///   Save and check again. Keep the test files unchanged.
+// </editor-fold>
+
 void paintWall(Graphics2D g) {
     paintBackground(g);
     paintTiles(g);
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F01">
+/// A method is a named action. Defining it makes the action available; a call asks it to run. Java
+/// starts this compact program at `main`, even though another method could be written first.
+///
+/// ```java
+/// void announce() {
+///     IO.println("Before");
+/// }
+///
+/// void main() {
+///     announce();
+///     IO.println("After");
+/// }
+/// ```
+///
+/// Predict the two output lines before reading on. The call `announce();` enters that method, prints
+/// `Before`, then returns to the next statement in `main`, which prints `After`. Inside a called
+/// method, these statements run in order. `void` means no result value is returned; `()` supplies no
+/// arguments here. Braces surround a body and a semicolon ends each call. Comments explain the
+/// program but do not run.
+///
+/// Now predict what happens if main calls announce twice before its final print.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -46,12 +97,16 @@ void paintWall(Graphics2D g) {
 /// paintBackground and paintTiles contain the ready-made painting; key handles the controls.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Read the two actions from top to bottom.
-/// 2. The last paint covers earlier paint at the same place.
-/// 3. Move paintBackground(g) above paintTiles(g).
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Read the two actions from top to bottom.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The last paint covers earlier paint at the same place.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Move paintBackground(g) above paintTiles(g).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

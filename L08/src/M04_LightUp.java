@@ -12,6 +12,9 @@
 /// Run File and enter 1 1 to toggle a bulb in the upper-left cell, then try lighting the other open cells
 /// without bulb conflicts.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F18 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int visible(int r, int c) {
     int n = 0;
     for (int[] d : dirs) {
@@ -28,6 +31,25 @@ int visible(int r, int c) {
     return n;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Recall · F18">
+/// ### Grids: choose the row before the column
+///
+/// In an array of rows, the first index selects a row and the second selects a position within it.
+/// Rows can have different lengths. A neighbour is a displacement from a cell, not another absolute
+/// position. Define the permitted directions before checking whether a candidate exists.
+///
+/// ```java
+/// int[][] mosaic = {{3, 6, 9}, {2, 4, 8}};
+/// int row = 0;
+/// int column = 1;
+/// IO.println(mosaic[row][column + 1]);
+/// ```
+///
+/// The output is nine: row zero and column two select that element. Moving down changes row; moving
+/// right changes column. From the top-right cell, which of those two moves stays inside? For a
+/// diagonal both coordinates change; bounds must be checked before accessing the candidate.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
 ///
@@ -42,12 +64,16 @@ int visible(int r, int c) {
 /// bulb conflicts, then checks numbered walls; toggling bulbs and console display are ready.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. dirs supplies the four one-cell offsets.
-/// 2. Advance y and x repeatedly while open(y,x) stays true.
-/// 3. Use a while loop instead of one if; keep the coordinate increments inside it.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// dirs supplies the four one-cell offsets.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Advance y and x repeatedly while open(y,x) stays true.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Use a while loop instead of one if; keep the coordinate increments inside it.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

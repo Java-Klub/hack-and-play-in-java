@@ -19,6 +19,9 @@ import java.util.ArrayList;
 /// Run File and click a tile to rotate its pipes, watching which tiles turn green as they connect to the
 /// source.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F18 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean[][] connected() {
     boolean[][] reached = new boolean[4][4];
     var queue = new ArrayList<Point>();
@@ -37,6 +40,25 @@ boolean[][] connected() {
     return reached;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Recall · F18">
+/// ### Grids: choose the row before the column
+///
+/// In an array of rows, the first index selects a row and the second selects a position within it.
+/// Rows can have different lengths. A neighbour is a displacement from a cell, not another absolute
+/// position. Define the permitted directions before checking whether a candidate exists.
+///
+/// ```java
+/// int[][] mosaic = {{3, 6, 9}, {2, 4, 8}};
+/// int row = 0;
+/// int column = 1;
+/// IO.println(mosaic[row][column + 1]);
+/// ```
+///
+/// The output is nine: row zero and column two select that element. Moving down changes row; moving
+/// right changes column. From the top-right cell, which of those two moves stays inside? For a
+/// diagonal both coordinates change; bounds must be checked before accessing the candidate.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
 ///
@@ -51,13 +73,37 @@ boolean[][] connected() {
 /// bits, drawing colours reached tiles, and won() adds complete-network and no-open-port checks.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Reading one port bit
 ///
-/// 1. d selects Up, Right, Down or Left.
-/// 2. The opposite direction is (d+2)%4.
-/// 3. Require both the current tile’s d bit and the neighbour’s opposite bit before adding it to the
-///   queue.
+/// Each direction has one bit. Bit positions start at zero: `1 << d` gives the masks 1, 2, 4, 8 for
+/// directions 0, 1, 2, 3. Bitwise `&` retains only positions set on both sides. This is different
+/// from boolean `&&`.
+///
+/// ```java
+/// int flags = 5;
+/// int selected = 1 << 2;
+/// IO.println((flags & selected) != 0);
+/// ```
+///
+/// The output is true: 5 = 1 + 4, so `5 & 4` gives 4, whereas `5 & 2` gives 0. A nonzero result means
+/// the selected bit is set. Now predict testing bit three when flags is 10. Directions here run Up,
+/// Right, Down, Left, so opposite ports are two steps apart around the four-direction cycle. Before
+/// admitting a neighbour, ask about both sides of that connection, not merely whether the neighbour
+/// exists.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// d selects Up, Right, Down or Left.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The opposite direction is (d+2)%4.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Require both the current tile’s d bit and the neighbour’s opposite bit before adding it to the
+/// queue.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

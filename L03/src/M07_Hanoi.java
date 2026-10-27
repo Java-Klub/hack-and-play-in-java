@@ -13,6 +13,9 @@
 /// Use Run File, enter A B and then A B again to inspect the forbidden larger-on-smaller move; r restores
 /// the original tower.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F08 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean move(int from, int to) {
     if (won() || from < 0 || from > 2 || to < 0 || to > 2 || from == to || sizes[from] == 0) {
         return false;
@@ -28,6 +31,30 @@ boolean move(int from, int to) {
     moves++;
     return true;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F08">
+/// A guard rejects a request before protected work happens. Read the rejected cases first, then ask
+/// what remains allowed. Short-circuit evaluation matters: in `A || B`, Java skips B when A is
+/// already true.
+///
+/// ```java
+/// boolean useSlot(int slot) {
+///     if (slot < 0 || slot >= 4) {
+///         return false;
+///     }
+///     IO.println("Using slot " + slot);
+///     return true;
+/// }
+/// ```
+///
+/// Predict what is printed and returned for `-1`, `3` and `4`. Only three reaches the print. A
+/// rejection must happen before any state change that should not occur. A board access may itself
+/// need a range guard before it is safe to evaluate. `return false` ends this method call; it does
+/// not automatically undo work already performed.
+///
+/// `useSlot(3)` passes three into `slot`; `boolean` declares a true/false result. Now predict slot
+/// zero.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -50,12 +77,16 @@ boolean move(int from, int to) {
 /// storage indices.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Disc numbers are sizes: 1 is smaller than 2.
-/// 2. The target-empty case must skip its top-disc read.
-/// 3. Inside the nonempty guard, reject targetTop < disc.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Disc numbers are sizes: 1 is smaller than 2.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The target-empty case must skip its top-disc read.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Inside the nonempty guard, reject targetTop < disc.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

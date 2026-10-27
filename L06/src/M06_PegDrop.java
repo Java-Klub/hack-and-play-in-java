@@ -20,6 +20,9 @@ import javax.swing.Timer;
 /// Run File and click above a bin to release a disc, then compare the landing bin’s label with the
 /// awarded points.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F15 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int scoreAt(int index) {
     // This supplied guard reports a bad index; exception handling comes in L09.
     if (index < 0 || index >= values.length) {
@@ -27,6 +30,25 @@ int scoreAt(int index) {
     }
     return values[index];
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F15">
+/// ### Contracts: ask without changing the world
+///
+/// A contract describes accepted inputs and the meaning of a result. A pure calculation uses its
+/// inputs without changing other state. A query may read the current model, but it should still leave
+/// that model untouched. Reading an answer and committing an action are separate responsibilities.
+///
+/// ```java
+/// int contrast(int light, int dark) {
+///     return Math.abs(light - dark);
+/// }
+/// ```
+///
+/// `Math.abs` gives the nonnegative magnitude, removing a negative sign. This method can be called
+/// repeatedly without consuming anything. Arguments `(9, 4)` give five: the difference is five.
+/// Predict `(4, 9)`. Which stored values would you compare before and after a query to show that it
+/// caused no side effect? A rejected candidate deserves the same protection.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -43,13 +65,17 @@ int scoreAt(int index) {
 /// the supplied bad-index guard; exceptions and their handling are explained in L09.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The values array is the scoring table drawn under the board.
-/// 2. The caller already decides when a disc has finished falling.
-/// 3. The supplied guard already rejects invalid indices. Return values[index]; awarding score remains in
-///   step().
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The values array is the scoring table drawn under the board.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The caller already decides when a disc has finished falling.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// The supplied guard already rejects invalid indices. Return values[index]; awarding score remains
+/// in step().
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

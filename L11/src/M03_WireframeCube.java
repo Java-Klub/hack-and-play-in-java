@@ -19,6 +19,9 @@ import javax.swing.Timer;
 /// After Run File, use Pause/Run to stop the rotating cube, read Distinct edges and choose Reset angle to
 /// restore the view.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F23 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 Set<Edge> uniqueEdges(int[][] candidates) {
     Set<Edge> result = new LinkedHashSet<>();
     for (int[] pair : candidates) {
@@ -28,6 +31,29 @@ Set<Edge> uniqueEdges(int[][] candidates) {
     }
     return result;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F23">
+/// ### Set: membership without duplicates
+///
+/// A `Set` answers whether a value belongs to a collection. It does not reserve an indexed place for
+/// each insertion.
+///
+/// ```java
+/// Set<String> stickers = new HashSet<>();
+/// IO.println(stickers.add("moon"));
+/// IO.println(stickers.add("moon"));
+/// IO.println(stickers.size());
+/// ```
+///
+/// The output is `true`, `false`, then `1`. The first add changes membership; the second finds an
+/// equal value already present. `contains(value)` asks without changing the set. `remove(value)`
+/// removes that value and reports whether it was present. A record's generated equality compares its
+/// component values, so two separately created equal records represent the same set member. Do not
+/// depend on HashSet iteration order.
+///
+/// Predict: after removing moon and adding sun, what are the size and the result of
+/// `contains("moon")`?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -45,12 +71,16 @@ Set<Edge> uniqueEdges(int[][] candidates) {
 /// the view.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Edge(0,1) and Edge(1,0) are unequal until you choose one representation.
-/// 2. Use min/max to make a canonical record value.
-/// 3. The Set then removes both repeated and reversed copies without a second search loop.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Edge(0,1) and Edge(1,0) are unequal until you choose one representation.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Use min/max to make a canonical record value.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// The Set then removes both repeated and reversed copies without a second search loop.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

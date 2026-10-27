@@ -12,9 +12,31 @@
 /// Run File and type W, A, S, or D followed by Enter to move the player and push the crate toward its
 /// goal.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F15 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean floor(int px, int py) {
     return py >= 0 && py < 5 && px >= 0 && px < 7 && terrain[py].charAt(px) != '#';
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F15">
+/// ### Contracts: ask without changing the world
+///
+/// A contract describes accepted inputs and the meaning of a result. A pure calculation uses its
+/// inputs without changing other state. A query may read the current model, but it should still leave
+/// that model untouched. Reading an answer and committing an action are separate responsibilities.
+///
+/// ```java
+/// int contrast(int light, int dark) {
+///     return Math.abs(light - dark);
+/// }
+/// ```
+///
+/// `Math.abs` gives the nonnegative magnitude, removing a negative sign. This method can be called
+/// repeatedly without consuming anything. Arguments `(9, 4)` give five: the difference is five.
+/// Predict `(4, 9)`. Which stored values would you compare before and after a query to show that it
+/// caused no side effect? A rejected candidate deserves the same protection.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -30,12 +52,26 @@ boolean floor(int px, int py) {
 /// commits movement only after these queries succeed; map drawing and restart are supplied.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Reading one map character
 ///
-/// 1. The bounds are already checked safely before indexing terrain.
-/// 2. Inspect terrain[py].charAt(px).
-/// 3. Combine the bounds with the condition that this character is not #; do not assign any fields.
+/// A terrain row is a String. `row.charAt(index)` reads one char at a zero-based position; for
+/// example, `"map".charAt(1)` reads the middle character. A char literal uses single quotes, unlike a
+/// String literal. Here `#` marks a wall. Preserve the existing bounds before reading the selected
+/// row and character. Predict the query's answer for an interior wall and explain why asking twice
+/// must not move the player or crate.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The bounds are already checked safely before indexing terrain.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Inspect terrain[py].charAt(px).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Combine the bounds with the condition that this character is not #; do not assign any fields.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

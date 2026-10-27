@@ -13,9 +13,35 @@
 /// Use Run File, think of 5 and answer the six cards with y, n, y, n, n, n to compare the reported number
 /// before and after your repair.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F06 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean yesAnswer(String input) {
     return input.equalsIgnoreCase("y");
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F06">
+/// A boolean expression produces `true` or `false`. `&&` requires both conditions, `||` needs at
+/// least one, and `!` reverses a boolean result. Comparisons such as `>=` include equality; `>` does
+/// not.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// int age = 14;
+/// boolean hasTicket = false;
+/// boolean enter = age >= 12 && hasTicket;
+/// boolean recognised = "open".equals("OPEN");
+/// ```
+///
+/// Predict both results: each is `false`. The age is sufficient, but the ticket condition is not.
+/// `equals` compares String contents and is case-sensitive; `equalsIgnoreCase` deliberately ignores
+/// letter case. For objects, `==` asks whether two references identify the same object, not whether
+/// their text matches. A content comparison and a range comparison answer different questions. Check
+/// values exactly at a boundary and just beyond it before trusting a condition.
+///
+/// Now predict enter for age twelve with a ticket.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -34,12 +60,16 @@ boolean yesAnswer(String input) {
 /// mathematics for this repair.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Typed text need not be the same String object as a quoted literal.
-/// 2. A case-insensitive comparison handles both y and Y.
-/// 3. Return input.equalsIgnoreCase("y").
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Typed text need not be the same String object as a quoted literal.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// A case-insensitive comparison handles both y and Y.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Return input.equalsIgnoreCase("y").
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

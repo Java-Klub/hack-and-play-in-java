@@ -18,6 +18,9 @@ import javax.imageio.ImageIO;
 /// After Run File, enter a branching angle from 10 to 70 or try oops, then open the PNG at the printed
 /// Saved path.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F31 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 double readAngle(String text) {
     try {
         double value = Double.parseDouble(text.strip());
@@ -27,6 +30,34 @@ double readAngle(String text) {
         return 28;
     }
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F31">
+/// ### Parse, validate, then commit
+///
+/// Parsing converts text; validation checks whether the resulting number is allowed. These can fail
+/// differently.
+///
+/// ```java
+/// int readCopies(String text) {
+///     try {
+///         int n = Integer.parseInt(text.strip());
+///         if (n < 1 || n > 5) {
+///             throw new IllegalArgumentException("Copies: 1..5");
+///         }
+///         return n;
+///     } catch (NumberFormatException invalid) {
+///         return 3;
+///     }
+/// }
+/// ```
+///
+/// `readCopies(" 2 ")` returns `2`: conversion and validation succeed. `"oops"` fails during
+/// conversion and reaches `catch`, returning `3`. A numeric `"8"` converts successfully, then throws
+/// a different exception; this narrow catch does not handle it. `return` ends the method; `throw`
+/// leaves the normal path. Change stored game state only after validation succeeds.
+///
+/// Predict the path for `"five"`, `"5"` and `"0"`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -44,12 +75,27 @@ double readAngle(String text) {
 /// shortens each branch, and the export code writes the resulting PNG locally.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Trace three different paths
 ///
-/// 1. Strip surrounding whitespace before parsing.
-/// 2. Catch NumberFormatException, not every programming error.
-/// 3. The fallback is 28; range guards remain separate from that fallback.
+/// For readAngle, `" 24 "` is stripped, converted and returned as 24. `"oops"` cannot be converted
+/// and enters the NumberFormatException catch; inspect its current result and compare it with the
+/// advertised default. `"90"` converts successfully but fails the range guard. Its
+/// IllegalArgumentException is not this catch's NumberFormatException, so it reaches the caller. NaN
+/// and infinity are also numeric special values, rejected by isFinite. Predict which lines run for
+/// `"70"` and `"9"`; do not treat every failure as a reason to replace the input with a default.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Strip surrounding whitespace before parsing.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Catch NumberFormatException, not every programming error.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// The fallback is 28; range guards remain separate from that fallback.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

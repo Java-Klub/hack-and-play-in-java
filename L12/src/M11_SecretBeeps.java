@@ -21,6 +21,9 @@ import java.io.ByteArrayInputStream;
 /// After Run File, press Enter for E E, choose a word gap of 7 or 10 and open the matching
 /// secret-beeps-gap7.wav or secret-beeps-gap10.wav.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F36 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 List<Integer> units(String text, int wordGap) {
     if (wordGap < 3 || wordGap > 12) throw new IllegalArgumentException("Word gap: 3..12 units.");
     var result = new ArrayList<Integer>();
@@ -45,6 +48,29 @@ List<Integer> units(String text, int wordGap) {
     return result;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Recall · F36">
+/// ### Transfer: keep the old promise while adding a choice
+///
+/// Extracting a helper gives one responsibility a name. Its inputs and result form a contract you can
+/// reuse elsewhere.
+///
+/// ```java
+/// String surround(String text, boolean stars) {
+///     String edge = stars ? "*" : "#";
+///     return edge + text + edge;
+/// }
+/// ```
+///
+/// `surround("hi", false)` returns `"#hi#"`; the old hash style still works. The caller can request a
+/// new style without reimplementing the operation. Test both choices, an empty input and a different
+/// word. Tests establish results, while explaining who chooses a style and who builds the label
+/// establishes the responsibility split. A successful new mode should not silently change the old
+/// one.
+///
+/// Predict: what will `surround("", true)` produce, and which part should change if the surrounding
+/// symbol changes?
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
 ///
@@ -60,13 +86,17 @@ List<Integer> units(String text, int wordGap) {
 /// seven-unit default.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Negative unit values represent silence lengths.
-/// 2. Only the w>0 branch separates words.
-/// 3. Use -wordGap there, leave the other two gap rules intact, and explain why text coding stays
-///   separate from timing.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Negative unit values represent silence lengths.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Only the w>0 branch separates words.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Use -wordGap there, leave the other two gap rules intact, and explain why text coding stays
+/// separate from timing.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

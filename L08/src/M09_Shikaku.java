@@ -19,9 +19,34 @@ import java.util.ArrayList;
 /// Run File and drag a rectangle around one clue, then press U to try undoing it or right-click to remove
 /// a rectangle.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F20 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 ArrayList<Box> snapshot() {
     return new ArrayList<>(boxes);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F20">
+/// ### References: another name or another object?
+///
+/// An array variable stores a reference. Assignment can give two names access to one array; writing
+/// through either name affects that shared object. Calling `clone()` on a one-dimensional int array
+/// creates another array with copied values. The original and copy can then change independently.
+///
+/// ```java
+/// int[] wave = {4, 1};
+/// int[] shared = wave;
+/// int[] saved = wave.clone();
+/// wave[1] = 7;
+/// IO.println(shared[1]);
+/// IO.println(saved[1]);
+/// ```
+///
+/// The output is seven, then one: shared sees the write, saved retains its copied value. After
+/// `saved[0] = 8`, predict `wave[0]` and `saved[0]`. `clone()` copies one layer: for a grid, its
+/// elements are row references, so copying the outside still shares rows. Ask which objects remain
+/// shared, not merely whether a new outer object exists.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -36,12 +61,37 @@ ArrayList<Box> snapshot() {
 /// snapshot before committing, and the supplied undo() restores that list once.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="expanded" desc="For this game">
+/// ### A mutable list needs a new container
 ///
-/// 1. The list changes, but each Box record keeps its components forever.
-/// 2. Returning boxes aliases the same list; cloning every Box is unnecessary.
-/// 3. Return new ArrayList<>(boxes) so membership changes are independent.
+/// ArrayList stores an ordered, changeable group of elements. `<String>` below names the element
+/// type; `<>` lets the constructor infer it. The constructor accepting another collection copies its
+/// membership into a new mutable list.
+///
+/// ```java
+/// var draft = new ArrayList<String>();
+/// draft.add("swirl");
+/// var kept = new ArrayList<>(draft);
+/// draft.clear();
+/// IO.println(kept.size());
+/// ```
+///
+/// The output is one: `add` appended a value, `clear` emptied only draft, and `size` counts kept's
+/// elements. Predict adding another draft element. In this game Box contains only fixed int
+/// components, so sharing Box values is safe while sharing the changeable list is not. Undo needs a
+/// mutable container because later drawing can add or remove rectangles.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The list changes, but each Box record keeps its components forever.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Returning boxes aliases the same list; cloning every Box is unnecessary.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Return new ArrayList<>(boxes) so membership changes are independent.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

@@ -21,9 +21,32 @@ import java.awt.geom.Area;
 /// After Run File, click or drag around the obstacles to move the lamp and press R to restore its
 /// starting position.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F28 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 java.util.function.BiConsumer<Integer, Integer> lightAction() {
     return this::moveLight;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F28">
+/// ### Callback: give an action for later
+///
+/// A callback is an action another part of the program calls later, perhaps after a click. A
+/// `Runnable` is an action with no supplied arguments and no returned result.
+///
+/// ```java
+/// Runnable cheer = () -> IO.println("Hooray!");
+/// IO.println("Ready");
+/// cheer.run();
+/// ```
+///
+/// The output is `Ready`, then `Hooray!`. Creating the lambda `() -> ...` does not execute its body.
+/// Calling `run()` does. Braces allow several statements inside one callback. A method reference such
+/// as `this::wave` similarly supplies this object's `wave` method without calling it yet; `wave()`
+/// calls it immediately. The prepared UI decides when to invoke a callback.
+///
+/// Predict: what prints if the last line becomes two consecutive calls to `cheer.run()`?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -40,12 +63,16 @@ java.util.function.BiConsumer<Integer, Integer> lightAction() {
 /// scene.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. moveLight already clamps x and y to the canvas.
-/// 2. The callback should delegate to that method, not copy or bypass it.
-/// 3. A method reference keeps creation separate from invocation.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// moveLight already clamps x and y to the canvas.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The callback should delegate to that method, not copy or bypass it.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// A method reference keeps creation separate from invocation.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

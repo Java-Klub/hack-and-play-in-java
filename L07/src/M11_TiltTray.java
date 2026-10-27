@@ -20,6 +20,9 @@ import javax.swing.Timer;
 /// Run File and use the arrow keys to tilt the marble around blocks, braking before it reaches the green
 /// target.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F25 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void step() {
     if (!started || won) {
         return;
@@ -63,6 +66,29 @@ void step() {
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Recall · F25">
+/// ### Invariant: a promise after every action
+///
+/// An invariant is a relationship that must remain true across accepted actions. Some actions move a
+/// quantity between places rather than creating more. Validate the complete request before making
+/// changes, then apply it once. Rejection should preserve the earlier state.
+///
+/// ```java
+/// int violet = 6;
+/// int gold = 2;
+/// int amount = 3;
+/// if (amount >= 0 && amount <= violet) {
+///     violet -= amount;
+///     gold += amount;
+/// }
+/// IO.println(violet + gold);
+/// ```
+///
+/// The containers become three and five; the printed total remains eight because the transfer
+/// balances. Now consider nine units: what must remain unchanged? Explain why moving only one side
+/// would violate the total even if both individual values looked legal.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
 ///
@@ -77,12 +103,16 @@ void step() {
 /// then vertical movement, and separately handles tray walls and the slow-arrival target.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Reversing vx alone leaves the centre at its already-penetrating position.
-/// 2. The collision direction tells which obstacle side the ball came from.
-/// 3. Place x at p.x-10 when moving right, or p.x+p.width+10 when moving left, then damp/reverse vx.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Reversing vx alone leaves the centre at its already-penetrating position.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The collision direction tells which obstacle side the ball came from.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Place x at p.x-10 when moving right, or p.x+p.width+10 when moving left, then damp/reverse vx.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

@@ -14,6 +14,9 @@
 /// Use Run File and enter STONE against the training word PLANT; T and N are shared, but the starter
 /// reports only one.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F12 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int matches(String word) {
     int n = 0;
     for (char c : word.toCharArray()) {
@@ -23,6 +26,28 @@ int matches(String word) {
     }
     return n;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F12">
+/// An accumulator remembers a growing result across passes. Its starting value belongs before the
+/// loop; putting it inside would start the result again for every item. The remembered result can be
+/// text, not only a number.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// String receipt = "Items:";
+/// for (String item : List.of("tea", "cake")) {
+///     receipt += " " + item;
+/// }
+/// ```
+///
+/// Predict receipt after each pass: `Items: tea`, then `Items: tea cake`. `+=` combines the old value
+/// with the new contribution and stores the result. Plain `=` replaces the stored value.
+/// `List.of(...)` supplies the fixed sequence of listed values; the colon visits one item per pass.
+/// Trace the current item and accumulator in two columns to discover whether earlier work survives.
+///
+/// Now predict receipt when the supplied list contains only `"rice"`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -43,12 +68,16 @@ int matches(String word) {
 /// supplies ten turns, /r and /q. The first secret is PLANT.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Setting n to one loses previous matches.
-/// 2. The dictionary already supplies words with distinct letters.
-/// 3. Replace n = 1 with n++ or n += 1.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Setting n to one loses previous matches.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The dictionary already supplies words with distinct letters.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Replace n = 1 with n++ or n += 1.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

@@ -19,9 +19,34 @@ import java.util.Arrays;
 ///
 /// Run File, click a faint connection to change its bridge count, and press U to try undoing that edit.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F20 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int[] snapshot() {
     return bridges.clone();
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F20">
+/// ### References: another name or another object?
+///
+/// An array variable stores a reference. Assignment can give two names access to one array; writing
+/// through either name affects that shared object. Calling `clone()` on a one-dimensional int array
+/// creates another array with copied values. The original and copy can then change independently.
+///
+/// ```java
+/// int[] wave = {4, 1};
+/// int[] shared = wave;
+/// int[] saved = wave.clone();
+/// wave[1] = 7;
+/// IO.println(shared[1]);
+/// IO.println(saved[1]);
+/// ```
+///
+/// The output is seven, then one: shared sees the write, saved retains its copied value. After
+/// `saved[0] = 8`, predict `wave[0]` and `saved[0]`. `clone()` copies one layer: for a grid, its
+/// elements are row references, so copying the outside still shares rows. Ask which objects remain
+/// shared, not merely whether a new outer object exists.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -36,12 +61,26 @@ int[] snapshot() {
 /// bridge geometry and won() checks counts and connectivity, so those algorithms stay as prepared.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="expanded" desc="For this game">
+/// ### A saved array must own its cells
 ///
-/// 1. Assigning bridges to another variable copies the reference, not its cells.
-/// 2. A one-dimensional int[] contains values, so one clone is enough.
-/// 3. Return bridges.clone(); the supplied undo() then restores an independent state.
+/// The neutral wave example distinguishes an alias from a clone. `clone()` creates storage
+/// immediately; making another variable or returning the array reference does not. For this int[] the
+/// cells themselves are plain values, so one copied layer is sufficient. Predict the saved and
+/// working counts after one connection changes. Also check timing: the caller captures the snapshot
+/// before the edit, so copying only after the edit could not preserve the earlier state.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Assigning bridges to another variable copies the reference, not its cells.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// A one-dimensional int[] contains values, so one clone is enough.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Return bridges.clone(); the supplied undo() then restores an independent state.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

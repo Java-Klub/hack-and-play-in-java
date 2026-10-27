@@ -12,6 +12,9 @@
 /// Run File and enter ray N1 to probe from the top edge, then compare that observation with rays from
 /// other labelled ports.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F18 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 String trace(boolean[][] grid, String entry) {
     require(entry.matches("[NSEW][1-4]"));
     int n = entry.charAt(1) - '1';
@@ -63,6 +66,25 @@ String trace(boolean[][] grid, String entry) {
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Recall · F18">
+/// ### Grids: choose the row before the column
+///
+/// In an array of rows, the first index selects a row and the second selects a position within it.
+/// Rows can have different lengths. A neighbour is a displacement from a cell, not another absolute
+/// position. Define the permitted directions before checking whether a candidate exists.
+///
+/// ```java
+/// int[][] mosaic = {{3, 6, 9}, {2, 4, 8}};
+/// int row = 0;
+/// int column = 1;
+/// IO.println(mosaic[row][column + 1]);
+/// ```
+///
+/// The output is nine: row zero and column two select that element. Moving down changes row; moving
+/// right changes column. From the top-right cell, which of those two moves stays inside? For a
+/// diagonal both coordinates change; bounds must be checked before accessing the candidate.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
 ///
@@ -78,12 +100,26 @@ String trace(boolean[][] grid, String entry) {
 /// guess.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Perpendicular means relative to travel
 ///
-/// 1. The ray’s forward vector is (dx,dy), and next cell is (nx,ny).
-/// 2. Perpendicular offsets are (-dy,+dx) and (+dy,-dx).
-/// 3. Keep left at (nx-dy,ny+dx); right must use (nx+dy,ny-dx).
+/// A direction is a pair of changes, not an absolute screen position. For a ray moving right with
+/// direction `(1,0)`, its two side offsets are `(0,1)` and `(0,-1)`. They are opposites. The next
+/// forward position supplies the common origin for both side checks. Sketch the same construction for
+/// an upward ray. Keep the supplied turning and reflection rules; only the two distinct side
+/// positions need to agree with travel.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The ray’s forward vector is (dx,dy), and next cell is (nx,ny).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Perpendicular offsets are (-dy,+dx) and (+dy,-dx).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Keep left at (nx-dy,ny+dx); right must use (nx+dy,ny-dx).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

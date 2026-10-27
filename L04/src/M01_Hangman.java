@@ -14,6 +14,9 @@
 /// Use Run File and type A for the training word BANANA; compare the displayed _A_A_ with the six places
 /// the word needs.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F10 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 String mask() {
     String result = "";
     int index = 0;
@@ -28,6 +31,30 @@ String mask() {
     }
     return result;
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F10">
+/// A `while` checks its condition before every pass, including the first. If the condition is false
+/// immediately, its body runs zero times. Something must make progress towards stopping, or
+/// deliberately wait for new input.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// int energy = 5;
+/// while (energy > 0) {
+///     IO.println(energy);
+///     energy -= 2;
+/// }
+/// ```
+///
+/// Predict the printed numbers and the final stored value. The output is `5`, `3`, `1`; afterwards
+/// energy is `-1`, so the next condition fails. The condition is not checked halfway through the
+/// body. `energy -= 2` subtracts two and stores the result; without it, the loop repeats forever.
+/// `return` ends the method; `break` ends the loop. Trace the condition and changing values
+/// separately, especially when the data being searched can grow.
+///
+/// Now predict the trace if energy starts at four.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -52,12 +79,16 @@ String mask() {
 /// never asks the player for input.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. A word of length six has indices 0 through 5.
-/// 2. Test the current condition when index is five.
-/// 3. Continue while index < word.length(); index++ supplies progress.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// A word of length six has indices 0 through 5.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Test the current condition when index is five.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Continue while index < word.length(); index++ supplies progress.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

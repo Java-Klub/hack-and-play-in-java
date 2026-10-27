@@ -18,11 +18,38 @@ import java.awt.GridLayout;
 /// Use Run File, choose 2 in the number selector and click the empty square immediately right of the
 /// top-left 1.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F08 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean place(int row, int col, int value) {
     if (complete() || !valid(row, col, value) || clues[row][col] != 0) return false;
     board[row][col] = value;
     return true;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F08">
+/// A guard rejects a request before protected work happens. Read the rejected cases first, then ask
+/// what remains allowed. Short-circuit evaluation matters: in `A || B`, Java skips B when A is
+/// already true.
+///
+/// ```java
+/// boolean useSlot(int slot) {
+///     if (slot < 0 || slot >= 4) {
+///         return false;
+///     }
+///     IO.println("Using slot " + slot);
+///     return true;
+/// }
+/// ```
+///
+/// Predict what is printed and returned for `-1`, `3` and `4`. Only three reaches the print. A
+/// rejection must happen before any state change that should not occur. A board access may itself
+/// need a range guard before it is safe to evaluate. `return false` ends this method call; it does
+/// not automatically undo work already performed.
+///
+/// `useSlot(3)` passes three into `slot`; `boolean` declares a true/false result. Now predict slot
+/// zero.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -44,12 +71,16 @@ boolean place(int row, int col, int value) {
 /// allowed to reach the write.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. A zero in clues means there was no printed clue.
-/// 2. Keep valid before accessing clues: it also checks coordinates.
-/// 3. The rejecting clue condition is clues[row][col] != 0.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// A zero in clues means there was no printed clue.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Keep valid before accessing clues: it also checks coordinates.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// The rejecting clue condition is clues[row][col] != 0.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

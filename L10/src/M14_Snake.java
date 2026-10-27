@@ -22,6 +22,9 @@ import javax.swing.Timer;
 /// After Run File, guide the snake with arrow keys toward food and press R to restart when the round
 /// ends.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F30 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void turn(int x, int y) {
     if (turnQueued || lost || won || Math.abs(x) + Math.abs(y) != 1) return;
     if (x == -dx && y == -dy) return;
@@ -29,6 +32,32 @@ void turn(int x, int y) {
     plannedY = y;
     turnQueued = true;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F30">
+/// ### Input requests; a tick advances time
+///
+/// An event can record an intention without changing the whole simulation immediately. A tick
+/// performs one bounded update. Keep drawing separate from both.
+///
+/// ```java
+/// int height = 0;
+/// int pending = 0;
+/// void press() {
+///     pending = 2;
+/// }
+/// void tick() {
+///     height += pending;
+///     pending = 0;
+/// }
+/// ```
+///
+/// After `press()`, height is still 0. One `tick()` changes it to 2 and consumes the request; another
+/// tick leaves it at 2. Repeating the input before that tick still records one request, rather than
+/// two updates. A supplied timer can call tick, but paused or finished games should reject further
+/// advancement. Restart must restore the initial state.
+///
+/// Predict: from the initial state, what happens after press, tick, press, tick?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -45,12 +74,16 @@ void turn(int x, int y) {
 /// window turns arrow keys into turn calls; restart clears the queued-turn state.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. turn records intention; step commits it.
-/// 2. Do not assign dx/dy inside turn.
-/// 3. Keep turnQueued so a second key cannot reverse the first queued turn before the tick.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// turn records intention; step commits it.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Do not assign dx/dy inside turn.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Keep turnQueued so a second key cannot reverse the first queued turn before the tick.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

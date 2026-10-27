@@ -19,6 +19,9 @@ import javax.swing.Timer;
 /// Run File, steer with Left and Right, and hold Space to fire again whenever the previous bullet has
 /// finished.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F25 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void step() {
     if (!state.equals("PLAY")) {
         return;
@@ -80,6 +83,29 @@ void step() {
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Recall · F25">
+/// ### Invariant: a promise after every action
+///
+/// An invariant is a relationship that must remain true across accepted actions. Some actions move a
+/// quantity between places rather than creating more. Validate the complete request before making
+/// changes, then apply it once. Rejection should preserve the earlier state.
+///
+/// ```java
+/// int violet = 6;
+/// int gold = 2;
+/// int amount = 3;
+/// if (amount >= 0 && amount <= violet) {
+///     violet -= amount;
+///     gold += amount;
+/// }
+/// IO.println(violet + gold);
+/// ```
+///
+/// The containers become three and five; the printed total remains eight because the transfer
+/// balances. Now consider nine units: what must remain unchanged? Explain why moving only one side
+/// would violate the total even if both individual values looked legal.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
 ///
@@ -95,12 +121,16 @@ void step() {
 /// A Swing timer calls it repeatedly; countAliens() reads the surviving enemy grid.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The labelled break stops only this frame’s search.
-/// 2. Without changing bulletActive, the same shot survives into later frames.
-/// 3. Set bulletActive=false inside the successful hit branch before leaving the search.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The labelled break stops only this frame’s search.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Without changing bulletActive, the same shot survives into later frames.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Set bulletActive=false inside the successful hit branch before leaving the search.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

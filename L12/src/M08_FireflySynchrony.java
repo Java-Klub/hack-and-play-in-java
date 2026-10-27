@@ -20,6 +20,9 @@ import javax.swing.Timer;
 /// After Run File, move Coupling toward 2 and watch the synchrony number, using Pause/Run or New phases
 /// to compare the flashes.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F35 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void apply(Control control) {
     switch (control) {
         case Coupling(var value) when Double.isFinite(value) && value >= 0 && value <= 2 -> coupling = value;
@@ -28,6 +31,30 @@ void apply(Control control) {
         case Restart(var seed) -> reset(seed);
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F35">
+/// ### Record patterns: choose a shape and unpack its data
+///
+/// ```java
+/// sealed interface Badge permits Name, Stars {}
+/// record Name(String text) implements Badge {}
+/// record Stars(int count) implements Badge {}
+/// String label(Badge badge) {
+///     return switch (badge) {
+///         case Name(var text) -> text;
+///         case Stars(var n) when n > 0 -> n + " stars";
+///         case Stars(var n) -> "none";
+///     };
+/// }
+/// ```
+///
+/// `label(new Stars(2))` returns `"2 stars"`. Sealed closes the alternatives; permits lists them. A
+/// record pattern matches its record type and gives component values local names, in declaration
+/// order. `var` infers their types. The `when` guard must also pass; otherwise matching continues.
+/// The last Stars case handles nonpositive counts. Every permitted alternative needs handling here.
+///
+/// Predict: which case handles `new Stars(0)`, and what text does `new Name("Nova")` produce?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -45,12 +72,27 @@ void apply(Control control) {
 /// from a seed.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### A guarded match does not discard the matched value
 ///
-/// 1. The guard already separates valid and invalid Coupling values.
-/// 2. The matched var value is the new strength, not a constant zero.
-/// 3. Keep the fallback Coupling case and the other closed alternatives exhaustive.
+/// Trace Coupling with value 1.5: the record type matches and all three guard conditions pass. The
+/// value is still available to the chosen action. Next trace value -1: the guard fails and the
+/// following Coupling case deliberately makes no change. Starting from an accepted setting, predict
+/// the setting after that rejected command. Toggle carries no components, while Restart carries a
+/// seed; neither should accidentally reuse a coupling value. This is why type matching, guard
+/// checking and the case action are three separate questions.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The guard already separates valid and invalid Coupling values.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The matched var value is the new strength, not a constant zero.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Keep the fallback Coupling case and the other closed alternatives exhaustive.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

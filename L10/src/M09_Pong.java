@@ -19,6 +19,9 @@ import javax.swing.Timer;
 /// After Run File, play the left paddle with W/S and the right with Up/Down, aiming for five points
 /// before restarting with R.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F30 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void step() {
     if (winner != 0) return;
     leftY = clampPaddle(leftY + (leftDown ? 5 : 0) - (leftUp ? 5 : 0));
@@ -52,6 +55,32 @@ void step() {
     if (rightScore >= 5) winner = 2;
 }
 
+// <editor-fold defaultstate="expanded" desc="Learn · F30">
+/// ### Input requests; a tick advances time
+///
+/// An event can record an intention without changing the whole simulation immediately. A tick
+/// performs one bounded update. Keep drawing separate from both.
+///
+/// ```java
+/// int height = 0;
+/// int pending = 0;
+/// void press() {
+///     pending = 2;
+/// }
+/// void tick() {
+///     height += pending;
+///     pending = 0;
+/// }
+/// ```
+///
+/// After `press()`, height is still 0. One `tick()` changes it to 2 and consumes the request; another
+/// tick leaves it at 2. Repeating the input before that tick still records one request, rather than
+/// two updates. A supplied timer can call tick, but paused or finished games should reject further
+/// advancement. Restart must restore the initial state.
+///
+/// Predict: from the initial state, what happens after press, tick, press, tick?
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
 ///
@@ -66,12 +95,16 @@ void step() {
 /// after a point. Keyboard flags move paddles; restart restores scores and the no-winner marker.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The winner values are 0, 1 and 2.
-/// 2. The stop guard belongs before paddles, ball and scores.
-/// 3. A finished tick must not change even a held paddle key’s position.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The winner values are 0, 1 and 2.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The stop guard belongs before paddles, ball and scores.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// A finished tick must not change even a held paddle key’s position.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

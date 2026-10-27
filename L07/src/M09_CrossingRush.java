@@ -20,6 +20,9 @@ import javax.swing.Timer;
 ///
 /// Run File and hop with the arrow keys between passing cars until you reach the green bank at the top.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F25 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void hop(int dx, int dy) {
     if (lost || won) {
         return;
@@ -32,6 +35,29 @@ void hop(int dx, int dy) {
         won = true;
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F25">
+/// ### Invariant: a promise after every action
+///
+/// An invariant is a relationship that must remain true across accepted actions. Some actions move a
+/// quantity between places rather than creating more. Validate the complete request before making
+/// changes, then apply it once. Rejection should preserve the earlier state.
+///
+/// ```java
+/// int violet = 6;
+/// int gold = 2;
+/// int amount = 3;
+/// if (amount >= 0 && amount <= violet) {
+///     violet -= amount;
+///     gold += amount;
+/// }
+/// IO.println(violet + gold);
+/// ```
+///
+/// The containers become three and five; the printed total remains eight because the transfer
+/// balances. Now consider nine units: what must remain unchanged? Explain why moving only one side
+/// would violate the total even if both individual values looked legal.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -47,12 +73,16 @@ void hop(int dx, int dy) {
 /// traffic; hop() owns player input and freezes movement after a win or loss.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The player radius margin is 12 pixels.
-/// 2. The postcondition is 12 <= x <= WIDTH-12 after every active hop.
-/// 3. Clamp x+dx between those limits; do not remove collision or terminal-round checks.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The player radius margin is 12 pixels.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The postcondition is 12 <= x <= WIDTH-12 after every active hop.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Clamp x+dx between those limits; do not remove collision or terminal-round checks.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

@@ -12,6 +12,9 @@
 /// Run File, choose an unused piece number from 0 to 15, then let the other player enter its destination
 /// cell from 1 to 16.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F16 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean won() {
     for (int i = 0; i < 4; i++) {
         if (line(i * 4, i * 4 + 1, i * 4 + 2, i * 4 + 3) || line(i, i + 4, i + 8, i + 12)) {
@@ -20,6 +23,24 @@ boolean won() {
     }
     return line(0, 5, 10, 15) || line(3, 6, 9, 12);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F16">
+/// ### Arrays: the position matters
+///
+/// An array keeps a fixed number of values of one element type. Square brackets select a position:
+/// the first index is zero, and `length` is the count. Reading one element does not alter the others.
+/// An index must exist before it is used; an empty array has no first element.
+///
+/// ```java
+/// String[] tools = {"pen", "tape", "chalk"};
+/// int chosen = 1;
+/// IO.println(tools[chosen]);
+/// IO.println(tools.length);
+/// ```
+///
+/// These statements belong inside a method. Index one selects `tape`; the count is three. What
+/// changes if `chosen` becomes two? Which index would be the first invalid one?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -35,12 +56,26 @@ boolean won() {
 /// command() handles choosing and placing pieces, then asks won() whether the round has ended.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### A flat board has an invisible row width
 ///
-/// 1. Draw the array indices as a 4 by 4 board.
-/// 2. A column has indices c, c+4, c+8, c+12.
-/// 3. The two diagonals are 0,5,10,15 and 3,6,9,12.
+/// A flat array can hold rows consecutively. In an unrelated three-column picture, row one starts
+/// after the first three values; its column two is at index five. Moving down one row keeps the
+/// column but skips the row width. Draw this game's indices as a square. `line(a,b,c,d)` already
+/// checks a proposed group, so your job is selecting positions, not decoding piece properties.
+/// Predict one column and each diagonal before extending the search.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Draw the array indices as a 4 by 4 board.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// A column has indices c, c+4, c+8, c+12.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// The two diagonals are 0,5,10,15 and 3,6,9,12.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

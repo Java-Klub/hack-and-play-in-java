@@ -22,9 +22,34 @@ import javax.swing.Timer;
 /// Use Run File, drag sideways to throw a ball at a wall and watch its rebound; Space pauses the room and
 /// R empties it.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F04 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 double bounceSpeed(double speed) {
     return Math.abs(speed) * 3.0 / 4;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F04">
+/// Arithmetic uses the operand types at the moment an operation runs. When both operands of `/` are
+/// whole numbers, Java discards the fractional part. Storing that result in a `double` afterwards
+/// does not recover it.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// int pages = 7;
+/// double first = pages / 2;
+/// double second = pages / 2.0;
+/// double third = (double) pages / 2;
+/// ```
+///
+/// Predict the three values: `3.0`, `3.5`, `3.5`. The cast `(double)` converts this use of `pages`
+/// before division; it does not change the variable’s declared type. Parentheses group calculations,
+/// while `*` multiplies and `/` divides. Check a negative input and zero as well as a positive one.
+/// Name the units: a distance and a speed are different quantities even when both use `double`.
+///
+/// Now predict all three results when pages is nine.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -43,12 +68,16 @@ double bounceSpeed(double speed) {
 /// a separate floor response. draw paints the stored balls; the mouse code creates throws.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. 3 / 4 with integer operands is zero.
-/// 2. Math.abs is already supplied to remove the old direction sign.
-/// 3. Multiply by 3.0 / 4, or by 0.75.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// 3 / 4 with integer operands is zero.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Math.abs is already supplied to remove the old direction sign.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Multiply by 3.0 / 4, or by 0.75.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

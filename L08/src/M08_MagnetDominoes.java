@@ -18,9 +18,34 @@ import java.util.Arrays;
 ///
 /// Run File, click a domino to change its polarity, and press U to try restoring the previous selection.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F20 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int[] copyState() {
     return state.clone();
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F20">
+/// ### References: another name or another object?
+///
+/// An array variable stores a reference. Assignment can give two names access to one array; writing
+/// through either name affects that shared object. Calling `clone()` on a one-dimensional int array
+/// creates another array with copied values. The original and copy can then change independently.
+///
+/// ```java
+/// int[] wave = {4, 1};
+/// int[] shared = wave;
+/// int[] saved = wave.clone();
+/// wave[1] = 7;
+/// IO.println(shared[1]);
+/// IO.println(saved[1]);
+/// ```
+///
+/// The output is seven, then one: shared sees the write, saved retains its copied value. After
+/// `saved[0] = 8`, predict `wave[0]` and `saved[0]`. `clone()` copies one layer: for a grid, its
+/// elements are row references, so copying the outside still shares rows. Ask which objects remain
+/// shared, not merely whether a new outer object exists.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -35,12 +60,26 @@ int[] copyState() {
 /// interprets orientation at a cell; won() handles counts and forbidden equal neighbours.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Copy values, not a later screen image
 ///
-/// 1. previousState must survive a later write to state[domino].
-/// 2. A reference alias sees that write too.
-/// 3. Return state.clone() in copyState(); keep polarity rules unchanged.
+/// Each domino polarity is an int in one array. Its clone copies those integers into separate
+/// storage. No row objects or nested lists need copying here. Predict the saved polarity after
+/// changing the live domino twice; it should still describe the moment the snapshot was taken. The
+/// supplied undo replaces the working state from that earlier data. Explain why repainting cannot
+/// repair shared storage.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// previousState must survive a later write to state[domino].
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// A reference alias sees that write too.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Return state.clone() in copyState(); keep polarity rules unchanged.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

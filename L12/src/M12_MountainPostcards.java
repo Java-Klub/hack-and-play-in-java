@@ -19,11 +19,37 @@ import javax.imageio.ImageIO;
 /// After Run File, enter n for mountain-old.png, then rerun and press Enter for the mirrored
 /// mountain-new.png.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F36 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 double[] reverseRidge(double[] heights) {
     double[] reversed = new double[heights.length];
     for (int i = 0; i < heights.length; i++) reversed[i] = heights[heights.length - 1 - i];
     return reversed;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F36">
+/// ### Transfer: keep the old promise while adding a choice
+///
+/// Extracting a helper gives one responsibility a name. Its inputs and result form a contract you can
+/// reuse elsewhere.
+///
+/// ```java
+/// String surround(String text, boolean stars) {
+///     String edge = stars ? "*" : "#";
+///     return edge + text + edge;
+/// }
+/// ```
+///
+/// `surround("hi", false)` returns `"#hi#"`; the old hash style still works. The caller can request a
+/// new style without reimplementing the operation. Test both choices, an empty input and a different
+/// word. Tests establish results, while explaining who chooses a style and who builds the label
+/// establishes the responsibility split. A successful new mode should not silently change the old
+/// one.
+///
+/// Predict: what will `surround("", true)` produce, and which part should change if the surrounding
+/// symbol changes?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -39,13 +65,17 @@ double[] reverseRidge(double[] heights) {
 /// comparison.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The last source value belongs at result index zero.
-/// 2. Map destination i to source length-1-i.
-/// 3. Explain why reversing data belongs in a separate value transform rather than inside random ridge
-///   generation.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The last source value belongs at result index zero.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Map destination i to source length-1-i.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Explain why reversing data belongs in a separate value transform rather than inside random ridge
+/// generation.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

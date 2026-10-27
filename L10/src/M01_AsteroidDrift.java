@@ -22,9 +22,32 @@ import javax.swing.Timer;
 /// After Run File, steer and thrust with the arrow keys, hold Space to fire and press R to restart the
 /// flight.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F28 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 Runnable firingAction() {
     return this::fire;
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F28">
+/// ### Callback: give an action for later
+///
+/// A callback is an action another part of the program calls later, perhaps after a click. A
+/// `Runnable` is an action with no supplied arguments and no returned result.
+///
+/// ```java
+/// Runnable cheer = () -> IO.println("Hooray!");
+/// IO.println("Ready");
+/// cheer.run();
+/// ```
+///
+/// The output is `Ready`, then `Hooray!`. Creating the lambda `() -> ...` does not execute its body.
+/// Calling `run()` does. Braces allow several statements inside one callback. A method reference such
+/// as `this::wave` similarly supplies this object's `wave` method without calling it yet; `wave()`
+/// calls it immediately. The prepared UI decides when to invoke a callback.
+///
+/// Predict: what prints if the last line becomes two consecutive calls to `cheer.run()`?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -39,12 +62,16 @@ Runnable firingAction() {
 /// then advances shots and asteroids; the Swing window handles keys and stops its timer when closed.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. A Runnable represents an action, not its result.
-/// 2. Return a method reference or a lambda that calls fire later.
-/// 3. Keep fire’s cooldown/lost guards; do not copy those rules into the callback.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// A Runnable represents an action, not its result.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Return a method reference or a lambda that calls fire later.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Keep fire’s cooldown/lost guards; do not copy those rules into the callback.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

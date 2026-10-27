@@ -20,9 +20,34 @@ import javax.swing.Timer;
 /// Use Run File, pull backwards from the resting ball and release for a putt; let it stop before the next
 /// shot, or press R to restart.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F04 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 double dragVelocity(double distance) {
     return distance / 12.5;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F04">
+/// Arithmetic uses the operand types at the moment an operation runs. When both operands of `/` are
+/// whole numbers, Java discards the fractional part. Storing that result in a `double` afterwards
+/// does not recover it.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// int pages = 7;
+/// double first = pages / 2;
+/// double second = pages / 2.0;
+/// double third = (double) pages / 2;
+/// ```
+///
+/// Predict the three values: `3.0`, `3.5`, `3.5`. The cast `(double)` converts this use of `pages`
+/// before division; it does not change the variable’s declared type. Parentheses group calculations,
+/// while `*` multiplies and `/` divides. Check a negative input and zero as well as a positive one.
+/// Name the units: a distance and a speed are different quantities even when both use `double`.
+///
+/// Now predict all three results when pages is nine.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -43,12 +68,24 @@ double dragVelocity(double distance) {
 /// working.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Predict the result of 100 / 125.
-/// 2. The conversion needs 8 units of speed per 100 pixels, not 0.8.
-/// 3. Use return distance / 12.5;
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// Here distance is already a double. Dividing it by the integer literal 125 therefore does keep
+/// fractional results: this fault is the wrong scale, not integer division. Separate those
+/// explanations before changing anything. Use the stated distance-to-speed examples to work out a
+/// consistent conversion, and preserve the direction sign. The prepared shoot code already limits
+/// extreme shots; your calculation should not add a second cap or choose the ball's direction.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Predict the result of 100 / 125.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The conversion needs 8 units of speed per 100 pixels, not 0.8.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Use return distance / 12.5;
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

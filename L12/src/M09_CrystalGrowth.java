@@ -19,6 +19,9 @@ import javax.imageio.ImageIO;
 /// After Run File, press Enter for diagonal growth and crystal-new.png, then rerun with n to compare
 /// crystal-old.png.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F36 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean touching(boolean[][] grid, int x, int y, boolean diagonals) {
     for (int dy = -1; dy <= 1; dy++) {
         for (int dx = -1; dx <= 1; dx++) {
@@ -30,6 +33,29 @@ boolean touching(boolean[][] grid, int x, int y, boolean diagonals) {
     }
     return false;
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F36">
+/// ### Transfer: keep the old promise while adding a choice
+///
+/// Extracting a helper gives one responsibility a name. Its inputs and result form a contract you can
+/// reuse elsewhere.
+///
+/// ```java
+/// String surround(String text, boolean stars) {
+///     String edge = stars ? "*" : "#";
+///     return edge + text + edge;
+/// }
+/// ```
+///
+/// `surround("hi", false)` returns `"#hi#"`; the old hash style still works. The caller can request a
+/// new style without reimplementing the operation. Test both choices, an empty input and a different
+/// word. Tests establish results, while explaining who chooses a style and who builds the label
+/// establishes the responsibility split. A successful new mode should not silently change the old
+/// one.
+///
+/// Predict: what will `surround("", true)` produce, and which part should change if the surrounding
+/// symbol changes?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -47,13 +73,17 @@ boolean touching(boolean[][] grid, int x, int y, boolean diagonals) {
 /// establish behaviour, not code clarity.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The old rule rejects diagonal dx/dy pairs.
-/// 2. Reject those pairs only when diagonals is false.
-/// 3. Keep centre exclusion and per-row bounds; explain why the extracted helper owns neighbour rules
-///   while grow owns the walk.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The old rule rejects diagonal dx/dy pairs.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Reject those pairs only when diagonals is false.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Keep centre exclusion and per-row bounds; explain why the extracted helper owns neighbour rules
+/// while grow owns the walk.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

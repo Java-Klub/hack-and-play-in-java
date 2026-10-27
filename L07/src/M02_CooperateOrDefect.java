@@ -17,6 +17,9 @@ import java.awt.BorderLayout;
 /// Run File, click Private choices for next round, and pass the computer between the two private choice
 /// dialogs before revealing both decisions.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F09 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int reward(boolean cooperate, boolean otherCooperates) {
     int choice = (cooperate ? 2 : 0) + (otherCooperates ? 1 : 0);
     return switch (choice) {
@@ -26,6 +29,28 @@ int reward(boolean cooperate, boolean otherCooperates) {
         default -> 1;
     };
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F09">
+/// ### Switch: choose one value
+///
+/// A switch expression selects a result from its selector. Each arrow case handles a matching value;
+/// it does not continue into the next case. `default` handles remaining values. The closing semicolon
+/// belongs to the surrounding assignment or return statement.
+///
+/// ```java
+/// String weather = "mist";
+/// String colour = switch (weather) {
+///     case "mist" -> "silver";
+///     case "sun" -> "gold";
+///     default -> "indigo";
+/// };
+/// IO.println(colour);
+/// ```
+///
+/// The mist case selects `silver`. Predict the output for `"sun"`, then for `"snow"`. The selector is
+/// compared with case labels; the text after the arrow is the result. Changing one special case
+/// should leave the fallback's meaning intact.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -43,12 +68,26 @@ int reward(boolean cooperate, boolean otherCooperates) {
 /// totals, and reveals the round summary; you only repair the shared scoring table.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### The selector is not the reward
 ///
-/// 1. choice uses two bits: your cooperation contributes 2, the other player contributes 1.
-/// 2. List the four possible sums 0,1,2,3 before editing.
-/// 3. The branch for 3 means both cooperated and must return 3.
+/// The two boolean choices contribute separate amounts to a case number. Write the four input pairs
+/// and calculate their selector numbers before assigning any reward. The game's displayed contract
+/// gives each cooperator three points when both cooperate, one each when both defect, and five versus
+/// zero when only one defects. `reward` returns the viewpoint of its first argument; the caller also
+/// asks from the other viewpoint. Predict both calls for one mixed-choice round.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// choice uses two bits: your cooperation contributes 2, the other player contributes 1.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// List the four possible sums 0,1,2,3 before editing.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// The branch for 3 means both cooperated and must return 3.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

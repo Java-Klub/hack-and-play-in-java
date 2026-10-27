@@ -20,9 +20,38 @@ import javax.swing.Timer;
 /// After Run File, adjust Length and Gravity, use Pause/Run to stop motion and Clear or Reset to restart
 /// your trace experiment.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F34 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 double accelerationNow() {
     return acceleration.at(angle, length);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F34">
+/// ### Interface: ask a role to do its job
+///
+/// An interface names an operation its implementations provide. The caller can use that role without
+/// choosing the implementation's formula.
+///
+/// ```java
+/// interface Points {
+///     int award(int n);
+/// }
+/// record DoublePoints() implements Points {
+///     public int award(int n) {
+///         return n * 2;
+///     }
+/// }
+/// ```
+///
+/// With `Points rule = new DoublePoints();`, `rule.award(3)` returns 6. `implements Points` promises
+/// the operation; the implementation must supply its public method. The variable rule refers to the
+/// selected object, so call its operation with the current input rather than repeating a fixed
+/// formula in the caller. Another implementation can supply another rule through the same interface.
+///
+/// Predict: what does this implementation return for `rule.award(5)`, and which code would change to
+/// award three times the input?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -38,12 +67,16 @@ double accelerationNow() {
 /// other responsibilities separate.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The role needs the current values, not the initial constants.
-/// 2. The default implementation captures the gravity slider’s field.
-/// 3. Call the interface field once; leave 0.03 and damping inside the supplied step.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The role needs the current values, not the initial constants.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The default implementation captures the gravity slider’s field.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Call the interface field once; leave 0.03 and damping inside the supplied step.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

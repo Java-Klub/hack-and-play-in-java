@@ -13,6 +13,9 @@
 /// Use Run File, read the printed dictionary and type R; the starter wrongly declares a dead prefix
 /// despite the listed R words.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F10 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean possiblePrefix(String candidate) {
     int index = 0;
     while (index < words.length) {
@@ -23,6 +26,30 @@ boolean possiblePrefix(String candidate) {
     }
     return false;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F10">
+/// A `while` checks its condition before every pass, including the first. If the condition is false
+/// immediately, its body runs zero times. Something must make progress towards stopping, or
+/// deliberately wait for new input.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// int energy = 5;
+/// while (energy > 0) {
+///     IO.println(energy);
+///     energy -= 2;
+/// }
+/// ```
+///
+/// Predict the printed numbers and the final stored value. The output is `5`, `3`, `1`; afterwards
+/// energy is `-1`, so the next condition fails. The condition is not checked halfway through the
+/// body. `energy -= 2` subtracts two and stores the result; without it, the loop repeats forever.
+/// `return` ends the method; `break` ends the loop. Trace the condition and changing values
+/// separately, especially when the data being searched can grow.
+///
+/// Now predict the trace if energy starts at four.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -45,12 +72,16 @@ boolean possiblePrefix(String candidate) {
 /// restart and quit handling.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. index < 1 stops after a single dictionary entry.
-/// 2. The bound should follow words.length, with index++ on each unsuccessful pass.
-/// 3. Remove the extra index < 1 restriction; keep the length check.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// index < 1 stops after a single dictionary entry.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The bound should follow words.length, with index++ on each unsuccessful pass.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Remove the extra index < 1 restriction; keep the length check.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

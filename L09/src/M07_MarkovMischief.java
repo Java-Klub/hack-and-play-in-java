@@ -13,6 +13,9 @@
 /// After Run File, press Enter to remix the sample corpus moon cat moon dog moon cat, or type your own
 /// short phrase.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F24 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 Map<String, List<String>> train(String text) {
     if (text.isBlank() || text.length() > 100000) {
         throw new IllegalArgumentException("Corpus size: 1..100000 characters.");
@@ -30,6 +33,28 @@ Map<String, List<String>> train(String text) {
     return links;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Recall · F24">
+/// ### Map: look up a value by its key
+///
+/// A `Map<String, Integer>` associates text keys with integer values. Each key has at most one stored
+/// value.
+///
+/// ```java
+/// Map<String, Integer> badges = new HashMap<>();
+/// badges.put("moon", 4);
+/// IO.println(badges.getOrDefault("moon", 0));
+/// IO.println(badges.getOrDefault("sun", 0));
+/// ```
+///
+/// The output is `4`, then `0`. `getOrDefault(key, fallback)` reads an existing value, or returns the
+/// fallback when the key is absent. This lookup does not insert anything. `put(key, value)` stores a
+/// value and replaces any previous value for that key; it does not add numbers automatically. Use
+/// `containsKey(key)` when you need to distinguish absence explicitly. These examples do not store
+/// null values.
+///
+/// Predict: after `badges.put("moon", 9)`, what will the same two lookups return?
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
 ///
@@ -46,12 +71,30 @@ Map<String, List<String>> train(String text) {
 /// from the matching list; keeping duplicates gives repeated examples more weight.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### A map can point to a mutable list
 ///
-/// 1. The same word can occur several times in the corpus.
-/// 2. Replacing its List discards all earlier followers.
-/// 3. Guard the initial put with containsKey; keep every later add, including duplicate followers.
+/// `Map<String, List<String>>` maps each word to a list of possible next words. `containsKey(key)`
+/// asks whether a key exists. `get(key)` reads its stored list, or returns null when absent; calling
+/// add on null fails. Reading an existing list does not copy it. For a separate example, if key
+/// `gate` stores `[hall]`, appending `yard` to the list obtained by get makes the stored list `[hall,
+/// yard]` too.
+///
+/// In train, repeated words must retain earlier successors. Predict the entries after `moon cat moon
+/// dog`. Explain when a list needs creating and when an existing list must survive. Repeated
+/// successors are allowed: their repeated occurrences affect later random choices.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The same word can occur several times in the corpus.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Replacing its List discards all earlier followers.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Guard the initial put with containsKey; keep every later add, including duplicate followers.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

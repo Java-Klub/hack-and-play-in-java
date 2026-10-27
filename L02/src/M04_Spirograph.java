@@ -25,9 +25,34 @@ import javax.imageio.ImageIO;
 /// Use Run File, change the inner radius with Left/Right and the pen distance with Up/Down, then compare
 /// the redrawn curves.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F04 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 double radiusRatio(int outer, int innerRadius) {
     return (outer - innerRadius) / (double) innerRadius;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F04">
+/// Arithmetic uses the operand types at the moment an operation runs. When both operands of `/` are
+/// whole numbers, Java discards the fractional part. Storing that result in a `double` afterwards
+/// does not recover it.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// int pages = 7;
+/// double first = pages / 2;
+/// double second = pages / 2.0;
+/// double third = (double) pages / 2;
+/// ```
+///
+/// Predict the three values: `3.0`, `3.5`, `3.5`. The cast `(double)` converts this use of `pages`
+/// before division; it does not change the variable’s declared type. Parentheses group calculations,
+/// while `*` multiplies and `/` divides. Check a negative input and zero as well as a positive one.
+/// Name the units: a distance and a speed are different quantities even when both use `double`.
+///
+/// Now predict all three results when pages is nine.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -48,12 +73,25 @@ double radiusRatio(int outer, int innerRadius) {
 /// export.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. A double return type does not undo earlier integer division.
-/// 2. Convert one operand before the division.
-/// 3. Use (outer - innerRadius) / (double) innerRadius.
+// <editor-fold defaultstate="expanded" desc="For this game">
+/// The radii arrive as int parameters, so an expression made only from those values can still use
+/// integer division inside a double-returning method. A cast applies to the value immediately
+/// following it. Neutral example: with seven seats and four rows, `(double) seats / rows` gives 1.75,
+/// while `(double) (seats / rows)` gives only 1.0 because the fraction was already discarded. The
+/// cast does not change the parameter declaration. Now predict those two expressions for five seats
+/// and two rows, then decide where a conversion belongs in your own calculation.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// A double return type does not undo earlier integer division.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Convert one operand before the division.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Use (outer - innerRadius) / (double) innerRadius.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

@@ -12,9 +12,37 @@
 /// Use Run File, compare the two printed Dice values with the rolled target, then type distinct open
 /// numbers that should add up to that target.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F13 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int diceTotal(int first, int second) {
     return first + second;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F13">
+/// A method packages an operation under one name. Parameters are local names for the information
+/// received on each call; arguments are the actual supplied values. `return` gives one result back to
+/// the caller.
+///
+/// ```java
+/// int remaining(int capacity, int used) {
+///     return capacity - used;
+/// }
+///
+/// void main() {
+///     IO.println(remaining(12, 5));
+///     IO.println(remaining(9, 4));
+/// }
+/// ```
+///
+/// Predict both printed values: seven and five. The comma separates the parameters or arguments, and
+/// their order decides which value each name receives. The names describe roles; they do not fetch
+/// information by magic. This method calculates without printing or changing the supplied program
+/// state. When repairing a calculation, try a second pair of arguments so an accidental fixed answer
+/// cannot hide.
+///
+/// Now predict remaining(10, 6).
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -32,12 +60,16 @@ int diceTotal(int first, int second) {
 /// can meet the target, command closes selected boxes, and display shows the remaining choices.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Use different values such as 2 and 5 to expose the ignored parameter.
-/// 2. Both parameters belong to this particular call.
-/// 3. Return first + second.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Use different values such as 2 and 5 to expose the ignored parameter.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Both parameters belong to this particular call.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Return first + second.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

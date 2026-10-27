@@ -20,6 +20,9 @@ import java.io.ByteArrayInputStream;
 /// After Run File, press Enter to save exports/shepard.wav and open it with its .plain.wav comparison in
 /// an audio player.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F32 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void write(Path path, double[] signal) throws Exception {
     byte[] pcm = new byte[signal.length * 2];
     for (int i = 0; i < signal.length; i++) {
@@ -33,6 +36,29 @@ void write(Path path, double[] signal) throws Exception {
         AudioSystem.write(stream, AudioFileFormat.Type.WAVE, path.toFile());
     }
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F32">
+/// ### Files: a destination and a resource lifetime
+///
+/// A `Path` describes a location; constructing it does not create a file. Inside a method that
+/// declares `throws IOException`, this writes a note:
+///
+/// ```java
+/// Path file = Path.of("exports", "note.txt");
+/// Files.createDirectories(file.getParent());
+/// try (var writer = Files.newBufferedWriter(file)) {
+///     writer.write("Hi");
+/// }
+/// ```
+///
+/// The result is exports/note.txt containing `Hi`. `getParent()` selects exports; `getFileName()`
+/// selects only note.txt and loses the directory. Try-with-resources closes writer when the block
+/// ends, including when writing fails. `throws` lets the caller handle an I/O failure; it does not
+/// handle it here. Image and audio encoders likewise need the actual destination, not an unrelated
+/// memory buffer.
+///
+/// Predict: if file becomes `Path.of("cards", "one.txt")`, where is the note written?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -50,12 +76,16 @@ void write(Path path, double[] signal) throws Exception {
 /// to open both files.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. getFileName deliberately discards the parent path.
-/// 2. The original Path already points to the chosen destination.
-/// 3. Use that Path in AudioSystem.write; retain createDirectories and try-with-resources.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// getFileName deliberately discards the parent path.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The original Path already points to the chosen destination.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Use that Path in AudioSystem.write; retain createDirectories and try-with-resources.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

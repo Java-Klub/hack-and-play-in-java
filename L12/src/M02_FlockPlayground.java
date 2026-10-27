@@ -19,9 +19,38 @@ import javax.swing.Timer;
 /// After Run File, move the orange mouse obstacle into the birds’ path and use Pause/Run or New flock to
 /// compare their response.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F34 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 double obstaclePush(double distance) {
     return avoidance.strength(distance);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F34">
+/// ### Interface: ask a role to do its job
+///
+/// An interface names an operation its implementations provide. The caller can use that role without
+/// choosing the implementation's formula.
+///
+/// ```java
+/// interface Points {
+///     int award(int n);
+/// }
+/// record DoublePoints() implements Points {
+///     public int award(int n) {
+///         return n * 2;
+///     }
+/// }
+/// ```
+///
+/// With `Points rule = new DoublePoints();`, `rule.award(3)` returns 6. `implements Points` promises
+/// the operation; the implementation must supply its public method. The variable rule refers to the
+/// selected object, so call its operation with the current input rather than repeating a fixed
+/// formula in the caller. Another implementation can supply another rule through the same interface.
+///
+/// Predict: what does this implementation return for `rule.award(5)`, and which code would change to
+/// award three times the input?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -37,12 +66,16 @@ double obstaclePush(double distance) {
 /// owns pause and reset.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The interface receives distance and supplies only a strength.
-/// 2. The field already holds the default implementation.
-/// 3. Delegate to the field; do not return a constant or copy the default formula.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The interface receives distance and supplies only a strength.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The field already holds the default implementation.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Delegate to the field; do not return a constant or copy the default formula.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

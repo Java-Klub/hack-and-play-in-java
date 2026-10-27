@@ -25,10 +25,34 @@ import javax.imageio.ImageIO;
 /// After Run File, drag a stroke, change mirror axes with Up/Down, change ink with C and press S to
 /// export your picture.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F29 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 Point2D.Double transform(int x, int y, int copy, boolean reflect) {
     double dx = x - WIDTH / 2, dy = (y - HEIGHT / 2) * (reflect ? -1 : 1), a = 2 * Math.PI * copy / axes;
     return new Point2D.Double(WIDTH / 2 + dx * Math.cos(a) - dy * Math.sin(a), HEIGHT / 2 + dx * Math.sin(a) + dy * Math.cos(a));
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F29">
+/// ### Rendering: translate state into pixels
+///
+/// Rendering reads the model and draws what it describes. Screen x increases rightward; screen y
+/// increases downward. Drawing methods often accept the upper-left corner and a size, rather than a
+/// centre.
+///
+/// ```java
+/// int tileX = 3;
+/// int tileY = 2;
+/// int size = 10;
+/// g.fillRect(tileX * size, tileY * size, size, size);
+/// ```
+///
+/// Here `g` is the supplied `Graphics2D` drawing tool. This paints a 10-by-10 square with upper-left
+/// corner `(30, 20)`. The model coordinates stay `(3, 2)`. Repainting should not move objects or
+/// advance a round: a window may request painting many times.
+///
+/// Predict: if only tileY becomes 4, which screen coordinate changes, and by how much?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -44,12 +68,16 @@ Point2D.Double transform(int x, int y, int copy, boolean reflect) {
 /// persistent canvas. Axis controls, colour changes, clearing and PNG export are supplied.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Coordinates are first made relative to the centre.
-/// 2. Rotation works in that relative space.
-/// 3. The returned point must add WIDTH/2 to x and HEIGHT/2 to y.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Coordinates are first made relative to the centre.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Rotation works in that relative space.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// The returned point must add WIDTH/2 to x and HEIGHT/2 to y.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

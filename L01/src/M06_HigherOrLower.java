@@ -12,7 +12,32 @@
 /// Use Run File, enter h for higher or l for lower, and watch how many correct guesses the displayed
 /// round requires.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F03 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int target = 10;
+
+// <editor-fold defaultstate="expanded" desc="Learn · F03">
+/// A variable gives a stored value a name. Its type describes the values it can hold: `int` holds
+/// whole numbers and `double` can hold a fractional part. Initialization supplies the first value;
+/// later assignment replaces it.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// int charge = 4;
+/// charge = charge + 3;
+/// IO.println(charge);
+/// ```
+///
+/// Predict the output. First `charge` stores four. On the second line, Java reads the old value to
+/// calculate the right-hand expression, then stores seven under the same name. `=` is assignment, not
+/// a mathematical claim that both sides remain equal forever. Other statements reading the name now
+/// obtain seven. A name does not update itself: some executed assignment must change its value. A
+/// `final` variable cannot be assigned again.
+///
+/// Now predict the final charge if its initialization uses six instead of four.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -30,12 +55,25 @@ int target = 10;
 /// display reads the same target for the score label. main supplies the input and restart loop.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Find the one initialization of target near the top.
-/// 2. The supplied display and win comparison already read target.
-/// 3. Change int target = 1; to int target = 10;
+// <editor-fold defaultstate="expanded" desc="For this game">
+/// This is your first game that waits for typed console input. After Run File, click in **Output at
+/// the current prompt**, type `h` or `l`, and press **Enter** to send the whole line. Type into
+/// Output, not into the Java editor. The printed `/r` restarts a round and `/q` ends the program.
+/// Save your source change and start a new run to load it; restarting the already running round does
+/// not reload edited Java. Random cards can end a round before ten correct guesses, so use Test File
+/// as well as playing to check the shared target.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Find the one initialization of target near the top.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The supplied display and win comparison already read target.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Change int target = 1; to int target = 10;
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

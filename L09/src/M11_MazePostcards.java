@@ -19,6 +19,9 @@ import java.util.List;
 ///
 /// After Run File, enter 2–50 columns or try oops, then open the generated maze-postcards.png.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F31 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int readColumns(String text) {
     try {
         int columns = Integer.parseInt(text.strip());
@@ -28,6 +31,34 @@ int readColumns(String text) {
         return 20;
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F31">
+/// ### Parse, validate, then commit
+///
+/// Parsing converts text; validation checks whether the resulting number is allowed. These can fail
+/// differently.
+///
+/// ```java
+/// int readCopies(String text) {
+///     try {
+///         int n = Integer.parseInt(text.strip());
+///         if (n < 1 || n > 5) {
+///             throw new IllegalArgumentException("Copies: 1..5");
+///         }
+///         return n;
+///     } catch (NumberFormatException invalid) {
+///         return 3;
+///     }
+/// }
+/// ```
+///
+/// `readCopies(" 2 ")` returns `2`: conversion and validation succeed. `"oops"` fails during
+/// conversion and reaches `catch`, returning `3`. A numeric `"8"` converts successfully, then throws
+/// a different exception; this narrow catch does not handle it. `return` ends the method; `throw`
+/// leaves the normal path. Change stored game state only after validation succeeds.
+///
+/// Predict the path for `"five"`, `"5"` and `"0"`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -43,12 +74,27 @@ int readColumns(String text) {
 /// passages and the drawing code turns walls into a local PNG postcard.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### A number can parse and still be rejected
 ///
-/// 1. The fallback handles a conversion failure, not every invalid value.
-/// 2. Keep the inclusive range guard outside the NumberFormatException case.
-/// 3. main passes this result into the real generate call through render.
+/// For readColumns, `" 8 "` converts to 8 and returns normally. `"eight"` fails conversion and
+/// reaches the NumberFormatException catch. `"1"` converts to 1, then the explicit bounds check
+/// throws IllegalArgumentException, which is not handled by that specific catch. Trace `"2"` and
+/// `"50"` to confirm both endpoints are allowed. Then predict whether `"51"` and `"fifty"` follow the
+/// same path. The maze generator should receive either an accepted numeric width or the documented
+/// malformed-text default, not an arbitrary tiny width.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The fallback handles a conversion failure, not every invalid value.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Keep the inclusive range guard outside the NumberFormatException case.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// main passes this result into the real generate call through render.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

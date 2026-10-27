@@ -19,6 +19,9 @@ import javax.swing.Timer;
 /// Run File and play together on one keyboard, with one person steering using W, A, S, D and the other
 /// using the arrow keys.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F09 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 Direction directionFor(int code) {
     return switch (code) {
         case KeyEvent.VK_W, KeyEvent.VK_UP -> new Direction(0, -1);
@@ -28,6 +31,28 @@ Direction directionFor(int code) {
         default -> null;
     };
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F09">
+/// ### Switch: choose one value
+///
+/// A switch expression selects a result from its selector. Each arrow case handles a matching value;
+/// it does not continue into the next case. `default` handles remaining values. The closing semicolon
+/// belongs to the surrounding assignment or return statement.
+///
+/// ```java
+/// String weather = "mist";
+/// String colour = switch (weather) {
+///     case "mist" -> "silver";
+///     case "sun" -> "gold";
+///     default -> "indigo";
+/// };
+/// IO.println(colour);
+/// ```
+///
+/// The mist case selects `silver`. Predict the output for `"sun"`, then for `"snow"`. The selector is
+/// compared with case labels; the text after the arrow is the result. Changing one special case
+/// should leave the fallback's meaning intact.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -44,12 +69,16 @@ Direction directionFor(int code) {
 /// checks both players against the same trail board before extending either trail.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Screen y grows downward, so up has dy=-1.
-/// 2. Grouped case labels can return the same record for two keys.
-/// 3. Return Direction(0,-1) for W and Up; default remains null for non-direction keys.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Screen y grows downward, so up has dy=-1.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Grouped case labels can return the same record for two keys.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Return Direction(0,-1) for W and Up; default remains null for non-direction keys.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

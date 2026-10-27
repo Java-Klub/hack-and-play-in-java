@@ -20,6 +20,9 @@ import java.util.Arrays;
 /// Run File and click an empty cell beside a tree to pitch a tent, then use Test File to see whether your
 /// map examples catch the cheats.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F33 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 record TreeExample(int x, int y, boolean expected) {
 }
 
@@ -27,6 +30,30 @@ TreeExample[] learnerChecks() {
     return new TreeExample[]{new TreeExample(0, 0, true), new TreeExample(3, 0, true),
     new TreeExample(0, 3, false), new TreeExample(1, 3, true), new TreeExample(4, 4, true), new TreeExample(-1, 0, false)};
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F33">
+/// ### Checks: choose an example that could disagree
+///
+/// A functional check needs an input and an independently predicted result. A passing example is weak
+/// if a plausible wrong rule gives the same answer. Read this separate calculation and its example;
+/// the equality produces a boolean that reports agreement.
+///
+/// ```java
+/// int twice(int value) {
+///     return value + value;
+/// }
+///
+/// void main() {
+///     boolean agrees = twice(0) == 0;
+///     IO.println(agrees);
+/// }
+/// ```
+///
+/// This prints true: twice zero is zero. An implementation always returning zero also passes. Choose
+/// a different input and derive its expected result yourself. What mistake does your new example
+/// expose? Keep each check's starting data independent so one example cannot accidentally prepare
+/// another.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -45,13 +72,27 @@ TreeExample[] learnerChecks() {
 /// and a backtracking tree-to-tent matching; your examples inspect the map lookup, not that search.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Your expectation comes from the map
 ///
-/// 1. (0,0) is symmetric and cannot expose swapped coordinates.
-/// 2. Compare the real tree at (3,0) with the empty transposed place (0,3).
-/// 3. Include a later tree and an outside coordinate; every expected value must still agree with the real
-///   map.
+/// `TreeExample(x,y,expected)` describes one occupancy question, not a sequence of tent placements.
+/// The authored `trees` array stores JDK Points with horizontal `x` and vertical `y` fields. Read
+/// that data or the visible tree symbols to predict true or false. Choose an asymmetric position
+/// where exchanging x and y changes the answer, then an empty position. Explain what each example
+/// rules out; repeated copies of the initial example add no evidence.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// (0,0) is symmetric and cannot expose swapped coordinates.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Compare the real tree at (3,0) with the empty transposed place (0,3).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Include a later tree and an outside coordinate; every expected value must still agree with the
+/// real map.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

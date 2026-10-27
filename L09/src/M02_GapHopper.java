@@ -20,6 +20,9 @@ import javax.swing.Timer;
 /// After Run File, keep the flyer between pipes by pressing Space or clicking, and press R to restart
 /// after a crash.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F22 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void recyclePipes() {
     if (!pipes.isEmpty() && pipes.getFirst().x + PIPE_WIDTH < 0) {
         double furthest = pipes.getLast().x;
@@ -27,6 +30,28 @@ void recyclePipes() {
         pipes.add(new Pipe(furthest + 260, newGap()));
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F22">
+/// ### List: a sequence you can change
+///
+/// A `List<String>` holds text in order. `new ArrayList<>()` makes a mutable list: its contents can
+/// change without replacing the list itself.
+///
+/// ```java
+/// List<String> snacks = new ArrayList<>();
+/// snacks.add("apple");
+/// snacks.add("nuts");
+/// IO.println(snacks.get(0));
+/// IO.println(snacks.size());
+/// ```
+///
+/// The output is `apple`, then `2`. `add(value)` appends one item; `get(index)` reads without
+/// removing it. Indexes start at zero. `isEmpty()` checks for no items. `removeLast()` removes and
+/// returns the final item; call it only on a nonempty list. A list made directly by `List.of(...)`
+/// cannot be changed, but `new ArrayList<>(List.of(...))` can.
+///
+/// Predict: after `snacks.removeLast()`, what are its size and first item?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -43,13 +68,17 @@ void recyclePipes() {
 /// bounded opening; the supplied window handles the jump key, restart and timer cleanup.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The oldest obstacle is at index zero.
-/// 2. Read the last position before removing the expired first element.
-/// 3. Removal and append must preserve a two-obstacle order; do not mutate the list during the earlier
-///   for-each.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The oldest obstacle is at index zero.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Read the last position before removing the expired first element.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Removal and append must preserve a two-obstacle order; do not mutate the list during the earlier
+/// for-each.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

@@ -18,6 +18,9 @@ import javax.imageio.ImageIO;
 /// Use Run File, refresh the project in NetBeans Files and open koch-snowflake-cards.png to inspect the
 /// missing side.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F11 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int snowflake(Graphics2D g, int level) {
     int[] xs = {270, 70, 470};
     int[] ys = {45, 390, 390};
@@ -28,6 +31,28 @@ int snowflake(Graphics2D g, int level) {
     }
     return segments;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F11">
+/// A counted `for` puts initialization, a continue condition and progress in one header.
+/// Initialization happens once. Then Java checks the condition, runs the body if true, performs
+/// progress, and checks again.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// for (int floor = 2; floor <= 4; floor++) {
+///     IO.println(floor);
+/// }
+/// ```
+///
+/// Predict the visited values: `2`, `3`, `4`. There are three passes, even though the last printed
+/// number is four. The two semicolons separate the header’s three parts; `floor++` adds one after a
+/// pass. The braces group the repeated statements. If the starting value already fails the condition,
+/// no pass occurs. Count positions and gaps separately: three positions have two gaps. Write down a
+/// tiny trace before changing a bound.
+///
+/// Now predict the output if floor starts at five.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -50,12 +75,16 @@ int snowflake(Graphics2D g, int level) {
 /// canvas and colours, while save and main write koch-snowflake-cards.png.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Starting at one omits the first side.
-/// 2. The three indices are 0,1,2, with 3 as the excluded bound.
-/// 3. Start side = 0 and keep side < 3.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Starting at one omits the first side.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The three indices are 0,1,2, with 3 as the excluded bound.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Start side = 0 and keep side < 3.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

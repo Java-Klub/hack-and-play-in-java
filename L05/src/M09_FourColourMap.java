@@ -11,6 +11,9 @@
 ///
 /// Run File, type B 2 to give region B colour 2, and continue colouring the other labelled regions.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F17 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 int conflicts() {
     int n = 0;
     for (int[] edge : adjacent) {
@@ -20,6 +23,29 @@ int conflicts() {
     }
     return n;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F17">
+/// ### Traversal: one question at a time
+///
+/// A traversal visits values; a search may stop at the first match, while a count must examine every
+/// relevant value. In a for-each loop, the name before the colon receives one value from the sequence
+/// after it. Keep a running count outside the repeated body so earlier matches survive.
+///
+/// ```java
+/// int[] pulses = {2, 0, 4};
+/// int strong = 0;
+/// for (int pulse : pulses) {
+///     if (pulse > 1) {
+///         strong++;
+///     }
+/// }
+/// IO.println(strong);
+/// ```
+///
+/// The result is two because pulses two and four satisfy the condition. If the question were merely
+/// whether any strong pulse exists, when could you already answer? What should the count be for an
+/// empty array?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -35,12 +61,16 @@ int conflicts() {
 /// solved() requires all regions coloured and calls conflicts() to judge their relationships.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. adjacent stores precisely the shared-border pairs.
-/// 2. The current traversal visits only its first pair.
-/// 3. Iterate over adjacent; count equal nonzero colours at both endpoints.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// adjacent stores precisely the shared-border pairs.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The current traversal visits only its first pair.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Iterate over adjacent; count equal nonzero colours at both endpoints.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

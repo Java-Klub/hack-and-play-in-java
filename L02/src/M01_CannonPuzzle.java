@@ -20,9 +20,34 @@ import javax.swing.Timer;
 /// Use Run File, drag from the cannon towards the upper right and release to shoot at the orange target;
 /// R prepares another attempt.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F04 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 double launchSpeed(double drag) {
     return drag * 0.09;
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F04">
+/// Arithmetic uses the operand types at the moment an operation runs. When both operands of `/` are
+/// whole numbers, Java discards the fractional part. Storing that result in a `double` afterwards
+/// does not recover it.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// int pages = 7;
+/// double first = pages / 2;
+/// double second = pages / 2.0;
+/// double third = (double) pages / 2;
+/// ```
+///
+/// Predict the three values: `3.0`, `3.5`, `3.5`. The cast `(double)` converts this use of `pages`
+/// before division; it does not change the variable’s declared type. Parentheses group calculations,
+/// while `*` multiplies and `/` divides. Check a negative input and zero as well as a positive one.
+/// Name the units: a distance and a speed are different quantities even when both use `double`.
+///
+/// Now predict all three results when pages is nine.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -43,12 +68,16 @@ double launchSpeed(double drag) {
 /// gravity and detects hits, and the remaining window code supplies the mouse and timer.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Evaluate 9 / 100 on its own: both numbers are integers.
-/// 2. Use a fractional factor rather than the truncated integer result.
-/// 3. Return drag * 0.09, or drag * 9.0 / 100.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Evaluate 9 / 100 on its own: both numbers are integers.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Use a fractional factor rather than the truncated integer result.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Return drag * 0.09, or drag * 9.0 / 100.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

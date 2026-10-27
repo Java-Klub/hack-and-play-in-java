@@ -19,6 +19,9 @@ import javax.imageio.ImageIO;
 /// After Run File, press Enter to save exports/mirror.png, then open that PNG to inspect the curved
 /// distortion.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F32 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void save(Path path, long seed, double option) throws Exception {
     Files.createDirectories(path.toAbsolutePath().getParent());
     try (var output = Files.newOutputStream(path)) {
@@ -27,6 +30,29 @@ void save(Path path, long seed, double option) throws Exception {
         }
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F32">
+/// ### Files: a destination and a resource lifetime
+///
+/// A `Path` describes a location; constructing it does not create a file. Inside a method that
+/// declares `throws IOException`, this writes a note:
+///
+/// ```java
+/// Path file = Path.of("exports", "note.txt");
+/// Files.createDirectories(file.getParent());
+/// try (var writer = Files.newBufferedWriter(file)) {
+///     writer.write("Hi");
+/// }
+/// ```
+///
+/// The result is exports/note.txt containing `Hi`. `getParent()` selects exports; `getFileName()`
+/// selects only note.txt and loses the directory. Try-with-resources closes writer when the block
+/// ends, including when writing fails. `throws` lets the caller handle an I/O failure; it does not
+/// handle it here. Image and audio encoders likewise need the actual destination, not an unrelated
+/// memory buffer.
+///
+/// Predict: if file becomes `Path.of("cards", "one.txt")`, where is the note written?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -44,12 +70,16 @@ void save(Path path, long seed, double option) throws Exception {
 /// software can open it.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. An opened file is not enough if the encoder writes somewhere else.
-/// 2. The try-with-resources variable is the actual file output.
-/// 3. Pass output to ImageIO.write instead of constructing a new memory stream.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// An opened file is not enough if the encoder writes somewhere else.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The try-with-resources variable is the actual file output.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Pass output to ImageIO.write instead of constructing a new memory stream.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

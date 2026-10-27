@@ -11,6 +11,9 @@
 ///
 /// Run File and enter one of your pit numbers from 1 to 6 to sow its stones around the board.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F14 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void reset() {
     pits = new int[14];
     Arrays.fill(pits, 4);
@@ -18,6 +21,27 @@ void reset() {
     player = 0;
     outcome = "";
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F14">
+/// ### Scope: which storage does this name mean?
+///
+/// A field belongs to the current object and can survive between method calls. A local variable
+/// belongs to one call or block. A declaration includes a type; assignment to an existing name does
+/// not declare another variable. A local name can shadow a field with the same spelling.
+///
+/// ```java
+/// int volume = 7;
+///
+/// void whisper() {
+///     int volume = 2;
+///     IO.println(volume);
+/// }
+/// ```
+///
+/// `whisper()` prints two while the field stays seven: the local declaration created separate
+/// storage. Predict a later field read; `this.volume` explicitly names the field when needed. Which
+/// value should survive several calls, and which value belongs to only one temporary calculation?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -34,12 +58,16 @@ void reset() {
 /// stones. side() counts a player’s ordinary pits; neither mechanism needs changing for a fair restart.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The field survives between calls to command().
-/// 2. A local int player disappears when reset() returns.
-/// 3. Assign to the existing player; leave pit initialization unchanged.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The field survives between calls to command().
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// A local int player disappears when reset() returns.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Assign to the existing player; leave pit initialization unchanged.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

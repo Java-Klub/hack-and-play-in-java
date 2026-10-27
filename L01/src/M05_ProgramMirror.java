@@ -13,9 +13,33 @@
 /// Use Run File and compare the two lines in Output: the first should describe an instruction and the
 /// second should be its message.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F02 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 String templateLine() {
     return "IO.println(\"HELLO\");";
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F02">
+/// A String literal is text written between double quotes. Those outside quotes tell Java where the
+/// text begins and ends; they are not printed. Digits inside quotes are text too. An expression, by
+/// contrast, can calculate a value before printing it.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// IO.println("Shelf 4");
+/// IO.println(4 + 2);
+/// IO.println("Shelf \"B\"");
+/// ```
+///
+/// Predict the three lines. They are `Shelf 4`, `6`, and `Shelf "B"`. In the last literal, each `\"`
+/// represents one quote belonging to the text. Its backslash is notation, not another printed
+/// character. `IO.println` prints its argument and ends the line. A space inside a literal remains a
+/// real space; changing comments does not change the printed message.
+///
+/// Now predict `IO.println(4 + 5);` and `IO.println("4 + 5");`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -37,12 +61,26 @@ String templateLine() {
 /// supplied.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. The line in quotes is data; it is not executed as Java code.
-/// 2. To put a double quote inside a String literal, write backslash then quote.
-/// 3. Use the String literal "IO.println(\"HELLO\");".
+// <editor-fold defaultstate="expanded" desc="For this game">
+/// Separate three layers: the Java source you edit, the text returned by templateLine, and the two
+/// lines printed in Output. The first printed line must include the quote characters around HELLO;
+/// the second is the separate message. Those first-line characters are data, not another instruction
+/// being executed. For a neutral example, source text `"A \"B\" C"` represents the value `A "B" C`:
+/// each `\"` contributes one quote without ending the outer literal. Try predicting that value before
+/// changing your own literal. Keep the real return statement's final semicolon distinct from a
+/// semicolon printed inside its text.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The line in quotes is data; it is not executed as Java code.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// To put a double quote inside a String literal, write backslash then quote.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Use the String literal "IO.println(\"HELLO\");".
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

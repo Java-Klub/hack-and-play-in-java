@@ -19,6 +19,9 @@ import javax.swing.Timer;
 ///
 /// Run File, run with Left and Right, and press Space to jump toward the platforms and flag.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F25 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void step() {
     if (!started || won) {
         return;
@@ -49,6 +52,29 @@ void step() {
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Recall · F25">
+/// ### Invariant: a promise after every action
+///
+/// An invariant is a relationship that must remain true across accepted actions. Some actions move a
+/// quantity between places rather than creating more. Validate the complete request before making
+/// changes, then apply it once. Rejection should preserve the earlier state.
+///
+/// ```java
+/// int violet = 6;
+/// int gold = 2;
+/// int amount = 3;
+/// if (amount >= 0 && amount <= violet) {
+///     violet -= amount;
+///     gold += amount;
+/// }
+/// IO.println(violet + gold);
+/// ```
+///
+/// The containers become three and five; the printed total remains eight because the transfer
+/// balances. Now consider nine units: what must remain unchanged? Explain why moving only one side
+/// would violate the total even if both individual values looked legal.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
 ///
@@ -63,12 +89,26 @@ void step() {
 /// checks the flag, and restarts a fallen attempt; platform drawing uses the same rectangles.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Landing is a crossing, not just an overlap
 ///
-/// 1. A current overlap alone does not say which side the player came from.
-/// 2. Compare oldBottom with the platform top before the movement.
-/// 3. Require vy>=0 and oldBottom<=p.y as well as the new bottom crossing p.y.
+/// Screen y grows downward, so positive vertical speed means falling. Compare the previous bottom
+/// edge with the new bottom edge and a platform's top. In a separate example, a bottom moving from 30
+/// to 38 crosses a surface at 35, while one already below 35 does not cross it this step. Predict a
+/// rising jump passing upward through a platform. Horizontal overlap is necessary but does not
+/// establish which side the player came from.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// A current overlap alone does not say which side the player came from.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Compare oldBottom with the platform top before the movement.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Require vy>=0 and oldBottom<=p.y as well as the new bottom crossing p.y.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

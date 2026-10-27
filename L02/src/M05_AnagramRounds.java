@@ -13,9 +13,33 @@
 /// Use Run File and type silent in the first round, then try a mixed-case spelling after the repair to
 /// see whether it is judged the same way.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F05 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 String normalize(String input) {
     return input.strip().toUpperCase(Locale.ROOT);
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F05">
+/// `IO.readln` receives a whole line, including internal spaces. String operations return text rather
+/// than changing the original String. Keep the returned result when you need it.
+///
+/// These example statements belong inside a called method.
+///
+/// ```java
+/// String raw = "  Quiet Room  ";
+/// String cleaned = raw.strip();
+/// String loud = cleaned.toUpperCase(Locale.ROOT);
+/// ```
+///
+/// Predict all three values. `raw` still has its outside spaces, `cleaned` is `Quiet Room`, and
+/// `loud` is `QUIET ROOM`. `strip()` removes edge whitespace, not the space between words. The dot
+/// selects an operation on the value to its left; parentheses pass its arguments. `Locale.ROOT` asks
+/// for language-neutral case conversion rather than the computer’s regional default. The prepared
+/// input code handles `null` at end of input; an empty line is a different value.
+///
+/// Now predict cleaned and loud for raw text `"  Soft Sky  "`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -34,12 +58,25 @@ String normalize(String input) {
 /// handles replay.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. strip already removes the outer spaces.
-/// 2. A String operation returns a new String; its result must be used.
-/// 3. Return input.strip().toUpperCase(Locale.ROOT).
+// <editor-fold defaultstate="expanded" desc="For this game">
+/// A chain uses each operation's returned value as the receiver of the next operation. For example,
+/// `"  Hi  ".strip().length()` first produces `Hi`, then its length, 2. Now predict the same chain
+/// for `"  Hello  "`. Your own calculation must still return text, not its length. The available
+/// case-conversion operation is `toUpperCase(Locale.ROOT)`; `Locale.ROOT` is a supplied constant
+/// passed as an argument, not another method call. It keeps this word-list comparison consistent
+/// across regional settings. Preserve the existing edge cleanup when adding the case conversion.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// strip already removes the outer spaces.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// A String operation returns a new String; its result must be used.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Return input.strip().toUpperCase(Locale.ROOT).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

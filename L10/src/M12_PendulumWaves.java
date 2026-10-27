@@ -19,11 +19,40 @@ import javax.swing.Timer;
 /// After Run File, press Space to play or pause the pendulums, change speed with Up/Down and press R to
 /// align them again.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F30 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void step() {
     if (!paused) {
         time += .02 * speed;
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F30">
+/// ### Input requests; a tick advances time
+///
+/// An event can record an intention without changing the whole simulation immediately. A tick
+/// performs one bounded update. Keep drawing separate from both.
+///
+/// ```java
+/// int height = 0;
+/// int pending = 0;
+/// void press() {
+///     pending = 2;
+/// }
+/// void tick() {
+///     height += pending;
+///     pending = 0;
+/// }
+/// ```
+///
+/// After `press()`, height is still 0. One `tick()` changes it to 2 and consumes the request; another
+/// tick leaves it at 2. Repeating the input before that tick still records one request, rather than
+/// two updates. A supplied timer can call tick, but paused or finished games should reject further
+/// advancement. Restart must restore the initial state.
+///
+/// Predict: from the initial state, what happens after press, tick, press, tick?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -38,12 +67,16 @@ void step() {
 /// speed, the timer calls step and repaint, and restart returns every pendulum to the shared start.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. time is simulation time, not wall-clock time.
-/// 2. The update belongs in the not-paused branch.
-/// 3. Do not compensate in draw or add another timer.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// time is simulation time, not wall-clock time.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The update belongs in the not-paused branch.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Do not compensate in draw or add another timer.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

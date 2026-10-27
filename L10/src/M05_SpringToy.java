@@ -23,6 +23,9 @@ import javax.swing.Timer;
 /// After Run File, drag and release the weight, press Space to pause and use arrow keys to tune spring
 /// stiffness and damping.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F29 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void draw(Graphics2D g) {
     g.setColor(new Color(225, 230, 240));
     for (int i = 1; i < trail.size(); i++) {
@@ -47,6 +50,27 @@ void draw(Graphics2D g) {
     g.drawString(String.format("Stiffness %.3f   Damping %.3f   %s", stiffness, damping, paused ? "Paused" : "Moving"), 15, 25);
 }
 
+// <editor-fold defaultstate="collapsed" desc="Recall · F29">
+/// ### Rendering: translate state into pixels
+///
+/// Rendering reads the model and draws what it describes. Screen x increases rightward; screen y
+/// increases downward. Drawing methods often accept the upper-left corner and a size, rather than a
+/// centre.
+///
+/// ```java
+/// int tileX = 3;
+/// int tileY = 2;
+/// int size = 10;
+/// g.fillRect(tileX * size, tileY * size, size, size);
+/// ```
+///
+/// Here `g` is the supplied `Graphics2D` drawing tool. This paints a 10-by-10 square with upper-left
+/// corner `(30, 20)`. The model coordinates stay `(3, 2)`. Repainting should not move objects or
+/// advance a round: a window may request painting many times.
+///
+/// Predict: if only tileY becomes 4, which screen coordinate changes, and by how much?
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
 ///
@@ -61,12 +85,16 @@ void draw(Graphics2D g) {
 /// existing values.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Compare the responsibilities of step and draw.
-/// 2. Look at the first action in draw; repaint can happen more often than a timer tick.
-/// 3. Remove the extra model update, while retaining all painting.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Compare the responsibilities of step and draw.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Look at the first action in draw; repaint can happen more often than a timer tick.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Remove the extra model update, while retaining all painting.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

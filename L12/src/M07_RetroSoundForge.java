@@ -21,6 +21,9 @@ import java.io.ByteArrayInputStream;
 /// After Run File, press Enter for wobble and open retro-wobble.wav in an audio player; sound is exported
 /// rather than played automatically.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Recall · F35 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 double frequency(Sound sound, double t) {
     if (!Double.isFinite(t) || t < 0 || t > 1) throw new IllegalArgumentException("Time: 0..1.");
     return switch (sound) {
@@ -29,6 +32,30 @@ double frequency(Sound sound, double t) {
         case Wobble(var base, var depth) -> base + depth * Math.sin(t * Math.PI * 16);
     };
 }
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F35">
+/// ### Record patterns: choose a shape and unpack its data
+///
+/// ```java
+/// sealed interface Badge permits Name, Stars {}
+/// record Name(String text) implements Badge {}
+/// record Stars(int count) implements Badge {}
+/// String label(Badge badge) {
+///     return switch (badge) {
+///         case Name(var text) -> text;
+///         case Stars(var n) when n > 0 -> n + " stars";
+///         case Stars(var n) -> "none";
+///     };
+/// }
+/// ```
+///
+/// `label(new Stars(2))` returns `"2 stars"`. Sealed closes the alternatives; permits lists them. A
+/// record pattern matches its record type and gives component values local names, in declaration
+/// order. `var` infers their types. The `when` guard must also pass; otherwise matching continues.
+/// The last Stars case handles nonpositive counts. Every permitted alternative needs handling here.
+///
+/// Predict: which case handles `new Stars(0)`, and what text does `new Name("Nova")` produce?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -45,12 +72,32 @@ double frequency(Sound sound, double t) {
 /// pitch, integrates phase and applies a fade; write exports a finite WAV without automatic playback.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="expanded" desc="For this game">
+/// ### The wobble rule, before any Java repair
 ///
-/// 1. base is the centre frequency; depth is the excursion.
-/// 2. The supplied sine has one at t=1/32.
-/// 3. Use both matched components: base + depth times the supplied sine.
+/// The contract is centre + depth × sin(16πt), with normalised time t from 0 to 1. That means eight
+/// complete modulation cycles during the sound, regardless of its duration in seconds. The sine
+/// ranges from -1 to +1, so depth is the maximum excursion below or above the centre.
+///
+/// `Math.sin(angle)` expects radians; `Math.PI` supplies π. A complete turn is 2π radians. At t = 0
+/// the sine is zero; at t = 1/32 its angle is π/2 and the sine is +1; at t = 3/32 it is -1. For a
+/// separate Wobble with centre 250 and depth 40, the first two frequencies are 250 and 290. Predict
+/// the third, then change only the depth. Translate the mathematical rule using the two matched
+/// components and t. Keep the time guard and the distinct Laser and Jump behaviours.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// The first Wobble component is the centre frequency; the second is the excursion depth.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// At t = 1/32 the specified modulation reaches +1; at t = 3/32 it reaches -1. Use the rule in For
+/// this game.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Compose the centre and depth with Math.sin and the angle described in For this game. Preserve the
+/// other cases and the time guard.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

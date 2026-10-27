@@ -24,12 +24,38 @@ import java.io.ByteArrayInputStream;
 /// After Run File, click cells to switch notes on and off, choose BPM and click Export WAV to save a
 /// rhythm you can open in a player.
 /// After your repair: Save → Test File → play again.
+///
+/// Need an explanation? Learn · F23 explains the Java skill; Read this code explains these lines.
+/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 boolean toggle(int row, int step) {
     if (row < 0 || row >= 4 || step < 0 || step >= 8) return false;
     Note note = new Note(row, step);
     if (!notes.remove(note)) notes.add(note);
     return true;
 }
+
+// <editor-fold defaultstate="expanded" desc="Learn · F23">
+/// ### Set: membership without duplicates
+///
+/// A `Set` answers whether a value belongs to a collection. It does not reserve an indexed place for
+/// each insertion.
+///
+/// ```java
+/// Set<String> stickers = new HashSet<>();
+/// IO.println(stickers.add("moon"));
+/// IO.println(stickers.add("moon"));
+/// IO.println(stickers.size());
+/// ```
+///
+/// The output is `true`, `false`, then `1`. The first add changes membership; the second finds an
+/// equal value already present. `contains(value)` asks without changing the set. `remove(value)`
+/// removes that value and reports whether it was present. A record's generated equality compares its
+/// component values, so two separately created equal records represent the same set member. Do not
+/// depend on HashSet iteration order.
+///
+/// Predict: after removing moon and adding sun, what are the size and the result of
+/// `contains("moon")`?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines
@@ -45,12 +71,16 @@ boolean toggle(int row, int step) {
 /// autoplay.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
-///
-/// 1. Equal Note records name the same grid position.
-/// 2. Set.remove returns whether the note was present.
-/// 3. Only add when removal found nothing; two toggles must restore the old Set.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Equal Note records name the same grid position.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Set.remove returns whether the note was present.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Only add when removal found nothing; two toggles must restore the old Set.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
