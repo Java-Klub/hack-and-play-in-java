@@ -1,0 +1,184 @@
+// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+// </editor-fold>
+
+/// # L11.09 · PixelSortingGlitch
+///
+/// Pull streaks out of a picture by sorting selected runs of pixels. The threshold changes where the
+/// glitch catches and where the original image survives.
+///
+/// **Your mission:** The transformed picture is saved as lost-pixels.png instead of the chosen filename.
+/// Repair its export destination without changing the input image.
+///
+/// **Today you learn:** A Path is part of the export contract, including its filename. The transformation
+/// and the destination are separate choices; saving must honour both rather than invent a neighbouring
+/// file.
+///
+/// After Run File, press Enter to sort the built-in picture into exports/pixel-sorted.png, then open that
+/// exact destination.
+/// After your repair: Save → Test File → play again.
+void saveSorted(Path path, BufferedImage input, int threshold) throws IOException {
+    Files.createDirectories(path.toAbsolutePath().getParent());
+    if (!ImageIO.write(sort(input, threshold), "png", path.resolveSibling("lost-pixels.png").toFile())) {
+        throw new IOException("PNG writer missing.");
+    }
+}
+
+// <editor-fold defaultstate="collapsed" desc="Read this code">
+/// ## Read these particular lines
+///
+/// - `Files.createDirectories` — Prepares destination directories and also works when they already exist.
+/// - `sort(input, threshold)` — Produces the transformed image from the supplied input and threshold.
+/// - `path.resolveSibling("lost-pixels.png")` — Chooses another name in the same parent directory,
+///   ignoring the requested filename.
+/// - `!ImageIO.write` — A false writer result becomes an explicit export failure.
+///
+/// ### What the prepared part already does
+///
+/// The supplied sort routine copies the input and sorts bounded brightness runs. main can use a built-in
+/// image, asks where to save it and calls saveSorted; ImageIO supplies the PNG encoding.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
+/// ## If you get stuck
+///
+/// 1. resolveSibling changes the requested filename.
+/// 2. sort already creates a separate output image.
+/// 3. Use the original Path for the encoder and keep the parent-directory creation.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+BufferedImage demo() {
+    var image = new BufferedImage(240, 160, BufferedImage.TYPE_INT_RGB);
+    for (int y = 0; y < 160; y++) {
+        for (int x = 0; x < 240; x++) {
+            image.setRGB(x, y, Color.HSBtoRGB(x / 240.0F, 0.7F, 0.2F + y / 200.0F));
+        }
+    }
+    return image;
+}
+
+int light(int rgb) {
+    return (((rgb >> 16) & 255) + ((rgb >> 8) & 255) + (rgb & 255)) / 3;
+}
+
+BufferedImage sort(BufferedImage input, int threshold) {
+    if (threshold < 0 || threshold > 255) {
+        throw new IllegalArgumentException("Threshold: 0..255.");
+    }
+    var output = new BufferedImage(input.getWidth(), input.getHeight(), BufferedImage.TYPE_INT_ARGB);
+    for (int y = 0; y < input.getHeight(); y++) {
+        int[] row = input.getRGB(0, y, input.getWidth(), 1, null, 0, input.getWidth());
+        int start = 0;
+        while (start < row.length) {
+            if (light(row[start]) < threshold) {
+                start++;
+                continue;
+            }
+            int end = start;
+            while (end < row.length && light(row[end]) >= threshold) {
+                end++;
+            }
+            Integer[] streak = new Integer[end - start];
+            for (int i = 0; i < streak.length; i++) {
+                streak[i] = row[start + i];
+            }
+            Arrays.sort(streak, Comparator.comparingInt(this::light));
+            for (int i = 0; i < streak.length; i++) {
+                row[start + i] = streak[i];
+            }
+            start = end;
+        }
+        output.setRGB(0, y, row.length, 1, row, 0, row.length);
+    }
+    return output;
+}
+
+/// Start the real program with Run File. Test File checks the rule without opening a window.
+/// sort preserves dark boundaries and the input image; its run sorting is supplied.
+/// main calls saveSorted for the actual selected output; ImageIO encodes PNG through the chosen Path.
+void main(String[] args) throws Exception {
+    if (args.length == 0) {
+        String entered = IO.readln("Output path (blank exports/pixel-sorted.png, q quits): ");
+        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
+        String destination = entered.isBlank() ? "exports/pixel-sorted.png" : entered.strip();
+        args = new String[]{"-", destination};
+    }
+
+    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
+        return;
+    }
+    try {
+        var input = args.length == 0 || args[0].equals("-") ? demo() : ImageIO.read(Path.of(args[0]).toFile());
+        if (input == null) {
+            throw new IllegalArgumentException("Input must be a readable image.");
+        }
+        Path output = Path.of(args.length > 1 ? args[1] : "pixel-sorted.png");
+        int option = args.length > 2 ? Integer.parseInt(args[2]) : 110;
+        saveSorted(output, input, option);
+        IO.println("Saved: " + output.toAbsolutePath());
+    } catch (IllegalArgumentException invalid) {
+        IO.println("Invalid options: " + invalid.getMessage());
+    }
+}
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
+/// ## An unfamiliar piece of Java?
+///
+/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+///
+/// - `///` — Words for the reader. Java skips these comment lines when running.
+/// - `import` — Makes library names available in this file; it does not run the library.
+/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
+///   parts.
+/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
+///   mean no supplied arguments.
+/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
+/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
+/// - `void` — This method performs an action and returns no result value.
+/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
+///   earlier in the file.
+/// - `int` — A type for whole numbers within a fixed range.
+/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
+/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
+/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
+///   type.
+/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
+/// - `==` — Compares primitive values. For text contents, use equals instead.
+/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
+/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
+/// - `!` — In front of a boolean expression, reverses true and false.
+/// - `++` — Increases a numeric value by one.
+/// - `+` — Adds numbers. When a String is involved, joins text instead.
+/// - `-` — Subtracts numbers; in front of one number, changes its sign.
+/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
+///   available.
+/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
+/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
+///   direction. In List<String>, angle brackets describe the element type.
+/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
+///   the second.
+/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
+///   alternatives of ? : or follows a switch label.
+/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
+///   count.
+/// - `new` — Creates a fresh value or object, such as a new array or window.
+/// - `return` — Ends this method call, optionally handing a result back to its caller.
+/// - `if` — Runs its body only when the condition in parentheses is true.
+/// - `for` — Repeats a block over a range or a sequence of values.
+/// - `while` — Keeps repeating its body while its condition stays true.
+/// - `::` — A method reference: supplies an action without calling it yet.
+/// - `this` — The current game object: this particular run and its stored state.
+/// - `null` — No object is present. IO.readln returns null when the input stream ends.
+/// - `try` — A block whose possible failures can be handled by the following catch.
+/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
+/// - `throw` — Reports a failure by creating or passing an exception.
+/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
+/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `Path` — A file-system location, not the file’s contents.
+/// - `Files` — JDK operations for reading and writing local files.
+// </editor-fold>
+

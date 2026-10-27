@@ -1,0 +1,174 @@
+// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+// </editor-fold>
+
+/// # L11.04 · MandelbrotPostcards
+///
+/// Send a postcard from the edge of the Mandelbrot set, where changing scale reveals new detail. Seeds
+/// should give the same landscape different, repeatable colour moods.
+///
+/// **Your mission:** Every seed produces the same palette because colour randomness always starts at
+/// zero. Restore the requested seed without changing the fractal calculation.
+///
+/// **Today you learn:** A seeded Random gives a repeatable sequence rather than a unique sequence every
+/// run. Here one drawn hue controls the palette: equal seeds should agree and different seeds should be
+/// able to differ.
+///
+/// After Run File, enter seed 42 and open mandelbrot-postcards-42.png, then rerun with 43 to compare
+/// palettes.
+/// After your repair: Save → Test File → play again.
+BufferedImage render(long seed, double span) {
+    if (!Double.isFinite(span) || span <= 1.0E-5 || span > 6 || !Double.isFinite(centerX + centerY)) {
+        throw new IllegalArgumentException("Span must be 0.00001..6.");
+    }
+    var image = new BufferedImage(480, 360, BufferedImage.TYPE_INT_RGB);
+    float hue = new Random(0).nextFloat();
+    for (int y = 0; y < 360; y++) {
+        for (int x = 0; x < 480; x++) {
+            int n = escape(centerX + (x / 479.0 - 0.5) * span, centerY + (y / 359.0 - 0.5) * span * 0.75);
+            image.setRGB(x, y, n == 160 ? 0 : Color.HSBtoRGB(hue + n / 55.0F, 0.8F, 1));
+        }
+    }
+    return image;
+}
+
+// <editor-fold defaultstate="collapsed" desc="Read this code">
+/// ## Read these particular lines
+///
+/// - `long seed` — The caller’s requested starting point for reproducible colour choices.
+/// - `new Random(0)` — Creates the same random sequence every time, ignoring the method’s seed parameter.
+/// - `nextFloat()` — Draws one hue offset from the chosen generator.
+/// - `n == 160 ? 0 :` — Keeps interior points black and colours the escaping points.
+///
+/// ### What the prepared part already does
+///
+/// main asks for a seed and save calls render. The supplied escape routine performs the bounded
+/// complex-number iteration, while the pixel loop combines its iteration count with the chosen hue and
+/// writes PNG.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
+/// ## If you get stuck
+///
+/// 1. The method already receives seed.
+/// 2. A hard-coded seed makes every palette identical.
+/// 3. Create the palette Random from the parameter, once per render.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+int escape(double x, double y) {
+    double a = 0;
+    double b = 0;
+    int steps = 0;
+    while (a * a + b * b <= 4 && steps < 160) {
+        double next = a * a - b * b + x;
+        b = 2 * a * b + y;
+        a = next;
+        steps++;
+    }
+    return steps;
+}
+double centerX = -0.6;
+double centerY = 0;
+
+/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
+void save(Path path, long seed, double option) throws Exception {
+    Files.createDirectories(path.toAbsolutePath().getParent());
+    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
+        throw new IllegalStateException("PNG writer missing.");
+    }
+}
+
+/// Start the real program with Run File. Test File checks the rule without opening a window.
+/// escape is the supplied bounded Mandelbrot calculation.
+/// render chooses one seeded hue and maps escape counts to colour; save/main export the local postcard.
+void main(String[] args) throws Exception {
+    if (args.length == 0) {
+        String entered = IO.readln("Seed (blank 42, q quits): ");
+        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
+        String seedText = entered.isBlank() ? "42" : entered.strip();
+        args = new String[]{"mandelbrot-postcards-" + seedText + ".png", seedText};
+    }
+
+    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
+        return;
+    }
+    try {
+        Path path = Path.of(args.length > 0 ? args[0] : "mandelbrot-postcards.png");
+        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
+        double option = args.length > 2 ? Double.parseDouble(args[2]) : 3.2;
+        if (args.length > 3) {
+            centerX = Double.parseDouble(args[3]);
+        }
+        if (args.length > 4) {
+            centerY = Double.parseDouble(args[4]);
+        }
+/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
+        save(path, seed, option);
+        IO.println("Saved: " + path.toAbsolutePath());
+    } catch (IllegalArgumentException invalid) {
+        IO.println("Invalid options: " + invalid.getMessage());
+    }
+}
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
+/// ## An unfamiliar piece of Java?
+///
+/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+///
+/// - `///` — Words for the reader. Java skips these comment lines when running.
+/// - `import` — Makes library names available in this file; it does not run the library.
+/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
+///   parts.
+/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
+///   mean no supplied arguments.
+/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
+/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
+/// - `void` — This method performs an action and returns no result value.
+/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
+///   earlier in the file.
+/// - `int` — A type for whole numbers within a fixed range.
+/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
+/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
+/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
+/// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
+/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
+///   type.
+/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
+/// - `==` — Compares primitive values. For text contents, use equals instead.
+/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
+/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
+/// - `!` — In front of a boolean expression, reverses true and false.
+/// - `++` — Increases a numeric value by one.
+/// - `+` — Adds numbers. When a String is involved, joins text instead.
+/// - `-` — Subtracts numbers; in front of one number, changes its sign.
+/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
+///   available.
+/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
+/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
+///   direction. In List<String>, angle brackets describe the element type.
+/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
+///   the second.
+/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
+///   alternatives of ? : or follows a switch label.
+/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
+///   count.
+/// - `new` — Creates a fresh value or object, such as a new array or window.
+/// - `return` — Ends this method call, optionally handing a result back to its caller.
+/// - `if` — Runs its body only when the condition in parentheses is true.
+/// - `for` — Repeats a block over a range or a sequence of values.
+/// - `while` — Keeps repeating its body while its condition stays true.
+/// - `null` — No object is present. IO.readln returns null when the input stream ends.
+/// - `try` — A block whose possible failures can be handled by the following catch.
+/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
+/// - `throw` — Reports a failure by creating or passing an exception.
+/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
+/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
+/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `Path` — A file-system location, not the file’s contents.
+/// - `Files` — JDK operations for reading and writing local files.
+// </editor-fold>
+

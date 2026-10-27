@@ -1,0 +1,194 @@
+/// # L02.05 · AnagramRounds
+///
+/// Unscramble five words and see how many you can solve within three guesses each. Several genuine
+/// anagrams may solve the same round, so a surprising word can still be right.
+///
+/// **Your mission:** A valid answer such as silent is rejected because its letter case differs from the
+/// word list. Repair normalize without losing the existing removal of outside spaces.
+///
+/// **Today you learn:** String operations: a text operation produces a result that you must use. A line
+/// can be cleaned at its edges and then normalized to the letter case expected by another part of the
+/// program.
+///
+/// Use Run File and type silent in the first round, then try a mixed-case spelling after the repair to
+/// see whether it is judged the same way.
+/// After your repair: Save → Test File → play again.
+String normalize(String input) {
+    return input.strip();
+}
+
+// <editor-fold defaultstate="collapsed" desc="Read this code">
+/// ## Read these particular lines
+///
+/// - `String normalize(String input)` — Receive one whole input line and return its normalized text.
+/// - `input` — The text received for this particular call, including any typed spaces and mixed case.
+/// - `.strip()` — Ask the text for a copy without leading and trailing whitespace; the empty parentheses
+///   supply no extra input.
+/// - `return input.strip();` — Return the result of the operation, rather than merely calling it and
+///   discarding the new text.
+///
+/// ### What the prepared part already does
+///
+/// command uses normalize before checking the curated answers. scramble shuffles the displayed letters;
+/// advance manages the five rounds and guess limits. The input loop already reads complete lines and
+/// handles replay.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
+/// ## If you get stuck
+///
+/// 1. strip already removes the outer spaces.
+/// 2. A String operation returns a new String; its result must be used.
+/// 3. Return input.strip().toUpperCase(Locale.ROOT).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+String[][] answers = {{"LISTEN", "SILENT", "ENLIST", "TINSEL"}, {"STONE", "TONES", "NOTES"}, {"EARTH", "HEART", "HATER"}, {"ANGEL", "GLEAN", "ANGLE"}, {"NIGHT", "THING"}};
+int round;
+int tries;
+int score;
+String scrambled;
+String outcome;
+
+void scramble() {
+    var letters = new ArrayList<Character>();
+    for (char c : answers[round][0].toCharArray()) {
+        letters.add(c);
+    }
+    Collections.shuffle(letters);
+    scrambled = "";
+    for (char c : letters) {
+        scrambled += c;
+    }
+}
+
+void reset() {
+    round = tries = score = 0;
+    outcome = "";
+    scramble();
+}
+
+void advance() {
+    round++;
+    tries = 0;
+    if (round == 5) {
+        outcome = "Finished: " + score + "/5";
+    } else {
+        scramble();
+    }
+}
+
+void command(String input) {
+    require(outcome.isEmpty());
+    String word = normalize(input);
+    if (word.equals("SKIP")) {
+        advance();
+        return;
+    }
+    require(word.matches("[A-Z]+"));
+    if (List.of(answers[round]).contains(word)) {
+        score++;
+        advance();
+    } else {
+        if (++tries == 3) {
+            advance();
+        }
+    }
+}
+
+void display() {
+    if (round < 5) {
+        IO.println("Round " + (round + 1) + "/5: " + scrambled + "; tries " + tries + "/3. Score " + score);
+    }
+}
+
+void main() {
+    reset();
+    IO.println("Anagram Rounds");
+    IO.println("Unscramble five words, three guesses each; skip moves on. Accepted alternatives are curated. /r restarts; /q quits.");
+    while (true) {
+        display();
+        if (!outcome.isEmpty()) {
+            IO.println(outcome);
+        }
+        String input = IO.readln("> ");
+        if (input == null || input.strip().equalsIgnoreCase("/q")) {
+            return;
+        }
+        if (input.strip().equalsIgnoreCase("/r")) {
+            reset();
+            continue;
+        }
+        if (!outcome.isEmpty()) {
+            IO.println("Round finished. /r restarts; /q quits.");
+            continue;
+        }
+        try {
+            command(input.strip());
+        } catch (IllegalArgumentException invalid) {
+            IO.println("Invalid move or command. Unscramble five words, three guesses each; skip moves on. Accepted alternatives are curated. /r restarts; /q quits.");
+        }
+    }
+}
+
+void require(boolean valid) {
+    if (!valid) {
+        throw new IllegalArgumentException("Invalid move or command.");
+    }
+}
+
+/// Prepared entry points: main, reset, command.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
+/// ## An unfamiliar piece of Java?
+///
+/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+///
+/// - `///` — Words for the reader. Java skips these comment lines when running.
+/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
+///   parts.
+/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
+///   mean no supplied arguments.
+/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
+/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
+/// - `void` — This method performs an action and returns no result value.
+/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
+///   earlier in the file.
+/// - `int` — A type for whole numbers within a fixed range.
+/// - `boolean` — A value that is either true or false.
+/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
+/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
+/// - `char` — A type for one UTF-16 code unit, often a simple board character such as X. Text uses
+///   String.
+/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
+///   type.
+/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
+/// - `==` — Compares primitive values. For text contents, use equals instead.
+/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
+/// - `!` — In front of a boolean expression, reverses true and false.
+/// - `++` — Increases a numeric value by one.
+/// - `+=` — Adds to the old value and stores the result back under the same name.
+/// - `+` — Adds numbers. When a String is involved, joins text instead.
+/// - `-` — Subtracts numbers; in front of one number, changes its sign.
+/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
+/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
+///   direction. In List<String>, angle brackets describe the element type.
+/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
+///   alternatives of ? : or follows a switch label.
+/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
+///   count.
+/// - `new` — Creates a fresh value or object, such as a new array or window.
+/// - `return` — Ends this method call, optionally handing a result back to its caller.
+/// - `if` — Runs its body only when the condition in parentheses is true.
+/// - `else` — The alternative when the preceding if condition is false.
+/// - `for` — Repeats a block over a range or a sequence of values.
+/// - `while` — Keeps repeating its body while its condition stays true.
+/// - `null` — No object is present. IO.readln returns null when the input stream ends.
+/// - `try` — A block whose possible failures can be handled by the following catch.
+/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
+/// - `throw` — Reports a failure by creating or passing an exception.
+/// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
+/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+// </editor-fold>
+

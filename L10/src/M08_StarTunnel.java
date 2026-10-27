@@ -1,0 +1,272 @@
+// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.Random;
+import javax.swing.Timer;
+// </editor-fold>
+
+/// # L10.08 · StarTunnel
+///
+/// Fly through a star tunnel and steer its vanishing point. Nearby stars should rush outward while
+/// distant ones cluster near the centre.
+///
+/// **Your mission:** An extra depth offset makes stars project at the wrong scale. Restore the requested
+/// depth while keeping the near-plane protection against unsafe division.
+///
+/// **Today you learn:** Projection converts a model position and depth into a screen point. A smaller
+/// safe depth produces a larger offset; the conversion should use the supplied request consistently.
+///
+/// After Run File, click or drag to start and steer the star tunnel, change speed with Up/Down and press
+/// Space to pause.
+/// After your repair: Save → Test File → play again.
+Point2D.Double project(Star star, double depth) {
+    double z = Math.max(5, depth + 100);
+    return new Point2D.Double(centreX + star.x * 260 / z, centreY + star.y * 260 / z);
+}
+
+// <editor-fold defaultstate="collapsed" desc="Read this code">
+/// ## Read these particular lines
+///
+/// - `Math.max(5, depth + 100)` — Clamps the divisor to a safe minimum, but also changes the requested
+///   depth.
+/// - `star.x * 260 / z` — Scales the horizontal model offset by inverse depth.
+/// - `centreX +` — Places the projected offset around the steering-controlled vanishing point.
+///
+/// ### What the prepared part already does
+///
+/// step moves stars toward the viewer and respawns those that pass the camera. The supplied renderer
+/// calls project for visible positions and trails; input controls speed, steering, pause and reset.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
+/// ## If you get stuck
+///
+/// 1. Perspective divides the x/y offset by depth.
+/// 2. The clamp protects zero or negative test depths.
+/// 3. Use max(5, depth), without an extra distance.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+final int WIDTH = 640, HEIGHT = 440;
+
+record Star(double x, double y, double z) {
+}
+
+ArrayList<Star> stars = new ArrayList<>();
+Random random;
+double centreX, centreY, speed;
+boolean paused;
+Star fresh() {
+    return new Star(random.nextDouble() * 1000 - 500, random.nextDouble() * 800 - 400, 800);
+}
+
+/// Supplied restart: restore the initial model before the UI uses it.
+void restart() {
+    random = new Random(38);
+    stars.clear();
+    for (int i = 0; i < 220; i++) {
+        var s = fresh();
+        stars.add(new Star(s.x, s.y, 20 + random.nextDouble() * 780));
+    }
+    centreX = WIDTH / 2;
+    centreY = HEIGHT / 2;
+    speed = 3;
+    paused = true;
+}
+
+void aim(int x, int y) {
+    centreX = Math.max(0, Math.min(WIDTH, x));
+    centreY = Math.max(0, Math.min(HEIGHT, y));
+}
+
+void adjust(double amount) {
+    speed = Math.max(1, Math.min(12, speed + amount));
+}
+
+/// Supplied bounded update: one call means one model step; the active repair is described above.
+void step() {
+    if (paused) {
+        return;
+    }
+    for (int i = 0; i < stars.size(); i++) {
+        var s = stars.get(i);
+        double z = s.z - speed;
+        stars.set(i, z < 5 ? fresh() : new Star(s.x, s.y, z));
+    }
+}
+
+/// Supplied drawing: reads model values; repainting is not another turn.
+void draw(Graphics2D g) {
+    g.setColor(new Color(7, 10, 24));
+    g.fillRect(0, 0, WIDTH, HEIGHT);
+    for (var s : stars) {
+        var head = project(s, s.z);
+        var tail = project(s, s.z + speed * 4);
+        int light = (int)Math.min(255, 100 + 155 * (1 - s.z / 800));
+        g.setColor(new Color(light, light, 255));
+        g.draw(new Line2D.Double(tail, head));
+    }
+    g.setColor(Color.WHITE);
+    g.drawString("Speed: " + (int)speed + "   " + (paused ? "Click or Space to fly" : "Drag to steer the vanishing point"), 12, 22);
+}
+
+void key(int code, boolean pressed) {
+    if (pressed && code == KeyEvent.VK_R) {
+/// Supplied restart: restore the initial model before the UI uses it.
+        restart();
+    }
+    if (pressed) {
+        switch (code) {
+            case KeyEvent.VK_SPACE -> paused = !paused;
+            case KeyEvent.VK_UP -> adjust(1);
+            case KeyEvent.VK_DOWN -> adjust(-1);
+        }
+    }
+}
+
+void press(int x, int y, int button) {
+    aim(x, y);
+    paused = false;
+}
+
+void drag(int x, int y) {
+    aim(x, y);
+}
+
+/// Supplied Swing UI: create it on the EDT; timer cleanup stays with the window.
+void showWindow() {
+    var frame = new JFrame("Star Tunnel");
+    var panel = new JPanel() {
+        @Override protected void paintComponent(Graphics graphics) {
+            super.paintComponent(graphics);
+            var g = (Graphics2D) graphics.create();
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+/// Supplied drawing: reads model values; repainting is not another turn.
+            draw(g);
+            g.dispose();
+        }
+    };
+    panel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+    panel.setBackground(Color.WHITE);
+    panel.setFocusable(true);
+    panel.addKeyListener(new KeyAdapter() {
+        @Override public void keyPressed(KeyEvent e) {
+            key(e.getKeyCode(), true);
+            panel.repaint();
+        }
+    });
+    var mouse = new MouseAdapter() {
+        @Override public void mousePressed(MouseEvent e) {
+            panel.requestFocusInWindow();
+            press(e.getX(), e.getY(), e.getButton());
+            panel.repaint();
+        }
+        @Override public void mouseDragged(MouseEvent e) {
+            drag(e.getX(), e.getY());
+            panel.repaint();
+        }
+    };
+    panel.addMouseListener(mouse);
+    panel.addMouseMotionListener(mouse);
+    var timer = new Timer(20, e -> {
+/// Supplied bounded update: one call means one model step; the active repair is described above.
+        step();
+        panel.repaint();
+    });
+    frame.addWindowListener(new WindowAdapter() {
+        @Override public void windowClosed(WindowEvent e) {
+            timer.stop();
+        }
+    });
+    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    frame.add(panel);
+    var help = new JLabel("<html><div style=\"text-align:center\">Click/drag: steer + start   Space: pause   Up/Down: speed   R: reset</div></html>", SwingConstants.CENTER);
+    help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+    frame.add(help, BorderLayout.SOUTH);
+    frame.pack();
+    frame.setResizable(false);
+    frame.setLocationByPlatform(true);
+    frame.setVisible(true);
+    panel.requestFocusInWindow();
+    timer.start();
+}
+
+/// Start the real program with Run File. Test File checks the rule without opening a window.
+/// project turns model values into screen points and is called by the real drawing path.
+/// Input changes model parameters; draw only reads them; the supplied UI owns timer and close behaviour.
+void main() {
+/// Supplied restart: restore the initial model before the UI uses it.
+    restart();
+    SwingUtilities.invokeLater(this::showWindow);
+}
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
+/// ## An unfamiliar piece of Java?
+///
+/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+///
+/// - `///` — Words for the reader. Java skips these comment lines when running.
+/// - `import` — Makes library names available in this file; it does not run the library.
+/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
+///   parts.
+/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
+///   mean no supplied arguments.
+/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
+/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
+/// - `void` — This method performs an action and returns no result value.
+/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
+///   earlier in the file.
+/// - `int` — A type for whole numbers within a fixed range.
+/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
+/// - `boolean` — A value that is either true or false.
+/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
+/// - `\` — Inside quoted text, starts an escape such as \n for a new line or \" for a quote.
+/// - `final` — The named value cannot be assigned another value afterwards. A referenced mutable object
+///   can still change.
+/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
+///   type.
+/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
+/// - `==` — Compares primitive values. For text contents, use equals instead.
+/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
+/// - `!` — In front of a boolean expression, reverses true and false.
+/// - `++` — Increases a numeric value by one.
+/// - `+` — Adds numbers. When a String is involved, joins text instead.
+/// - `-` — Subtracts numbers; in front of one number, changes its sign.
+/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
+///   available.
+/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
+/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
+///   direction. In List<String>, angle brackets describe the element type.
+/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
+///   the second.
+/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
+///   alternatives of ? : or follows a switch label.
+/// - `new` — Creates a fresh value or object, such as a new array or window.
+/// - `return` — Ends this method call, optionally handing a result back to its caller.
+/// - `if` — Runs its body only when the condition in parentheses is true.
+/// - `for` — Repeats a block over a range or a sequence of values.
+/// - `switch` — Selects one case from a set of alternatives. It can also produce a result.
+/// - `case` — One alternative of a switch; the arrow points to what it does or returns.
+/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
+///   later.
+/// - `::` — A method reference: supplies an action without calling it yet.
+/// - `this` — The current game object: this particular run and its stored state.
+/// - `public` — Makes this declaration accessible to other code.
+/// - `protected` — A visibility keyword used by supplied library callbacks, such as paintComponent.
+/// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
+///   background first.
+/// - `record` — A small named bundle of values. Its component accessors use the component names with ().
+/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
+/// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
+/// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
+/// - `JPanel` — A window area that can display the game’s drawing or controls.
+/// - `@Override` — Marks a supplied replacement for a library action, such as painting.
+/// - `SwingUtilities.invokeLater` — Schedules window work for Swing’s event thread; the action runs
+///   later.
+// </editor-fold>
+

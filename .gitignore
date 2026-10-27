@@ -1,0 +1,14 @@
+# Local IDE settings and reproducible build output.
+.DS_Store
+/L??/build/
+/L??/dist/
+/L??/nbproject/private/
+/L??/nbproject/build-impl.xml
+/L??/nbproject/genfiles.properties
+
+# Pictures, sound and default data generated while playing.
+/L??/*.png
+/L??/*.wav
+/L??/exports/
+/L??/portrait.txt
+/L??/seed.txt

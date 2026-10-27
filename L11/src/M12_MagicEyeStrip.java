@@ -1,0 +1,165 @@
+// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+// </editor-fold>
+
+/// # L11.12 · MagicEyeStrip
+///
+/// Grow a repeating dot strip that can hide a depth shape when your eyes match neighbouring patterns. The
+/// seed file lets you save and recreate a particular field of dots.
+///
+/// **Your mission:** The program tries to parse the filename as a number rather than reading the number
+/// inside it. Repair seed loading, including whitespace, bad content and a missing file.
+///
+/// **Today you learn:** A Path names a location; its text is not that location’s contents. Read the file
+/// before numeric conversion so missing data and malformed data remain distinct failures.
+///
+/// After Run File, press Enter to read seed.txt, created with 42 only if absent, then open
+/// magic-eye-strip.png.
+/// After your repair: Save → Test File → play again.
+long readSeed(Path path) throws IOException {
+    return Long.parseLong(path.toString());
+}
+
+// <editor-fold defaultstate="collapsed" desc="Read this code">
+/// ## Read these particular lines
+///
+/// - `Path path` — The selected location of a text file, not the numeric seed itself.
+/// - `path.toString()` — Produces a path such as seed.txt, not the text stored inside seed.txt.
+/// - `Long.parseLong` — Converts a numeric string into a long and rejects malformed content.
+/// - `throws IOException` — Allows a genuine file-reading failure to reach the caller’s error handling.
+///
+/// ### What the prepared part already does
+///
+/// main uses seed.txt by default and creates it with 42 only when absent. The supplied renderer builds
+/// repeatable dots and copies them at depth-dependent intervals; save writes magic-eye-strip.png.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
+/// ## If you get stuck
+///
+/// 1. A Path is a location, not the stored content.
+/// 2. Use Files.readString before numeric conversion.
+/// 3. Whitespace is allowed; bad content and a missing file stay distinct failures.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+BufferedImage render(long seed, double option) {
+    int depth = (int)option;
+    if (!Double.isFinite(option) || depth < 1 || depth > 24) {
+        throw new IllegalArgumentException("Disparity: 1..24 pixels.");
+    }
+    var image = new BufferedImage(600, 240, BufferedImage.TYPE_INT_RGB);
+    var random = new Random(seed);
+    for (int y = 0; y < 240; y++) {
+        for (int x = 0; x < 600; x++) {
+            int shift = x > 230 && x < 420 && y > 60 && y < 180 ? 80 - depth : 80;
+            int colour = x < 80 ? random.nextBoolean() ? 0xFFFFFF : 0 : image.getRGB(x - shift, y);
+            image.setRGB(x, y, colour);
+        }
+    }
+    return image;
+}
+
+/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
+void save(Path path, long seed, double option) throws Exception {
+    Files.createDirectories(path.toAbsolutePath().getParent());
+    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
+        throw new IllegalStateException("PNG writer missing.");
+    }
+}
+
+/// Start the real program with Run File. Test File checks the rule without opening a window.
+/// readSeed loads the optional text input; render uses it to initialise dot noise.
+/// The supplied period/depth rule makes the central shape; save/main export PNG without a network dependency.
+void main(String[] args) throws Exception {
+    if (args.length == 0) {
+        String entered = IO.readln("Seed text path (blank seed.txt, created with 42 if absent; q quits): ");
+        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
+        Path seedPath = Path.of(entered.isBlank() ? "seed.txt" : entered.strip());
+        try {
+            if (entered.isBlank() && !Files.exists(seedPath)) Files.writeString(seedPath, "42");
+            long seed = readSeed(seedPath);
+/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
+            save(Path.of("magic-eye-strip.png"), seed, 16);
+            IO.println("Loaded seed: " + seed + "; saved magic-eye-strip.png");
+        } catch (IOException | IllegalArgumentException failure) {
+            IO.println("Seed input failed: " + failure.getMessage());
+        }
+        return;
+    }
+
+    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
+        return;
+    }
+    try {
+        Path path = Path.of(args.length > 0 ? args[0] : "magic-eye-strip.png");
+        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
+        double option = args.length > 2 ? Double.parseDouble(args[2]) : 16;
+        if (args.length > 3) seed = readSeed(Path.of(args[3]));
+/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
+        save(path, seed, option);
+        IO.println("Saved: " + path.toAbsolutePath());
+    } catch (IllegalArgumentException invalid) {
+        IO.println("Invalid options: " + invalid.getMessage());
+    }
+}
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
+/// ## An unfamiliar piece of Java?
+///
+/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+///
+/// - `///` — Words for the reader. Java skips these comment lines when running.
+/// - `import` — Makes library names available in this file; it does not run the library.
+/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
+///   parts.
+/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
+///   mean no supplied arguments.
+/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
+/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
+/// - `void` — This method performs an action and returns no result value.
+/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
+///   earlier in the file.
+/// - `int` — A type for whole numbers within a fixed range.
+/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
+/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
+/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
+/// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
+/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
+///   type.
+/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
+/// - `==` — Compares primitive values. For text contents, use equals instead.
+/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
+/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
+/// - `!` — In front of a boolean expression, reverses true and false.
+/// - `++` — Increases a numeric value by one.
+/// - `+` — Adds numbers. When a String is involved, joins text instead.
+/// - `-` — Subtracts numbers; in front of one number, changes its sign.
+/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
+///   available.
+/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
+///   direction. In List<String>, angle brackets describe the element type.
+/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
+///   the second.
+/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
+///   alternatives of ? : or follows a switch label.
+/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
+///   count.
+/// - `new` — Creates a fresh value or object, such as a new array or window.
+/// - `return` — Ends this method call, optionally handing a result back to its caller.
+/// - `if` — Runs its body only when the condition in parentheses is true.
+/// - `for` — Repeats a block over a range or a sequence of values.
+/// - `null` — No object is present. IO.readln returns null when the input stream ends.
+/// - `try` — A block whose possible failures can be handled by the following catch.
+/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
+/// - `throw` — Reports a failure by creating or passing an exception.
+/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
+/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
+/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `Path` — A file-system location, not the file’s contents.
+/// - `Files` — JDK operations for reading and writing local files.
+// </editor-fold>
+

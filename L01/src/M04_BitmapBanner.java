@@ -1,0 +1,146 @@
+/// # L01.04 · BitmapBanner
+///
+/// Make a large arcade sign out of small printed # characters. The handmade alphabet lets you turn a
+/// short message into five rows of pixel lettering.
+///
+/// **Your mission:** The sign currently prints only blank space. Repair the message from bannerMessage so
+/// the default sign reads JAVA CLUB!.
+///
+/// **Today you learn:** Literals and output: the chosen text determines what another action prints.
+/// Spaces inside quotes are real characters too, even though their output can look empty.
+///
+/// Use Run File and look in Output for the five-line sign; after repairing it, try reading it from
+/// farther away.
+/// After your repair: Save → Test File → play again.
+String bannerMessage() {
+    return "     ";
+}
+
+// <editor-fold defaultstate="collapsed" desc="Read this code">
+/// ## Read these particular lines
+///
+/// - `String` — This action answers with text rather than a number.
+/// - `bannerMessage()` — The empty parentheses mean no input is needed to choose the default sign.
+/// - `{` — The matching braces contain the answer-producing body.
+/// - `return` — Pass the message back; this statement does not print the sign by itself.
+/// - `"     "` — This literal contains five spaces, not an empty pair of quotes. The font renders those
+///   spaces as blank cells.
+/// - `;` — Finish the return statement after the text value.
+///
+/// ### What the prepared part already does
+///
+/// banner already contains the small letter patterns and builds five output rows. main asks for the
+/// default message and prints the result. This font supports A B C J L U V ! and spaces.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
+/// ## If you get stuck
+///
+/// 1. Spaces are real characters, but this font leaves them blank.
+/// 2. Keep the text inside one pair of double quotes.
+/// 3. The complete return statement is return "JAVA CLUB!";
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+Map<Character, String> font = Map.of(
+    'A', "01110/10001/11111/10001/10001",
+    'B', "11110/10001/11110/10001/11110",
+    'C', "01111/10000/10000/10000/01111",
+    'J', "00111/00010/00010/10010/01100",
+    'L', "10000/10000/10000/10000/11111",
+    'U', "10001/10001/10001/10001/01110",
+    'V', "10001/10001/10001/01010/00100",
+    '!', "00100/00100/00100/00000/00100",
+    ' ', "00000/00000/00000/00000/00000"
+);
+
+String banner(String message, char ink) {
+    if (message.isEmpty() || message.length() > 30) {
+        throw new IllegalArgumentException("Message length: 1..30.");
+    }
+    String upper = message.toUpperCase(Locale.ROOT);
+    var result = new StringBuilder();
+    for (int row = 0; row < 5; row++) {
+        for (char letter : upper.toCharArray()) {
+            String glyph = font.get(letter);
+            if (glyph == null) {
+                throw new IllegalArgumentException("Supported letters: A B C J L U V ! and space.");
+            }
+            for (char pixel : glyph.split("/")[row].toCharArray()) {
+                result.append(pixel == '1' ? ink : ' ');
+            }
+            result.append(' ');
+        }
+        result.append('\n');
+    }
+    return result.toString();
+}
+
+void main(String[] args) {
+    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
+        return;
+    }
+    try {
+        String message = args.length > 0 ? args[0] : bannerMessage();
+        char ink = args.length > 1 && !args[1].isEmpty() ? args[1].charAt(0) : '#';
+        IO.print(banner(message, ink));
+    } catch (IllegalArgumentException invalid) {
+        IO.println(invalid.getMessage());
+    }
+}
+
+/// Prepared entry points: main.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
+/// ## An unfamiliar piece of Java?
+///
+/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+///
+/// - `///` — Words for the reader. Java skips these comment lines when running.
+/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
+///   parts.
+/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
+///   mean no supplied arguments.
+/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
+/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
+/// - `void` — This method performs an action and returns no result value.
+/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
+///   earlier in the file.
+/// - `int` — A type for whole numbers within a fixed range.
+/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
+/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
+/// - `'` — Single quotes enclose one character, such as a board marker.
+/// - `\` — Inside quoted text, starts an escape such as \n for a new line or \" for a quote.
+/// - `char` — A type for one UTF-16 code unit, often a simple board character such as X. Text uses
+///   String.
+/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
+///   type.
+/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
+/// - `==` — Compares primitive values. For text contents, use equals instead.
+/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
+/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
+/// - `!` — In front of a boolean expression, reverses true and false.
+/// - `++` — Increases a numeric value by one.
+/// - `+` — Adds numbers. When a String is involved, joins text instead.
+/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
+/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
+///   direction. In List<String>, angle brackets describe the element type.
+/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
+///   the second.
+/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
+///   alternatives of ? : or follows a switch label.
+/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
+///   count.
+/// - `new` — Creates a fresh value or object, such as a new array or window.
+/// - `return` — Ends this method call, optionally handing a result back to its caller.
+/// - `if` — Runs its body only when the condition in parentheses is true.
+/// - `for` — Repeats a block over a range or a sequence of values.
+/// - `null` — No object is present. IO.readln returns null when the input stream ends.
+/// - `try` — A block whose possible failures can be handled by the following catch.
+/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
+/// - `throw` — Reports a failure by creating or passing an exception.
+/// - `Map` — Associates keys with values. A missing key needs an explicit fallback or decision.
+/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+// </editor-fold>
+

@@ -1,0 +1,156 @@
+/// # L09.07 · MarkovMischief
+///
+/// Feed a tiny word machine a phrase and let it remix new nonsense from words it has seen together.
+/// Repeated examples should influence which continuation wins the next draw.
+///
+/// **Your mission:** Training forgets earlier followers whenever a word appears again. Restore the
+/// collected possibilities so the remix can escape a repetitive two-word loop.
+///
+/// **Today you learn:** This Map stores a List as each value: one word can have several followers,
+/// including repeated ones. Create a word’s collection deliberately, then preserve it across later
+/// occurrences.
+///
+/// After Run File, press Enter to remix the sample corpus moon cat moon dog moon cat, or type your own
+/// short phrase.
+/// After your repair: Save → Test File → play again.
+Map<String, List<String>> train(String text) {
+    if (text.isBlank() || text.length() > 100000) {
+        throw new IllegalArgumentException("Corpus size: 1..100000 characters.");
+    }
+    String[] words = text.strip().split("\\s+");
+    var links = new LinkedHashMap<String, List<String>>();
+    for (int i = 0; i < words.length; i++) {
+        if (true) {
+            links.put(words[i], new ArrayList<>());
+        }
+        if (i + 1 < words.length) {
+            links.get(words[i]).add(words[i + 1]);
+        }
+    }
+    return links;
+}
+
+// <editor-fold defaultstate="collapsed" desc="Read this code">
+/// ## Read these particular lines
+///
+/// - `Map<String, List<String>>` — Each string key maps to an ordered collection of possible next words.
+/// - `if (true)` — This branch runs every time; consider what that does to an existing follower list.
+/// - `links.put(words[i], new ArrayList<>())` — Replaces any collection already stored for this word with
+///   a fresh empty one.
+/// - `links.get(words[i]).add(words[i + 1])` — Finds this word’s collection and appends the following
+///   word.
+///
+/// ### What the prepared part already does
+///
+/// main reads your corpus and train builds the links. The supplied generator repeatedly draws a follower
+/// from the matching list; keeping duplicates gives repeated examples more weight.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
+/// ## If you get stuck
+///
+/// 1. The same word can occur several times in the corpus.
+/// 2. Replacing its List discards all earlier followers.
+/// 3. Guard the initial put with containsKey; keep every later add, including duplicate followers.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+String corpus = "The moon hired a tiny dragon. The tiny dragon collected umbrellas. "
+    + "The moon collected rumours. Every umbrella wanted a holiday. Every dragon wanted the moon.";
+
+String generate(String text, long seed, int count) {
+    if (count < 1 || count > 200) {
+        throw new IllegalArgumentException("Words: 1..200.");
+    }
+    var links = train(text);
+    String first = links.keySet().iterator().next();
+    String current = first;
+    var random = new Random(seed);
+    var output = new StringJoiner(" ");
+    for (int i = 0; i < count; i++) {
+        output.add(current);
+        var next = links.get(current);
+        current = next.isEmpty() ? first : next.get(random.nextInt(next.size()));
+    }
+    return output.toString();
+}
+
+/// Start the real program with Run File. Test File checks the rule without opening a window.
+/// train builds a LinkedHashMap whose values are mutable follower Lists.
+/// generate follows links with the supplied seed; main optionally reads a local corpus.
+void main(String[] args) throws Exception {
+    if (args.length == 0) {
+        String entered = IO.readln("Corpus (blank moon cat moon dog moon cat, q quits): ");
+        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
+        corpus = entered.isBlank() ? "moon cat moon dog moon cat" : entered;
+    }
+
+    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
+        return;
+    }
+    try {
+        long seed = args.length > 0 ? Long.parseLong(args[0]) : 42;
+        int count = args.length > 1 ? Integer.parseInt(args[1]) : 50;
+        if (args.length > 2) {
+            corpus = Files.readString(Path.of(args[2]));
+        }
+        IO.println(generate(corpus, seed, count));
+    } catch (IllegalArgumentException invalid) {
+        IO.println(invalid.getMessage());
+    }
+}
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
+/// ## An unfamiliar piece of Java?
+///
+/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+///
+/// - `///` — Words for the reader. Java skips these comment lines when running.
+/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
+///   parts.
+/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
+///   mean no supplied arguments.
+/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
+/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
+/// - `void` — This method performs an action and returns no result value.
+/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
+///   earlier in the file.
+/// - `int` — A type for whole numbers within a fixed range.
+/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
+/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
+/// - `\` — Inside quoted text, starts an escape such as \n for a new line or \" for a quote.
+/// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
+/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
+///   type.
+/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
+/// - `==` — Compares primitive values. For text contents, use equals instead.
+/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
+/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
+/// - `++` — Increases a numeric value by one.
+/// - `+` — Adds numbers. When a String is involved, joins text instead.
+/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
+///   direction. In List<String>, angle brackets describe the element type.
+/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
+///   the second.
+/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
+///   alternatives of ? : or follows a switch label.
+/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
+///   count.
+/// - `new` — Creates a fresh value or object, such as a new array or window.
+/// - `return` — Ends this method call, optionally handing a result back to its caller.
+/// - `if` — Runs its body only when the condition in parentheses is true.
+/// - `for` — Repeats a block over a range or a sequence of values.
+/// - `null` — No object is present. IO.readln returns null when the input stream ends.
+/// - `try` — A block whose possible failures can be handled by the following catch.
+/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
+/// - `throw` — Reports a failure by creating or passing an exception.
+/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
+/// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
+/// - `Map` — Associates keys with values. A missing key needs an explicit fallback or decision.
+/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
+/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `Path` — A file-system location, not the file’s contents.
+/// - `Files` — JDK operations for reading and writing local files.
+// </editor-fold>
+

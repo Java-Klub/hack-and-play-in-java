@@ -1,0 +1,186 @@
+/// # L12.06 · CipherPostcards
+///
+/// Send a puzzle postcard in one of three toy ciphers and decode it again. Changing the cipher card
+/// should change the transformation while keeping spaces and punctuation recognisable.
+///
+/// **Your mission:** The Vigenere alternative is routed to an unchanged Caesar result. Make it use its
+/// own carried key and decoding choice while retaining the other cipher alternatives.
+///
+/// **Today you learn:** Record patterns give each closed alternative its own named data. The switch
+/// should forward that matched data to the correct supplied algorithm, rather than treating every card as
+/// the same operation.
+///
+/// After Run File, press Enter for Vigenere and again for LEMON, then type ATTACK AT DAWN! to make an
+/// encoded postcard.
+/// After your repair: Save → Test File → play again.
+String transform(String text, Cipher cipher, boolean decode) {
+    return switch (cipher) {
+        case Caesar(var shift) -> applyText(text, "caesar", Integer.toString(shift), decode);
+        case Substitution(var alphabet) -> applyText(text, "substitution", alphabet, decode);
+        case Vigenere(var keyword) -> applyText(text, "caesar", "0", decode);
+    };
+}
+
+// <editor-fold defaultstate="collapsed" desc="Read this code">
+/// ## Read these particular lines
+///
+/// - `return switch (cipher)` — Computes the method result from exactly one matched cipher alternative.
+/// - `case Vigenere(var keyword)` — Extracts the keyword stored in this particular Vigenere record.
+/// - `"caesar", "0"` — Currently selects a different algorithm with a fixed zero shift.
+/// - `decode` — Carries the caller’s choice of forward or reverse transformation.
+///
+/// ### What the prepared part already does
+///
+/// main asks for cipher, key and message, then chooseCipher constructs the typed card. applyText already
+/// handles letter arithmetic, case, punctuation and key validation; these toy ciphers are puzzles, not
+/// secure messaging.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
+/// ## If you get stuck
+///
+/// 1. The matched keyword belongs to this Vigenere value.
+/// 2. Use that component, rather than a fixed key or another cipher mode.
+/// 3. applyText already handles letter case, punctuation, key validation and reverse transformation.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+String applyText(String text, String mode, String key, boolean decode) {
+    String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    String upper = key.toUpperCase(Locale.ROOT);
+    if (mode.equals("substitution") && (!upper.matches("[A-Z]{26}") || upper.chars().distinct().count() != 26)) {
+        throw new IllegalArgumentException("Substitution key needs each A-Z once.");
+    }
+    if (mode.equals("vigenere") && !key.matches("[A-Za-z]+")) {
+        throw new IllegalArgumentException("Vigenere key needs ASCII letters.");
+    }
+    if (!List.of("caesar", "substitution", "vigenere").contains(mode)) {
+        throw new IllegalArgumentException("Unknown cipher.");
+    }
+    int shift = mode.equals("caesar") ? Integer.parseInt(key) : 0;
+    var output = new StringBuilder();
+    int position = 0;
+    for (char c : text.toCharArray()) {
+        boolean lower = c >= 'a' && c <= 'z';
+        int index = c >= 'A' && c <= 'Z' ? c - 'A' : lower ? c - 'a' : -1;
+        if (index < 0) {
+            output.append(c);
+            continue;
+        }
+        int result;
+        if (mode.equals("substitution")) {
+            result = decode ? upper.indexOf(alphabet.charAt(index)) : upper.charAt(index) - 'A';
+        } else {
+            int amount = mode.equals("caesar") ? Math.floorMod(shift, 26) : upper.charAt(position % upper.length()) - 'A';
+            result = Math.floorMod(index + (decode ? -amount : amount), 26);
+        }
+        output.append((char)((lower ? 'a' : 'A') + result));
+        position++;
+    }
+    return output.toString();
+}
+
+sealed interface Cipher permits Caesar, Substitution, Vigenere {}
+record Caesar(int shift) implements Cipher {}
+record Substitution(String alphabet) implements Cipher {}
+record Vigenere(String keyword) implements Cipher {}
+Cipher chooseCipher(String mode, String key) {
+    return switch (mode) {
+        case "caesar" -> new Caesar(Integer.parseInt(key));
+        case "substitution" -> new Substitution(key);
+        case "vigenere" -> new Vigenere(key);
+        default -> throw new IllegalArgumentException("Unknown cipher.");
+    };
+}
+
+/// Start the real program with Run File. Test File checks the rule without opening a window.
+/// chooseCipher turns the selected mode/key into typed data; transform matches its components.
+/// applyText supplies character arithmetic and validation; main reads local text with q/EOF handling.
+void main(String[] args) {
+    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
+        return;
+    }
+    String mode = args.length > 0 ? args[0] : IO.readln("Cipher caesar/substitution/vigenere (blank vigenere, q quits): ");
+    if (mode == null || mode.strip().equalsIgnoreCase("q")) return;
+    mode = mode.isBlank() ? "vigenere" : mode.strip().toLowerCase(Locale.ROOT);
+    String key = args.length > 1 ? args[1] : IO.readln("Key (blank uses 3 / reversed alphabet / LEMON; q quits): ");
+    if (key == null || key.strip().equalsIgnoreCase("q")) return;
+    if (key.isBlank()) key = mode.equals("caesar") ? "3" : mode.equals("substitution") ? "ZYXWVUTSRQPONMLKJIHGFEDCBA" : "LEMON";
+    String text = args.length > 2 ? args[2] : IO.readln("Message (q to quit): ");
+    if (text == null || text.equalsIgnoreCase("q")) {
+        return;
+    }
+    try {
+        IO.println(transform(text, chooseCipher(mode, key), args.length > 3 && args[3].equals("decode")));
+    } catch (IllegalArgumentException invalid) {
+        IO.println(invalid.getMessage());
+    }
+    IO.println("Toy ciphers are puzzles, not modern secure encryption.");
+}
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
+/// ## An unfamiliar piece of Java?
+///
+/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+///
+/// - `///` — Words for the reader. Java skips these comment lines when running.
+/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
+///   parts.
+/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
+///   mean no supplied arguments.
+/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
+/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
+/// - `void` — This method performs an action and returns no result value.
+/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
+///   earlier in the file.
+/// - `int` — A type for whole numbers within a fixed range.
+/// - `boolean` — A value that is either true or false.
+/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
+/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
+/// - `'` — Single quotes enclose one character, such as a board marker.
+/// - `char` — A type for one UTF-16 code unit, often a simple board character such as X. Text uses
+///   String.
+/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
+///   type.
+/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
+/// - `==` — Compares primitive values. For text contents, use equals instead.
+/// - `!=` — Checks that two values differ.
+/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
+/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
+/// - `!` — In front of a boolean expression, reverses true and false.
+/// - `++` — Increases a numeric value by one.
+/// - `%` — The remainder after division; useful for repeated positions or turns.
+/// - `+` — Adds numbers. When a String is involved, joins text instead.
+/// - `-` — Subtracts numbers; in front of one number, changes its sign.
+/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
+/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
+///   direction. In List<String>, angle brackets describe the element type.
+/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
+///   the second.
+/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
+///   alternatives of ? : or follows a switch label.
+/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
+///   count.
+/// - `new` — Creates a fresh value or object, such as a new array or window.
+/// - `return` — Ends this method call, optionally handing a result back to its caller.
+/// - `if` — Runs its body only when the condition in parentheses is true.
+/// - `else` — The alternative when the preceding if condition is false.
+/// - `for` — Repeats a block over a range or a sequence of values.
+/// - `switch` — Selects one case from a set of alternatives. It can also produce a result.
+/// - `case` — One alternative of a switch; the arrow points to what it does or returns.
+/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
+///   later.
+/// - `implements` — Says that a record or class fulfils the named interface role.
+/// - `record` — A small named bundle of values. Its component accessors use the component names with ().
+/// - `interface` — Describes a role that different implementations can fulfil. The caller can use that
+///   role without choosing its internals.
+/// - `sealed` — Restricts a data type to its explicitly listed alternatives.
+/// - `null` — No object is present. IO.readln returns null when the input stream ends.
+/// - `try` — A block whose possible failures can be handled by the following catch.
+/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
+/// - `throw` — Reports a failure by creating or passing an exception.
+/// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
+/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+// </editor-fold>
+
