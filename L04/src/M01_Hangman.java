@@ -126,21 +126,32 @@ void main() {
     IO.println("HANGMAN: reveal the word before six wrong letters.");
     IO.println("Repeated letters cost nothing. Every letter accepts either case.");
     IO.println("/r chooses a new word; /q quits.");
+    boolean showState = true;
     while (true) {
-        IO.println(mask() + "    Tried: " + tried + "    Misses: " + misses + "/6");
-        if (over()) {
-            IO.println((won() ? "You win!" : "Out of guesses!") + " Word: " + word);
+        if (showState) {
+            IO.println(mask() + "    Tried: " + tried + "    Misses: " + misses + "/6");
+            if (over()) {
+                IO.println((won() ? "You win!" : "Out of guesses!") + " Word: " + word);
+            }
+            showState = false;
         }
-        String input = IO.readln(over() ? "/r replay, /q quit: " : "Guess A-Z, /r restart, /q quit: ");
+        String input = IO.readln(over() ? "Enter or /r: new round; /q: quit: " : "Guess A-Z, /r restart, /q quit: ");
         if (input == null || input.trim().equalsIgnoreCase("/q")) {
             return;
         }
         input = input.trim();
-        if (input.equalsIgnoreCase("/r")) {
+        if ((input.equalsIgnoreCase("/r") || (over() && input.isBlank()))) {
             reset();
+            showState = true;
             continue;
         }
-        if (!guess(input)) {
+        if (over()) {
+            IO.println("Round finished. Press Enter or /r for a new round; /q quits.");
+            continue;
+        }
+        if (guess(input)) {
+            showState = true;
+        } else {
             IO.println("Enter one new letter A-Z during an unfinished round.");
         }
     }
@@ -177,8 +188,6 @@ void main() {
 /// - `++` — Zvětší číselnou hodnotu o jedna.
 /// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
 /// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
-/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
-/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
 /// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
@@ -195,7 +204,7 @@ void main() {
 /// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
 /// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
 ///   zopakuje stejnou posloupnost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek. readln čeká na celý
+///   řádek vstupu.
 // </editor-fold>
 

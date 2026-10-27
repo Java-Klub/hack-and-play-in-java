@@ -274,7 +274,6 @@ void main() {
 /// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
 /// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
 /// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
-/// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
 /// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
 /// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
 /// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package

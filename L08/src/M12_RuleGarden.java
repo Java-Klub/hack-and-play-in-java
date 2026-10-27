@@ -9,8 +9,8 @@
 /// **Dnes trénuješ:** Simultaneous updates (současné aktualizace): odděl čtený snapshot (snímek) od
 /// zapisované generace. Výsledek nemá záviset na průchodu sloupců zleva či zprava.
 ///
-/// Spusť Run File, napiš 90 a potvrď Enter pro vytvoření vzoru, potom program spusť znovu s jiným
-/// pravidlem od 0 do 255.
+/// Run File hned ukáže rule (pravidlo) 30 v Output (výstupu). V další výzvě napiš 90 pro porovnání,
+/// stiskni Enter pro opakování současného pravidla, nebo q pro konec.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Nová dovednost · F26 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -101,22 +101,41 @@ List<String> grow(int rule, int width, int rows) {
     return result;
 }
 
-/// main(): Načte jedno pravidlo nebo volitelné argumenty, vypíše konečný vzor a skončí.
-void main(String[] args) {
-    String text = args.length > 0 ? args[0] : IO.readln("Rule 0..255 (q to quit): ");
-    if (text == null || text.equalsIgnoreCase("q")) {
-        return;
+/// displayRule(): Vypíše konečný vzor vybraného pravidla.
+void displayRule(int rule, int width, int rows) {
+    IO.println("Rule " + rule + "; # is on, . is off; cells outside the width stay off.");
+    for (String line : grow(rule, width, rows)) {
+        IO.println(line);
     }
-    try {
-        int rule = Integer.parseInt(text.strip());
-        int width = args.length > 1 ? Integer.parseInt(args[1]) : 61;
-        int rows = args.length > 2 ? Integer.parseInt(args[2]) : 31;
-        IO.println("Rule " + rule + "; cells outside the printed width stay off.");
-        for (String line : grow(rule, width, rows)) {
-            IO.println(line);
+}
+
+/// Run File hned vypíše rule (pravidlo) 30. # znamená zapnuto a . vypnuto; řádek je jedna generace.
+/// V dalším prompt (výzvě) zkus jiné pravidlo, Enter zopakuje současné a q skončí. Žádný soubor neotvíráš.
+void main() {
+    int rule = 30;
+    IO.println("RULE GARDEN: watch one starting cell grow into a pattern.");
+    IO.println("Each printed line is a new generation. Try 90 or 110 to compare with rule 30.");
+    displayRule(rule, 61, 31);
+    while (true) {
+        String input = IO.readln("New rule 0..255; Enter or r: repeat; q: quit: ");
+        if (input == null) {
+            return;
         }
-    } catch (IllegalArgumentException invalidInput) {
-        IO.println("Use rule 0..255, width 3..121 and rows 1..60.");
+        input = input.strip();
+        if (input.equalsIgnoreCase("q") || input.equalsIgnoreCase("/q")) {
+            return;
+        }
+        try {
+            int requested = input.isEmpty() || input.equalsIgnoreCase("r") || input.equalsIgnoreCase("/r")
+                    ? rule : Integer.parseInt(input);
+            if (requested < 0 || requested > 255) {
+                throw new IllegalArgumentException("Rule: 0..255.");
+            }
+            rule = requested;
+            displayRule(rule, 61, 31);
+        } catch (IllegalArgumentException invalidInput) {
+            IO.println("Enter a rule number from 0 to 255, or q to quit.");
+        }
     }
 }
 // </editor-fold>
@@ -173,7 +192,7 @@ void main(String[] args) {
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
 /// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
 ///   měnit velikost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek. readln čeká na celý
+///   řádek vstupu.
 // </editor-fold>
 

@@ -20,7 +20,7 @@ import javax.swing.Timer;
 /// další tick (časový krok) jej použije jednou, takže zákaz otočení stále vychází z posledního skutečného
 /// pohybu.
 ///
-/// Po Run File veď hada šipkami k jídlu a po skončení kola začni znovu klávesou R.
+/// Po Run File šipka spustí hada; dalšími šipkami jej veď k jídlu. Náraz nebo zaplněná plocha ukončí kolo; R obnoví začátek a čeká na další šipku.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Připomenutí · F30 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -170,29 +170,35 @@ void draw(Graphics g) {
 /// Připravené Swing UI (rozhraní): vytváří se na EDT; úklid timer (časovače) patří k oknu.
 void showWindow() {
     var frame = new JFrame("Snake - Snack Snake");
+    boolean[] launched = {false};
     var panel = new JPanel() {
         @Override protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 /// Připravené kreslení: čte hodnoty model (modelu pravidel); repaint (překreslení) není další tah.
             draw(g);
+            if (!launched[0]) {
+                g.setColor(Color.WHITE);
+                g.drawString("Arrow key to start", 20, 65);
+            }
         }
     };
     panel.setPreferredSize(new Dimension(COLUMNS * TILE, ROWS * TILE + 50));
     panel.setFocusable(true);
     panel.addKeyListener(new KeyAdapter() {
         @Override public void keyPressed(KeyEvent event) {
+            if (event.getKeyCode() >= KeyEvent.VK_LEFT && event.getKeyCode() <= KeyEvent.VK_DOWN) launched[0] = true;
             switch (event.getKeyCode()) {
                 case KeyEvent.VK_LEFT -> turn(-1, 0);
                 case KeyEvent.VK_RIGHT -> turn(1, 0);
                 case KeyEvent.VK_UP -> turn(0, -1);
                 case KeyEvent.VK_DOWN -> turn(0, 1);
-                case KeyEvent.VK_R -> restart();
+                case KeyEvent.VK_R -> { restart(); launched[0] = false; }
             }
         }
     });
     var timer = new Timer(125, event -> {
 /// Připravený omezený update (aktualizace): jedno volání znamená jeden krok; aktivní oprava je popsaná výše.
-        step();
+        if (launched[0]) step();
         panel.repaint();
     });
     frame.addWindowListener(new WindowAdapter() {
@@ -209,8 +215,7 @@ void showWindow() {
 }
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// turn je aktivní hranice; model (model pravidel) ji zpřístupňuje pro opakovatelné check (kontroly) bez okna.
-/// Restart obnoví počáteční field (položky objektu); draw čte state (stav); showWindow dodává listener (obsluhy), jeden timer (časovač) a úklid po zavření.
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();
@@ -278,7 +283,7 @@ void main() {
 ///   implementaci), aby nejprve vykreslila běžné pozadí.
 /// - `record` — Malý pojmenovaný balíček hodnot. Component accessor (přístupová metoda složky) má jméno
 ///   složky a závorky ().
-/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `null` — Žádný object (objekt) tu není.
 /// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
 ///   měnit velikost.
 /// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)

@@ -166,28 +166,32 @@ void display() {
 void main() {
     reset();
     IO.println("Blackjack / Twenty-One");
-    IO.println("h hits, s stands. One hand, no bets or splitting. /r deals again; /q quits.");
+    IO.println("h hits, s stands. One hand at a time. /r deals again; /q quits.");
+    boolean showState = true;
     while (true) {
-        display();
-        if (!outcome.isEmpty()) {
-            IO.println(outcome);
+        if (showState) {
+            display();
+            if (!outcome.isEmpty()) IO.println(outcome);
+            showState = false;
         }
-        String input = IO.readln("> ");
+        String input = IO.readln(outcome.isEmpty() ? "> " : "Enter or /r: new round; /q: quit: ");
         if (input == null || input.strip().equalsIgnoreCase("/q")) {
             return;
         }
-        if (input.strip().equalsIgnoreCase("/r")) {
+        if (input.strip().equalsIgnoreCase("/r") || (!outcome.isEmpty() && input.isBlank())) {
             reset();
+            showState = true;
             continue;
         }
         if (!outcome.isEmpty()) {
-            IO.println("Round finished. /r restarts; /q quits.");
+            IO.println("Round finished. Press Enter or /r for a new round; /q quits.");
             continue;
         }
         try {
             command(input.strip());
+            showState = true;
         } catch (IllegalArgumentException invalid) {
-            IO.println("Invalid move or command. h hits, s stands. One hand, no bets or splitting. /r deals again; /q quits.");
+            IO.println("Invalid move or command. h hits, s stands. One hand at a time. /r deals again; /q quits.");
         }
     }
 }
@@ -232,7 +236,6 @@ void require(boolean valid) {
 /// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
 /// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
 /// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
-/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
 /// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
@@ -251,7 +254,7 @@ void require(boolean valid) {
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
 /// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
 ///   měnit velikost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek. readln čeká na celý
+///   řádek vstupu.
 // </editor-fold>
 

@@ -254,8 +254,7 @@ void showWindow() {
 }
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// Step vypočte pružinu a jednou přidá bod stopy.
-/// Draw kreslí existující stopu a závaží; showWindow odděluje timer update (aktualizaci časovače) od repaint (překreslení).
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

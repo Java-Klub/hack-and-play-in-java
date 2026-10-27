@@ -5,9 +5,6 @@ import javax.swing.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L10.06 · MirrorArt
@@ -22,8 +19,8 @@ import javax.imageio.ImageIO;
 /// potom se vrátí k obrazovce. Připravená trigonometrie řeší otočení; ověř, které posuny ke středu ještě
 /// chybějí.
 ///
-/// Po Run File nakresli tah tažením, šipkami Up/Down měň osy zrcadlení, klávesou C barvu a pomocí S
-/// obrázek ulož.
+/// Po Run File táhni čáru a prohlédni její odrazy, pomocí Up/Down měň osy zrcadlení a R kresbu
+/// vymaž a obnov.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Připomenutí · F29 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -63,8 +60,8 @@ Point2D.Double transform(int x, int y, int copy, boolean reflect) {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Obsluha tažení požádá transform o každou otočenou i zrcadlenou kopii a vykreslí tyto pozice na trvalé
-/// plátno. Ovládání os, změna barvy, mazání i PNG export jsou připravené.
+/// stroke volá upravované transform pro každou zrcadlenou kopii a uchová čáry na jednom canvas
+/// (kreslicí ploše). Up/Down mění osy; R kresbu vymaže a obnoví pokus.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -83,10 +80,9 @@ Point2D.Double transform(int x, int y, int copy, boolean reflect) {
 final int WIDTH = 640, HEIGHT = 440;
 
 BufferedImage canvas;
-int axes, colour, lastX, lastY;
+int axes, lastX, lastY;
 boolean drawing;
 String message;
-Color[] colours = {new Color(40, 80, 170), new Color(200, 65, 120), new Color(30, 150, 120), new Color(220, 140, 30)};
 void clear() {
     var g = canvas.createGraphics();
     g.setColor(Color.WHITE);
@@ -99,7 +95,6 @@ void restart() {
     canvas = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
     clear();
     axes = 6;
-    colour = 0;
     drawing = false;
     message = "Draw with the mouse";
 }
@@ -110,7 +105,7 @@ void adjust(int amount) {
 
 void stroke(int x1, int y1, int x2, int y2) {
     var g = canvas.createGraphics();
-    g.setColor(colours[colour]);
+    g.setColor(new Color(40, 80, 170));
     g.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
     for (int i = 0; i < axes; i++) {
         for (boolean reflected : new boolean[]{false, true}) {
@@ -120,21 +115,6 @@ void stroke(int x1, int y1, int x2, int y2) {
     g.dispose();
 }
 
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-void save(File file) throws IOException {
-    ImageIO.write(canvas, "png", file);
-}
-
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-void save() {
-    try {
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-        save(new File("mirror-art.png"));
-        message = "Saved mirror-art.png";
-    } catch (IOException e) {
-        message = "Save failed: " + e.getMessage();
-    }
-}
 
 /// Připravené kreslení: čte hodnoty model (modelu pravidel); repaint (překreslení) není další tah.
 void draw(Graphics2D g) {
@@ -155,9 +135,6 @@ void key(int code, boolean pressed) {
         switch (code) {
             case KeyEvent.VK_UP -> adjust(1);
             case KeyEvent.VK_DOWN -> adjust(-1);
-            case KeyEvent.VK_C -> colour = (colour + 1) % colours.length;
-            case KeyEvent.VK_BACK_SPACE -> clear();
-            case KeyEvent.VK_S -> save();
         }
     }
 }
@@ -221,7 +198,7 @@ void showWindow() {
     panel.addMouseMotionListener(mouse);
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.add(panel);
-    var help = new JLabel("<html><div style=\"text-align:center\">Drag: draw   Up/Down: axes   C: colour   Backspace: clear   S: save PNG   R: reset</div></html>", SwingConstants.CENTER);
+    var help = new JLabel("<html><div style=\"text-align:center\">Drag: draw   Up/Down: axes   R: reset</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
     frame.add(help, BorderLayout.SOUTH);
     frame.pack();
@@ -232,8 +209,7 @@ void showWindow() {
 }
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// transform mění hodnoty modelu na body obrazovky a volá ji skutečné kreslení.
-/// Input (vstup) mění hodnoty modelu; draw je jen čte; připravené UI (rozhraní) řídí timer (časovač) i zavření.
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();
@@ -272,7 +248,6 @@ void main() {
 /// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
 /// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
 /// - `++` — Zvětší číselnou hodnotu o jedna.
-/// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
 /// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
 /// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
 /// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
@@ -301,11 +276,7 @@ void main() {
 ///   (knihovním zpětným voláním), například paintComponent.
 /// - `super` — V super.paintComponent(g) požádá připravenou parent implementation (nadřazenou
 ///   implementaci), aby nejprve vykreslila běžné pozadí.
-/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
-/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
-/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
-/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
-///   zpracovat.
+/// - `null` — Žádný object (objekt) tu není.
 /// - `Graphics2D` — Kreslicí nástroj dodaný při vykreslování okna nebo obrázku.
 /// - `JFrame` — Okno dodané JDK knihovnou Swing.
 /// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.

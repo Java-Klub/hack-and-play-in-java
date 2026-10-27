@@ -281,8 +281,7 @@ void showWindow() {
 Runnable fireCallback = firingAction();
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// Fire vytváří střelu s omezenou životností; existující guard (podmínky) řeší cooldown a konec.
-/// Step volá fireCallback pro držený Space, potom posune loď/kameny/střely; showWindow spravuje připravené EDT/timer i úklid.
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

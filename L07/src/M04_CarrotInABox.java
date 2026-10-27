@@ -122,11 +122,13 @@ void show() {
         if (answer >= 0) {
             choose(answer == 1);
             refresh();
+            play.setEnabled(false);
         }
     });
     var restart = new JButton("Restart");
     restart.addActionListener((e) -> {
         reset();
+        play.setEnabled(true);
         refresh();
     });
     frame.add(play, BorderLayout.NORTH);
@@ -182,9 +184,6 @@ void require(boolean valid) {
 /// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
 /// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
 ///   (balíčku).
-/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
-/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
-///   List<String> lomené závorky popisují element type (typ prvku).
 /// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
 ///   druhou.
 /// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
@@ -199,7 +198,7 @@ void require(boolean valid) {
 /// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
 /// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
 /// - `enum` — Type (typ) s pevnou sadou pojmenovaných hodnot, například READY, PLAYING a FINISHED.
-/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `null` — Žádný object (objekt) tu není.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
 /// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
 ///   zopakuje stejnou posloupnost.

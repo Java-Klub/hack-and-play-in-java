@@ -178,38 +178,54 @@ void command(String input) {
 }
 
 void display() {
-    IO.println("Dice " + Arrays.toString(dice) + "; roll " + rolls + "/3; total " + total());
+    IO.println("Dice positions:  1  2  3  4  5");
+    IO.println("Dice values:    " + Arrays.toString(dice));
+    IO.println("Hand " + Math.min(13, turn + 1) + "/13; rerolls left " + (3 - rolls) + "; total " + total());
     for (int i = 0; i < 13; i++) {
-        IO.println((i + 1) + " " + names[i] + ": " + (scores[i] >= 0 ? scores[i] : "open; now " + value(i)));
+        IO.println((i + 1) + " " + names[i] + ": " + (scores[i] >= 0 ? scores[i] + " points saved" : "open; this hand would score " + value(i)));
     }
-    IO.println("Upper sum63 earns35. FullHouse25, SmallStraight30, Large40, Yatzy50. No Joker or repeat bonuses.");
+    IO.println(rolls < 3 ? "Example: roll 4 5 changes only dice 4 and 5; the others stay. Or bank an open category." : "No rerolls left. Bank an open category to continue.");
+    IO.println("Example: bank 2 saves the Twos score in category 2. Each category can be filled once. /help explains scoring.");
 }
 
 void main() {
     reset();
     IO.println("Yatzy Scorecard");
-    IO.println("roll positions(1-5), at most two rerolls; bank category(1-13) fills it once. /r restarts; /q quits.");
+    IO.println("Each hand starts with five dice. Reroll selected positions up to twice, then save one open scoring category. /help explains scores; /r restarts; /q quits.");
+    boolean showState = true;
     while (true) {
-        display();
-        if (!outcome.isEmpty()) {
-            IO.println(outcome);
+        if (showState) {
+            display();
+            if (!outcome.isEmpty()) IO.println(outcome);
+            showState = false;
         }
-        String input = IO.readln("> ");
+        String input = IO.readln(outcome.isEmpty() ? (rolls < 3 ? "roll 4 5, bank category, /help, /r, /q: " : "bank category, /help, /r, /q: ") : "Enter or /r: new round; /q: quit: ");
         if (input == null || input.strip().equalsIgnoreCase("/q")) {
             return;
         }
-        if (input.strip().equalsIgnoreCase("/r")) {
+        if (input.strip().equalsIgnoreCase("/r") || (!outcome.isEmpty() && input.isBlank())) {
             reset();
+            showState = true;
+            continue;
+        }
+        if (input.strip().equalsIgnoreCase("/help")) {
+            IO.println("Categories 1-6: add only dice showing that number. Example: Twos adds all the 2s.");
+            IO.println("Three-kind or Four-kind: at least three or four equal dice; score the sum of all five dice.");
+            IO.println("Full-house: a triple and a pair, 25 points. Small-straight: four consecutive values, 30 points.");
+            IO.println("Large-straight: five consecutive values, 40 points. Yatzy: five equal dice, 50 points.");
+            IO.println("Chance: sum all five dice. A category whose condition is not met scores zero.");
+            IO.println("If categories 1-6 total at least 63, add a 35-point bonus. Bank fills a category even when it scores zero.");
             continue;
         }
         if (!outcome.isEmpty()) {
-            IO.println("Round finished. /r restarts; /q quits.");
+            IO.println("Round finished. Press Enter or /r for a new round; /q quits.");
             continue;
         }
         try {
             command(input.strip());
+            showState = true;
         } catch (IllegalArgumentException invalid) {
-            IO.println("Invalid move or command. roll positions(1-5), at most two rerolls; bank category(1-13) fills it once. /r restarts; /q quits.");
+            IO.println("Move rejected. Try roll 4 5 while rerolls remain, or bank 2 if category 2 is open. /help explains scoring.");
         }
     }
 }
@@ -257,7 +273,6 @@ void require(boolean valid) {
 /// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
 /// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
 ///   (balíčku).
-/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
 /// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
@@ -282,7 +297,7 @@ void require(boolean valid) {
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
 /// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
 ///   zopakuje stejnou posloupnost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek. readln čeká na celý
+///   řádek vstupu.
 // </editor-fold>
 

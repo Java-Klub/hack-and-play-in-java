@@ -247,7 +247,7 @@ void showWindow() {
     panel.addMouseListener(mouse);
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.add(panel);
-    var help = new JLabel("<html><div style=\"text-align:center\">Click a faint edge: 0 / 1 / 2 bridges   R: reset</div></html>", SwingConstants.CENTER);
+    var help = new JLabel("<html><div style=\"text-align:center\">Click a faint edge: 0 / 1 / 2 bridges<br>U: undo one change   R: reset</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
     frame.add(help, BorderLayout.SOUTH);
     frame.pack();
@@ -258,6 +258,7 @@ void showWindow() {
 }
 
 /// main(): Spouští model a potom plánuje dodané okno na Swing event thread.
+/// Připravené Undo (vrácení změny) ovládá U: obnoví jeden předchozí tah. R začne hádanku znovu.
 void main() {
     restart();
     SwingUtilities.invokeLater(this::showWindow);
@@ -313,7 +314,6 @@ void undo() {
 /// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
 /// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
 ///   (balíčku).
-/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
 /// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
@@ -334,7 +334,7 @@ void undo() {
 ///   (knihovním zpětným voláním), například paintComponent.
 /// - `super` — V super.paintComponent(g) požádá připravenou parent implementation (nadřazenou
 ///   implementaci), aby nejprve vykreslila běžné pozadí.
-/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `null` — Žádný object (objekt) tu není.
 /// - `Graphics2D` — Kreslicí nástroj dodaný při vykreslování okna nebo obrázku.
 /// - `JFrame` — Okno dodané JDK knihovnou Swing.
 /// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.

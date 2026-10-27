@@ -154,6 +154,7 @@ void remove(int x, int y) {
     if (found) {
         previousBoxes = snapshot();
         boxes.removeIf(box -> box.contains(x, y));
+        message = "Rectangle removed";
     }
 }
 
@@ -292,7 +293,7 @@ void showWindow() {
     panel.addMouseMotionListener(mouse);
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.add(panel);
-    var help = new JLabel("<html><div style=\"text-align:center\">Drag: add rectangle   Right click: remove rectangle   R: reset</div></html>", SwingConstants.CENTER);
+    var help = new JLabel("<html><div style=\"text-align:center\">Drag: add rectangle   Right click: remove rectangle<br>U: undo one change   R: reset</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
     frame.add(help, BorderLayout.SOUTH);
     frame.pack();
@@ -303,6 +304,7 @@ void showWindow() {
 }
 
 /// main(): Spouští model a potom plánuje dodané okno na Swing event thread.
+/// Připravené Undo (vrácení změny) ovládá U: obnoví jeden předchozí tah. R začne hádanku znovu.
 void main() {
     restart();
     SwingUtilities.invokeLater(this::showWindow);
@@ -315,6 +317,8 @@ void undo() {
     if (previousBoxes != null) {
         boxes = previousBoxes;
         previousBoxes = null;
+        startX = -1;
+        message = "Previous layout restored";
     }
 }
 // </editor-fold>
@@ -383,7 +387,7 @@ void undo() {
 ///   implementaci), aby nejprve vykreslila běžné pozadí.
 /// - `record` — Malý pojmenovaný balíček hodnot. Component accessor (přístupová metoda složky) má jméno
 ///   složky a závorky ().
-/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `null` — Žádný object (objekt) tu není.
 /// - `Graphics2D` — Kreslicí nástroj dodaný při vykreslování okna nebo obrázku.
 /// - `JFrame` — Okno dodané JDK knihovnou Swing.
 /// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.

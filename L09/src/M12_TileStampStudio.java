@@ -2,7 +2,6 @@
 import java.awt.*;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L09.12 · TileStampStudio
@@ -16,7 +15,8 @@ import javax.imageio.ImageIO;
 /// **Dnes trénuješ:** Nejprve proveď parsing (rozbor) a ověření candidate (kandidáta), teprve potom změň
 /// sdílený state (stav). Úspěch má znamenat skutečné použití požadované volby, ne pouhý zdařený převod.
 ///
-/// Po Run File namaluj dlaždici, napiš 3 do políčka Repeats a klikni na Repeats pro změnu hustoty vzoru.
+/// Po Run File klikáním zapínej či vypínej barvu políček; napiš 3 a klikni na Repeats pro změnu
+/// hustoty vzoru. Clear obnoví dlaždici.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Připomenutí · F31 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -72,8 +72,8 @@ boolean applyRepeats(String text) {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Input (vstup) opakování volá applyRepeats a náhled potom čte repeats field (položku objektu). Kreslení
-/// dlaždice, skládání vzoru i PNG export jsou připravené; oprava řeší jednu hranici nastavení.
+/// Každé kliknutí přepne zdrojové políčko mezi barvou a prázdným místem. render dlaždici opakuje a
+/// tlačítko Repeats volá applyRepeats pro skutečný náhled; Clear obnoví dlaždici.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
@@ -101,8 +101,7 @@ boolean applyRepeats(String text) {
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 int[][] tile = new int[8][8];
-int[] palette = {0xFFFFFF, 0x182030, 0xE94B8A, 0x36BDD6, 0xF7CB43};
-int brush = 1;
+int[] palette = {0xFFFFFF, 0x182030};
 JButton[][] buttons = new JButton[8][8];
 
 boolean paint(int row, int col, int colour) {
@@ -158,7 +157,7 @@ void showWindow() {
             var button = new JButton();
             buttons[row][col] = button;
             button.addActionListener(event -> {
-                paint(r, c, brush);
+                paint(r, c, tile[r][c] == 0 ? 1 : 0);
                 refresh();
                 preview.repaint();
             });
@@ -166,9 +165,6 @@ void showWindow() {
         }
     }
     var controls = new JPanel();
-    var colours = new JComboBox<>(new String[]{"White", "Ink", "Pink", "Cyan", "Gold"});
-    colours.setSelectedIndex(1);
-    colours.addActionListener(event -> brush = colours.getSelectedIndex());
     var clear = new JButton("Clear");
     clear.addActionListener(event -> {
         tile = new int[8][8];
@@ -176,15 +172,6 @@ void showWindow() {
         preview.repaint();
     });
     var status = new JLabel("Repeated preview");
-    var save = new JButton("Export PNG");
-    save.addActionListener(event -> {
-        try {
-            ImageIO.write(render(repeats), "png", Path.of("tile-stamp.png").toFile());
-            status.setText("Saved tile-stamp.png");
-        } catch (Exception failure) {
-            status.setText(failure.getMessage());
-        }
-    });
     var repeatText = new JTextField("6", 3);
     var apply = new JButton("Repeats");
     apply.addActionListener(event -> {
@@ -194,9 +181,7 @@ void showWindow() {
     });
     controls.add(repeatText);
     controls.add(apply);
-    controls.add(colours);
     controls.add(clear);
-    controls.add(save);
     frame.add(grid, BorderLayout.WEST);
     frame.add(preview, BorderLayout.CENTER);
     frame.add(controls, BorderLayout.SOUTH);
@@ -210,12 +195,8 @@ void showWindow() {
 int repeats = 6;
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// Paint mění jednu cell (buňku) dlaždice; render ji opakovaně čte.
-/// Nové políčko Repeats volá applyRepeats; stejná hodnota řídí náhled i PNG save (uložení).
-void main(String[] args) {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
+void main() {
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
@@ -244,7 +225,6 @@ void main(String[] args) {
 ///   textu nepatří.
 /// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
 /// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
-/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
 /// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
 /// - `++` — Zvětší číselnou hodnotu o jedna.
 /// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
@@ -273,11 +253,10 @@ void main(String[] args) {
 ///   (knihovním zpětným voláním), například paintComponent.
 /// - `super` — V super.paintComponent(g) požádá připravenou parent implementation (nadřazenou
 ///   implementaci), aby nejprve vykreslila běžné pozadí.
-/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `null` — Žádný object (objekt) tu není.
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
 /// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
-/// - `Path` — Umístění v souborech, nikoli obsah souboru.
 /// - `JFrame` — Okno dodané JDK knihovnou Swing.
 /// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.
 /// - `SwingUtilities.invokeLater` — Naplánuje práci s oknem na Swing event thread (vlákno událostí); akce

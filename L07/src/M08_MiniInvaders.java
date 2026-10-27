@@ -218,9 +218,16 @@ void showWindow() {
         }
     };
     panel.setPreferredSize(new Dimension(WIDTH, HEIGHT + 42));
+    var status = new JLabel("Left / Right / Space: start   Clear all aliens before they descend   R: restart");
+    frame.add(status, BorderLayout.NORTH);
     panel.setFocusable(true);
+    boolean[] started = {false};
     panel.addKeyListener(new KeyAdapter() {
         void change(KeyEvent event, boolean pressed) {
+            if (pressed && (event.getKeyCode() == KeyEvent.VK_LEFT
+                    || event.getKeyCode() == KeyEvent.VK_RIGHT || event.getKeyCode() == KeyEvent.VK_SPACE)) {
+                started[0] = true;
+            }
             switch (event.getKeyCode()) {
                 case KeyEvent.VK_LEFT -> left = pressed;
                 case KeyEvent.VK_RIGHT -> right = pressed;
@@ -228,6 +235,7 @@ void showWindow() {
                 case KeyEvent.VK_R -> {
                     if (pressed) {
                         restart();
+                        started[0] = false;
                     }
                 }
             }
@@ -240,7 +248,9 @@ void showWindow() {
         }
     });
     var timer = new Timer(20, event -> {
-        step();
+        if (started[0]) {
+            step();
+        }
         panel.repaint();
     });
     frame.addWindowFocusListener(new WindowAdapter() {

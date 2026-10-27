@@ -10,9 +10,9 @@
 /// AND vyžaduje obě. U trojice bez dvojice nejdřív urči obě pravdivostní hodnoty zvlášť a teprve potom je
 /// spoj.
 ///
-/// Použij Run File pro prohlédnutí cvičné kombinace a bodů, potom například příkazem roll 4 5 přehoď
-/// pouze tyto dvě kostky a příkazem bank ulož body.
-/// Po opravě: Save → Test File → zahraj si znovu.
+/// Použij Run File: kostky jsou očíslované a kliknutím je vybereš k přehození. V úvodní kombinaci
+/// ponech tři dvojky, vyber kostky 4 a 5 a stiskni Reroll selected. Bank points uloží body a
+/// připraví další kolo; Scoring help vysvětlí kombinace.
 ///
 /// Potřebuješ výklad? Připomenutí · F06 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
 /// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
@@ -146,38 +146,69 @@ void command(String input) {
     }
 }
 
-void display() {
-    IO.println("Round " + (round + 1) + "/5; dice " + Arrays.toString(dice) + "; roll " + rolls + "/3; current points " + points() + "; total " + total);
-    IO.println("Five50 Four40 FullHouse35 Straight30 Three20 TwoPairs10 Pair5 High0. Equal categories tie.");
-}
-
 void main() {
     reset();
-    IO.println("Poker Dice");
-    IO.println("roll positions(1-5) rerolls those dice, at most twice; bank scores the hand. Five rounds. /r restarts; /q quits.");
-    while (true) {
-        display();
-        if (!outcome.isEmpty()) {
-            IO.println(outcome);
-        }
-        String input = IO.readln("> ");
-        if (input == null || input.strip().equalsIgnoreCase("/q")) {
-            return;
-        }
-        if (input.strip().equalsIgnoreCase("/r")) {
-            reset();
-            continue;
-        }
-        if (!outcome.isEmpty()) {
-            IO.println("Round finished. /r restarts; /q quits.");
-            continue;
-        }
-        try {
-            command(input.strip());
-        } catch (IllegalArgumentException invalid) {
-            IO.println("Invalid move or command. roll positions(1-5) rerolls those dice, at most twice; bank scores the hand. Five rounds. /r restarts; /q quits.");
-        }
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        IO.println("Poker Dice needs a graphical display; the model remains headless-testable.");
+        return;
     }
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame("Poker Dice");
+        var dicePanel = new javax.swing.JPanel(new java.awt.GridLayout(1, 5, 8, 8));
+        var picks = new javax.swing.JToggleButton[5];
+        for (int i = 0; i < picks.length; i++) {
+            picks[i] = new javax.swing.JToggleButton();
+            picks[i].setPreferredSize(new java.awt.Dimension(95, 100));
+            dicePanel.add(picks[i]);
+        }
+        var status = new javax.swing.JLabel();
+        var feedback = new javax.swing.JLabel("Opening: keep the three 2s; try selecting dice 4 and 5, then Reroll selected.");
+        var reroll = new javax.swing.JButton("Reroll selected");
+        var bank = new javax.swing.JButton("Bank points / next round");
+        var restart = new javax.swing.JButton("New game");
+        var rules = new javax.swing.JButton("Scoring help");
+        Runnable refresh = () -> {
+            boolean selected = false;
+            for (int i = 0; i < picks.length; i++) {
+                picks[i].setText("<html><center>Die " + (i + 1) + "<br><span style='font-size:30px'>" + dice[i] + "</span><br>" + (picks[i].isSelected() ? "REROLL" : "keep") + "</center></html>");
+                picks[i].setEnabled(outcome.isEmpty() && rolls < 3);
+                selected |= picks[i].isSelected();
+            }
+            status.setText(outcome.isEmpty() ? "Round " + (round + 1) + "/5. Rerolls left: " + (3 - rolls) + ". This hand: " + points() + " points. Banked total: " + total : outcome);
+            reroll.setEnabled(outcome.isEmpty() && rolls < 3 && selected);
+            bank.setEnabled(outcome.isEmpty());
+        };
+        for (var pick : picks) pick.addActionListener(event -> refresh.run());
+        reroll.addActionListener(event -> {
+            String request = "roll";
+            for (int i = 0; i < picks.length; i++) if (picks[i].isSelected()) request += " " + (i + 1);
+            command(request);
+            for (var pick : picks) pick.setSelected(false);
+            feedback.setText(rolls < 3 ? "Select dice to change, or bank the current points." : "No rerolls left. Bank this hand to continue.");
+            refresh.run();
+        });
+        bank.addActionListener(event -> {
+            int earned = points();
+            command("bank");
+            for (var pick : picks) pick.setSelected(false);
+            feedback.setText(outcome.isEmpty() ? "Banked " + earned + " points. A new hand is ready." : "Finished. Use New game to play again.");
+            refresh.run();
+        });
+        restart.addActionListener(event -> { reset(); for (var pick : picks) pick.setSelected(false); feedback.setText("Select the dice you want to change; unselected dice stay."); refresh.run(); });
+        rules.addActionListener(event -> javax.swing.JOptionPane.showMessageDialog(frame,
+            "Only the highest matching hand scores.\nFive equal dice: 50. Four equal: 40.\nFull house: a triple AND a pair, 35.\nStraight 1-2-3-4-5 or 2-3-4-5-6: 30.\nThree equal: 20. Two pairs: 10. One pair: 5. Otherwise: 0.\nBank keeps those points and advances one of five rounds.", "Scoring help", javax.swing.JOptionPane.INFORMATION_MESSAGE));
+        var buttons = new javax.swing.JPanel();
+        buttons.add(reroll); buttons.add(bank); buttons.add(restart); buttons.add(rules);
+        var content = new javax.swing.JPanel(new java.awt.BorderLayout(8, 8));
+        content.setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 12, 12, 12));
+        content.add(new javax.swing.JLabel("Click a die to select it for reroll. You may reroll twice, or bank at any time."), java.awt.BorderLayout.NORTH);
+        content.add(dicePanel);
+        var bottom = new javax.swing.JPanel(new java.awt.GridLayout(3, 1));
+        bottom.add(status); bottom.add(feedback); bottom.add(buttons);
+        content.add(bottom, java.awt.BorderLayout.SOUTH);
+        frame.add(content); frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        refresh.run(); frame.pack(); frame.setLocationByPlatform(true); frame.setVisible(true);
+    });
 }
 
 void require(boolean valid) {
@@ -221,7 +252,6 @@ void require(boolean valid) {
 /// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
 /// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
 /// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
-/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
 /// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
@@ -235,14 +265,9 @@ void require(boolean valid) {
 /// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
 /// - `else` — Alternativní větev pro případ, že předchozí if condition (podmínka) neplatí.
 /// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
-/// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
-/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
-/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
-/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
 /// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
 ///   zopakuje stejnou posloupnost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek.
 // </editor-fold>
 

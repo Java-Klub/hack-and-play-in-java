@@ -4,17 +4,14 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Random;
-import javax.imageio.ImageIO;
 import javax.swing.Timer;
 // </editor-fold>
 
 /// # L04.06 · VirtualScribbler
 ///
-/// Nech neposedné pero rozvíjet kresbu po plátně a potom řiď jeho tah a roztěkanost. Zastav zajímavý vzor
-/// nebo ulož obrázek před vyčištěním plátna pro další pokus.
+/// Nech neposedné pero rozvíjet kresbu po plátně a potom řiď jeho tah a roztěkanost. Zastav
+/// zajímavý vzor a prohlédni si ho před vyčištěním plátna pro další pokus.
 ///
 /// **Tvoje mise:** Každá požadovaná dávka vykreslí o krok méně. Oprav burst tak, aby count vyžádalo právě
 /// tolik call (volání) step, včetně nuly a jedné; zachovej hranice i pravidla pozastavení.
@@ -74,9 +71,10 @@ void burst(int count) {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// step zajišťuje neklidný pohyb pera, odrazy od okrajů, kreslení i kontrolu pozastavení. Timer (časovač)
-/// pravidelně žádá burst o čtyři kroky; draw ukazuje plátno a skutečný counter (počítadlo) Steps bez
-/// pohybu pera. Připravené ovládání řeší tah, roztěkanost, obnovení i export scribble.png.
+/// step zajišťuje neklidný pohyb pera, odrazy od okrajů, kreslení i kontrolu pozastavení. Timer
+/// (časovač) pravidelně žádá burst o čtyři kroky; draw ukazuje plátno a skutečný counter
+/// (počítadlo) Steps bez pohybu pera. Připravené ovládání řeší tah, roztěkanost, pozastavení a
+/// obnovení.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
@@ -109,7 +107,6 @@ Random random;
 double x, y, angle;
 int drift, jitter, steps;
 boolean paused;
-String message;
 void clear() {
     var g = canvas.createGraphics();
     g.setColor(Color.WHITE);
@@ -128,7 +125,6 @@ void restart() {
     jitter = 4;
     steps = 0;
     paused = true;
-    message = "Space starts the pen";
 }
 
 void adjust(int d, int j) {
@@ -159,19 +155,6 @@ void step() {
     y = ny;
 }
 
-void save(File file) throws IOException {
-    ImageIO.write(canvas, "png", file);
-}
-
-void save() {
-    try {
-        save(new File("scribble.png"));
-        message = "Saved scribble.png";
-    } catch (IOException e) {
-        message = "Save failed: " + e.getMessage();
-    }
-}
-
 void draw(Graphics2D g) {
     g.drawImage(canvas, 0, 0, null);
     g.setColor(Color.RED);
@@ -179,7 +162,7 @@ void draw(Graphics2D g) {
     g.setColor(new Color(245, 245, 245));
     g.fillRect(0, 0, WIDTH, 28);
     g.setColor(Color.BLACK);
-    g.drawString("Steps: " + steps + "  Drift: " + drift + "  Jitter: " + jitter + "  " + (paused ? "Paused" : "Drawing") + "  " + message, 10, 20);
+    g.drawString("Steps: " + steps + "  Drift: " + drift + "  Jitter: " + jitter + "  " + (paused ? "Paused" : "Drawing"), 10, 20);
 }
 
 void key(int code, boolean pressed) {
@@ -194,7 +177,6 @@ void key(int code, boolean pressed) {
             case KeyEvent.VK_UP -> adjust(0, 1);
             case KeyEvent.VK_DOWN -> adjust(0, -1);
             case KeyEvent.VK_C -> clear();
-            case KeyEvent.VK_S -> save();
         }
     }
 }
@@ -230,7 +212,7 @@ void showWindow() {
     });
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.add(panel);
-    var help = new JLabel("<html><div style=\"text-align:center\">Space: play / pause   Arrows: drift / jitter   C: clear   S: save PNG   R: reset</div></html>", SwingConstants.CENTER);
+    var help = new JLabel("<html><div style=\"text-align:center\">Space: play / pause   Arrows: drift / jitter   C: clear   R: reset</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
     frame.add(help, BorderLayout.SOUTH);
     frame.pack();
@@ -242,11 +224,15 @@ void showWindow() {
 }
 
 void main() {
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        IO.println("This game needs a graphical display; model checks still work headlessly.");
+        return;
+    }
     restart();
     SwingUtilities.invokeLater(this::showWindow);
 }
 
-/// Připravené vstupní body: main, restart, draw, save, showWindow.
+/// Připravené vstupní body: main, restart, draw, showWindow.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
@@ -269,7 +255,6 @@ void main() {
 /// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
 /// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
 /// - `boolean` — Hodnota true nebo false: ano nebo ne.
-/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
 /// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
 ///   textu nepatří.
 /// - `\` — Uvnitř textu začíná escape (zvláštní zápis), například \n pro nový řádek nebo \" pro uvozovku.
@@ -310,11 +295,7 @@ void main() {
 ///   (knihovním zpětným voláním), například paintComponent.
 /// - `super` — V super.paintComponent(g) požádá připravenou parent implementation (nadřazenou
 ///   implementaci), aby nejprve vykreslila běžné pozadí.
-/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
-/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
-/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
-/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
-///   zpracovat.
+/// - `null` — Žádný object (objekt) tu není.
 /// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
 ///   zopakuje stejnou posloupnost.
 /// - `Graphics2D` — Kreslicí nástroj dodaný při vykreslování okna nebo obrázku.

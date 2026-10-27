@@ -20,8 +20,8 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Projection (promítání) mění pozici modelu a hloubku na bod obrazovky. Menší
 /// bezpečná hloubka dává větší odchylku; převod má důsledně použít předaný požadavek.
 ///
-/// Po Run File kliknutím či tažením spusť a řiď hvězdný tunel, pomocí Up/Down měň rychlost a klávesou
-/// Space zastav pohyb.
+/// Po Run File kliknutím nebo tažením spusť a řiď hvězdný tunel; Space pozastaví pohyb a R obnoví
+/// výchozí pohled.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Připomenutí · F29 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -60,8 +60,8 @@ Point2D.Double project(Star star, double depth) {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Step přibližuje hvězdy k pozorovateli a obnovuje ty, které minou kameru. Připravené kreslení volá
-/// project pro viditelné pozice i stopy; input (vstup) řídí rychlost, směr, pause a reset.
+/// step posouvá hvězdy jedinou pevnou rychlostí a draw používá project pro perspektivu.
+/// Kliknutí/tažení řídí a spouští; Space pozastaví a R obnoví pohled.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -109,9 +109,6 @@ void aim(int x, int y) {
     centreY = Math.max(0, Math.min(HEIGHT, y));
 }
 
-void adjust(double amount) {
-    speed = Math.max(1, Math.min(12, speed + amount));
-}
 
 /// Připravený omezený update (aktualizace): jedno volání znamená jeden krok; aktivní oprava je popsaná výše.
 void step() {
@@ -148,8 +145,6 @@ void key(int code, boolean pressed) {
     if (pressed) {
         switch (code) {
             case KeyEvent.VK_SPACE -> paused = !paused;
-            case KeyEvent.VK_UP -> adjust(1);
-            case KeyEvent.VK_DOWN -> adjust(-1);
         }
     }
 }
@@ -210,7 +205,7 @@ void showWindow() {
     });
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.add(panel);
-    var help = new JLabel("<html><div style=\"text-align:center\">Click/drag: steer + start   Space: pause   Up/Down: speed   R: reset</div></html>", SwingConstants.CENTER);
+    var help = new JLabel("<html><div style=\"text-align:center\">Click/drag: steer + start   Space: pause   R: reset</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
     frame.add(help, BorderLayout.SOUTH);
     frame.pack();
@@ -222,8 +217,7 @@ void showWindow() {
 }
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// project mění hodnoty modelu na body obrazovky a volá ji skutečné kreslení.
-/// Input (vstup) mění hodnoty modelu; draw je jen čte; připravené UI (rozhraní) řídí timer (časovač) i zavření.
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

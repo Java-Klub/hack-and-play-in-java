@@ -16,8 +16,8 @@ import javax.imageio.ImageIO;
 /// Try-with-resources (automatická správa prostředků) vlastní input stream (vstupní proud); dekódování
 /// obrázku a skryté zprávy jsou další kroky.
 ///
-/// Po Run File napiš tajnou zprávu nebo stiskni Enter pro Pixel moon a potom v Output přečti text
-/// obnovený z exports/secret-course.png.
+/// Run File přečte data/postcard.png přes readMessage a zobrazí získanou zprávu s pohlednicí.
+/// Ukázková pohlednice vznikne pouze při neexistenci souboru.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Připomenutí · F32 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -63,9 +63,8 @@ String readMessage(Path path) throws IOException {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Main se zeptá na zprávu, uloží exports/secret-course.png a hned volá readMessage. Připravené
-/// encoding/decoding (kódování a dekódování) řeší délku zprávy a bity bodů; aktivní method (metoda)
-/// spravuje jen načtení vybraného obrázku.
+/// Ukázkový data/postcard.png vznikne pouze při neexistenci. main zavolá readMessage s úplným Path
+/// (cestou) a zobrazí skutečnou pohlednici s přečtenou zprávou; existující obsah zachová.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -159,47 +158,42 @@ void save(Path path, long seed, double option) throws Exception {
 }
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// Encode/decode tvoří omezený image payload format (formát zprávy v obrazu).
-/// ReadMessage spravuje file stream (souborový proud); skutečný příkaz decode v main jej používá pro zvolený PNG.
-void main(String[] args) throws Exception {
-    if (args.length == 0) {
-        String entered = IO.readln("Secret message (blank Pixel moon, q quits): ");
-        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
-        message = entered.isBlank() ? "Pixel moon" : entered;
-        Path postcard = Path.of("exports/secret-course.png");
-        try {
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-            save(postcard, 42, 1);
-            IO.println("Saved: " + postcard.toAbsolutePath());
-            IO.println("Recovered: " + readMessage(postcard));
-        } catch (IOException failure) {
-            IO.println("Read/write failed: " + failure.getMessage());
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
+void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var pictures = new javax.swing.JPanel(new java.awt.GridLayout(1, images.length, 8, 8));
+        for (int i = 0; i < images.length; i++) {
+            var picture = new javax.swing.JPanel(new java.awt.BorderLayout());
+            picture.add(new javax.swing.JLabel(captions[i], javax.swing.SwingConstants.CENTER), java.awt.BorderLayout.NORTH);
+            double scale = Math.min(1, Math.min(900.0 / images.length / images[i].getWidth(), 550.0 / images[i].getHeight()));
+            var icon = new javax.swing.ImageIcon(images[i].getScaledInstance(
+                    Math.max(1, (int)(images[i].getWidth() * scale)),
+                    Math.max(1, (int)(images[i].getHeight() * scale)), java.awt.Image.SCALE_FAST));
+            picture.add(new javax.swing.JLabel(icon), java.awt.BorderLayout.CENTER);
+            pictures.add(picture);
         }
-        return;
-    }
+        frame.add(pictures);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
 
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
-    if (args.length > 0 && args[0].equals("decode")) {
-        if (args.length != 2) {
-            throw new IllegalArgumentException("Use decode input.png.");
-        }
-        IO.println(readMessage(Path.of(args[1])));
-        return;
-    }
+
+void main() {
+    Path input = Path.of("data", "postcard.png");
     try {
-        Path path = Path.of(args.length > 0 ? args[0] : "secret-png-postcard.png");
-        long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
-        double option = 1;
-        if (args.length > 2) {
-            message = args[2];
-        }
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-        save(path, seed, option);
-        IO.println("Saved: " + path.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
+        if (!Files.exists(input)) save(input, 42, 1);
+        String recovered = readMessage(input);
+        var image = ImageIO.read(input.toFile());
+        if (image == null) throw new IOException("The postcard is not a readable PNG.");
+        IO.println("Recovered from " + input + ": " + recovered);
+        showImages("Secret PNG Postcard", new String[]{recovered}, new java.awt.image.BufferedImage[]{image});
+    } catch (Exception failure) {
+        IO.println("Cannot read requested postcard " + input + ": " + failure.getMessage() + ". Repair readMessage; Save, Test File, Run File.");
     }
 }
 // </editor-fold>
@@ -231,8 +225,6 @@ void main(String[] args) throws Exception {
 /// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
 /// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
 /// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
-/// - `!=` — Ověří, že se dvě hodnoty liší.
-/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
 /// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
 /// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
 /// - `++` — Zvětší číselnou hodnotu o jedna.
@@ -244,17 +236,13 @@ void main(String[] args) throws Exception {
 /// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
-/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
-///   druhou.
-/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
-///   možnosti ? : nebo následuje za značkou switch.
 /// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
 ///   (prvek); length je počet prvků.
 /// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
 /// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
 /// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
 /// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
-/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `null` — Žádný object (objekt) tu není.
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
 /// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
@@ -262,8 +250,7 @@ void main(String[] args) throws Exception {
 ///   zpracovat.
 /// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
 ///   zopakuje stejnou posloupnost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek.
 /// - `Path` — Umístění v souborech, nikoli obsah souboru.
 /// - `Files` — JDK operace pro čtení a zápis místních souborů.
 // </editor-fold>

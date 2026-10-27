@@ -9,7 +9,7 @@
 /// **Dnes trénuješ:** Mutable List (měnitelný seznam) pamatuje položky v pořadí. Jedno přijaté slovo má
 /// prodloužit existující cestu; nahrazení celého List změní, co si hráč pamatuje.
 ///
-/// Po Run File napiš CORD a potom CARD pro cestu od COLD; pomocí /r začneš znovu a pomocí /q skončíš.
+/// Po Run File napiš CORD a potom CARD a posouvej se od COLD; /r obnoví začátek a /q ukončí hru. Po výhře Enter zahájí novou cestu.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Nová dovednost · F22 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -118,35 +118,30 @@ void display() {
 }
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// Adjacent počítá rozdílná písmena; připravený slovník udržuje úlohu omezenou.
-/// Reset založí počáteční historii; display ji vypíše a main ošetřuje input (vstup) a EOF.
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
-/// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
     reset();
-    IO.println("Word Ladder");
-    IO.println("Change exactly one letter to a listed word. Transform COLD to WARM. /r restarts; /q quits.");
+    IO.println("Word Ladder: transform COLD to WARM using the listed words. /r restarts; /q quits.");
+    display();
     while (true) {
-        display();
-        if (!outcome.isEmpty()) {
-            IO.println(outcome);
-        }
-        String input = IO.readln("> ");
-        if (input == null || input.strip().equalsIgnoreCase("/q")) {
-            return;
-        }
-        if (input.strip().equalsIgnoreCase("/r")) {
-/// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
+        boolean finished = !outcome.isEmpty();
+        String input = IO.readln(finished ? "Enter or /r: new round; /q: quit > " : "> ");
+        if (input == null || input.strip().equalsIgnoreCase("/q")) return;
+        if (input.strip().equalsIgnoreCase("/r") || finished && input.isBlank()) {
             reset();
+            display();
             continue;
         }
-        if (!outcome.isEmpty()) {
-            IO.println("Round finished. /r restarts; /q quits.");
+        if (finished) {
+            IO.println("This round is finished. Enter or /r starts a fresh trail; /q quits.");
             continue;
         }
         try {
             command(input.strip());
+            display();
+            if (!outcome.isEmpty()) IO.println(outcome);
         } catch (IllegalArgumentException invalid) {
-            IO.println("Invalid move or command. Change exactly one letter to a listed word. Transform COLD to WARM. /r restarts; /q quits.");
+            IO.println("Invalid move. Change one letter to a listed word; the trail has not changed.");
         }
     }
 }
@@ -188,7 +183,6 @@ void require(boolean valid) {
 /// - `++` — Zvětší číselnou hodnotu o jedna.
 /// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
 /// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
-/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
 /// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
@@ -200,15 +194,13 @@ void require(boolean valid) {
 /// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
 /// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
 /// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
-/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
-///   až při pozdějším volání.
 /// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
 /// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
 /// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
 ///   měnit velikost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek. readln čeká na celý
+///   řádek vstupu.
 // </editor-fold>
 

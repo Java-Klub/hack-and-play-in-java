@@ -16,7 +16,7 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Lifecycle guard (podmínka životního cyklu) má popsat povolení aktualizace včetně
 /// všech zastavených stavů. Tick (časový krok) nesmí měnit hru označenou jako vyhranou či ukončenou.
 ///
-/// Po Run File pohybem myši nastavuj pálku a odrážej míček do cihel; pomocí R spusť nové kolo.
+/// Po Run File si prohlédni plochu a potom stiskni Space nebo klikni pro start; myší miř pálku. Odstraň všech 18 cihel před třetím pádem; R obnoví začátek a čeká na další start.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Připomenutí · F30 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -174,11 +174,16 @@ void draw(Graphics g) {
 /// Připravené Swing UI (rozhraní): vytváří se na EDT; úklid timer (časovače) patří k oknu.
 void showWindow() {
     var frame = new JFrame("Breakout - Brick Bash");
+    boolean[] launched = {false};
     var panel = new JPanel() {
         @Override protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 /// Připravené kreslení: čte hodnoty model (modelu pravidel); repaint (překreslení) není další tah.
             draw(g);
+            if (!launched[0]) {
+                g.setColor(Color.WHITE);
+                g.drawString("Space or click to start", 20, 65);
+            }
         }
     };
     panel.setPreferredSize(new Dimension(WIDTH, HEIGHT + 42));
@@ -189,12 +194,19 @@ void showWindow() {
     });
     panel.addKeyListener(new KeyAdapter() {
         @Override public void keyPressed(KeyEvent event) {
-            if (event.getKeyCode() == KeyEvent.VK_R) restart();
+            if (event.getKeyCode() == KeyEvent.VK_SPACE) launched[0] = true;
+            if (event.getKeyCode() == KeyEvent.VK_R) { restart(); launched[0] = false; }
+        }
+    });
+    panel.addMouseListener(new MouseAdapter() {
+        @Override public void mousePressed(MouseEvent event) {
+            launched[0] = true;
+            panel.requestFocusInWindow();
         }
     });
     var timer = new Timer(16, event -> {
 /// Připravený omezený update (aktualizace): jedno volání znamená jeden krok; aktivní oprava je popsaná výše.
-        step();
+        if (launched[0]) step();
         panel.repaint();
     });
     frame.addWindowListener(new WindowAdapter() {
@@ -211,8 +223,7 @@ void showWindow() {
 }
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// step je aktivní hranice; model (model pravidel) ji zpřístupňuje pro opakovatelné check (kontroly) bez okna.
-/// Restart obnoví počáteční field (položky objektu); draw čte state (stav); showWindow dodává listener (obsluhy), jeden timer (časovač) a úklid po zavření.
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

@@ -235,8 +235,7 @@ void showWindow() {
 }
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// Draw volá drawNode pro skutečných osm uzlů.
-/// Crossings porovnává nesouvisející hrany; pick/moveSelected řídí tažení; showWindow dodává Swing event (události).
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

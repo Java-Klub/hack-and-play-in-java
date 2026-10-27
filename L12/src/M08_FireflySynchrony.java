@@ -194,12 +194,8 @@ record Toggle() implements Control {}
 record Restart(long seed) implements Control {}
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// Posuvník/tlačítka vytvářejí Control record; apply rozpozná jejich component (složky).
-/// Reset používá seed (počáteční hodnotu), step počítá další snapshot (snímek), order měří sladění; připravené okno spravuje timer (časovač).
-void main(String[] args) {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
+void main() {
 /// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
     reset(42);
     SwingUtilities.invokeLater(this::showWindow);

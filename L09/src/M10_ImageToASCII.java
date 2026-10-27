@@ -1,7 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L09.10 · ImageToASCII
@@ -16,8 +15,7 @@ import javax.imageio.ImageIO;
 /// platného integer (celého čísla) s chybnou hodnotou. Náhradní šířku má vybrat jen očekávaná conversion
 /// exception (výjimka převodu).
 ///
-/// Po Run File zadej šířku obrázku od 4 do 160 nebo zkus oops a potom prozkoumej znakový obrázek v Output
-/// i portrait.txt.
+/// Po Run File napiš šířku od 4 do 160 nebo zkus oops; prohlédni označený ASCII obrázek přímo v Output a dalším Run File porovnej jinou šířku.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Připomenutí · F31 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -71,8 +69,8 @@ int readWidth(String text) {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Main se zeptá na šířku a vypíše vybranou hodnotu. Připravený převod čte jas, vybírá znak z palety a
-/// uloží stejný text do portrait.txt.
+/// main předá zadanou šířku přes readWidth a convert převede pevnou ukázku pomocí character ramp
+/// (stupnice znaků). Výsledek vznikne pouze v Output; další Run File umožní jinou šířku.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
@@ -128,32 +126,16 @@ String convert(BufferedImage image, int width) {
 }
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// Convert čte jas obrazu přes připravený ASCII ramp (stupnici znaků).
-/// Main čte tuto volbu; save/export a rendering (vykreslení) jsou připravené.
-void main(String[] args) throws Exception {
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
-    String enteredOption = "";
-    if (args.length <= 2) {
-        enteredOption = IO.readln("width 4..160 (blank/default 80, q quits): ");
-        if (enteredOption == null || enteredOption.strip().equalsIgnoreCase("q")) return;
-    }
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
+void main() {
+    String input = IO.readln("Width 4..160 (blank/default 80, q quits): ");
+    if (input == null || input.strip().equalsIgnoreCase("q")) return;
     try {
-        var input = args.length == 0 || args[0].equals("-") ? demo() : ImageIO.read(Path.of(args[0]).toFile());
-        if (input == null) {
-            throw new IllegalArgumentException("Input must be a readable image.");
-        }
-        Path output = Path.of(args.length > 1 ? args[1] : "portrait.txt");
-        int option = readWidth(args.length > 2 ? args[2] : enteredOption);
-        IO.println("width: " + option);
-        Files.createDirectories(output.toAbsolutePath().getParent());
-        String text = convert(input, option);
-        Files.writeString(output, text);
-        IO.print(text);
-        IO.println("Saved: " + output.toAbsolutePath());
-    } catch (IllegalArgumentException invalid) {
-        IO.println("Invalid options: " + invalid.getMessage());
+        int width = readWidth(input);
+        IO.println("ASCII picture, width " + width + ":");
+        IO.print(convert(demo(), width));
+    } catch (IllegalArgumentException failure) {
+        IO.println("Invalid width: " + failure.getMessage());
     }
 }
 // </editor-fold>
@@ -184,10 +166,8 @@ void main(String[] args) throws Exception {
 /// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
 /// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
 /// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
-/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
 /// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
 /// - `++` — Zvětší číselnou hodnotu o jedna.
-/// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
 /// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
 /// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
 /// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
@@ -195,12 +175,6 @@ void main(String[] args) throws Exception {
 /// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
-/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
-///   druhou.
-/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
-///   možnosti ? : nebo následuje za značkou switch.
-/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
-///   (prvek); length je počet prvků.
 /// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
 /// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
 /// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
@@ -209,11 +183,7 @@ void main(String[] args) throws Exception {
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
 /// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
-/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
-///   zpracovat.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
-/// - `Path` — Umístění v souborech, nikoli obsah souboru.
-/// - `Files` — JDK operace pro čtení a zápis místních souborů.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek. print vypíše text bez
+///   přidání nového řádku. readln čeká na celý řádek vstupu.
 // </editor-fold>
 

@@ -100,30 +100,41 @@ void main() {
     IO.println("CHOMP: two players share a chocolate bar.");
     IO.println("A bite removes its cell and the rectangle below and right.");
     IO.println("P at row 1, column 1 is poisoned. Eating P loses.");
+    boolean showState = true;
     while (true) {
-        IO.println("    1 2 3 4 5");
-        for (int row = 0; row < 4; row++) {
-            String line = (row + 1) + " : ";
-            for (int column = 0; column < 5; column++) {
-                line += column >= widths[row] ? ". " : row == 0 && column == 0 ? "P " : "# ";
+        if (showState) {
+            IO.println("    1 2 3 4 5");
+            for (int row = 0; row < 4; row++) {
+                String line = (row + 1) + " : ";
+                for (int column = 0; column < 5; column++) {
+                    line += column >= widths[row] ? ". " : row == 0 && column == 0 ? "P " : "# ";
+                }
+                IO.println(line);
             }
-            IO.println(line);
+            if (winner != 0) {
+                IO.println("Player " + winner + " wins!");
+            }
+            showState = false;
         }
-        if (winner != 0) {
-            IO.println("Player " + winner + " wins!");
-        }
-        String input = IO.readln(winner == 0 ? "Player " + player + ": row column, r restart, q quit: " : "r replay, q quit: ");
-        if (input == null || input.trim().equalsIgnoreCase("q")) {
+        String input = IO.readln(winner == 0 ? "Player " + player + ": row column, r restart, q quit: " : "Enter or /r: new round; /q: quit: ");
+        if (input == null || (input.trim().equalsIgnoreCase("q") || input.trim().equalsIgnoreCase("/q"))) {
             return;
         }
         input = input.trim();
-        if (input.equalsIgnoreCase("r")) {
+        if ((input.equalsIgnoreCase("r") || input.equalsIgnoreCase("/r") || (winner != 0 && input.isBlank()))) {
             reset();
+            showState = true;
+            continue;
+        }
+        if (winner != 0) {
+            IO.println("Round finished. Press Enter or /r for a new round; /q quits.");
             continue;
         }
         try {
             String[] parts = input.split("\\s+");
-            if (parts.length != 2 || !bite(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]))) {
+            if (parts.length == 2 && bite(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]))) {
+                showState = true;
+            } else {
                 IO.println("Illegal bite. Enter row and column of remaining chocolate.");
             }
         } catch (NumberFormatException exception) {
@@ -183,7 +194,7 @@ void main() {
 /// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
 /// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek. readln čeká na celý
+///   řádek vstupu.
 // </editor-fold>
 

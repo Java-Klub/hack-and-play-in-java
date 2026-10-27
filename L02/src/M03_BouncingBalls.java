@@ -9,8 +9,8 @@ import javax.swing.Timer;
 
 /// # L02.03 · BouncingBalls
 ///
-/// Vhoď do místnosti několik barevných míčků a sleduj, jak jejich pohyb mění gravitace a odrazy od stěn.
-/// Porovnávej jemné a prudké hody; míčky navzájem procházejí.
+/// Vhoď do místnosti několik barevných míčků a sleduj, jak jejich pohyb mění gravitace a odrazy od
+/// stěn. Porovnávej jemné a prudké hody.
 ///
 /// **Tvoje mise:** Míčky u boční stěny ztratí vodorovnou rychlost místo odrazu. Oprav bounceSpeed tak,
 /// aby stěna zachovala tři čtvrtiny velikosti příchozí rychlosti.
@@ -153,7 +153,7 @@ void draw(Graphics2D g) {
         g.drawLine(startX, startY, aimX, aimY);
     }
     g.setColor(Color.BLACK);
-    g.drawString("Balls: " + balls.size() + " / 60   " + (paused ? "Paused" : "Gravity on") + "   No ball-to-ball collisions", 12, 23);
+    g.drawString("Balls: " + balls.size() + " / 60   " + (paused ? "Paused" : "Gravity on") + "   Drag to throw a ball; Space pauses; R clears", 12, 23);
 }
 
 void key(int code, boolean pressed) {
@@ -242,7 +242,12 @@ void showWindow() {
     timer.start();
 }
 
+
 void main() {
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        IO.println("This game needs a graphical display; model checks still work headlessly.");
+        return;
+    }
     restart();
     SwingUtilities.invokeLater(this::showWindow);
 }

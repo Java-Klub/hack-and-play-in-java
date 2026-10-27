@@ -66,8 +66,8 @@ Map<String, List<String>> train(String text) {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Main přečte tvůj corpus (učební text) a train sestaví vazby. Připravený generátor opakovaně losuje
-/// následníka z odpovídajícího List (seznamu); zachované duplicity zvýší váhu opakovaných příkladů.
+/// main nabídne malý corpus (učební text) a předá zvolený text do generate. train dodá Map (mapu
+/// následovníků slov); vygenerovaný remix se vypíše vedle původního corpus.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
@@ -118,27 +118,16 @@ String generate(String text, long seed, int count) {
 }
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// Train tvoří LinkedHashMap s mutable List (měnitelnými seznamy) následníků.
-/// Generate sleduje vazby s připraveným seed (počáteční hodnotou); main případně načte místní text.
-void main(String[] args) throws Exception {
-    if (args.length == 0) {
-        String entered = IO.readln("Corpus (blank moon cat moon dog moon cat, q quits): ");
-        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
-        corpus = entered.isBlank() ? "moon cat moon dog moon cat" : entered;
-    }
-
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
-    }
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
+void main() {
+    String input = IO.readln("Corpus (blank moon cat moon dog moon cat, q quits): ");
+    if (input == null || input.strip().equalsIgnoreCase("q")) return;
+    corpus = input.isBlank() ? "moon cat moon dog moon cat" : input;
     try {
-        long seed = args.length > 0 ? Long.parseLong(args[0]) : 42;
-        int count = args.length > 1 ? Integer.parseInt(args[1]) : 50;
-        if (args.length > 2) {
-            corpus = Files.readString(Path.of(args[2]));
-        }
-        IO.println(generate(corpus, seed, count));
-    } catch (IllegalArgumentException invalid) {
-        IO.println(invalid.getMessage());
+        IO.println("Corpus: " + corpus);
+        IO.println("Generated remix: " + generate(corpus, 42, 50));
+    } catch (IllegalArgumentException failure) {
+        IO.println(failure.getMessage());
     }
 }
 // </editor-fold>
@@ -169,7 +158,6 @@ void main(String[] args) throws Exception {
 /// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
 /// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
 /// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
-/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
 /// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
 /// - `++` — Zvětší číselnou hodnotu o jedna.
 /// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
@@ -189,16 +177,12 @@ void main(String[] args) throws Exception {
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
 /// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
-/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
-///   zpracovat.
 /// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
 ///   měnit velikost.
 /// - `Map` — Přiřazuje key (klíčům) hodnoty. Pro chybějící key je třeba rozhodnout výchozí chování.
 /// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
 ///   zopakuje stejnou posloupnost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
-/// - `Path` — Umístění v souborech, nikoli obsah souboru.
-/// - `Files` — JDK operace pro čtení a zápis místních souborů.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek. readln čeká na celý
+///   řádek vstupu.
 // </editor-fold>
 

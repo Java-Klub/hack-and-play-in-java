@@ -86,19 +86,28 @@ String story(String name, String creature, String place, String object) {
         + "By midnight, the " + creature + " had promoted the " + object + " to manager.\n";
 }
 
-void main(String[] args) {
+void main() {
     String[] labels = {"A name", "A creature", "A place", "An object"};
-    String[] words = new String[4];
-    for (int i = 0; i < 4; i++) {
-        words[i] = args.length > i ? args[i] : IO.readln(labels[i] + " (q to quit): ");
-        if (words[i] == null || words[i].equalsIgnoreCase("q")) {
-            return;
+    IO.println("Build a strange story. Each answer may be a complete phrase; /q quits.");
+    while (true) {
+        String[] words = new String[4];
+        for (int i = 0; i < words.length;) {
+            String input = IO.readln(labels[i] + " (/q to quit): ");
+            if (input == null || input.equalsIgnoreCase("/q")) return;
+            String cleaned = cleanWord(input);
+            if (cleaned.isBlank() || cleaned.length() > 40) {
+                IO.println("Use a nonblank phrase of at most 40 characters. This answer has not been accepted.");
+                continue;
+            }
+            words[i++] = input;
         }
-    }
-    try {
         IO.print(story(words[0], words[1], words[2], words[3]));
-    } catch (IllegalArgumentException invalid) {
-        IO.println(invalid.getMessage());
+        while (true) {
+            String input = IO.readln("Enter or /r: new story; /q: quit: ");
+            if (input == null || input.strip().equalsIgnoreCase("/q")) return;
+            if (input.isBlank() || input.strip().equalsIgnoreCase("/r")) break;
+            IO.println("The story is finished. Press Enter or /r for a new story; /q quits.");
+        }
     }
 }
 
@@ -133,8 +142,6 @@ void main(String[] args) {
 /// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
-/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
-///   druhou.
 /// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
 ///   možnosti ? : nebo následuje za značkou switch.
 /// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
@@ -144,12 +151,10 @@ void main(String[] args) {
 /// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
 /// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
 /// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
-/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
-/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
 /// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
 ///   měnit velikost.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek. print vypíše text bez
+///   přidání nového řádku. readln čeká na celý řádek vstupu.
 // </editor-fold>
 

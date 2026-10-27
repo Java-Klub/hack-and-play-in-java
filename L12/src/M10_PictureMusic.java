@@ -1,9 +1,4 @@
 // <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioSystem;
-import java.io.ByteArrayInputStream;
 // </editor-fold>
 
 /// # L12.10 · PictureMusic
@@ -18,8 +13,8 @@ import java.io.ByteArrayInputStream;
 /// části). PitchFrequency spojí známé pravidlo řádku a tónu s půltónovým posunem; nula zůstane případem
 /// zachování původního chování.
 ///
-/// Po Run File zadej 0 a potom spusť znovu s 12; v přehrávači otevři picture-music-0.wav a
-/// picture-music-12.wav pro porovnání výšky.
+/// Po Run File prohlédni Java obrázek a porovnej Play shift 12 s Play original; Stop přehrávání
+/// přeruší a opravený posun má změnit výšku tónů při stejném rytmu.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Potřebuješ výklad? Připomenutí · F36 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
@@ -62,9 +57,8 @@ double pitchFrequency(int row, int shift) {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Připravený převod obrázku na zvuk mění jas v sílu tónu a volá pitchFrequency pro výšky řádků. Main se
-/// zeptá na transpose (transpozici) a write uloží WAV; vysvětli, proč nové pravidlo patří do malé
-/// operace, ne do každého caller (volající části).
+/// demo dodá obrázek; signal čte jeho jas jako hlasitost a žádá pitchFrequency o výšku pro každý
+/// řádek. Dvě volby Play porovnají posun 12 s nulou při stejném obrázku a rytmu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -83,20 +77,6 @@ double pitchFrequency(int row, int shift) {
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int RATE = 22050;
 
-/// Připravený WAV encoding (kódování): omezené PCM sample (vzorky) a try-with-resources spravují stream (proud).
-void write(Path path, double[] signal) throws Exception {
-    byte[] pcm = new byte[signal.length * 2];
-    for (int i = 0; i < signal.length; i++) {
-        int value = (int)(Math.max(-0.8, Math.min(0.8, signal[i])) * 32767);
-        pcm[i * 2] = (byte)value;
-        pcm[i * 2 + 1] = (byte)(value >> 8);
-    }
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    var format = new AudioFormat(RATE, 16, 1, true, false);
-    try (var stream = new AudioInputStream(new ByteArrayInputStream(pcm), format, signal.length)) {
-        AudioSystem.write(stream, AudioFileFormat.Type.WAVE, path.toFile());
-    }
-}
 
 java.awt.image.BufferedImage demo() {
     var image = new java.awt.image.BufferedImage(32, 12, java.awt.image.BufferedImage.TYPE_INT_RGB);
@@ -129,30 +109,110 @@ double[] signal(java.awt.image.BufferedImage image) {
 int transpose = 0;
 
 /// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
-/// PitchFrequency vlastní matematiku řádku/posunu; signal jas a sampling (vzorkování) časových sloupců.
-/// Demo dodá vlastní obraz; main může použít místní obraz a volitelný transpose argument (argument posunu); write uloží WAV.
-void main(String[] args) throws Exception {
-    if (args.length == 0) {
-        String entered = IO.readln("Transpose -12..12 (blank 12, q quits): ");
-        if (entered == null || entered.strip().equalsIgnoreCase("q")) return;
-        String shift = entered.isBlank() ? "12" : entered.strip();
-        args = new String[]{"picture-music-" + shift + ".wav", "-", shift};
-    }
+/// Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
+volatile javax.sound.sampled.SourceDataLine playingLine;
+volatile int playbackVersion;
 
-    if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
-        return;
+/// Připravený Java Sound: worker (pracovní vlákno) vlastní kanál; Stop a zavření jej uvolní.
+/// Play/Stop používají oddělený Java Sound worker (pracovní vlákno); zavření jej uvolní.
+void stopAudio() {
+    playbackVersion++;
+    var line = playingLine;
+    playingLine = null;
+    if (line != null) {
+        line.stop();
+        line.flush();
+        line.close();
     }
-    Path path = Path.of(args.length > 0 ? args[0] : "picture-music.wav");
-    var image = args.length > 1 && !args[1].equals("-") ? javax.imageio.ImageIO.read(Path.of(args[1]).toFile()) : demo();
-    if (image == null) {
-        IO.println("Use a readable local image.");
-        return;
-    }
-    if (args.length > 2) transpose = Integer.parseInt(args[2]);
-/// Připravený WAV encoding (kódování): omezené PCM sample (vzorky) a try-with-resources spravují stream (proud).
-    write(path, signal(image));
-    IO.println("Saved sonification: " + path.toAbsolutePath());
-    IO.println("32 columns become time; 12 rows become pitches; brightness sets volume. This is not recorded space sound.");
+}
+
+void playAudio(double[] samples, javax.swing.JLabel status) {
+    stopAudio();
+    int ticket = playbackVersion;
+    status.setText("Playing in Java; Stop interrupts playback.");
+    var worker = new Thread(() -> {
+        javax.sound.sampled.SourceDataLine line = null;
+        try {
+            byte[] pcm = new byte[samples.length * 2];
+            for (int i = 0; i < samples.length; i++) {
+                int value = (int)(Math.max(-0.8, Math.min(0.8, samples[i])) * 32767);
+                pcm[i * 2] = (byte)value;
+                pcm[i * 2 + 1] = (byte)(value >> 8);
+            }
+            var format = new javax.sound.sampled.AudioFormat(RATE, 16, 1, true, false);
+            line = javax.sound.sampled.AudioSystem.getSourceDataLine(format);
+            line.open(format);
+            if (ticket != playbackVersion) return;
+            playingLine = line;
+            line.start();
+            int offset = 0;
+            while (offset < pcm.length && ticket == playbackVersion) {
+                int written = line.write(pcm, offset, Math.min(4096, pcm.length - offset));
+                if (written <= 0) break;
+                offset += written;
+            }
+            if (ticket == playbackVersion) {
+                line.drain();
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    if (ticket == playbackVersion) status.setText("Finished; Play replays the same sound.");
+                });
+            }
+        } catch (Exception failure) {
+            if (ticket == playbackVersion) {
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    if (ticket == playbackVersion) status.setText("Audio unavailable: " + failure.getMessage());
+                });
+            }
+        } finally {
+            if (line != null) {
+                line.stop();
+                line.close();
+                if (playingLine == line) playingLine = null;
+            }
+        }
+    }, "java-sound-player");
+    worker.setDaemon(true);
+    worker.start();
+}
+
+void showAudio(java.awt.image.BufferedImage picture, String title, String detail, String[] captions, double[][] sounds) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var status = new javax.swing.JLabel(detail);
+        var controls = new javax.swing.JPanel();
+        for (int i = 0; i < sounds.length; i++) {
+            int index = i;
+            var play = new javax.swing.JButton("Play " + captions[i]);
+            play.addActionListener(event -> playAudio(sounds[index], status));
+            controls.add(play);
+        }
+        var stop = new javax.swing.JButton("Stop");
+        stop.addActionListener(event -> {
+            stopAudio();
+            status.setText("Stopped; choose Play to listen again.");
+        });
+        controls.add(stop);
+        frame.add(status, java.awt.BorderLayout.NORTH);
+        frame.add(new javax.swing.JLabel(new javax.swing.ImageIcon(picture.getScaledInstance(640, 240, java.awt.Image.SCALE_FAST))), java.awt.BorderLayout.CENTER);
+        frame.add(controls, java.awt.BorderLayout.SOUTH);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override public void windowClosed(java.awt.event.WindowEvent event) { stopAudio(); }
+        });
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
+
+void main() {
+    var image = demo();
+    transpose = 12;
+    var shifted = signal(image);
+    transpose = 0;
+    var original = signal(image);
+    showAudio(image, "Picture Music", "The same image: shifted notes keep the original rhythm.", new String[]{"shift 12", "original"}, new double[][]{shifted, original});
 }
 // </editor-fold>
 
@@ -163,7 +223,6 @@ void main(String[] args) throws Exception {
 /// dopředu.
 ///
 /// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
-/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
 /// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
 ///   části.
 /// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
@@ -195,24 +254,14 @@ void main(String[] args) throws Exception {
 /// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
 ///   List<String> lomené závorky popisují element type (typ prvku).
-/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
-///   druhou.
-/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
-///   možnosti ? : nebo následuje za značkou switch.
 /// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
 ///   (prvek); length je počet prvků.
 /// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
 /// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
 /// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
 /// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
-/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `null` — Žádný object (objekt) tu není.
 /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
 /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
-/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
-///   zpracovat.
-/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
-///   řádek textu.
-/// - `Path` — Umístění v souborech, nikoli obsah souboru.
-/// - `Files` — JDK operace pro čtení a zápis místních souborů.
 // </editor-fold>
 
