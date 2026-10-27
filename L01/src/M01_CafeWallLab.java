@@ -21,10 +21,62 @@ import javax.swing.*;
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Řádky s `///` jsou průvodce pro tebe; při spuštění se neprovádějí.
+///
+/// Potřebuješ výklad? Nová dovednost · F01 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+///
+/// **První spuštění:** zvol Run → Run File. Šedé okno je připravená chyba. Zavři je a uprav dva řádky
+/// níže. Pomocí + nebo trojúhelníku v levém okraji rozbal Začni tady · NetBeans, kde najdeš první
+/// kliknutí a kontrolu výsledku.
+// <editor-fold defaultstate="collapsed" desc="Začni tady · NetBeans">
+/// - Podle potřeby použij **File → Open Project**, vyber složku **L01** a otevři **Projects → Source
+///   Packages → default package → M01_CafeWallLab.java**. Další Java soubor tam otevři podle čísla.
+/// - Nech aktivní tento source (zdrojový soubor). **Run → Run File** spustí tuto hru; **Run Project**
+///   spouští nastavený program projektu a může vybrat jinou hru. Před dalším spuštěním zavři herní
+///   okno.
+/// - Sekci s názvem rozbal malým **+ nebo trojúhelníkem v levém okraji editoru**. Fold marker (značky
+///   sbalení) jen uspořádávají editor; neprovádějí se.
+/// - Po úpravě: **File → Save**, potom **Run → Test File** s aktivním souborem této hry. Check
+///   (kontroly) běží odděleně od hraní. Čti **Output**: `PASS` znamená úspěch těchto kontrol.
+///   Počáteční `AssertionError` výchozí verze je očekávaný: kontrola odhalila záměrně chybné
+///   pravidlo.
+/// - **Test Project** kontroluje celou úroveň včetně dosud neopravených her. Klikni na vypsaný
+///   soubor/řádek v Output: assertion (ověření podmínky) vede k nesplněnému očekávání; compiler
+///   diagnostic (hlášení překladače) k problému source (zdrojového textu).
+/// - Compiler error (chyba překladu) je jiná: Java se nemohla spustit. Čti první hlášení a jeho
+///   řádek; ověř znaménka kolem úpravy nebo se pomocí **Edit → Undo** vrať k přeložitelné verzi.
+///   Znovu ulož a zkontroluj. Testovací soubory neměň.
+// </editor-fold>
+
 void paintWall(Graphics2D g) {
     paintTiles(g);
     paintBackground(g);
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F01">
+/// Method (metoda) je pojmenovaná akce. Její definice akci zpřístupní; call (volání) ji požádá o
+/// provedení. Java spustí tento compact program (stručný program) v `main`, i kdyby jiná method byla
+/// zapsaná první.
+///
+/// ```java
+/// void announce() {
+///     IO.println("Before");
+/// }
+///
+/// void main() {
+///     announce();
+///     IO.println("After");
+/// }
+/// ```
+///
+/// Před dalším čtením předpověz dva řádky output (výstupu). Call `announce();` vstoupí do této
+/// method, vypíše `Before` a potom se vrátí k dalšímu statement (příkazu) v `main`, který vypíše
+/// `After`. Uvnitř zavolané method běží tyto statement v pořadí. `void` znamená, že se nevrací
+/// výsledná hodnota; `()` zde nepředává žádné argument (argumenty). Složené závorky ohraničují tělo a
+/// středník ukončuje každé call. Comment (komentáře) program vysvětlují, ale neprovádějí se.
+///
+/// Nyní předpověz, co nastane, pokud main před posledním výpisem zavolá announce dvakrát.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -46,12 +98,16 @@ void paintWall(Graphics2D g) {
 /// paintTiles obsahují připravené kreslení; key zpracuje ovládání.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Čti dvě akce shora dolů.
-/// 2. Poslední nátěr zakryje dřívější nátěr na stejném místě.
-/// 3. Přesuň paintBackground(g) nad paintTiles(g).
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Čti dvě akce shora dolů.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Poslední nátěr zakryje dřívější nátěr na stejném místě.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Přesuň paintBackground(g) nad paintTiles(g).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

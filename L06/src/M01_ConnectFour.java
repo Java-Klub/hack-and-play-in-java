@@ -12,6 +12,9 @@
 /// Spusť Run File, napiš 4 a potvrď Enter pro kámen do prostředního sloupce, potom se s kamarádem
 /// střídejte ve volbě sloupců.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F14 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void reset() {
     for (char[] row : board) {
         Arrays.fill(row, '.');
@@ -20,6 +23,28 @@ void reset() {
     winner = '.';
     int moves = 0;
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F14">
+/// ### Scope: které úložiště jméno označuje?
+///
+/// Field (položka objektu) patří aktuálnímu objektu a může přežít více volání. Local variable (místní
+/// proměnná) patří jedinému call (volání) či bloku. Declaration (deklarace) obsahuje type (typ);
+/// assignment (přiřazení) do existujícího jména nevytváří další proměnnou. Místní jméno může zastínit
+/// stejně napsaný field.
+///
+/// ```java
+/// int volume = 7;
+///
+/// void whisper() {
+///     int volume = 2;
+///     IO.println(volume);
+/// }
+/// ```
+///
+/// `whisper()` vypíše dvě, zatímco field zůstane sedm: local declaration (místní deklarace) vytvořila
+/// jiné úložiště. Předpověz pozdější čtení field; `this.volume` podle potřeby výslovně označí field.
+/// Která hodnota má přežít několik volání a která patří pouze dočasnému výpočtu?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -36,12 +61,16 @@ void reset() {
 /// při r volá reset(); mazání desky i hledání výhry je připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Najdi field deklarovaný mimo reset().
-/// 2. int moves uvnitř method vytváří jinou lokální variable.
-/// 3. Přiřaď moves = 0 bez nové deklarace typu.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Najdi field deklarovaný mimo reset().
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// int moves uvnitř method vytváří jinou lokální variable.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Přiřaď moves = 0 bez nové deklarace typu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

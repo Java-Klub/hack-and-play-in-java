@@ -19,6 +19,9 @@ import java.util.ArrayList;
 /// Spusť Run File a kliknutím otáčej potrubí dílku, přitom sleduj, které dílky při spojení se zdrojem
 /// zezelenají.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F18 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean[][] connected() {
     boolean[][] reached = new boolean[4][4];
     var queue = new ArrayList<Point>();
@@ -37,6 +40,25 @@ boolean[][] connected() {
     return reached;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F18">
+/// ### Grids: nejdřív řádek, potom sloupec
+///
+/// V array of rows (poli řádků) první index (pozice) vybírá řádek a druhý pozici v něm. Řádky mohou
+/// mít různé délky. Neighbour (soused) je posun od buňky, nikoli další absolutní pozice. Před
+/// kontrolou existence kandidáta urči povolené směry.
+///
+/// ```java
+/// int[][] mosaic = {{3, 6, 9}, {2, 4, 8}};
+/// int row = 0;
+/// int column = 1;
+/// IO.println(mosaic[row][column + 1]);
+/// ```
+///
+/// Výstup je devět: řádek nula a sloupec dva vyberou tento element (prvek). Pohyb dolů mění row;
+/// doprava mění column. Který z těchto pohybů z pravé horní cell (buňky) zůstane uvnitř? U úhlopříčky
+/// se mění obě souřadnice; bounds (meze) musíš ověřit před přístupem ke kandidátovi.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
 ///
@@ -51,12 +73,35 @@ boolean[][] connected() {
 /// vývodů, kreslení barví dosažené dílky a won() přidává kontrolu úplné uzavřené sítě.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Čtení jediného port bit (bitu otvoru)
 ///
-/// 1. d vybírá nahoru, doprava, dolů nebo doleva.
-/// 2. Protilehlý směr je (d+2)%4.
-/// 3. Před vložením do queue vyžaduj bit d aktuálního dílku i protilehlý bit souseda.
+/// Každý směr má jeden bit. Bit position (pozice bitu) začíná nulou: `1 << d` dává mask (masku) 1, 2,
+/// 4, 8 pro směry 0, 1, 2, 3. Bitwise `&` (bitový součin) zachová jen pozice zapnuté na obou
+/// stranách. Liší se od boolean `&&` (logického a).
+///
+/// ```java
+/// int flags = 5;
+/// int selected = 1 << 2;
+/// IO.println((flags & selected) != 0);
+/// ```
+///
+/// Výstup je true: 5 = 1 + 4, takže `5 & 4` dává 4, zatímco `5 & 2` dává 0. Nenulový výsledek
+/// znamená, že vybraný bit je zapnutý. Nyní předpověz test bitu tři, pokud flags má hodnotu 10. Směry
+/// zde běží Up, Right, Down, Left, proto jsou protilehlé otvory o dva kroky dál ve čtyřsměrném kruhu.
+/// Před přijetím souseda ověř obě strany spojení, ne jen existenci souseda.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// d vybírá nahoru, doprava, dolů nebo doleva.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Protilehlý směr je (d+2)%4.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Před vložením do queue vyžaduj bit d aktuálního dílku i protilehlý bit souseda.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

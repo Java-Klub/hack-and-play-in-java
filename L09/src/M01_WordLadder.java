@@ -11,6 +11,9 @@
 ///
 /// Po Run File napiš CORD a potom CARD pro cestu od COLD; pomocí /r začneš znovu a pomocí /q skončíš.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F22 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void command(String input) {
     require(outcome.isEmpty());
     String word = input.toUpperCase(Locale.ROOT);
@@ -21,6 +24,28 @@ void command(String input) {
         outcome = "Reached WARM in " + (history.size() - 1) + " moves!";
     }
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F22">
+/// ### List (seznam): pořadí, které můžeš měnit
+///
+/// `List<String>` uchovává texty v pořadí. `new ArrayList<>()` vytvoří mutable list (měnitelný
+/// seznam): obsah lze měnit bez nahrazení samotného seznamu.
+///
+/// ```java
+/// List<String> snacks = new ArrayList<>();
+/// snacks.add("apple");
+/// snacks.add("nuts");
+/// IO.println(snacks.get(0));
+/// IO.println(snacks.size());
+/// ```
+///
+/// Výstup je `apple`, potom `2`. `add(value)` připojí jeden prvek na konec; `get(index)` přečte prvek
+/// bez odebrání. Indexes (indexy) začínají nulou. `isEmpty()` zjišťuje, zda seznam nemá prvky.
+/// `removeLast()` odebere a vrátí poslední prvek; volej jej jen u neprázdného seznamu. Seznam přímo z
+/// `List.of(...)` měnit nelze, ale `new ArrayList<>(List.of(...))` měnit lze.
+///
+/// Předpověz: po `snacks.removeLast()` jaká bude velikost a první prvek?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -36,12 +61,29 @@ void command(String input) {
 /// vypíše stejnou historii a reset vytvoří počáteční cestu od COLD.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
+/// ### Operaci pro historii máš k dispozici tady
 ///
-/// 1. Prozkoumej, co assignment (přiřazení) nového ArrayList udělá se staršími slovy.
-/// 2. Použij operaci, která přidá jedno slovo do existující sequence (posloupnosti).
-/// 3. Projdi COLD → CORD → CARD a potom odmítni WARM bez přidání.
+/// Kvůli tomuto API nemusíš absolvovat jinou volitelnou slovní hru. U mutable list (měnitelného
+/// seznamu) `list.add(item)` připojí prvek a zachová předchozí prvky. Změní tentýž seznam. Naproti
+/// tomu `list = new ArrayList<>(...)` změní, který seznam proměnná označuje. Samotné `List.of(...)`
+/// je neměnitelné; připravená historie je `ArrayList`.
+///
+/// Trasuj zvlášť přijatý a odmítnutý command (příkaz): začni na COLD, přijmi CORD, potom zkus WARM,
+/// který se liší více písmeny. Odmítnutý příkaz musí zachovat současné slovo i všechny položky
+/// historie. Než určíš místo operace s historií, najdi konec validation (ověření).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Prozkoumej, co assignment (přiřazení) nového ArrayList udělá se staršími slovy.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Použij operaci, která přidá jedno slovo do existující sequence (posloupnosti).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Projdi COLD → CORD → CARD a potom odmítni WARM bez přidání.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -18,6 +18,9 @@ import javax.imageio.ImageIO;
 /// Po Run File zadej seed (počáteční hodnotu) 42, otevři colour-filter-secrets-42.png a porovnej
 /// zašuměnou horní a odhalenou spodní polovinu, potom spusť 43.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F27 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 BufferedImage hide(BufferedImage mask, long seed) {
     var random = new Random(0);
     var image = new BufferedImage(mask.getWidth(), mask.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -29,6 +32,28 @@ BufferedImage hide(BufferedImage mask, long seed) {
     }
     return image;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F27">
+/// ### Seeded randomness (náhoda se seedem): opakuj pokus
+///
+/// Pseudorandom generator (generátor pseudonáhodných hodnot) vytváří posloupnost. Seed (počáteční
+/// hodnota) určuje výchozí stav; stejné seedy a stejná volání zopakují stejné výsledky.
+///
+/// ```java
+/// var first = new Random(9);
+/// var second = new Random(9);
+/// int a = first.nextInt(4);
+/// int b = second.nextInt(4);
+/// IO.println(a == b);
+/// ```
+///
+/// Výstup je `true`. Každé nextInt posune příslušný generátor. `nextInt(4)` vybere celé číslo od 0 do
+/// 3; horní mez nepatří do výběru. V celém generovaném obrázku používej jeden generátor, aby další
+/// volby četly další místa posloupnosti. Opakované vytváření se stejným seedem uvnitř loop (cyklu)
+/// stále vrací první volbu. Různé seedy mohou náhodou dát stejný jednotlivý výsledek.
+///
+/// Předpověz: která čísla smí vrátit `nextInt(3)` a může vrátit 3?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -46,13 +71,17 @@ BufferedImage hide(BufferedImage mask, long seed) {
 /// horní a spodní poloviny jediného uloženého obrázku; změna náhody nesmí přepsat masku.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Mask určuje červený channel (kanál); náhodnost mění zelený/modrý.
-/// 2. Neměň channel encoding (kódování kanálů) ani zprávu.
-/// 3. Nahraď pevný seed (počáteční hodnotu) předaným parameter (parametrem); Random používej v celém
-///   pixel loop (cyklu bodů obrazu).
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Mask určuje červený channel (kanál); náhodnost mění zelený/modrý.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Neměň channel encoding (kódování kanálů) ani zprávu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Nahraď pevný seed (počáteční hodnotu) předaným parameter (parametrem); Random používej v celém
+/// pixel loop (cyklu bodů obrazu).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

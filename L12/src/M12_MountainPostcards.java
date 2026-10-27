@@ -19,9 +19,34 @@ import javax.imageio.ImageIO;
 /// Po Run File zadej n pro mountain-old.png, potom spusť znovu a stiskni Enter pro zrcadlený
 /// mountain-new.png.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F36 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 double[] reverseRidge(double[] heights) {
     return heights.clone();
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F36">
+/// ### Transfer (přenos): zachovej slib a přidej volbu
+///
+/// Extract helper (vyčlenění pomocné metody) pojmenuje jednu odpovědnost. Vstupy a výsledek tvoří
+/// contract (smlouvu), kterou můžeš využít jinde.
+///
+/// ```java
+/// String surround(String text, boolean stars) {
+///     String edge = stars ? "*" : "#";
+///     return edge + text + edge;
+/// }
+/// ```
+///
+/// `surround("hi", false)` vrátí `"#hi#"`; původní styl s mřížkami dál funguje. Volající může požádat
+/// o nový styl bez opakování celé operace. Ověř obě volby, prázdný vstup i jiné slovo. Tests (testy)
+/// ověří výsledky; vysvětlení, kdo vybírá styl a kdo sestavuje popisek, ověří rozdělení odpovědností.
+/// Úspěšný nový režim nemá potichu měnit původní.
+///
+/// Předpověz: co vytvoří `surround("", true)` a která část by se měnila při změně obklopujícího
+/// znaku?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -38,12 +63,16 @@ double[] reverseRidge(double[] heights) {
 /// zrcadlení a uloží odlišně pojmenované PNG k porovnání.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Poslední původní hodnota patří na index (pořadové číslo) nula výsledku.
-/// 2. Cílové i přiřaď ke zdroji length-1-i.
-/// 3. Vysvětli, proč převrácení patří do samostatné transformace hodnot a ne do náhodné tvorby hřebene.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Poslední původní hodnota patří na index (pořadové číslo) nula výsledku.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Cílové i přiřaď ke zdroji length-1-i.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Vysvětli, proč převrácení patří do samostatné transformace hodnot a ne do náhodné tvorby hřebene.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

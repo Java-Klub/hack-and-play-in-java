@@ -20,6 +20,9 @@ import javax.swing.Timer;
 /// Po Run File pomocí Pause/Run zastav otáčení krychle, přečti Distinct edges a pomocí Reset angle obnov
 /// pohled.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F23 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 Set<Edge> uniqueEdges(int[][] candidates) {
     Set<Edge> result = new LinkedHashSet<>();
     for (int[] pair : candidates) {
@@ -29,6 +32,27 @@ Set<Edge> uniqueEdges(int[][] candidates) {
     }
     return result;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F23">
+/// ### Set (množina): členství bez duplikátů
+///
+/// `Set` odpovídá, zda hodnota patří do kolekce. Každému vložení nepřiděluje indexovanou pozici.
+///
+/// ```java
+/// Set<String> stickers = new HashSet<>();
+/// IO.println(stickers.add("moon"));
+/// IO.println(stickers.add("moon"));
+/// IO.println(stickers.size());
+/// ```
+///
+/// Výstup je `true`, `false`, potom `1`. První add změní membership (členství); druhý najde stejnou
+/// hodnotu již uloženou. `contains(value)` se ptá bez změny množiny. `remove(value)` hodnotu odebere
+/// a oznámí, zda byla přítomna. Record (datový záznam) má automatické porovnání podle hodnot svých
+/// složek, takže dva samostatně vytvořené stejné záznamy představují stejného člena množiny. Na
+/// pořadí průchodu přes HashSet nespoléhej.
+///
+/// Předpověz: po odebrání moon a přidání sun jaká bude velikost a výsledek `contains("moon")`?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -45,12 +69,16 @@ Set<Edge> uniqueEdges(int[][] candidates) {
 /// obrácenou duplicitu, proto popisek Distinct edges odhalí problém; ovládání okna mění jen pohled.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Edge(0,1) a Edge(1,0) nejsou rovné, dokud nezvolíš jednotné vyjádření.
-/// 2. Použij min/max pro canonical record value (jednotnou hodnotu record).
-/// 3. Set (množina) pak odstraní stejné i obrácené kopie bez dalšího hledacího loop (cyklu).
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Edge(0,1) a Edge(1,0) nejsou rovné, dokud nezvolíš jednotné vyjádření.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Použij min/max pro canonical record value (jednotnou hodnotu record).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Set (množina) pak odstraní stejné i obrácené kopie bez dalšího hledacího loop (cyklu).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

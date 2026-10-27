@@ -19,6 +19,9 @@ import java.util.List;
 ///
 /// Po Run File zadej 2–50 sloupců nebo zkus oops a potom otevři vytvořený maze-postcards.png.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F31 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int readColumns(String text) {
     try {
         int columns = Integer.parseInt(text.strip());
@@ -28,6 +31,34 @@ int readColumns(String text) {
         return 2;
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F31">
+/// ### Parse (převod), validation (ověření), potom uložení
+///
+/// Parsing převádí text; validation ověřuje, zda je výsledné číslo povolené. Každý krok může selhat
+/// jinak.
+///
+/// ```java
+/// int readCopies(String text) {
+///     try {
+///         int n = Integer.parseInt(text.strip());
+///         if (n < 1 || n > 5) {
+///             throw new IllegalArgumentException("Copies: 1..5");
+///         }
+///         return n;
+///     } catch (NumberFormatException invalid) {
+///         return 3;
+///     }
+/// }
+/// ```
+///
+/// `readCopies(" 2 ")` vrátí `2`: převod i ověření uspějí. `"oops"` selže při převodu a přes `catch`
+/// vrátí `3`. Číselný text `"8"` se převede, ale následně vyvolá jinou exception (výjimku); tento
+/// konkrétní catch ji nezachytí. `return` ukončí metodu; `throw` opustí běžnou cestu. Uložený stav
+/// hry měň až po úspěšném ověření.
+///
+/// Předpověz cestu pro `"five"`, `"5"` a `"0"`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -45,12 +76,27 @@ int readColumns(String text) {
 /// kreslicí část promění stěny v místní PNG pohlednici.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Číslo se může převést a přesto být odmítnuto
 ///
-/// 1. Výchozí hodnota řeší chybu převodu, nikoli každou neplatnou hodnotu.
-/// 2. Guard (podmínku) zahrnutého rozsahu nech mimo případ NumberFormatException.
-/// 3. Main předá výsledek přes render do skutečného generate.
+/// V readColumns se `" 8 "` převede na 8 a běžně vrátí. `"eight"` selže při převodu a přejde do catch
+/// pro NumberFormatException. `"1"` se převede na 1, potom výslovná kontrola mezí vyvolá
+/// IllegalArgumentException, kterou tento konkrétní catch neřeší. Trasuj `"2"` a `"50"` a ověř, že
+/// oba krajní body patří do rozsahu. Potom předpověz, zda `"51"` a `"fifty"` projdou stejnou cestou.
+/// Generátor bludiště má dostat buď přijatelné číslo, nebo dokumentovanou náhradu chybného textu,
+/// nikoli libovolnou malou šířku.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Výchozí hodnota řeší chybu převodu, nikoli každou neplatnou hodnotu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Guard (podmínku) zahrnutého rozsahu nech mimo případ NumberFormatException.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Main předá výsledek přes render do skutečného generate.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

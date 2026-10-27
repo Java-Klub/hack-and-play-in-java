@@ -12,6 +12,9 @@
 /// Použij Run File a zadáním s zůstaň na cvičném součtu 20, potom porovnej oznámený výsledek s
 /// krupiérovou 19.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F07 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 String compareTotals(int human, int house) {
     if (human > 21) {
         return "You bust";
@@ -19,6 +22,33 @@ String compareTotals(int human, int house) {
         return "Dealer wins";
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F07">
+/// `if` položí boolean question (logickou otázku). Jeho tělo běží jen při pravdivé odpovědi. `else
+/// if` položí další otázku teprve po neúspěchu předchozích; poslední `else` pokrývá všechny zbývající
+/// možnosti.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// int temperature = 10;
+/// if (temperature < 0) {
+///     IO.println("Frozen");
+/// } else if (temperature < 20) {
+///     IO.println("Cool");
+/// } else {
+///     IO.println("Warm");
+/// }
+/// ```
+///
+/// S desítkou se vypíše `Cool`: první comparison (porovnání) neplatí a druhé ano. Předpověz zprávy
+/// pro `-3` a `20`. Každé spuštění vypíše právě jednu zprávu. Na pořadí záleží: příliš široká
+/// dřívější branch (větev) může zabránit dosažení další. Uvnitř výpočtu může branch místo výpisu
+/// použít `return` výsledku. Ten okamžitě dokončí toto call (volání metody); neopustí pouze větev.
+/// Složené závorky ukazují, které statement (příkazy) patří k jednotlivým možnostem.
+///
+/// Nyní předpověz zprávu při přesně nula stupních.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -38,12 +68,31 @@ String compareTotals(int human, int house) {
 /// (vstup) i zobrazení jsou hotové.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
+/// Vrať jeden z těchto přesných anglických String (řetězců); připravená volající část jej vypíše:
 ///
-/// 1. Nejdřív ověř překročení hráče a teprve potom velikost čísel.
-/// 2. Podmínka výhry je house > 21 NEBO human > house.
-/// 3. Pro výhru a remízu použij else if před posledním else.
+/// - Hráč nad 21: `You bust`, i když 21 překročily oba součty.
+/// - Jinak krupiér nad 21 nebo hráč výš než krupiér: `You win`.
+/// - Jinak stejné součty: `Draw`.
+/// - Jinak: `Dealer wins`.
+///
+/// Jsou to priority, nikoli čtyři nezávislá oznámení. Například hráč 22 proti krupiérovým 25 stále
+/// znamená `You bust`; přednostní porovnání většího čísla by bylo chybné. Před zapsáním branch
+/// (větví) předpověz výsledky pro 20 proti 22, 18 proti 18 a 18 proti 20. Zachovej původní velikost
+/// písmen i mezery: vrácená zpráva je součástí contract (smlouvy) této method (metody). Dobírání
+/// karet ani vypisování do compareTotals nepřesouvej.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Nejdřív ověř překročení hráče a teprve potom velikost čísel.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Podmínka výhry je house > 21 NEBO human > house.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Pro výhru a remízu použij else if před posledním else.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

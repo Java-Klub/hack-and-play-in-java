@@ -11,9 +11,32 @@
 ///
 /// Spusť Run File a zadávej W, A, S nebo D potvrzené Enter pro pohyb hráče a tlačení bedny k cíli.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F15 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean floor(int px, int py) {
     return py >= 0 && py < 5 && px >= 0 && px < 7;
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F15">
+/// ### Contracts: ptej se bez změny světa
+///
+/// Contract (smlouva) popisuje přijímaný input (vstup) a význam výsledku. Pure calculation (čistý
+/// výpočet) používá své vstupy bez změny dalšího state (stavu). Query (dotaz) může číst aktuální
+/// model (model pravidel), ale má jej zachovat. Získání odpovědi a potvrzení akce jsou různé
+/// odpovědnosti.
+///
+/// ```java
+/// int contrast(int light, int dark) {
+///     return Math.abs(light - dark);
+/// }
+/// ```
+///
+/// `Math.abs` dává nezápornou velikost, odstraní tedy případné záporné znaménko. Tuto method (metodu)
+/// můžeš volat opakovaně, aniž by něco spotřebovala. Argument (argumenty) `(9, 4)` dávají pět: rozdíl
+/// je pět. Předpověz `(4, 9)`. Které uložené hodnoty porovnáš před dotazem a po něm, abys doložil
+/// nepřítomnost side effect (vedlejšího účinku)? Stejnou ochranu potřebuje odmítnutý kandidát.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -29,12 +52,26 @@ boolean floor(int px, int py) {
 /// dotazech; kreslení mapy i restart jsou připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Čtení jednoho map character (znaku mapy)
 ///
-/// 1. Hranice jsou bezpečně ověřené před indexováním terrain.
-/// 2. Podívej se na terrain[py].charAt(px).
-/// 3. Spoj hranice s podmínkou, že znak není #; nepřiřazuj žádné fields.
+/// Řádek terrain je String. `row.charAt(index)` čte jeden char na pozici od nuly; například
+/// `"map".charAt(1)` přečte prostřední character (znak). Char literal (přímo zapsaný znak) má
+/// jednoduché uvozovky, na rozdíl od String literal (textové hodnoty). Zde `#` označuje zeď. Před
+/// čtením řádku a znaku zachovej existující bounds (meze). Předpověz odpověď pro vnitřní zeď a
+/// vysvětli, proč dvojí dotaz nesmí pohnout hráčem či bednou.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Hranice jsou bezpečně ověřené před indexováním terrain.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Podívej se na terrain[py].charAt(px).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Spoj hranice s podmínkou, že znak není #; nepřiřazuj žádné fields.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

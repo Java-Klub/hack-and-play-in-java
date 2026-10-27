@@ -18,9 +18,34 @@ import java.util.Arrays;
 ///
 /// Spusť Run File, kliknutím na domino změň polaritu a klávesou U zkus obnovit předchozí volbu.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F20 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int[] copyState() {
     return state;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F20">
+/// ### References: jiné jméno, nebo jiný objekt?
+///
+/// Array variable (proměnná pole) uchovává reference (odkaz). Assignment (přiřazení) může dát dvěma
+/// jménům přístup k jedinému array (poli); zápis přes kterékoli změní sdílený objekt. `clone()` na
+/// jednorozměrném int array vytvoří další array se zkopírovanými hodnotami. Původní array i kopie se
+/// potom mohou měnit nezávisle.
+///
+/// ```java
+/// int[] wave = {4, 1};
+/// int[] shared = wave;
+/// int[] saved = wave.clone();
+/// wave[1] = 7;
+/// IO.println(shared[1]);
+/// IO.println(saved[1]);
+/// ```
+///
+/// Výstup je sedm a potom jedna: shared vidí zápis, saved uchová kopii. Po `saved[0] = 8` předpověz
+/// `wave[0]` a `saved[0]`. `clone()` kopíruje jednu vrstvu: element (prvky) mřížky jsou reference na
+/// řádky, takže kopie vnějšího array řádky dál sdílí. Ptej se, které objekty zůstaly společné.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -35,12 +60,26 @@ int[] copyState() {
 /// na políčku; won() řeší počty i zakázané stejné sousedy.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Kopíruj hodnoty, ne pozdější obrazovku
 ///
-/// 1. previousState musí přežít pozdější zápis do state[domino].
-/// 2. Alias stejné reference uvidí tento zápis také.
-/// 3. V copyState() vrať state.clone(); pravidla polarity ponech.
+/// Polarita každého dílku je int v jediném array (poli). Jeho `clone()` kopíruje tato čísla do
+/// odděleného úložiště. Zde není třeba kopírovat další row object (objekty řádků) či vnořené List
+/// (seznamy). Předpověz uloženou polaritu po dvojí změně živého dílku; stále má popisovat okamžik
+/// pořízení snapshot (snímku). Připravené undo z těchto dat obnoví pracovní state (stav). Vysvětli,
+/// proč repaint (překreslení) neopraví sdílené úložiště.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// previousState musí přežít pozdější zápis do state[domino].
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Alias stejné reference uvidí tento zápis také.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// V copyState() vrať state.clone(); pravidla polarity ponech.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

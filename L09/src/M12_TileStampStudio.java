@@ -18,6 +18,9 @@ import javax.imageio.ImageIO;
 ///
 /// Po Run File namaluj dlaždici, napiš 3 do políčka Repeats a klikni na Repeats pro změnu hustoty vzoru.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F31 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean applyRepeats(String text) {
     try {
         int candidate = Integer.parseInt(text.strip());
@@ -28,6 +31,34 @@ boolean applyRepeats(String text) {
         return false;
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F31">
+/// ### Parse (převod), validation (ověření), potom uložení
+///
+/// Parsing převádí text; validation ověřuje, zda je výsledné číslo povolené. Každý krok může selhat
+/// jinak.
+///
+/// ```java
+/// int readCopies(String text) {
+///     try {
+///         int n = Integer.parseInt(text.strip());
+///         if (n < 1 || n > 5) {
+///             throw new IllegalArgumentException("Copies: 1..5");
+///         }
+///         return n;
+///     } catch (NumberFormatException invalid) {
+///         return 3;
+///     }
+/// }
+/// ```
+///
+/// `readCopies(" 2 ")` vrátí `2`: převod i ověření uspějí. `"oops"` selže při převodu a přes `catch`
+/// vrátí `3`. Číselný text `"8"` se převede, ale následně vyvolá jinou exception (výjimku); tento
+/// konkrétní catch ji nezachytí. `return` ukončí metodu; `throw` opustí běžnou cestu. Uložený stav
+/// hry měň až po úspěšném ověření.
+///
+/// Předpověz cestu pro `"five"`, `"5"` a `"0"`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -45,12 +76,27 @@ boolean applyRepeats(String text) {
 /// dlaždice, skládání vzoru i PNG export jsou připravené; oprava řeší jednu hranici nastavení.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Před změnou razítka ověř vstup
 ///
-/// 1. Parsing (rozbor) míří do dočasného candidate, nikoli přímo do field (položky objektu).
-/// 2. Obě hranice ověř před assignment (přiřazením).
-/// 3. Při úspěchu přiřaď candidate místo původní výchozí hodnoty.
+/// Parsing (převod) a změna modelu jsou dva kroky. Jestliže repeats bylo 4, chybný text `"oops"` musí
+/// vrátit false a ponechat uloženou 4. Číselné `"13"` také ponechá 4, protože neprojde kontrolou
+/// rozsahu; toto odmítnutí používá return false místo vyvolání výjimky. Pro přijaté `"3"` musí
+/// uložený počet opakování odpovídat přijatému požadavku. Trasuj současný kód: který řádek ukládá
+/// konstantu až poté, co candidate prošel ověřením? Předpověz uloženou hodnotu po platném vstupu a
+/// následném překlepu; neúspěšný druhý pokus nesmí smazat první úspěch.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Parsing (rozbor) míří do dočasného candidate, nikoli přímo do field (položky objektu).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Obě hranice ověř před assignment (přiřazením).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Při úspěchu přiřaď candidate místo původní výchozí hodnoty.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -12,9 +12,34 @@
 /// Použij Run File a v Output si prohlédni pětiřádkovou ceduli; po opravě ji zkus přečíst z větší
 /// vzdálenosti.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F02 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 String bannerMessage() {
     return "     ";
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F02">
+/// String literal (doslovně zapsaný řetězec) je text mezi dvojitými uvozovkami. Vnější uvozovky
+/// říkají Javě, kde text začíná a končí; nevypisují se. I číslice v uvozovkách jsou text. Expression
+/// (výraz) naopak může před vypsáním vypočítat hodnotu.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// IO.println("Shelf 4");
+/// IO.println(4 + 2);
+/// IO.println("Shelf \"B\"");
+/// ```
+///
+/// Předpověz tři řádky. Jsou to `Shelf 4`, `6` a `Shelf "B"`. V posledním literal představuje každé
+/// `\"` jednu uvozovku patřící do textu. Zpětné lomítko je zápis, nikoli další vypsaný znak.
+/// `IO.println` vypíše svůj argument (předanou hodnotu) a ukončí řádek. Mezery uvnitř literal
+/// zůstávají skutečnými mezerami; změna comment (komentářů) vypsanou zprávu nezmění. Rozlišuj tedy
+/// znaky zapsané ve source (zdrojovém textu) a znaky, které se opravdu objeví v output (výstupu).
+///
+/// Nyní předpověz `IO.println(4 + 5);` a `IO.println("4 + 5");`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -33,12 +58,24 @@ String bannerMessage() {
 /// zprávu a vytiskne výsledek. Písmo podporuje A B C J L U V ! a mezery.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Mezery jsou skutečné znaky, ale toto písmo je nechá prázdné.
-/// 2. Text nech uvnitř jedné dvojice dvojitých uvozovek.
-/// 3. Celý return statement (příkaz vrácení) je return "JAVA CLUB!";
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// Tentokrát je výsledkem text v NetBeans **Output**, nikoli samostatné okno nebo soubor. Starter
+/// (výchozí program) vypíše pět řádků mezer a potom běžně skončí; prázdný output (výstup) je zkoumaná
+/// chyba. Rozšiř panel, aby bylo písmo s pevnou šířkou dobře vidět. Připravené písmo podporuje pouze
+/// uvedená písmena, `!` a mezery, takže libovolný text může být odmítnut. Comment (komentář)
+/// popisující novou ceduli nezmění zprávu vrácenou bannerMessage.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Mezery jsou skutečné znaky, ale toto písmo je nechá prázdné.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Text nech uvnitř jedné dvojice dvojitých uvozovek.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Celý return statement (příkaz vrácení) je return "JAVA CLUB!";
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

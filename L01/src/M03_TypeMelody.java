@@ -20,9 +20,34 @@ import java.io.ByteArrayInputStream;
 /// Použij Run File, v kartě Files projektu najdi melody.wav a otevři uložený soubor ve zvukovém
 /// přehrávači, abys zprávu slyšel.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F02 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 String defaultMessage() {
     return "1234";
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F02">
+/// String literal (doslovně zapsaný řetězec) je text mezi dvojitými uvozovkami. Vnější uvozovky
+/// říkají Javě, kde text začíná a končí; nevypisují se. I číslice v uvozovkách jsou text. Expression
+/// (výraz) naopak může před vypsáním vypočítat hodnotu.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// IO.println("Shelf 4");
+/// IO.println(4 + 2);
+/// IO.println("Shelf \"B\"");
+/// ```
+///
+/// Předpověz tři řádky. Jsou to `Shelf 4`, `6` a `Shelf "B"`. V posledním literal představuje každé
+/// `\"` jednu uvozovku patřící do textu. Zpětné lomítko je zápis, nikoli další vypsaný znak.
+/// `IO.println` vypíše svůj argument (předanou hodnotu) a ukončí řádek. Mezery uvnitř literal
+/// zůstávají skutečnými mezerami; změna comment (komentářů) vypsanou zprávu nezmění. Rozlišuj tedy
+/// znaky zapsané ve source (zdrojovém textu) a znaky, které se opravdu objeví v output (výstupu).
+///
+/// Nyní předpověz `IO.println(4 + 5);` a `IO.println("4 + 5");`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -42,12 +67,26 @@ String defaultMessage() {
 /// samostatný přehrávač.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Zprávou je pouze text mezi uvozovkami.
-/// 2. Připravený synthesizer (syntetizér) přiřazuje číslicím tiché úseky.
-/// 3. Použij return "JAVA"; potom znovu vytvoř a otevři melody.wav.
+// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
+/// Tento program exportuje zvuk místo otevření herního okna. Po Run File přečti umístění za `Saved:`
+/// v Output. Přepni na **Window → Files**, rozbal L01 a podle potřeby obnov seznam souborů; najdi
+/// `melody.wav`. Uložený soubor otevři systémovým zvukovým přehrávačem. Pokud jej NetBeans
+/// nepřehraje, najdi vypsanou cestu v systémovém správci souborů a otevři jej tam. Čtyři tiché úseky
+/// výchozí verze jsou záměrné pozorování, nikoli selhání zvukové karty. Po úpravě source (zdrojového
+/// textu) znovu použij Run File k nahrazení WAV a znovu jej otevři; Test File kontroluje chování, ale
+/// tento poslech neprovádí.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Zprávou je pouze text mezi uvozovkami.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Připravený synthesizer (syntetizér) přiřazuje číslicím tiché úseky.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Použij return "JAVA"; potom znovu vytvoř a otevři melody.wav.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

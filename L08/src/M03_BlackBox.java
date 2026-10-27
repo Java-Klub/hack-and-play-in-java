@@ -12,6 +12,9 @@
 /// Spusť Run File a zadáním ray N1 prozkoumej krabici shora, potom pozorování porovnej s paprsky z
 /// dalších označených vstupů.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F18 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 String trace(boolean[][] grid, String entry) {
     require(entry.matches("[NSEW][1-4]"));
     int n = entry.charAt(1) - '1';
@@ -63,6 +66,25 @@ String trace(boolean[][] grid, String entry) {
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F18">
+/// ### Grids: nejdřív řádek, potom sloupec
+///
+/// V array of rows (poli řádků) první index (pozice) vybírá řádek a druhý pozici v něm. Řádky mohou
+/// mít různé délky. Neighbour (soused) je posun od buňky, nikoli další absolutní pozice. Před
+/// kontrolou existence kandidáta urči povolené směry.
+///
+/// ```java
+/// int[][] mosaic = {{3, 6, 9}, {2, 4, 8}};
+/// int row = 0;
+/// int column = 1;
+/// IO.println(mosaic[row][column + 1]);
+/// ```
+///
+/// Výstup je devět: řádek nula a sloupec dva vyberou tento element (prvek). Pohyb dolů mění row;
+/// doprava mění column. Který z těchto pohybů z pravé horní cell (buňky) zůstane uvnitř? U úhlopříčky
+/// se mění obě souřadnice; bounds (meze) musíš ověřit před přístupem ke kandidátovi.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
 ///
@@ -78,12 +100,25 @@ String trace(boolean[][] grid, String entry) {
 /// zásahy, odrazy a zacyklení; equivalent() při ověření odhadu porovnává všechna pozorování paprsků.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Kolmý směr je vztažený k pohybu
 ///
-/// 1. Dopředný vektor je (dx,dy) a další pole (nx,ny).
-/// 2. Kolmé posuny jsou (-dy,+dx) a (+dy,-dx).
-/// 3. Levou stranu ponech (nx-dy,ny+dx); pravá má být (nx+dy,ny-dx).
+/// Direction (směr) je dvojice změn, ne absolutní pozice obrazovky. Paprsek mířící doprava ve směru
+/// `(1,0)` má dva boční posuny `(0,1)` a `(0,-1)`. Jsou opačné. Společným počátkem obou bočních
+/// dotazů je další pozice vpřed. Nakresli stejnou konstrukci pro paprsek mířící vzhůru. Zachovej
+/// připravená pravidla otočení a odrazu; s pohybem mají souhlasit dvě odlišné boční pozice.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Dopředný vektor je (dx,dy) a další pole (nx,ny).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Kolmé posuny jsou (-dy,+dx) a (+dy,-dx).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Levou stranu ponech (nx-dy,ny+dx); pravá má být (nx+dy,ny-dx).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

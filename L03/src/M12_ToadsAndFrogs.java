@@ -19,9 +19,37 @@ import java.util.Arrays;
 /// Použij Run File a stiskni 5, abys požádal žábu vedle počáteční mezery o krok doleva; R obnoví výchozí
 /// uspořádání.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F13 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int direction(int piece) {
     return 1;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F13">
+/// Method (metoda) zabalí operaci pod jediné jméno. Parameter (parametry) jsou místní jména informací
+/// přijatých při každém call (volání); argument (argumenty) jsou skutečně předané hodnoty. `return`
+/// předá jediný výsledek zpět volající části.
+///
+/// ```java
+/// int remaining(int capacity, int used) {
+///     return capacity - used;
+/// }
+///
+/// void main() {
+///     IO.println(remaining(12, 5));
+///     IO.println(remaining(9, 4));
+/// }
+/// ```
+///
+/// Předpověz obě vypsané hodnoty: sedmičku a pětku. Čárka odděluje parameter či argument a jejich
+/// pořadí rozhoduje, kterou hodnotu jméno dostane. Jména popisují role; informace si sama
+/// nezískávají. Tato method počítá bez vypisování a změny připraveného state (stavu programu). Při
+/// opravě výpočtu vyzkoušej druhou dvojici argument, aby se za jediný případ nemohla schovat náhodná
+/// pevná odpověď. Method se provede až při skutečném call, nikoli samotným zapsáním definice.
+///
+/// Nyní předpověz remaining(10, 6).
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -40,12 +68,16 @@ int direction(int piece) {
 /// kontroluje výměnu skupin; draw a připravená vstupní část umožňují vybrat tvora.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Výsledkem je směr, nikoli nová pozice na desce.
-/// 2. Volající tento výsledek přičítá k vybrané pozici.
-/// 3. Při piece == 1 vrať 1; jinak vrať -1.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Výsledkem je směr, nikoli nová pozice na desce.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Volající tento výsledek přičítá k vybrané pozici.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Při piece == 1 vrať 1; jinak vrať -1.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

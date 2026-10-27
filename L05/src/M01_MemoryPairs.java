@@ -18,9 +18,30 @@ import java.awt.GridLayout;
 /// Spusť Run File a klikni na dvě zakryté karty; po neshodě začne kliknutí na další zakrytou kartu nový
 /// pokus.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F16 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int visible(int index) {
     return matched[index] || index == first || index == second ? cards[0] : 0;
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F16">
+/// ### Arrays: záleží na pozici
+///
+/// Array (pole) uchovává pevný počet hodnot jednoho element type (typu prvku). Hranaté závorky
+/// vybírají pozici: první index (pozice) je nula a `length` je počet. Čtení jednoho element (prvku)
+/// nemění ostatní. Použitý index musí existovat; prázdné array nemá první element.
+///
+/// ```java
+/// String[] tools = {"pen", "tape", "chalk"};
+/// int chosen = 1;
+/// IO.println(tools[chosen]);
+/// IO.println(tools.length);
+/// ```
+///
+/// Tyto statement (příkazy) patří dovnitř method (metody). Index jedna vybere `tape`; počet je tři.
+/// Co se změní při `chosen` rovném dvěma? Který index už bude první neplatný?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -38,12 +59,16 @@ int visible(int index) {
 /// metodami.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. cards a matched popisují stejné očíslované pozice.
-/// 2. index je pozice, kterou požaduje refresh().
-/// 3. cards[index] použij jen ve viditelné větvi podmínky.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// cards a matched popisují stejné očíslované pozice.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// index je pozice, kterou požaduje refresh().
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// cards[index] použij jen ve viditelné větvi podmínky.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -20,6 +20,9 @@ import javax.swing.Timer;
 ///
 /// Spusť Run File a šipkou se rozjeď bludištěm, potom miř k tečkám a vyhýbej se duchovi.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F21 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 enum RoundState {
     PLAY, CAUGHT, WON
 }
@@ -33,6 +36,28 @@ RoundState afterContact(boolean caught, int dotsLeft) {
     }
     return RoundState.PLAY;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F21">
+/// ### Enum: jedna z pojmenovaných možností
+///
+/// Enum vymezí konečnou sadu hodnot jednoho type (typu). Jméno type a tečka určují konkrétní hodnotu.
+/// Překlep v enum value (hodnotě enum) způsobí compiler error (chybu překladu), na rozdíl od
+/// libovolného textu. Variable (proměnná) nese jednu volbu; `==` je pro tyto hodnoty vhodné.
+///
+/// ```java
+/// enum Voice {
+///     WHISPER, SING, SHOUT
+/// }
+///
+/// Voice voice = Voice.SING;
+/// IO.println(voice == Voice.SHOUT);
+/// ```
+///
+/// Declaration (deklarace) patří vedle method (metod); příkazy můžeš číst uvnitř metody. Porovnání
+/// vypíše false, protože SING a SHOUT jsou různé hodnoty. Předpověz je po přiřazení SHOUT. Může
+/// jediná variable tvrdit současně SING i SHOUT? Vysvětli, jaké rozporné kombinace by dovolily
+/// oddělené boolean (logické proměnné).
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -48,12 +73,26 @@ RoundState afterContact(boolean caught, int dotsLeft) {
 /// moveGhost() už vybírá legální sousedy a kreslení používá vrácený RoundState.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Jedna událost může splnit dvě condition (podmínky)
 ///
-/// 1. Pojmenované koncové stavy nelze zkombinovat do rozporných flags.
-/// 2. Srážka a poslední tečka mohou nastat v jednom kroku.
-/// 3. Nejprve ověř caught, potom dotsLeft==0; ve zbývajícím případě vrať PLAY.
+/// Enum value (hodnoty enum) činí konečný výsledek výlučným, podmínky se však mohou překrývat.
+/// Uvedený contract (smlouva) dává chycení přednost před poslední tečkou. Předpověz výsledek při
+/// chycení s nulou teček, bez chycení s nulou teček a bez chycení se zbývajícími tečkami. Jsou to
+/// různé vstupní situace, ne tři postupně přiřazované state (stavy). Vysvětli, který dřívější return
+/// zabrání pozdější podmínce nahradit zamýšlený výsledek.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Pojmenované koncové stavy nelze zkombinovat do rozporných flags.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Srážka a poslední tečka mohou nastat v jednom kroku.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Nejprve ověř caught, potom dotsLeft==0; ve zbývajícím případě vrať PLAY.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

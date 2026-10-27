@@ -13,9 +13,37 @@
 /// Použij Run File a jako čtyři samostatné tahy zadej 3 1 2 1; 1 2 2 1; 3 3 2 3; 2 1 3 1, čímž hráč 2
 /// dojde dolů.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F13 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int goalRow(int who) {
     return 0;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F13">
+/// Method (metoda) zabalí operaci pod jediné jméno. Parameter (parametry) jsou místní jména informací
+/// přijatých při každém call (volání); argument (argumenty) jsou skutečně předané hodnoty. `return`
+/// předá jediný výsledek zpět volající části.
+///
+/// ```java
+/// int remaining(int capacity, int used) {
+///     return capacity - used;
+/// }
+///
+/// void main() {
+///     IO.println(remaining(12, 5));
+///     IO.println(remaining(9, 4));
+/// }
+/// ```
+///
+/// Předpověz obě vypsané hodnoty: sedmičku a pětku. Čárka odděluje parameter či argument a jejich
+/// pořadí rozhoduje, kterou hodnotu jméno dostane. Jména popisují role; informace si sama
+/// nezískávají. Tato method počítá bez vypisování a změny připraveného state (stavu programu). Při
+/// opravě výpočtu vyzkoušej druhou dvojici argument, aby se za jediný případ nemohla schovat náhodná
+/// pevná odpověď. Method se provede až při skutečném call, nikoli samotným zapsáním definice.
+///
+/// Nyní předpověz remaining(10, 6).
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -33,12 +61,16 @@ int goalRow(int who) {
 /// vráceného řádku; display a main dodávají desku a input (vstup) jednotlivých tahů.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Porovnej dvě volání: goalRow(1) a goalRow(2).
-/// 2. Return value (vrácená hodnota) musí záviset na parametru volání, ne na pevném globálním hráči.
-/// 3. Při who == 1 vrať 0; jinak vrať 2.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Porovnej dvě volání: goalRow(1) a goalRow(2).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Return value (vrácená hodnota) musí záviset na parametru volání, ne na pevném globálním hráči.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Při who == 1 vrať 0; jinak vrať 2.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

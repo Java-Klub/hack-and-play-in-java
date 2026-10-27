@@ -12,6 +12,9 @@
 /// Použij Run File a napiš 1 1 1 3 pro výběr CAT v prvním řádku; starter (výchozí program) přečte jen CA
 /// a nález odmítne.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F11 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 String read(int r, int c, int nr, int nc) {
     require(r >= 0 && r < 5 && c >= 0 && c < 5 && nr >= 0 && nr < 5 && nc >= 0 && nc < 5);
     int dr = Integer.signum(nr - r);
@@ -24,6 +27,28 @@ String read(int r, int c, int nr, int nc) {
     }
     return word;
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F11">
+/// Counted for (počítaná smyčka for) sdruží initialization (počáteční nastavení), podmínku
+/// pokračování a postup do jediného záhlaví. Nastavení proběhne jednou. Potom Java ověří condition
+/// (podmínku), při pravdě provede tělo, udělá postup a znovu ověří podmínku.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// for (int floor = 2; floor <= 4; floor++) {
+///     IO.println(floor);
+/// }
+/// ```
+///
+/// Předpověz navštívené hodnoty: `2`, `3`, `4`. Jsou to tři průchody, i když poslední vypsané číslo
+/// je čtyřka. Dva středníky oddělují tři části záhlaví; `floor++` přičte jedničku po průchodu.
+/// Složené závorky sdružují opakované statement (příkazy). Pokud počáteční hodnota podmínku už
+/// nesplňuje, neproběhne žádný průchod. Rozlišuj počet pozic a mezer: tři pozice mají dvě mezery. Než
+/// změníš hranici, napiš drobnou trace (stopu průběhu).
+///
+/// Nyní předpověz output (výstup), pokud floor začíná na pětce.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -44,12 +69,16 @@ String read(int r, int c, int nr, int nc) {
 /// mřížku a main čte čtyři hráčské souřadnice číslované od jedné.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Vzdálenost n počítá mezery mezi políčky, nikoli vybraná políčka.
-/// 2. Index (indexy) 0, 1 a 2 obsahují tři písmena.
-/// 3. Nech i běžet od 0 při i <= n.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Vzdálenost n počítá mezery mezi políčky, nikoli vybraná políčka.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Index (indexy) 0, 1 a 2 obsahují tři písmena.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Nech i běžet od 0 při i <= n.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

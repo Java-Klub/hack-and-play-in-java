@@ -20,9 +20,34 @@ import java.util.Arrays;
 /// Spusť Run File a opakovaným klikáním na neoranžové políčko přepínej neznámou, černou a bílou podle
 /// pravidel vyvážení.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F20 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int[][] copyBoard(int[][] original) {
     return original.clone();
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F20">
+/// ### References: jiné jméno, nebo jiný objekt?
+///
+/// Array variable (proměnná pole) uchovává reference (odkaz). Assignment (přiřazení) může dát dvěma
+/// jménům přístup k jedinému array (poli); zápis přes kterékoli změní sdílený objekt. `clone()` na
+/// jednorozměrném int array vytvoří další array se zkopírovanými hodnotami. Původní array i kopie se
+/// potom mohou měnit nezávisle.
+///
+/// ```java
+/// int[] wave = {4, 1};
+/// int[] shared = wave;
+/// int[] saved = wave.clone();
+/// wave[1] = 7;
+/// IO.println(shared[1]);
+/// IO.println(saved[1]);
+/// ```
+///
+/// Výstup je sedm a potom jedna: shared vidí zápis, saved uchová kopii. Po `saved[0] = 8` předpověz
+/// `wave[0]` a `saved[0]`. `clone()` kopíruje jednu vrstvu: element (prvky) mřížky jsou reference na
+/// řádky, takže kopie vnějšího array řádky dál sdílí. Ptej se, které objekty zůstaly společné.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -39,12 +64,35 @@ int[][] copyBoard(int[][] original) {
 /// zatímco lineValid() a won() kontrolují vyvážení i opakované skupiny; tyto kontroly jsou připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
+/// ### Kopie řádků i vnější vrstvy
 ///
-/// 1. int[][] je array referencí na řádky.
-/// 2. original.clone() kopíruje reference řádků; buňky zůstávají sdílené.
-/// 3. Vytvoř copy[original.length][] a před vrácením naklonuj každý original[row].
+/// Vnější array (pole) mřížky ukládá row reference (odkazy na řádky). Vnější `clone()` proto kopíruje
+/// odkazy na stejné řádky. Zde je jiný dvouřádkový příklad s nezávislými řádky:
+///
+/// ```java
+/// int[][] original = {{1}, {2}};
+/// int[][] copied = {original[0].clone(), original[1].clone()};
+/// copied[0][0] = 9;
+/// IO.println(original[0][0]);
+/// ```
+///
+/// Výstup zůstane jedna, protože změněný řádek patří copied. Předpověz výsledek, kdyby jeho první
+/// řádek byl jen `original[0]`. Tvoje deska má více řádků: podle skutečného počtu opakuj operaci
+/// kopírování. Každý row clone (klon řádku) zachová jeho aktuální element (prvky). Vysvětli, která
+/// vrstva by zůstala sdílená při kopii pouze vnějšího array.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// int[][] je array referencí na řádky.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// original.clone() kopíruje reference řádků; buňky zůstávají sdílené.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Vytvoř copy[original.length][] a před vrácením naklonuj každý original[row].
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

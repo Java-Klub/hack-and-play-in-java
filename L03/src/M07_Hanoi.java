@@ -12,6 +12,9 @@
 /// Použij Run File, zadej A B a potom znovu A B pro prohlédnutí zakázaného většího disku na menším; r
 /// obnoví původní věž.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F08 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean move(int from, int to) {
     if (won() || from < 0 || from > 2 || to < 0 || to > 2 || from == to || sizes[from] == 0) {
         return false;
@@ -27,6 +30,30 @@ boolean move(int from, int to) {
     moves++;
     return true;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F08">
+/// Guard (ochranná podmínka) odmítne požadavek před chráněnou prací. Nejdřív přečti odmítané případy
+/// a potom se ptej, co zůstává povolené. Short-circuit (zkrácené vyhodnocení) je důležité: u `A || B`
+/// Java přeskočí B, pokud A už platí.
+///
+/// ```java
+/// boolean useSlot(int slot) {
+///     if (slot < 0 || slot >= 4) {
+///         return false;
+///     }
+///     IO.println("Using slot " + slot);
+///     return true;
+/// }
+/// ```
+///
+/// Předpověz výpis a vrácenou hodnotu pro `-1`, `3` a `4`. Jen trojka dojde k výpisu. Odmítnutí musí
+/// nastat před jakoukoli state change (změnou stavu), která se nemá provést. Přístup na desku sám
+/// může potřebovat kontrolu rozsahu, než jej lze bezpečně vyhodnotit. `return false` ukončí toto call
+/// (volání metody); automaticky nevrací zpět práci již provedenou předtím.
+///
+/// `useSlot(3)` předá trojku do `slot`; `boolean` před názvem říká, že výsledkem je true/false. Nyní
+/// předpověz slot nula.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -49,12 +76,16 @@ boolean move(int from, int to) {
 /// připraveného úložiště.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Čísla disků jsou velikosti: 1 je menší než 2.
-/// 2. Prázdný cíl musí přeskočit čtení svého horního disku.
-/// 3. Uvnitř ochrany neprázdného cíle odmítni targetTop < disc.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Čísla disků jsou velikosti: 1 je menší než 2.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Prázdný cíl musí přeskočit čtení svého horního disku.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Uvnitř ochrany neprázdného cíle odmítni targetTop < disc.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -20,10 +20,35 @@ import javax.swing.Timer;
 /// Použij Run File, klávesou M ukaž společnou pozici a potom pomocí Space spusť pohyb; C přepíná
 /// pruhované a hladké pozadí.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F03 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void startingPosition() {
     x = 20;
     x = -80;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F03">
+/// Variable (proměnná) pojmenuje uloženou hodnotu. Type (typ) popisuje přípustné hodnoty: `int`
+/// uchovává celá čísla a `double` může uchovat desetinnou část. Initialization (počáteční přiřazení)
+/// dodá první hodnotu; pozdější assignment (přiřazení) ji nahradí.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// int charge = 4;
+/// charge = charge + 3;
+/// IO.println(charge);
+/// ```
+///
+/// Předpověz output (výstup). Nejprve `charge` uchovává čtyřku. Na druhém řádku Java přečte starou
+/// hodnotu pro výpočet pravého expression (výrazu) a potom pod stejným jménem uloží sedmičku. `=` je
+/// assignment, nikoli matematické tvrzení, že obě strany mají navždy zůstat stejné. Další statement
+/// (příkazy) čtoucí toto jméno nyní dostanou sedmičku. Jméno se neaktualizuje samo: hodnotu musí
+/// změnit provedené assignment. Variable označenou `final` nelze znovu přiřadit.
+///
+/// Nyní předpověz konečné charge, pokud počáteční přiřazení použije šest místo čtyř.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -43,12 +68,24 @@ void startingPosition() {
 /// připravená klávesnice mění pruhy, značku a pauzu.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Čti oba assignment (přiřazení) v pořadí: druhé přepíše výsledek prvního.
-/// 2. Pravá strana může přečíst současné x, než uloží nové x.
-/// 3. Druhý assignment (přiřazení) zapiš x = x + 60;
+// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
+/// Druhé assignment (přiřazení) má vyjádřit relativní změnu: vezmi současné x a zvětši je o 60. První
+/// assignment zachovej. S nynější počáteční hodnotou 20 je výsledkem 80; pokud by se počáteční
+/// hodnota změnila, druhý výpočet na ni má navázat místo nesouvisející pevné odpovědi. Pravý
+/// expression (výraz) nejdřív přečti se starým x a potom výsledek ulož. Proto může assignment uvádět
+/// stejné jméno na obou stranách. Připravené x sdílejí obě nohy, takže opravuješ jedinou pozici.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Čti oba assignment (přiřazení) v pořadí: druhé přepíše výsledek prvního.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Pravá strana může přečíst současné x, než uloží nové x.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Druhý assignment (přiřazení) zapiš x = x + 60;
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

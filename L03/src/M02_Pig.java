@@ -12,6 +12,9 @@
 /// Použij Run File a zadávej d pro hod nebo b pro uložení tahu; sleduj, co se stane při jedničce a
 /// šestce.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F07 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean roll(int die) {
     if (winner != -1 || die < 1 || die > 6) {
         return false;
@@ -24,6 +27,33 @@ boolean roll(int die) {
     }
     return true;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F07">
+/// `if` položí boolean question (logickou otázku). Jeho tělo běží jen při pravdivé odpovědi. `else
+/// if` položí další otázku teprve po neúspěchu předchozích; poslední `else` pokrývá všechny zbývající
+/// možnosti.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// int temperature = 10;
+/// if (temperature < 0) {
+///     IO.println("Frozen");
+/// } else if (temperature < 20) {
+///     IO.println("Cool");
+/// } else {
+///     IO.println("Warm");
+/// }
+/// ```
+///
+/// S desítkou se vypíše `Cool`: první comparison (porovnání) neplatí a druhé ano. Předpověz zprávy
+/// pro `-3` a `20`. Každé spuštění vypíše právě jednu zprávu. Na pořadí záleží: příliš široká
+/// dřívější branch (větev) může zabránit dosažení další. Uvnitř výpočtu může branch místo výpisu
+/// použít `return` výsledku. Ten okamžitě dokončí toto call (volání metody); neopustí pouze větev.
+/// Složené závorky ukazují, které statement (příkazy) patří k jednotlivým možnostem.
+///
+/// Nyní předpověz zprávu při přesně nula stupních.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -43,12 +73,16 @@ boolean roll(int die) {
 /// stav a zpracuje další příkaz. Body neukončeného tahu zůstávají oddělené od uloženého skóre.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Projdi současnou condition (podmínku) pro die = 1.
-/// 2. Obě těla branch (větví) jsou připravená; chybná je výběrová condition (podmínka).
-/// 3. If comparison (porovnání) musí být die == 1.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Projdi současnou condition (podmínku) pro die = 1.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Obě těla branch (větví) jsou připravená; chybná je výběrová condition (podmínka).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// If comparison (porovnání) musí být die == 1.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

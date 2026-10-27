@@ -18,9 +18,33 @@ import javax.imageio.ImageIO;
 /// Pomocí Run File ulož truchet-tile-lab.png, potom jej otevři a porovnej klikaté dlaždice s počty LEFT a
 /// RIGHT nahoře.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F24 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void countOrientation(String orientation) {
     orientationCounts.put(orientation, 1);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F24">
+/// ### Map (mapa): hodnota podle klíče
+///
+/// `Map<String, Integer>` přiřazuje textovým keys (klíčům) celočíselné values (hodnoty). Jeden klíč
+/// má nejvýše jednu uloženou hodnotu.
+///
+/// ```java
+/// Map<String, Integer> badges = new HashMap<>();
+/// badges.put("moon", 4);
+/// IO.println(badges.getOrDefault("moon", 0));
+/// IO.println(badges.getOrDefault("sun", 0));
+/// ```
+///
+/// Výstup je `4`, potom `0`. `getOrDefault(key, fallback)` přečte existující hodnotu; při chybějícím
+/// klíči vrátí fallback (náhradní hodnotu). Toto čtení nic nevkládá. `put(key, value)` hodnotu uloží
+/// a případnou předchozí hodnotu téhož klíče přepíše; čísla automaticky nesčítá. `containsKey(key)`
+/// použij, když potřebuješ výslovně rozlišit chybějící klíč. V těchto příkladech neukládáme `null`.
+///
+/// Předpověz: po `badges.put("moon", 9)` co vrátí stejná dvě čtení?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -35,12 +59,16 @@ void countOrientation(String orientation) {
 /// obrázku čte stejnou Map (mapu); seed (počáteční hodnota) i PNG výstup jsou připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. LEFT a RIGHT jsou různé key (klíče).
-/// 2. Chybějící key (klíč) znamená nula starších dlaždic.
-/// 3. Ulož starý počet plus jedna, nikoli pevnou jedničku.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// LEFT a RIGHT jsou různé key (klíče).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Chybějící key (klíč) znamená nula starších dlaždic.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Ulož starý počet plus jedna, nikoli pevnou jedničku.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

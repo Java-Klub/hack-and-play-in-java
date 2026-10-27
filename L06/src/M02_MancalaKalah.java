@@ -12,6 +12,9 @@
 ///
 /// Spusť Run File a zadej číslo jedné své jamky od 1 do 6, aby se její kameny rozesely po desce.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F14 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void reset() {
     pits = new int[14];
     Arrays.fill(pits, 4);
@@ -19,6 +22,28 @@ void reset() {
     int player = 0;
     outcome = "";
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F14">
+/// ### Scope: které úložiště jméno označuje?
+///
+/// Field (položka objektu) patří aktuálnímu objektu a může přežít více volání. Local variable (místní
+/// proměnná) patří jedinému call (volání) či bloku. Declaration (deklarace) obsahuje type (typ);
+/// assignment (přiřazení) do existujícího jména nevytváří další proměnnou. Místní jméno může zastínit
+/// stejně napsaný field.
+///
+/// ```java
+/// int volume = 7;
+///
+/// void whisper() {
+///     int volume = 2;
+///     IO.println(volume);
+/// }
+/// ```
+///
+/// `whisper()` vypíše dvě, zatímco field zůstane sedm: local declaration (místní deklarace) vytvořila
+/// jiné úložiště. Předpověz pozdější čtení field; `this.volume` podle potřeby výslovně označí field.
+/// Která hodnota má přežít několik volání a která patří pouze dočasnému výpočtu?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -35,12 +60,16 @@ void reset() {
 /// sčítá běžné jamky hráče; pro spravedlivý restart tyto mechanismy neměň.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Field přežívá mezi voláními command().
-/// 2. Lokální int player zanikne při návratu z reset().
-/// 3. Přiřaď existujícímu player; inicializaci jamek ponech.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Field přežívá mezi voláními command().
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Lokální int player zanikne při návratu z reset().
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Přiřaď existujícímu player; inicializaci jamek ponech.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

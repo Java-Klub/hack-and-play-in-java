@@ -13,9 +13,34 @@
 /// Použij Run File a porovnej dva řádky v Output: první má popisovat instrukci a druhý má být její
 /// zprávou.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F02 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 String templateLine() {
     return "IO.println(HELLO);";
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F02">
+/// String literal (doslovně zapsaný řetězec) je text mezi dvojitými uvozovkami. Vnější uvozovky
+/// říkají Javě, kde text začíná a končí; nevypisují se. I číslice v uvozovkách jsou text. Expression
+/// (výraz) naopak může před vypsáním vypočítat hodnotu.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// IO.println("Shelf 4");
+/// IO.println(4 + 2);
+/// IO.println("Shelf \"B\"");
+/// ```
+///
+/// Předpověz tři řádky. Jsou to `Shelf 4`, `6` a `Shelf "B"`. V posledním literal představuje každé
+/// `\"` jednu uvozovku patřící do textu. Zpětné lomítko je zápis, nikoli další vypsaný znak.
+/// `IO.println` vypíše svůj argument (předanou hodnotu) a ukončí řádek. Mezery uvnitř literal
+/// zůstávají skutečnými mezerami; změna comment (komentářů) vypsanou zprávu nezmění. Rozlišuj tedy
+/// znaky zapsané ve source (zdrojovém textu) a znaky, které se opravdu objeví v output (výstupu).
+///
+/// Nyní předpověz `IO.println(4 + 5);` a `IO.println("4 + 5");`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -36,12 +61,26 @@ String templateLine() {
 /// nevypisuje svůj celý source (zdrojový text). Obě skutečné tiskové akce jsou připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Řádek v uvozovkách je data; nespouští se jako Java code (kód).
-/// 2. Dvojitou uvozovku uvnitř String literal (řetězcového literálu) zapiš zpětným lomítkem a uvozovkou.
-/// 3. Použij String literal (řetězcový literál) "IO.println(\"HELLO\");".
+// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
+/// Odděl tři vrstvy: Java source (zdrojový text), který upravuješ, text vrácený templateLine a dva
+/// řádky vypsané v Output. První vypsaný řádek musí obsahovat uvozovky kolem HELLO; druhý je
+/// samostatná zpráva. Znaky prvního řádku jsou data, nikoli další prováděný příkaz. Neutrální
+/// příklad: source text `"A \"B\" C"` představuje hodnotu `A "B" C`: každé `\"` přidá jednu uvozovku
+/// bez ukončení vnějšího literal (doslovného řetězce). Než změníš vlastní literal, předpověz tuto
+/// hodnotu. Rozlišuj poslední středník skutečného return statement (příkazu vrácení) a středník
+/// vypsaný uvnitř textu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Řádek v uvozovkách je data; nespouští se jako Java code (kód).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Dvojitou uvozovku uvnitř String literal (řetězcového literálu) zapiš zpětným lomítkem a uvozovkou.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Použij String literal (řetězcový literál) "IO.println(\"HELLO\");".
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

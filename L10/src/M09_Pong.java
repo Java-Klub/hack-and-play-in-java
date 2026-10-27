@@ -19,6 +19,9 @@ import javax.swing.Timer;
 /// Po Run File ovládej levou pálku pomocí W/S a pravou pomocí Up/Down, hraj do pěti bodů a klávesou R
 /// začni znovu.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F30 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void step() {
     if (winner == -1) return;
     leftY = clampPaddle(leftY + (leftDown ? 5 : 0) - (leftUp ? 5 : 0));
@@ -52,6 +55,32 @@ void step() {
     if (rightScore >= 5) winner = 2;
 }
 
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F30">
+/// ### Input (vstup) požádá; tick (krok) posune čas
+///
+/// Event (událost) může zaznamenat záměr bez okamžité změny celé simulace. Tick provede jednu
+/// omezenou aktualizaci. Kreslení drž oddělené od obou činností.
+///
+/// ```java
+/// int height = 0;
+/// int pending = 0;
+/// void press() {
+///     pending = 2;
+/// }
+/// void tick() {
+///     height += pending;
+///     pending = 0;
+/// }
+/// ```
+///
+/// Po `press()` je height stále 0. Jeden `tick()` jej změní na 2 a požadavek spotřebuje; další tick
+/// jej ponechá na 2. Opakovaný vstup před tímto krokem stále zaznamená jeden požadavek místo dvou
+/// aktualizací. Připravený timer (časovač) může tick volat, ale pozastavená nebo dokončená hra nemá
+/// pokračovat. Restart musí obnovit počáteční stav.
+///
+/// Předpověz: co od počátečního stavu udělá pořadí press, tick, press, tick?
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
 ///
@@ -66,12 +95,16 @@ void step() {
 /// flag (příznaky kláves) posouvají pálky; restart obnoví skóre i značku neurčeného vítěze.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Winner má hodnoty 0, 1 a 2.
-/// 2. Stop guard (podmínka zastavení) patří před pálky, míč i skóre.
-/// 3. Dokončený tick (časový krok) nezmění ani pálku s drženou klávesou.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Winner má hodnoty 0, 1 a 2.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Stop guard (podmínka zastavení) patří před pálky, míč i skóre.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Dokončený tick (časový krok) nezmění ani pálku s drženou klávesou.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

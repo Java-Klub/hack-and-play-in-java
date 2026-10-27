@@ -18,11 +18,38 @@ import java.awt.GridLayout;
 /// Použij Run File, ve výběru čísla zvol 2 a klikni na prázdné políčko bezprostředně vpravo od levé horní
 /// 1.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F08 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean place(int row, int col, int value) {
     if (complete() || !valid(row, col, value) || clues[row][col] == 0) return false;
     board[row][col] = value;
     return true;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F08">
+/// Guard (ochranná podmínka) odmítne požadavek před chráněnou prací. Nejdřív přečti odmítané případy
+/// a potom se ptej, co zůstává povolené. Short-circuit (zkrácené vyhodnocení) je důležité: u `A || B`
+/// Java přeskočí B, pokud A už platí.
+///
+/// ```java
+/// boolean useSlot(int slot) {
+///     if (slot < 0 || slot >= 4) {
+///         return false;
+///     }
+///     IO.println("Using slot " + slot);
+///     return true;
+/// }
+/// ```
+///
+/// Předpověz výpis a vrácenou hodnotu pro `-1`, `3` a `4`. Jen trojka dojde k výpisu. Odmítnutí musí
+/// nastat před jakoukoli state change (změnou stavu), která se nemá provést. Přístup na desku sám
+/// může potřebovat kontrolu rozsahu, než jej lze bezpečně vyhodnotit. `return false` ukončí toto call
+/// (volání metody); automaticky nevrací zpět práci již provedenou předtím.
+///
+/// `useSlot(3)` předá trojku do `slot`; `boolean` před názvem říká, že výsledkem je true/false. Nyní
+/// předpověz slot nula.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -43,12 +70,16 @@ boolean place(int row, int col, int value) {
 /// dostat k zápisu.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Nula v clues znamená, že zde nebyla pevná nápověda.
-/// 2. valid zachovej před přístupem do clues: ověřuje i souřadnice.
-/// 3. Odmítající condition (podmínka) pro nápovědu je clues[row][col] != 0.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Nula v clues znamená, že zde nebyla pevná nápověda.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// valid zachovej před přístupem do clues: ověřuje i souřadnice.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Odmítající condition (podmínka) pro nápovědu je clues[row][col] != 0.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

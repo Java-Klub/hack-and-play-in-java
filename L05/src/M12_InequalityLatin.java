@@ -19,11 +19,35 @@ import java.util.Arrays;
 /// Spusť Run File a opakovaným klikáním na volné políčko měň jeho číslo při sledování okolních znamének
 /// nerovnosti.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F19 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 record Rule(int x, int y) {
     boolean satisfiedBy(int[][] values) {
         return values[y][x] > values[y][x + 1];
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F19">
+/// ### Records: jedna pojmenovaná hodnota
+///
+/// Record sdružuje související component (složky). Constructor (konstruktor) je přijímá v pořadí
+/// declaration (deklarace); accessor (přístupová metoda) jako `ink()` je čte. Vlastní method (metody)
+/// uvnitř record mohou používat přímo jména složek. Vytvoření nové hodnoty původní složky nezmění.
+/// Připravené `equals` porovnává jejich hodnoty.
+///
+/// ```java
+/// record Frame(String ink, int dots) {
+///     Frame recoloured(String nextInk) {
+///         return new Frame(nextInk, dots);
+///     }
+/// }
+/// ```
+///
+/// Volání `recoloured("gold")` na `new Frame("violet", 6)` vrátí gold a šest; původní hodnota zůstane
+/// violet a šest. Rovná se další přebarvení zpět na violet původní hodnotě? Jména vysvětlují, co dvě
+/// jinak anonymní hodnoty znamenají.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -39,12 +63,16 @@ record Rule(int x, int y) {
 /// Kreslení umísťuje nápovědu podle stejných souřadnic záznamu.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. x a y patří tomuto Rule record, nikoli globálnímu kurzoru.
-/// 2. Řádek je values[y]; pravý soused má sloupec x+1.
-/// 3. Vrať values[y][x] < values[y][x+1]; rovnost musí dát false.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// x a y patří tomuto Rule record, nikoli globálnímu kurzoru.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Řádek je values[y]; pravý soused má sloupec x+1.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Vrať values[y][x] < values[y][x+1]; rovnost musí dát false.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

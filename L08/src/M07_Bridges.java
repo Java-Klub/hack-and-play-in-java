@@ -20,9 +20,34 @@ import java.util.Arrays;
 /// Spusť Run File, kliknutím na slabě vyznačené spojení změň počet mostů a klávesou U zkus tuto úpravu
 /// vrátit.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F20 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int[] snapshot() {
     return bridges;
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F20">
+/// ### References: jiné jméno, nebo jiný objekt?
+///
+/// Array variable (proměnná pole) uchovává reference (odkaz). Assignment (přiřazení) může dát dvěma
+/// jménům přístup k jedinému array (poli); zápis přes kterékoli změní sdílený objekt. `clone()` na
+/// jednorozměrném int array vytvoří další array se zkopírovanými hodnotami. Původní array i kopie se
+/// potom mohou měnit nezávisle.
+///
+/// ```java
+/// int[] wave = {4, 1};
+/// int[] shared = wave;
+/// int[] saved = wave.clone();
+/// wave[1] = 7;
+/// IO.println(shared[1]);
+/// IO.println(saved[1]);
+/// ```
+///
+/// Výstup je sedm a potom jedna: shared vidí zápis, saved uchová kopii. Po `saved[0] = 8` předpověz
+/// `wave[0]` a `saved[0]`. `clone()` kopíruje jednu vrstvu: element (prvky) mřížky jsou reference na
+/// řádky, takže kopie vnějšího array řádky dál sdílí. Ptej se, které objekty zůstaly společné.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -39,12 +64,26 @@ int[] snapshot() {
 /// připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
+/// ### Uložené array (pole) musí vlastnit buňky
 ///
-/// 1. Přiřazení bridges jiné variable kopíruje referenci, nikoli buňky.
-/// 2. Jednorozměrná int[] obsahuje hodnoty; stačí jeden clone.
-/// 3. Vrať bridges.clone(); dodaná undo() potom obnoví nezávislý stav.
+/// Neutrální příklad wave rozlišuje alias (sdílený odkaz) a kopii. `clone()` vytvoří úložiště
+/// okamžitě; další variable (proměnná) či vrácení reference (odkazu) nikoli. Buňky tohoto int[] jsou
+/// prosté hodnoty, proto stačí jedna zkopírovaná vrstva. Předpověz uložené i pracovní počty po změně
+/// spojení. Zkontroluj také čas: caller (volající část) pořizuje snapshot (snímek) před změnou, takže
+/// kopie až po ní nezachová dřívější state (stav).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Přiřazení bridges jiné variable kopíruje referenci, nikoli buňky.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Jednorozměrná int[] obsahuje hodnoty; stačí jeden clone.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Vrať bridges.clone(); dodaná undo() potom obnoví nezávislý stav.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

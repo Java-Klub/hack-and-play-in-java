@@ -12,6 +12,9 @@
 /// Po Run File stiskni Enter pro remix ukázkového corpus (učebního textu) moon cat moon dog moon cat,
 /// nebo napiš vlastní krátkou větu.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F24 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 Map<String, List<String>> train(String text) {
     if (text.isBlank() || text.length() > 100000) {
         throw new IllegalArgumentException("Corpus size: 1..100000 characters.");
@@ -28,6 +31,27 @@ Map<String, List<String>> train(String text) {
     }
     return links;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F24">
+/// ### Map (mapa): hodnota podle klíče
+///
+/// `Map<String, Integer>` přiřazuje textovým keys (klíčům) celočíselné values (hodnoty). Jeden klíč
+/// má nejvýše jednu uloženou hodnotu.
+///
+/// ```java
+/// Map<String, Integer> badges = new HashMap<>();
+/// badges.put("moon", 4);
+/// IO.println(badges.getOrDefault("moon", 0));
+/// IO.println(badges.getOrDefault("sun", 0));
+/// ```
+///
+/// Výstup je `4`, potom `0`. `getOrDefault(key, fallback)` přečte existující hodnotu; při chybějícím
+/// klíči vrátí fallback (náhradní hodnotu). Toto čtení nic nevkládá. `put(key, value)` hodnotu uloží
+/// a případnou předchozí hodnotu téhož klíče přepíše; čísla automaticky nesčítá. `containsKey(key)`
+/// použij, když potřebuješ výslovně rozlišit chybějící klíč. V těchto příkladech neukládáme `null`.
+///
+/// Předpověz: po `badges.put("moon", 9)` co vrátí stejná dvě čtení?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -46,12 +70,30 @@ Map<String, List<String>> train(String text) {
 /// následníka z odpovídajícího List (seznamu); zachované duplicity zvýší váhu opakovaných příkladů.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Map (mapa) může odkazovat na mutable list (měnitelný seznam)
 ///
-/// 1. Stejné slovo se může v textu opakovat.
-/// 2. Nahrazení jeho List (seznamu) zahodí starší následníky.
-/// 3. Počáteční put podmiň containsKey; další add zachovej, včetně stejných následníků.
+/// `Map<String, List<String>>` přiřazuje každému slovu seznam možných následujících slov.
+/// `containsKey(key)` zjišťuje existenci klíče. `get(key)` přečte uložený seznam; při chybějícím
+/// klíči vrátí null a volání add na null selže. Čtení existujícího seznamu jej nekopíruje. V jiném
+/// příkladu: pokud klíč `gate` ukládá `[hall]`, připojení `yard` k seznamu získanému přes get změní i
+/// uložený seznam na `[hall, yard]`.
+///
+/// V train musí opakovaná slova zachovat dřívější následovníky. Předpověz záznamy po `moon cat moon
+/// dog`. Vysvětli, kdy je třeba vytvořit seznam a kdy zachovat existující. Opakovaní následovníci
+/// jsou dovolení: jejich opakované výskyty ovlivňují pozdější náhodný výběr.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Stejné slovo se může v textu opakovat.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Nahrazení jeho List (seznamu) zahodí starší následníky.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Počáteční put podmiň containsKey; další add zachovej, včetně stejných následníků.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

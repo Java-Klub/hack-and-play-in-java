@@ -10,6 +10,9 @@
 ///
 /// Spusť Run File, napiš B 2 pro obarvení oblasti B barvou 2 a pokračuj dalšími označenými oblastmi.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F17 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int conflicts() {
     int n = 0;
     for (int[] edge : new int[][]{adjacent[0]}) {
@@ -19,6 +22,30 @@ int conflicts() {
     }
     return n;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F17">
+/// ### Traversal: vždy jedna otázka
+///
+/// Traversal (průchod) navštěvuje hodnoty; search (hledání) může skončit první shodou, count
+/// (počítání) musí prohlédnout všechny relevantní hodnoty. Ve for-each loop (cyklu pro každý prvek)
+/// dostane jméno před dvojtečkou jednu hodnotu ze sequence (posloupnosti) za ní. Průběžný počet založ
+/// mimo opakované tělo, aby dřívější shody přežily.
+///
+/// ```java
+/// int[] pulses = {2, 0, 4};
+/// int strong = 0;
+/// for (int pulse : pulses) {
+///     if (pulse > 1) {
+///         strong++;
+///     }
+/// }
+/// IO.println(strong);
+/// ```
+///
+/// Výsledek je dvě, protože pulzy dva a čtyři splňují condition (podmínku). Kdybys potřeboval pouze
+/// vědět, zda existuje nějaký silný pulz, kdy už můžeš odpovědět? Jaký počet má mít prázdné array
+/// (pole)?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -34,12 +61,16 @@ int conflicts() {
 /// solved() vyžaduje všechny vybarvené a přes conflicts() posuzuje jejich sousedství.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. adjacent obsahuje právě dvojice se společnou hranicí.
-/// 2. Současný průchod navštíví jen první dvojici.
-/// 3. Projdi adjacent; počítej stejné nenulové barvy obou konců.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// adjacent obsahuje právě dvojice se společnou hranicí.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Současný průchod navštíví jen první dvojici.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Projdi adjacent; počítej stejné nenulové barvy obou konců.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

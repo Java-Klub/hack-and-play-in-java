@@ -12,6 +12,9 @@
 /// Spusť Run File, napiš 90 a potvrď Enter pro vytvoření vzoru, potom program spusť znovu s jiným
 /// pravidlem od 0 do 255.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F26 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean[] nextRow(boolean[] current, int rule) {
     boolean[] next = current;
     for (int column = 0; column < current.length; column++) {
@@ -26,6 +29,29 @@ boolean[] nextRow(boolean[] current, int rule) {
     }
     return next;
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F26">
+/// ### Simultaneous updates: čti okamžik, sestav další
+///
+/// Simultaneous step (současný krok) dává všem výpočtům stejná původní data. Výsledky zapisuj do
+/// odděleného úložiště a zveřejni je po celém průchodu. Jinak se dřívější zápis skrytě stane
+/// pozdějším input (vstupem) a pořadí průchodu změní pravidlo.
+///
+/// ```java
+/// int[] tones = {2, 5, 9};
+/// int[] shifted = new int[tones.length];
+/// for (int i = 0; i < tones.length; i++) {
+///     shifted[i] = tones[(i + 1) % tones.length];
+/// }
+/// ```
+///
+/// Výsledek je `[5,9,2]`; tones zůstane `[2,5,9]`, protože se čte nezměněné. Změnil by obrácený
+/// průchod výsledek? Nové array začíná nulovými hodnotami, takže každý potřebný výstup musíš záměrně
+/// vypočítat. Zkopírovaný snapshot (snímek) a nový output buffer (výstupní prostor) plní různé role.
+///
+/// Zde `% tones.length` používá remainder (zbytek po dělení), aby se index za posledním element
+/// (prvkem) vrátil na nulu.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -43,13 +69,17 @@ boolean[] nextRow(boolean[] current, int rule) {
 /// vypíše dokončenou generaci a pak použije nextRow() pro další; vnější políčka zůstávají zhasnutá.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. next=current vytváří dvě jména jedné array; dřívější zápis změní vstup pozdější buňky.
-/// 2. Clone by jednorozměrné boolean hodnoty oddělil, ale nová výstupní array nejjasněji rozliší čtení a
-///   zápis.
-/// 3. Vytvoř new boolean[current.length]; všechny pattern vstupy čti z current a next vrať až za loop.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// next=current vytváří dvě jména jedné array; dřívější zápis změní vstup pozdější buňky.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Clone by jednorozměrné boolean hodnoty oddělil, ale nová výstupní array nejjasněji rozliší čtení a
+/// zápis.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Vytvoř new boolean[current.length]; všechny pattern vstupy čti z current a next vrať až za loop.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

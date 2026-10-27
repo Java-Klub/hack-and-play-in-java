@@ -20,9 +20,34 @@ import java.util.ArrayList;
 /// Spusť Run File a tažením vyznač obdélník kolem jedné nápovědy, potom jej zkus vrátit klávesou U nebo
 /// smazat pravým kliknutím.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F20 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 ArrayList<Box> snapshot() {
     return boxes;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F20">
+/// ### References: jiné jméno, nebo jiný objekt?
+///
+/// Array variable (proměnná pole) uchovává reference (odkaz). Assignment (přiřazení) může dát dvěma
+/// jménům přístup k jedinému array (poli); zápis přes kterékoli změní sdílený objekt. `clone()` na
+/// jednorozměrném int array vytvoří další array se zkopírovanými hodnotami. Původní array i kopie se
+/// potom mohou měnit nezávisle.
+///
+/// ```java
+/// int[] wave = {4, 1};
+/// int[] shared = wave;
+/// int[] saved = wave.clone();
+/// wave[1] = 7;
+/// IO.println(shared[1]);
+/// IO.println(saved[1]);
+/// ```
+///
+/// Výstup je sedm a potom jedna: shared vidí zápis, saved uchová kopii. Po `saved[0] = 8` předpověz
+/// `wave[0]` a `saved[0]`. `clone()` kopíruje jednu vrstvu: element (prvky) mřížky jsou reference na
+/// řádky, takže kopie vnějšího array řádky dál sdílí. Ptej se, které objekty zůstaly společné.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -37,12 +62,37 @@ ArrayList<Box> snapshot() {
 /// ukládají snapshot (snímek) a připravené undo() tento seznam jednou obnoví.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
+/// ### Mutable List (měnitelný seznam) potřebuje novou nádobu
 ///
-/// 1. Seznam se mění, ale každý Box record si navždy ponechá své složky.
-/// 2. Vrácení boxes sdílí tentýž seznam; klonování každého Box není nutné.
-/// 3. Vrať new ArrayList<>(boxes), aby změny členství byly nezávislé.
+/// ArrayList ukládá uspořádanou měnitelnou skupinu element (prvků). `<String>` určuje element type
+/// (typ prvku); `<>` nechá constructor (konstruktor) typ odvodit. Constructor přijímající jinou
+/// collection (kolekci) zkopíruje členství do nového měnitelného List.
+///
+/// ```java
+/// var draft = new ArrayList<String>();
+/// draft.add("swirl");
+/// var kept = new ArrayList<>(draft);
+/// draft.clear();
+/// IO.println(kept.size());
+/// ```
+///
+/// Výstup je jedna: `add` připojilo hodnotu, `clear` vyprázdnilo jen draft a `size` počítá prvky
+/// kept. Předpověz přidání dalšího prvku do draft. Box této hry obsahuje jen pevné int component
+/// (složky), proto lze bezpečně sdílet hodnoty Box, ale ne měnitelný List. Undo potřebuje mutable
+/// container (měnitelnou nádobu), protože další kreslení přidává či odebírá obdélníky.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Seznam se mění, ale každý Box record si navždy ponechá své složky.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Vrácení boxes sdílí tentýž seznam; klonování každého Box není nutné.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Vrať new ArrayList<>(boxes), aby změny členství byly nezávislé.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

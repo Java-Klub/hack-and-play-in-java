@@ -12,6 +12,9 @@
 /// Spusť Run File, první střelu zadej jako 1 1 a potvrď Enter, potom zkoušej další dvojice řádku a
 /// sloupce.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F16 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void layout(int n) {
     board = new int[6][6];
     int[][][] maps = {{{0, 0}, {0, 1}, {3, 2}, {3, 3}, {3, 4}}, {{1, 4}, {2, 4}, {5, 0}, {5, 1}, {5, 2}}, {{4, 0}, {4, 1}, {0, 5}, {1, 5}, {2, 5}}};
@@ -19,6 +22,24 @@ void layout(int n) {
         board[maps[n][i][0]][maps[n][i][1]] = i < 2 ? 1 : 2;
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F16">
+/// ### Arrays: záleží na pozici
+///
+/// Array (pole) uchovává pevný počet hodnot jednoho element type (typu prvku). Hranaté závorky
+/// vybírají pozici: první index (pozice) je nula a `length` je počet. Čtení jednoho element (prvku)
+/// nemění ostatní. Použitý index musí existovat; prázdné array nemá první element.
+///
+/// ```java
+/// String[] tools = {"pen", "tape", "chalk"};
+/// int chosen = 1;
+/// IO.println(tools[chosen]);
+/// IO.println(tools.length);
+/// ```
+///
+/// Tyto statement (příkazy) patří dovnitř method (metody). Index jedna vybere `tape`; počet je tři.
+/// Co se změní při `chosen` rovném dvěma? Který index už bude první neplatný?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -36,12 +57,25 @@ void layout(int n) {
 /// vzniklé desce dosud nezasažené části dané lodě.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Čtení nested data (vnořených dat)
 ///
-/// 1. maps[n] je vybraný seznam pozic.
-/// 2. Každé maps[n][i] obsahuje řádek a sloupec; i není souřadnice desky.
-/// 3. Opakuj při i < maps[n].length; ponech dodané přiřazení čísla lodi.
+/// `maps` obsahuje rozmístění; `maps[n]` vybere jedno. To obsahuje dvojice souřadnic, takže
+/// `maps[n][i]` vybere dvojici i. Poslední `[0]` a `[1]` čtou řádek a sloupec. `maps.length` počítá
+/// rozmístění, zatímco `maps[n].length` počítá dvojice ve vybraném rozmístění. Před volbou meze
+/// předpověz význam každé délky. Hodnoty dvojice jsou vnitřní coordinate (souřadnice) od nuly.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// maps[n] je vybraný seznam pozic.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Každé maps[n][i] obsahuje řádek a sloupec; i není souřadnice desky.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Opakuj při i < maps[n].length; ponech dodané přiřazení čísla lodi.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

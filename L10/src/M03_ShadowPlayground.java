@@ -20,9 +20,32 @@ import java.awt.geom.Area;
 ///
 /// Po Run File klikáním či tažením kolem překážek posouvej lampu a pomocí R obnov její počáteční pozici.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F28 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 java.util.function.BiConsumer<Integer, Integer> lightAction() {
     return (x, y) -> {};
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F28">
+/// ### Callback (zpětné volání): akce na později
+///
+/// Callback je akce, kterou jiná část programu zavolá později, třeba po kliknutí. `Runnable` je akce
+/// bez předávaných argumentů a bez vraceného výsledku.
+///
+/// ```java
+/// Runnable cheer = () -> IO.println("Hooray!");
+/// IO.println("Ready");
+/// cheer.run();
+/// ```
+///
+/// Výstup je `Ready`, potom `Hooray!`. Vytvoření lambda (anonymní funkce) zápisem `() -> ...` její
+/// tělo nespustí. To udělá volání `run()`. Složené závorky dovolují uvnitř callbacku několik příkazů.
+/// Method reference (odkaz na metodu) jako `this::wave` obdobně předá metodu `wave` tohoto objektu
+/// pro pozdější použití; `wave()` ji zavolá hned. Připravené UI rozhoduje, kdy callback vyvolat.
+///
+/// Předpověz: co se vypíše, když poslední řádek nahradí dvě po sobě jdoucí volání `cheer.run()`?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -38,12 +61,16 @@ java.util.function.BiConsumer<Integer, Integer> lightAction() {
 /// pozici; geometrie stínů a kreslení čtou výsledné souřadnice lampy a restart obnoví scénu.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. MoveLight už omezuje x a y na plátno.
-/// 2. Callback (předaná akce) má volat tuto method (metodu), nikoli ji kopírovat či obejít.
-/// 3. Method reference (odkaz na metodu) oddělí vytvoření od spuštění.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// MoveLight už omezuje x a y na plátno.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Callback (předaná akce) má volat tuto method (metodu), nikoli ji kopírovat či obejít.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Method reference (odkaz na metodu) oddělí vytvoření od spuštění.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

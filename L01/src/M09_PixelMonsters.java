@@ -18,7 +18,32 @@ import javax.imageio.ImageIO;
 /// Použij Run File, přijmi monster.png a zadej seed (počáteční hodnotu) 42, potom obnov Files a otevři
 /// monster.png; pro porovnání opravených očí použij stejný seed.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F03 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int eyeColour = Color.BLACK.getRGB();
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F03">
+/// Variable (proměnná) pojmenuje uloženou hodnotu. Type (typ) popisuje přípustné hodnoty: `int`
+/// uchovává celá čísla a `double` může uchovat desetinnou část. Initialization (počáteční přiřazení)
+/// dodá první hodnotu; pozdější assignment (přiřazení) ji nahradí.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// int charge = 4;
+/// charge = charge + 3;
+/// IO.println(charge);
+/// ```
+///
+/// Předpověz output (výstup). Nejprve `charge` uchovává čtyřku. Na druhém řádku Java přečte starou
+/// hodnotu pro výpočet pravého expression (výrazu) a potom pod stejným jménem uloží sedmičku. `=` je
+/// assignment, nikoli matematické tvrzení, že obě strany mají navždy zůstat stejné. Další statement
+/// (příkazy) čtoucí toto jméno nyní dostanou sedmičku. Jméno se neaktualizuje samo: hodnotu musí
+/// změnit provedené assignment. Variable označenou `final` nelze znovu přiřadit.
+///
+/// Nyní předpověz konečné charge, pokud počáteční přiřazení použije šest místo čtyř.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -38,12 +63,25 @@ int eyeColour = Color.BLACK.getRGB();
 /// souměrné tělo. write uloží průhledný PNG; main se zeptá na jméno souboru a seed (počáteční hodnotu).
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Obě oční místa už čtou eyeColour.
-/// 2. Color.WHITE.getRGB() je připravený způsob získání hodnoty bílé barvy.
-/// 3. V initialization (inicializaci) nahraď Color.BLACK hodnotou Color.WHITE.
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// Při výzvě k cestě v Output stiskni Enter pro přijetí výchozího jména souboru; potom napiš seed
+/// (počáteční hodnotu) a znovu stiskni Enter. Seed řídí připravené náhodné tělo, nikoli barvu očí.
+/// Pro oba obrázky použij stejný seed, aby změněné tělo neodvádělo pozornost od úpravy. `Color`
+/// poskytuje pojmenované barvy palety jako `BLACK`, `WHITE`, `RED` a `YELLOW`; velikost písmen je
+/// významná. `getRGB()` získá celočíselný zápis potřebný pro pixel (obrazové body). Vybíráš
+/// připravenou barvu, nevymýšlíš její číselný zápis ani neupravuješ dvě samostatné pozice očí.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Obě oční místa už čtou eyeColour.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Color.WHITE.getRGB() je připravený způsob získání hodnoty bílé barvy.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// V initialization (inicializaci) nahraď Color.BLACK hodnotou Color.WHITE.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

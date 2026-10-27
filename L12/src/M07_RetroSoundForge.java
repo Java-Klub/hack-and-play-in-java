@@ -21,6 +21,9 @@ import java.io.ByteArrayInputStream;
 /// Po Run File stiskni Enter pro wobble a otevři retro-wobble.wav v přehrávači; zvuk se ukládá místo
 /// automatického přehrání.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F35 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 double frequency(Sound sound, double t) {
     if (!Double.isFinite(t) || t < 0 || t > 1) throw new IllegalArgumentException("Time: 0..1.");
     return switch (sound) {
@@ -29,6 +32,30 @@ double frequency(Sound sound, double t) {
         case Wobble(var base, var depth) -> base;
     };
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F35">
+/// ### Record patterns (vzory záznamů): vyber typ a rozbal data
+///
+/// ```java
+/// sealed interface Badge permits Name, Stars {}
+/// record Name(String text) implements Badge {}
+/// record Stars(int count) implements Badge {}
+/// String label(Badge badge) {
+///     return switch (badge) {
+///         case Name(var text) -> text;
+///         case Stars(var n) when n > 0 -> n + " stars";
+///         case Stars(var n) -> "none";
+///     };
+/// }
+/// ```
+///
+/// `label(new Stars(2))` vrátí `"2 stars"`. Sealed uzavírá alternativy; permits je vyjmenovává.
+/// Record pattern rozpozná typ záznamu a dá hodnotám složek místní jména v pořadí deklarace. `var`
+/// odvodí jejich typy. Musí platit také when guard (dodatečná podmínka); jinak hledání pokračuje.
+/// Poslední Stars větev zpracuje nekladné počty. Každá povolená alternativa zde potřebuje zpracování.
+///
+/// Předpověz: která větev zpracuje `new Stars(0)` a jaký text vznikne pro `new Name("Nova")`?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -45,12 +72,31 @@ double frequency(Sound sound, double t) {
 /// (vzorku), skládá fázi a zeslabí konec; write uloží konečný WAV bez automatického přehrávání.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
+/// ### Pravidlo wobble před opravou Javy
 ///
-/// 1. Base je střední frekvence; depth je odchylka.
-/// 2. Připravený sinus má v t=1/32 hodnotu jedna.
-/// 3. Použij obě rozpoznané component (složky): base + depth krát připravený sinus.
+/// Contract (dohodnuté chování) je střed + hloubka × sin(16πt), s normalizovaným časem t od 0 do 1.
+/// To znamená osm úplných modulačních cyklů během zvuku bez ohledu na jeho délku v sekundách. Sinus
+/// je mezi -1 a +1, takže hloubka určuje největší odchylku pod nebo nad středem.
+///
+/// `Math.sin(angle)` očekává radiány; `Math.PI` dodává π. Celá otáčka je 2π radiánů. Při t = 0 je
+/// sinus nula; při t = 1/32 má úhel π/2 a sinus +1; při t = 3/32 je -1. Pro jiný Wobble se středem
+/// 250 a hloubkou 40 jsou první dvě frekvence 250 a 290. Předpověz třetí a potom změň jen hloubku.
+/// Matematické pravidlo zapiš pomocí obou matched components (rozebraných složek) a t. Zachovej time
+/// guard (kontrolu času) i odlišné chování Laser a Jump.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// První component (složka) Wobble je střední frekvence, druhá je hloubka odchylky.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Při t = 1/32 má předepsaná modulace +1; při t = 3/32 má -1. Použij pravidlo v Pro tuto hru.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Spoj střed a hloubku s Math.sin a úhlem popsaným v Pro tuto hru. Zachovej ostatní case (větve) i
+/// kontrolu času.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

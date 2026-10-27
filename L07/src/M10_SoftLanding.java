@@ -19,6 +19,9 @@ import javax.swing.Timer;
 /// Spusť Run File, šipkou nahoru začni brzdit pád a tahem vlevo či vpravo se srovnej nad přistávací
 /// plošinu.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F25 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void step() {
     if (!state.equals("FLYING")) {
         return;
@@ -50,6 +53,29 @@ void step() {
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F25">
+/// ### Invariant: slib po každé akci
+///
+/// Invariant (trvale platné pravidlo) je vztah, který má přežít přijaté akce. Některá akce množství
+/// pouze přesune mezi místy, nevytváří další. Před změnami ověř celý požadavek a potom jej proveď
+/// jednou. Odmítnutí má zachovat původní state (stav).
+///
+/// ```java
+/// int violet = 6;
+/// int gold = 2;
+/// int amount = 3;
+/// if (amount >= 0 && amount <= violet) {
+///     violet -= amount;
+///     gold += amount;
+/// }
+/// IO.println(violet + gold);
+/// ```
+///
+/// Nádoby mají tři a pět; součet zůstane osm, protože přesun obě strany vyrovná. Potom zvaž devět
+/// jednotek: co musí zůstat beze změny? Vysvětli, proč změna jediné strany poruší součet, přestože
+/// jednotlivé hodnoty mohou působit platně.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
 ///
@@ -64,12 +90,16 @@ void step() {
 /// klávesy při restartu či ztrátě zaměření; časování a kreslení je připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Gravitace působí i bez paliva.
-/// 2. Existující jediné snížení už správně řeší kombinované klávesy.
-/// 3. Obal celý blok tahu podmínkou fuel>0; nestačí dodatečně omezit číslo.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Gravitace působí i bez paliva.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Existující jediné snížení už správně řeší kombinované klávesy.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Obal celý blok tahu podmínkou fuel>0; nestačí dodatečně omezit číslo.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

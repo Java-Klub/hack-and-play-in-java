@@ -12,6 +12,9 @@
 /// Spusť Run File, vyber číslo nepoužité figurky od 0 do 15 a nech druhého hráče zadat její cílové
 /// políčko od 1 do 16.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F16 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean won() {
     for (int row = 0; row < 4; row++) {
         if (line(row * 4, row * 4 + 1, row * 4 + 2, row * 4 + 3)) {
@@ -20,6 +23,24 @@ boolean won() {
     }
     return false;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F16">
+/// ### Arrays: záleží na pozici
+///
+/// Array (pole) uchovává pevný počet hodnot jednoho element type (typu prvku). Hranaté závorky
+/// vybírají pozici: první index (pozice) je nula a `length` je počet. Čtení jednoho element (prvku)
+/// nemění ostatní. Použitý index musí existovat; prázdné array nemá první element.
+///
+/// ```java
+/// String[] tools = {"pen", "tape", "chalk"};
+/// int chosen = 1;
+/// IO.println(tools[chosen]);
+/// IO.println(tools.length);
+/// ```
+///
+/// Tyto statement (příkazy) patří dovnitř method (metody). Index jedna vybere `tape`; počet je tři.
+/// Co se změní při `chosen` rovném dvěma? Který index už bude první neplatný?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -35,12 +56,26 @@ boolean won() {
 /// command() řeší výběr a položení figurky, potom se ptá won() na konec kola.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Plochá deska má skrytou šířku řádku
 ///
-/// 1. Nakresli indexy array jako desku 4 × 4.
-/// 2. Sloupec má indexy c, c+4, c+8, c+12.
-/// 3. Diagonály jsou 0,5,10,15 a 3,6,9,12.
+/// Flat array (ploché pole) může uchovávat řádky za sebou. V jiném obrázku se třemi sloupci začíná
+/// řádek jedna za prvními třemi hodnotami; jeho sloupec dva leží na index (pozici) pět. Pohyb o řádek
+/// dolů zachová sloupec a přeskočí šířku řádku. Nakresli index tohoto čtverce. `line(a,b,c,d)` už
+/// ověří navrženou skupinu: vybíráš pozice, nerozebíráš vlastnosti figurek. Předpověz sloupec i obě
+/// úhlopříčky před rozšířením search (hledání).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Nakresli indexy array jako desku 4 × 4.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Sloupec má indexy c, c+4, c+8, c+12.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Diagonály jsou 0,5,10,15 a 3,6,9,12.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

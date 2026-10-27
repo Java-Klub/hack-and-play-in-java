@@ -20,6 +20,9 @@ import java.util.List;
 /// Po Run File stiskni Enter pro seed (počáteční hodnotu) 42 a otevři two-noisy-pictures-42.png spolu s
 /// obrázky .share1.png a .share2.png.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F27 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 BufferedImage[] shares(BufferedImage secret, long seed) {
     var images = new BufferedImage[3];
     for (int i = 0; i < 3; i++) {
@@ -45,6 +48,28 @@ BufferedImage[] shares(BufferedImage secret, long seed) {
     return images;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F27">
+/// ### Seeded randomness (náhoda se seedem): opakuj pokus
+///
+/// Pseudorandom generator (generátor pseudonáhodných hodnot) vytváří posloupnost. Seed (počáteční
+/// hodnota) určuje výchozí stav; stejné seedy a stejná volání zopakují stejné výsledky.
+///
+/// ```java
+/// var first = new Random(9);
+/// var second = new Random(9);
+/// int a = first.nextInt(4);
+/// int b = second.nextInt(4);
+/// IO.println(a == b);
+/// ```
+///
+/// Výstup je `true`. Každé nextInt posune příslušný generátor. `nextInt(4)` vybere celé číslo od 0 do
+/// 3; horní mez nepatří do výběru. V celém generovaném obrázku používej jeden generátor, aby další
+/// volby četly další místa posloupnosti. Opakované vytváření se stejným seedem uvnitř loop (cyklu)
+/// stále vrací první volbu. Různé seedy mohou náhodou dát stejný jednotlivý výsledek.
+///
+/// Předpověz: která čísla smí vrátit `nextInt(3)` a může vrátit 3?
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
 ///
@@ -62,12 +87,16 @@ BufferedImage[] shares(BufferedImage secret, long seed) {
 /// obrázek ukazuje.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. New Random(seed) začíná sequence (posloupnost) pokaždé od začátku.
-/// 2. Method (metoda) už jeden Random tvoří před pixel loop (cykly bodů obrazu).
-/// 3. Existující object (objekt) předej do každého Collections.shuffle.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// New Random(seed) začíná sequence (posloupnost) pokaždé od začátku.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Method (metoda) už jeden Random tvoří před pixel loop (cykly bodů obrazu).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Existující object (objekt) předej do každého Collections.shuffle.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

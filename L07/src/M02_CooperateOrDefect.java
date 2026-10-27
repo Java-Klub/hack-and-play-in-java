@@ -17,6 +17,9 @@ import java.awt.BorderLayout;
 /// Spusť Run File, klikni na Private choices for next round a před odhalením obou voleb si mezi
 /// soukromými dialogy předejte počítač.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F09 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int reward(boolean cooperate, boolean otherCooperates) {
     int choice = (cooperate ? 2 : 0) + (otherCooperates ? 1 : 0);
     return switch (choice) {
@@ -26,6 +29,29 @@ int reward(boolean cooperate, boolean otherCooperates) {
         default -> 1;
     };
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F09">
+/// ### Switch: vyber jednu hodnotu
+///
+/// Switch expression (výraz s výběrem) vybírá výsledek podle selector (výběrové hodnoty). Každá arrow
+/// case (větev se šipkou) obslouží odpovídající hodnotu; nepokračuje do další větve. `default`
+/// pokrývá zbývající hodnoty. Koncový středník patří okolnímu assignment (přiřazení) či return
+/// statement (příkazu návratu).
+///
+/// ```java
+/// String weather = "mist";
+/// String colour = switch (weather) {
+///     case "mist" -> "silver";
+///     case "sun" -> "gold";
+///     default -> "indigo";
+/// };
+/// IO.println(colour);
+/// ```
+///
+/// Mist case (větev pro mlhu) vybere `silver`. Předpověz výstup pro `"sun"` a potom `"snow"`.
+/// Selector se porovnává s case label (označením větve); text za šipkou je výsledek. Změna jednoho
+/// zvláštního případu má zachovat význam náhradní větve.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -44,12 +70,26 @@ int reward(boolean cooperate, boolean otherCooperates) {
 /// odhalí výsledek kola; opravuješ pouze společnou bodovací tabulku.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Selector (výběrové číslo) není odměna
 ///
-/// 1. choice používá dva bity: tvoje spolupráce přidá 2, soupeřova 1.
-/// 2. Před úpravou vypiš možné součty 0,1,2,3.
-/// 3. Větev pro 3 znamená vzájemnou spolupráci a má vracet 3.
+/// Dvě boolean choice (logické volby) přispívají samostatně k číslu větve. Než přiřadíš odměnu, napiš
+/// čtyři dvojice vstupů a vypočítej selector. Zobrazený contract (smlouva hry) dává tři body oběma
+/// při spolupráci, jeden oběma při zradě a pět proti nule při jediné zradě. `reward` vrací pohled
+/// prvního argument (argumentu); caller (volající část) se ptá také z opačného pohledu. Předpověz obě
+/// volání při jednom smíšeném kole.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// choice používá dva bity: tvoje spolupráce přidá 2, soupeřova 1.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Před úpravou vypiš možné součty 0,1,2,3.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Větev pro 3 znamená vzájemnou spolupráci a má vracet 3.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -13,6 +13,9 @@
 /// Použij Run File a napiš A pro cvičné slovo BANANA; porovnej zobrazené _A_A_ se šesti místy, která
 /// slovo potřebuje.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F10 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 String mask() {
     String result = "";
     int index = 0;
@@ -27,6 +30,31 @@ String mask() {
     }
     return result;
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F10">
+/// `while` ověřuje condition (podmínku) před každým průchodem včetně prvního. Je-li hned false
+/// (nepravda), tělo proběhne nula krát. Něco musí postupovat k ukončení nebo záměrně čekat na nový
+/// input (vstup).
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// int energy = 5;
+/// while (energy > 0) {
+///     IO.println(energy);
+///     energy -= 2;
+/// }
+/// ```
+///
+/// Předpověz vypsaná čísla a konečnou uloženou hodnotu. Output (výstup) je `5`, `3`, `1`; potom je
+/// energy `-1`, takže další condition neplatí. Podmínka se neověřuje uprostřed těla. `energy -= 2`
+/// odečte dvojku a uloží výsledek; bez postupu se loop opakuje donekonečna. `return` ukončí method
+/// (metodu); `break` ukončí loop (smyčku). Sleduj condition a měnící se hodnoty odděleně, zejména
+/// pokud prohledávaná data mohou přibývat. Samotná přítomnost while nezaručuje, že program někdy
+/// skončí; důvod ukončení musí vyplývat z prováděných kroků.
+///
+/// Nyní předpověz trace (stopu průběhu), pokud energy začíná na čtyřech.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -49,12 +77,16 @@ String mask() {
 /// hráče na input (vstup) neptá.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Slovo délky šest má index (indexy) 0 až 5.
-/// 2. Vyhodnoť současnou condition (podmínku), když index je pět.
-/// 3. Pokračuj při index < word.length(); index++ zajišťuje postup.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Slovo délky šest má index (indexy) 0 až 5.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Vyhodnoť současnou condition (podmínku), když index je pět.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Pokračuj při index < word.length(); index++ zajišťuje postup.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

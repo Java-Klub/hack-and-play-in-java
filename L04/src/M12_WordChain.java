@@ -13,6 +13,9 @@
 /// Použij Run File a porovnej celý Dictionary s jedinou další nabídkou; po opravě napiš APPLE a prohlédni
 /// nabídnutá pokračování na E.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F12 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 List<String> choices() {
     var list = new ArrayList<String>();
     for (String w : words) {
@@ -23,6 +26,29 @@ List<String> choices() {
     }
     return list;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F12">
+/// Accumulator (průběžný výsledek) pamatuje rostoucí výsledek mezi průchody. Jeho počáteční hodnota
+/// patří před loop (smyčku); uvnitř by výsledek začínal znovu pro každou položku. Uloženým výsledkem
+/// může být text, nejen číslo.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// String receipt = "Items:";
+/// for (String item : List.of("tea", "cake")) {
+///     receipt += " " + item;
+/// }
+/// ```
+///
+/// Předpověz receipt po každém průchodu: `Items: tea`, potom `Items: tea cake`. `+=` spojí starou
+/// hodnotu s novým příspěvkem a výsledek uloží. Samotné `=` uloženou hodnotu nahradí. `List.of(...)`
+/// dodá pevnou sequence (posloupnost) uvedených hodnot; dvojtečka navštíví jednu položku za průchod.
+/// Sleduj aktuální položku a accumulator ve dvou sloupcích, abys zjistil, zda dřívější práce přežije.
+/// Počáteční hodnota má vzniknout jednou za celý výpočet, nikoli jednou za každou objevenou položku.
+///
+/// Nyní předpověz receipt, pokud připravený seznam obsahuje jen `"rice"`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -44,12 +70,16 @@ List<String> choices() {
 /// výsledek pro nabídku, takže oprava ovlivní skutečně povolenou hru.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. list.clear smaže dříve přijatá slova.
-/// 2. Prázdný List (seznam) už vzniká před začátkem cyklu.
-/// 3. Odstraň list.clear(); zachovej list.add(w).
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// list.clear smaže dříve přijatá slova.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Prázdný List (seznam) už vzniká před začátkem cyklu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Odstraň list.clear(); zachovej list.add(w).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

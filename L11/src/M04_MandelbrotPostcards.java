@@ -19,6 +19,9 @@ import javax.imageio.ImageIO;
 /// Po Run File zadej seed (počáteční hodnotu) 42 a otevři mandelbrot-postcards-42.png, potom spuštění
 /// zopakuj s 43 pro porovnání palet.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F27 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 BufferedImage render(long seed, double span) {
     if (!Double.isFinite(span) || span <= 1.0E-5 || span > 6 || !Double.isFinite(centerX + centerY)) {
         throw new IllegalArgumentException("Span must be 0.00001..6.");
@@ -33,6 +36,28 @@ BufferedImage render(long seed, double span) {
     }
     return image;
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F27">
+/// ### Seeded randomness (náhoda se seedem): opakuj pokus
+///
+/// Pseudorandom generator (generátor pseudonáhodných hodnot) vytváří posloupnost. Seed (počáteční
+/// hodnota) určuje výchozí stav; stejné seedy a stejná volání zopakují stejné výsledky.
+///
+/// ```java
+/// var first = new Random(9);
+/// var second = new Random(9);
+/// int a = first.nextInt(4);
+/// int b = second.nextInt(4);
+/// IO.println(a == b);
+/// ```
+///
+/// Výstup je `true`. Každé nextInt posune příslušný generátor. `nextInt(4)` vybere celé číslo od 0 do
+/// 3; horní mez nepatří do výběru. V celém generovaném obrázku používej jeden generátor, aby další
+/// volby četly další místa posloupnosti. Opakované vytváření se stejným seedem uvnitř loop (cyklu)
+/// stále vrací první volbu. Různé seedy mohou náhodou dát stejný jednotlivý výsledek.
+///
+/// Předpověz: která čísla smí vrátit `nextInt(3)` a může vrátit 3?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -50,12 +75,16 @@ BufferedImage render(long seed, double span) {
 /// uloží PNG.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Method (metoda) už dostává seed (počáteční hodnotu).
-/// 2. Pevný seed udělá všechny palety stejné.
-/// 3. Random palety vytvoř z parameter (parametru), jednou na render.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Method (metoda) už dostává seed (počáteční hodnotu).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Pevný seed udělá všechny palety stejné.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Random palety vytvoř z parameter (parametru), jednou na render.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -17,6 +17,9 @@ import java.awt.BorderLayout;
 /// Spusť Run File, klikni na Look, bluff, then choose, nech prvního hráče tajně nahlédnout a druhého
 /// rozhodnout o ponechání či výměně.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F21 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 enum Holder {
     PLAYER_ONE, PLAYER_TWO
 }
@@ -24,6 +27,28 @@ enum Holder {
 Holder holderAfterSwap(boolean swap) {
     return prizeA ? Holder.PLAYER_ONE : Holder.PLAYER_TWO;
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F21">
+/// ### Enum: jedna z pojmenovaných možností
+///
+/// Enum vymezí konečnou sadu hodnot jednoho type (typu). Jméno type a tečka určují konkrétní hodnotu.
+/// Překlep v enum value (hodnotě enum) způsobí compiler error (chybu překladu), na rozdíl od
+/// libovolného textu. Variable (proměnná) nese jednu volbu; `==` je pro tyto hodnoty vhodné.
+///
+/// ```java
+/// enum Voice {
+///     WHISPER, SING, SHOUT
+/// }
+///
+/// Voice voice = Voice.SING;
+/// IO.println(voice == Voice.SHOUT);
+/// ```
+///
+/// Declaration (deklarace) patří vedle method (metod); příkazy můžeš číst uvnitř metody. Porovnání
+/// vypíše false, protože SING a SHOUT jsou různé hodnoty. Předpověz je po přiřazení SHOUT. Může
+/// jediná variable tvrdit současně SING i SHOUT? Vysvětli, jaké rozporné kombinace by dovolily
+/// oddělené boolean (logické proměnné).
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -41,12 +66,16 @@ Holder holderAfterSwap(boolean swap) {
 /// odhalení; prizeA už uchovává počáteční polohu mrkve.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. prizeA říká, kde mrkev začala; swap říká, zda si hráči krabice vyměnili.
-/// 2. Ponechání zachová držitele; výměna jej obrátí.
-/// 3. První hráč má cenu právě tehdy, když prizeA != swap.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// prizeA říká, kde mrkev začala; swap říká, zda si hráči krabice vyměnili.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Ponechání zachová držitele; výměna jej obrátí.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// První hráč má cenu právě tehdy, když prizeA != swap.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

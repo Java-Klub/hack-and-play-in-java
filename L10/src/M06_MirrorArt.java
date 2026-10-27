@@ -25,10 +25,33 @@ import javax.imageio.ImageIO;
 /// Po Run File nakresli tah tažením, šipkami Up/Down měň osy zrcadlení, klávesou C barvu a pomocí S
 /// obrázek ulož.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F29 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 Point2D.Double transform(int x, int y, int copy, boolean reflect) {
     double dx = x - WIDTH / 2, dy = (y - HEIGHT / 2) * (reflect ? -1 : 1), a = 2 * Math.PI * copy / axes;
     return new Point2D.Double(dx * Math.cos(a) - dy * Math.sin(a), HEIGHT / 2 + dx * Math.sin(a) + dy * Math.cos(a));
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F29">
+/// ### Rendering (vykreslení): ze stavu na pixely
+///
+/// Rendering čte model (stav programu) a kreslí jeho podobu. Screen x (obrazovkové x) roste doprava;
+/// screen y roste dolů. Kreslicí metody často přijímají levý horní roh a velikost, nikoli střed.
+///
+/// ```java
+/// int tileX = 3;
+/// int tileY = 2;
+/// int size = 10;
+/// g.fillRect(tileX * size, tileY * size, size, size);
+/// ```
+///
+/// `g` je připravený kreslicí nástroj `Graphics2D`. Příkaz vybarví čtverec 10 × 10 s levým horním
+/// rohem `(30, 20)`. Modelové souřadnice zůstanou `(3, 2)`. Repainting (překreslení) nemá posouvat
+/// objekty ani zahajovat další tah: okno může požadovat kreslení mnohokrát.
+///
+/// Předpověz: pokud se pouze tileY změní na 4, která obrazovková souřadnice se změní a o kolik?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -44,12 +67,16 @@ Point2D.Double transform(int x, int y, int copy, boolean reflect) {
 /// plátno. Ovládání os, změna barvy, mazání i PNG export jsou připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Coordinate (souřadnice) se nejdřív vztáhnou ke středu.
-/// 2. Otáčení pracuje v tomto místním prostoru.
-/// 3. Vrácený bod musí přičíst WIDTH/2 k x a HEIGHT/2 k y.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Coordinate (souřadnice) se nejdřív vztáhnou ke středu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Otáčení pracuje v tomto místním prostoru.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Vrácený bod musí přičíst WIDTH/2 k x a HEIGHT/2 k y.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

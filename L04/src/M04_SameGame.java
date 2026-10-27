@@ -13,6 +13,9 @@
 /// Použij Run File a navzdory předčasné zprávě „No groups remain“ najdi dvě políčka stejné barvy, která
 /// sdílejí hranu; po opravě zadej řádek a sloupec některého políčka z této skupiny.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F10 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 List<int[]> group(int row, int col) {
     var result = new ArrayList<int[]>();
     if (row < 0 || row >= 5 || col < 0 || col >= 5 || board[row][col] == 0) {
@@ -37,6 +40,31 @@ List<int[]> group(int row, int col) {
     return result;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F10">
+/// `while` ověřuje condition (podmínku) před každým průchodem včetně prvního. Je-li hned false
+/// (nepravda), tělo proběhne nula krát. Něco musí postupovat k ukončení nebo záměrně čekat na nový
+/// input (vstup).
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// int energy = 5;
+/// while (energy > 0) {
+///     IO.println(energy);
+///     energy -= 2;
+/// }
+/// ```
+///
+/// Předpověz vypsaná čísla a konečnou uloženou hodnotu. Output (výstup) je `5`, `3`, `1`; potom je
+/// energy `-1`, takže další condition neplatí. Podmínka se neověřuje uprostřed těla. `energy -= 2`
+/// odečte dvojku a uloží výsledek; bez postupu se loop opakuje donekonečna. `return` ukončí method
+/// (metodu); `break` ukončí loop (smyčku). Sleduj condition a měnící se hodnoty odděleně, zejména
+/// pokud prohledávaná data mohou přibývat. Samotná přítomnost while nezaručuje, že program někdy
+/// skončí; důvod ukončení musí vyplývat z prováděných kroků.
+///
+/// Nyní předpověz trace (stopu průběhu), pokud energy začíná na čtyřech.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
 ///
@@ -58,12 +86,26 @@ List<int[]> group(int row, int col) {
 /// zajišťuje padání a reset ověřuje možnost pokračovat; i tato kontrola volá tvoji group.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. result se po první zpracované buňce stane neprázdným.
-/// 2. To neznamená, že queue (fronta) už skončila.
-/// 3. While condition (podmínka) má být pouze !queue.isEmpty().
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// Odděl tři připravené role: queue uchovává objevená políčka čekající na návštěvu; result již
+/// nasbíraná políčka; seen pamatuje už zařazená políčka, aby je dvě cesty nepřidaly dvakrát.
+/// queue.remove() vyjme čekající dvojici souřadnic, zatímco result.add přidá toto políčko do
+/// odpovědi. Odpověď obsahující jedno políčko neznamená, že čekající práce je prázdná. Počáteční
+/// zpráva „No groups remain“ pochází z herního hledání skupin před jakýmkoli tahem; je to záměrný
+/// projev chyby, nikoli problém console input (vstupu do konzole). Oprav source (zdrojový text) a
+/// spusť jej znovu místo pokusu odstranit chybu pouhým restartem kola.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// result se po první zpracované buňce stane neprázdným.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// To neznamená, že queue (fronta) už skončila.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// While condition (podmínka) má být pouze !queue.isEmpty().
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

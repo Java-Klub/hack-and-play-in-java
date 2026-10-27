@@ -13,6 +13,9 @@
 /// Po Run File stiskni Enter pro Vigenere a znovu pro LEMON, potom napiš ATTACK AT DAWN! pro vytvoření
 /// zašifrované pohlednice.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F35 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 String transform(String text, Cipher cipher, boolean decode) {
     return switch (cipher) {
         case Caesar(var shift) -> applyText(text, "caesar", Integer.toString(shift), decode);
@@ -20,6 +23,30 @@ String transform(String text, Cipher cipher, boolean decode) {
         case Vigenere(var keyword) -> applyText(text, "caesar", "0", decode);
     };
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F35">
+/// ### Record patterns (vzory záznamů): vyber typ a rozbal data
+///
+/// ```java
+/// sealed interface Badge permits Name, Stars {}
+/// record Name(String text) implements Badge {}
+/// record Stars(int count) implements Badge {}
+/// String label(Badge badge) {
+///     return switch (badge) {
+///         case Name(var text) -> text;
+///         case Stars(var n) when n > 0 -> n + " stars";
+///         case Stars(var n) -> "none";
+///     };
+/// }
+/// ```
+///
+/// `label(new Stars(2))` vrátí `"2 stars"`. Sealed uzavírá alternativy; permits je vyjmenovává.
+/// Record pattern rozpozná typ záznamu a dá hodnotám složek místní jména v pořadí deklarace. `var`
+/// odvodí jejich typy. Musí platit také when guard (dodatečná podmínka); jinak hledání pokračuje.
+/// Poslední Stars větev zpracuje nekladné počty. Každá povolená alternativa zde potřebuje zpracování.
+///
+/// Předpověz: která větev zpracuje `new Stars(0)` a jaký text vznikne pro `new Name("Nova")`?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -37,12 +64,27 @@ String transform(String text, Cipher cipher, boolean decode) {
 /// zprávy.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Rozpoznej kartu a použij její vlastní data
 ///
-/// 1. Keyword z match (rozpoznání) patří této hodnotě Vigenere.
-/// 2. Použij tuto component (složku), nikoli pevný klíč či jiný režim.
-/// 3. ApplyText už řeší velikost písmen, interpunkci, ověření klíče a opačný převod.
+/// U record (záznamu) Vigenere nesoucího `"CAT"` je rozpoznaný keyword CAT bez ohledu na jméno místní
+/// proměnné. Předpověz, zda změna této karty na `"DOG"` má změnit zašifrovaná písmena. Porovnej dvě
+/// volání se stejnou zprávou a klíčem, ale opačnou hodnotou decode; předání volby volajícího patří ke
+/// contract (smlouvě). Připravené applyText přijímá zprávu, název režimu, text jeho klíče a přepínač
+/// decode. Rozpoznaná větev vybere, který připravený algoritmus tato data dostane. Interpunkce má
+/// zůstat zachovaná.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Keyword z match (rozpoznání) patří této hodnotě Vigenere.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Použij tuto component (složku), nikoli pevný klíč či jiný režim.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// ApplyText už řeší velikost písmen, interpunkci, ověření klíče a opačný převod.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

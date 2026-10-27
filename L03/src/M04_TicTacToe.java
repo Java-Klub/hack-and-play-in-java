@@ -12,6 +12,9 @@
 /// Použij Run File, vyber políčko 9 a potom jej zkus znovu; porovnej přijaté prázdné políčko s odmítnutým
 /// obsazeným.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F08 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean play(int cell) {
     if (winner != '.' || cell < 1 || cell >= 9 || board[cell - 1] != '.') {
         return false;
@@ -27,6 +30,30 @@ boolean play(int cell) {
     }
     return true;
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F08">
+/// Guard (ochranná podmínka) odmítne požadavek před chráněnou prací. Nejdřív přečti odmítané případy
+/// a potom se ptej, co zůstává povolené. Short-circuit (zkrácené vyhodnocení) je důležité: u `A || B`
+/// Java přeskočí B, pokud A už platí.
+///
+/// ```java
+/// boolean useSlot(int slot) {
+///     if (slot < 0 || slot >= 4) {
+///         return false;
+///     }
+///     IO.println("Using slot " + slot);
+///     return true;
+/// }
+/// ```
+///
+/// Předpověz výpis a vrácenou hodnotu pro `-1`, `3` a `4`. Jen trojka dojde k výpisu. Odmítnutí musí
+/// nastat před jakoukoli state change (změnou stavu), která se nemá provést. Přístup na desku sám
+/// může potřebovat kontrolu rozsahu, než jej lze bezpečně vyhodnotit. `return false` ukončí toto call
+/// (volání metody); automaticky nevrací zpět práci již provedenou předtím.
+///
+/// `useSlot(3)` předá trojku do `slot`; `boolean` před názvem říká, že výsledkem je true/false. Nyní
+/// předpověz slot nula.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -47,12 +74,16 @@ boolean play(int cell) {
 /// vypisuje očíslovaná políčka a čte tahy. Opravuješ vstupní bránu před těmito připravenými účinky.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Poslední platný input (vstup) je devět, nikoli osm.
-/// 2. Range guard (ochrana rozsahu) musí proběhnout před board[cell - 1].
-/// 3. Odmítej cell > 9 místo cell >= 9.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Poslední platný input (vstup) je devět, nikoli osm.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Range guard (ochrana rozsahu) musí proběhnout před board[cell - 1].
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Odmítej cell > 9 místo cell >= 9.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

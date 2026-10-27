@@ -25,6 +25,9 @@ import javax.swing.Timer;
 /// Použij Run File, klávesou Space spusť pero a šipkami měň kresbu; sleduj Steps a potom pomocí Test File
 /// ověř přesné dávky nuly, jednoho a čtyř kroků.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F11 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void burst(int count) {
     if (count < 0 || count > 60) {
         return;
@@ -33,6 +36,28 @@ void burst(int count) {
         step();
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F11">
+/// Counted for (počítaná smyčka for) sdruží initialization (počáteční nastavení), podmínku
+/// pokračování a postup do jediného záhlaví. Nastavení proběhne jednou. Potom Java ověří condition
+/// (podmínku), při pravdě provede tělo, udělá postup a znovu ověří podmínku.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// for (int floor = 2; floor <= 4; floor++) {
+///     IO.println(floor);
+/// }
+/// ```
+///
+/// Předpověz navštívené hodnoty: `2`, `3`, `4`. Jsou to tři průchody, i když poslední vypsané číslo
+/// je čtyřka. Dva středníky oddělují tři části záhlaví; `floor++` přičte jedničku po průchodu.
+/// Složené závorky sdružují opakované statement (příkazy). Pokud počáteční hodnota podmínku už
+/// nesplňuje, neproběhne žádný průchod. Rozlišuj počet pozic a mezer: tři pozice mají dvě mezery. Než
+/// změníš hranici, napiš drobnou trace (stopu průběhu).
+///
+/// Nyní předpověz output (výstup), pokud floor začíná na pětce.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -54,12 +79,26 @@ void burst(int count) {
 /// pohybu pera. Připravené ovládání řeší tah, roztěkanost, obnovení i export scribble.png.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Vyzkoušej count = 1 se současnou počáteční hodnotou i.
-/// 2. Počítání od nuly při i < count dá count průchodů.
-/// 3. Začni int i = 0; zachovej i < count a i++.
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// Před úpravou udělej trace (stopu průběhu) nynější smyčky. Pro count 1 začíná i na 1 a comparison
+/// (porovnání) je hned nepravdivé: nula volání. Pro count 4 běží tělo s i rovným 1, 2 a 3: tři
+/// volání. Nyní předpověz count 0 a potom zvol rozsah splňující požadavek pro všechny tři případy.
+/// Počítej call (volání) step odděleně od skutečných pohybů pera: připravené step se při pauze
+/// nepohybuje. Před hodnocením viditelného counter (počítadla) Steps stiskni Space. Timer (časovač)
+/// žádá čtyři volání v dávce; repaint (překreslení) výsledek jen zobrazí. Zachovej odmítání count
+/// mimo 0–60.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Vyzkoušej count = 1 se současnou počáteční hodnotou i.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Počítání od nuly při i < count dá count průchodů.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Začni int i = 0; zachovej i < count a i++.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -13,9 +13,37 @@
 /// Použij Run File a jako samostatné tahy zadej 1 S, 2 O, 3 S a 4 S; porovnej odměnu za poslední tah,
 /// který nové SOS nevytvoří.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F13 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int gainedPoints(int before, int after) {
     return after + before;
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F13">
+/// Method (metoda) zabalí operaci pod jediné jméno. Parameter (parametry) jsou místní jména informací
+/// přijatých při každém call (volání); argument (argumenty) jsou skutečně předané hodnoty. `return`
+/// předá jediný výsledek zpět volající části.
+///
+/// ```java
+/// int remaining(int capacity, int used) {
+///     return capacity - used;
+/// }
+///
+/// void main() {
+///     IO.println(remaining(12, 5));
+///     IO.println(remaining(9, 4));
+/// }
+/// ```
+///
+/// Předpověz obě vypsané hodnoty: sedmičku a pětku. Čárka odděluje parameter či argument a jejich
+/// pořadí rozhoduje, kterou hodnotu jméno dostane. Jména popisují role; informace si sama
+/// nezískávají. Tato method počítá bez vypisování a změny připraveného state (stavu programu). Při
+/// opravě výpočtu vyzkoušej druhou dvojici argument, aby se za jediný případ nemohla schovat náhodná
+/// pevná odpověď. Method se provede až při skutečném call, nikoli samotným zapsáním definice.
+///
+/// Nyní předpověz remaining(10, 6).
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -34,12 +62,24 @@ int gainedPoints(int before, int after) {
 /// připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Parameter (parametry) jsou počty ze dvou okamžiků, nikoli dvě odměny.
-/// 2. Nezměněný počet musí vrátit nulu.
-/// 3. Vrať after - before.
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// before a after počítají úplné řady SOS na celé desce; nejsou to dosavadní skóre obou hráčů.
+/// Jsou-li oba počty stejné, tento tah nevytvořil žádnou novou řadu. Připravená volající část přičte
+/// vrácenou odměnu ke skóre aktuálního hráče. Volitelný transfer (přenos znalosti): vymysli dvě různé
+/// dvojice before/after se stejnou odměnou a potom jednu dvojici s jinou odměnou. Vysvětli, proč
+/// tvoje pravidlo zvládne všechny tři bez znalosti desky a bez vypisování.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Parameter (parametry) jsou počty ze dvou okamžiků, nikoli dvě odměny.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Nezměněný počet musí vrátit nulu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Vrať after - before.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

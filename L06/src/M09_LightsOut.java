@@ -19,12 +19,38 @@ import java.awt.Color;
 /// Spusť Run File a zkus klikáním zhasnout všechna světla, potom pomocí Test File zjisti, které chybné
 /// pravidlo tvé příklady ještě přehlížejí.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F33 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 record CrossExample(int row, int column, int expected) {
 }
 
 CrossExample[] learnerChecks() {
     return new CrossExample[]{new CrossExample(2, 2, 5)};
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F33">
+/// ### Checks: vyber příklad, který může nesouhlasit
+///
+/// Functional check (funkční kontrola) potřebuje input (vstup) a nezávisle předpovězený výsledek.
+/// Úspěšný příklad je slabý, pokud uvěřitelné chybné pravidlo odpoví stejně. Přečti samostatný
+/// výpočet a jeho příklad; comparison (porovnání) dává boolean (logickou hodnotu) oznamující shodu.
+///
+/// ```java
+/// int twice(int value) {
+///     return value + value;
+/// }
+///
+/// void main() {
+///     boolean agrees = twice(0) == 0;
+///     IO.println(agrees);
+/// }
+/// ```
+///
+/// Výpis je true: dvojnásobek nuly je nula. Projde také implementace vracející vždy nulu. Vyber jiný
+/// input a očekávaný výsledek odvoď sám. Jakou chybu nový příklad odhalí? Počáteční data každé check
+/// (kontroly) udržuj nezávislá, aby jeden příklad omylem nepřipravil další.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -42,12 +68,38 @@ CrossExample[] learnerChecks() {
 /// File zkouší také pojmenovaná chybná pravidla a hlásí, které tvé příklady neodmítly.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Očekávání odvoď před sestavením check (kontroly)
 ///
-/// 1. Každý příklad začíná zhasnutou deskou; expected počítá rozsvícená pole po jednom flip.
-/// 2. Střed má pět polí, okraj čtyři a roh tři.
-/// 3. Ponech střed a přidej (0,0,3) a (0,2,4); vysvětli, kterého mutanta každý odhalí.
+/// Nacvič jinou hračku: na panelu se třemi řádky a dvěma sloupci rozsvítí stisk vlastní cell (buňku)
+/// a případnou buňku přímo pod ní.
+///
+/// ```java
+/// record Probe(int row, int column, int expectedLit) {}
+/// Probe sample = new Probe(0, 1, 2);
+/// ```
+///
+/// Souřadnice jsou vnitřní index (pozice). Dvě buňky příkladu vypíšeš na papír nezávisle na
+/// implementaci. Vrať se ke skutečnému kříži. Každý CrossExample začíná na nové zhasnuté desce pět
+/// krát pět a provede jediné kliknutí; `expected` počítá rozsvícené buňky. Element (položky) array
+/// oddělují čárky. Nakresli vlastní kliknutí u hranice a vypiš odlišné zasažené buňky. Který chybný
+/// kříž by nesouhlasil? Před Test File dodej a vysvětli vlastní counterexample (protipříklad).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Nakresli zhasnutou desku a označ přesně buňky přepnuté jediným vybraným kliknutím. Očekávaný počet
+/// odvoď ze značek před voláním implementace.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Původní kliknutí je daleko od všech okrajů. Vyber jiné platné místo, kde hranice změní tvar;
+/// pojmenuj chybné pravidlo, které nové očekávání odmítne.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Zkus roh a započti stisknutou buňku i pouze existující sousedy ve čtyřech směrech. Sestav
+/// CrossExample z vlastních souřadnic a počtu, potom odvoď jiný hraniční případ, který samotný roh
+/// nenahradí.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

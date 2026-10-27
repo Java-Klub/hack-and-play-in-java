@@ -12,9 +12,34 @@
 /// Použij Run File a na otázku na jméno napiš Red Fox s mezerami kolem, potom doplň další tři fráze a
 /// prohlédni hotový příběh.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F05 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 String cleanWord(String word) {
     return word;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F05">
+/// `IO.readln` přijímá celý řádek včetně vnitřních mezer. String operation (operace nad řetězcem)
+/// vrací text, nemění původní String (řetězec). Potřebuješ-li výsledek, musíš jej uchovat.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// String raw = "  Quiet Room  ";
+/// String cleaned = raw.strip();
+/// String loud = cleaned.toUpperCase(Locale.ROOT);
+/// ```
+///
+/// Předpověz všechny tři hodnoty. `raw` stále obsahuje okrajové mezery, `cleaned` je `Quiet Room` a
+/// `loud` je `QUIET ROOM`. `strip()` odstraní okrajové whitespace (bílé znaky), nikoli mezeru mezi
+/// slovy. Tečka vybere operaci hodnoty vlevo; závorky předávají její argument (argumenty).
+/// `Locale.ROOT` žádá převod velikosti písmen nezávislý na jazyce místo místního nastavení počítače.
+/// Připravený input code (vstupní část) řeší `null` při konci vstupu; prázdný řádek je jiná hodnota.
+/// Samotné zavolání operace ještě nenahradí text uchovaný pod původním jménem.
+///
+/// Nyní předpověz cleaned a loud pro raw text `"  Soft Sky  "`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -33,12 +58,16 @@ String cleanWord(String word) {
 /// vstupu.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Nerozděluj text podle mezer: jméno může mít několik slov.
-/// 2. String.strip vrací očištěnou kopii.
-/// 3. Použij return word.strip();
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Nerozděluj text podle mezer: jméno může mít několik slov.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// String.strip vrací očištěnou kopii.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Použij return word.strip();
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

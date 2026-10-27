@@ -19,9 +19,33 @@ import java.util.List;
 /// Pomocí Run File vytvoř circle-packing.png a po dokončení omezeného skládání otevři cestu vypsanou za
 /// Saved.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F23 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean claimCentre(Set<Centre> seen, int x, int y) {
     return seen.contains(new Centre(x, y));
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F23">
+/// ### Set (množina): členství bez duplikátů
+///
+/// `Set` odpovídá, zda hodnota patří do kolekce. Každému vložení nepřiděluje indexovanou pozici.
+///
+/// ```java
+/// Set<String> stickers = new HashSet<>();
+/// IO.println(stickers.add("moon"));
+/// IO.println(stickers.add("moon"));
+/// IO.println(stickers.size());
+/// ```
+///
+/// Výstup je `true`, `false`, potom `1`. První add změní membership (členství); druhý najde stejnou
+/// hodnotu již uloženou. `contains(value)` se ptá bez změny množiny. `remove(value)` hodnotu odebere
+/// a oznámí, zda byla přítomna. Record (datový záznam) má automatické porovnání podle hodnot svých
+/// složek, takže dva samostatně vytvořené stejné záznamy představují stejného člena množiny. Na
+/// pořadí průchodu přes HashSet nespoléhej.
+///
+/// Předpověz: po odebrání moon a přidání sun jaká bude velikost a výsledek `contains("moon")`?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -37,12 +61,16 @@ boolean claimCentre(Set<Centre> seen, int x, int y) {
 /// pro srážky, růst poloměru až do dotyku, barvy i závěrečný circle-packing.png jsou připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Contains se jen ptá; nový střed si nezapamatuje.
-/// 2. Record se stejným x/y je roven starší hodnotě.
-/// 3. Set.add současně uloží hodnotu a oznámí, zda byla nová.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Contains se jen ptá; nový střed si nezapamatuje.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Record se stejným x/y je roven starší hodnotě.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Set.add současně uloží hodnotu a oznámí, zda byla nová.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

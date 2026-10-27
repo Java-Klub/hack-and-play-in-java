@@ -21,9 +21,32 @@ import javax.swing.Timer;
 ///
 /// Po Run File řiď a zrychluj šipkami, drž Space pro střelbu a klávesou R začni let znovu.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F28 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 Runnable firingAction() {
     return () -> {};
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F28">
+/// ### Callback (zpětné volání): akce na později
+///
+/// Callback je akce, kterou jiná část programu zavolá později, třeba po kliknutí. `Runnable` je akce
+/// bez předávaných argumentů a bez vraceného výsledku.
+///
+/// ```java
+/// Runnable cheer = () -> IO.println("Hooray!");
+/// IO.println("Ready");
+/// cheer.run();
+/// ```
+///
+/// Výstup je `Ready`, potom `Hooray!`. Vytvoření lambda (anonymní funkce) zápisem `() -> ...` její
+/// tělo nespustí. To udělá volání `run()`. Složené závorky dovolují uvnitř callbacku několik příkazů.
+/// Method reference (odkaz na metodu) jako `this::wave` obdobně předá metodu `wave` tohoto objektu
+/// pro pozdější použití; `wave()` ji zavolá hned. Připravené UI rozhoduje, kdy callback vyvolat.
+///
+/// Předpověz: co se vypíše, když poslední řádek nahradí dvě po sobě jdoucí volání `cheer.run()`?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -40,12 +63,16 @@ Runnable firingAction() {
 /// zastaví timer (časovač).
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Runnable představuje akci, nikoli její výsledek.
-/// 2. Vrať method reference (odkaz na metodu) nebo lambda, která fire zavolá později.
-/// 3. Zachovej guard (podmínky) cooldown/lost v fire; nekopíruj je do callback (předané akce).
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Runnable představuje akci, nikoli její výsledek.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Vrať method reference (odkaz na metodu) nebo lambda, která fire zavolá později.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Zachovej guard (podmínky) cooldown/lost v fire; nekopíruj je do callback (předané akce).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

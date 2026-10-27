@@ -12,6 +12,9 @@
 /// Použij Run File a zadáním 4 5 ukousni viditelný pravý dolní dílek, potom zkus stejné souřadnice znovu,
 /// když už tam není.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F08 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean bite(int row, int column) {
     if (winner != 0 || row < 1 || row >= 4 || column < 1 || column > widths[row - 1]) {
         return false;
@@ -26,6 +29,30 @@ boolean bite(int row, int column) {
     }
     return true;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F08">
+/// Guard (ochranná podmínka) odmítne požadavek před chráněnou prací. Nejdřív přečti odmítané případy
+/// a potom se ptej, co zůstává povolené. Short-circuit (zkrácené vyhodnocení) je důležité: u `A || B`
+/// Java přeskočí B, pokud A už platí.
+///
+/// ```java
+/// boolean useSlot(int slot) {
+///     if (slot < 0 || slot >= 4) {
+///         return false;
+///     }
+///     IO.println("Using slot " + slot);
+///     return true;
+/// }
+/// ```
+///
+/// Předpověz výpis a vrácenou hodnotu pro `-1`, `3` a `4`. Jen trojka dojde k výpisu. Odmítnutí musí
+/// nastat před jakoukoli state change (změnou stavu), která se nemá provést. Přístup na desku sám
+/// může potřebovat kontrolu rozsahu, než jej lze bezpečně vyhodnotit. `return false` ukončí toto call
+/// (volání metody); automaticky nevrací zpět práci již provedenou předtím.
+///
+/// `useSlot(3)` předá trojku do `slot`; `boolean` před názvem říká, že výsledkem je true/false. Nyní
+/// předpověz slot nula.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -46,12 +73,16 @@ boolean bite(int row, int column) {
 /// vstupní hranici.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Řádek čtyři do tabulky patří.
-/// 2. Bounds guard (ochranu hranic) nemaž: chrání i widths[row - 1].
-/// 3. Odmítnutí řádku je row < 1 || row > 4.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Řádek čtyři do tabulky patří.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Bounds guard (ochranu hranic) nemaž: chrání i widths[row - 1].
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Odmítnutí řádku je row < 1 || row > 4.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

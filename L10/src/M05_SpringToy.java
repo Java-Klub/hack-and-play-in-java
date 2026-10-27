@@ -22,6 +22,9 @@ import javax.swing.Timer;
 ///
 /// Po Run File odtáhni a pusť závaží, pomocí Space zastav pohyb a šipkami měň tuhost a tlumení pružiny.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F29 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void draw(Graphics2D g) {
 // Připravený omezený update (aktualizace): jedno volání znamená jeden krok; aktivní oprava je popsaná výše.
     step();
@@ -48,6 +51,26 @@ void draw(Graphics2D g) {
     g.drawString(String.format("Stiffness %.3f   Damping %.3f   %s", stiffness, damping, paused ? "Paused" : "Moving"), 15, 25);
 }
 
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F29">
+/// ### Rendering (vykreslení): ze stavu na pixely
+///
+/// Rendering čte model (stav programu) a kreslí jeho podobu. Screen x (obrazovkové x) roste doprava;
+/// screen y roste dolů. Kreslicí metody často přijímají levý horní roh a velikost, nikoli střed.
+///
+/// ```java
+/// int tileX = 3;
+/// int tileY = 2;
+/// int size = 10;
+/// g.fillRect(tileX * size, tileY * size, size, size);
+/// ```
+///
+/// `g` je připravený kreslicí nástroj `Graphics2D`. Příkaz vybarví čtverec 10 × 10 s levým horním
+/// rohem `(30, 20)`. Modelové souřadnice zůstanou `(3, 2)`. Repainting (překreslení) nemá posouvat
+/// objekty ani zahajovat další tah: okno může požadovat kreslení mnohokrát.
+///
+/// Předpověz: pokud se pouze tileY změní na 4, která obrazovková souřadnice se změní a o kolik?
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
 ///
@@ -61,12 +84,16 @@ void draw(Graphics2D g) {
 /// ukládá pozice; draw sestaví klikatou pružinu, závaží i popisek z existujících hodnot.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Porovnej odpovědnosti step a draw.
-/// 2. Podívej se na první akci v draw; repaint (překreslení) může nastat častěji než tick (časový krok).
-/// 3. Odstraň nadbytečný update (aktualizaci) modelu a zachovej kreslení.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Porovnej odpovědnosti step a draw.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Podívej se na první akci v draw; repaint (překreslení) může nastat častěji než tick (časový krok).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Odstraň nadbytečný update (aktualizaci) modelu a zachovej kreslení.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

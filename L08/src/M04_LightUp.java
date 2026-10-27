@@ -12,6 +12,9 @@
 /// Spusť Run File a zadáním 1 1 přepni žárovku vlevo nahoře, potom zkus osvětlit ostatní volná políčka
 /// bez střetů žárovek.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F18 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int visible(int r, int c) {
     int n = 0;
     for (int[] d : dirs) {
@@ -28,6 +31,25 @@ int visible(int r, int c) {
     return n;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F18">
+/// ### Grids: nejdřív řádek, potom sloupec
+///
+/// V array of rows (poli řádků) první index (pozice) vybírá řádek a druhý pozici v něm. Řádky mohou
+/// mít různé délky. Neighbour (soused) je posun od buňky, nikoli další absolutní pozice. Před
+/// kontrolou existence kandidáta urči povolené směry.
+///
+/// ```java
+/// int[][] mosaic = {{3, 6, 9}, {2, 4, 8}};
+/// int row = 0;
+/// int column = 1;
+/// IO.println(mosaic[row][column + 1]);
+/// ```
+///
+/// Výstup je devět: řádek nula a sloupec dva vyberou tento element (prvek). Pohyb dolů mění row;
+/// doprava mění column. Který z těchto pohybů z pravé horní cell (buňky) zůstane uvnitř? U úhlopříčky
+/// se mění obě souřadnice; bounds (meze) musíš ověřit před přístupem ke kandidátovi.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
 ///
@@ -42,12 +64,16 @@ int visible(int r, int c) {
 /// kontroluje očíslované zdi; přepínání žárovek a konzolové zobrazení je připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. dirs dodává čtyři posuny o jedno pole.
-/// 2. Opakovaně posouvej y a x, dokud platí open(y,x).
-/// 3. Místo jediného if použij while; posuny souřadnic ponech uvnitř.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// dirs dodává čtyři posuny o jedno pole.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Opakovaně posouvej y a x, dokud platí open(y,x).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Místo jediného if použij while; posuny souřadnic ponech uvnitř.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

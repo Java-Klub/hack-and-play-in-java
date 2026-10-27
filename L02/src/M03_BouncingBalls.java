@@ -22,9 +22,35 @@ import javax.swing.Timer;
 /// Použij Run File, tažením do strany hoď míček na stěnu a sleduj odraz; Space místnost pozastaví a R ji
 /// vyprázdní.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F04 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 double bounceSpeed(double speed) {
     return Math.abs(speed) * (3 / 4);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F04">
+/// Arithmetic (aritmetika) používá operand type (typy operandů) v okamžiku provedení operace. Jsou-li
+/// oba operand u `/` celočíselné, Java zahodí desetinnou část. Pozdější uložení výsledku do `double`
+/// ji nevrátí.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// int pages = 7;
+/// double first = pages / 2;
+/// double second = pages / 2.0;
+/// double third = (double) pages / 2;
+/// ```
+///
+/// Předpověz tři hodnoty: `3.0`, `3.5`, `3.5`. Cast (převod) `(double)` převede toto použití `pages`
+/// před dělením; nezmění deklarovaný type (typ) proměnné. Závorky seskupují výpočty, `*` násobí a `/`
+/// dělí. Kromě kladného input (vstupu) ověř i záporný a nulu. Pojmenuj jednotky: vzdálenost a
+/// rychlost jsou různé veličiny, i když obě používají `double`. O výsledku rozhoduje celý expression
+/// (výraz), nikoli jen type napsaný před jménem method (metody).
+///
+/// Nyní předpověz všechny tři výsledky, pokud pages obsahuje devítku.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -43,12 +69,16 @@ double bounceSpeed(double speed) {
 /// samostatné chování podlahy. draw kreslí uložené míčky a myš vytváří hody.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. 3 / 4 s celočíselnými operand (operandy) je nula.
-/// 2. Math.abs už odstraňuje znaménko původního směru.
-/// 3. Násob hodnotou 3.0 / 4 nebo 0.75.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// 3 / 4 s celočíselnými operand (operandy) je nula.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Math.abs už odstraňuje znaménko původního směru.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Násob hodnotou 3.0 / 4 nebo 0.75.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

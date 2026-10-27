@@ -12,6 +12,9 @@
 /// Spusť Run File, prohlédni si zobrazené vlastnosti karet a zadej čísla tří karet, které podle tebe
 /// tvoří platnou trojici.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F17 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean hasSet() {
     for (int a = 0; a < table.size(); a++) {
         for (int b = a + 1; b < table.size(); b++) {
@@ -24,6 +27,30 @@ boolean hasSet() {
     }
     return false;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F17">
+/// ### Traversal: vždy jedna otázka
+///
+/// Traversal (průchod) navštěvuje hodnoty; search (hledání) může skončit první shodou, count
+/// (počítání) musí prohlédnout všechny relevantní hodnoty. Ve for-each loop (cyklu pro každý prvek)
+/// dostane jméno před dvojtečkou jednu hodnotu ze sequence (posloupnosti) za ní. Průběžný počet založ
+/// mimo opakované tělo, aby dřívější shody přežily.
+///
+/// ```java
+/// int[] pulses = {2, 0, 4};
+/// int strong = 0;
+/// for (int pulse : pulses) {
+///     if (pulse > 1) {
+///         strong++;
+///     }
+/// }
+/// IO.println(strong);
+/// ```
+///
+/// Výsledek je dvě, protože pulzy dva a čtyři splňují condition (podmínku). Kdybys potřeboval pouze
+/// vědět, zda existuje nějaký silný pulz, kdy už můžeš odpovědět? Jaký počet má mít prázdné array
+/// (pole)?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -39,12 +66,26 @@ boolean hasSet() {
 /// výsledek využívá, když hráč tvrdí, že žádná trojice nezbývá.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Reading API (rozhraní čtení) stolu
 ///
-/// 1. Použij a < b < c, aby se karta neopakovala.
-/// 2. Největší dovolené c je table.size()-1.
-/// 3. Podmínka c loop porovnává c s table.size(), nikoli table.size()-1.
+/// `table` je připravený List (seznam): `size()` dává aktuální počet karet a `get(index)` jednu
+/// přečte bez odebrání. Pozice začínají nulou jako u array (pole). Tři loop index (pozice cyklů)
+/// záměrně rostou: a předchází b a b předchází c, takže stejnou kartu nevybereš dvakrát. Předpověz,
+/// jak se poslední pozice dostane do trojice; připravený query (dotaz) `triple` dál posuzuje
+/// vlastnosti.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Použij a < b < c, aby se karta neopakovala.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Největší dovolené c je table.size()-1.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Podmínka c loop porovnává c s table.size(), nikoli table.size()-1.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
