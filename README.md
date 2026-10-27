@@ -27,7 +27,7 @@ Start here, then work towards mazes, arcade games, generative pictures and sound
 
 ## What you learn
 
-| Your growing toolkit | Java skills you will use |
+| What you’ll do | Java skills you will use |
 | --- | --- |
 | Read and decide | Execution order, variables, strings, arithmetic, conditions, methods and loops |
 | Build a world | Arrays, grids, records, enums, `List`, `Map`, `Set` and independent copies |
@@ -38,15 +38,8 @@ The guide lives **inside the code**: short explanations, worked examples and hin
 
 ## Start playing
 
-1. Have **NetBeans and JDK 26 or newer** ready. The projects target Java 26 without preview features.
+1. Have **NetBeans and JDK 26 or newer** ready.
 2. Download your language branch above. Open **[L01](L01/)** with **File → Open Project**, then open `M01_CafeWallLab.java` under **Source Packages**.
 3. Choose **Run → Run File**. Read the mission, edit, **Save → Test File**, then play again. The starter's first failed check is an intentional clue; `PASS` means the checked cases agree with your repair.
 
 Designed for curious beginners, coding clubs and guided workshops. Choose extra games whenever an idea needs another round.
-
-<details>
-<summary>For teachers · completed versions</summary>
-
-[English solutions](https://github.com/Java-Klub/hack-and-play-in-java/tree/solution) · [Česká řešení](https://github.com/Java-Klub/hack-and-play-in-java/tree/reseni)
-
-</details>
