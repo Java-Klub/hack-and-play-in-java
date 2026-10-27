@@ -21,7 +21,7 @@ import javax.swing.Timer;
 /// After your repair: Save → Test File → play again.
 void startingPosition() {
     x = 20;
-    x = -80;
+    x = x + 60;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

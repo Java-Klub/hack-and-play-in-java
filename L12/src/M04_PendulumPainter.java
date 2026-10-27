@@ -21,7 +21,7 @@ import javax.swing.Timer;
 /// your trace experiment.
 /// After your repair: Save → Test File → play again.
 double accelerationNow() {
-    return 0;
+    return acceleration.at(angle, length);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

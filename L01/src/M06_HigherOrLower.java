@@ -12,7 +12,7 @@
 /// Use Run File, enter h for higher or l for lower, and watch how many correct guesses the displayed
 /// round requires.
 /// After your repair: Save → Test File → play again.
-int target = 1;
+int target = 10;
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines

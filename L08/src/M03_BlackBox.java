@@ -32,7 +32,7 @@ String trace(boolean[][] grid, String entry) {
             return "HIT";
         }
         boolean left = ball(grid, nx - dy, ny + dx);
-        boolean right = ball(grid, nx - dy, ny + dx);
+        boolean right = ball(grid, nx + dy, ny - dx);
         if (entering && (left || right)) {
             return "REFLECT";
         }

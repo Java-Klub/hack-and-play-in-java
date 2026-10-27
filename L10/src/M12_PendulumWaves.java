@@ -20,7 +20,7 @@ import javax.swing.Timer;
 /// align them again.
 /// After your repair: Save → Test File → play again.
 void step() {
-    if (paused) {
+    if (!paused) {
         time += .02 * speed;
     }
 }

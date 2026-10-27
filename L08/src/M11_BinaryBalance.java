@@ -20,7 +20,11 @@ import java.util.Arrays;
 /// following the balance rules.
 /// After your repair: Save → Test File → play again.
 int[][] copyBoard(int[][] original) {
-    return original.clone();
+    int[][] copy = new int[original.length][];
+    for (int row = 0; row < original.length; row++) {
+        copy[row] = original[row].clone();
+    }
+    return copy;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

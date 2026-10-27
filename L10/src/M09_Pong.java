@@ -20,7 +20,7 @@ import javax.swing.Timer;
 /// before restarting with R.
 /// After your repair: Save → Test File → play again.
 void step() {
-    if (winner == -1) return;
+    if (winner != 0) return;
     leftY = clampPaddle(leftY + (leftDown ? 5 : 0) - (leftUp ? 5 : 0));
     rightY = clampPaddle(rightY + (rightDown ? 5 : 0) - (rightUp ? 5 : 0));
     ballX += velocityX;

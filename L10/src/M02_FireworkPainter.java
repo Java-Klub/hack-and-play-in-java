@@ -27,7 +27,7 @@ import javax.swing.Timer;
 /// clear the sky.
 /// After your repair: Save → Test File → play again.
 java.util.function.BiConsumer<Integer, Integer> burstAction() {
-    return (x, y) -> {};
+    return this::burst;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

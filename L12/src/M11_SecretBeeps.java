@@ -27,7 +27,7 @@ List<Integer> units(String text, int wordGap) {
     String[] words = code(text).split(" / ");
     for (int w = 0; w < words.length; w++) {
         if (w > 0) {
-            result.add(-7);
+            result.add(-wordGap);
         }
         String[] letters = words[w].split(" ");
         for (int l = 0; l < letters.length; l++) {

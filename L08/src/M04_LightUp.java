@@ -17,7 +17,7 @@ int visible(int r, int c) {
     for (int[] d : dirs) {
         int y = r + d[0];
         int x = c + d[1];
-        if (open(y, x)) {
+        while (open(y, x)) {
             if (bulbs[y][x]) {
                 n++;
             }

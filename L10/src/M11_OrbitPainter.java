@@ -25,7 +25,7 @@ import javax.swing.Timer;
 /// clear its trail.
 /// After your repair: Save → Test File → play again.
 void step() {
-    if (!paused) {
+    if (paused) {
         return;
     }
     double dx = WIDTH / 2 - x, dy = HEIGHT / 2 - y, r2 = dx * dx + dy * dy + 25 * 25;

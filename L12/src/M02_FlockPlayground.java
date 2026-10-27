@@ -20,7 +20,7 @@ import javax.swing.Timer;
 /// compare their response.
 /// After your repair: Save → Test File → play again.
 double obstaclePush(double distance) {
-    return 0;
+    return avoidance.strength(distance);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

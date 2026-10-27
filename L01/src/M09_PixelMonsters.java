@@ -18,7 +18,7 @@ import javax.imageio.ImageIO;
 /// Use Run File, accept monster.png and enter seed 42, then refresh Files and open monster.png; reuse
 /// that seed to compare the repaired eyes.
 /// After your repair: Save → Test File → play again.
-int eyeColour = Color.BLACK.getRGB();
+int eyeColour = Color.WHITE.getRGB();
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines

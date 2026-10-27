@@ -24,7 +24,8 @@ record TreeExample(int x, int y, boolean expected) {
 }
 
 TreeExample[] learnerChecks() {
-    return new TreeExample[]{new TreeExample(0, 0, true)};
+    return new TreeExample[]{new TreeExample(0, 0, true), new TreeExample(3, 0, true),
+    new TreeExample(0, 3, false), new TreeExample(1, 3, true), new TreeExample(4, 4, true), new TreeExample(-1, 0, false)};
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

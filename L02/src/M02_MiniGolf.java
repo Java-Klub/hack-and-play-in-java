@@ -21,7 +21,7 @@ import javax.swing.Timer;
 /// shot, or press R to restart.
 /// After your repair: Save → Test File → play again.
 double dragVelocity(double distance) {
-    return distance / 125;
+    return distance / 12.5;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

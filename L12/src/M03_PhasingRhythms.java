@@ -22,7 +22,7 @@ import java.io.ByteArrayInputStream;
 /// between the two rhythms.
 /// After your repair: Save → Test File → play again.
 double mix(double time) {
-    return 0.17 * first.sample(time);
+    return 0.17 * (first.sample(time) + second.sample(time));
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

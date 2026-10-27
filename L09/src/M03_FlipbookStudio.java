@@ -26,7 +26,7 @@ import javax.swing.Timer;
 /// After your repair: Save → Test File → play again.
 boolean undo() {
     if (history.isEmpty()) return false;
-    Edit edit = history.removeFirst();
+    Edit edit = history.removeLast();
     frames[edit.frame()][edit.y()][edit.x()] = edit.oldColour();
     return true;
 }

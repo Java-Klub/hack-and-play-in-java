@@ -16,7 +16,11 @@ record MergeExample(int[] input, int[] expected, int score) {
 }
 
 MergeExample[] learnerChecks() {
-    return new MergeExample[]{new MergeExample(new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}, 0)};
+    return new MergeExample[]{
+    new MergeExample(new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}, 0),
+    new MergeExample(new int[]{2, 0, 2, 0}, new int[]{4, 0, 0, 0}, 4),
+    new MergeExample(new int[]{2, 2, 4, 0}, new int[]{4, 4, 0, 0}, 4),
+    new MergeExample(new int[]{4, 4, 4, 4}, new int[]{8, 8, 0, 0}, 16)};
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

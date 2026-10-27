@@ -24,7 +24,7 @@ void recyclePipes() {
     if (!pipes.isEmpty() && pipes.getFirst().x + PIPE_WIDTH < 0) {
         double furthest = pipes.getLast().x;
         pipes.removeFirst();
-        pipes.addFirst(new Pipe(furthest + 260, newGap()));
+        pipes.add(new Pipe(furthest + 260, newGap()));
     }
 }
 

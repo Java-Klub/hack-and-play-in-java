@@ -20,7 +20,7 @@ import java.util.ArrayList;
 /// a rectangle.
 /// After your repair: Save → Test File → play again.
 ArrayList<Box> snapshot() {
-    return boxes;
+    return new ArrayList<>(boxes);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

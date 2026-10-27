@@ -20,7 +20,7 @@ import javax.imageio.ImageIO;
 /// chemical simulation finishes.
 /// After your repair: Save → Test File → play again.
 double reactionAt(int x, int y) {
-    return 0;
+    return chemistry.reaction(a[y][x], b[y][x]);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

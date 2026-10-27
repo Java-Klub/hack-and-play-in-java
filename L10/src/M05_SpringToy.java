@@ -24,8 +24,6 @@ import javax.swing.Timer;
 /// stiffness and damping.
 /// After your repair: Save → Test File → play again.
 void draw(Graphics2D g) {
-// Supplied bounded update: one call means one model step; the active repair is described above.
-    step();
     g.setColor(new Color(225, 230, 240));
     for (int i = 1; i < trail.size(); i++) {
         g.draw(new Line2D.Double(trail.get(i - 1), trail.get(i)));

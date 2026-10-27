@@ -22,7 +22,7 @@ int[] leftoverLetters(String guess, char[] result) {
             result[i] = 'G';
         } else {
             int letter = secret.charAt(i) - 'A';
-            counts[letter] = 1;
+            counts[letter] += 1;
         }
     }
     return counts;
@@ -172,6 +172,7 @@ void require(boolean valid) {
 /// - `||` — At least one condition must be true; if the first is true, Java skips the second.
 /// - `!` — In front of a boolean expression, reverses true and false.
 /// - `++` — Increases a numeric value by one.
+/// - `+=` — Adds to the old value and stores the result back under the same name.
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
 /// - `-` — Subtracts numbers; in front of one number, changes its sign.
 /// - `/` — Divides numbers. Dividing two int values discards the fractional part.

@@ -18,7 +18,7 @@ boolean move(int from, int to) {
         return false;
     }
     int disc = pegs[from][sizes[from] - 1];
-    if (sizes[to] > 0 && pegs[to][sizes[to] - 1] > disc) {
+    if (sizes[to] > 0 && pegs[to][sizes[to] - 1] < disc) {
         return false;
     }
     sizes[from]--;

@@ -24,7 +24,7 @@ import javax.swing.Timer;
 /// Space to pause.
 /// After your repair: Save → Test File → play again.
 Point2D.Double project(Star star, double depth) {
-    double z = Math.max(5, depth + 100);
+    double z = Math.max(5, depth);
     return new Point2D.Double(centreX + star.x * 260 / z, centreY + star.y * 260 / z);
 }
 

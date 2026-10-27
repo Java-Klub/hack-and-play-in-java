@@ -16,7 +16,7 @@
 int familySize(List<String> family) {
     int total = 0;
     for (int i = 0; i < family.size(); i++) {
-        total = 1;
+        total += 1;
     }
     return total;
 }

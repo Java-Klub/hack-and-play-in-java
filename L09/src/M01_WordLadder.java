@@ -16,7 +16,7 @@ void command(String input) {
     String word = input.toUpperCase(Locale.ROOT);
     require(List.of(words).contains(word) && adjacent(current, word));
     current = word;
-    history = new ArrayList<>(List.of(word));
+    history.add(word);
     if (word.equals("WARM")) {
         outcome = "Reached WARM in " + (history.size() - 1) + " moves!";
     }

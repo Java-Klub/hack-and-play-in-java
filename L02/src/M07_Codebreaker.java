@@ -14,7 +14,7 @@
 /// a newly hidden code.
 /// After your repair: Save → Test File → play again.
 boolean matchesCode(String guess) {
-    return secret == guess;
+    return secret.equals(guess);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

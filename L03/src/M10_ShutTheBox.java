@@ -13,7 +13,7 @@
 /// numbers that should add up to that target.
 /// After your repair: Save → Test File → play again.
 int diceTotal(int first, int second) {
-    return first;
+    return first + second;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

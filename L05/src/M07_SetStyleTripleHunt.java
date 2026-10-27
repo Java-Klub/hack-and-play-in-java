@@ -15,7 +15,7 @@
 boolean hasSet() {
     for (int a = 0; a < table.size(); a++) {
         for (int b = a + 1; b < table.size(); b++) {
-            for (int c = b + 1; c < table.size() - 1; c++) {
+            for (int c = b + 1; c < table.size(); c++) {
                 if (triple(table.get(a), table.get(b), table.get(c))) {
                     return true;
                 }

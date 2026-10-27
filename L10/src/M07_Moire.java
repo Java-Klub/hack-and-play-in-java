@@ -22,7 +22,7 @@ import javax.swing.Timer;
 /// After your repair: Save → Test File → play again.
 Point2D.Double gridPoint(int column, int row, double a) {
     double x = column * spacing, y = row * spacing;
-    return new Point2D.Double(WIDTH / 2 + x * Math.cos(a) - y * Math.sin(a), x * Math.sin(a) + y * Math.cos(a));
+    return new Point2D.Double(WIDTH / 2 + x * Math.cos(a) - y * Math.sin(a), HEIGHT / 2 + x * Math.sin(a) + y * Math.cos(a));
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

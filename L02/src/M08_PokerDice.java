@@ -13,7 +13,7 @@
 /// reroll only those two dice before bank.
 /// After your repair: Save → Test File → play again.
 boolean fullHouse(int largestGroup, int pairs) {
-    return largestGroup == 3 || pairs == 1;
+    return largestGroup == 3 && pairs == 1;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

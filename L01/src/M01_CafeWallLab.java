@@ -22,8 +22,8 @@ import javax.swing.*;
 ///
 /// Lines starting with `///` are your guide; they do not run as Java instructions.
 void paintWall(Graphics2D g) {
-    paintTiles(g);
     paintBackground(g);
+    paintTiles(g);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

@@ -13,7 +13,7 @@
 /// goal.
 /// After your repair: Save → Test File → play again.
 boolean floor(int px, int py) {
-    return py >= 0 && py < 5 && px >= 0 && px < 7;
+    return py >= 0 && py < 5 && px >= 0 && px < 7 && terrain[py].charAt(px) != '#';
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
@@ -148,6 +148,7 @@ void require(boolean valid) {
 /// - `'` — Single quotes enclose one character, such as a board marker.
 /// - `=` — Stores the value on the right under the name on the left. It does not compare them.
 /// - `==` — Compares primitive values. For text contents, use equals instead.
+/// - `!=` — Checks that two values differ.
 /// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
 /// - `||` — At least one condition must be true; if the first is true, Java skips the second.
 /// - `!` — In front of a boolean expression, reverses true and false.

@@ -23,7 +23,7 @@ import java.io.ByteArrayInputStream;
 /// After your repair: Save → Test File → play again.
 double pitchFrequency(int row, int shift) {
     if (row < 0 || row >= 12 || shift < -12 || shift > 12) throw new IllegalArgumentException("Row 0..11; transpose -12..12.");
-    return 220 * Math.pow(2, (11 - row) / 12.0);
+    return 220 * Math.pow(2, (11 - row + shift) / 12.0);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

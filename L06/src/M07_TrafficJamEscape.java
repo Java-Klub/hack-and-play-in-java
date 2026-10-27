@@ -13,8 +13,6 @@
 /// A’s exit.
 /// After your repair: Save → Test File → play again.
 boolean fits(int car, int x, int y) {
-    xs[car] = x;
-    ys[car] = y;
     for (int i = 0; i < lengths[car]; i++) {
         int px = x + (vertical[car] ? 0 : i);
         int py = y + (vertical[car] ? i : 0);

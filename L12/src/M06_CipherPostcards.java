@@ -17,7 +17,7 @@ String transform(String text, Cipher cipher, boolean decode) {
     return switch (cipher) {
         case Caesar(var shift) -> applyText(text, "caesar", Integer.toString(shift), decode);
         case Substitution(var alphabet) -> applyText(text, "substitution", alphabet, decode);
-        case Vigenere(var keyword) -> applyText(text, "caesar", "0", decode);
+        case Vigenere(var keyword) -> applyText(text, "vigenere", keyword, decode);
     };
 }
 

@@ -21,8 +21,8 @@ import javax.swing.*;
 ///
 /// Lines starting with `///` are your guide; they do not run as Java instructions.
 void paintDisc(Graphics2D g, int i) {
-    whiteBite(g, i);
     darkDisc(g, i);
+    whiteBite(g, i);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

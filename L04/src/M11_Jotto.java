@@ -18,7 +18,7 @@ int matches(String word) {
     int n = 0;
     for (char c : word.toCharArray()) {
         if (secret.indexOf(c) >= 0) {
-            n = 1;
+            n++;
         }
     }
     return n;

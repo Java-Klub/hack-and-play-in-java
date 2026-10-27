@@ -23,7 +23,7 @@ boolean connected(int who) {
             queue.add(new int[]{r, c});
         }
     }
-    int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, -1}, {-1, 1}};
     while (!queue.isEmpty()) {
         int[] cell = queue.remove();
         if (who == 1 && cell[0] == 4 || who == 2 && cell[1] == 4) {

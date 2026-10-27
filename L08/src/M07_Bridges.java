@@ -20,7 +20,7 @@ import java.util.Arrays;
 /// Run File, click a faint connection to change its bridge count, and press U to try undoing that edit.
 /// After your repair: Save → Test File → play again.
 int[] snapshot() {
-    return bridges;
+    return bridges.clone();
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

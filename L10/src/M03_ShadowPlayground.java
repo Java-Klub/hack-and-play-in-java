@@ -22,7 +22,7 @@ import java.awt.geom.Area;
 /// starting position.
 /// After your repair: Save → Test File → play again.
 java.util.function.BiConsumer<Integer, Integer> lightAction() {
-    return (x, y) -> {};
+    return this::moveLight;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
@@ -230,8 +230,6 @@ void main() {
 /// - `return` — Ends this method call, optionally handing a result back to its caller.
 /// - `if` — Runs its body only when the condition in parentheses is true.
 /// - `for` — Repeats a block over a range or a sequence of values.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
 /// - `::` — A method reference: supplies an action without calling it yet.
 /// - `this` — The current game object: this particular run and its stored state.
 /// - `public` — Makes this declaration accessible to other code.

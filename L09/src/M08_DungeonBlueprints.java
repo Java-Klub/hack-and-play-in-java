@@ -21,7 +21,7 @@ import java.util.List;
 /// After your repair: Save → Test File → play again.
 void countRoom(Room room) {
     String kind = room.width() * room.height() <= 42 ? "SMALL" : "LARGE";
-    roomCounts.put(kind, 1);
+    roomCounts.put(kind, roomCounts.getOrDefault(kind, 0) + 1);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

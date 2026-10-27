@@ -21,7 +21,7 @@ import javax.swing.Timer;
 /// R prepares another attempt.
 /// After your repair: Save → Test File → play again.
 double launchSpeed(double drag) {
-    return drag * (9 / 100);
+    return drag * 0.09;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

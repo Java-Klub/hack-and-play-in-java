@@ -14,7 +14,7 @@
 void collect(int who) {
     for (int rank = 2; rank <= 14; rank++) {
         if (Collections.frequency(hands.get(who), rank) == 4) {
-            for (int n = 0; n < 3; n++) {
+            for (int n = 0; n < 4; n++) {
                 hands.get(who).remove(Integer.valueOf(rank));
             }
             books[who]++;

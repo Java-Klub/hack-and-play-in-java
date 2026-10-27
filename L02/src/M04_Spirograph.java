@@ -26,7 +26,7 @@ import javax.imageio.ImageIO;
 /// the redrawn curves.
 /// After your repair: Save → Test File → play again.
 double radiusRatio(int outer, int innerRadius) {
-    return (outer - innerRadius) / innerRadius;
+    return (outer - innerRadius) / (double) innerRadius;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

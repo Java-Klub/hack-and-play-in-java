@@ -21,7 +21,7 @@ import java.io.ByteArrayInputStream;
 /// to hear your message.
 /// After your repair: Save → Test File → play again.
 String defaultMessage() {
-    return "1234";
+    return "JAVA";
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

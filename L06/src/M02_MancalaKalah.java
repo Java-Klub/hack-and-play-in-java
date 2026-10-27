@@ -15,7 +15,7 @@ void reset() {
     pits = new int[14];
     Arrays.fill(pits, 4);
     pits[6] = pits[13] = 0;
-    int player = 0;
+    player = 0;
     outcome = "";
 }
 

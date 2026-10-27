@@ -17,7 +17,7 @@ record Domino(int low, int high) {
 
 Domino pairKey(int a, int b) {
     int x = numbers[a / 10][a % 10], y = numbers[b / 10][b % 10];
-    return new Domino(x, y);
+    return new Domino(Math.min(x, y), Math.max(x, y));
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

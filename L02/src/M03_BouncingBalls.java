@@ -23,7 +23,7 @@ import javax.swing.Timer;
 /// R empties it.
 /// After your repair: Save → Test File → play again.
 double bounceSpeed(double speed) {
-    return Math.abs(speed) * (3 / 4);
+    return Math.abs(speed) * 3.0 / 4;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

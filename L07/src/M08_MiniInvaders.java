@@ -62,6 +62,7 @@ void step() {
             if (aliens[row][column] && bulletActive && bulletX >= x && bulletX <= x + 28
             && bulletY <= y + 18 && bulletY + 10 >= y) {
                 aliens[row][column] = false;
+                bulletActive = false;
                 score++;
                 break hit;
             }

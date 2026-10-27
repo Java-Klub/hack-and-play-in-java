@@ -19,7 +19,7 @@ import javax.imageio.ImageIO;
 /// exports/secret-course.png in Output.
 /// After your repair: Save → Test File → play again.
 String readMessage(Path path) throws IOException {
-    try (var input = Files.newInputStream(Path.of(path.getFileName().toString()))) {
+    try (var input = Files.newInputStream(path)) {
         var image = ImageIO.read(input);
         if (image == null) throw new IOException("Input is not a readable image.");
         return decode(image);

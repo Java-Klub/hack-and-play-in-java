@@ -16,7 +16,7 @@ boolean handsAlive(int own, int opposing) {
     if (own < 0 || own >= 2 || opposing < 0 || opposing >= 2) {
         return false;
     }
-    if (hands[player][own] < 0 || hands[1 - player][opposing] < 0) {
+    if (hands[player][own] == 0 || hands[1 - player][opposing] == 0) {
         return false;
     }
     return true;

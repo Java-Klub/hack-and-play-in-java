@@ -23,7 +23,7 @@ import javax.imageio.ImageIO;
 /// the pixel counter above the image.
 /// After your repair: Save → Test File → play again.
 void countColour(int rgb) {
-    colourCounts.put(rgb, 1);
+    colourCounts.put(rgb, colourCounts.getOrDefault(rgb, 0) + 1);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

@@ -29,7 +29,7 @@ void burst(int count) {
     if (count < 0 || count > 60) {
         return;
     }
-    for (int i = 1; i < count; i++) {
+    for (int i = 0; i < count; i++) {
         step();
     }
 }

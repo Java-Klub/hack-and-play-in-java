@@ -18,7 +18,7 @@ import javax.imageio.ImageIO;
 /// Use Run File, refresh the project in NetBeans Files and open sunflower-spiral.png to compare the
 /// generated arrangement.
 /// After your repair: Save → Test File → play again.
-double defaultAngle = 180;
+double defaultAngle = 137.5;
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
 /// ## Read these particular lines

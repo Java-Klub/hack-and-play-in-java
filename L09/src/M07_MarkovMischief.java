@@ -20,7 +20,7 @@ Map<String, List<String>> train(String text) {
     String[] words = text.strip().split("\\s+");
     var links = new LinkedHashMap<String, List<String>>();
     for (int i = 0; i < words.length; i++) {
-        if (true) {
+        if (!links.containsKey(words[i])) {
             links.put(words[i], new ArrayList<>());
         }
         if (i + 1 < words.length) {
@@ -127,6 +127,7 @@ void main(String[] args) throws Exception {
 /// - `==` — Compares primitive values. For text contents, use equals instead.
 /// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
 /// - `||` — At least one condition must be true; if the first is true, Java skips the second.
+/// - `!` — In front of a boolean expression, reverses true and false.
 /// - `++` — Increases a numeric value by one.
 /// - `+` — Adds numbers. When a String is involved, joins text instead.
 /// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other

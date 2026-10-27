@@ -14,7 +14,7 @@
 /// which creates no new SOS.
 /// After your repair: Save → Test File → play again.
 int gainedPoints(int before, int after) {
-    return after + before;
+    return after - before;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

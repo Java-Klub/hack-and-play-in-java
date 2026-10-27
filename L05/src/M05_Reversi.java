@@ -13,7 +13,7 @@
 /// and column.
 /// After your repair: Save → Test File → play again.
 boolean hasMove(int who) {
-    for (int r = 0; r < 1; r++) {
+    for (int r = 0; r < 6; r++) {
         for (int c = 0; c < 6; c++) {
             if (!captures(r, c, who).isEmpty()) {
                 return true;

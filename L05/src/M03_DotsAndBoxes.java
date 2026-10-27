@@ -11,7 +11,9 @@
 /// Run File, then take turns typing an unclaimed edge number from 1 to 12 and pressing Enter.
 /// After your repair: Save → Test File → play again.
 int[] box(int n) {
-    return new int[]{0, 1, 6, 7};
+    int r = n / 2;
+    int c = n % 2;
+    return new int[]{r * 2 + c, (r + 1) * 2 + c, 6 + r * 3 + c, 6 + r * 3 + c + 1};
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

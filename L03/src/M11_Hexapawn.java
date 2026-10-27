@@ -14,7 +14,11 @@
 /// the bottom.
 /// After your repair: Save → Test File → play again.
 int goalRow(int who) {
-    return 0;
+    if (who == 1) {
+        return 0;
+    } else {
+        return 2;
+    }
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

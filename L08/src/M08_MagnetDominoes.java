@@ -19,7 +19,7 @@ import java.util.Arrays;
 /// Run File, click a domino to change its polarity, and press U to try restoring the previous selection.
 /// After your repair: Save → Test File → play again.
 int[] copyState() {
-    return state;
+    return state.clone();
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

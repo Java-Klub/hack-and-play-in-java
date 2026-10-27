@@ -13,7 +13,7 @@
 /// phrases and inspect the finished story.
 /// After your repair: Save → Test File → play again.
 String cleanWord(String word) {
-    return word;
+    return word.strip();
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

@@ -13,7 +13,7 @@
 /// occupied square.
 /// After your repair: Save → Test File → play again.
 boolean play(int cell) {
-    if (winner != '.' || cell < 1 || cell >= 9 || board[cell - 1] != '.') {
+    if (winner != '.' || cell < 1 || cell > 9 || board[cell - 1] != '.') {
         return false;
     }
     board[cell - 1] = player;

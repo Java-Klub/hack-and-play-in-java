@@ -20,7 +20,7 @@ import javax.swing.Timer;
 /// round.
 /// After your repair: Save → Test File → play again.
 void step() {
-    if (state.equals("PAUSE")) return;
+    if (!state.equals("PLAY")) return;
     double previousX = ballX, previousY = ballY;
     ballX += velocityX;
     ballY += velocityY;

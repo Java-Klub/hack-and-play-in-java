@@ -14,7 +14,7 @@
 /// round before a real treasure search.
 /// After your repair: Save → Test File → play again.
 boolean insideSea(int row, int column) {
-    return row >= 0 && row <= 8 && column >= 0 && column <= 8;
+    return row >= 0 && row < 8 && column >= 0 && column < 8;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

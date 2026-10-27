@@ -14,7 +14,7 @@
 /// second should be its message.
 /// After your repair: Save → Test File → play again.
 String templateLine() {
-    return "IO.println(HELLO);";
+    return "IO.println(\"HELLO\");";
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
@@ -71,6 +71,7 @@ void main() {
 ///   earlier in the file.
 /// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
 /// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
+/// - `\` — Inside quoted text, starts an escape such as \n for a new line or \" for a quote.
 /// - `return` — Ends this method call, optionally handing a result back to its caller.
 /// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
 // </editor-fold>

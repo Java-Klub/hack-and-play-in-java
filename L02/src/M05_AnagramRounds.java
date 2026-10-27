@@ -14,7 +14,7 @@
 /// see whether it is judged the same way.
 /// After your repair: Save → Test File → play again.
 String normalize(String input) {
-    return input.strip();
+    return input.strip().toUpperCase(Locale.ROOT);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

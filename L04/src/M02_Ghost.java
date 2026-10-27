@@ -15,7 +15,7 @@
 /// After your repair: Save → Test File → play again.
 boolean possiblePrefix(String candidate) {
     int index = 0;
-    while (index < words.length && index < 1) {
+    while (index < words.length) {
         if (words[index].startsWith(candidate)) {
             return true;
         }

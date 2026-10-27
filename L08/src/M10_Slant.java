@@ -13,7 +13,11 @@
 /// restored.
 /// After your repair: Save → Test File → play again.
 char[][] snapshot() {
-    return cells.clone();
+    char[][] copy = new char[cells.length][];
+    for (int row = 0; row < cells.length; row++) {
+        copy[row] = cells[row].clone();
+    }
+    return copy;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

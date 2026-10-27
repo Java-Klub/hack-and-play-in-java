@@ -25,7 +25,7 @@ int readColumns(String text) {
         if (columns < 2 || columns > 50) throw new IllegalArgumentException("Columns: 2..50.");
         return columns;
     } catch (NumberFormatException invalid) {
-        return 2;
+        return 20;
     }
 }
 

@@ -14,7 +14,7 @@
 /// before and after your repair.
 /// After your repair: Save → Test File → play again.
 boolean yesAnswer(String input) {
-    return input == "y";
+    return input.equalsIgnoreCase("y");
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

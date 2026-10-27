@@ -20,8 +20,6 @@ import javax.swing.Timer;
 /// or wall.
 /// After your repair: Save → Test File → play again.
 boolean fits(int[][] cells, int x, int y) {
-    px = x;
-    py = y;
     for (var c : cells) {
         int xx = x + c[0], yy = y + c[1];
         if (xx < 0 || xx >= 10 || yy < 0 || yy >= 16 || board[yy][xx] != 0) {

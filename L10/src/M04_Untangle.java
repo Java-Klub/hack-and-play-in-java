@@ -20,7 +20,7 @@ import java.awt.geom.Line2D;
 /// After your repair: Save → Test File → play again.
 void drawNode(Graphics2D g, Point point, int label) {
     g.setColor(new Color(35, 55, 90));
-    g.fillOval(point.y - 13, point.x - 13, 26, 26);
+    g.fillOval(point.x - 13, point.y - 13, 26, 26);
     g.setColor(Color.WHITE);
     g.drawString("" + label, point.x - 4, point.y + 4);
 }

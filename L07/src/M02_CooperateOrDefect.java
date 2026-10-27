@@ -20,7 +20,7 @@ import java.awt.BorderLayout;
 int reward(boolean cooperate, boolean otherCooperates) {
     int choice = (cooperate ? 2 : 0) + (otherCooperates ? 1 : 0);
     return switch (choice) {
-        case 3 -> 0;
+        case 3 -> 3;
         case 2 -> 0;
         case 1 -> 5;
         default -> 1;

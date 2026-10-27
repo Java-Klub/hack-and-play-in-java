@@ -26,7 +26,7 @@ enum Phase {
 
 Phase afterTime(long now) {
     if (phase == Phase.RUNNING && now >= deadline) {
-        return Phase.READY;
+        return Phase.FINISHED;
     }
     return phase;
 }

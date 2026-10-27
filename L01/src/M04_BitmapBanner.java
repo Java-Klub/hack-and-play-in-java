@@ -13,7 +13,7 @@
 /// farther away.
 /// After your repair: Save → Test File → play again.
 String bannerMessage() {
-    return "     ";
+    return "JAVA CLUB!";
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

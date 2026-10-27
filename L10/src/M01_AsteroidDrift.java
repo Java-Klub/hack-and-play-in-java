@@ -23,7 +23,7 @@ import javax.swing.Timer;
 /// flight.
 /// After your repair: Save → Test File → play again.
 Runnable firingAction() {
-    return () -> {};
+    return this::fire;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

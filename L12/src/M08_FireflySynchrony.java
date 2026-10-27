@@ -22,7 +22,7 @@ import javax.swing.Timer;
 /// After your repair: Save → Test File → play again.
 void apply(Control control) {
     switch (control) {
-        case Coupling(var value) when Double.isFinite(value) && value >= 0 && value <= 2 -> coupling = 0;
+        case Coupling(var value) when Double.isFinite(value) && value >= 0 && value <= 2 -> coupling = value;
         case Coupling(var value) -> { }
         case Toggle() -> running = !running;
         case Restart(var seed) -> reset(seed);

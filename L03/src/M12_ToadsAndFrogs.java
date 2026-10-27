@@ -20,7 +20,11 @@ import java.util.Arrays;
 /// arrangement.
 /// After your repair: Save → Test File → play again.
 int direction(int piece) {
-    return 1;
+    if (piece == 1) {
+        return 1;
+    } else {
+        return -1;
+    }
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

@@ -21,7 +21,7 @@ import javax.imageio.ImageIO;
 /// After your repair: Save → Test File → play again.
 void saveSorted(Path path, BufferedImage input, int threshold) throws IOException {
     Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(sort(input, threshold), "png", path.resolveSibling("lost-pixels.png").toFile())) {
+    if (!ImageIO.write(sort(input, threshold), "png", path.toFile())) {
         throw new IOException("PNG writer missing.");
     }
 }

@@ -21,7 +21,7 @@ import java.util.HashSet;
 /// After your repair: Save → Test File → play again.
 record RayState(int x, int y, int dx, int dy) {
     RayState advance() {
-        return new RayState(x + dy, y + dx, dx, dy);
+        return new RayState(x + dx, y + dy, dx, dy);
     }
 }
 

@@ -19,7 +19,7 @@ import javax.imageio.ImageIO;
 /// and RIGHT counts at the top.
 /// After your repair: Save → Test File → play again.
 void countOrientation(String orientation) {
-    orientationCounts.put(orientation, 1);
+    orientationCounts.put(orientation, orientationCounts.getOrDefault(orientation, 0) + 1);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">

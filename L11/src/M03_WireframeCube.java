@@ -24,7 +24,7 @@ Set<Edge> uniqueEdges(int[][] candidates) {
     for (int[] pair : candidates) {
         int a = pair[0], b = pair[1];
         if (a < 0 || b < 0 || a >= 8 || b >= 8 || a == b) continue;
-        result.add(new Edge(a, b));
+        result.add(new Edge(Math.min(a, b), Math.max(a, b)));
     }
     return result;
 }
