@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M09_FractalTreeGardenTest {
     static int checks;
     static final String[] CASES = {
-        "Malformed numeric text returns 28.",
-        "Both inclusive bounds and surrounding spaces work.",
-        "Out-of-range numeric input is rejected."
+        "Nečíselný text vrátí 28.",
+        "Obě zahrnuté hranice i okolní mezery fungují.",
+        "Číselný input (vstup) mimo rozsah se odmítne."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -59,7 +59,7 @@ public class M09_FractalTreeGardenTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I106: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I106: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

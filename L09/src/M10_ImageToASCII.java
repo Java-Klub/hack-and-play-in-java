@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -6,18 +6,19 @@ import javax.imageio.ImageIO;
 
 /// # L09.10 · ImageToASCII
 ///
-/// Turn a picture into a wall of characters. Change its text width to discover how much detail survives
-/// when pixels become dots, colons and other marks.
+/// Proměň obrázek ve stěnu znaků. Měň šířku textu a zjisti, kolik detailů přežije, když se obrazové body
+/// změní v tečky, dvojtečky a další značky.
 ///
-/// **Your mission:** A mistyped width shrinks the result to four characters rather than using the
-/// advertised width 80. Repair that fallback without accepting numbers outside 4–160.
+/// **Tvoje mise:** Překlep v šířce smrskne výsledek na čtyři znaky místo slíbené šířky 80. Oprav náhradní
+/// hodnotu a nepřijímej čísla mimo 4–160.
 ///
-/// **Today you learn:** A narrow parsing boundary separates unrecognisable text from valid integers with
-/// invalid values. Only the expected conversion exception should select the fallback width.
+/// **Dnes trénuješ:** Úzká parsing boundary (hranice rozboru vstupu) odděluje nerozpoznaný text od
+/// platného integer (celého čísla) s chybnou hodnotou. Náhradní šířku má vybrat jen očekávaná conversion
+/// exception (výjimka převodu).
 ///
-/// After Run File, enter an image width from 4 to 160 or try oops, then inspect the character picture in
-/// Output and portrait.txt.
-/// After your repair: Save → Test File → play again.
+/// Po Run File zadej šířku obrázku od 4 do 160 nebo zkus oops a potom prozkoumej znakový obrázek v Output
+/// i portrait.txt.
+/// Po opravě: Save → Test File → zahraj si znovu.
 int readWidth(String text) {
     try {
         int value = Integer.parseInt(text.strip());
@@ -28,30 +29,30 @@ int readWidth(String text) {
     }
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `Integer.parseInt(text.strip())` — Converts a whole-number string after trimming its outer spaces.
-/// - `value < 4 || value > 160` — The || means either bound violation is enough to reject the number.
-/// - `catch (NumberFormatException invalid)` — Runs for text such as oops; a numeric range error is not
-///   caught here.
-/// - `return 4;` — This fallback controls the width after unparseable input.
+/// - `Integer.parseInt(text.strip())` — Převede text celého čísla po odstranění okolních mezer.
+/// - `value < 4 || value > 160` — Znak || znamená, že k odmítnutí stačí překročení kterékoli meze.
+/// - `catch (NumberFormatException invalid)` — Spustí se pro text jako oops; číselná chyba rozmezí se zde
+///   nezachytí.
+/// - `return 4;` — Tato náhradní hodnota určuje šířku po nerozpoznaném vstupu.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// main asks for width and prints the chosen value. The supplied converter samples brightness, chooses a
-/// character from its palette and saves the same text in portrait.txt.
+/// Main se zeptá na šířku a vypíše vybranou hodnotu. Připravený převod čte jas, vybírá znak z palety a
+/// uloží stejný text do portrait.txt.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Strip surrounding whitespace before parsing.
-/// 2. Catch NumberFormatException, not every programming error.
-/// 3. The fallback is 80; range guards remain separate from that fallback.
+/// 1. Před parsing (rozborem) odstraň okolní mezery.
+/// 2. Zachyť NumberFormatException, nikoli každou chybu programu.
+/// 3. Výchozí hodnota je 80; guard (podmínky) rozsahu zůstanou oddělené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 BufferedImage demo() {
     var image = new BufferedImage(240, 160, BufferedImage.TYPE_INT_RGB);
     for (int y = 0; y < 160; y++) {
@@ -80,9 +81,9 @@ String convert(BufferedImage image, int width) {
     return result.toString();
 }
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// convert samples image brightness through a supplied ASCII ramp.
-/// main reads this option; save/export and rendering stay supplied.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// Convert čte jas obrazu přes připravený ASCII ramp (stupnici znaků).
+/// Main čte tuto volbu; save/export a rendering (vykreslení) jsou připravené.
 void main(String[] args) throws Exception {
     if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
         return;
@@ -111,59 +112,62 @@ void main(String[] args) throws Exception {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `'` — Single quotes enclose one character, such as a board marker.
-/// - `\` — Inside quoted text, starts an escape such as \n for a new line or \" for a quote.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `++` — Increases a numeric value by one.
-/// - `%` — The remainder after division; useful for repeated positions or turns.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `'` — Jednoduché uvozovky ohraničují jeden character (znak), například značku na desce.
+/// - `\` — Uvnitř textu začíná escape (zvláštní zápis), například \n pro nový řádek nebo \" pro uvozovku.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
+///   zpracovat.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
+/// - `Path` — Umístění v souborech, nikoli obsah souboru.
+/// - `Files` — JDK operace pro čtení a zápis místních souborů.
 // </editor-fold>
 

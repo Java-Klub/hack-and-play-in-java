@@ -1,18 +1,18 @@
 /// # L12.06 · CipherPostcards
 ///
-/// Send a puzzle postcard in one of three toy ciphers and decode it again. Changing the cipher card
-/// should change the transformation while keeping spaces and punctuation recognisable.
+/// Pošli hádankovou pohlednici v jedné ze tří hračkových šifer a zase ji rozlušti. Výměna šifrovací karty
+/// má změnit převod a nechat rozpoznatelné mezery i interpunkci.
 ///
-/// **Your mission:** The Vigenere alternative is routed to an unchanged Caesar result. Make it use its
-/// own carried key and decoding choice while retaining the other cipher alternatives.
+/// **Tvoje mise:** Alternativa Vigenere míří do Caesar s nezměněným výsledkem. Ať použije vlastní
+/// přenášený klíč a volbu decode při zachování ostatních šifer.
 ///
-/// **Today you learn:** Record patterns give each closed alternative its own named data. The switch
-/// should forward that matched data to the correct supplied algorithm, rather than treating every card as
-/// the same operation.
+/// **Dnes trénuješ:** Record pattern (vzor record) dává každé uzavřené alternativě vlastní pojmenovaná
+/// data. Switch má předat rozpoznaná data správnému připravenému postupu, ne považovat každou kartu za
+/// stejnou operaci.
 ///
-/// After Run File, press Enter for Vigenere and again for LEMON, then type ATTACK AT DAWN! to make an
-/// encoded postcard.
-/// After your repair: Save → Test File → play again.
+/// Po Run File stiskni Enter pro Vigenere a znovu pro LEMON, potom napiš ATTACK AT DAWN! pro vytvoření
+/// zašifrované pohlednice.
+/// Po opravě: Save → Test File → zahraj si znovu.
 String transform(String text, Cipher cipher, boolean decode) {
     return switch (cipher) {
         case Caesar(var shift) -> applyText(text, "caesar", Integer.toString(shift), decode);
@@ -21,30 +21,31 @@ String transform(String text, Cipher cipher, boolean decode) {
     };
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `return switch (cipher)` — Computes the method result from exactly one matched cipher alternative.
-/// - `case Vigenere(var keyword)` — Extracts the keyword stored in this particular Vigenere record.
-/// - `"caesar", "0"` — Currently selects a different algorithm with a fixed zero shift.
-/// - `decode` — Carries the caller’s choice of forward or reverse transformation.
+/// - `return switch (cipher)` — Vypočítá výsledek method (metody) podle právě jedné rozpoznané
+///   alternativy šifry.
+/// - `case Vigenere(var keyword)` — Vybere keyword uložený právě v tomto Vigenere record.
+/// - `"caesar", "0"` — Nyní vybírá jiný postup s pevným nulovým posunem.
+/// - `decode` — Přenáší volbu caller (volající části) mezi dopředným a zpětným převodem.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// main asks for cipher, key and message, then chooseCipher constructs the typed card. applyText already
-/// handles letter arithmetic, case, punctuation and key validation; these toy ciphers are puzzles, not
-/// secure messaging.
+/// Main se zeptá na šifru, klíč a zprávu a chooseCipher vytvoří typovanou kartu. ApplyText už řeší
+/// výpočty písmen, velikost, interpunkci i ověření klíče; tyto hračkové šifry jsou hádanky, ne bezpečné
+/// zprávy.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. The matched keyword belongs to this Vigenere value.
-/// 2. Use that component, rather than a fixed key or another cipher mode.
-/// 3. applyText already handles letter case, punctuation, key validation and reverse transformation.
+/// 1. Keyword z match (rozpoznání) patří této hodnotě Vigenere.
+/// 2. Použij tuto component (složku), nikoli pevný klíč či jiný režim.
+/// 3. ApplyText už řeší velikost písmen, interpunkci, ověření klíče a opačný převod.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 String applyText(String text, String mode, String key, boolean decode) {
     String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     String upper = key.toUpperCase(Locale.ROOT);
@@ -93,9 +94,9 @@ Cipher chooseCipher(String mode, String key) {
     };
 }
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// chooseCipher turns the selected mode/key into typed data; transform matches its components.
-/// applyText supplies character arithmetic and validation; main reads local text with q/EOF handling.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// ChooseCipher převede režim/klíč na typovaná data; transform rozpozná jejich component (složky).
+/// ApplyText dodává výpočty písmen a ověření; main čte místní text s q/EOF.
 void main(String[] args) {
     if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
         return;
@@ -119,68 +120,72 @@ void main(String[] args) {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `'` — Single quotes enclose one character, such as a board marker.
-/// - `char` — A type for one UTF-16 code unit, often a simple board character such as X. Text uses
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `'` — Jednoduché uvozovky ohraničují jeden character (znak), například značku na desce.
+/// - `char` — Type (typ) pro jednu UTF-16 jednotku, často jednoduchý znak desky jako X. Pro text slouží
 ///   String.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `!=` — Checks that two values differ.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `%` — The remainder after division; useful for repeated positions or turns.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `else` — The alternative when the preceding if condition is false.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `switch` — Selects one case from a set of alternatives. It can also produce a result.
-/// - `case` — One alternative of a switch; the arrow points to what it does or returns.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
-/// - `implements` — Says that a record or class fulfils the named interface role.
-/// - `record` — A small named bundle of values. Its component accessors use the component names with ().
-/// - `interface` — Describes a role that different implementations can fulfil. The caller can use that
-///   role without choosing its internals.
-/// - `sealed` — Restricts a data type to its explicitly listed alternatives.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `!=` — Ověří, že se dvě hodnoty liší.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `else` — Alternativní větev pro případ, že předchozí if condition (podmínka) neplatí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `switch` — Vybere case (větev) z několika možností. Může také vrátit výsledek.
+/// - `case` — Jedna větev switch; šipka ukazuje, co větev provede nebo vrátí.
+/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+///   až při pozdějším volání.
+/// - `implements` — Říká, že record nebo class (třída) plní roli uvedeného interface (rozhraní).
+/// - `record` — Malý pojmenovaný balíček hodnot. Component accessor (přístupová metoda složky) má jméno
+///   složky a závorky ().
+/// - `interface` — Popisuje role (roli), kterou mohou plnit různé implementation (implementace). Volající
+///   používá roli bez znalosti jejích vnitřností.
+/// - `sealed` — Omezuje data type (datový typ) na výslovně uvedené alternativy.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
+///   měnit velikost.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
 // </editor-fold>
 

@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M08_EndlessToneStaircaseTest {
     static int checks;
     static final String[] CASES = {
-        "The complete nested destination is created.",
-        "The actual WAV contains the expected number/rate of frames.",
-        "A parent that is a file causes an expected IOException."
+        "Vznikne celý zadaný vnořený cíl.",
+        "Skutečný WAV obsahuje očekávaný počet a frekvenci frame (rámců).",
+        "Nadřazený file (soubor) místo adresáře způsobí očekávanou IOException."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -58,7 +58,7 @@ public class M08_EndlessToneStaircaseTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I103: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I103: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

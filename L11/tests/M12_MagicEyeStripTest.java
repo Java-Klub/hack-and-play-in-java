@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M12_MagicEyeStripTest {
     static int checks;
     static final String[] CASES = {
-        "The seed comes from content rather than the filename.",
-        "Whitespace and a negative seed work in the real rendering input.",
-        "Bad numeric text and a missing path remain visible expected failures."
+        "Seed (počáteční hodnota) pochází z obsahu, nikoli názvu.",
+        "Mezery i záporný seed fungují ve skutečném vstupu vykreslení.",
+        "Nečíselný text a chybějící cesta zůstanou viditelné očekávané chyby."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -60,7 +60,7 @@ public class M12_MagicEyeStripTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I120: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I120: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

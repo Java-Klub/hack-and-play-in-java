@@ -1,42 +1,42 @@
 /// # L05.03 · DotsAndBoxes
 ///
-/// Take turns claiming lines between dots. Close a box to steal its point and take another turn.
+/// Střídejte se v zabírání čar mezi tečkami. Kdo uzavře čtvereček, získá bod a další tah.
 ///
-/// **Your mission:** Every box currently consults the same four edges. Repair box(int n) so scoring
-/// follows the box actually closed.
+/// **Tvoje mise:** Každý čtvereček teď sleduje stejné čtyři hrany. Oprav box(int n), aby bodování
+/// odpovídalo skutečně uzavřenému čtverečku.
 ///
-/// **Today you learn:** Arrays: an int[] can describe a group of board positions. Translate one box
-/// number into the edge indices its caller needs.
+/// **Dnes trénuješ:** Arrays (pole): int[] může popsat skupinu míst na desce. Převeď číslo čtverečku na
+/// indexy (pozice) hran, které potřebuje volající kód.
 ///
-/// Run File, then take turns typing an unclaimed edge number from 1 to 12 and pressing Enter.
-/// After your repair: Save → Test File → play again.
+/// Spusť Run File a střídejte se v zadávání dosud volného čísla hrany od 1 do 12, vždy potvrzeného Enter.
+/// Po opravě: Save → Test File → zahraj si znovu.
 int[] box(int n) {
     return new int[]{0, 1, 6, 7};
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `int[]` — The result is an array of whole-number edge indices.
-/// - `box(int n)` — n is the box number supplied by the caller, starting at zero.
-/// - `new int[]` — Creates a separate array containing the values inside the following braces.
-/// - `return` — Passes the edge group back to command(); it does not claim the edges.
+/// - `int[]` — Výsledek je array (pole) celočíselných indexů hran.
+/// - `box(int n)` — n je číslo čtverečku předané volajícím kódem; počítá se od nuly.
+/// - `new int[]` — Vytvoří samostatné array (pole) s hodnotami z následujících složených závorek.
+/// - `return` — Vrátí skupinu hran do command(); samotné hrany tím nezabere.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// display() draws numbered edges. command() claims one edge, asks box() about each unfinished box, and
-/// handles scores and extra turns; those rules are already supplied.
+/// display() kreslí očíslované hrany. command() zabere hranu, přes box() prověří nedokončené čtverečky a
+/// vyřídí body i další tah; tato pravidla jsou připravená.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. A box number gives row n / 2 and column n % 2.
-/// 2. Horizontal edges occupy slots 0-5; vertical edges start at 6.
-/// 3. Return top, bottom, left and right in one new int[].
+/// 1. Číslo čtverečku dává řádek n / 2 a sloupec n % 2.
+/// 2. Vodorovné hrany zabírají 0–5; svislé začínají na 6.
+/// 3. Vrať horní, dolní, levou a pravou hranu v novém int[].
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 boolean[] edges;
 int[] owners;
 int[] scores;
@@ -44,8 +44,7 @@ int player;
 int moves;
 String outcome;
 
-/// reset(): Restores the starting Dots and Boxes round, clearing the state that belongs to the old
-/// round.
+/// reset(): Obnovuje počáteční kolo Dots and Boxes a maže stav patřící starému kolu.
 void reset() {
     edges = new boolean[12];
     owners = new int[4];
@@ -55,7 +54,7 @@ void reset() {
     outcome = "";
 }
 
-/// command(): Claims one edge, awards newly closed boxes and retains the turn after a score.
+/// command(): Zabere hranu, přidělí nově uzavřené čtverečky a po zisku ponechá tah.
 void command(String input) {
     require(outcome.isEmpty());
     int edge = Integer.parseInt(input) - 1;
@@ -89,7 +88,7 @@ String edge(int n) {
     return edges[n] ? "##" : String.format("%02d", n + 1);
 }
 
-/// display(): Presents the current board and the legal input choices in the console.
+/// display(): Zobrazuje aktuální desku a volby zadávání v konzoli.
 void display() {
     IO.println("Player " + player + "; scores " + scores[1] + ":" + scores[2]);
     for (int r = 0; r < 3; r++) {
@@ -100,7 +99,7 @@ void display() {
     }
 }
 
-/// main(): Starts the real game loop: display, read a command, validate, replay or quit.
+/// main(): Spouští skutečnou herní smyčku: zobrazit, načíst, ověřit, opakovat nebo ukončit.
 void main() {
     reset();
     IO.println("Dots and Boxes");
@@ -130,7 +129,7 @@ void main() {
     }
 }
 
-/// require(): Rejects an illegal command with an exception handled by the supplied input loop.
+/// require(): Odmítá neplatný příkaz výjimkou zachycenou dodanou vstupní smyčkou.
 void require(boolean valid) {
     if (!valid) {
         throw new IllegalArgumentException("Invalid move or command.");
@@ -138,55 +137,58 @@ void require(boolean valid) {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `!=` — Checks that two values differ.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `%` — The remainder after division; useful for repeated positions or turns.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `while` — Keeps repeating its body while its condition stays true.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `!=` — Ověří, že se dvě hodnoty liší.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
 // </editor-fold>
 

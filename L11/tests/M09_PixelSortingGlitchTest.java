@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M09_PixelSortingGlitchTest {
     static int checks;
     static final String[] CASES = {
-        "The exact nested filename exists after export.",
-        "The decoded PNG is sorted while input pixels remain unchanged.",
-        "An unusable parent produces an expected IOException."
+        "Po exportu existuje přesně zadaný vnořený název.",
+        "Načtený PNG je seřazený a původní pixel (body obrazu) zůstanou stejné.",
+        "Nepoužitelný nadřazený cíl způsobí očekávanou IOException."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -60,7 +60,7 @@ public class M09_PixelSortingGlitchTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I115: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I115: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

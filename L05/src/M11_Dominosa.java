@@ -1,17 +1,16 @@
 /// # L05.11 · Dominosa
 ///
-/// Cover the number board with dominoes, using each number pair only once. Turning a domino around should
-/// not create a second kind of piece.
+/// Zakryj číselnou desku dominovými kameny a každou dvojici čísel použij jen jednou. Otočení kamene nesmí
+/// vytvořit nový druh domina.
 ///
-/// **Your mission:** A reversed duplicate slips through the uniqueness check. Repair pairKey(int a, int
-/// b) so equal domino values are represented consistently.
+/// **Tvoje mise:** Obrácený duplikát projde kontrolou jedinečnosti. Oprav pairKey(int a, int b), aby se
+/// stejné hodnoty domina zapisovaly jednotně.
 ///
-/// **Today you learn:** Records: equal component values give equal record values. Choose a consistent
-/// representation before using a Domino as a uniqueness key.
+/// **Dnes trénuješ:** Records (datové záznamy): stejné hodnoty složek vytvoří shodné hodnoty záznamu. Než
+/// Domino použiješ jako klíč jedinečnosti, zvol jednotné uspořádání.
 ///
-/// Run File and type 1 1 1 2 to pair the first two adjacent cells, then continue with other neighbouring
-/// cells.
-/// After your repair: Save → Test File → play again.
+/// Spusť Run File a zadáním 1 1 1 2 spoj první dvě sousední políčka, potom pokračuj dalšími sousedy.
+/// Po opravě: Save → Test File → zahraj si znovu.
 record Domino(int low, int high) {
 }
 
@@ -20,38 +19,37 @@ Domino pairKey(int a, int b) {
     return new Domino(x, y);
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `record Domino(int low, int high)` — A two-number value with generated component access and value
-///   equality.
-/// - `a / 10` — Decodes the row from the game’s packed cell number.
-/// - `a % 10` — Decodes the column as the remainder after division by ten.
-/// - `new Domino(x, y)` — Constructs the key that the duplicate checker will compare with existing
-///   pieces.
+/// - `record Domino(int low, int high)` — Dvoučíselná hodnota s automatickým přístupem ke components
+///   (složkám) a porovnáváním podle hodnot.
+/// - `a / 10` — Integer division (celočíselné dělení) získá řádek ze složeného čísla políčka.
+/// - `a % 10` — Remainder (zbytek po dělení) získá sloupec ze složeného čísla políčka.
+/// - `new Domino(x, y)` — Vytvoří klíč, který kontrola duplikátů porovná s již použitými kameny.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// command() checks adjacency and unused cells, then stores Domino keys in a Set. That supplied
-/// collection prevents repeats only when pairKey() gives equivalent pieces equal values.
+/// command() kontroluje sousedství i volná políčka a ukládá klíče Domino do Set (množiny). Připravená
+/// množina zabrání opakování jen tehdy, když pairKey() vrací pro stejná domina stejné hodnoty.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Record equality compares both named components by value.
-/// 2. Domino(0,1) and Domino(1,0) are different records unless you normalize input.
-/// 3. Construct Domino(min(x,y), max(x,y)); the supplied Set then rejects repeats.
+/// 1. Rovnost record porovnává hodnoty obou pojmenovaných složek.
+/// 2. Domino(0,1) a Domino(1,0) jsou různé records, pokud vstup nesjednotíš.
+/// 3. Vytvoř Domino(min(x,y), max(x,y)); dodaný Set pak odmítá opakování.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 int[][] numbers = {{0, 0, 0, 1, 0, 2, 0, 3, 1, 1}, {1, 2, 1, 3, 2, 2, 2, 3, 3, 3}};
 int[] partner;
 
 Set<Domino> used;
 String outcome;
 
-/// reset(): Restores the starting Dominosa round, clearing the state that belongs to the old round.
+/// reset(): Obnovuje počáteční kolo Dominosa a maže stav patřící starému kolu.
 void reset() {
     partner = new int[20];
     Arrays.fill(partner, -1);
@@ -66,8 +64,7 @@ int cell(String row, String col) {
     return r * 10 + c;
 }
 
-/// command(): Places adjacent unused cells or erases their pair; the Set prevents duplicate domino
-/// values.
+/// command(): Páruje sousední volná pole nebo pár maže; Set brání opakování stejného domina.
 void command(String input) {
     require(outcome.isEmpty());
     String[] p = input.split("\\s+");
@@ -91,7 +88,7 @@ void command(String input) {
     }
 }
 
-/// display(): Presents the current board and the legal input choices in the console.
+/// display(): Zobrazuje aktuální desku a volby zadávání v konzoli.
 void display() {
     IO.println("Authored 0-3 set. Rows1-2; columns1-10. Match adjacent cells once per unordered pair.");
     for (int r = 0; r < 2; r++) {
@@ -105,7 +102,7 @@ void display() {
     }
 }
 
-/// main(): Starts the real game loop: display, read a command, validate, replay or quit.
+/// main(): Spouští skutečnou herní smyčku: zobrazit, načíst, ověřit, opakovat nebo ukončit.
 void main() {
     reset();
     IO.println("Dominosa");
@@ -135,7 +132,7 @@ void main() {
     }
 }
 
-/// require(): Rejects an illegal command with an exception handled by the supplied input loop.
+/// require(): Odmítá neplatný příkaz výjimkou zachycenou dodanou vstupní smyčkou.
 void require(boolean valid) {
     if (!valid) {
         throw new IllegalArgumentException("Invalid move or command.");
@@ -143,56 +140,60 @@ void require(boolean valid) {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `\` — Inside quoted text, starts an escape such as \n for a new line or \" for a quote.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `%` — The remainder after division; useful for repeated positions or turns.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `else` — The alternative when the preceding if condition is false.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `while` — Keeps repeating its body while its condition stays true.
-/// - `record` — A small named bundle of values. Its component accessors use the component names with ().
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `Set` — Stores distinct values; the same value is present at most once.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `\` — Uvnitř textu začíná escape (zvláštní zápis), například \n pro nový řádek nebo \" pro uvozovku.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `else` — Alternativní větev pro případ, že předchozí if condition (podmínka) neplatí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
+/// - `record` — Malý pojmenovaný balíček hodnot. Component accessor (přístupová metoda složky) má jméno
+///   složky a závorky ().
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `Set` — Uchovává různé hodnoty; stejná hodnota je přítomná nejvýše jednou.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
 // </editor-fold>
 

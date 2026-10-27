@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
@@ -8,18 +8,17 @@ import javax.swing.Timer;
 
 /// # L07.05 · TargetPop
 ///
-/// Pop moving targets against a thirty-second clock. Try a second round to beat your own accuracy and
-/// score.
+/// Praskej pohybující se terče proti třicetisekundovým hodinám. V dalším kole zkus překonat vlastní
+/// přesnost i skóre.
 ///
-/// **Your mission:** At the deadline the game returns to its ready state instead of finishing. Repair
-/// afterTime() so the final score survives until an intentional restart.
+/// **Tvoje mise:** Po vypršení času se hra vrací do připraveného stavu místo ukončení. Oprav afterTime(),
+/// aby konečné skóre vydrželo až do úmyslného restartu.
 ///
-/// **Today you learn:** Enum states: a transition changes only the states to which it applies. Expiring
-/// RUNNING must not accidentally restart a finished or not-yet-started round.
+/// **Dnes trénuješ:** Enum states (pojmenované stavy): přechod mění jen stavy, kterých se týká. Vypršení
+/// RUNNING nesmí omylem obnovit dokončené ani dosud nezačaté kolo.
 ///
-/// Run File and click a circle to begin the timed round, then keep clicking targets until the clock
-/// expires.
-/// After your repair: Save → Test File → play again.
+/// Spusť Run File a kliknutím na kruh začni časované kolo, potom zasahuj další terče až do vypršení času.
+/// Po opravě: Save → Test File → zahraj si znovu.
 enum Phase {
     READY, RUNNING, FINISHED
 }
@@ -31,29 +30,30 @@ Phase afterTime(long now) {
     return phase;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `enum Phase` — Defines the three named phases understood by clicks, timing, and drawing.
-/// - `long now` — A whole-number time value supplied by the caller, making deadline behaviour testable.
-/// - `now >= deadline` — The deadline itself already counts as expired, not just later times.
-/// - `return phase` — Leaves the current state unchanged when no transition applies.
+/// - `enum Phase` — Definuje tři pojmenované fáze používané klikáním, časováním a kreslením.
+/// - `long now` — Celočíselný čas předaný volajícím umožňuje otestovat chování přesně na konci limitu.
+/// - `now >= deadline` — Za vypršení se počítá už samotný okamžik deadline (konce limitu), nejen pozdější
+///   čas.
+/// - `return phase` — Ponechá aktuální stav beze změny, když se žádný přechod neuplatní.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// click() starts a ready round and scores hits only while it runs. The timer calls afterTime() through
-/// the update path; drawing and input both read phase to agree on what is allowed.
+/// click() spustí připravené kolo a boduje zásahy jen během hry. Timer (časovač) při aktualizaci volá
+/// afterTime(); kreslení i vstup čtou phase, aby se shodly na povolených akcích.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. afterTime() receives time explicitly, so the boundary can be tested without waiting.
-/// 2. Only RUNNING can expire; READY and FINISHED must remain unchanged.
-/// 3. At now >= deadline return FINISHED, not READY.
+/// 1. afterTime() dostává čas výslovně, takže hranici ověříš bez čekání.
+/// 2. Vypršet může jen RUNNING; READY a FINISHED se nemění.
+/// 3. Při now >= deadline vrať FINISHED, nikoli READY.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int WIDTH = 600, HEIGHT = 400, RADIUS = 26;
 final long ROUND_NANOS = 30_000_000_000L, TARGET_NANOS = 1_200_000_000L;
 final Random random = new Random();
@@ -68,7 +68,7 @@ void spawn(long now) {
     targetDeadline = now + TARGET_NANOS;
 }
 
-/// restart(): Restores the starting Target Pop model so this toy can be tried again.
+/// restart(): Obnovuje počáteční model Target Pop pro další pokus.
 void restart() {
     hits = misses = expired = 0;
     deadline = 0;
@@ -87,7 +87,7 @@ void tick(long now) {
     }
 }
 
-/// click(): Starts on first click, ignores finished rounds and scores a circular hit or miss.
+/// click(): Spouští první kliknutí, ignoruje hotová kola a boduje kruhový zásah nebo chybu.
 void click(int x, int y, long now) {
     tick(now);
     if (phase == Phase.FINISHED) {
@@ -107,7 +107,7 @@ void click(int x, int y, long now) {
     }
 }
 
-/// draw(): Supplied rendering reads this model; paint calls do not advance its rules.
+/// draw(): Dodané kreslení čte tento model; volání paint neposouvá pravidla.
 void draw(Graphics g) {
     g.setColor(new Color(25, 26, 47));
     g.fillRect(0, 0, WIDTH, HEIGHT + 58);
@@ -133,8 +133,8 @@ void draw(Graphics g) {
     }
 }
 
-/// showWindow(): Supplied later topic: Swing listeners forward input to the model; timers stop on
-/// window close.
+/// showWindow(): Dodané pozdější téma: Swing listeners předávají vstupy modelu; časovače končí při
+/// zavření okna.
 void showWindow() {
     var frame = new JFrame("Target Pop");
     var panel = new JPanel() {
@@ -179,72 +179,76 @@ void showWindow() {
     timer.start();
 }
 
-/// main(): Starts the model, then schedules the supplied window on Swing’s event thread.
+/// main(): Spouští model a potom plánuje dodané okno na Swing event thread.
 void main() {
     restart();
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
-/// - `final` — The named value cannot be assigned another value afterwards. A referenced mutable object
-///   can still change.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `!=` — Checks that two values differ.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `else` — The alternative when the preceding if condition is false.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
-/// - `::` — A method reference: supplies an action without calling it yet.
-/// - `this` — The current game object: this particular run and its stored state.
-/// - `public` — Makes this declaration accessible to other code.
-/// - `protected` — A visibility keyword used by supplied library callbacks, such as paintComponent.
-/// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
-///   background first.
-/// - `enum` — A type whose values are a fixed named set, such as READY, PLAYING and FINISHED.
-/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
-/// - `JPanel` — A window area that can display the game’s drawing or controls.
-/// - `@Override` — Marks a supplied replacement for a library action, such as painting.
-/// - `SwingUtilities.invokeLater` — Schedules window work for Swing’s event thread; the action runs
-///   later.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `long` — Whole-number type (typ pro celá čísla) s větším rozsahem než int. Koncové L označuje long
+///   literal (přímo zapsanou hodnotu).
+/// - `final` — Pojmenované hodnotě už nelze přiřadit jinou. Odkazovaný mutable object (měnitelný objekt)
+///   se ale dál měnit může.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `!=` — Ověří, že se dvě hodnoty liší.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `else` — Alternativní větev pro případ, že předchozí if condition (podmínka) neplatí.
+/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+///   až při pozdějším volání.
+/// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
+/// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
+/// - `public` — Zpřístupňuje tuto declaration (deklaraci) dalšímu kódu.
+/// - `protected` — Visibility keyword (klíčové slovo přístupnosti) používané připraveným library callback
+///   (knihovním zpětným voláním), například paintComponent.
+/// - `super` — V super.paintComponent(g) požádá připravenou parent implementation (nadřazenou
+///   implementaci), aby nejprve vykreslila běžné pozadí.
+/// - `enum` — Type (typ) s pevnou sadou pojmenovaných hodnot, například READY, PLAYING a FINISHED.
+/// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
+///   zopakuje stejnou posloupnost.
+/// - `JFrame` — Okno dodané JDK knihovnou Swing.
+/// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.
+/// - `@Override` — Označuje dodanou náhradu knihovní akce, například kreslení.
+/// - `SwingUtilities.invokeLater` — Naplánuje práci s oknem na Swing event thread (vlákno událostí); akce
+///   se provede později.
 // </editor-fold>
 

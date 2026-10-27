@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -6,53 +6,52 @@ import java.awt.GridLayout;
 
 /// # L03.08 · Sudoku
 ///
-/// Complete a small 4×4 Sudoku using 1–4 once in every row, column and 2×2 block. The fixed clues give
-/// you a starting point, and empty squares are yours to fill.
+/// Doplň malé Sudoku 4×4 s čísly 1–4 právě jednou v každém řádku, sloupci a bloku 2×2. Pevná čísla dávají
+/// výchozí bod a prázdná políčka můžeš doplňovat.
 ///
-/// **Your mission:** The lock protects the empty squares instead of the printed clues. Repair place so a
-/// valid editable square accepts its value while fixed clues and invalid choices remain untouched.
+/// **Tvoje mise:** Zámek chrání prázdná políčka místo předtištěných čísel. Oprav place tak, aby platné
+/// upravitelné políčko přijalo hodnotu a pevná čísla i neplatné volby zůstaly nedotčené.
 ///
-/// **Today you learn:** Protect a write with an early return: combine the reasons to reject, then perform
-/// one write only after none applies. Coordinate validation must happen before reading the clue table.
+/// **Dnes trénuješ:** Chraň zápis časným return (návratem): spoj důvody odmítnutí a jediný zápis proveď
+/// až tehdy, když žádný neplatí. Souřadnice musí být ověřené před čtením tabulky pevných čísel.
 ///
-/// Use Run File, choose 2 in the number selector and click the empty square immediately right of the
-/// top-left 1.
-/// After your repair: Save → Test File → play again.
+/// Použij Run File, ve výběru čísla zvol 2 a klikni na prázdné políčko bezprostředně vpravo od levé horní
+/// 1.
+/// Po opravě: Save → Test File → zahraj si znovu.
 boolean place(int row, int col, int value) {
     if (complete() || !valid(row, col, value) || clues[row][col] == 0) return false;
     board[row][col] = value;
     return true;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `complete()` — A supplied yes/no check for an already finished puzzle.
-/// - `!valid(row, col, value)` — The ! reverses the supplied validity decision: this part is true when
-///   the proposed placement is invalid.
-/// - `clues[row][col] == 0` — Read the fixed-clue table; zero means this square originally had no printed
-///   clue.
-/// - `return false;` — Finish the call without editing the board.
-/// - `board[row][col] = value;` — The protected write stores the chosen value at the accepted row and
-///   column.
-/// - `return true;` — Tell the caller the placement was accepted.
+/// - `complete()` — Připravená kontrola ano/ne pro už dokončenou hádanku.
+/// - `!valid(row, col, value)` — ! obrací připravené rozhodnutí o platnosti: tato část je true, když je
+///   navržené položení neplatné.
+/// - `clues[row][col] == 0` — Přečti tabulku pevných čísel; nula znamená, že toto políčko původně nemělo
+///   předtištěné číslo.
+/// - `return false;` — Dokonči call (volání) beze změny desky.
+/// - `board[row][col] = value;` — Chráněný zápis uloží zvolenou hodnotu do přijatého řádku a sloupce.
+/// - `return true;` — Oznam volající části, že položení bylo přijato.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// valid already checks bounds, rows, columns and blocks. complete checks the finished board, and the
-/// supplied buttons call place and refresh their labels. The editable rule decides which requests are
-/// allowed to reach the write.
+/// valid už ověřuje hranice, řádky, sloupce a bloky. complete kontroluje dokončenou desku a připravená
+/// tlačítka volají place a obnovují své popisky. Upravované pravidlo určuje, které požadavky se smějí
+/// dostat k zápisu.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. A zero in clues means there was no printed clue.
-/// 2. Keep valid before accessing clues: it also checks coordinates.
-/// 3. The rejecting clue condition is clues[row][col] != 0.
+/// 1. Nula v clues znamená, že zde nebyla pevná nápověda.
+/// 2. valid zachovej před přístupem do clues: ověřuje i souřadnice.
+/// 3. Odmítající condition (podmínka) pro nápovědu je clues[row][col] != 0.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int[][] clues = {{1, 0, 0, 4}, {0, 4, 1, 0}, {2, 0, 4, 0}, {0, 3, 0, 1}};
 int[][] board = new int[4][4];
 JButton[][] buttons = new JButton[4][4];
@@ -142,63 +141,64 @@ void main() {
     SwingUtilities.invokeLater(this::show);
 }
 
-/// Prepared entry points: main, reset, show.
+/// Připravené vstupní body: main, reset, show.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `boolean` — A value that is either true or false.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `final` — The named value cannot be assigned another value afterwards. A referenced mutable object
-///   can still change.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `!=` — Checks that two values differ.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
-/// - `::` — A method reference: supplies an action without calling it yet.
-/// - `this` — The current game object: this particular run and its stored state.
-/// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
-/// - `JPanel` — A window area that can display the game’s drawing or controls.
-/// - `SwingUtilities.invokeLater` — Schedules window work for Swing’s event thread; the action runs
-///   later.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `final` — Pojmenované hodnotě už nelze přiřadit jinou. Odkazovaný mutable object (měnitelný objekt)
+///   se ale dál měnit může.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `!=` — Ověří, že se dvě hodnoty liší.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+///   až při pozdějším volání.
+/// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
+/// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
+/// - `JFrame` — Okno dodané JDK knihovnou Swing.
+/// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.
+/// - `SwingUtilities.invokeLater` — Naplánuje práci s oknem na Swing event thread (vlákno událostí); akce
+///   se provede později.
 // </editor-fold>
 

@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M07_RetroSoundForgeTest {
     static int checks;
     static final String[] CASES = {
-        "Wobble uses arbitrary carried base and depth values.",
-        "Jump and Laser retain their independent formulas.",
-        "Invalid time is rejected and real sound presets differ."
+        "Wobble používá libovolné předané base a depth.",
+        "Jump a Laser zachovají své samostatné vzorce.",
+        "Neplatný čas se odmítne a skutečné zvukové předvolby se liší."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -61,7 +61,7 @@ public class M07_RetroSoundForgeTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I132: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I132: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

@@ -1,22 +1,22 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import javax.swing.*;
 import java.awt.BorderLayout;
 // </editor-fold>
 
 /// # L07.04 · CarrotInABox
 ///
-/// One box hides a carrot, and one player gets a private peek. Bluff, bargain, and decide whether
-/// swapping boxes is worth the risk.
+/// Jedna krabice skrývá mrkev a jeden hráč smí tajně nahlédnout. Blafuj, vyjednávej a rozhodni, zda stojí
+/// za to krabice vyměnit.
 ///
-/// **Your mission:** The final prize holder ignores the swap decision. Repair holderAfterSwap() so the
-/// reveal agrees with keeping or exchanging the boxes.
+/// **Tvoje mise:** Konečný majitel ceny ignoruje rozhodnutí o výměně. Oprav holderAfterSwap(), aby
+/// odhalení odpovídalo ponechání či výměně krabic.
 ///
-/// **Today you learn:** Enum states: use a small set of meaningful named outcomes instead of unexplained
-/// numbers. holderAfterSwap() must return the correct Holder value for the final situation.
+/// **Dnes trénuješ:** Enum states (pojmenované stavy): používej malou sadu srozumitelných výsledků místo
+/// nevysvětlených čísel. holderAfterSwap() má vrátit správnou hodnotu Holder pro konečnou situaci.
 ///
-/// Run File, click Look, bluff, then choose, let the first player peek privately, and let the other
-/// decide whether to keep or swap.
-/// After your repair: Save → Test File → play again.
+/// Spusť Run File, klikni na Look, bluff, then choose, nech prvního hráče tajně nahlédnout a druhého
+/// rozhodnout o ponechání či výměně.
+/// Po opravě: Save → Test File → zahraj si znovu.
 enum Holder {
     PLAYER_ONE, PLAYER_TWO
 }
@@ -25,56 +25,56 @@ Holder holderAfterSwap(boolean swap) {
     return prizeA ? Holder.PLAYER_ONE : Holder.PLAYER_TWO;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `enum Holder` — Declares the complete set of possible named prize holders.
-/// - `PLAYER_ONE, PLAYER_TWO` — These are alternatives of the same Holder type, not arbitrary strings.
-/// - `boolean swap` — The caller passes whether the boxes were exchanged.
-/// - `prizeA ? Holder.PLAYER_ONE : Holder.PLAYER_TWO` — Chooses a named holder from the initial carrot
-///   location; consider what the final choice changes.
+/// - `enum Holder` — Deklaruje úplnou sadu pojmenovaných možných majitelů ceny.
+/// - `PLAYER_ONE, PLAYER_TWO` — Jsou to alternativy stejného typu Holder, nikoli libovolné string values
+///   (textové hodnoty).
+/// - `boolean swap` — Volající předává, zda byly krabice vyměněny.
+/// - `prizeA ? Holder.PLAYER_ONE : Holder.PLAYER_TWO` — Vybírá pojmenovaného majitele podle počáteční
+///   polohy mrkve; zvaž, co mění konečné rozhodnutí.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// The dialogs handle private peeking and the final choice. choose() calls holderAfterSwap() and builds
-/// the public reveal; prizeA already records where the carrot started.
+/// Dialogy řeší tajné nahlédnutí i konečnou volbu. choose() volá holderAfterSwap() a sestaví veřejné
+/// odhalení; prizeA už uchovává počáteční polohu mrkve.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. prizeA says where the carrot started; swap says whether boxes changed hands.
-/// 2. Keeping preserves the owner; swapping reverses it.
-/// 3. Player one holds the prize exactly when prizeA != swap.
+/// 1. prizeA říká, kde mrkev začala; swap říká, zda si hráči krabice vyměnili.
+/// 2. Ponechání zachová držitele; výměna jej obrátí.
+/// 3. První hráč má cenu právě tehdy, když prizeA != swap.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 boolean prizeA;
 String outcome;
 JFrame frame;
 JLabel status;
 
-/// reset(): Restores the starting Carrot in a Box round, clearing the state that belongs to the old
-/// round.
+/// reset(): Obnovuje počáteční kolo Carrot in a Box a maže stav patřící starému kolu.
 void reset() {
     prizeA = new Random().nextBoolean();
     outcome = "";
 }
 
-/// choose(): Commits the final reveal using the Holder value.
+/// choose(): Provede závěrečné odhalení podle hodnoty Holder.
 void choose(boolean swap) {
     require(outcome.isEmpty());
     Holder holder = holderAfterSwap(swap);
     outcome = "Player " + (holder == Holder.PLAYER_ONE ? 1 : 2) + " wins the carrot!";
 }
 
-/// refresh(): Copies the current model values into button labels, enabled states and status text.
+/// refresh(): Přenáší aktuální hodnoty modelu do popisků tlačítek, jejich povolení a stavového
+/// textu.
 void refresh() {
     status.setText("<html>One box holds a carrot. A looks privately and may bluff aloud.<br>B chooses keep or swap. " + outcome + "</html>");
 }
 
-/// show(): Supplied later topic: Swing button callbacks invoke the model and refresh its visible
-/// state.
+/// show(): Dodané pozdější téma: Swing callbacks tlačítek volají model a obnovují jeho zobrazení.
 void show() {
     frame = new JFrame("Carrot in a Box");
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -108,13 +108,13 @@ void show() {
     frame.setVisible(true);
 }
 
-/// main(): Starts the model, then schedules the supplied window on Swing’s event thread.
+/// main(): Spouští model a potom plánuje dodané okno na Swing event thread.
 void main() {
     reset();
     SwingUtilities.invokeLater(this::show);
 }
 
-/// require(): Rejects an illegal command with an exception handled by the supplied input loop.
+/// require(): Odmítá neplatný příkaz výjimkou zachycenou dodanou vstupní smyčkou.
 void require(boolean valid) {
     if (!valid) {
         throw new IllegalArgumentException("Invalid move or command.");
@@ -122,58 +122,60 @@ void require(boolean valid) {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `!=` — Checks that two values differ.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
-/// - `::` — A method reference: supplies an action without calling it yet.
-/// - `this` — The current game object: this particular run and its stored state.
-/// - `enum` — A type whose values are a fixed named set, such as READY, PLAYING and FINISHED.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
-/// - `SwingUtilities.invokeLater` — Schedules window work for Swing’s event thread; the action runs
-///   later.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `!=` — Ověří, že se dvě hodnoty liší.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+///   až při pozdějším volání.
+/// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
+/// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
+/// - `enum` — Type (typ) s pevnou sadou pojmenovaných hodnot, například READY, PLAYING a FINISHED.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
+///   zopakuje stejnou posloupnost.
+/// - `JFrame` — Okno dodané JDK knihovnou Swing.
+/// - `SwingUtilities.invokeLater` — Naplánuje práci s oknem na Swing event thread (vlákno událostí); akce
+///   se provede později.
 // </editor-fold>
 

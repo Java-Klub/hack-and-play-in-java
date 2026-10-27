@@ -1,18 +1,17 @@
 /// # L03.07 · Hanoi
 ///
-/// Move three discs from peg A to peg C, one top disc at a time. Work out a sequence that never places a
-/// larger disc on a smaller one, and see how close you get to seven moves.
+/// Přesuň tři disky z tyčky A na tyčku C, vždy pouze horní disk. Vymysli pořadí bez většího disku na
+/// menším a zjisti, jak blízko se dostaneš sedmi tahům.
 ///
-/// **Your mission:** The tower accepts a larger disc on a smaller one and refuses some harmless
-/// placements. Repair the rejecting comparison in move before either stack changes.
+/// **Tvoje mise:** Věž přijímá větší disk na menším a odmítá některá neškodná položení. Oprav odmítající
+/// comparison (porovnání) v move před změnou kterékoli hromádky.
 ///
-/// **Today you learn:** Guarding a forbidden state: describe the bad situation in the condition, then
-/// return without applying the move. Check an empty destination separately from a destination with a top
-/// disc.
+/// **Dnes trénuješ:** Ochrana před zakázaným stavem: popiš špatnou situaci v condition (podmínce) a vrať
+/// se bez provedení tahu. Prázdný cíl posuzuj odděleně od cíle s horním diskem.
 ///
-/// Use Run File, enter A B and then A B again to inspect the forbidden larger-on-smaller move; r restores
-/// the original tower.
-/// After your repair: Save → Test File → play again.
+/// Použij Run File, zadej A B a potom znovu A B pro prohlédnutí zakázaného většího disku na menším; r
+/// obnoví původní věž.
+/// Po opravě: Save → Test File → zahraj si znovu.
 boolean move(int from, int to) {
     if (won() || from < 0 || from > 2 || to < 0 || to > 2 || from == to || sizes[from] == 0) {
         return false;
@@ -29,36 +28,36 @@ boolean move(int from, int to) {
     return true;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `won()` — Ask the supplied win check whether play has already finished.
-/// - `sizes[from] == 0` — Reject an empty source peg before trying to read its top disc.
-/// - `&&` — The second part is checked only when the first is true, so an empty destination has no
-///   top-disc lookup.
-/// - `pegs[to][sizes[to] - 1]` — The supplied storage keeps a peg’s top disc at its current size minus
-///   one.
-/// - `> disc` — This currently asks whether the target’s top disc is larger than the moving disc; reason
-///   whether that is the forbidden situation.
-/// - `return false;` — Reject before the later writes remove or insert a disc.
-/// - `moves++;` — Count one accepted move after both stacks have been updated.
+/// - `won()` — Zeptej se připravené kontroly výhry, zda už hra skončila.
+/// - `sizes[from] == 0` — Odmítni prázdnou zdrojovou tyčku před pokusem přečíst její horní disk.
+/// - `&&` — Druhá část se ověřuje pouze při platné první části, takže u prázdného cíle nedojde ke čtení
+///   horního disku.
+/// - `pegs[to][sizes[to] - 1]` — Připravené úložiště uchovává horní disk tyčky na místě její současné
+///   velikosti minus jedna.
+/// - `> disc` — Toto se nyní ptá, zda je horní disk cíle větší než přesouvaný disk; rozmysli, zda právě
+///   to je zakázaná situace.
+/// - `return false;` — Odmítni před pozdějšími zápisy odebírajícími nebo vkládajícími disk.
+/// - `moves++;` — Započítej jeden přijatý tah po úpravě obou hromádek.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// The later part of move already transfers one top disc and updates both stack sizes. reset rebuilds the
-/// three-disc puzzle; main prints the top disc on the right and translates peg letters into supplied
-/// storage indices.
+/// Pozdější část move už přesouvá jediný horní disk a upravuje velikost obou hromádek. reset obnoví
+/// hádanku tří disků; main vypisuje horní disk napravo a převádí písmena tyček na index (indexy)
+/// připraveného úložiště.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Disc numbers are sizes: 1 is smaller than 2.
-/// 2. The target-empty case must skip its top-disc read.
-/// 3. Inside the nonempty guard, reject targetTop < disc.
+/// 1. Čísla disků jsou velikosti: 1 je menší než 2.
+/// 2. Prázdný cíl musí přeskočit čtení svého horního disku.
+/// 3. Uvnitř ochrany neprázdného cíle odmítni targetTop < disc.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 int[][] pegs = {{3, 2, 1}, {0, 0, 0}, {0, 0, 0}};
 int[] sizes = {3, 0, 0};
 int moves;
@@ -109,54 +108,57 @@ void main() {
     }
 }
 
-/// Prepared entry points: main, reset.
+/// Připravené vstupní body: main, reset.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `'` — Single quotes enclose one character, such as a board marker.
-/// - `\` — Inside quoted text, starts an escape such as \n for a new line or \" for a quote.
-/// - `char` — A type for one UTF-16 code unit, often a simple board character such as X. Text uses
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `'` — Jednoduché uvozovky ohraničují jeden character (znak), například značku na desce.
+/// - `\` — Uvnitř textu začíná escape (zvláštní zápis), například \n pro nový řádek nebo \" pro uvozovku.
+/// - `char` — Type (typ) pro jednu UTF-16 jednotku, často jednoduchý znak desky jako X. Pro text slouží
 ///   String.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `!=` — Checks that two values differ.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `while` — Keeps repeating its body while its condition stays true.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `!=` — Ověří, že se dvě hodnoty liší.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
 // </editor-fold>
 

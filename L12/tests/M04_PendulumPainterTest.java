@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M04_PendulumPainterTest {
     static int checks;
     static final String[] CASES = {
-        "The default role sees current angle, length and gravity.",
-        "A constant alternate acceleration changes the actual velocity.",
-        "A zero alternate rule keeps an initially resting angle fixed."
+        "Výchozí role čte aktuální úhel, délku a gravitaci.",
+        "Konstantní jiné zrychlení změní skutečnou rychlost.",
+        "Nulové jiné pravidlo udrží původně klidný úhel."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -63,7 +63,7 @@ public class M04_PendulumPainterTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I138: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I138: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

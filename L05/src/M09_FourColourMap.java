@@ -1,16 +1,15 @@
 /// # L05.09 · FourColourMap
 ///
-/// Colour a tiny map without giving neighbouring regions the same colour. Two distant regions may happily
-/// match.
+/// Vybarvi malou mapu tak, aby sousední oblasti neměly stejnou barvu. Vzdálené oblasti se shodovat mohou.
 ///
-/// **Your mission:** Only one shared border is checked, so clashes elsewhere escape the counter. Repair
-/// conflicts() to count every actual clash.
+/// **Tvoje mise:** Kontroluje se jen jedna společná hranice, takže ostatní spory počítadlu uniknou. Oprav
+/// conflicts(), aby spočítalo všechny skutečné konflikty.
 ///
-/// **Today you learn:** Traversal and search: scan a list of relationships, not just a list of regions.
-/// Each border names the two colour entries to compare.
+/// **Dnes trénuješ:** Traversal and search (průchod a hledání): procházej vztahy mezi oblastmi, nejen
+/// oblasti samotné. Každá hranice určuje dvě barvy k porovnání.
 ///
-/// Run File, type B 2 to give region B colour 2, and continue colouring the other labelled regions.
-/// After your repair: Save → Test File → play again.
+/// Spusť Run File, napiš B 2 pro obarvení oblasti B barvou 2 a pokračuj dalšími označenými oblastmi.
+/// Po opravě: Save → Test File → zahraj si znovu.
 int conflicts() {
     int n = 0;
     for (int[] edge : new int[][]{adjacent[0]}) {
@@ -21,42 +20,41 @@ int conflicts() {
     return n;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `int[] edge` — A pair of region indices that share a border.
-/// - `adjacent[0]` — Selects only the first stored border pair; examine what the traversal receives.
-/// - `colours[edge[0]] != 0` — An uncoloured region is excluded from the conflict count.
-/// - `n++` — Counts one conflicting shared border, not one coloured region.
+/// - `int[] edge` — Dvojice indexů (pozic) oblastí, které sdílejí hranici.
+/// - `adjacent[0]` — Vybírá pouze první uloženou dvojici sousedů; sleduj, co průchod dostává.
+/// - `colours[edge[0]] != 0` — Nevybarvená oblast se do počtu konfliktů nezahrnuje.
+/// - `n++` — Započítá jednu konfliktní společnou hranici, nikoli jednu vybarvenou oblast.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// adjacent contains the authored shared-border pairs. The click handler changes one region’s colour;
-/// solved() requires all regions coloured and calls conflicts() to judge their relationships.
+/// adjacent obsahuje připravené dvojice sousedních oblastí. Reakce na kliknutí mění barvu jedné oblasti;
+/// solved() vyžaduje všechny vybarvené a přes conflicts() posuzuje jejich sousedství.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. adjacent stores precisely the shared-border pairs.
-/// 2. The current traversal visits only its first pair.
-/// 3. Iterate over adjacent; count equal nonzero colours at both endpoints.
+/// 1. adjacent obsahuje právě dvojice se společnou hranicí.
+/// 2. Současný průchod navštíví jen první dvojici.
+/// 3. Projdi adjacent; počítej stejné nenulové barvy obou konců.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 String[] map = {"AABB", "ACCB", "DDEE"};
 int[][] adjacent = {{0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 4}, {2, 3}, {2, 4}, {3, 4}};
 int[] colours;
 String outcome;
 
-/// reset(): Restores the starting Four-Colour Map round, clearing the state that belongs to the old
-/// round.
+/// reset(): Obnovuje počáteční kolo Four-Colour Map a maže stav patřící starému kolu.
 void reset() {
     colours = new int[]{1, 0, 0, 0, 0};
     outcome = "";
 }
 
-/// solved(): Requires every region coloured and zero adjacency conflicts.
+/// solved(): Vyžaduje obarvení každé oblasti a žádný konflikt sousedů.
 boolean solved() {
     for (int c : colours) {
         if (c == 0) {
@@ -66,7 +64,7 @@ boolean solved() {
     return conflicts() == 0;
 }
 
-/// command(): Validates one actual player command before applying its changes to this game.
+/// command(): Ověřuje jeden skutečný příkaz hráče před jeho provedením v této hře.
 void command(String input) {
     require(outcome.isEmpty());
     String[] p = input.toUpperCase(Locale.ROOT).split("\\s+");
@@ -80,7 +78,7 @@ void command(String input) {
     }
 }
 
-/// display(): Presents the current board and the legal input choices in the console.
+/// display(): Zobrazuje aktuální desku a volby zadávání v konzoli.
 void display() {
     for (String row : map) {
         IO.println(row);
@@ -92,7 +90,7 @@ void display() {
     IO.println("Equal-colour shared-edge conflicts: " + conflicts());
 }
 
-/// main(): Starts the real game loop: display, read a command, validate, replay or quit.
+/// main(): Spouští skutečnou herní smyčku: zobrazit, načíst, ověřit, opakovat nebo ukončit.
 void main() {
     reset();
     IO.println("Four-Colour Map");
@@ -122,7 +120,7 @@ void main() {
     }
 }
 
-/// require(): Rejects an illegal command with an exception handled by the supplied input loop.
+/// require(): Odmítá neplatný příkaz výjimkou zachycenou dodanou vstupní smyčkou.
 void require(boolean valid) {
     if (!valid) {
         throw new IllegalArgumentException("Invalid move or command.");
@@ -130,54 +128,57 @@ void require(boolean valid) {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `'` — Single quotes enclose one character, such as a board marker.
-/// - `\` — Inside quoted text, starts an escape such as \n for a new line or \" for a quote.
-/// - `char` — A type for one UTF-16 code unit, often a simple board character such as X. Text uses
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `'` — Jednoduché uvozovky ohraničují jeden character (znak), například značku na desce.
+/// - `\` — Uvnitř textu začíná escape (zvláštní zápis), například \n pro nový řádek nebo \" pro uvozovku.
+/// - `char` — Type (typ) pro jednu UTF-16 jednotku, často jednoduchý znak desky jako X. Pro text slouží
 ///   String.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `!=` — Checks that two values differ.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `while` — Keeps repeating its body while its condition stays true.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `!=` — Ověří, že se dvě hodnoty liší.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
 // </editor-fold>
 

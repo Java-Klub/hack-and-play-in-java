@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -7,18 +7,18 @@ import java.awt.Color;
 
 /// # L06.09 · LightsOut
 ///
-/// Turn every light off by clicking crosses of cells. Become the tester who catches convincing but unfair
-/// copies of the toggle rule.
+/// Zhasni všechna světla klikáním na kříže políček. Staň se testerem, který odhalí přesvědčivé, ale nefér
+/// kopie pravidla přepínání.
 ///
-/// **Your mission:** The centre-only example cannot catch every wrong rule. Expand learnerChecks() with
-/// valid board examples that distinguish different cross shapes.
+/// **Tvoje mise:** Samotný příklad ze středu neodhalí všechna chybná pravidla. Rozšiř learnerChecks() o
+/// platné příklady z desky, které rozliší různé tvary kříže.
 ///
-/// **Today you learn:** Writing functional checks: choose inputs and expected results that could disprove
-/// a broken rule. The learner’s work is the examples, not a replacement flip() algorithm.
+/// **Dnes trénuješ:** Writing functional checks (psaní funkčních kontrol): vyber vstupy a očekávané
+/// výsledky, které vyvrátí chybná pravidla. Tvou prací jsou příklady, nikoli náhradní algoritmus flip().
 ///
-/// Run File and click cells to try extinguishing every light, then use Test File to see which wrong rule
-/// your examples still miss.
-/// After your repair: Save → Test File → play again.
+/// Spusť Run File a zkus klikáním zhasnout všechna světla, potom pomocí Test File zjisti, které chybné
+/// pravidlo tvé příklady ještě přehlížejí.
+/// Po opravě: Save → Test File → zahraj si znovu.
 record CrossExample(int row, int column, int expected) {
 }
 
@@ -26,38 +26,38 @@ CrossExample[] learnerChecks() {
     return new CrossExample[]{new CrossExample(2, 2, 5)};
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `record CrossExample(int row, int column, int expected)` — One example bundles a click position with
-///   the expected number of lit cells on an empty board.
-/// - `CrossExample[]` — An array lets the checker run several independent examples.
-/// - `new CrossExample(2, 2, 5)` — The existing example selects a legal centre cell and its expected
-///   result.
-/// - `return` — Hands your example data to both the startup check and Test File.
+/// - `record CrossExample(int row, int column, int expected)` — Jeden example (příklad) spojuje místo
+///   kliknutí s očekávaným počtem rozsvícených políček na prázdné desce.
+/// - `CrossExample[]` — Array (pole) dovoluje kontrole spustit několik samostatných příkladů.
+/// - `new CrossExample(2, 2, 5)` — Existující příklad vybírá platné středové políčko a jeho očekávaný
+///   výsledek.
+/// - `return` — Předá tvá data příkladů úvodní kontrole i Test File.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// flip() is already correct, so Run File remains playable. Startup checks examples against that rule;
-/// Test File also tries named wrong rules and reports which one your examples failed to reject.
+/// flip() je správně, takže Run File zůstává hratelné. Start ověří příklady proti tomuto pravidlu; Test
+/// File zkouší také pojmenovaná chybná pravidla a hlásí, které tvé příklady neodmítly.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Start from an all-off board for each example; expected counts lit cells after one flip.
-/// 2. A centre has five cells, an edge has four and a corner has three.
-/// 3. Keep the centre case and add (0,0,3) and (0,2,4); explain which mutant each catches.
+/// 1. Každý příklad začíná zhasnutou deskou; expected počítá rozsvícená pole po jednom flip.
+/// 2. Střed má pět polí, okraj čtyři a roh tři.
+/// 3. Ponech střed a přidej (0,0,3) a (0,2,4); vysvětli, kterého mutanta každý odhalí.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int SIZE = 5;
 boolean[][] lights = new boolean[SIZE][SIZE];
 int moves;
 JButton[][] buttons = new JButton[SIZE][SIZE];
 JLabel status = new JLabel();
 
-/// flip(): Toggles the centre and valid cardinal neighbours; applying it twice restores the board.
+/// flip(): Přepíná střed a platné kolmé sousedy; dvojí použití obnoví desku.
 void flip(int row, int col) {
     int[][] offsets = {{0, 0}, {-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     for (var offset : offsets) {
@@ -80,8 +80,7 @@ boolean solved() {
     return true;
 }
 
-/// reset(): Restores the starting Lights Out round, clearing the state that belongs to the old
-/// round.
+/// reset(): Obnovuje počáteční kolo Lights Out a maže stav patřící starému kolu.
 void reset(long seed) {
     lights = new boolean[SIZE][SIZE];
     var random = new Random(seed);
@@ -103,7 +102,8 @@ boolean play(int row, int col) {
     return true;
 }
 
-/// refresh(): Copies the current model values into button labels, enabled states and status text.
+/// refresh(): Přenáší aktuální hodnoty modelu do popisků tlačítek, jejich povolení a stavového
+/// textu.
 void refresh() {
     for (int r = 0; r < SIZE; r++) {
         for (int c = 0; c < SIZE; c++) {
@@ -116,8 +116,7 @@ void refresh() {
     status.setText((solved() ? "All lights out! " : "Turn every light off. ") + "Moves: " + moves);
 }
 
-/// show(): Supplied later topic: Swing button callbacks invoke the model and refresh its visible
-/// state.
+/// show(): Dodané pozdější téma: Swing callbacks tlačítek volají model a obnovují jeho zobrazení.
 void show() {
     var frame = new JFrame("Lights Out");
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -149,15 +148,15 @@ void show() {
     frame.setVisible(true);
 }
 
-/// main(): Starts the model, then schedules the supplied window on Swing’s event thread.
+/// main(): Spouští model a potom plánuje dodané okno na Swing event thread.
 void main() {
     verifyExamples();
     reset(System.nanoTime());
     SwingUtilities.invokeLater(this::show);
 }
 
-/// verifyExamples(): Startup runs your examples against the real game rule; supplied save/restore
-/// keeps the round unchanged.
+/// verifyExamples(): Start zkouší tvé příklady proti skutečnému pravidlu hry; dodané
+/// uložení/obnovení ponechá kolo beze změny.
 void verifyExamples() {
     boolean[][] saved = lights;
     try {
@@ -185,63 +184,67 @@ void verifyExamples() {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `boolean` — A value that is either true or false.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
-/// - `final` — The named value cannot be assigned another value afterwards. A referenced mutable object
-///   can still change.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `!=` — Checks that two values differ.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
-/// - `::` — A method reference: supplies an action without calling it yet.
-/// - `this` — The current game object: this particular run and its stored state.
-/// - `record` — A small named bundle of values. Its component accessors use the component names with ().
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
-/// - `JPanel` — A window area that can display the game’s drawing or controls.
-/// - `SwingUtilities.invokeLater` — Schedules window work for Swing’s event thread; the action runs
-///   later.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `long` — Whole-number type (typ pro celá čísla) s větším rozsahem než int. Koncové L označuje long
+///   literal (přímo zapsanou hodnotu).
+/// - `final` — Pojmenované hodnotě už nelze přiřadit jinou. Odkazovaný mutable object (měnitelný objekt)
+///   se ale dál měnit může.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `!=` — Ověří, že se dvě hodnoty liší.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+///   až při pozdějším volání.
+/// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
+/// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
+/// - `record` — Malý pojmenovaný balíček hodnot. Component accessor (přístupová metoda složky) má jméno
+///   složky a závorky ().
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
+///   zopakuje stejnou posloupnost.
+/// - `JFrame` — Okno dodané JDK knihovnou Swing.
+/// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.
+/// - `SwingUtilities.invokeLater` — Naplánuje práci s oknem na Swing event thread (vlákno událostí); akce
+///   se provede později.
 // </editor-fold>
 

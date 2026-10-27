@@ -1,48 +1,48 @@
 /// # L02.07 · Codebreaker
 ///
-/// Break a four-digit code using clues that distinguish the right digit in the right place from a digit
-/// placed elsewhere. After the known training code, restart to try a hidden random code.
+/// Prolom čtyřmístný kód pomocí stop, které odlišují správnou číslici na správném místě od číslice
+/// umístěné jinam. Po známém cvičném kódu spusť nové kolo s ukrytým náhodným kódem.
 ///
-/// **Your mission:** Entering the training code gives four exact digits but no win. Repair matchesCode so
-/// equal text is accepted even when it came from separate String values.
+/// **Tvoje mise:** Zadání cvičného kódu dá čtyři přesné číslice, ale žádnou výhru. Oprav matchesCode tak,
+/// aby přijímalo stejný text i ze samostatných String value (řetězcových hodnot).
 ///
-/// **Today you learn:** Boolean decisions and text equality: boolean means true or false. For text,
-/// comparing the characters is different from asking whether two names point to the very same stored
-/// String object.
+/// **Dnes trénuješ:** Boolean decision (logické rozhodnutí) a rovnost textu: boolean znamená true nebo
+/// false. U textu se porovnání znaků liší od otázky, zda dvě jména ukazují na tentýž uložený String
+/// object (objekt řetězce).
 ///
-/// Use Run File and enter 1234 to investigate the failed training win; after repairing it, enter r to try
-/// a newly hidden code.
-/// After your repair: Save → Test File → play again.
+/// Použij Run File a zadej 1234 pro prozkoumání chybné cvičné výhry; po opravě zadej r a vyzkoušej nově
+/// ukrytý kód.
+/// Po opravě: Save → Test File → zahraj si znovu.
 boolean matchesCode(String guess) {
     return secret == guess;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `boolean` — The result is a yes/no decision: true for a match and false otherwise.
-/// - `matchesCode(String guess)` — The supplied caller asks this rule about the complete guessed text.
-/// - `secret` — The stored target code for this round.
-/// - `guess` — The text received for this attempt, not necessarily the same stored object as secret.
-/// - `==` — With String objects this asks about identity, not matching characters; it is different from
-///   numeric equality.
-/// - `return` — Give the decision back to submit, where it determines whether the round was won.
+/// - `boolean` — Výsledek je rozhodnutí ano/ne: true pro shodu a jinak false.
+/// - `matchesCode(String guess)` — Připravená volající část se tohoto pravidla ptá na celý hádaný text.
+/// - `secret` — Uložený cílový kód tohoto kola.
+/// - `guess` — Text přijatý pro tento pokus, ne nutně tentýž uložený object (objekt) jako secret.
+/// - `==` — U String object (objektů řetězců) se ptá na identity (totožnost), nikoli stejné znaky; liší
+///   se to od číselné rovnosti.
+/// - `return` — Předej rozhodnutí zpět do submit, kde určuje výhru kola.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// submit validates the four digits, computes exact/elsewhere clues and asks matchesCode for the win
-/// decision. The first secret is 1234 for investigation; reset generates random codes for later rounds.
+/// submit ověří čtyři číslice, spočítá přesné a jinak umístěné shody a požádá matchesCode o rozhodnutí
+/// výhry. První secret je 1234 pro zkoumání; reset pro další kola vytváří náhodné kódy.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Two separate String values can contain the same text.
-/// 2. Use the String content comparison operation.
-/// 3. Return secret.equals(guess).
+/// 1. Dvě samostatné String value (řetězcové hodnoty) mohou obsahovat stejný text.
+/// 2. Použij operaci porovnání obsahu String (řetězců).
+/// 3. Vrať secret.equals(guess).
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 String secret = "1234";
 int attempts;
 boolean won;
@@ -130,56 +130,60 @@ void main() {
     }
 }
 
-/// Prepared entry points: main, reset.
+/// Připravené vstupní body: main, reset.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `else` — The alternative when the preceding if condition is false.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `while` — Keeps repeating its body while its condition stays true.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `else` — Alternativní větev pro případ, že předchozí if condition (podmínka) neplatí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
+/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+///   až při pozdějším volání.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
+///   zopakuje stejnou posloupnost.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
 // </editor-fold>
 

@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M04_UntangleTest {
     static int checks;
     static final String[] CASES = {
-        "An asymmetric point draws a correctly centred node.",
-        "Drawing does not change Point/model values.",
-        "The real full scene uses the repaired helper."
+        "Nestejný bod vykreslí správně vystředěný uzel.",
+        "Kreslení nezmění Point ani model (model pravidel).",
+        "Skutečná celá scéna používá opravený helper (pomocnou funkci)."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -60,7 +60,7 @@ public class M04_UntangleTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I056: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I056: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

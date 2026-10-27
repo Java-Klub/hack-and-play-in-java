@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -7,45 +7,45 @@ import java.util.List;
 
 /// # L11.02 · CirclePacking
 ///
-/// Let circles squeeze into the gaps between earlier circles. A growing cluster should use fresh centres
-/// rather than repeatedly trying the same location.
+/// Nech kruhy vtěsnat se do mezer mezi dřívějšími kruhy. Rostoucí shluk má používat nové středy místo
+/// opakovaných pokusů na stejném místě.
 ///
-/// **Your mission:** Fresh centres are rejected because the method asks whether they were already seen.
-/// Repair the claim operation so only the first claim succeeds.
+/// **Tvoje mise:** Nové středy se odmítají, protože se method (metoda) ptá, zda už byly viděny. Oprav
+/// přijetí středu tak, aby uspěl právě první pokus.
 ///
-/// **Today you learn:** Set membership and insertion are different operations. The boolean result of an
-/// insertion can report whether a centre was new while recording it for future attempts.
+/// **Dnes trénuješ:** Členství v Set (množině) a vložení jsou různé operace. Boolean result (logický
+/// výsledek) vložení může oznámit nový střed a současně jej zaznamenat pro další pokusy.
 ///
-/// Use Run File to generate circle-packing.png, then open the Saved path after the bounded packing run
-/// finishes.
-/// After your repair: Save → Test File → play again.
+/// Pomocí Run File vytvoř circle-packing.png a po dokončení omezeného skládání otevři cestu vypsanou za
+/// Saved.
+/// Po opravě: Save → Test File → zahraj si znovu.
 boolean claimCentre(Set<Centre> seen, int x, int y) {
     return seen.contains(new Centre(x, y));
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `Set<Centre>` — Stores distinct centre values; equal coordinates represent the same centre.
-/// - `seen.contains` — Checks membership only; it does not record a newly discovered centre.
-/// - `new Centre(x, y)` — Creates a value record whose equality depends on x and y.
+/// - `Set<Centre>` — Ukládá odlišné hodnoty Centre; stejné coordinate (souřadnice) představují stejný
+///   střed.
+/// - `seen.contains` — Jen ověří členství; nově nalezený střed nezaznamená.
+/// - `new Centre(x, y)` — Vytvoří value record (hodnotový record), jehož rovnost závisí na x a y.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// The bounded pack loop calls claimCentre before testing a circle’s available radius. Collision
-/// distances, radius growth until contact, colour choices and the final circle-packing.png export are
-/// already supplied.
+/// Omezený pack loop (cyklus skládání) volá claimCentre před zkoumáním dostupného poloměru. Vzdálenosti
+/// pro srážky, růst poloměru až do dotyku, barvy i závěrečný circle-packing.png jsou připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. contains only asks; it does not remember a new centre.
-/// 2. A record with the same x/y is equal to the earlier value.
-/// 3. Set.add both stores the value and reports whether it was new.
+/// 1. Contains se jen ptá; nový střed si nezapamatuje.
+/// 2. Record se stejným x/y je roven starší hodnotě.
+/// 3. Set.add současně uloží hodnotu a oznámí, zda byla nová.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 record Bubble(double x, double y, double radius) {}
 
 List<Bubble> pack(long seed, int count) {
@@ -91,7 +91,7 @@ List<Bubble> pack(long seed, int count) {
     return bubbles;
 }
 
-/// Supplied image creation: generation and drawing remain visible in this file.
+/// Připravená tvorba obrazu: generování a kreslení zůstávají viditelné v tomto file (souboru).
 BufferedImage render(long seed, double option) {
     if (!Double.isFinite(option)) {
         throw new IllegalArgumentException("Finite bubble count required.");
@@ -111,7 +111,7 @@ BufferedImage render(long seed, double option) {
     return image;
 }
 
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
+/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
 void save(Path path, long seed, double option) throws Exception {
     Files.createDirectories(path.toAbsolutePath().getParent());
     if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
@@ -121,9 +121,9 @@ void save(Path path, long seed, double option) throws Exception {
 
 record Centre(int x, int y) {}
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// claimCentre keeps stable record keys instead of mutable coordinate objects.
-/// pack makes at most 10,000 proposals and grows non-overlapping bubbles; render/save expose the result.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// ClaimCentre uchovává stabilní record key (klíče) místo mutable object (měnitelných objektů) souřadnic.
+/// Pack provede nejvýše 10 000 návrhů a nechá růst nepřekrývající se bubliny; render/save výsledek ukážou.
 void main(String[] args) throws Exception {
     if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
         return;
@@ -132,7 +132,7 @@ void main(String[] args) throws Exception {
         Path path = Path.of(args.length > 0 ? args[0] : "circle-packing.png");
         long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
         double option = args.length > 2 ? Double.parseDouble(args[2]) : 80;
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
+/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
         save(path, seed, option);
         IO.println("Saved: " + path.toAbsolutePath());
     } catch (IllegalArgumentException invalid) {
@@ -141,63 +141,70 @@ void main(String[] args) throws Exception {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `!=` — Checks that two values differ.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `else` — The alternative when the preceding if condition is false.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `record` — A small named bundle of values. Its component accessors use the component names with ().
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
-/// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
-/// - `Set` — Stores distinct values; the same value is present at most once.
-/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `long` — Whole-number type (typ pro celá čísla) s větším rozsahem než int. Koncové L označuje long
+///   literal (přímo zapsanou hodnotu).
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `!=` — Ověří, že se dvě hodnoty liší.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `else` — Alternativní větev pro případ, že předchozí if condition (podmínka) neplatí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `record` — Malý pojmenovaný balíček hodnot. Component accessor (přístupová metoda složky) má jméno
+///   složky a závorky ().
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
+///   zpracovat.
+/// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
+///   měnit velikost.
+/// - `Set` — Uchovává různé hodnoty; stejná hodnota je přítomná nejvýše jednou.
+/// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
+///   zopakuje stejnou posloupnost.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
+/// - `Path` — Umístění v souborech, nikoli obsah souboru.
+/// - `Files` — JDK operace pro čtení a zápis místních souborů.
 // </editor-fold>
 

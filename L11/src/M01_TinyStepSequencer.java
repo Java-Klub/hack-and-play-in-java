@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -12,18 +12,18 @@ import java.io.ByteArrayInputStream;
 
 /// # L11.01 · TinyStepSequencer
 ///
-/// Build a tiny drum pattern by switching cells on and off. Four rows and eight beats are enough to make
-/// a loop worth exporting and comparing with a friend’s.
+/// Sestav malý rytmus zapínáním a vypínáním políček. Čtyři řádky a osm dob stačí na smyčku, kterou můžeš
+/// uložit a porovnat s kamarádovou.
 ///
-/// **Your mission:** A note can be switched on but not off; the second click leaves it selected. Repair
-/// toggling while preserving invalid-coordinate handling.
+/// **Tvoje mise:** Notu lze zapnout, ale ne vypnout; druhé kliknutí ji nechá vybranou. Oprav přepínání a
+/// zachovej zpracování chybných souřadnic.
 ///
-/// **Today you learn:** A Set answers whether a distinct value is present. A toggle has two paths: a
-/// previously absent Note becomes present, while an already present Note must stop belonging to the set.
+/// **Dnes trénuješ:** Set (množina) říká, zda obsahuje danou odlišnou hodnotu. Toggle (přepnutí) má dvě
+/// cesty: dosud nepřítomný Note přibude, přítomný Note má naopak přestat patřit do Set.
 ///
-/// After Run File, click cells to switch notes on and off, choose BPM and click Export WAV to save a
-/// rhythm you can open in a player.
-/// After your repair: Save → Test File → play again.
+/// Po Run File klikáním zapínej a vypínej noty, vyber BPM a pomocí Export WAV ulož rytmus, který můžeš
+/// otevřít v přehrávači.
+/// Po opravě: Save → Test File → zahraj si znovu.
 boolean toggle(int row, int step) {
     if (row < 0 || row >= 4 || step < 0 || step >= 8) return false;
     Note note = new Note(row, step);
@@ -31,32 +31,31 @@ boolean toggle(int row, int step) {
     return true;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `new Note(row, step)` — A record value identifies one cell by both its row and beat.
-/// - `notes.add(note)` — Adds a distinct note, but adding the same value twice does not remove it.
-/// - `row < 0 || row >= 4` — Rejects rows outside the four-row grid before touching the set.
+/// - `new Note(row, step)` — Record value (hodnota record) určuje jedno políčko řádkem i dobou.
+/// - `notes.add(note)` — Přidá odlišnou notu, ale druhé přidání stejné hodnoty ji neodebere.
+/// - `row < 0 || row >= 4` — Odmítne řádky mimo čtyřřádkovou mřížku před změnou Set (množiny).
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// Each button calls toggle and refreshes its selection from notes. The supplied synthesiser reads that
-/// same set, combines finite instrument sounds and writes a WAV at the selected tempo; it does not
-/// autoplay.
+/// Každé tlačítko volá toggle a obnoví výběr podle notes. Připravená syntéza čte stejnou Set (množinu),
+/// spojuje konečné zvuky nástrojů a zapíše WAV ve zvoleném tempu; sama jej nepřehrává.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Equal Note records name the same grid position.
-/// 2. Set.remove returns whether the note was present.
-/// 3. Only add when removal found nothing; two toggles must restore the old Set.
+/// 1. Rovné Note record pojmenovávají stejnou pozici mřížky.
+/// 2. Set.remove vrací, zda nota existovala.
+/// 3. Přidávej jen tehdy, když remove nic nenašlo; dvě přepnutí musí obnovit starý Set (množinu).
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int RATE = 22050;
 
-/// Supplied WAV encoding: bounded PCM samples and try-with-resources own the stream.
+/// Připravený WAV encoding (kódování): omezené PCM sample (vzorky) a try-with-resources spravují stream (proud).
 void write(Path path, double[] signal) throws Exception {
     byte[] pcm = new byte[signal.length * 2];
     for (int i = 0; i < signal.length; i++) {
@@ -75,7 +74,7 @@ Set<Note> notes = new HashSet<>();
 JToggleButton[][] buttons = new JToggleButton[4][8];
 int bpm = 120;
 
-/// Supplied restart: create the initial model; no native window is created here.
+/// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
 void reset() {
     notes.clear();
     for (int step = 0; step < 8; step++) {
@@ -116,7 +115,7 @@ void refresh() {
     }
 }
 
-/// Supplied Swing UI: create it on the EDT; timer cleanup stays with the window.
+/// Připravené Swing UI (rozhraní): vytváří se na EDT; úklid timer (časovače) patří k oknu.
 void showWindow() {
     var frame = new JFrame("Tiny Step Sequencer");
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -142,7 +141,7 @@ void showWindow() {
     });
     var restore = new JButton("Restore");
     restore.addActionListener(event -> {
-/// Supplied restart: create the initial model; no native window is created here.
+/// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
         reset();
         refresh();
     });
@@ -150,7 +149,7 @@ void showWindow() {
     var export = new JButton("Export WAV");
     export.addActionListener(event -> {
         try {
-/// Supplied WAV encoding: bounded PCM samples and try-with-resources own the stream.
+/// Připravený WAV encoding (kódování): omezené PCM sample (vzorky) a try-with-resources spravují stream (proud).
             write(Path.of("tiny-sequencer.wav"), sequence(4));
             status.setText("Saved tiny-sequencer.wav");
         } catch (Exception failure) {
@@ -171,21 +170,21 @@ void showWindow() {
     frame.setVisible(true);
 }
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// toggle is the real button action; notes contains immutable Note values.
-/// sequence builds four voices at the chosen tempo; write exports them without autoplay; close disposes the window.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// Toggle je skutečná akce tlačítka; notes obsahuje immutable Note (neměnné hodnoty Note).
+/// Sequence tvoří čtyři hlasy ve zvoleném tempu; write je uloží bez automatického přehrání; zavření uvolní okno.
 void main(String[] args) throws Exception {
     if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
         return;
     }
-/// Supplied restart: create the initial model; no native window is created here.
+/// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
     reset();
     if (args.length > 0 && args[0].equals("export")) {
         if (args.length > 2) {
             bpm = Integer.parseInt(args[2]);
         }
         Path path = Path.of(args.length > 1 ? args[1] : "tiny-sequencer.wav");
-/// Supplied WAV encoding: bounded PCM samples and try-with-resources own the stream.
+/// Připravený WAV encoding (kódování): omezené PCM sample (vzorky) a try-with-resources spravují stream (proud).
         write(path, sequence(4));
         IO.println("Saved: " + path.toAbsolutePath());
     } else {
@@ -194,72 +193,76 @@ void main(String[] args) throws Exception {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `final` — The named value cannot be assigned another value afterwards. A referenced mutable object
-///   can still change.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `%` — The remainder after division; useful for repeated positions or turns.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `else` — The alternative when the preceding if condition is false.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
-/// - `::` — A method reference: supplies an action without calling it yet.
-/// - `this` — The current game object: this particular run and its stored state.
-/// - `record` — A small named bundle of values. Its component accessors use the component names with ().
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
-/// - `Set` — Stores distinct values; the same value is present at most once.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
-/// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
-/// - `JPanel` — A window area that can display the game’s drawing or controls.
-/// - `SwingUtilities.invokeLater` — Schedules window work for Swing’s event thread; the action runs
-///   later.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `final` — Pojmenované hodnotě už nelze přiřadit jinou. Odkazovaný mutable object (měnitelný objekt)
+///   se ale dál měnit může.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
+/// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `else` — Alternativní větev pro případ, že předchozí if condition (podmínka) neplatí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+///   až při pozdějším volání.
+/// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
+/// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
+/// - `record` — Malý pojmenovaný balíček hodnot. Component accessor (přístupová metoda složky) má jméno
+///   složky a závorky ().
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
+///   zpracovat.
+/// - `Set` — Uchovává různé hodnoty; stejná hodnota je přítomná nejvýše jednou.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
+/// - `Path` — Umístění v souborech, nikoli obsah souboru.
+/// - `Files` — JDK operace pro čtení a zápis místních souborů.
+/// - `JFrame` — Okno dodané JDK knihovnou Swing.
+/// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.
+/// - `SwingUtilities.invokeLater` — Naplánuje práci s oknem na Swing event thread (vlákno událostí); akce
+///   se provede později.
 // </editor-fold>
 

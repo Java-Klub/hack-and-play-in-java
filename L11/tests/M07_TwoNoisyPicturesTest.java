@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M07_TwoNoisyPicturesTest {
     static int checks;
     static final String[] CASES = {
-        "Neighbouring blank tiles use varied dot patterns.",
-        "Equal seeds repeat and different seeds vary the first share.",
-        "Each share tile still has exactly two black dots."
+        "Sousední prázdné dlaždice mají různé vzory teček.",
+        "Stejné seed (počáteční hodnoty) opakují a jiné mění první část.",
+        "Každá dlaždice části má dál přesně dvě černé tečky."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -56,7 +56,7 @@ public class M07_TwoNoisyPicturesTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I118: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I118: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

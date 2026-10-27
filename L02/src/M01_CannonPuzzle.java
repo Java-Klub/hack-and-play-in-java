@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -7,51 +7,51 @@ import javax.swing.Timer;
 
 /// # L02.01 · CannonPuzzle
 ///
-/// Aim a cannon at the orange target and watch a shot curve under gravity. Each attempt gives you a
-/// visible way to compare direction and launch power.
+/// Zamiř dělem na oranžový cíl a sleduj zakřivený let střely v gravitaci. Každý pokus ti umožní viditelně
+/// porovnat směr a sílu výstřelu.
 ///
-/// **Your mission:** The starter drops the shot at the muzzle because its calculated speed is zero.
-/// Repair launchSpeed so a drag of 100 gives speed 9 and an upward drag keeps its negative sign.
+/// **Tvoje mise:** Výchozí verze nechá střelu spadnout u hlavně, protože vypočtená rychlost je nula.
+/// Oprav launchSpeed tak, aby natažení 100 dalo rychlost 9 a natažení vzhůru zachovalo záporné znaménko.
 ///
-/// **Today you learn:** Arithmetic and numeric types: intermediate calculations matter. For example,
-/// integer 5 / 2 gives 2, while a fractional operand can keep the result 2.5; the final return type does
-/// not recover a fraction already lost.
+/// **Dnes trénuješ:** Arithmetic (aritmetika) a numeric type (číselné typy): záleží i na mezivýpočtech.
+/// Například celočíselné 5 / 2 dá 2, zatímco desetinný operand může zachovat 2.5; výsledný návratový typ
+/// už ztracenou část neobnoví.
 ///
-/// Use Run File, drag from the cannon towards the upper right and release to shoot at the orange target;
-/// R prepares another attempt.
-/// After your repair: Save → Test File → play again.
+/// Použij Run File, táhni od děla směrem vpravo nahoru a pusť myš pro výstřel na oranžový cíl; R připraví
+/// další pokus.
+/// Po opravě: Save → Test File → zahraj si znovu.
 double launchSpeed(double drag) {
     return drag * (9 / 100);
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `double launchSpeed(double drag)` — A named calculation receives one signed drag distance and
-///   returns a possibly fractional speed.
-/// - `return` — Send the calculated speed back to launch, rather than printing it.
-/// - `drag` — The distance supplied for this call; horizontal and vertical calls can receive different
-///   values.
-/// - `*` — Multiply the drag by the scaling result.
-/// - `(9 / 100)` — Parentheses make this division happen first; the two integer literals currently
-///   produce zero.
-/// - `;` — End the returned expression after it has been evaluated.
+/// - `double launchSpeed(double drag)` — Pojmenovaný výpočet přijme vzdálenost natažení se znaménkem a
+///   vrátí případně desetinnou rychlost.
+/// - `return` — Pošli vypočtenou rychlost zpět do launch místo jejího vypsání.
+/// - `drag` — Vzdálenost dodaná při tomto call (volání); vodorovné a svislé volání mohou dostat různé
+///   hodnoty.
+/// - `*` — Vynásob natažení výsledkem měřítka.
+/// - `(9 / 100)` — Závorky vynutí toto dělení jako první; dva celočíselné literal (doslovné zápisy) nyní
+///   dají nulu.
+/// - `;` — Ukonči vrácený expression (výraz) po jeho vyhodnocení.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// aim limits the direction and drag length. launch calls your calculation for both velocities, step adds
-/// gravity and detects hits, and the remaining window code supplies the mouse and timer.
+/// aim omezuje směr a délku natažení. launch volá tvůj výpočet pro obě rychlosti, step přidává gravitaci
+/// a rozpoznává zásahy a zbývající část okna dodává myš a timer (časovač).
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Evaluate 9 / 100 on its own: both numbers are integers.
-/// 2. Use a fractional factor rather than the truncated integer result.
-/// 3. Return drag * 0.09, or drag * 9.0 / 100.
+/// 1. Spočítej samostatně 9 / 100: obě čísla jsou celá.
+/// 2. Použij desetinný násobek místo zkráceného celočíselného výsledku.
+/// 3. Vrať drag * 0.09 nebo drag * 9.0 / 100.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int WIDTH = 600, HEIGHT = 420;
 
 double x, y, vx, vy, aimX, aimY;
@@ -213,68 +213,70 @@ void main() {
     SwingUtilities.invokeLater(this::showWindow);
 }
 
-/// Prepared entry points: main, restart, draw, showWindow.
+/// Připravené vstupní body: main, restart, draw, showWindow.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
-/// - `boolean` — A value that is either true or false.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `\` — Inside quoted text, starts an escape such as \n for a new line or \" for a quote.
-/// - `final` — The named value cannot be assigned another value afterwards. A referenced mutable object
-///   can still change.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `else` — The alternative when the preceding if condition is false.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
-/// - `::` — A method reference: supplies an action without calling it yet.
-/// - `this` — The current game object: this particular run and its stored state.
-/// - `public` — Makes this declaration accessible to other code.
-/// - `protected` — A visibility keyword used by supplied library callbacks, such as paintComponent.
-/// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
-///   background first.
-/// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
-/// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
-/// - `JPanel` — A window area that can display the game’s drawing or controls.
-/// - `@Override` — Marks a supplied replacement for a library action, such as painting.
-/// - `SwingUtilities.invokeLater` — Schedules window work for Swing’s event thread; the action runs
-///   later.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `\` — Uvnitř textu začíná escape (zvláštní zápis), například \n pro nový řádek nebo \" pro uvozovku.
+/// - `final` — Pojmenované hodnotě už nelze přiřadit jinou. Odkazovaný mutable object (měnitelný objekt)
+///   se ale dál měnit může.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `else` — Alternativní větev pro případ, že předchozí if condition (podmínka) neplatí.
+/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+///   až při pozdějším volání.
+/// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
+/// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
+/// - `public` — Zpřístupňuje tuto declaration (deklaraci) dalšímu kódu.
+/// - `protected` — Visibility keyword (klíčové slovo přístupnosti) používané připraveným library callback
+///   (knihovním zpětným voláním), například paintComponent.
+/// - `super` — V super.paintComponent(g) požádá připravenou parent implementation (nadřazenou
+///   implementaci), aby nejprve vykreslila běžné pozadí.
+/// - `Graphics2D` — Kreslicí nástroj dodaný při vykreslování okna nebo obrázku.
+/// - `JFrame` — Okno dodané JDK knihovnou Swing.
+/// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.
+/// - `@Override` — Označuje dodanou náhradu knihovní akce, například kreslení.
+/// - `SwingUtilities.invokeLater` — Naplánuje práci s oknem na Swing event thread (vlákno událostí); akce
+///   se provede později.
 // </editor-fold>
 

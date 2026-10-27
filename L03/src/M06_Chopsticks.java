@@ -1,17 +1,17 @@
 /// # L03.06 · Chopsticks
 ///
-/// Tap an opponent’s hand with one of your living hands and add your fingers to it. Five or more fingers
-/// knock a hand out; eliminate both opposing hands to win.
+/// Ťukni jednou ze svých živých rukou do soupeřovy ruky a přičti jí své prsty. Pět a více prstů ruku
+/// vyřadí; vyřazením obou soupeřových rukou vyhraješ.
 ///
-/// **Your mission:** A knocked-out hand can still participate in a strike. Repair handsAlive so invalid
-/// hand numbers and either zero-finger hand are rejected before the game changes.
+/// **Tvoje mise:** Vyřazená ruka se stále může účastnit zásahu. Oprav handsAlive tak, aby neplatná čísla
+/// rukou a kteroukoli ruku s nulou prstů odmítlo před změnou hry.
 ///
-/// **Today you learn:** Several guards in order: first establish that a place exists, then inspect
-/// whether it is usable. A rejected strike must not move fingers or pass the turn.
+/// **Dnes trénuješ:** Několik guard (ochran) v pořadí: nejdřív ověř, že místo existuje, a potom zkoumej,
+/// zda je použitelné. Odmítnutý zásah nesmí změnit prsty ani předat tah.
 ///
-/// Use Run File and enter 1 1 three times to knock out a hand, then try a fourth 1 1 and watch whether an
-/// invalid strike changes the player.
-/// After your repair: Save → Test File → play again.
+/// Použij Run File a třikrát zadej 1 1 pro vyřazení ruky, potom zkus čtvrté 1 1 a sleduj, zda neplatný
+/// zásah změní hráče.
+/// Po opravě: Save → Test File → zahraj si znovu.
 boolean handsAlive(int own, int opposing) {
     if (own < 0 || own >= 2 || opposing < 0 || opposing >= 2) {
         return false;
@@ -22,34 +22,33 @@ boolean handsAlive(int own, int opposing) {
     return true;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `own` — The selected attacking-hand index, already converted to zero or one.
-/// - `opposing` — The selected defending-hand index for the other player.
-/// - `own < 0 || own >= 2` — These alternatives reject a number outside the two available hand slots.
-/// - `hands[player][own]` — Read fingers from the supplied two-level table: first choose the player, then
-///   their hand.
-/// - `< 0` — This asks whether a value is negative; a knocked-out hand actually has zero fingers.
-/// - `return false;` — End the check as rejected as soon as one guard finds a problem.
-/// - `return true;` — Only a call passing both guards reaches the final accepted result.
+/// - `own` — Vybraný index (pořadí) útočící ruky, už převedený na nulu nebo jedničku.
+/// - `opposing` — Vybraný index (pořadí) bránící ruky druhého hráče.
+/// - `own < 0 || own >= 2` — Tyto alternativy odmítají číslo mimo dvě dostupná místa rukou.
+/// - `hands[player][own]` — Přečti prsty z připravené dvouúrovňové tabulky: nejdřív vyber hráče a potom
+///   jeho ruku.
+/// - `< 0` — Toto se ptá, zda je hodnota záporná; vyřazená ruka má ve skutečnosti nula prstů.
+/// - `return false;` — Ukonči kontrolu jako odmítnutou, jakmile guard (ochrana) najde problém.
+/// - `return true;` — Konečného přijetí dosáhne pouze call (volání), které projde oběma ochranami.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// command converts the typed hand numbers and asks handsAlive before applying a strike. The supplied
-/// body adds fingers, eliminates hands, changes turns and detects repeated positions; main displays both
-/// players’ hands.
+/// command převede napsaná čísla rukou a ptá se handsAlive před zásahem. Připravené tělo přičítá prsty,
+/// vyřazuje ruce, střídá hráče a odhaluje opakované pozice; main zobrazuje ruce obou hráčů.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Zero, not a negative number, represents a dead hand.
-/// 2. Keep the index guard before reading either hand.
-/// 3. Reject when either stored hand value == 0.
+/// 1. Mrtvou ruku představuje nula, nikoli záporné číslo.
+/// 2. Ochranu index (indexů) zachovej před přečtením obou rukou.
+/// 3. Odmítni tah, když je kterákoli uložená hodnota ruky == 0.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 int[][] hands;
 int player;
 Set<String> seen;
@@ -126,53 +125,56 @@ void require(boolean valid) {
     }
 }
 
-/// Prepared entry points: main, reset, command.
+/// Připravené vstupní body: main, reset, command.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `\` — Inside quoted text, starts an escape such as \n for a new line or \" for a quote.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `while` — Keeps repeating its body while its condition stays true.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `Set` — Stores distinct values; the same value is present at most once.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `\` — Uvnitř textu začíná escape (zvláštní zápis), například \n pro nový řádek nebo \" pro uvozovku.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `Set` — Uchovává různé hodnoty; stejná hodnota je přítomná nejvýše jednou.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
 // </editor-fold>
 

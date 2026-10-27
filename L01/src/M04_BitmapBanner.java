@@ -1,47 +1,47 @@
 /// # L01.04 · BitmapBanner
 ///
-/// Make a large arcade sign out of small printed # characters. The handmade alphabet lets you turn a
-/// short message into five rows of pixel lettering.
+/// Vytvoř velkou ceduli do arcade z malých vypsaných znaků #. Ručně připravená abeceda promění krátkou
+/// zprávu v pět řádků obrazového písma.
 ///
-/// **Your mission:** The sign currently prints only blank space. Repair the message from bannerMessage so
-/// the default sign reads JAVA CLUB!.
+/// **Tvoje mise:** Cedule nyní vypisuje jen prázdné místo. Oprav zprávu z bannerMessage tak, aby výchozí
+/// cedule říkala JAVA CLUB!.
 ///
-/// **Today you learn:** Literals and output: the chosen text determines what another action prints.
-/// Spaces inside quotes are real characters too, even though their output can look empty.
+/// **Dnes trénuješ:** Literal (doslovný zápis) a output (výstup): zvolený text určuje, co další akce
+/// vytiskne. Mezery v uvozovkách jsou také skutečné znaky, i když jejich výstup může vypadat prázdně.
 ///
-/// Use Run File and look in Output for the five-line sign; after repairing it, try reading it from
-/// farther away.
-/// After your repair: Save → Test File → play again.
+/// Použij Run File a v Output si prohlédni pětiřádkovou ceduli; po opravě ji zkus přečíst z větší
+/// vzdálenosti.
+/// Po opravě: Save → Test File → zahraj si znovu.
 String bannerMessage() {
     return "     ";
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `String` — This action answers with text rather than a number.
-/// - `bannerMessage()` — The empty parentheses mean no input is needed to choose the default sign.
-/// - `{` — The matching braces contain the answer-producing body.
-/// - `return` — Pass the message back; this statement does not print the sign by itself.
-/// - `"     "` — This literal contains five spaces, not an empty pair of quotes. The font renders those
-///   spaces as blank cells.
-/// - `;` — Finish the return statement after the text value.
+/// - `String` — Tato akce odpovídá textem místo čísla.
+/// - `bannerMessage()` — Prázdné závorky znamenají, že výběr výchozí cedule nepotřebuje input (vstup).
+/// - `{` — Odpovídající složené závorky obsahují tělo, které vytváří odpověď.
+/// - `return` — Předej zprávu zpět; tento statement (příkaz) sám ceduli netiskne.
+/// - `"     "` — Tento literal (doslovný text) obsahuje pět mezer, nikoli prázdné uvozovky. Písmo tyto
+///   mezery zobrazí jako prázdná políčka.
+/// - `;` — Ukonči return statement (příkaz vrácení) za textovou hodnotou.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// banner already contains the small letter patterns and builds five output rows. main asks for the
-/// default message and prints the result. This font supports A B C J L U V ! and spaces.
+/// banner už obsahuje malé vzory písmen a sestaví pět řádků output (výstupu). main si vyžádá výchozí
+/// zprávu a vytiskne výsledek. Písmo podporuje A B C J L U V ! a mezery.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Spaces are real characters, but this font leaves them blank.
-/// 2. Keep the text inside one pair of double quotes.
-/// 3. The complete return statement is return "JAVA CLUB!";
+/// 1. Mezery jsou skutečné znaky, ale toto písmo je nechá prázdné.
+/// 2. Text nech uvnitř jedné dvojice dvojitých uvozovek.
+/// 3. Celý return statement (příkaz vrácení) je return "JAVA CLUB!";
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 Map<Character, String> font = Map.of(
     'A', "01110/10001/11111/10001/10001",
     'B', "11110/10001/11110/10001/11110",
@@ -89,58 +89,60 @@ void main(String[] args) {
     }
 }
 
-/// Prepared entry points: main.
+/// Připravené vstupní body: main.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `'` — Single quotes enclose one character, such as a board marker.
-/// - `\` — Inside quoted text, starts an escape such as \n for a new line or \" for a quote.
-/// - `char` — A type for one UTF-16 code unit, often a simple board character such as X. Text uses
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `'` — Jednoduché uvozovky ohraničují jeden character (znak), například značku na desce.
+/// - `\` — Uvnitř textu začíná escape (zvláštní zápis), například \n pro nový řádek nebo \" pro uvozovku.
+/// - `char` — Type (typ) pro jednu UTF-16 jednotku, často jednoduchý znak desky jako X. Pro text slouží
 ///   String.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `Map` — Associates keys with values. A missing key needs an explicit fallback or decision.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `Map` — Přiřazuje key (klíčům) hodnoty. Pro chybějící key je třeba rozhodnout výchozí chování.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
 // </editor-fold>
 

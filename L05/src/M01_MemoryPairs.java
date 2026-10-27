@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -6,46 +6,47 @@ import java.awt.GridLayout;
 
 /// # L05.01 · MemoryPairs
 ///
-/// Flip two cards and remember where their partners hide. The game is unfair when different cards all
-/// show the same face.
+/// Otoč dvě karty a zapamatuj si, kde se skrývají jejich dvojice. Hra není fér, když různé karty ukazují
+/// stejný obrázek.
 ///
-/// **Your mission:** Revealed cards borrow the first card’s value. Repair visible(int index) while
-/// keeping unmatched hidden cards concealed.
+/// **Tvoje mise:** Odkryté karty přebírají hodnotu první karty. Oprav visible(int index), ale nechej
+/// nespárované skryté karty zakryté.
 ///
-/// **Today you learn:** Arrays: related arrays describe the same numbered positions. Read the requested
-/// position without changing the rule that decides whether it is visible.
+/// **Dnes trénuješ:** Arrays (pole): související pole popisují stejné očíslované pozice. Přečti
+/// požadovanou pozici a zachovej pravidlo, které rozhoduje o jejím odkrytí.
 ///
-/// Run File and click two covered cards; after a mismatch, clicking another covered card begins your next
-/// attempt.
-/// After your repair: Save → Test File → play again.
+/// Spusť Run File a klikni na dvě zakryté karty; po neshodě začne kliknutí na další zakrytou kartu nový
+/// pokus.
+/// Po opravě: Save → Test File → zahraj si znovu.
 int visible(int index) {
     return matched[index] || index == first || index == second ? cards[0] : 0;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `matched[index]` — Reads whether this exact card position is already part of a found pair.
-/// - `||` — Logical OR: any one of these visibility reasons is enough.
-/// - `index == first` — Compares the requested position with the first selected position.
-/// - `? cards[0] : 0` — Conditional expression: the left result is used when visible, otherwise zero. The
-///   selected array entry is part of the fault.
+/// - `matched[index]` — Čte, zda právě tato pozice karty už patří k nalezené dvojici.
+/// - `||` — Logical OR (logické nebo): stačí kterýkoli z uvedených důvodů odkrytí.
+/// - `index == first` — Porovnává požadovanou pozici s první vybranou pozicí.
+/// - `? cards[0] : 0` — Conditional expression (podmíněný výraz): při odkrytí použije levý výsledek,
+///   jinak nulu. Zvolený prvek pole souvisí s chybou.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// play() remembers the two selections and marks real pairs. refresh() asks visible() for each button
-/// label; the supplied Swing callbacks connect clicks to those two methods.
+/// play() pamatuje dvě vybrané karty a označuje skutečné dvojice. refresh() se přes visible() ptá na
+/// popisek každého tlačítka; připravené Swing callbacks (reakce na události) propojují kliknutí s těmito
+/// metodami.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. cards and matched describe the same numbered positions.
-/// 2. index is the position requested by refresh().
-/// 3. Use cards[index] only on the visible branch of the conditional.
+/// 1. cards a matched popisují stejné očíslované pozice.
+/// 2. index je pozice, kterou požaduje refresh().
+/// 3. cards[index] použij jen ve viditelné větvi podmínky.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 int[] cards = new int[12];
 boolean[] matched = new boolean[12];
 int first = -1;
@@ -55,8 +56,7 @@ int pairs;
 JButton[] buttons = new JButton[12];
 JLabel status = new JLabel();
 
-/// reset(): Restores the starting Memory Pairs round, clearing the state that belongs to the old
-/// round.
+/// reset(): Obnovuje počáteční kolo Memory Pairs a maže stav patřící starému kolu.
 void reset(long seed) {
     var values = new ArrayList<Integer>();
     for (int value = 1; value <= 6; value++) {
@@ -74,7 +74,7 @@ void reset(long seed) {
     pairs = 0;
 }
 
-/// play(): Tracks two reveals, delays mismatches and permanently marks a matching pair.
+/// play(): Sleduje dvě otočení, ponechá neshodu viditelnou a shodnou dvojici trvale označí.
 boolean play(int index) {
     if (index < 0 || index >= cards.length || matched[index] || index == first || index == second || pairs == 6) {
         return false;
@@ -99,7 +99,8 @@ boolean play(int index) {
     return true;
 }
 
-/// refresh(): Copies the current model values into button labels, enabled states and status text.
+/// refresh(): Přenáší aktuální hodnoty modelu do popisků tlačítek, jejich povolení a stavového
+/// textu.
 void refresh() {
     for (int i = 0; i < cards.length; i++) {
         int value = visible(i);
@@ -109,8 +110,7 @@ void refresh() {
     status.setText((pairs == 6 ? "All pairs found! " : "Pairs: " + pairs + "/6. ") + "Attempts: " + attempts);
 }
 
-/// show(): Supplied later topic: Swing button callbacks invoke the model and refresh its visible
-/// state.
+/// show(): Dodané pozdější téma: Swing callbacks tlačítek volají model a obnovují jeho zobrazení.
 void show() {
     var frame = new JFrame("Memory Pairs");
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -139,68 +139,71 @@ void show() {
     frame.setVisible(true);
 }
 
-/// main(): Starts the model, then schedules the supplied window on Swing’s event thread.
+/// main(): Spouští model a potom plánuje dodané okno na Swing event thread.
 void main() {
     reset(System.nanoTime());
     SwingUtilities.invokeLater(this::show);
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `boolean` — A value that is either true or false.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `!=` — Checks that two values differ.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `else` — The alternative when the preceding if condition is false.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
-/// - `::` — A method reference: supplies an action without calling it yet.
-/// - `this` — The current game object: this particular run and its stored state.
-/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
-/// - `JPanel` — A window area that can display the game’s drawing or controls.
-/// - `SwingUtilities.invokeLater` — Schedules window work for Swing’s event thread; the action runs
-///   later.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `long` — Whole-number type (typ pro celá čísla) s větším rozsahem než int. Koncové L označuje long
+///   literal (přímo zapsanou hodnotu).
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `!=` — Ověří, že se dvě hodnoty liší.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `else` — Alternativní větev pro případ, že předchozí if condition (podmínka) neplatí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+///   až při pozdějším volání.
+/// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
+/// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
+/// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
+///   zopakuje stejnou posloupnost.
+/// - `JFrame` — Okno dodané JDK knihovnou Swing.
+/// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.
+/// - `SwingUtilities.invokeLater` — Naplánuje práci s oknem na Swing event thread (vlákno událostí); akce
+///   se provede později.
 // </editor-fold>
 

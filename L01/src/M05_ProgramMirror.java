@@ -1,77 +1,79 @@
 /// # L01.05 · ProgramMirror
 ///
-/// A small program mirror shows a Java instruction as text, then shows the message that instruction would
-/// print. Compare the instruction with its result and see how a program can describe another program.
+/// Malé programové zrcadlo ukáže Java instrukci jako text a potom zprávu, kterou by tato instrukce
+/// vypsala. Porovnej instrukci s výsledkem a sleduj, jak může program popisovat jiný program.
 ///
-/// **Your mission:** The reflected instruction has lost the quotation marks around HELLO. Repair
-/// templateLine so its printed instruction contains them, while the next output stays HELLO.
+/// **Tvoje mise:** Odražená instrukce ztratila uvozovky kolem HELLO. Oprav templateLine tak, aby je
+/// vypsaná instrukce obsahovala a další output (výstup) zůstal HELLO.
 ///
-/// **Today you learn:** Quoted text and escaping: code-looking text inside a String is still only data. A
-/// quote that belongs inside that text needs special notation so Java does not mistake it for the end of
-/// the String.
+/// **Dnes trénuješ:** Uvozovaný text a escaping (zápis speciálních znaků): text připomínající code
+/// (program) uvnitř String (řetězce) je stále jen data. Uvozovka patřící dovnitř potřebuje zvláštní
+/// zápis, aby ji Java nepovažovala za konec řetězce.
 ///
-/// Use Run File and compare the two lines in Output: the first should describe an instruction and the
-/// second should be its message.
-/// After your repair: Save → Test File → play again.
+/// Použij Run File a porovnej dva řádky v Output: první má popisovat instrukci a druhý má být její
+/// zprávou.
+/// Po opravě: Save → Test File → zahraj si znovu.
 String templateLine() {
     return "IO.println(HELLO);";
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `String` — The returned value is text, even when that text looks like a Java instruction.
-/// - `templateLine()` — This no-input action supplies the instruction’s written form.
-/// - `return` — Give that text to main, which will print it.
-/// - `"IO.println(HELLO);"` — The outer quotes enclose the entire text value; the characters inside are
-///   not executed here.
-/// - `IO.println(HELLO);` — Inside the String, the dot, parentheses and semicolon are printable
-///   characters describing another instruction.
-/// - `;` — The semicolon after the closing quote ends the real return statement; it differs from the
-///   printed semicolon inside the text.
+/// - `String` — Vrácená hodnota je text, i když vypadá jako Java instrukce.
+/// - `templateLine()` — Tato akce bez input (vstupu) poskytuje zapsanou podobu instrukce.
+/// - `return` — Předej tento text do main, která jej vypíše.
+/// - `"IO.println(HELLO);"` — Vnější uvozovky uzavírají celou textovou hodnotu; znaky uvnitř se zde
+///   neprovádějí.
+/// - `IO.println(HELLO);` — Uvnitř String (řetězce) jsou tečka, závorky a středník tisknutelné znaky
+///   popisující jinou instrukci.
+/// - `;` — Středník za zavírací uvozovkou ukončuje skutečný return statement (příkaz vrácení); liší se od
+///   tištěného středníku uvnitř textu.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// main prints the returned template and then the separate HELLO message. This task mirrors one
-/// instruction; it does not print its own complete source. The two actual printing actions are already
-/// supplied.
+/// main vypíše vrácenou šablonu a potom samostatnou zprávu HELLO. Úloha zrcadlí jednu instrukci;
+/// nevypisuje svůj celý source (zdrojový text). Obě skutečné tiskové akce jsou připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. The line in quotes is data; it is not executed as Java code.
-/// 2. To put a double quote inside a String literal, write backslash then quote.
-/// 3. Use the String literal "IO.println(\"HELLO\");".
+/// 1. Řádek v uvozovkách je data; nespouští se jako Java code (kód).
+/// 2. Dvojitou uvozovku uvnitř String literal (řetězcového literálu) zapiš zpětným lomítkem a uvozovkou.
+/// 3. Použij String literal (řetězcový literál) "IO.println(\"HELLO\");".
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 void main() {
     IO.println(templateLine());
     IO.println("HELLO");
 }
 
-/// Prepared entry points: main.
+/// Připravené vstupní body: main.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
 // </editor-fold>
 

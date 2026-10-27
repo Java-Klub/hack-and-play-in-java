@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M07_MarkovMischiefTest {
     static int checks;
     static final String[] CASES = {
-        "Repeated moon keeps cat, dog, cat in that order.",
-        "Existing follower lists survive later occurrences.",
-        "A single word has an empty list and blank corpora are rejected."
+        "Opakované moon zachová cat, dog, cat v tomto pořadí.",
+        "Existující List (seznamy) následníků přežijí další výskyty.",
+        "Jediné slovo má prázdný List a prázdný text se odmítne."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -59,7 +59,7 @@ public class M07_MarkovMischiefTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I130: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I130: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M11_SecretBeepsTest {
     static int checks;
     static final String[] CASES = {
-        "The new word gap changes the actual waveform length.",
-        "The original seven-unit mode and three-unit letter gap remain unchanged.",
-        "Word-gap values outside 3–12 are rejected."
+        "Nová mezera mezi slovy změní skutečnou délku zvuku.",
+        "Původních sedm jednotek i tři jednotky mezi písmeny zůstanou stejné.",
+        "Mezery mezi slovy mimo 3–12 se odmítnou."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -58,7 +58,7 @@ public class M11_SecretBeepsTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I143: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I143: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

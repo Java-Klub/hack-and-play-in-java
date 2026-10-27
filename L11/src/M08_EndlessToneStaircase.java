@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioFileFormat;
@@ -8,18 +8,18 @@ import java.io.ByteArrayInputStream;
 
 /// # L11.08 · EndlessToneStaircase
 ///
-/// Make a tone staircase that seems to keep climbing by blending octave layers. Compare its finite WAV
-/// with a plain rising tone and listen for where the illusion takes over.
+/// Vytvoř zvukové schodiště, které díky vrstvám oktáv zdánlivě stále stoupá. Porovnej konečný WAV s
+/// obyčejně stoupajícím tónem a poslouchej, kde začne působit iluze.
 ///
-/// **Your mission:** The WAV is written in the working directory even when you request a nested
-/// destination. Preserve the complete chosen path through the final write operation.
+/// **Tvoje mise:** WAV se zapíše do pracovního adresáře, i když požádáš o vnořený cíl. Zachovej úplný
+/// zvolený Path (cestu) až do konečného zápisu.
 ///
-/// **Today you learn:** A Path carries both directories and filename. Keeping only its last name changes
-/// the destination; preparing parent directories does not fix a later write to another location.
+/// **Dnes trénuješ:** Path (cesta) nese adresáře i název souboru. Ponechání jen posledního názvu změní
+/// cíl; příprava nadřazených adresářů neopraví pozdější zápis jinam.
 ///
-/// After Run File, press Enter to save exports/shepard.wav and open it with its .plain.wav comparison in
-/// an audio player.
-/// After your repair: Save → Test File → play again.
+/// Po Run File stiskni Enter pro uložení exports/shepard.wav a otevři jej v přehrávači spolu se
+/// srovnávacím .plain.wav.
+/// Po opravě: Save → Test File → zahraj si znovu.
 void write(Path path, double[] signal) throws Exception {
     byte[] pcm = new byte[signal.length * 2];
     for (int i = 0; i < signal.length; i++) {
@@ -34,34 +34,33 @@ void write(Path path, double[] signal) throws Exception {
     }
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `path.toAbsolutePath().getParent()` — Finds the full destination’s parent directory so it can be
-///   created.
-/// - `path.getFileName()` — Extracts only the last name and discards the requested directory.
-/// - `try (var stream =` — Closes the owned audio stream when the block finishes, even if writing fails.
-/// - `AudioSystem.write` — Encodes the supplied samples as a WAV at the destination it receives.
+/// - `path.toAbsolutePath().getParent()` — Najde nadřazený adresář úplného cíle, aby mohl vzniknout.
+/// - `path.getFileName()` — Vybere jen poslední název a zahodí požadovaný adresář.
+/// - `try (var stream =` — Po skončení bloku zavře vlastní audio stream (zvukový proud), i když zápis
+///   selže.
+/// - `AudioSystem.write` — Zakóduje připravené sample (vzorky) do WAV v předaném cíli.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// The supplied synthesis blends octave-spaced tones with changing weights, while a separate plain signal
-/// gives a comparison. write converts samples to PCM and the JDK writes the WAV header; main prints where
-/// to open both files.
+/// Připravená syntéza míchá tóny po oktávách s měnícími se vahami, samostatný plain signal dává srovnání.
+/// Write převádí sample (vzorky) na PCM a JDK zapíše WAV hlavičku; main vypíše, kde oba soubory otevřít.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. getFileName deliberately discards the parent path.
-/// 2. The original Path already points to the chosen destination.
-/// 3. Use that Path in AudioSystem.write; retain createDirectories and try-with-resources.
+/// 1. GetFileName záměrně zahazuje nadřazenou cestu.
+/// 2. Původní Path už ukazuje na zvolený cíl.
+/// 3. Použij jej v AudioSystem.write; zachovej createDirectories i try-with-resources.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int RATE = 22050;
 
-/// Supplied synthesis: bounded sample loops build audio; there is no autoplay.
+/// Připravená syntéza: omezené sample loop (cykly vzorků) tvoří zvuk; automatické přehrávání zde není.
 double[] signal(int layers, boolean plain) {
     if (layers < 2 || layers > 8) {
         throw new IllegalArgumentException("Octave layers: 2..8.");
@@ -86,9 +85,9 @@ double[] signal(int layers, boolean plain) {
     return signal;
 }
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// signal creates three finite pitch loops; no autoplay is attempted.
-/// write encodes the selected samples; main writes layered/plain WAV paths and prints their location.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// Signal tvoří tři konečné melodické loop (cykly); nepokouší se o automatické přehrání.
+/// Write kóduje zvolené sample (vzorky); main uloží obě WAV verze a vypíše umístění.
 void main(String[] args) throws Exception {
     if (args.length == 0) {
         String entered = IO.readln("Output path (blank exports/shepard.wav, q quits): ");
@@ -113,63 +112,66 @@ void main(String[] args) throws Exception {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `'` — Single quotes enclose one character, such as a board marker.
-/// - `final` — The named value cannot be assigned another value afterwards. A referenced mutable object
-///   can still change.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `++` — Increases a numeric value by one.
-/// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `%` — The remainder after division; useful for repeated positions or turns.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `'` — Jednoduché uvozovky ohraničují jeden character (znak), například značku na desce.
+/// - `final` — Pojmenované hodnotě už nelze přiřadit jinou. Odkazovaný mutable object (měnitelný objekt)
+///   se ale dál měnit může.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
+/// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
+///   zpracovat.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
+/// - `Path` — Umístění v souborech, nikoli obsah souboru.
+/// - `Files` — JDK operace pro čtení a zápis místních souborů.
 // </editor-fold>
 

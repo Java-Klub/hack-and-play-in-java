@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -6,18 +6,18 @@ import javax.imageio.ImageIO;
 
 /// # L11.06 · ColourFilterSecrets
 ///
-/// Hide a clear message inside a noisy colour picture, then reveal it through a red-channel view.
-/// Changing the seed should change the camouflage while leaving the secret readable.
+/// Ukryj jasný nápis do barevného šumu a potom jej odhal pohledem na červenou složku. Změna seed
+/// (počáteční hodnoty) má změnit maskování a zachovat čitelnou zprávu.
 ///
-/// **Your mission:** The noise stays identical for every requested seed. Repair the random source while
-/// preserving the channel that carries the hidden mask.
+/// **Tvoje mise:** Šum zůstává stejný při každém požadovaném seed (počáteční hodnotě). Oprav zdroj náhody
+/// a zachovej složku, která nese ukrytou masku.
 ///
-/// **Today you learn:** One seeded Random should supply the noise across the whole image. Its
-/// repeatability is useful for comparison, while a different seed should change the distracting channels.
+/// **Dnes trénuješ:** Jeden Random se seed (počáteční hodnotou) má dodávat šum pro celý obrázek.
+/// Opakovatelnost pomáhá s porovnáním, zatímco jiný seed má změnit rušivé barevné složky.
 ///
-/// After Run File, enter seed 42 and open colour-filter-secrets-42.png, compare its noisy top and
-/// revealed bottom halves, then rerun with 43.
-/// After your repair: Save → Test File → play again.
+/// Po Run File zadej seed (počáteční hodnotu) 42, otevři colour-filter-secrets-42.png a porovnej
+/// zašuměnou horní a odhalenou spodní polovinu, potom spusť 43.
+/// Po opravě: Save → Test File → zahraj si znovu.
 BufferedImage hide(BufferedImage mask, long seed) {
     var random = new Random(0);
     var image = new BufferedImage(mask.getWidth(), mask.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -30,30 +30,32 @@ BufferedImage hide(BufferedImage mask, long seed) {
     return image;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `new Random(0)` — Fixes the noise sequence to zero instead of the requested seed.
-/// - `red << 16` — Places the secret-bearing red value into its part of the packed RGB integer.
-/// - `random.nextInt(256)` — Draws a channel intensity from zero through 255.
-/// - `|` — Combines the red, green and blue bit fields into one colour.
+/// - `new Random(0)` — Pevně nastaví sequence (posloupnost) šumu na nulu místo požadovaného seed
+///   (počáteční hodnoty).
+/// - `red << 16` — Vloží červenou hodnotu nesoucí tajemství do její části zabaleného RGB integer (celého
+///   čísla).
+/// - `random.nextInt(256)` — Vybere intenzitu složky od nuly do 255.
+/// - `|` — Spojí bit field (bitové oblasti) červené, zelené a modré do jedné barvy.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// The supplied mask contains the text. hide combines that mask with noise, and render places the
-/// disguised and channel-revealed views in the top and bottom halves of one saved picture; changing
-/// randomness must not rewrite the mask.
+/// Připravená maska obsahuje nápis. Hide ji spojí se šumem a render umístí maskovaný i odhalený pohled do
+/// horní a spodní poloviny jediného uloženého obrázku; změna náhody nesmí přepsat masku.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. The mask determines the red channel; randomness changes green/blue.
-/// 2. Do not change the channel encoding or message.
-/// 3. Replace the hard-coded seed with the parameter; reuse that Random in the pixel loops.
+/// 1. Mask určuje červený channel (kanál); náhodnost mění zelený/modrý.
+/// 2. Neměň channel encoding (kódování kanálů) ani zprávu.
+/// 3. Nahraď pevný seed (počáteční hodnotu) předaným parameter (parametrem); Random používej v celém
+///   pixel loop (cyklu bodů obrazu).
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 String message = "SECRET";
 
 BufferedImage mask(String text) {
@@ -83,7 +85,7 @@ BufferedImage reveal(BufferedImage image) {
     return result;
 }
 
-/// Supplied image creation: generation and drawing remain visible in this file.
+/// Připravená tvorba obrazu: generování a kreslení zůstávají viditelné v tomto file (souboru).
 BufferedImage render(long seed, double option) {
     var hidden = hide(mask(message), seed);
     var clear = reveal(hidden);
@@ -98,7 +100,7 @@ BufferedImage render(long seed, double option) {
     return image;
 }
 
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
+/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
 void save(Path path, long seed, double option) throws Exception {
     Files.createDirectories(path.toAbsolutePath().getParent());
     if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
@@ -106,9 +108,9 @@ void save(Path path, long seed, double option) throws Exception {
     }
 }
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// mask draws the supplied text; hide adds coloured camouflage; reveal reads the red channel.
-/// render shows hidden and revealed halves; save/main export the local PNG.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// Mask kreslí připravený text; hide přidá barevné maskování; reveal čte červený channel (kanál).
+/// Render ukáže skrytou a odhalenou půlku; save/main uloží místní PNG.
 void main(String[] args) throws Exception {
     if (args.length == 0) {
         String entered = IO.readln("Seed (blank 42, q quits): ");
@@ -127,7 +129,7 @@ void main(String[] args) throws Exception {
         if (args.length > 2) {
             message = args[2];
         }
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
+/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
         save(path, seed, option);
         IO.println("Saved: " + path.toAbsolutePath());
     } catch (IllegalArgumentException invalid) {
@@ -136,59 +138,64 @@ void main(String[] args) throws Exception {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
-/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `long` — Whole-number type (typ pro celá čísla) s větším rozsahem než int. Koncové L označuje long
+///   literal (přímo zapsanou hodnotu).
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
+///   zpracovat.
+/// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
+///   zopakuje stejnou posloupnost.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
+/// - `Path` — Umístění v souborech, nikoli obsah souboru.
+/// - `Files` — JDK operace pro čtení a zápis místních souborů.
 // </editor-fold>
 

@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M10_PictureMusicTest {
     static int checks;
     static final String[] CASES = {
-        "The new +12 shift doubles frequency and changes actual samples.",
-        "Zero and -12 retain the old mapping and octave relation.",
-        "Invalid rows and shifts are rejected."
+        "Nový posun +12 zdvojnásobí frekvenci a změní skutečné sample (vzorky).",
+        "Nula a -12 zachovají původní mapování i vztah oktávy.",
+        "Neplatné řádky a posuny se odmítnou."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -59,7 +59,7 @@ public class M10_PictureMusicTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I134: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I134: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

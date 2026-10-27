@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M01_AsteroidDriftTest {
     static int checks;
     static final String[] CASES = {
-        "Creating a callback does not fire.",
-        "Invoking the callback and the real held-key path fire once.",
-        "Cooldown and a lost game still prevent a new shot."
+        "Vytvoření callback (předané akce) nevystřelí.",
+        "Spuštění callback i skutečná držená klávesa vystřelí jednou.",
+        "Cooldown i prohra dál brání nové střele."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -59,7 +59,7 @@ public class M01_AsteroidDriftTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I051: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I051: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

@@ -1,17 +1,17 @@
 /// # L06.12 · Merge2048
 ///
-/// Slide numbered tiles into bigger pairs. Design tiny rows that can expose a fake 2048 engine before a
-/// full game hides its mistakes.
+/// Posouvej číselné dílky do větších dvojic. Navrhni krátké řádky, které odhalí falešný stroj pro 2048
+/// dřív, než chybu skryje celá hra.
 ///
-/// **Your mission:** The empty-row check lets broken merge rules pass. Expand learnerChecks() to
-/// challenge compression, merging, independent pairs, and awarded points.
+/// **Tvoje mise:** Kontrola prázdného řádku propouští chybná slučovací pravidla. Rozšiř learnerChecks() a
+/// prověř stlačení, slučování, nezávislé dvojice i získané body.
 ///
-/// **Today you learn:** Writing functional checks: a result can have more than one observable part. State
-/// both the transformed row and its score, then choose cases that separate plausible mistakes.
+/// **Dnes trénuješ:** Writing functional checks (psaní funkčních kontrol): výsledek může mít více
+/// pozorovatelných částí. Uveď změněný řádek i skóre a zvol případy rozlišující uvěřitelné chyby.
 ///
-/// Run File and type A followed by Enter to slide left, then try other directions and use Test File to
-/// challenge your row examples.
-/// After your repair: Save → Test File → play again.
+/// Spusť Run File a napiš A potvrzené Enter pro posun vlevo, potom vyzkoušej další směry a přes Test File
+/// prověř řádkové příklady.
+/// Po opravě: Save → Test File → zahraj si znovu.
 record MergeExample(int[] input, int[] expected, int score) {
 }
 
@@ -19,36 +19,36 @@ MergeExample[] learnerChecks() {
     return new MergeExample[]{new MergeExample(new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}, 0)};
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `record MergeExample(int[] input, int[] expected, int score)` — An example carries an input row, an
-///   expected row, and expected awarded points.
-/// - `MergeExample[]` — The checker consumes an array of independent row scenarios.
-/// - `new int[]{0, 0, 0, 0}` — An explicit four-cell row; zero represents an empty slot.
-/// - `new MergeExample(` — Constructs one complete expectation for the real rule and its wrong variants.
+/// - `record MergeExample(int[] input, int[] expected, int score)` — Example (příklad) nese vstupní
+///   řádek, očekávaný řádek a očekávaný bodový zisk.
+/// - `MergeExample[]` — Kontrola přijímá array (pole) samostatných řádkových scénářů.
+/// - `new int[]{0, 0, 0, 0}` — Výslovně zadaný čtyřprvkový řádek; nula představuje prázdné místo.
+/// - `new MergeExample(` — Vytvoří jedno úplné očekávání pro skutečné pravidlo i jeho chybné varianty.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// merge() supplies the real row rule used by movement. Startup checks your examples against it; Test
-/// File tries five wrong variants, including one that merges only the first available pair.
+/// merge() poskytuje skutečné pravidlo řádku použité při pohybu. Start proti němu ověří příklady; Test
+/// File zkouší pět chybných variant včetně té, která sloučí jen první dostupnou dvojici.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Every example is one four-cell row sliding left; score is the sum of created tile values.
-/// 2. [2,0,2,0] becomes [4,0,0,0], but [2,2,4,0] becomes [4,4,0,0].
-/// 3. Also test [4,4,4,4] -> [8,8,0,0] with score 16; justify each expectation.
+/// 1. Každý příklad je čtyřpolový řádek posunutý doleva; body jsou součet vzniklých dílků.
+/// 2. [2,0,2,0] dá [4,0,0,0], ale [2,2,4,0] dá [4,4,0,0].
+/// 3. Otestuj také [4,4,4,4] -> [8,8,0,0] s 16 body; každé očekávání zdůvodni.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 int[][] board;
 int score;
 String outcome;
 Random random = new Random();
 
-/// reset(): Restores the starting 2048 round, clearing the state that belongs to the old round.
+/// reset(): Obnovuje počáteční kolo 2048 a maže stav patřící starému kolu.
 void reset() {
     board = new int[4][4];
     score = 0;
@@ -73,7 +73,7 @@ void spawn() {
     board[p[0]][p[1]] = random.nextInt(10) == 0 ? 4 : 2;
 }
 
-/// merge(): Compresses zeros, combines equal neighbours once and awards created tile values.
+/// merge(): Odstraní mezery, jednou sloučí stejné sousedy a přičte hodnoty vzniklých dílků.
 int[] merge(int[] row) {
     int[] values = Arrays.stream(row).filter((n) -> n != 0).toArray();
     int[] result = new int[4];
@@ -101,7 +101,7 @@ boolean canMove() {
     return false;
 }
 
-/// command(): Validates one actual player command before applying its changes to this game.
+/// command(): Ověřuje jeden skutečný příkaz hráče před jeho provedením v této hře.
 void command(String input) {
     require(outcome.isEmpty());
     require(input.matches("(?i)[wasd]"));
@@ -139,7 +139,7 @@ void command(String input) {
     }
 }
 
-/// display(): Presents the current board and the legal input choices in the console.
+/// display(): Zobrazuje aktuální desku a volby zadávání v konzoli.
 void display() {
     for (int[] row : board) {
         IO.println(Arrays.toString(row));
@@ -147,7 +147,7 @@ void display() {
     IO.println("Score: " + score);
 }
 
-/// main(): Starts the real game loop: display, read a command, validate, replay or quit.
+/// main(): Spouští skutečnou herní smyčku: zobrazit, načíst, ověřit, opakovat nebo ukončit.
 void main() {
     reset();
     verifyExamples();
@@ -178,15 +178,15 @@ void main() {
     }
 }
 
-/// require(): Rejects an illegal command with an exception handled by the supplied input loop.
+/// require(): Odmítá neplatný příkaz výjimkou zachycenou dodanou vstupní smyčkou.
 void require(boolean valid) {
     if (!valid) {
         throw new IllegalArgumentException("Invalid move or command.");
     }
 }
 
-/// verifyExamples(): Startup runs your examples against the real game rule; supplied save/restore
-/// keeps the round unchanged.
+/// verifyExamples(): Start zkouší tvé příklady proti skutečnému pravidlu hry; dodané
+/// uložení/obnovení ponechá kolo beze změny.
 void verifyExamples() {
     int saved = score;
     try {
@@ -202,65 +202,69 @@ void verifyExamples() {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `'` — Single quotes enclose one character, such as a board marker.
-/// - `char` — A type for one UTF-16 code unit, often a simple board character such as X. Text uses
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `'` — Jednoduché uvozovky ohraničují jeden character (znak), například značku na desce.
+/// - `char` — Type (typ) pro jednu UTF-16 jednotku, často jednoduchý znak desky jako X. Pro text slouží
 ///   String.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `!=` — Checks that two values differ.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `else` — The alternative when the preceding if condition is false.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `while` — Keeps repeating its body while its condition stays true.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
-/// - `record` — A small named bundle of values. Its component accessors use the component names with ().
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `!=` — Ověří, že se dvě hodnoty liší.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `else` — Alternativní větev pro případ, že předchozí if condition (podmínka) neplatí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
+/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+///   až při pozdějším volání.
+/// - `record` — Malý pojmenovaný balíček hodnot. Component accessor (přístupová metoda složky) má jméno
+///   složky a závorky ().
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
+///   zopakuje stejnou posloupnost.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
 // </editor-fold>
 

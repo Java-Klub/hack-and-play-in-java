@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M08_FireflySynchronyTest {
     static int checks;
     static final String[] CASES = {
-        "A valid Coupling value reaches the model.",
-        "Both the upper boundary and invalid-value preservation work.",
-        "Toggle and seeded Restart dispatch to the correct independent rules."
+        "Platná hodnota Coupling dojde do modelu.",
+        "Horní hranice i zachování původní hodnoty po neplatném vstupu fungují.",
+        "Toggle a Restart se seed (počáteční hodnotou) volají správná samostatná pravidla."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -63,7 +63,7 @@ public class M08_FireflySynchronyTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I139: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I139: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

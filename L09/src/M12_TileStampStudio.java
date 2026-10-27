@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
@@ -7,18 +7,17 @@ import javax.imageio.ImageIO;
 
 /// # L09.12 · TileStampStudio
 ///
-/// Stamp your own tile across a surface and watch a small motif become a pattern. The repeat control
-/// should let you choose a sparse design or a dense one.
+/// Otiskni vlastní dlaždici po ploše a sleduj, jak z malého motivu vznikne vzor. Ovládání opakování má
+/// dovolit řídký i hustý obrazec.
 ///
-/// **Your mission:** Every accepted number becomes six repeats. Make a valid choice reach the live
-/// pattern, and make rejected text preserve the previous setting.
+/// **Tvoje mise:** Každé přijaté číslo se změní na šest opakování. Nech platnou volbu dojít do živého
+/// vzoru a při odmítnutém textu zachovej předchozí nastavení.
 ///
-/// **Today you learn:** Parse and validate a candidate before committing it to shared state. Returning
-/// success should mean the requested setting was actually applied, not merely that parsing worked.
+/// **Dnes trénuješ:** Nejprve proveď parsing (rozbor) a ověření candidate (kandidáta), teprve potom změň
+/// sdílený state (stav). Úspěch má znamenat skutečné použití požadované volby, ne pouhý zdařený převod.
 ///
-/// After Run File, paint a tile, type 3 into the Repeats box and click Repeats to change the pattern
-/// density.
-/// After your repair: Save → Test File → play again.
+/// Po Run File namaluj dlaždici, napiš 3 do políčka Repeats a klikni na Repeats pro změnu hustoty vzoru.
+/// Po opravě: Save → Test File → zahraj si znovu.
 boolean applyRepeats(String text) {
     try {
         int candidate = Integer.parseInt(text.strip());
@@ -30,30 +29,31 @@ boolean applyRepeats(String text) {
     }
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `int candidate` — Keeps a proposed value separate from the currently active repeats field.
-/// - `candidate < 1 || candidate > 12` — Rejects an integer outside the supported repeat range before
-///   changing the model.
-/// - `repeats = 6` — Commits a constant instead of the parsed proposal.
-/// - `return false;` — Signals rejection so the caller can keep the previous pattern setting.
+/// - `int candidate` — Odděluje navrženou hodnotu od aktuálního repeats field (položky objektu).
+/// - `candidate < 1 || candidate > 12` — Odmítne integer (celé číslo) mimo povolené opakování před změnou
+///   model (modelu pravidel).
+/// - `repeats = 6` — Potvrdí konstantu místo převedeného návrhu.
+/// - `return false;` — Oznámí odmítnutí, aby caller (volající část) mohl zachovat předchozí nastavení
+///   vzoru.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// The repeat input calls applyRepeats, then the preview uses the repeats field. Tile editing, pattern
-/// assembly and PNG export are supplied, so the repair concerns one setting boundary.
+/// Input (vstup) opakování volá applyRepeats a náhled potom čte repeats field (položku objektu). Kreslení
+/// dlaždice, skládání vzoru i PNG export jsou připravené; oprava řeší jednu hranici nastavení.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Parse into a temporary candidate, not directly into the field.
-/// 2. Both range checks must happen before assignment.
-/// 3. On success assign the candidate rather than the original default.
+/// 1. Parsing (rozbor) míří do dočasného candidate, nikoli přímo do field (položky objektu).
+/// 2. Obě hranice ověř před assignment (přiřazením).
+/// 3. Při úspěchu přiřaď candidate místo původní výchozí hodnoty.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 int[][] tile = new int[8][8];
 int[] palette = {0xFFFFFF, 0x182030, 0xE94B8A, 0x36BDD6, 0xF7CB43};
 int brush = 1;
@@ -67,7 +67,7 @@ boolean paint(int row, int col, int colour) {
     return true;
 }
 
-/// Supplied image creation: generation and drawing remain visible in this file.
+/// Připravená tvorba obrazu: generování a kreslení zůstávají viditelné v tomto file (souboru).
 BufferedImage render(int repeats) {
     if (repeats < 1 || repeats > 12) {
         throw new IllegalArgumentException("Repeats: 1..12.");
@@ -91,7 +91,7 @@ void refresh() {
     }
 }
 
-/// Supplied Swing UI: create it on the EDT; timer cleanup stays with the window.
+/// Připravené Swing UI (rozhraní): vytváří se na EDT; úklid timer (časovače) patří k oknu.
 void showWindow() {
     var frame = new JFrame("Tile Stamp Studio");
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -163,9 +163,9 @@ void showWindow() {
 
 int repeats = 6;
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// paint edits one tile cell; render reads it repeatedly.
-/// The new Repeats field calls applyRepeats; the same value drives preview and PNG save.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// Paint mění jednu cell (buňku) dlaždice; render ji opakovaně čte.
+/// Nové políčko Repeats volá applyRepeats; stejná hodnota řídí náhled i PNG save (uložení).
 void main(String[] args) {
     if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
         return;
@@ -174,65 +174,67 @@ void main(String[] args) {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `++` — Increases a numeric value by one.
-/// - `%` — The remainder after division; useful for repeated positions or turns.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
-/// - `::` — A method reference: supplies an action without calling it yet.
-/// - `this` — The current game object: this particular run and its stored state.
-/// - `protected` — A visibility keyword used by supplied library callbacks, such as paintComponent.
-/// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
-///   background first.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
-/// - `JPanel` — A window area that can display the game’s drawing or controls.
-/// - `SwingUtilities.invokeLater` — Schedules window work for Swing’s event thread; the action runs
-///   later.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+///   až při pozdějším volání.
+/// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
+/// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
+/// - `protected` — Visibility keyword (klíčové slovo přístupnosti) používané připraveným library callback
+///   (knihovním zpětným voláním), například paintComponent.
+/// - `super` — V super.paintComponent(g) požádá připravenou parent implementation (nadřazenou
+///   implementaci), aby nejprve vykreslila běžné pozadí.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `Path` — Umístění v souborech, nikoli obsah souboru.
+/// - `JFrame` — Okno dodané JDK knihovnou Swing.
+/// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.
+/// - `SwingUtilities.invokeLater` — Naplánuje práci s oknem na Swing event thread (vlákno událostí); akce
+///   se provede později.
 // </editor-fold>
 

@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -8,52 +8,50 @@ import java.awt.geom.Area;
 
 /// # L10.03 · ShadowPlayground
 ///
-/// Move a lamp around a scene of obstacles and watch their shadows stretch. Try making a huge silhouette
-/// from a small object by moving the light closer.
+/// Pohybuj lampou kolem překážek a sleduj prodlužující se stíny. Zkus přiblížením světla udělat z malé
+/// překážky obrovskou siluetu.
 ///
-/// **Your mission:** The lamp ignores clicks and drags because its delayed action is empty. Restore the
-/// link from each input position to the real light.
+/// **Tvoje mise:** Lampa ignoruje kliknutí i tažení, protože její odložená akce je prázdná. Obnov spojení
+/// od každé vstupní pozice ke skutečnému světlu.
 ///
-/// **Today you learn:** A callback separates receiving an event from choosing its effect. This
-/// two-coordinate action should forward the event’s values, rather than store one fixed position or act
-/// during setup.
+/// **Dnes trénuješ:** Callback (předaná akce) odděluje přijetí event (události) od volby jejího účinku.
+/// Akce se dvěma souřadnicemi má předat hodnoty události, ne uložit pevnou pozici či jednat už při
+/// přípravě.
 ///
-/// After Run File, click or drag around the obstacles to move the lamp and press R to restore its
-/// starting position.
-/// After your repair: Save → Test File → play again.
+/// Po Run File klikáním či tažením kolem překážek posouvej lampu a pomocí R obnov její počáteční pozici.
+/// Po opravě: Save → Test File → zahraj si znovu.
 java.util.function.BiConsumer<Integer, Integer> lightAction() {
     return (x, y) -> {};
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `BiConsumer<Integer, Integer>` — Describes an action receiving x and y but producing no returned
-///   value.
-/// - `lightAction()` — Supplies the reusable action that input handlers will call later.
-/// - `(x, y) -> {}` — Names the future inputs, but the empty body currently discards them.
+/// - `BiConsumer<Integer, Integer>` — Popisuje akci, která přijme x a y, ale nevrací hodnotu.
+/// - `lightAction()` — Dodává opakovaně použitelnou akci, kterou input handler (obsluha vstupu) zavolá
+///   později.
+/// - `(x, y) -> {}` — Pojmenuje budoucí vstupy, ale prázdné tělo je nyní zahodí.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// press and drag call the same light callback. The supplied moveLight checks the allowed position;
-/// shadow geometry and drawing read the resulting lamp coordinates, and restart restores the starting
-/// scene.
+/// Press i drag volají stejný light callback (předanou akci světla). Připravený moveLight ověří povolenou
+/// pozici; geometrie stínů a kreslení čtou výsledné souřadnice lampy a restart obnoví scénu.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. moveLight already clamps x and y to the canvas.
-/// 2. The callback should delegate to that method, not copy or bypass it.
-/// 3. A method reference keeps creation separate from invocation.
+/// 1. MoveLight už omezuje x a y na plátno.
+/// 2. Callback (předaná akce) má volat tuto method (metodu), nikoli ji kopírovat či obejít.
+/// 3. Method reference (odkaz na metodu) oddělí vytvoření od spuštění.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int WIDTH = 640, HEIGHT = 440;
 
 Rectangle[] obstacles = {new Rectangle(190, 130, 70, 100), new Rectangle(380, 220, 100, 60)};
 double lightX, lightY;
-/// Supplied restart: restore the initial model before the UI uses it.
+/// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
 void restart() {
     lightX = 100;
     lightY = 80;
@@ -85,7 +83,7 @@ Area shadow(Rectangle obstacle) {
     return area;
 }
 
-/// Supplied drawing: reads model values; repainting is not another turn.
+/// Připravené kreslení: čte hodnoty model (modelu pravidel); repaint (překreslení) není další tah.
 void draw(Graphics2D g) {
     g.setColor(new Color(255, 246, 205));
     g.fillRect(0, 0, WIDTH, HEIGHT);
@@ -111,7 +109,7 @@ void draw(Graphics2D g) {
 
 void key(int code, boolean pressed) {
     if (pressed && code == KeyEvent.VK_R) {
-/// Supplied restart: restore the initial model before the UI uses it.
+/// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
         restart();
     }
 }
@@ -124,7 +122,7 @@ void drag(int x, int y) {
     lightCallback.accept(x, y);
 }
 
-/// Supplied Swing UI: create it on the EDT; timer cleanup stays with the window.
+/// Připravené Swing UI (rozhraní): vytváří se na EDT; úklid timer (časovače) patří k oknu.
 void showWindow() {
     var frame = new JFrame("Shadow Playground");
     var panel = new JPanel() {
@@ -132,7 +130,7 @@ void showWindow() {
             super.paintComponent(graphics);
             var g = (Graphics2D) graphics.create();
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-/// Supplied drawing: reads model values; repainting is not another turn.
+/// Připravené kreslení: čte hodnoty model (modelu pravidel); repaint (překreslení) není další tah.
             draw(g);
             g.dispose();
         }
@@ -173,76 +171,78 @@ void showWindow() {
 
 java.util.function.BiConsumer<Integer, Integer> lightCallback = lightAction();
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// moveLight is the model rule; press and drag use the same lightCallback.
-/// shadow extrudes obstacle edges into a supplied Area; draw reads it; no shadow mathematics belongs in this repair.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// MoveLight je pravidlo modelu; press a drag používají stejný lightCallback.
+/// Shadow protahuje hrany překážek do připravené Area; draw ji čte; matematika stínů do opravy nepatří.
 void main() {
-/// Supplied restart: restore the initial model before the UI uses it.
+/// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
-/// - `boolean` — A value that is either true or false.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `\` — Inside quoted text, starts an escape such as \n for a new line or \" for a quote.
-/// - `final` — The named value cannot be assigned another value afterwards. A referenced mutable object
-///   can still change.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `++` — Increases a numeric value by one.
-/// - `%` — The remainder after division; useful for repeated positions or turns.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
-/// - `::` — A method reference: supplies an action without calling it yet.
-/// - `this` — The current game object: this particular run and its stored state.
-/// - `public` — Makes this declaration accessible to other code.
-/// - `protected` — A visibility keyword used by supplied library callbacks, such as paintComponent.
-/// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
-///   background first.
-/// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
-/// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
-/// - `JPanel` — A window area that can display the game’s drawing or controls.
-/// - `@Override` — Marks a supplied replacement for a library action, such as painting.
-/// - `SwingUtilities.invokeLater` — Schedules window work for Swing’s event thread; the action runs
-///   later.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `\` — Uvnitř textu začíná escape (zvláštní zápis), například \n pro nový řádek nebo \" pro uvozovku.
+/// - `final` — Pojmenované hodnotě už nelze přiřadit jinou. Odkazovaný mutable object (měnitelný objekt)
+///   se ale dál měnit může.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+///   až při pozdějším volání.
+/// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
+/// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
+/// - `public` — Zpřístupňuje tuto declaration (deklaraci) dalšímu kódu.
+/// - `protected` — Visibility keyword (klíčové slovo přístupnosti) používané připraveným library callback
+///   (knihovním zpětným voláním), například paintComponent.
+/// - `super` — V super.paintComponent(g) požádá připravenou parent implementation (nadřazenou
+///   implementaci), aby nejprve vykreslila běžné pozadí.
+/// - `Graphics2D` — Kreslicí nástroj dodaný při vykreslování okna nebo obrázku.
+/// - `JFrame` — Okno dodané JDK knihovnou Swing.
+/// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.
+/// - `@Override` — Označuje dodanou náhradu knihovní akce, například kreslení.
+/// - `SwingUtilities.invokeLater` — Naplánuje práci s oknem na Swing event thread (vlákno událostí); akce
+///   se provede později.
 // </editor-fold>
 

@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -11,20 +11,19 @@ import javax.swing.Timer;
 
 /// # L10.05 · SpringToy
 ///
-/// Drag a weight, release it and watch a spring trace its motion. Tune the spring and damping to find a
-/// slow wobble or a lively bounce.
+/// Odtáhni závaží, pusť je a sleduj stopu pohybu pružiny. Měň tuhost a tlumení a hledej pomalé houpání
+/// nebo živé poskakování.
 ///
-/// **Your mission:** Painting the window advances the physics, so even repainting can move a paused
-/// weight. Restore a drawing method that only observes the current model.
+/// **Tvoje mise:** Malování okna posouvá fyziku, takže i překreslení může pohnout zastaveným závažím.
+/// Obnov draw method (kreslicí metodu), která jen čte aktuální model (model pravidel).
 ///
-/// **Today you learn:** Rendering should be a faithful snapshot, not another clock. The timer already
-/// owns movement; a paint request may arrive for reasons unrelated to a new simulation step.
+/// **Dnes trénuješ:** Rendering (vykreslení) má být věrný snapshot (snímek), ne další hodiny. Pohyb už
+/// spravuje timer (časovač); požadavek na kreslení může přijít bez nového kroku simulace.
 ///
-/// After Run File, drag and release the weight, press Space to pause and use arrow keys to tune spring
-/// stiffness and damping.
-/// After your repair: Save → Test File → play again.
+/// Po Run File odtáhni a pusť závaží, pomocí Space zastav pohyb a šipkami měň tuhost a tlumení pružiny.
+/// Po opravě: Save → Test File → zahraj si znovu.
 void draw(Graphics2D g) {
-// Supplied bounded update: one call means one model step; the active repair is described above.
+// Připravený omezený update (aktualizace): jedno volání znamená jeden krok; aktivní oprava je popsaná výše.
     step();
     g.setColor(new Color(225, 230, 240));
     for (int i = 1; i < trail.size(); i++) {
@@ -49,35 +48,34 @@ void draw(Graphics2D g) {
     g.drawString(String.format("Stiffness %.3f   Damping %.3f   %s", stiffness, damping, paused ? "Paused" : "Moving"), 15, 25);
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `step();` — Calls the physics update; ask why a drawing request should advance time.
-/// - `trail.size()` — Reads how many recorded positions are available for drawing the trace.
-/// - `g.draw(spring)` — Draws the prepared spring shape without needing to alter the weight position.
+/// - `step();` — Volá fyzikální update (aktualizaci); zvaž, proč by požadavek kreslení měl posouvat čas.
+/// - `trail.size()` — Čte počet uložených pozic dostupných pro kreslení stopy.
+/// - `g.draw(spring)` — Nakreslí připravený tvar pružiny bez potřeby změnit pozici závaží.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// The supplied timer invokes step and requests repainting separately. step calculates spring
-/// acceleration and records positions; draw builds the zigzag spring, weight and caption from the
-/// existing values.
+/// Připravený timer (časovač) volá step a zvlášť požádá o překreslení. Step počítá zrychlení pružiny a
+/// ukládá pozice; draw sestaví klikatou pružinu, závaží i popisek z existujících hodnot.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Compare the responsibilities of step and draw.
-/// 2. Look at the first action in draw; repaint can happen more often than a timer tick.
-/// 3. Remove the extra model update, while retaining all painting.
+/// 1. Porovnej odpovědnosti step a draw.
+/// 2. Podívej se na první akci v draw; repaint (překreslení) může nastat častěji než tick (časový krok).
+/// 3. Odstraň nadbytečný update (aktualizaci) modelu a zachovej kreslení.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int WIDTH = 640, HEIGHT = 440;
 
 double x, y, vx, vy, stiffness, damping;
 boolean paused, grabbed;
 ArrayList<Point2D.Double> trail = new ArrayList<>();
-/// Supplied restart: restore the initial model before the UI uses it.
+/// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
 void restart() {
     x = WIDTH / 2;
     y = 260;
@@ -100,7 +98,7 @@ void pull(int xx, int yy) {
     vx = vy = 0;
 }
 
-/// Supplied bounded update: one call means one model step; the active repair is described above.
+/// Připravený omezený update (aktualizace): jedno volání znamená jeden krok; aktivní oprava je popsaná výše.
 void step() {
     if (paused || grabbed) {
         return;
@@ -132,7 +130,7 @@ void step() {
 
 void key(int code, boolean pressed) {
     if (pressed && code == KeyEvent.VK_R) {
-/// Supplied restart: restore the initial model before the UI uses it.
+/// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
         restart();
     }
     if (pressed) {
@@ -167,7 +165,7 @@ void release(int x, int y) {
     }
 }
 
-/// Supplied Swing UI: create it on the EDT; timer cleanup stays with the window.
+/// Připravené Swing UI (rozhraní): vytváří se na EDT; úklid timer (časovače) patří k oknu.
 void showWindow() {
     var frame = new JFrame("Spring Toy");
     var panel = new JPanel() {
@@ -206,7 +204,7 @@ void showWindow() {
     panel.addMouseListener(mouse);
     panel.addMouseMotionListener(mouse);
     var timer = new Timer(20, e -> {
-/// Supplied bounded update: one call means one model step; the active repair is described above.
+/// Připravený omezený update (aktualizace): jedno volání znamená jeden krok; aktivní oprava je popsaná výše.
         step();
         panel.repaint();
     });
@@ -228,80 +226,82 @@ void showWindow() {
     timer.start();
 }
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// step calculates the spring and appends a trail point once.
-/// draw paints the existing trail and mass; showWindow separates timer updates from repainting.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// Step vypočte pružinu a jednou přidá bod stopy.
+/// Draw kreslí existující stopu a závaží; showWindow odděluje timer update (aktualizaci časovače) od repaint (překreslení).
 void main() {
-/// Supplied restart: restore the initial model before the UI uses it.
+/// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `\` — Inside quoted text, starts an escape such as \n for a new line or \" for a quote.
-/// - `final` — The named value cannot be assigned another value afterwards. A referenced mutable object
-///   can still change.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `%` — The remainder after division; useful for repeated positions or turns.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `switch` — Selects one case from a set of alternatives. It can also produce a result.
-/// - `case` — One alternative of a switch; the arrow points to what it does or returns.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
-/// - `::` — A method reference: supplies an action without calling it yet.
-/// - `this` — The current game object: this particular run and its stored state.
-/// - `public` — Makes this declaration accessible to other code.
-/// - `protected` — A visibility keyword used by supplied library callbacks, such as paintComponent.
-/// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
-///   background first.
-/// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
-/// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
-/// - `JPanel` — A window area that can display the game’s drawing or controls.
-/// - `@Override` — Marks a supplied replacement for a library action, such as painting.
-/// - `SwingUtilities.invokeLater` — Schedules window work for Swing’s event thread; the action runs
-///   later.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `\` — Uvnitř textu začíná escape (zvláštní zápis), například \n pro nový řádek nebo \" pro uvozovku.
+/// - `final` — Pojmenované hodnotě už nelze přiřadit jinou. Odkazovaný mutable object (měnitelný objekt)
+///   se ale dál měnit může.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
+/// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `switch` — Vybere case (větev) z několika možností. Může také vrátit výsledek.
+/// - `case` — Jedna větev switch; šipka ukazuje, co větev provede nebo vrátí.
+/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+///   až při pozdějším volání.
+/// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
+/// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
+/// - `public` — Zpřístupňuje tuto declaration (deklaraci) dalšímu kódu.
+/// - `protected` — Visibility keyword (klíčové slovo přístupnosti) používané připraveným library callback
+///   (knihovním zpětným voláním), například paintComponent.
+/// - `super` — V super.paintComponent(g) požádá připravenou parent implementation (nadřazenou
+///   implementaci), aby nejprve vykreslila běžné pozadí.
+/// - `Graphics2D` — Kreslicí nástroj dodaný při vykreslování okna nebo obrázku.
+/// - `JFrame` — Okno dodané JDK knihovnou Swing.
+/// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.
+/// - `@Override` — Označuje dodanou náhradu knihovní akce, například kreslení.
+/// - `SwingUtilities.invokeLater` — Naplánuje práci s oknem na Swing event thread (vlákno událostí); akce
+///   se provede později.
 // </editor-fold>
 

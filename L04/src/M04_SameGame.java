@@ -1,18 +1,18 @@
 /// # L04.04 · SameGame
 ///
-/// Remove touching blocks of the same colour, then watch the others fall and empty columns close. Larger
-/// groups score more, but removing a tempting group may strand the blocks you need later.
+/// Odstraňuj dotýkající se bloky stejné barvy a sleduj, jak ostatní spadnou a prázdné sloupce se zavřou.
+/// Větší skupiny dávají více bodů, ale lákavé odstranění může izolovat bloky potřebné později.
 ///
-/// **Your mission:** The starter can announce that no groups remain even when matching blocks touch.
-/// Repair the work condition in group so all reachable matching cells are collected, rather than stopping
-/// after the first result.
+/// **Tvoje mise:** Starter (výchozí program) může oznámit, že nezbývají skupiny, i když se stejné bloky
+/// dotýkají. Oprav podmínku práce v group tak, aby posbírala všechna dosažitelná shodná políčka místo
+/// zastavení po prvním výsledku.
 ///
-/// **Today you learn:** While until no work remains: the pending queue and the collected result answer
-/// different questions. Finding one cell does not mean there are no more cells waiting to be explored.
+/// **Dnes trénuješ:** While do vyčerpání práce: čekající queue a nasbíraný result odpovídají na různé
+/// otázky. Nalezení jednoho políčka neznamená, že už žádná políčka nečekají na prozkoumání.
 ///
-/// Use Run File and look for two same-colour blocks that share an edge despite the early “No groups
-/// remain” message; after your repair, enter the row and column of a block in that group.
-/// After your repair: Save → Test File → play again.
+/// Použij Run File a navzdory předčasné zprávě „No groups remain“ najdi dvě políčka stejné barvy, která
+/// sdílejí hranu; po opravě zadej řádek a sloupec některého políčka z této skupiny.
+/// Po opravě: Save → Test File → zahraj si znovu.
 List<int[]> group(int row, int col) {
     var result = new ArrayList<int[]>();
     if (row < 0 || row >= 5 || col < 0 || col >= 5 || board[row][col] == 0) {
@@ -37,37 +37,36 @@ List<int[]> group(int row, int col) {
     return result;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `while (!queue.isEmpty() && result.isEmpty())` — The ! means “not”; queue.isEmpty() asks whether
-///   pending work is empty, while result.isEmpty() asks whether anything has been collected yet.
-/// - `int[] p = queue.remove();` — Take the next waiting coordinate pair out of the queue. The pair
-///   format is supplied.
-/// - `result.add(p);` — Save this visited cell in the result that the game will later remove from the
-///   board.
-/// - `seen[r][c] = true;` — Mark a neighbour before queuing it, so another route cannot queue that cell
-///   again.
-/// - `queue.add(new int[]{r, c});` — Append one newly discovered coordinate pair as more work for a later
-///   pass.
-/// - `return result;` — After exploration ends, return every collected cell together.
+/// - `while (!queue.isEmpty() && result.isEmpty())` — ! znamená „ne“; queue.isEmpty() zjišťuje prázdnost
+///   čekající práce, zatímco result.isEmpty() zjišťuje, zda už bylo něco nasbíráno.
+/// - `int[] p = queue.remove();` — Vyjmi další čekající dvojici souřadnic z queue. Zápis dvojice je
+///   připravený.
+/// - `result.add(p);` — Ulož navštívené políčko do výsledku, který hra později odstraní z desky.
+/// - `seen[r][c] = true;` — Označ souseda před zařazením, aby jiná cesta nemohla totéž políčko zařadit
+///   znovu.
+/// - `queue.add(new int[]{r, c});` — Připoj jednu nově objevenou dvojici souřadnic jako práci pro
+///   pozdější průchod.
+/// - `return result;` — Po skončení prohledávání vrať všechna nasbíraná políčka společně.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// The initial guard rejects off-board and empty cells. The supplied neighbour scan checks four
-/// directions, matching colours and seen marks. command removes groups of at least two, collapse supplies
-/// gravity, and reset checks whether play can continue; that check also calls your group.
+/// Úvodní kontrola odmítá pozice mimo desku a prázdná políčka. Připravené prohlížení sousedů kontroluje
+/// čtyři směry, stejnou barvu a značky seen. command odstraňuje skupiny alespoň dvou bloků, collapse
+/// zajišťuje padání a reset ověřuje možnost pokračovat; i tato kontrola volá tvoji group.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. result becomes nonempty after the first processed cell.
-/// 2. That does not mean the queue has finished.
-/// 3. The while condition should be only !queue.isEmpty().
+/// 1. result se po první zpracované buňce stane neprázdným.
+/// 2. To neznamená, že queue (fronta) už skončila.
+/// 3. While condition (podmínka) má být pouze !queue.isEmpty().
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 int[][] board;
 int score;
 String outcome;
@@ -185,62 +184,66 @@ void require(boolean valid) {
     }
 }
 
-/// Prepared entry points: main, reset, command.
+/// Připravené vstupní body: main, reset, command.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `\` — Inside quoted text, starts an escape such as \n for a new line or \" for a quote.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `!=` — Checks that two values differ.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `else` — The alternative when the preceding if condition is false.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `while` — Keeps repeating its body while its condition stays true.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
-/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `\` — Uvnitř textu začíná escape (zvláštní zápis), například \n pro nový řádek nebo \" pro uvozovku.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `!=` — Ověří, že se dvě hodnoty liší.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `else` — Alternativní větev pro případ, že předchozí if condition (podmínka) neplatí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
+///   měnit velikost.
+/// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
+///   zopakuje stejnou posloupnost.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
 // </editor-fold>
 

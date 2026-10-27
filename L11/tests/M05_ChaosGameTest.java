@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M05_ChaosGameTest {
     static int checks;
     static final String[] CASES = {
-        "All three legal vertices are reachable.",
-        "A fixed seed reproduces the index sequence.",
-        "A single candidate is zero and an empty range is rejected."
+        "Všechny tři platné vrcholy jsou dosažitelné.",
+        "Pevný seed (počáteční hodnota) zopakuje sequence (posloupnost) indexů.",
+        "Jediná možnost dá nulu a prázdný rozsah se odmítne."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -58,7 +58,7 @@ public class M05_ChaosGameTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I105: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I105: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

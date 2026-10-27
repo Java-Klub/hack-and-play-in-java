@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -6,19 +6,18 @@ import javax.imageio.ImageIO;
 
 /// # L11.09 · PixelSortingGlitch
 ///
-/// Pull streaks out of a picture by sorting selected runs of pixels. The threshold changes where the
-/// glitch catches and where the original image survives.
+/// Vytáhni z obrázku pruhy řazením vybraných úseků bodů. Práh mění místa, kde se glitch zachytí a kde
+/// původní obraz přežije.
 ///
-/// **Your mission:** The transformed picture is saved as lost-pixels.png instead of the chosen filename.
-/// Repair its export destination without changing the input image.
+/// **Tvoje mise:** Upravený obrázek se uloží jako lost-pixels.png místo zvoleného názvu. Oprav cíl
+/// uložení a neměň vstupní obrázek.
 ///
-/// **Today you learn:** A Path is part of the export contract, including its filename. The transformation
-/// and the destination are separate choices; saving must honour both rather than invent a neighbouring
-/// file.
+/// **Dnes trénuješ:** Path (cesta) je součást export contract (smlouvy ukládání), včetně názvu. Úprava
+/// obrázku a cíl jsou dvě oddělené volby; zápis má respektovat obě a nevymýšlet sousední soubor.
 ///
-/// After Run File, press Enter to sort the built-in picture into exports/pixel-sorted.png, then open that
-/// exact destination.
-/// After your repair: Save → Test File → play again.
+/// Po Run File stiskni Enter pro úpravu připraveného obrázku do exports/pixel-sorted.png a potom otevři
+/// právě tento cíl.
+/// Po opravě: Save → Test File → zahraj si znovu.
 void saveSorted(Path path, BufferedImage input, int threshold) throws IOException {
     Files.createDirectories(path.toAbsolutePath().getParent());
     if (!ImageIO.write(sort(input, threshold), "png", path.resolveSibling("lost-pixels.png").toFile())) {
@@ -26,30 +25,30 @@ void saveSorted(Path path, BufferedImage input, int threshold) throws IOExceptio
     }
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `Files.createDirectories` — Prepares destination directories and also works when they already exist.
-/// - `sort(input, threshold)` — Produces the transformed image from the supplied input and threshold.
-/// - `path.resolveSibling("lost-pixels.png")` — Chooses another name in the same parent directory,
-///   ignoring the requested filename.
-/// - `!ImageIO.write` — A false writer result becomes an explicit export failure.
+/// - `Files.createDirectories` — Připraví cílové adresáře a funguje i tehdy, když už existují.
+/// - `sort(input, threshold)` — Vytvoří upravený obrázek z předaného input (vstupu) a prahu.
+/// - `path.resolveSibling("lost-pixels.png")` — Vybere jiný název ve stejném nadřazeném adresáři a
+///   ignoruje požadovaný název.
+/// - `!ImageIO.write` — Výsledek false od writer (zapisovače) se změní ve výslovnou chybu uložení.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// The supplied sort routine copies the input and sorts bounded brightness runs. main can use a built-in
-/// image, asks where to save it and calls saveSorted; ImageIO supplies the PNG encoding.
+/// Připravený sort kopíruje input (vstup) a řadí omezené úseky podle jasu. Main může použít vestavěný
+/// obrázek, zeptá se na cíl a volá saveSorted; ImageIO dodá PNG encoding (kódování).
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. resolveSibling changes the requested filename.
-/// 2. sort already creates a separate output image.
-/// 3. Use the original Path for the encoder and keep the parent-directory creation.
+/// 1. ResolveSibling mění zadaný název.
+/// 2. Sort už tvoří nezávislý výstupní obraz.
+/// 3. Encoder (zapisovač obrazu) má použít původní Path; vytvoření adresářů zachovej.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 BufferedImage demo() {
     var image = new BufferedImage(240, 160, BufferedImage.TYPE_INT_RGB);
     for (int y = 0; y < 160; y++) {
@@ -96,9 +95,9 @@ BufferedImage sort(BufferedImage input, int threshold) {
     return output;
 }
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// sort preserves dark boundaries and the input image; its run sorting is supplied.
-/// main calls saveSorted for the actual selected output; ImageIO encodes PNG through the chosen Path.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// Sort zachová tmavé hranice i vstupní obraz; řazení úseků je připravené.
+/// Main volá saveSorted pro skutečný zvolený výstup; ImageIO kóduje PNG přes zadaný Path.
 void main(String[] args) throws Exception {
     if (args.length == 0) {
         String entered = IO.readln("Output path (blank exports/pixel-sorted.png, q quits): ");
@@ -125,60 +124,63 @@ void main(String[] args) throws Exception {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `while` — Keeps repeating its body while its condition stays true.
-/// - `::` — A method reference: supplies an action without calling it yet.
-/// - `this` — The current game object: this particular run and its stored state.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
+/// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
+/// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
+///   zpracovat.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
+/// - `Path` — Umístění v souborech, nikoli obsah souboru.
+/// - `Files` — JDK operace pro čtení a zápis místních souborů.
 // </editor-fold>
 

@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M10_BreakoutTest {
     static int checks;
     static final String[] CASES = {
-        "Paused, queued or normal input respects the stated tick boundary.",
-        "An active tick changes the model exactly once; a finished/paused tick cannot drift.",
-        "Invalid boundaries, restart or input cleanup remain correct."
+        "Pozastavený, čekající či běžný input (vstup) respektuje popsanou hranici kroku.",
+        "Aktivní tick (časový krok) změní model právě jednou; dokončený či pozastavený jej neposouvá.",
+        "Neplatné hranice, restart či úklid vstupu zůstanou správné."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -55,7 +55,7 @@ public class M10_BreakoutTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I048: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I048: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

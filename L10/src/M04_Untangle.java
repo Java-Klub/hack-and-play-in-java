@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -7,17 +7,17 @@ import java.awt.geom.Line2D;
 
 /// # L10.04 · Untangle
 ///
-/// Untangle a web by dragging numbered nodes until its edges stop crossing. The circles and their
-/// connecting lines must agree about where each node really is.
+/// Rozmotej síť tažením očíslovaných bodů, až se její hrany přestanou křížit. Kolečka i spojnice se musí
+/// shodnout, kde každý bod skutečně leží.
 ///
-/// **Your mission:** A node’s circle swaps x and y while its label and edges use the proper position.
-/// Repair the drawing coordinates without moving the puzzle itself.
+/// **Tvoje mise:** Kolečko bodu prohodí x a y, zatímco popisek i hrany používají správnou pozici. Oprav
+/// kreslicí souřadnice a neposouvej samotnou hádanku.
 ///
-/// **Today you learn:** Rendering turns model coordinates into visible marks. A circle’s top-left corner
-/// is offset from its centre, but x must still mean horizontal and y vertical.
+/// **Dnes trénuješ:** Rendering (vykreslení) převádí coordinate (souřadnice) modelu na viditelné značky.
+/// Levý horní roh kolečka je posunutý od středu, ale x stále znamená vodorovně a y svisle.
 ///
-/// After Run File, drag numbered nodes to uncross the web, or press R to scramble it again.
-/// After your repair: Save → Test File → play again.
+/// Po Run File tahej očíslované body a rozmotej křížení sítě; klávesou R ji můžeš znovu promíchat.
+/// Po opravě: Save → Test File → zahraj si znovu.
 void drawNode(Graphics2D g, Point point, int label) {
     g.setColor(new Color(35, 55, 90));
     g.fillOval(point.y - 13, point.x - 13, 26, 26);
@@ -25,29 +25,29 @@ void drawNode(Graphics2D g, Point point, int label) {
     g.drawString("" + label, point.x - 4, point.y + 4);
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `point.x` — The model’s horizontal coordinate; it should agree with edge endpoints.
-/// - `point.y` — The vertical coordinate, increasing downward on this screen.
-/// - `g.fillOval(point.y - 13, point.x - 13, 26, 26)` — fillOval expects left, top, width and height;
-///   subtracting 13 centres a 26-pixel circle.
+/// - `point.x` — Vodorovná coordinate (souřadnice) modelu; má souhlasit s konci hran.
+/// - `point.y` — Svislá coordinate (souřadnice), která na této obrazovce roste dolů.
+/// - `g.fillOval(point.y - 13, point.x - 13, 26, 26)` — FillOval očekává levou pozici, horní pozici,
+///   šířku a výšku; odečtení 13 vystředí kruh o průměru 26.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// Dragging changes the real Point values; the supplied crossing check evaluates edges between those
-/// points. drawNode only paints one node, so its repair should not change layout or game rules.
+/// Tažení mění skutečné hodnoty Point; připravená kontrola křížení vyhodnocuje hrany mezi nimi. DrawNode
+/// pouze maluje jeden bod, proto oprava nemá změnit rozmístění ani pravidla.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. fillOval takes the top-left corner, not the centre.
-/// 2. Subtract the radius from x and y independently.
-/// 3. Use an asymmetric point such as (120,70), not a diagonal point that hides swapped axes.
+/// 1. FillOval přijímá levý horní roh, nikoli střed.
+/// 2. Od x a y samostatně odečti poloměr.
+/// 3. Použij nestejný bod jako (120,70), nikoli bod na diagonále, který prohození os skryje.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int WIDTH = 600, HEIGHT = 420;
 
 int[][] edges = {{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 7}, {7, 0}, {0, 2}, {2, 4}, {4, 6}, {6, 0}};
@@ -61,7 +61,7 @@ void layout(boolean scrambled) {
     }
 }
 
-/// Supplied restart: restore the initial model before the UI uses it.
+/// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
 void restart() {
     selected = -1;
     layout(true);
@@ -114,7 +114,7 @@ void moveSelected(int x, int y) {
     points[selected].setLocation(x, y);
 }
 
-/// Supplied drawing: reads model values; repainting is not another turn.
+/// Připravené kreslení: čte hodnoty model (modelu pravidel); repaint (překreslení) není další tah.
 void draw(Graphics2D g) {
     g.setStroke(new BasicStroke(2));
     for (int i = 0; i < edges.length; i++) {
@@ -139,7 +139,7 @@ void draw(Graphics2D g) {
 
 void key(int code, boolean pressed) {
     if (pressed && code == KeyEvent.VK_R) {
-/// Supplied restart: restore the initial model before the UI uses it.
+/// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
         restart();
     }
 }
@@ -156,7 +156,7 @@ void release(int x, int y) {
     selected = -1;
 }
 
-/// Supplied Swing UI: create it on the EDT; timer cleanup stays with the window.
+/// Připravené Swing UI (rozhraní): vytváří se na EDT; úklid timer (časovače) patří k oknu.
 void showWindow() {
     var frame = new JFrame("Untangle");
     var panel = new JPanel() {
@@ -164,7 +164,7 @@ void showWindow() {
             super.paintComponent(graphics);
             var g = (Graphics2D) graphics.create();
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-/// Supplied drawing: reads model values; repainting is not another turn.
+/// Připravené kreslení: čte hodnoty model (modelu pravidel); repaint (překreslení) není další tah.
             draw(g);
             g.dispose();
         }
@@ -207,75 +207,77 @@ void showWindow() {
     panel.requestFocusInWindow();
 }
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// draw calls drawNode for the real eight nodes.
-/// crossings compares unrelated edges; pick/moveSelected handle drag input; showWindow supplies Swing events.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// Draw volá drawNode pro skutečných osm uzlů.
+/// Crossings porovnává nesouvisející hrany; pick/moveSelected řídí tažení; showWindow dodává Swing event (události).
 void main() {
-/// Supplied restart: restore the initial model before the UI uses it.
+/// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
-/// - `boolean` — A value that is either true or false.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `\` — Inside quoted text, starts an escape such as \n for a new line or \" for a quote.
-/// - `final` — The named value cannot be assigned another value afterwards. A referenced mutable object
-///   can still change.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `!=` — Checks that two values differ.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `::` — A method reference: supplies an action without calling it yet.
-/// - `this` — The current game object: this particular run and its stored state.
-/// - `public` — Makes this declaration accessible to other code.
-/// - `protected` — A visibility keyword used by supplied library callbacks, such as paintComponent.
-/// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
-///   background first.
-/// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
-/// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
-/// - `JPanel` — A window area that can display the game’s drawing or controls.
-/// - `@Override` — Marks a supplied replacement for a library action, such as painting.
-/// - `SwingUtilities.invokeLater` — Schedules window work for Swing’s event thread; the action runs
-///   later.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `\` — Uvnitř textu začíná escape (zvláštní zápis), například \n pro nový řádek nebo \" pro uvozovku.
+/// - `final` — Pojmenované hodnotě už nelze přiřadit jinou. Odkazovaný mutable object (měnitelný objekt)
+///   se ale dál měnit může.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `!=` — Ověří, že se dvě hodnoty liší.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
+/// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
+/// - `public` — Zpřístupňuje tuto declaration (deklaraci) dalšímu kódu.
+/// - `protected` — Visibility keyword (klíčové slovo přístupnosti) používané připraveným library callback
+///   (knihovním zpětným voláním), například paintComponent.
+/// - `super` — V super.paintComponent(g) požádá připravenou parent implementation (nadřazenou
+///   implementaci), aby nejprve vykreslila běžné pozadí.
+/// - `Graphics2D` — Kreslicí nástroj dodaný při vykreslování okna nebo obrázku.
+/// - `JFrame` — Okno dodané JDK knihovnou Swing.
+/// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.
+/// - `@Override` — Označuje dodanou náhradu knihovní akce, například kreslení.
+/// - `SwingUtilities.invokeLater` — Naplánuje práci s oknem na Swing event thread (vlákno událostí); akce
+///   se provede později.
 // </editor-fold>
 

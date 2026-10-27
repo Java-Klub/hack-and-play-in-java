@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M02_GapHopperTest {
     static int checks;
     static final String[] CASES = {
-        "The expired object is removed and its successor survives.",
-        "The new obstacle is appended beyond the last one; unchanged obstacles are not recycled.",
-        "An empty list is safe."
+        "Prošlý object (objekt) zmizí a jeho následník zůstane.",
+        "Nová překážka vznikne za poslední; neprošlé překážky se neobnovují.",
+        "Prázdný List (seznam) je bezpečný."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -60,7 +60,7 @@ public class M02_GapHopperTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I052: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I052: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

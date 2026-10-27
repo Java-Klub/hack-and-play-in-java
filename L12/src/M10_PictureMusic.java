@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioFileFormat;
@@ -8,53 +8,53 @@ import java.io.ByteArrayInputStream;
 
 /// # L12.10 · PictureMusic
 ///
-/// Listen to a little picture as if its rows were notes and its columns were time. Transposing it should
-/// move the tune up or down while preserving its rhythm and outline.
+/// Poslechni si malý obrázek, jako by jeho řádky byly tóny a sloupce čas. Transpose (transpozice) má
+/// posunout melodii výš či níž a zachovat rytmus i obrys.
 ///
-/// **Your mission:** The transpose input is accepted but has no effect on pitch. Extend the extracted
-/// frequency rule while keeping shift zero identical to the original sound.
+/// **Tvoje mise:** Transpose input (vstup transpozice) se přijme, ale neovlivní výšku tónu. Rozšiř
+/// oddělené pravidlo frekvence a zachovej původní zvuk pro shift nula.
 ///
-/// **Today you learn:** A small extracted operation can add one new capability without changing the
-/// caller’s job. pitchFrequency combines a familiar row-to-note rule with a semitone shift; zero remains
-/// the compatibility case.
+/// **Dnes trénuješ:** Malá oddělená operace může přidat schopnost beze změny práce caller (volající
+/// části). PitchFrequency spojí známé pravidlo řádku a tónu s půltónovým posunem; nula zůstane případem
+/// zachování původního chování.
 ///
-/// After Run File, enter 0 and then rerun with 12, opening picture-music-0.wav and picture-music-12.wav
-/// in a player to compare pitch.
-/// After your repair: Save → Test File → play again.
+/// Po Run File zadej 0 a potom spusť znovu s 12; v přehrávači otevři picture-music-0.wav a
+/// picture-music-12.wav pro porovnání výšky.
+/// Po opravě: Save → Test File → zahraj si znovu.
 double pitchFrequency(int row, int shift) {
     if (row < 0 || row >= 12 || shift < -12 || shift > 12) throw new IllegalArgumentException("Row 0..11; transpose -12..12.");
     return 220 * Math.pow(2, (11 - row) / 12.0);
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `int row, int shift` — The operation receives both picture position and requested transposition.
-/// - `shift < -12 || shift > 12` — Keeps transposition within one octave in either direction.
-/// - `(11 - row) / 12.0` — Converts row distance into an octave fraction; the decimal divisor preserves
-///   fractional steps.
-/// - `220 * Math.pow(2,` — Scales a base frequency by an octave ratio, not by adding a fixed number of
-///   hertz.
+/// - `int row, int shift` — Operace dostane pozici v obrázku i požadovaný posun.
+/// - `shift < -12 || shift > 12` — Udrží transpose (transpozici) v rozmezí jedné oktávy oběma směry.
+/// - `(11 - row) / 12.0` — Převede vzdálenost řádku na část oktávy; desetinný dělitel zachová dílčí
+///   kroky.
+/// - `220 * Math.pow(2,` — Násobí základní frekvenci poměrem oktáv, ne přičtením pevného počtu hertzů.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// The supplied picture-to-sound loop turns brightness into note strength and calls pitchFrequency for
-/// row pitches. main asks for transpose and write saves the WAV; explain why that new rule belongs in the
-/// small operation rather than in every caller.
+/// Připravený převod obrázku na zvuk mění jas v sílu tónu a volá pitchFrequency pro výšky řádků. Main se
+/// zeptá na transpose (transpozici) a write uloží WAV; vysvětli, proč nové pravidlo patří do malé
+/// operace, ne do každého caller (volající části).
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Pitch changes live in the exponent, not the output amplitude.
-/// 2. Add shift to 11-row before dividing by 12.0.
-/// 3. Retain row/shift guards and explain why picture sampling stays outside this helper.
+/// 1. Změna výšky tónu patří do exponentu, nikoli hlasitosti.
+/// 2. Shift přičti k 11-row před dělením 12.0.
+/// 3. Zachovej guard (podmínky) row/shift a vysvětli, proč sampling (vzorkování) obrazu zůstává mimo
+///   helper.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int RATE = 22050;
 
-/// Supplied WAV encoding: bounded PCM samples and try-with-resources own the stream.
+/// Připravený WAV encoding (kódování): omezené PCM sample (vzorky) a try-with-resources spravují stream (proud).
 void write(Path path, double[] signal) throws Exception {
     byte[] pcm = new byte[signal.length * 2];
     for (int i = 0; i < signal.length; i++) {
@@ -77,7 +77,7 @@ java.awt.image.BufferedImage demo() {
     return image;
 }
 
-/// Supplied synthesis: bounded sample loops build audio; there is no autoplay.
+/// Připravená syntéza: omezené sample loop (cykly vzorků) tvoří zvuk; automatické přehrávání zde není.
 double[] signal(java.awt.image.BufferedImage image) {
     int step = RATE / 10;
     double[] signal = new double[32 * step];
@@ -99,9 +99,9 @@ double[] signal(java.awt.image.BufferedImage image) {
 
 int transpose = 0;
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// pitchFrequency owns row/transpose mathematics; signal owns brightness and time-column sampling.
-/// demo gives an original image; main can use a local image and optional transpose argument; write exports WAV.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// PitchFrequency vlastní matematiku řádku/posunu; signal jas a sampling (vzorkování) časových sloupců.
+/// Demo dodá vlastní obraz; main může použít místní obraz a volitelný transpose argument (argument posunu); write uloží WAV.
 void main(String[] args) throws Exception {
     if (args.length == 0) {
         String entered = IO.readln("Transpose -12..12 (blank 12, q quits): ");
@@ -120,67 +120,70 @@ void main(String[] args) throws Exception {
         return;
     }
     if (args.length > 2) transpose = Integer.parseInt(args[2]);
-/// Supplied WAV encoding: bounded PCM samples and try-with-resources own the stream.
+/// Připravený WAV encoding (kódování): omezené PCM sample (vzorky) a try-with-resources spravují stream (proud).
     write(path, signal(image));
     IO.println("Saved sonification: " + path.toAbsolutePath());
     IO.println("32 columns become time; 12 rows become pitches; brightness sets volume. This is not recorded space sound.");
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `final` — The named value cannot be assigned another value afterwards. A referenced mutable object
-///   can still change.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `final` — Pojmenované hodnotě už nelze přiřadit jinou. Odkazovaný mutable object (měnitelný objekt)
+///   se ale dál měnit může.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
+///   zpracovat.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
+/// - `Path` — Umístění v souborech, nikoli obsah souboru.
+/// - `Files` — JDK operace pro čtení a zápis místních souborů.
 // </editor-fold>
 

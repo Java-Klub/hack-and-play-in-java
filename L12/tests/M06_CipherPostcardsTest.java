@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M06_CipherPostcardsTest {
     static int checks;
     static final String[] CASES = {
-        "LEMON transforms ATTACK AT DAWN! into LXFOPV EF RNHR!.",
-        "Decoding uses the same carried keyword and restores the text.",
-        "Other alternatives, punctuation and invalid keys retain their contracts."
+        "LEMON převede ATTACK AT DAWN! na LXFOPV EF RNHR!.",
+        "Decode používá stejný předaný keyword a obnoví text.",
+        "Jiné alternativy, interpunkce a neplatné klíče zachovají své contract (smlouvy)."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -62,7 +62,7 @@ public class M06_CipherPostcardsTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I131: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I131: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

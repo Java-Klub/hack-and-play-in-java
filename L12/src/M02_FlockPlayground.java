@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -7,45 +7,45 @@ import javax.swing.Timer;
 
 /// # L12.02 · FlockPlayground
 ///
-/// Guide a flock by moving an obstacle through its path. Watch how local steering choices turn many
-/// separate birds into a flowing group.
+/// Veď hejno pohybem překážky do jeho dráhy. Sleduj, jak místní volby směru promění mnoho samostatných
+/// ptáků v plynoucí skupinu.
 ///
-/// **Your mission:** Birds receive no push from the obstacle because the adapter always returns zero.
-/// Make the installed avoidance rule receive the real distance.
+/// **Tvoje mise:** Ptáci nedostanou od překážky žádný příspěvek, protože spojovací část stále vrací nulu.
+/// Ať připravené pravidlo vyhýbání dostane skutečnou vzdálenost.
 ///
-/// **Today you learn:** Composition lets the flock use an Avoidance role without owning its formula.
-/// Passing the actual distance matters: a replacement rule may react differently nearby and farther away.
+/// **Dnes trénuješ:** Composition (skládání) dovolí hejnu používat roli Avoidance bez vlastnictví jejího
+/// vzorce. Předání skutečné vzdálenosti je podstatné: jiné pravidlo může reagovat jinak zblízka a zdálky.
 ///
-/// After Run File, move the orange mouse obstacle into the birds’ path and use Pause/Run or New flock to
-/// compare their response.
-/// After your repair: Save → Test File → play again.
+/// Po Run File posouvej oranžovou překážku myší do dráhy ptáků a pomocí Pause/Run či New flock porovnej
+/// jejich reakci.
+/// Po opravě: Save → Test File → zahraj si znovu.
 double obstaclePush(double distance) {
     return 0;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `double distance` — The actual distance supplied by the current bird’s obstacle calculation.
-/// - `obstaclePush` — This adapter supplies only strength; the caller already knows the push direction.
-/// - `return 0;` — Reports no obstacle contribution regardless of distance or installed behaviour.
+/// - `double distance` — Skutečná vzdálenost předaná z výpočtu překážky pro aktuálního ptáka.
+/// - `obstaclePush` — Tato spojovací část dodává jen sílu; caller (volající část) už zná směr.
+/// - `return 0;` — Hlásí nulový příspěvek překážky bez ohledu na vzdálenost či připravené chování.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// step combines separation, alignment and cohesion with obstaclePush before applying a speed limit. The
-/// supplied Avoidance interface and field hold the replaceable rule; the window moves the obstacle and
-/// owns pause and reset.
+/// Step spojí separation (oddělování), alignment (sjednocení směru) a cohesion (soudržnost) s
+/// obstaclePush před omezením rychlosti. Připravené Avoidance interface (rozhraní) a field (položka
+/// objektu) nesou vyměnitelné pravidlo; okno posouvá překážku a spravuje pause i reset.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. The interface receives distance and supplies only a strength.
-/// 2. The field already holds the default implementation.
-/// 3. Delegate to the field; do not return a constant or copy the default formula.
+/// 1. Interface (rozhraní) dostane vzdálenost a dodá jen sílu.
+/// 2. Field (položka objektu) už obsahuje výchozí implementaci.
+/// 3. Volej tento field; nevracej konstantu a nekopíruj výchozí vzorec.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int COUNT = 36;
 double[] x = new double[COUNT];
 double[] y = new double[COUNT];
@@ -55,7 +55,7 @@ double obstacleX = 300;
 double obstacleY = 200;
 boolean running = true;
 
-/// Supplied restart: create the initial model; no native window is created here.
+/// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
 void reset(long seed) {
     var random = new Random(seed);
     for (int i = 0; i < COUNT; i++) {
@@ -67,7 +67,7 @@ void reset(long seed) {
     }
 }
 
-/// Supplied bounded update: one call means one model step; the active repair is described above.
+/// Připravený omezený update (aktualizace): jedno volání znamená jeden krok; aktivní oprava je popsaná výše.
 void step() {
     double[] nx = new double[COUNT];
     double[] ny = new double[COUNT];
@@ -119,7 +119,7 @@ void step() {
     }
 }
 
-/// Supplied Swing UI: create it on the EDT; timer cleanup stays with the window.
+/// Připravené Swing UI (rozhraní): vytváří se na EDT; úklid timer (časovače) patří k oknu.
 void showWindow() {
     var frame = new JFrame("Flock Playground");
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -156,7 +156,7 @@ void showWindow() {
     pause.addActionListener(event -> running = !running);
     var restart = new JButton("New flock");
     restart.addActionListener(event -> {
-/// Supplied restart: create the initial model; no native window is created here.
+/// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
         reset(System.nanoTime());
         canvas.repaint();
     });
@@ -164,7 +164,7 @@ void showWindow() {
     controls.add(restart);
     var timer = new Timer(25, event -> {
         if (running) {
-/// Supplied bounded update: one call means one model step; the active repair is described above.
+/// Připravený omezený update (aktualizace): jedno volání znamená jeden krok; aktivní oprava je popsaná výše.
             step();
         }
         canvas.repaint();
@@ -186,84 +186,88 @@ void showWindow() {
 interface Avoidance { double strength(double distance); }
 Avoidance avoidance = distance -> distance > 0 && distance < 75 ? 0.2 : 0;
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// obstaclePush supplies the actual obstacle terms inside step.
-/// reset makes repeatable birds; showWindow moves the obstacle and cleans up the supplied timer.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// ObstaclePush dodává skutečný příspěvek překážky uvnitř step.
+/// Reset tvoří opakovatelné hejno; showWindow posouvá překážku a uklidí připravený timer (časovač).
 void main(String[] args) {
     if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
         return;
     }
-/// Supplied restart: create the initial model; no native window is created here.
+/// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
     reset(42);
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
-/// - `final` — The named value cannot be assigned another value afterwards. A referenced mutable object
-///   can still change.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `%` — The remainder after division; useful for repeated positions or turns.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
-/// - `::` — A method reference: supplies an action without calling it yet.
-/// - `this` — The current game object: this particular run and its stored state.
-/// - `public` — Makes this declaration accessible to other code.
-/// - `protected` — A visibility keyword used by supplied library callbacks, such as paintComponent.
-/// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
-///   background first.
-/// - `interface` — Describes a role that different implementations can fulfil. The caller can use that
-///   role without choosing its internals.
-/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
-/// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
-/// - `JPanel` — A window area that can display the game’s drawing or controls.
-/// - `SwingUtilities.invokeLater` — Schedules window work for Swing’s event thread; the action runs
-///   later.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `long` — Whole-number type (typ pro celá čísla) s větším rozsahem než int. Koncové L označuje long
+///   literal (přímo zapsanou hodnotu).
+/// - `final` — Pojmenované hodnotě už nelze přiřadit jinou. Odkazovaný mutable object (měnitelný objekt)
+///   se ale dál měnit může.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
+/// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+///   až při pozdějším volání.
+/// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
+/// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
+/// - `public` — Zpřístupňuje tuto declaration (deklaraci) dalšímu kódu.
+/// - `protected` — Visibility keyword (klíčové slovo přístupnosti) používané připraveným library callback
+///   (knihovním zpětným voláním), například paintComponent.
+/// - `super` — V super.paintComponent(g) požádá připravenou parent implementation (nadřazenou
+///   implementaci), aby nejprve vykreslila běžné pozadí.
+/// - `interface` — Popisuje role (roli), kterou mohou plnit různé implementation (implementace). Volající
+///   používá roli bez znalosti jejích vnitřností.
+/// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
+///   zopakuje stejnou posloupnost.
+/// - `Graphics2D` — Kreslicí nástroj dodaný při vykreslování okna nebo obrázku.
+/// - `JFrame` — Okno dodané JDK knihovnou Swing.
+/// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.
+/// - `SwingUtilities.invokeLater` — Naplánuje práci s oknem na Swing event thread (vlákno událostí); akce
+///   se provede později.
 // </editor-fold>
 

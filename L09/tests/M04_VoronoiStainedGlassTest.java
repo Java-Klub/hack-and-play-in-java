@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M04_VoronoiStainedGlassTest {
     static int checks;
     static final String[] CASES = {
-        "Three seeds are appended in legal coordinate ranges.",
-        "The returned List supports removal.",
-        "Zero is empty and negative counts are rejected."
+        "Tři zárodky přibudou v platných coordinate (souřadnicích).",
+        "Vrácený List (seznam) umožní odstranění.",
+        "Nula dá prázdný výsledek a záporný počet se odmítne."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -60,7 +60,7 @@ public class M04_VoronoiStainedGlassTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I112: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I112: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

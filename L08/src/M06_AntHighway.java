@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -7,17 +7,18 @@ import javax.swing.Timer;
 
 /// # L08.06 · AntHighway
 ///
-/// Let a tiny ant turn, repaint tiles, and slowly build a surprising trail. Watch for a highway emerging
-/// from its simple repeated rule.
+/// Nech malého mravence zatáčet, přebarvovat políčka a postupně tvořit překvapivou stopu. Sleduj, zda z
+/// jednoduchého opakovaného pravidla vznikne dálnice.
 ///
-/// **Your mission:** The west direction sends the ant east, distorting its trail. Repair the direction
-/// offsets in step() while preserving turning, repainting, and edge wrapping.
+/// **Tvoje mise:** Západní směr posílá mravence na východ a křiví jeho stopu. Oprav směrové posuny v
+/// step() a zachovej zatáčení, přebarvování i přechod přes okraje.
 ///
-/// **Today you learn:** Grid neighbours: parallel dx and dy arrays describe one cardinal step per
-/// direction. The same direction index must select matching horizontal and vertical offsets.
+/// **Dnes trénuješ:** Grid neighbours (sousedé v mřížce): souběžná pole dx a dy popisují jeden krok pro
+/// každý hlavní směr. Stejný index směru musí vybírat odpovídající vodorovný i svislý posun.
 ///
-/// Run File and click One step to inspect one ant move before using Run/Pause to grow a longer trail.
-/// After your repair: Save → Test File → play again.
+/// Spusť Run File a kliknutím na One step si prohlédni jeden krok mravence, potom pomocí Run/Pause nech
+/// vyrůst delší stopu.
+/// Po opravě: Save → Test File → zahraj si znovu.
 void step() {
     direction = Math.floorMod(direction + (black[y][x] ? -1 : 1), 4);
     black[y][x] = !black[y][x];
@@ -28,29 +29,30 @@ void step() {
     steps++;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `black[y][x] = !black[y][x]` — Negation flips the current tile’s boolean colour.
-/// - `int[] dx` — Horizontal movement offsets indexed by the ant’s direction.
-/// - `dx[direction]` — Reads the horizontal part of this particular direction’s step.
-/// - `Math.floorMod` — Wraps coordinates and direction indices into a valid nonnegative range.
+/// - `black[y][x] = !black[y][x]` — Negation (logická negace) přepne barvu právě navštíveného políčka.
+/// - `int[] dx` — Vodorovné posuny vybírané podle indexu směru mravence.
+/// - `dx[direction]` — Čte vodorovnou část kroku pro právě tento směr.
+/// - `Math.floorMod` — Převádí souřadnice a indexy směru do platného nezáporného rozsahu i při přechodu
+///   přes okraj.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// The buttons call one step or run bounded batches on a Swing timer. reset() clears the board, and
-/// painting shows stored tile colours and the current ant; step() is the whole movement rule.
+/// Tlačítka spustí jeden krok nebo omezené dávky pomocí Swing timer (časovače). reset() vymaže desku a
+/// kreslení ukazuje uložené barvy i mravence; step() tvoří celé pravidlo pohybu.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Directions 0,1,2,3 mean north,east,south,west.
-/// 2. West changes x by -1 and leaves y unchanged.
-/// 3. Use dx={0,1,0,-1}; dy already supplies {-1,0,1,0}.
+/// 1. Směry 0,1,2,3 znamenají sever,východ,jih,západ.
+/// 2. Západ mění x o -1 a ponechává y.
+/// 3. Použij dx={0,1,0,-1}; dy už dodává {-1,0,1,0}.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 boolean[][] black = new boolean[61][81];
 int x = 40;
 int y = 30;
@@ -58,8 +60,7 @@ int direction;
 long steps;
 boolean running;
 
-/// reset(): Restores the starting Ant Highway round, clearing the state that belongs to the old
-/// round.
+/// reset(): Obnovuje počáteční kolo Ant Highway a maže stav patřící starému kolu.
 void reset(long seed) {
     black = new boolean[61][81];
     x = 40;
@@ -68,8 +69,8 @@ void reset(long seed) {
     steps = 0;
 }
 
-/// showWindow(): Supplied later topic: Swing listeners forward input to the model; timers stop on
-/// window close.
+/// showWindow(): Dodané pozdější téma: Swing listeners předávají vstupy modelu; časovače končí při
+/// zavření okna.
 void showWindow() {
     var frame = new JFrame("Ant Highway");
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -138,7 +139,7 @@ void showWindow() {
     frame.setVisible(true);
 }
 
-/// main(): Starts the model, then schedules the supplied window on Swing’s event thread.
+/// main(): Spouští model a potom plánuje dodané okno na Swing event thread.
 void main(String[] args) {
     if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
         return;
@@ -148,62 +149,65 @@ void main(String[] args) {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
-/// - `::` — A method reference: supplies an action without calling it yet.
-/// - `this` — The current game object: this particular run and its stored state.
-/// - `public` — Makes this declaration accessible to other code.
-/// - `protected` — A visibility keyword used by supplied library callbacks, such as paintComponent.
-/// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
-///   background first.
-/// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
-/// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
-/// - `JPanel` — A window area that can display the game’s drawing or controls.
-/// - `SwingUtilities.invokeLater` — Schedules window work for Swing’s event thread; the action runs
-///   later.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `long` — Whole-number type (typ pro celá čísla) s větším rozsahem než int. Koncové L označuje long
+///   literal (přímo zapsanou hodnotu).
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+///   až při pozdějším volání.
+/// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
+/// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
+/// - `public` — Zpřístupňuje tuto declaration (deklaraci) dalšímu kódu.
+/// - `protected` — Visibility keyword (klíčové slovo přístupnosti) používané připraveným library callback
+///   (knihovním zpětným voláním), například paintComponent.
+/// - `super` — V super.paintComponent(g) požádá připravenou parent implementation (nadřazenou
+///   implementaci), aby nejprve vykreslila běžné pozadí.
+/// - `Graphics2D` — Kreslicí nástroj dodaný při vykreslování okna nebo obrázku.
+/// - `JFrame` — Okno dodané JDK knihovnou Swing.
+/// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.
+/// - `SwingUtilities.invokeLater` — Naplánuje práci s oknem na Swing event thread (vlákno událostí); akce
+///   se provede později.
 // </editor-fold>
 

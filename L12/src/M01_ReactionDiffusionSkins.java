@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -6,51 +6,52 @@ import javax.imageio.ImageIO;
 
 /// # L12.01 · ReactionDiffusionSkins
 ///
-/// Let two virtual chemicals spread and react until spots or stripes emerge. A tiny local recipe can
-/// change the whole skin of the creature you imagine wearing it.
+/// Nech dvě virtuální látky šířit se a reagovat, až vzniknou skvrny či pruhy. Drobné místní pravidlo
+/// změní celou kůži tvora, kterého si pod ní představíš.
 ///
-/// **Your mission:** The reaction is always zero, so the selected chemistry never affects the pattern.
-/// Reconnect the replaceable rule to the current cell’s real values.
+/// **Tvoje mise:** Reakce je stále nula, takže vybraná chemie vzor neovlivní. Znovu propoj vyměnitelné
+/// pravidlo se skutečnými hodnotami aktuální cell (buňky).
 ///
-/// **Today you learn:** A small interface can name one replaceable calculation. reactionAt should ask the
-/// installed Chemistry role about this cell, so a different implementation changes chemistry without
-/// replacing diffusion.
+/// **Dnes trénuješ:** Malý interface (rozhraní) může pojmenovat jeden vyměnitelný výpočet. ReactionAt se
+/// má zeptat připravené role Chemistry na tuto cell (buňku), aby jiná implementace změnila chemii bez
+/// přepisování difuze.
 ///
-/// Use Run File to generate reaction-diffusion-skins.png, then open the Saved path when the finite
-/// chemical simulation finishes.
-/// After your repair: Save → Test File → play again.
+/// Pomocí Run File vytvoř reaction-diffusion-skins.png a po dokončení konečné chemické simulace otevři
+/// cestu vypsanou za Saved.
+/// Po opravě: Save → Test File → zahraj si znovu.
 double reactionAt(int x, int y) {
     return 0;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `double` — The returned reaction is a decimal quantity, not a yes/no decision.
-/// - `reactionAt(int x, int y)` — The caller identifies which cell’s current chemical values are needed.
-/// - `return 0;` — Ignores the cell and installed rule, reporting no reaction everywhere.
+/// - `double` — Vrácená reakce je desetinná veličina, ne rozhodnutí ano/ne.
+/// - `reactionAt(int x, int y)` — Caller (volající část) určí, ze které cell (buňky) potřebuje aktuální
+///   hodnoty látek.
+/// - `return 0;` — Ignoruje cell (buňku) i připravené pravidlo a všude hlásí nulovou reakci.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// step calls reactionAt for each cell and fills separate next buffers. The supplied Chemistry interface
-/// and default lambda describe the reaction; neighbourhood diffusion, bounded updates and PNG export are
-/// already prepared.
+/// Step volá reactionAt pro každou cell (buňku) a plní nezávislá další pole. Připravené Chemistry
+/// interface (rozhraní) a výchozí lambda (anonymní funkce) popisují reakci; okolní difuze, omezené
+/// aktualizace i PNG export jsou připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Chemistry names a two-value calculation role.
-/// 2. Read a[y][x] and b[y][x], then pass both to the field’s reaction method.
-/// 3. Do not hard-code one formula; the caller must also work when chemistry is replaced.
+/// 1. Chemistry pojmenovává roli výpočtu ze dvou hodnot.
+/// 2. Přečti a[y][x] a b[y][x] a předej obě do reaction v připraveném field (položce objektu).
+/// 3. Nepřepisuj jeden vzorec napevno; caller (volající část) musí fungovat i po výměně chemistry.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int SIZE = 64;
 double[][] a;
 double[][] b;
 
-/// Supplied restart: create the initial model; no native window is created here.
+/// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
 void reset(long seed) {
     var random = new Random(seed);
     a = new double[SIZE][SIZE];
@@ -80,7 +81,7 @@ double laplace(double[][] field, int x, int y) {
     return sum;
 }
 
-/// Supplied bounded update: one call means one model step; the active repair is described above.
+/// Připravený omezený update (aktualizace): jedno volání znamená jeden krok; aktivní oprava je popsaná výše.
 void step() {
     double[][] nextA = new double[SIZE][SIZE];
     double[][] nextB = new double[SIZE][SIZE];
@@ -95,16 +96,16 @@ void step() {
     b = nextB;
 }
 
-/// Supplied image creation: generation and drawing remain visible in this file.
+/// Připravená tvorba obrazu: generování a kreslení zůstávají viditelné v tomto file (souboru).
 BufferedImage render(long seed, double option) {
     int count = (int)option;
     if (!Double.isFinite(option) || count < 1 || count > 3000) {
         throw new IllegalArgumentException("Steps: 1..3000.");
     }
-/// Supplied restart: create the initial model; no native window is created here.
+/// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
     reset(seed);
     for (int i = 0; i < count; i++) {
-/// Supplied bounded update: one call means one model step; the active repair is described above.
+/// Připravený omezený update (aktualizace): jedno volání znamená jeden krok; aktivní oprava je popsaná výše.
         step();
     }
     var image = new BufferedImage(SIZE * 6, SIZE * 6, BufferedImage.TYPE_INT_RGB);
@@ -117,7 +118,7 @@ BufferedImage render(long seed, double option) {
     return image;
 }
 
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
+/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
 void save(Path path, long seed, double option) throws Exception {
     Files.createDirectories(path.toAbsolutePath().getParent());
     if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
@@ -128,9 +129,9 @@ void save(Path path, long seed, double option) throws Exception {
 interface Chemistry { double reaction(double a, double b); }
 Chemistry chemistry = (a, b) -> a * b * b;
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// step calls reactionAt for each cell and writes independent next buffers.
-/// render repeats bounded steps and maps chemicals to colour; save/main keep the local PNG export.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// Step volá reactionAt pro každou cell (buňku) a zapisuje nezávislá další pole.
+/// Render opakuje omezený počet kroků a mapuje látky na barvu; save/main zachovávají místní PNG export.
 void main(String[] args) throws Exception {
     if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
         return;
@@ -139,7 +140,7 @@ void main(String[] args) throws Exception {
         Path path = Path.of(args.length > 0 ? args[0] : "reaction-diffusion-skins.png");
         long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
         double option = args.length > 2 ? Double.parseDouble(args[2]) : 1200;
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
+/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
         save(path, seed, option);
         IO.println("Saved: " + path.toAbsolutePath());
     } catch (IllegalArgumentException invalid) {
@@ -148,67 +149,72 @@ void main(String[] args) throws Exception {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
-/// - `final` — The named value cannot be assigned another value afterwards. A referenced mutable object
-///   can still change.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `%` — The remainder after division; useful for repeated positions or turns.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
-/// - `interface` — Describes a role that different implementations can fulfil. The caller can use that
-///   role without choosing its internals.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
-/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `long` — Whole-number type (typ pro celá čísla) s větším rozsahem než int. Koncové L označuje long
+///   literal (přímo zapsanou hodnotu).
+/// - `final` — Pojmenované hodnotě už nelze přiřadit jinou. Odkazovaný mutable object (měnitelný objekt)
+///   se ale dál měnit může.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
+/// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+///   až při pozdějším volání.
+/// - `interface` — Popisuje role (roli), kterou mohou plnit různé implementation (implementace). Volající
+///   používá roli bez znalosti jejích vnitřností.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
+///   zpracovat.
+/// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
+///   zopakuje stejnou posloupnost.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
+/// - `Path` — Umístění v souborech, nikoli obsah souboru.
+/// - `Files` — JDK operace pro čtení a zápis místních souborů.
 // </editor-fold>
 

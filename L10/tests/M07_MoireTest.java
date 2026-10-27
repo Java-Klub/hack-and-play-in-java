@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M07_MoireTest {
     static int checks;
     static final String[] CASES = {
-        "The normal asymmetric point has the specified screen position.",
-        "Centre/rotation or near-depth boundary stays correct.",
-        "The real drawing uses the transform and preserves model state."
+        "Běžný nestejný bod má popsanou pozici na obrazovce.",
+        "Střed/otočení či hranice hloubky zůstanou správné.",
+        "Skutečné kreslení používá transformaci a zachová state (stav) modelu."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -55,7 +55,7 @@ public class M07_MoireTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I076: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I076: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

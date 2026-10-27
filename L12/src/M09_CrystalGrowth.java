@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -6,19 +6,18 @@ import javax.imageio.ImageIO;
 
 /// # L12.09 · CrystalGrowth
 ///
-/// Grow a crystal by letting wandering particles stick to an existing cluster. Allowing diagonal contact
-/// should give the growth a different character from edge-only contact.
+/// Vypěstuj krystal z bloudících částic, které přilnou k existujícímu shluku. Povolení dotyku po
+/// úhlopříčce má změnit charakter růstu oproti dotyku jen hranou.
 ///
-/// **Your mission:** The new diagonal mode behaves exactly like the old four-neighbour mode. Extend the
-/// extracted contact rule while preserving the original option and safe boundary checks.
+/// **Tvoje mise:** Nový diagonal mode (režim úhlopříček) se chová stejně jako původní čtyřsousední.
+/// Rozšiř oddělené pravidlo dotyku a zachovej původní volbu i bezpečné meze.
 ///
-/// **Today you learn:** Transfer means reusing a familiar neighbourhood rule in a new option. A named
-/// contact operation should explain the difference between four and eight neighbours while leaving the
-/// growth algorithm unchanged.
+/// **Dnes trénuješ:** Transfer (přenos znalosti) znovu použije známé pravidlo sousedství pro novou volbu.
+/// Pojmenovaná operace dotyku má vyjádřit rozdíl čtyř a osmi sousedů a zachovat postup růstu.
 ///
-/// After Run File, press Enter for diagonal growth and crystal-new.png, then rerun with n to compare
+/// Po Run File stiskni Enter pro růst po úhlopříčce a crystal-new.png, potom spusť n pro porovnání s
 /// crystal-old.png.
-/// After your repair: Save → Test File → play again.
+/// Po opravě: Save → Test File → zahraj si znovu.
 boolean touching(boolean[][] grid, int x, int y, boolean diagonals) {
     for (int dy = -1; dy <= 1; dy++) {
         for (int dx = -1; dx <= 1; dx++) {
@@ -31,32 +30,32 @@ boolean touching(boolean[][] grid, int x, int y, boolean diagonals) {
     return false;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `dx == 0 && dy == 0` — Recognises the centre cell, which is not its own neighbour.
-/// - `dx != 0 && dy != 0` — Recognises a diagonal offset because both axes change.
-/// - `boolean diagonals` — The caller’s choice exists here but currently does not affect the rule.
-/// - `ny < grid.length && nx >= 0 && nx < grid[ny].length` — Checks row and column bounds before reading
-///   the candidate cell.
+/// - `dx == 0 && dy == 0` — Rozpozná středovou cell (buňku), která není vlastním sousedem.
+/// - `dx != 0 && dy != 0` — Rozpozná úhlopříčný posun, protože se mění obě osy.
+/// - `boolean diagonals` — Volba caller (volající části) zde existuje, ale pravidlo ji nyní nezohledňuje.
+/// - `ny < grid.length && nx >= 0 && nx < grid[ny].length` — Ověří meze řádku i sloupce před čtením
+///   kandidátní cell (buňky).
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// main asks which contact mode to use. The supplied bounded random walk calls touching before sticking a
-/// particle; drawing and PNG export are prepared. Explain the extracted responsibility yourself: checks
-/// establish behaviour, not code clarity.
+/// Main se zeptá na druh dotyku. Připravená omezená random walk (náhodná procházka) volá touching před
+/// přichycením částice; kreslení i PNG export jsou připravené. Oddělenou odpovědnost vysvětli sám: check
+/// (kontroly) dokládají chování, ne čitelnost.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. The old rule rejects diagonal dx/dy pairs.
-/// 2. Reject those pairs only when diagonals is false.
-/// 3. Keep centre exclusion and per-row bounds; explain why the extracted helper owns neighbour rules
-///   while grow owns the walk.
+/// 1. Staré pravidlo odmítá diagonální dvojice dx/dy.
+/// 2. Odmítej je jen tehdy, když diagonals je false.
+/// 3. Zachovej vynechání středu a hranice řádků; vysvětli, proč helper (pomocná funkce) vlastní sousedy a
+///   grow náhodnou chůzi.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 boolean[][] grow(long seed, int particles) {
     if (particles < 1 || particles > 1200) {
         throw new IllegalArgumentException("Particles: 1..1200.");
@@ -89,7 +88,7 @@ boolean[][] grow(long seed, int particles) {
     return stuck;
 }
 
-/// Supplied image creation: generation and drawing remain visible in this file.
+/// Připravená tvorba obrazu: generování a kreslení zůstávají viditelné v tomto file (souboru).
 BufferedImage render(long seed, double option) {
     if (!Double.isFinite(option)) {
         throw new IllegalArgumentException("Finite particle count required.");
@@ -112,7 +111,7 @@ BufferedImage render(long seed, double option) {
     return image;
 }
 
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
+/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
 void save(Path path, long seed, double option) throws Exception {
     Files.createDirectories(path.toAbsolutePath().getParent());
     if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
@@ -122,9 +121,9 @@ void save(Path path, long seed, double option) throws Exception {
 
 boolean diagonalGrowth = true;
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// touching owns the four/eight-neighbour rule; grow owns bounded random walks and sticking.
-/// render colours the resulting cluster; save/main keep the existing local PNG workflow.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// Touching vlastní pravidlo čtyř/osmi sousedů; grow omezenou náhodnou chůzi a přichycení.
+/// Render obarví vzniklý shluk; save/main zachovávají místní PNG postup.
 void main(String[] args) throws Exception {
     if (args.length == 0) {
         String entered = IO.readln("Allow diagonal growth? y/n (blank y, q quits): ");
@@ -140,7 +139,7 @@ void main(String[] args) throws Exception {
         Path path = Path.of(args.length > 0 ? args[0] : "crystal-growth.png");
         long seed = args.length > 1 ? Long.parseLong(args[1]) : 42;
         double option = args.length > 2 ? Double.parseDouble(args[2]) : 600;
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
+/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
         save(path, seed, option);
         IO.println("Saved: " + path.toAbsolutePath());
     } catch (IllegalArgumentException invalid) {
@@ -149,63 +148,68 @@ void main(String[] args) throws Exception {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `!=` — Checks that two values differ.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
-/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `long` — Whole-number type (typ pro celá čísla) s větším rozsahem než int. Koncové L označuje long
+///   literal (přímo zapsanou hodnotu).
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `!=` — Ověří, že se dvě hodnoty liší.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
+///   zpracovat.
+/// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
+///   zopakuje stejnou posloupnost.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
+/// - `Path` — Umístění v souborech, nikoli obsah souboru.
+/// - `Files` — JDK operace pro čtení a zápis místních souborů.
 // </editor-fold>
 

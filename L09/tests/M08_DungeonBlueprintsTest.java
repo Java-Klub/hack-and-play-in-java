@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M08_DungeonBlueprintsTest {
     static int checks;
     static final String[] CASES = {
-        "Area 42 is SMALL and repeated kinds accumulate.",
-        "The real generated dungeon counts only accepted rooms.",
-        "Generating another dungeon clears old totals."
+        "Plocha 42 je SMALL a opakované druhy se sčítají.",
+        "Skutečně generované podzemí započte jen přijaté místnosti.",
+        "Tvorba dalšího podzemí smaže staré součty."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -59,7 +59,7 @@ public class M08_DungeonBlueprintsTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I141: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I141: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

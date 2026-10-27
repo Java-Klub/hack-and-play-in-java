@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M09_CrystalGrowthTest {
     static int checks;
     static final String[] CASES = {
-        "The added mode sees a diagonal-only neighbour.",
-        "The old four-neighbour mode still excludes diagonals and accepts orthogonal contact.",
-        "Edges/empty data are safe and real crystal growth still attaches cells."
+        "Nový režim vidí samotného diagonálního souseda.",
+        "Původní čtyřsousední režim dál odmítá diagonály a přijímá kolmý dotyk.",
+        "Okraje/prázdná data jsou bezpečné a skutečný krystal dál přichycuje cell (buňky)."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -59,7 +59,7 @@ public class M09_CrystalGrowthTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I127: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I127: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

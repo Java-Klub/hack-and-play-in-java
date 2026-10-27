@@ -1,46 +1,47 @@
 /// # L02.06 · MadLibsStoryMachine
 ///
-/// Give the machine a name, a creature, a place and an object, then read the absurd story it builds from
-/// them. Multiword answers can make the result much stranger than single words.
+/// Dej stroji jméno, tvora, místo a předmět a přečti si absurdní příběh, který z nich sestaví. Víceslovné
+/// odpovědi mohou vytvořit mnohem zvláštnější výsledek než jednotlivá slova.
 ///
-/// **Your mission:** Spaces accidentally typed around an answer leak into the story. Repair cleanWord so
-/// the outside spaces disappear while a phrase such as Red Fox stays complete.
+/// **Tvoje mise:** Mezery omylem napsané kolem odpovědi pronikají do příběhu. Oprav cleanWord tak, aby
+/// okrajové mezery zmizely, ale fráze jako Red Fox zůstala celá.
 ///
-/// **Today you learn:** Whole-line text: reading a phrase is different from reading only its first word.
-/// Work on the returned String while preserving the spaces that belong inside the phrase.
+/// **Dnes trénuješ:** Text celého řádku: přečíst frázi se liší od převzetí jen jejího prvního slova.
+/// Pracuj s vráceným String (řetězcem) a zachovej mezery, které patří dovnitř fráze.
 ///
-/// Use Run File and answer the name prompt with spaces around Red Fox, then supply the other three
-/// phrases and inspect the finished story.
-/// After your repair: Save → Test File → play again.
+/// Použij Run File a na otázku na jméno napiš Red Fox s mezerami kolem, potom doplň další tři fráze a
+/// prohlédni hotový příběh.
+/// Po opravě: Save → Test File → zahraj si znovu.
 String cleanWord(String word) {
     return word;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `String cleanWord(String word)` — One String enters as word and a cleaned String should leave as the
-///   result.
-/// - `word` — A local name for this answer; it may contain several words and spaces.
-/// - `return word;` — The current body returns the received text unchanged, including its outside spaces.
-/// - `{` — The matching braces enclose the small text-cleaning rule; the prompts remain elsewhere.
+/// - `String cleanWord(String word)` — Jediný String (řetězec) vstoupí jako word a očištěný String má
+///   odejít jako výsledek.
+/// - `word` — Místní jméno této odpovědi; může obsahovat několik slov i mezery.
+/// - `return word;` — Současné tělo vrací přijatý text beze změny, včetně okrajových mezer.
+/// - `{` — Odpovídající složené závorky uzavírají malé pravidlo pro čištění textu; otázky zůstávají
+///   jinde.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// main asks for four complete lines. story calls cleanWord for each answer, checks usable lengths and
-/// inserts the cleaned phrases into the prepared story. You are editing the phrase cleanup, not the
-/// story’s input machinery.
+/// main se zeptá na čtyři celé řádky. story volá cleanWord pro každou odpověď, ověří použitelnou délku a
+/// vloží očištěné fráze do připraveného příběhu. Upravuješ očištění frází, nikoli zpracování jejich
+/// vstupu.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Do not split at spaces: a name may contain several words.
-/// 2. String.strip returns a cleaned copy.
-/// 3. Use return word.strip();
+/// 1. Nerozděluj text podle mezer: jméno může mít několik slov.
+/// 2. String.strip vrací očištěnou kopii.
+/// 3. Použij return word.strip();
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 String story(String name, String creature, String place, String object) {
     name = cleanWord(name);
     creature = cleanWord(creature);
@@ -72,50 +73,54 @@ void main(String[] args) {
     }
 }
 
-/// Prepared entry points: main.
+/// Připravené vstupní body: main.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `\` — Inside quoted text, starts an escape such as \n for a new line or \" for a quote.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `++` — Increases a numeric value by one.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `\` — Uvnitř textu začíná escape (zvláštní zápis), například \n pro nový řádek nebo \" pro uvozovku.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
+///   měnit velikost.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
 // </editor-fold>
 

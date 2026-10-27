@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M10_SecretPNGPostcardTest {
     static int checks;
     static final String[] CASES = {
-        "A nested PNG round-trips a UTF-8 message.",
-        "An empty message survives the same path.",
-        "Unsupported and missing input paths cause IOException."
+        "Vnořený PNG vrátí původní UTF-8 zprávu.",
+        "Prázdná zpráva přežije stejnou cestu.",
+        "Nepodporovaný a chybějící vstupní Path způsobí IOException."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -59,7 +59,7 @@ public class M10_SecretPNGPostcardTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I117: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I117: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

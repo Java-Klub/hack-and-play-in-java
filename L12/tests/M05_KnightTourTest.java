@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M05_KnightTourTest {
     static int checks;
     static final String[] CASES = {
-        "Move preserves the record component order.",
-        "Further legal moves advance count once.",
-        "Bad coordinates preserve state and Restart restores the initial board."
+        "Move zachová pořadí record component (složek record).",
+        "Další platné tahy zvýší počet jednou.",
+        "Chybné coordinate (souřadnice) zachovají state (stav) a Restart obnoví počáteční desku."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -58,7 +58,7 @@ public class M05_KnightTourTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I096: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I096: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

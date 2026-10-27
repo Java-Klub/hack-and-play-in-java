@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M05_PhotoRemixLabTest {
     static int checks;
     static final String[] CASES = {
-        "Repeated colour keys accumulate instead of overwriting.",
-        "A real two-pixel remix counts both occurrences.",
-        "Remixing a new source removes stale keys."
+        "Opakovaný barevný key (klíč) se sčítá místo přepsání.",
+        "Skutečný remix dvou pixel (bodů obrazu) započte oba výskyty.",
+        "Remix nového obrazu odstraní staré key (klíče)."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -60,7 +60,7 @@ public class M05_PhotoRemixLabTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I079: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I079: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

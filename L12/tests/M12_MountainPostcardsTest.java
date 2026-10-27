@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M12_MountainPostcardsTest {
     static int checks;
     static final String[] CASES = {
-        "The new transform reverses order and changes the real image.",
-        "The returned array is independent of the original.",
-        "Empty and one-element ridges preserve their meaning."
+        "Nová transformace obrátí pořadí a změní skutečný obraz.",
+        "Vrácený array (pole) je nezávislý na původním.",
+        "Prázdný a jednoprvkový hřeben zachovají význam."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -58,7 +58,7 @@ public class M12_MountainPostcardsTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I140: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I140: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

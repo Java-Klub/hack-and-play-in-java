@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -7,46 +7,47 @@ import javax.swing.Timer;
 
 /// # L12.04 · PendulumPainter
 ///
-/// Let a pendulum draw its own luminous trail. Change length and gravity to discover how the same
-/// starting swing produces different motion.
+/// Nech kyvadlo kreslit vlastní světelnou stopu. Měň délku a gravitaci a objevuj, jak stejný počáteční
+/// výkyv vytváří různý pohyb.
 ///
-/// **Your mission:** The pendulum receives zero acceleration and stays still. Restore the installed
-/// acceleration rule using the current angle and length, not fixed starting values.
+/// **Tvoje mise:** Kyvadlo dostává nulové zrychlení a stojí. Obnov připravené pravidlo zrychlení s
+/// aktuálním úhlem a délkou, nikoli pevnými počátečními hodnotami.
 ///
-/// **Today you learn:** An interface can isolate one physical rule from the surrounding simulation.
-/// accelerationNow connects current state to that rule, allowing an alternative rule without rewriting
-/// integration or drawing.
+/// **Dnes trénuješ:** Interface (rozhraní) může oddělit jedno fyzikální pravidlo od okolní simulace.
+/// AccelerationNow propojí aktuální state (stav) s pravidlem, takže jej lze vyměnit bez přepisování
+/// časového kroku či kreslení.
 ///
-/// After Run File, adjust Length and Gravity, use Pause/Run to stop motion and Clear or Reset to restart
-/// your trace experiment.
-/// After your repair: Save → Test File → play again.
+/// Po Run File měň Length a Gravity, pomocí Pause/Run zastav pohyb a tlačítky Clear či Reset obnov pokus
+/// se stopou.
+/// Po opravě: Save → Test File → zahraj si znovu.
 double accelerationNow() {
     return 0;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `double` — Angular acceleration is returned as a decimal value.
-/// - `accelerationNow()` — Has no parameters, so it must obtain current state from this model’s fields.
-/// - `return 0;` — Currently reports no acceleration even when gravity, angle or length changes.
+/// - `double` — Úhlové zrychlení se vrací jako desetinná hodnota.
+/// - `accelerationNow()` — Nemá parameter (parametry), proto musí získat aktuální state (stav) z field
+///   (položek) tohoto modelu.
+/// - `return 0;` — Nyní hlásí nulové zrychlení i při změně gravitace, úhlu či délky.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// step applies accelerationNow, damping and a fixed time increment, then draws between old and new bob
-/// positions. The supplied Acceleration interface, default rule, sliders and trace canvas keep those
-/// other responsibilities separate.
+/// Step použije accelerationNow, tlumení a pevný přírůstek času a potom kreslí mezi starou a novou pozicí
+/// závaží. Připravené Acceleration interface (rozhraní), výchozí pravidlo, posuvníky a plátno stopy
+/// oddělují ostatní odpovědnosti.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. The role needs the current values, not the initial constants.
-/// 2. The default implementation captures the gravity slider’s field.
-/// 3. Call the interface field once; leave 0.03 and damping inside the supplied step.
+/// 1. Role potřebuje aktuální hodnoty, nikoli počáteční konstanty.
+/// 2. Výchozí implementace používá field (položku objektu) posuvníku gravitace.
+/// 3. Interface field (položku rozhraní) zavolej jednou; 0.03 a tlumení nech v připraveném step.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 double angle = 0.9;
 double velocity;
 double length = 180;
@@ -59,7 +60,7 @@ Point bob() {
     return new Point(300 + (int)(length * Math.sin(angle)), 70 + (int)(length * Math.cos(angle)));
 }
 
-/// Supplied restart: create the initial model; no native window is created here.
+/// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
 void reset(long seed) {
     angle = 0.9;
     velocity = 0;
@@ -67,7 +68,7 @@ void reset(long seed) {
     trace = new java.awt.image.BufferedImage(600, 450, java.awt.image.BufferedImage.TYPE_INT_RGB);
 }
 
-/// Supplied bounded update: one call means one model step; the active repair is described above.
+/// Připravený omezený update (aktualizace): jedno volání znamená jeden krok; aktivní oprava je popsaná výše.
 void step() {
     Point before = bob();
     velocity += accelerationNow() * 0.03;
@@ -83,7 +84,7 @@ void step() {
     }
 }
 
-/// Supplied Swing UI: create it on the EDT; timer cleanup stays with the window.
+/// Připravené Swing UI (rozhraní): vytváří se na EDT; úklid timer (časovače) patří k oknu.
 void showWindow() {
     var frame = new JFrame("Pendulum Painter");
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -115,7 +116,7 @@ void showWindow() {
     });
     var reset = new JButton("Reset");
     reset.addActionListener(event -> {
-/// Supplied restart: create the initial model; no native window is created here.
+/// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
         reset(42);
         canvas.repaint();
     });
@@ -128,7 +129,7 @@ void showWindow() {
     controls.add(reset);
     var timer = new Timer(20, event -> {
         if (running) {
-/// Supplied bounded update: one call means one model step; the active repair is described above.
+/// Připravený omezený update (aktualizace): jedno volání znamená jeden krok; aktivní oprava je popsaná výše.
             step();
         }
         canvas.repaint();
@@ -150,76 +151,79 @@ void showWindow() {
 interface Acceleration { double at(double angle, double length); }
 Acceleration acceleration = (a, len) -> -gravity / len * Math.sin(a);
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// accelerationNow supplies the real angular acceleration used by step.
-/// reset restores motion; bob/drawing and sliders are supplied; the window owns timer cleanup.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// AccelerationNow dodává skutečné úhlové zrychlení pro step.
+/// Reset obnoví pohyb; bob/kreslení i posuvníky jsou připravené; okno spravuje úklid timer (časovače).
 void main(String[] args) {
     if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
         return;
     }
-/// Supplied restart: create the initial model; no native window is created here.
+/// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
     reset(42);
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
-/// - `::` — A method reference: supplies an action without calling it yet.
-/// - `this` — The current game object: this particular run and its stored state.
-/// - `public` — Makes this declaration accessible to other code.
-/// - `protected` — A visibility keyword used by supplied library callbacks, such as paintComponent.
-/// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
-///   background first.
-/// - `interface` — Describes a role that different implementations can fulfil. The caller can use that
-///   role without choosing its internals.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
-/// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
-/// - `JPanel` — A window area that can display the game’s drawing or controls.
-/// - `SwingUtilities.invokeLater` — Schedules window work for Swing’s event thread; the action runs
-///   later.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `long` — Whole-number type (typ pro celá čísla) s větším rozsahem než int. Koncové L označuje long
+///   literal (přímo zapsanou hodnotu).
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+///   až při pozdějším volání.
+/// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
+/// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
+/// - `public` — Zpřístupňuje tuto declaration (deklaraci) dalšímu kódu.
+/// - `protected` — Visibility keyword (klíčové slovo přístupnosti) používané připraveným library callback
+///   (knihovním zpětným voláním), například paintComponent.
+/// - `super` — V super.paintComponent(g) požádá připravenou parent implementation (nadřazenou
+///   implementaci), aby nejprve vykreslila běžné pozadí.
+/// - `interface` — Popisuje role (roli), kterou mohou plnit různé implementation (implementace). Volající
+///   používá roli bez znalosti jejích vnitřností.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `Graphics2D` — Kreslicí nástroj dodaný při vykreslování okna nebo obrázku.
+/// - `JFrame` — Okno dodané JDK knihovnou Swing.
+/// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.
+/// - `SwingUtilities.invokeLater` — Naplánuje práci s oknem na Swing event thread (vlákno událostí); akce
+///   se provede později.
 // </editor-fold>
 

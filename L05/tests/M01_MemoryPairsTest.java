@@ -1,4 +1,4 @@
-// Functional checks: game behaviour only.
+// Funkční kontroly: pouze chování hry.
 public class M01_MemoryPairsTest {
     static int checks;
     static void expect(boolean correct, String message) {

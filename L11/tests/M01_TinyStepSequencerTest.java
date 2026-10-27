@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M01_TinyStepSequencerTest {
     static int checks;
     static final String[] CASES = {
-        "Two toggles restore the same active-note Set.",
-        "A new note appears exactly once.",
-        "Invalid cells preserve membership; an empty Set exports silence."
+        "Dvě přepnutí obnoví stejný Set (množinu) aktivních not.",
+        "Nová nota se objeví právě jednou.",
+        "Neplatná cell (buňka) zachová příslušnost; prázdný Set uloží ticho."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -60,7 +60,7 @@ public class M01_TinyStepSequencerTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I102: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I102: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M01_ReactionDiffusionSkinsTest {
     static int checks;
     static final String[] CASES = {
-        "Default chemistry receives the real current cell values.",
-        "Replacing the interface implementation changes the result.",
-        "The actual step uses the replacement reaction in both next buffers."
+        "Výchozí chemistry přijme skutečné aktuální hodnoty cell (buňky).",
+        "Výměna implementace interface (rozhraní) změní výsledek.",
+        "Skutečný step používá náhradní reakci v obou dalších polích."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -63,7 +63,7 @@ public class M01_ReactionDiffusionSkinsTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I126: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I126: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

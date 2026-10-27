@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -6,18 +6,18 @@ import javax.imageio.ImageIO;
 
 /// # L04.07 · KochSnowflakeCards
 ///
-/// Make a snowflake postcard whose three sides grow smaller zigzags. The supplied edge builder can add
-/// intricate detail, while your part decides whether the shape closes all the way around.
+/// Vytvoř pohlednici se sněhovou vločkou, jejíž tři strany rostou do menších klikatých úseků. Připravené
+/// stavění hrany přidá jemné detaily; tvoje část rozhoduje, zda se tvar uzavře po celém obvodu.
 ///
-/// **Your mission:** The saved snowflake is missing a whole side. Repair the side loop in snowflake so
-/// corner indices 0, 1 and 2 are each visited once; keep the prepared edge builder.
+/// **Tvoje mise:** Uložené vločce chybí celá strana. Oprav smyčku stran ve snowflake tak, aby index
+/// (pozice) rohů 0, 1 a 2 navštívila právě jednou; připravené stavění hrany zachovej.
 ///
-/// **Today you learn:** For ranges over positions: three stored corners have indices 0, 1 and 2. The
-/// loop’s initial value and stopping comparison together decide which sides exist in the picture.
+/// **Dnes trénuješ:** Rozsah for nad pozicemi: tři uložené rohy mají index (pozice) 0, 1 a 2. Počáteční
+/// hodnota a ukončovací porovnání společně rozhodují, které strany budou v obrázku existovat.
 ///
-/// Use Run File, refresh the project in NetBeans Files and open koch-snowflake-cards.png to inspect the
-/// missing side.
-/// After your repair: Save → Test File → play again.
+/// Použij Run File, obnov projekt v kartě NetBeans Files a otevři koch-snowflake-cards.png, abys prohlédl
+/// chybějící stranu.
+/// Po opravě: Save → Test File → zahraj si znovu.
 int snowflake(Graphics2D g, int level) {
     int[] xs = {270, 70, 470};
     int[] ys = {45, 390, 390};
@@ -29,36 +29,35 @@ int snowflake(Graphics2D g, int level) {
     return segments;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `for (int side = 1; side < 3; side++)` — The initial side, the continue condition and the one-step
-///   increase form this loop’s range.
-/// - `int next = (side + 1) % 3;` — The supplied expression chooses the following corner and wraps from
-///   the last one back to the first.
-/// - `xs[side]` — Look up the horizontal position of this corner; the square brackets select a stored
-///   entry.
-/// - `segments += edge(g, xs[side], ys[side], xs[next], ys[next], level);` — Ask the prepared edge action
-///   to draw this side and add its returned segment count.
-/// - `return segments;` — Return the total number of drawn small segments after every selected side is
-///   finished.
+/// - `for (int side = 1; side < 3; side++)` — Počáteční side, podmínka pokračování a zvětšení o jeden
+///   tvoří rozsah této smyčky.
+/// - `int next = (side + 1) % 3;` — Připravený výraz vybere následující roh a z posledního se vrátí k
+///   prvnímu.
+/// - `xs[side]` — Vyhledej vodorovnou pozici tohoto rohu; hranaté závorky vybírají uloženou položku.
+/// - `segments += edge(g, xs[side], ys[side], xs[next], ys[next], level);` — Požádej připravenou akci
+///   edge o vykreslení této strany a připočti vrácený počet úseků.
+/// - `return segments;` — Po dokončení všech vybraných stran vrať celkový počet vykreslených malých
+///   úseků.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// xs and ys contain the three corner positions. edge already breaks a side into smaller zigzags,
-/// repeatedly when the level is higher; you need not change that recursive machinery. render supplies the
-/// canvas and colours, while save and main write koch-snowflake-cards.png.
+/// xs a ys obsahují pozice tří rohů. edge už rozděluje stranu na menší klikaté úseky, při vyšší úrovni
+/// opakovaně; tuto recursion (rekurzi) měnit nemusíš. render připraví plátno a barvy, save a main zapíší
+/// koch-snowflake-cards.png.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Starting at one omits the first side.
-/// 2. The three indices are 0,1,2, with 3 as the excluded bound.
-/// 3. Start side = 0 and keep side < 3.
+/// 1. Začátek na jedné vynechá první stranu.
+/// 2. Tři index (indexy) jsou 0,1,2 a vyloučená hranice je 3.
+/// 3. Začni side = 0 a zachovej side < 3.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 int edge(Graphics2D g, double x, double y, double nx, double ny, int level) {
     if (level == 0) {
         g.drawLine((int)x, (int)y, (int)nx, (int)ny);
@@ -116,65 +115,70 @@ void main(String[] args) throws Exception {
     }
 }
 
-/// Prepared entry points: main, render, save.
+/// Připravené vstupní body: main, render, save.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `%` — The remainder after division; useful for repeated positions or turns.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
-/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
-/// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `long` — Whole-number type (typ pro celá čísla) s větším rozsahem než int. Koncové L označuje long
+///   literal (přímo zapsanou hodnotu).
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
+/// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
+///   zpracovat.
+/// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
+///   zopakuje stejnou posloupnost.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
+/// - `Path` — Umístění v souborech, nikoli obsah souboru.
+/// - `Files` — JDK operace pro čtení a zápis místních souborů.
+/// - `Graphics2D` — Kreslicí nástroj dodaný při vykreslování okna nebo obrázku.
 // </editor-fold>
 

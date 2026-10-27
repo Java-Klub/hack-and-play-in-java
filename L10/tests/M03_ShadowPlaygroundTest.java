@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M03_ShadowPlaygroundTest {
     static int checks;
     static final String[] CASES = {
-        "Callback creation preserves the starting light position.",
-        "Invocation and actual press/drag use the supplied x/y values.",
-        "Out-of-bounds coordinates are clamped by moveLight."
+        "Vytvoření callback (předané akce) zachová počáteční pozici světla.",
+        "Spuštění i skutečné press/drag použijí zadané x/y.",
+        "Coordinate (souřadnice) mimo plátno omezí moveLight."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -58,7 +58,7 @@ public class M03_ShadowPlaygroundTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I078: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I078: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

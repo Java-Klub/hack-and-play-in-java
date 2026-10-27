@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioFileFormat;
@@ -8,19 +8,19 @@ import java.io.ByteArrayInputStream;
 
 /// # L12.11 · SecretBeeps
 ///
-/// Turn a short message into dots, dashes and beeps. Try a longer word gap and hear how timing alone
-/// makes the same symbols easier or harder to separate.
+/// Proměň krátkou zprávu v tečky, čárky a pípání. Zkus delší mezeru mezi slovy a poslechni si, jak
+/// samotné časování usnadní či ztíží rozlišení stejných značek.
 ///
-/// **Your mission:** The requested word gap is validated but always replaced by seven units. Extend the
-/// timing conversion while keeping the original seven-unit mode and all other gaps.
+/// **Tvoje mise:** Požadovaná mezera slov se ověří, ale vždy ji nahradí sedm jednotek. Rozšiř převod
+/// časování a zachovej původní sedmijednotkový režim i ostatní mezery.
 ///
-/// **Today you learn:** Transfer an existing encoding rule into a parameterised operation. Keep letter
-/// and mark timing stable while one new parameter controls word separation; compatibility is a behaviour
-/// to check, not a reason to duplicate the whole algorithm.
+/// **Dnes trénuješ:** Přenes existující encoding rule (pravidlo kódování) do parameterised operation
+/// (operace s parametrem). Zachovej časování písmen a značek, zatímco nový parameter (parametr) řídí
+/// oddělení slov; původní chování ověř, ale nekopíruj kvůli němu celý postup.
 ///
-/// After Run File, press Enter for E E, choose a word gap of 7 or 10 and open the matching
-/// secret-beeps-gap7.wav or secret-beeps-gap10.wav.
-/// After your repair: Save → Test File → play again.
+/// Po Run File stiskni Enter pro E E, vyber mezeru slov 7 či 10 a otevři odpovídající
+/// secret-beeps-gap7.wav nebo secret-beeps-gap10.wav.
+/// Po opravě: Save → Test File → zahraj si znovu.
 List<Integer> units(String text, int wordGap) {
     if (wordGap < 3 || wordGap > 12) throw new IllegalArgumentException("Word gap: 3..12 units.");
     var result = new ArrayList<Integer>();
@@ -45,34 +45,33 @@ List<Integer> units(String text, int wordGap) {
     return result;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `wordGap < 3 || wordGap > 12` — Validates the requested gap before building any timing units.
-/// - `result.add(-7)` — Negative units mean silence; this constant currently fixes every word gap.
-/// - `result.add(-3)` — Keeps the separate three-unit pause between letters.
-/// - `charAt(m) == '.' ? 1 : 3` — A dot is one sounding unit and a dash three.
+/// - `wordGap < 3 || wordGap > 12` — Ověří požadovanou mezeru před sestavením časových jednotek.
+/// - `result.add(-7)` — Záporné jednotky znamenají ticho; tato konstanta nyní určuje každou mezeru slov.
+/// - `result.add(-3)` — Zachovává samostatnou tříjednotkovou pause (pauzu) mezi písmeny.
+/// - `charAt(m) == '.' ? 1 : 3` — Tečka je jedna znějící jednotka a čárka tři.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// code supplies the Morse symbols and separators. units turns them into signed sound/silence durations,
-/// signal builds the samples and write exports WAV; the original one-argument units call keeps its
-/// seven-unit default.
+/// Code dodává Morseovy značky a oddělovače. Units je mění v kladné a záporné délky zvuku a ticha, signal
+/// tvoří sample (vzorky) a write uloží WAV; původní units s jedním argument (argumentem) zachovává
+/// výchozích sedm jednotek.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Negative unit values represent silence lengths.
-/// 2. Only the w>0 branch separates words.
-/// 3. Use -wordGap there, leave the other two gap rules intact, and explain why text coding stays
-///   separate from timing.
+/// 1. Záporné unit (jednotky) představují délku ticha.
+/// 2. Slova odděluje jen branch (větev) w>0.
+/// 3. Tam použij -wordGap, dvě ostatní mezery zachovej a vysvětli oddělení kódování textu od časování.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int RATE = 22050;
 
-/// Supplied WAV encoding: bounded PCM samples and try-with-resources own the stream.
+/// Připravený WAV encoding (kódování): omezené PCM sample (vzorky) a try-with-resources spravují stream (proud).
 void write(Path path, double[] signal) throws Exception {
     byte[] pcm = new byte[signal.length * 2];
     for (int i = 0; i < signal.length; i++) {
@@ -109,7 +108,7 @@ String code(String text) {
     return words.toString();
 }
 
-/// Supplied synthesis: bounded sample loops build audio; there is no autoplay.
+/// Připravená syntéza: omezené sample loop (cykly vzorků) tvoří zvuk; automatické přehrávání zde není.
 double[] signal(String text, int milliseconds) {
     if (milliseconds < 20 || milliseconds > 100) {
         throw new IllegalArgumentException("Unit duration: 20..100 ms.");
@@ -136,9 +135,9 @@ List<Integer> units(String text) {
     return units(text, 7);
 }
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// code maps ASCII letters/digits to Morse; units owns signed tone/silence lengths.
-/// signal expands those lengths to samples using wordGap; main optionally selects the new fourth argument and write exports WAV.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// Code mapuje ASCII písmena/číslice na Morse; units vlastní podepsané délky tónu/ticha.
+/// Signal rozvine délky na sample (vzorky) pomocí wordGap; main případně volí nový čtvrtý argument (argument) a write uloží WAV.
 void main(String[] args) throws Exception {
     if (args.length == 0) {
         String entered = IO.readln("Message (blank E E, q quits): ");
@@ -159,7 +158,7 @@ void main(String[] args) throws Exception {
         int unit = args.length > 2 ? Integer.parseInt(args[2]) : 60;
         if (args.length > 3) wordGap = Integer.parseInt(args[3]);
         IO.println(code(text));
-/// Supplied WAV encoding: bounded PCM samples and try-with-resources own the stream.
+/// Připravený WAV encoding (kódování): omezené PCM sample (vzorky) a try-with-resources spravují stream (proud).
         write(path, signal(text, unit));
         IO.println("Saved: " + path.toAbsolutePath());
     } catch (IllegalArgumentException invalid) {
@@ -168,66 +167,70 @@ void main(String[] args) throws Exception {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `'` — Single quotes enclose one character, such as a board marker.
-/// - `char` — A type for one UTF-16 code unit, often a simple board character such as X. Text uses
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `'` — Jednoduché uvozovky ohraničují jeden character (znak), například značku na desce.
+/// - `char` — Type (typ) pro jednu UTF-16 jednotku, často jednoduchý znak desky jako X. Pro text slouží
 ///   String.
-/// - `final` — The named value cannot be assigned another value afterwards. A referenced mutable object
-///   can still change.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `::` — A method reference: supplies an action without calling it yet.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
-/// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `final` — Pojmenované hodnotě už nelze přiřadit jinou. Odkazovaný mutable object (měnitelný objekt)
+///   se ale dál měnit může.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
+///   zpracovat.
+/// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
+///   měnit velikost.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
+/// - `Path` — Umístění v souborech, nikoli obsah souboru.
+/// - `Files` — JDK operace pro čtení a zápis místních souborů.
 // </editor-fold>
 

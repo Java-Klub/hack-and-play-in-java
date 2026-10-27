@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M06_ColourFilterSecretsTest {
     static int checks;
     static final String[] CASES = {
-        "Changing seed changes camouflage.",
-        "Equal seeds reproduce all hidden pixels.",
-        "The recovered message is independent of the noise seed."
+        "Změna seed (počáteční hodnoty) změní maskování.",
+        "Stejný seed zopakuje všechny skryté pixel (body obrazu).",
+        "Odhalená zpráva nezávisí na seed šumu."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -56,7 +56,7 @@ public class M06_ColourFilterSecretsTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I116: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I116: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

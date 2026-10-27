@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -7,19 +7,20 @@ import java.util.List;
 
 /// # L04.08 · DragonCurve
 ///
-/// Grow a paper-folding dragon from a trail of left and right turns. Repeating a small folding recipe
-/// creates a surprisingly elaborate curve, which the program saves as a coloured picture.
+/// Nech z posloupnosti levých a pravých odbočení vyrůst papírového draka. Opakování malého skládacího
+/// receptu vytváří překvapivě složitou křivku, kterou program uloží jako barevný obrázek.
 ///
-/// **Your mission:** The curve receives one fold fewer than requested. Repair only the outer loop in
-/// foldTurns so zero folds does no work and every positive request runs that many folding passes.
+/// **Tvoje mise:** Křivka dostane o jeden přehyb méně, než bylo požadováno. Oprav pouze vnější smyčku ve
+/// foldTurns tak, aby nula přehybů neudělala nic a kladný požadavek provedl právě tolik průchodů
+/// skládání.
 ///
-/// **Today you learn:** For as a repetition count: the outer counter counts complete folds, not turns
-/// already stored. Check the tiny requests zero and one before reasoning about a detailed eleven-fold
-/// picture.
+/// **Dnes trénuješ:** For jako počet opakování: vnější counter (počítadlo) počítá celé přehyby, nikoli
+/// již uložená odbočení. Než začneš uvažovat o podrobném obrázku s jedenácti přehyby, ověř drobné
+/// požadavky nula a jedna.
 ///
-/// Use Run File, refresh NetBeans Files and open dragon-curve.png; then use Test File to compare the
-/// exact zero-fold and one-fold cases.
-/// After your repair: Save → Test File → play again.
+/// Použij Run File, obnov NetBeans Files a otevři dragon-curve.png; potom pomocí Test File porovnej
+/// přesné případy nuly a jednoho přehybu.
+/// Po opravě: Save → Test File → zahraj si znovu.
 List<Integer> foldTurns(int folds) {
     var turns = new ArrayList<Integer>();
     for (int fold = 1; fold < folds; fold++) {
@@ -32,36 +33,36 @@ List<Integer> foldTurns(int folds) {
     return turns;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `for (int fold = 1; fold < folds; fold++)` — This is the outer repetition range you own; folds is
-///   the requested number, while fold tracks the current pass.
-/// - `int old = turns.size();` — Remember how many turns existed before this fold; the inner copy must
-///   use that earlier portion.
-/// - `turns.add(1);` — The prepared recipe appends one right turn at the centre of each fold.
-/// - `for (int i = old - 1; i >= 0; i--)` — This supplied inner loop reads the old turns backwards; i--
-///   moves towards the first stored turn.
-/// - `turns.add(-turns.get(i));` — Copy a turn with its direction reversed. Keep this ready-made folding
-///   rule intact.
-/// - `return turns;` — Give the finished turn sequence to the supplied path-drawing code.
+/// - `for (int fold = 1; fold < folds; fold++)` — Toto je rozsah vnějšího opakování, který upravuješ;
+///   folds je požadovaný počet, zatímco fold sleduje aktuální průchod.
+/// - `int old = turns.size();` — Zapamatuj počet odbočení před tímto přehybem; vnitřní kopírování musí
+///   použít právě tuto dřívější část.
+/// - `turns.add(1);` — Připravený recept připojí doprostřed každého přehybu jedno pravé odbočení.
+/// - `for (int i = old - 1; i >= 0; i--)` — Tato připravená vnitřní smyčka čte stará odbočení pozpátku;
+///   i-- postupuje k prvnímu uloženému odbočení.
+/// - `turns.add(-turns.get(i));` — Zkopíruj odbočení s obráceným směrem. Toto připravené skládací
+///   pravidlo zachovej.
+/// - `return turns;` — Předej hotovou posloupnost odbočení připravené části pro kreslení cesty.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// The prepared inner loop supplies one complete fold by reversing earlier turns and changing their
-/// directions. Later methods convert the sequence to positions, fit it on the canvas, colour it and write
-/// dragon-curve.png. No window or fold slider is part of this exporter.
+/// Připravená vnitřní smyčka dodává jeden celý přehyb obrácením dřívějších odbočení a jejich směrů.
+/// Pozdější method (metody) převedou posloupnost na pozice, přizpůsobí ji plátnu, obarví ji a zapíší
+/// dragon-curve.png. Tento export neobsahuje okno ani posuvník přehybů.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Try folds = 1 with the current starting fold.
-/// 2. The outer counter should visit 0 through folds - 1.
-/// 3. Initialize fold to 0; keep fold < folds.
+/// 1. Vyzkoušej folds = 1 se současným počátečním fold.
+/// 2. Vnější counter (čítač) má navštívit 0 až folds - 1.
+/// 3. Dej fold výchozí hodnotu 0; zachovej fold < folds.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 List<Point> path(int folds) {
     if (folds < 0 || folds > 15) {
         throw new IllegalArgumentException("Folds: 0..15.");
@@ -133,65 +134,70 @@ void main(String[] args) throws Exception {
     }
 }
 
-/// Prepared entry points: main, render, save.
+/// Připravené vstupní body: main, render, save.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `%` — The remainder after division; useful for repeated positions or turns.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
-/// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `long` — Whole-number type (typ pro celá čísla) s větším rozsahem než int. Koncové L označuje long
+///   literal (přímo zapsanou hodnotu).
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
+/// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+///   až při pozdějším volání.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
+///   zpracovat.
+/// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
+///   měnit velikost.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
+/// - `Path` — Umístění v souborech, nikoli obsah souboru.
+/// - `Files` — JDK operace pro čtení a zápis místních souborů.
 // </editor-fold>
 

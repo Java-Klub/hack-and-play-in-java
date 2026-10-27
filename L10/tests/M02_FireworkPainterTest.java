@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M02_FireworkPainterTest {
     static int checks;
     static final String[] CASES = {
-        "Creating the callback creates no particles.",
-        "Invocation creates sixty particles at the supplied asymmetric coordinates.",
-        "A real press adds another burst and restart clears it."
+        "Vytvoření callback (předané akce) nevytvoří částice.",
+        "Spuštění vytvoří šedesát částic v zadaných nestejných coordinate (souřadnicích).",
+        "Skutečný press přidá další výbuch a restart vše smaže."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -59,7 +59,7 @@ public class M02_FireworkPainterTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I072: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I072: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

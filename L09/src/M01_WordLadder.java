@@ -1,16 +1,16 @@
 /// # L09.01 · WordLadder
 ///
-/// Turn COLD into WARM by changing one letter at a time. Your trail is part of the puzzle: can you reach
-/// the target without forgetting the route?
+/// Proměň COLD ve WARM změnou jediného písmene při každém tahu. Součástí hádanky je celá cesta: dosáhneš
+/// cíle, aniž bys zapomněl, kudy jsi šel?
 ///
-/// **Your mission:** After a valid move, the trail loses its earlier words. Repair the history update
-/// while leaving rejected moves and restart trustworthy.
+/// **Tvoje mise:** Po platném tahu cesta ztratí starší slova. Oprav změnu history tak, aby odmítnuté tahy
+/// i restart zůstaly spolehlivé.
 ///
-/// **Today you learn:** A mutable List remembers items in order. Here one accepted word should extend an
-/// existing journey; replacing the whole list changes what the player remembers.
+/// **Dnes trénuješ:** Mutable List (měnitelný seznam) pamatuje položky v pořadí. Jedno přijaté slovo má
+/// prodloužit existující cestu; nahrazení celého List změní, co si hráč pamatuje.
 ///
-/// After Run File, type CORD and then CARD to climb from COLD; use /r to restart and /q to quit.
-/// After your repair: Save → Test File → play again.
+/// Po Run File napiš CORD a potom CARD pro cestu od COLD; pomocí /r začneš znovu a pomocí /q skončíš.
+/// Po opravě: Save → Test File → zahraj si znovu.
 void command(String input) {
     require(outcome.isEmpty());
     String word = input.toUpperCase(Locale.ROOT);
@@ -22,35 +22,35 @@ void command(String input) {
     }
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `history =` — Assignment replaces the list referenced by history; it does not extend that list.
-/// - `List.of(word)` — Creates a list containing just this word, with no earlier route.
-/// - `&&` — Both dictionary membership and the one-letter rule must pass before current changes.
-/// - `history.size() - 1` — Words include the starting position, so moves are one fewer.
+/// - `history =` — Assignment (přiřazení) nahradí List, na který history odkazuje; neprodlouží jej.
+/// - `List.of(word)` — Vytvoří List (seznam) jen s tímto slovem, bez dřívější cesty.
+/// - `&&` — Před změnou current musí platit členství ve slovníku i pravidlo jednoho písmene.
+/// - `history.size() - 1` — Slova zahrnují počáteční pozici, proto je tahů o jeden méně.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// main reads a word and command validates it before changing current. adjacent counts changed letters,
-/// display prints the same history, and reset creates the initial COLD route.
+/// Main přečte slovo a command je ověří před změnou current. Adjacent počítá změněná písmena, display
+/// vypíše stejnou historii a reset vytvoří počáteční cestu od COLD.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Inspect what assigning a new ArrayList does to the earlier words.
-/// 2. Use the mutating operation that appends one word to the existing sequence.
-/// 3. Trace COLD → CORD → CARD, then reject WARM without appending it.
+/// 1. Prozkoumej, co assignment (přiřazení) nového ArrayList udělá se staršími slovy.
+/// 2. Použij operaci, která přidá jedno slovo do existující sequence (posloupnosti).
+/// 3. Projdi COLD → CORD → CARD a potom odmítni WARM bez přidání.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 String[] words = {"COLD", "CORD", "CARD", "WARD", "WARM", "WORD", "WORM", "GOLD", "SOLD", "TOLD", "HOLD"};
 String current;
 String outcome;
 List<String> history;
 
-/// Supplied restart: create the initial model; no native window is created here.
+/// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
 void reset() {
     current = "COLD";
     history = new ArrayList<>(List.of(current));
@@ -75,11 +75,11 @@ void display() {
     IO.println(String.join(" -> ", history) + "; target WARM");
 }
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// adjacent counts differing letters; the supplied dictionary keeps this puzzle finite.
-/// reset creates the starting history; display prints it and main handles input/EOF.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// Adjacent počítá rozdílná písmena; připravený slovník udržuje úlohu omezenou.
+/// Reset založí počáteční historii; display ji vypíše a main ošetřuje input (vstup) a EOF.
 void main() {
-/// Supplied restart: create the initial model; no native window is created here.
+/// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
     reset();
     IO.println("Word Ladder");
     IO.println("Change exactly one letter to a listed word. Transform COLD to WARM. /r restarts; /q quits.");
@@ -93,7 +93,7 @@ void main() {
             return;
         }
         if (input.strip().equalsIgnoreCase("/r")) {
-/// Supplied restart: create the initial model; no native window is created here.
+/// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
             reset();
             continue;
         }
@@ -116,53 +116,57 @@ void require(boolean valid) {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `!=` — Checks that two values differ.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `while` — Keeps repeating its body while its condition stays true.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `!=` — Ověří, že se dvě hodnoty liší.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
+/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+///   až při pozdějším volání.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
+///   měnit velikost.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
 // </editor-fold>
 

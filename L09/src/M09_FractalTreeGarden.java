@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -6,18 +6,18 @@ import javax.imageio.ImageIO;
 
 /// # L09.09 · FractalTreeGarden
 ///
-/// Grow a branching tree by changing one angle. A small turn can transform a narrow twig into a sprawling
-/// canopy worth saving as a postcard.
+/// Vypěstuj větvící se strom změnou jediného úhlu. Malé pootočení promění úzkou větvičku v rozložitou
+/// korunu, kterou stojí za to uložit jako pohlednici.
 ///
-/// **Your mission:** Mistyped angle text quietly selects 10 instead of the promised default 28. Repair
-/// that fallback while still rejecting numeric values outside the allowed range.
+/// **Tvoje mise:** Překlep v úhlu potichu vybere 10 místo slíbené výchozí hodnoty 28. Oprav náhradní
+/// hodnotu a dál odmítej čísla mimo povolené rozmezí.
 ///
-/// **Today you learn:** Parsing turns text into a number and can fail before range checking begins. Catch
-/// the specific text-conversion failure; an out-of-range number is a different problem.
+/// **Dnes trénuješ:** Parsing (rozbor vstupu) mění text v číslo a může selhat ještě před kontrolou
+/// rozmezí. Zachyť konkrétní chybu převodu textu; číslo mimo rozmezí je jiný problém.
 ///
-/// After Run File, enter a branching angle from 10 to 70 or try oops, then open the PNG at the printed
-/// Saved path.
-/// After your repair: Save → Test File → play again.
+/// Po Run File zadej úhel větvení od 10 do 70 nebo zkus oops a potom otevři PNG na cestě vypsané za
+/// Saved.
+/// Po opravě: Save → Test File → zahraj si znovu.
 double readAngle(String text) {
     try {
         double value = Double.parseDouble(text.strip());
@@ -28,31 +28,30 @@ double readAngle(String text) {
     }
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `Double.parseDouble(text.strip())` — Removes outer whitespace, then attempts a decimal-number
-///   conversion.
-/// - `!Double.isFinite(value)` — Rejects NaN and infinities, which are not usable branching angles.
-/// - `catch (NumberFormatException invalid)` — Handles malformed numeric text, rather than every possible
-///   programming error.
-/// - `return 10;` — The current fallback determines the visible tree after a typing mistake.
+/// - `Double.parseDouble(text.strip())` — Odstraní okolní mezery a pokusí se o převod na desetinné číslo.
+/// - `!Double.isFinite(value)` — Odmítne NaN a nekonečna, která nejsou použitelnými úhly větvení.
+/// - `catch (NumberFormatException invalid)` — Zachytí chybný číselný text, nikoli každou možnou
+///   programátorskou chybu.
+/// - `return 10;` — Současná náhradní hodnota určuje viditelný strom po překlepu.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// main asks for the angle and calls readAngle before drawing. The supplied recursive branch routine
-/// shortens each branch, and the export code writes the resulting PNG locally.
+/// Main se zeptá na úhel a před kreslením volá readAngle. Připravená recursive routine (rekurzivní část)
+/// zkracuje větve a ukládací část zapíše výsledné PNG místně.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Strip surrounding whitespace before parsing.
-/// 2. Catch NumberFormatException, not every programming error.
-/// 3. The fallback is 28; range guards remain separate from that fallback.
+/// 1. Před parsing (rozborem) odstraň okolní mezery.
+/// 2. Zachyť NumberFormatException, nikoli každou chybu programu.
+/// 3. Výchozí hodnota je 28; guard (podmínky) rozsahu zůstanou oddělené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 double shortening = 0.7;
 
 int branches(Graphics2D g, double x, double y, double length, double heading, double fork, int depth) {
@@ -67,7 +66,7 @@ int branches(Graphics2D g, double x, double y, double length, double heading, do
         + branches(g, nx, ny, length * shortening, heading + fork, fork, depth - 1);
 }
 
-/// Supplied image creation: generation and drawing remain visible in this file.
+/// Připravená tvorba obrazu: generování a kreslení zůstávají viditelné v tomto file (souboru).
 BufferedImage render(long seed, double angle) {
     if (!Double.isFinite(angle) || angle < 10 || angle > 70 || shortening < 0.4 || shortening > 0.78) {
         throw new IllegalArgumentException("Angle 10..70; optional shortening 0.4..0.78.");
@@ -85,7 +84,7 @@ BufferedImage render(long seed, double angle) {
     return image;
 }
 
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
+/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
 void save(Path path, long seed, double option) throws Exception {
     Files.createDirectories(path.toAbsolutePath().getParent());
     if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
@@ -93,9 +92,9 @@ void save(Path path, long seed, double option) throws Exception {
     }
 }
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// branches recursively draws a bounded tree; angle and shortening are explained controls.
-/// main reads this option; save/export and rendering stay supplied.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// Branches rekurzivně kreslí omezený strom; úhel a zkrácení jsou vysvětlené ovládání.
+/// Main čte tuto volbu; save/export a rendering (vykreslení) jsou připravené.
 void main(String[] args) throws Exception {
     if (args.length > 0 && args[0].equalsIgnoreCase("q")) {
         return;
@@ -113,7 +112,7 @@ void main(String[] args) throws Exception {
         if (args.length > 3) {
             shortening = Double.parseDouble(args[3]);
         }
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
+/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
         save(path, seed, option);
         IO.println("Saved: " + path.toAbsolutePath());
     } catch (IllegalArgumentException invalid) {
@@ -122,59 +121,64 @@ void main(String[] args) throws Exception {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
-/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
-/// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `long` — Whole-number type (typ pro celá čísla) s větším rozsahem než int. Koncové L označuje long
+///   literal (přímo zapsanou hodnotu).
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
+///   zpracovat.
+/// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
+///   zopakuje stejnou posloupnost.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
+/// - `Path` — Umístění v souborech, nikoli obsah souboru.
+/// - `Files` — JDK operace pro čtení a zápis místních souborů.
+/// - `Graphics2D` — Kreslicí nástroj dodaný při vykreslování okna nebo obrázku.
 // </editor-fold>
 

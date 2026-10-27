@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M11_MirrorCylinderPictureTest {
     static int checks;
     static final String[] CASES = {
-        "The requested nested file contains nonempty bytes.",
-        "The actual saved PNG has the expected image dimensions.",
-        "An invalid parent path reports IOException."
+        "Zadaný vnořený file (soubor) obsahuje neprázdná data.",
+        "Skutečný uložený PNG má očekávané rozměry.",
+        "Neplatná nadřazená cesta oznámí IOException."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -58,7 +58,7 @@ public class M11_MirrorCylinderPictureTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I119: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I119: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

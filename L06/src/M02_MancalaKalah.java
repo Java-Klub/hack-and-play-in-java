@@ -1,16 +1,17 @@
 /// # L06.02 · MancalaKalah
 ///
-/// Sow stones around the pits, catch an extra turn, and try to collect more than your opponent. Then
-/// trade tactics in a fresh round.
+/// Rozsévej kameny po jamkách, získej další tah a nasbírej víc než soupeř. Potom si v novém kole vyměňte
+/// taktiku.
 ///
-/// **Your mission:** Restart can leave the previous player on turn. Repair reset() so the newly dealt
-/// pits and active player belong to the same fresh round.
+/// **Tvoje mise:** Restart může ponechat na tahu předchozího hráče. Oprav reset(), aby nové jamky i
+/// aktivní hráč patřili stejnému čerstvému kolu.
 ///
-/// **Today you learn:** Scope and state lifetime: a local player disappears when reset() returns, while
-/// the game’s player field remains. Reset the state actually read by commands.
+/// **Dnes trénuješ:** Scope and state lifetime (platnost jména a životnost stavu): lokální player po
+/// návratu z reset() zanikne, ale field (proměnná programu) player zůstává. Obnov stav, který skutečně
+/// čtou příkazy.
 ///
-/// Run File and enter one of your pit numbers from 1 to 6 to sow its stones around the board.
-/// After your repair: Save → Test File → play again.
+/// Spusť Run File a zadej číslo jedné své jamky od 1 do 6, aby se její kameny rozesely po desce.
+/// Po opravě: Save → Test File → zahraj si znovu.
 void reset() {
     pits = new int[14];
     Arrays.fill(pits, 4);
@@ -19,35 +20,35 @@ void reset() {
     outcome = "";
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `new int[14]` — Creates fourteen zero-filled pit/store slots.
-/// - `Arrays.fill(pits, 4)` — Places four stones in each slot before the stores are cleared.
-/// - `pits[6] = pits[13] = 0` — The same zero value is assigned to both store positions.
-/// - `int player = 0` — This declaration introduces a local player instead of automatically updating the
-///   field.
+/// - `new int[14]` — Vytvoří čtrnáct nulových pozic pro jamky a pokladnice.
+/// - `Arrays.fill(pits, 4)` — Vloží do každé pozice čtyři kameny před vyprázdněním pokladnic.
+/// - `pits[6] = pits[13] = 0` — Stejná nula se přiřadí oběma pozicím pokladnic.
+/// - `int player = 0` — Tato deklarace zavádí local variable (lokální proměnnou) player místo automatické
+///   změny stejnojmenného pole programu.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// command() already sows stones, skips the opponent’s store, awards captures, and settles the final
-/// stones. side() counts a player’s ordinary pits; neither mechanism needs changing for a fair restart.
+/// command() už rozsévá kameny, přeskakuje soupeřovu pokladnici, řeší braní i konečné sebrání. side()
+/// sčítá běžné jamky hráče; pro spravedlivý restart tyto mechanismy neměň.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. The field survives between calls to command().
-/// 2. A local int player disappears when reset() returns.
-/// 3. Assign to the existing player; leave pit initialization unchanged.
+/// 1. Field přežívá mezi voláními command().
+/// 2. Lokální int player zanikne při návratu z reset().
+/// 3. Přiřaď existujícímu player; inicializaci jamek ponech.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 int[] pits;
 int player;
 String outcome;
 
-/// side(): Sums the six ordinary pits belonging to one player.
+/// side(): Sčítá šest obyčejných jamek jednoho hráče.
 int side(int who) {
     int n = 0;
     for (int i = who * 7; i < who * 7 + 6; i++) {
@@ -56,8 +57,8 @@ int side(int who) {
     return n;
 }
 
-/// command(): Sows stones, skips the enemy store, captures opposite stones and settles an empty
-/// side.
+/// command(): Rozsévá kameny, přeskakuje cizí zásobník, bere protější kameny a vyhodnocuje prázdnou
+/// stranu.
 void command(String input) {
     require(outcome.isEmpty());
     int chosen = Integer.parseInt(input) - 1;
@@ -94,7 +95,7 @@ void command(String input) {
     }
 }
 
-/// display(): Presents the current board and the legal input choices in the console.
+/// display(): Zobrazuje aktuální desku a volby zadávání v konzoli.
 void display() {
     IO.println("Player " + (player + 1) + " chooses own pit 1-6 (left-to-right in its list).");
     IO.println("P1 " + Arrays.toString(Arrays.copyOfRange(pits, 0, 6)) + " store " + pits[6]);
@@ -102,7 +103,7 @@ void display() {
     IO.println("Opposite pairs: P1 pit1/P2 pit6 ... P1 pit6/P2 pit1.");
 }
 
-/// main(): Starts the real game loop: display, read a command, validate, replay or quit.
+/// main(): Spouští skutečnou herní smyčku: zobrazit, načíst, ověřit, opakovat nebo ukončit.
 void main() {
     reset();
     IO.println("Mancala / Kalah");
@@ -132,7 +133,7 @@ void main() {
     }
 }
 
-/// require(): Rejects an illegal command with an exception handled by the supplied input loop.
+/// require(): Odmítá neplatný příkaz výjimkou zachycenou dodanou vstupní smyčkou.
 void require(boolean valid) {
     if (!valid) {
         throw new IllegalArgumentException("Invalid move or command.");
@@ -140,57 +141,60 @@ void require(boolean valid) {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `!=` — Checks that two values differ.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `%` — The remainder after division; useful for repeated positions or turns.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `else` — The alternative when the preceding if condition is false.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `while` — Keeps repeating its body while its condition stays true.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `!=` — Ověří, že se dvě hodnoty liší.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
+/// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `else` — Alternativní větev pro případ, že předchozí if condition (podmínka) neplatí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
 // </editor-fold>
 

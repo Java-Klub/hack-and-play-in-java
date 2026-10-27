@@ -1,18 +1,17 @@
 /// # L03.03 · BlackjackTwentyOne
 ///
-/// Try to finish closer to 21 than the dealer without going over. You can take another card or stand, and
-/// aces may count as one or eleven.
+/// Zkus skončit blíž k 21 než krupiér bez překročení. Můžeš si vzít další kartu nebo zůstat a esa mohou
+/// mít hodnotu jedna či jedenáct.
 ///
-/// **Your mission:** The known 20-versus-19 opening incorrectly awards the dealer a win. Complete
-/// compareTotals so bust, player win, draw and dealer win are separated in the right priority.
+/// **Tvoje mise:** Známý začátek 20 proti 19 chybně přisoudí výhru krupiérovi. Doplň compareTotals tak,
+/// aby ve správném pořadí oddělilo překročení, výhru hráče, remízu a výhru krupiéra.
 ///
-/// **Today you learn:** Ordered branches: a first matching branch can settle the result before later
-/// possibilities are considered. A player total above 21 must be handled before deciding which total is
-/// larger.
+/// **Dnes trénuješ:** Uspořádané branch (větve): první vybraná větev může rozhodnout výsledek dřív, než
+/// se posoudí další možnosti. Překročení hráče nad 21 se musí řešit před porovnáním velikosti součtů.
 ///
-/// Use Run File and enter s to stand on the training total 20, then compare the reported result against
-/// the dealer’s 19.
-/// After your repair: Save → Test File → play again.
+/// Použij Run File a zadáním s zůstaň na cvičném součtu 20, potom porovnej oznámený výsledek s
+/// krupiérovou 19.
+/// Po opravě: Save → Test File → zahraj si znovu.
 String compareTotals(int human, int house) {
     if (human > 21) {
         return "You bust";
@@ -21,34 +20,33 @@ String compareTotals(int human, int house) {
     }
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `String compareTotals(int human, int house)` — Receive two whole-number totals and return one text
-///   result; the comma keeps the two inputs separate.
-/// - `human > 21` — A numeric condition for the player exceeding the limit; > does not include equality.
-/// - `if` — Start a conditional choice; the following parentheses contain the question.
-/// - `return "You bust";` — Return this literal result and finish the current call.
-/// - `else` — The current alternative covers everything that did not satisfy the first condition.
-/// - `house` — The other total is available as an input even though the incomplete body does not use it
-///   yet.
+/// - `String compareTotals(int human, int house)` — Přijmi dva celočíselné součty a vrať jediný textový
+///   výsledek; čárka odděluje oba input (vstupy).
+/// - `human > 21` — Číselná condition (podmínka) překročení hráče; > nezahrnuje rovnost.
+/// - `if` — Začni podmíněný výběr; následující závorky obsahují otázku.
+/// - `return "You bust";` — Vrať tento literal (doslovný výsledek) a dokonči současné call (volání).
+/// - `else` — Současná alternativa pokrývá vše, co nesplnilo první condition (podmínku).
+/// - `house` — Druhý součet je dostupný jako input (vstup), i když ho nehotové tělo zatím nepoužívá.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// value computes the supplied ace-aware hand totals. finish lets the dealer draw and then asks
-/// compareTotals for the result. reset prepares a known first comparison and a real remaining deck; input
-/// and display are ready.
+/// value počítá připravené součty kombinací s esy. finish nechá krupiéra dobírat a potom se zeptá
+/// compareTotals na výsledek. reset připraví známé první porovnání a skutečný zbývající balíček; input
+/// (vstup) i zobrazení jsou hotové.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. Check player bust before comparing which number is larger.
-/// 2. The win condition is house > 21 OR human > house.
-/// 3. Use else if for the win and draw cases before the final else.
+/// 1. Nejdřív ověř překročení hráče a teprve potom velikost čísel.
+/// 2. Podmínka výhry je house > 21 NEBO human > house.
+/// 3. Pro výhru a remízu použij else if před posledním else.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 ArrayDeque<Integer> deck;
 List<Integer> hand;
 List<Integer> dealer;
@@ -151,57 +149,60 @@ void require(boolean valid) {
     }
 }
 
-/// Prepared entry points: main, reset, command.
+/// Připravené vstupní body: main, reset, command.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `else` — The alternative when the preceding if condition is false.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `while` — Keeps repeating its body while its condition stays true.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `else` — Alternativní větev pro případ, že předchozí if condition (podmínka) neplatí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
+///   měnit velikost.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
 // </editor-fold>
 

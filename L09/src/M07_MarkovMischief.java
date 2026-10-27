@@ -1,18 +1,17 @@
 /// # L09.07 · MarkovMischief
 ///
-/// Feed a tiny word machine a phrase and let it remix new nonsense from words it has seen together.
-/// Repeated examples should influence which continuation wins the next draw.
+/// Nakrm malý slovní stroj větou a nech jej míchat nové nesmysly ze slov, která viděl vedle sebe.
+/// Opakované příklady mají ovlivnit další vylosované pokračování.
 ///
-/// **Your mission:** Training forgets earlier followers whenever a word appears again. Restore the
-/// collected possibilities so the remix can escape a repetitive two-word loop.
+/// **Tvoje mise:** Training (učení) zapomene dřívější následníky při každém opakování slova. Obnov
+/// shromážděné možnosti, aby se remix dostal z opakované dvouslovné smyčky.
 ///
-/// **Today you learn:** This Map stores a List as each value: one word can have several followers,
-/// including repeated ones. Create a word’s collection deliberately, then preserve it across later
-/// occurrences.
+/// **Dnes trénuješ:** Tato Map (mapa) ukládá jako hodnotu List (seznam): jedno slovo může mít více
+/// následníků včetně opakovaných. Kolekci pro slovo založ záměrně a při dalších výskytech ji zachovej.
 ///
-/// After Run File, press Enter to remix the sample corpus moon cat moon dog moon cat, or type your own
-/// short phrase.
-/// After your repair: Save → Test File → play again.
+/// Po Run File stiskni Enter pro remix ukázkového corpus (učebního textu) moon cat moon dog moon cat,
+/// nebo napiš vlastní krátkou větu.
+/// Po opravě: Save → Test File → zahraj si znovu.
 Map<String, List<String>> train(String text) {
     if (text.isBlank() || text.length() > 100000) {
         throw new IllegalArgumentException("Corpus size: 1..100000 characters.");
@@ -30,31 +29,32 @@ Map<String, List<String>> train(String text) {
     return links;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `Map<String, List<String>>` — Each string key maps to an ordered collection of possible next words.
-/// - `if (true)` — This branch runs every time; consider what that does to an existing follower list.
-/// - `links.put(words[i], new ArrayList<>())` — Replaces any collection already stored for this word with
-///   a fresh empty one.
-/// - `links.get(words[i]).add(words[i + 1])` — Finds this word’s collection and appends the following
-///   word.
+/// - `Map<String, List<String>>` — Každý String key (textový klíč) vede k uspořádané kolekci možných
+///   dalších slov.
+/// - `if (true)` — Tato branch (větev) běží pokaždé; zvaž důsledek pro existující List (seznam)
+///   následníků.
+/// - `links.put(words[i], new ArrayList<>())` — Nahradí případnou uloženou kolekci pro toto slovo novou
+///   prázdnou kolekcí.
+/// - `links.get(words[i]).add(words[i + 1])` — Najde kolekci tohoto slova a přidá následující slovo.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// main reads your corpus and train builds the links. The supplied generator repeatedly draws a follower
-/// from the matching list; keeping duplicates gives repeated examples more weight.
+/// Main přečte tvůj corpus (učební text) a train sestaví vazby. Připravený generátor opakovaně losuje
+/// následníka z odpovídajícího List (seznamu); zachované duplicity zvýší váhu opakovaných příkladů.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. The same word can occur several times in the corpus.
-/// 2. Replacing its List discards all earlier followers.
-/// 3. Guard the initial put with containsKey; keep every later add, including duplicate followers.
+/// 1. Stejné slovo se může v textu opakovat.
+/// 2. Nahrazení jeho List (seznamu) zahodí starší následníky.
+/// 3. Počáteční put podmiň containsKey; další add zachovej, včetně stejných následníků.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 String corpus = "The moon hired a tiny dragon. The tiny dragon collected umbrellas. "
     + "The moon collected rumours. Every umbrella wanted a holiday. Every dragon wanted the moon.";
 
@@ -75,9 +75,9 @@ String generate(String text, long seed, int count) {
     return output.toString();
 }
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// train builds a LinkedHashMap whose values are mutable follower Lists.
-/// generate follows links with the supplied seed; main optionally reads a local corpus.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// Train tvoří LinkedHashMap s mutable List (měnitelnými seznamy) následníků.
+/// Generate sleduje vazby s připraveným seed (počáteční hodnotou); main případně načte místní text.
 void main(String[] args) throws Exception {
     if (args.length == 0) {
         String entered = IO.readln("Corpus (blank moon cat moon dog moon cat, q quits): ");
@@ -101,56 +101,62 @@ void main(String[] args) throws Exception {
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `\` — Inside quoted text, starts an escape such as \n for a new line or \" for a quote.
-/// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `++` — Increases a numeric value by one.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `throws` — In a method declaration: tells callers which failure they may need to handle.
-/// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
-/// - `Map` — Associates keys with values. A missing key needs an explicit fallback or decision.
-/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
-/// - `Path` — A file-system location, not the file’s contents.
-/// - `Files` — JDK operations for reading and writing local files.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `\` — Uvnitř textu začíná escape (zvláštní zápis), například \n pro nový řádek nebo \" pro uvozovku.
+/// - `long` — Whole-number type (typ pro celá čísla) s větším rozsahem než int. Koncové L označuje long
+///   literal (přímo zapsanou hodnotu).
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `throws` — V method declaration (popisu metody) říká volajícím, jaké selhání mohou potřebovat
+///   zpracovat.
+/// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
+///   měnit velikost.
+/// - `Map` — Přiřazuje key (klíčům) hodnoty. Pro chybějící key je třeba rozhodnout výchozí chování.
+/// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
+///   zopakuje stejnou posloupnost.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
+/// - `Path` — Umístění v souborech, nikoli obsah souboru.
+/// - `Files` — JDK operace pro čtení a zápis místních souborů.
 // </editor-fold>
 

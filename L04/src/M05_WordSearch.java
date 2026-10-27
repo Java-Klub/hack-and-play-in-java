@@ -1,17 +1,17 @@
 /// # L04.05 · WordSearch
 ///
-/// Hunt for CAT, DOG and TIGER in a letter grid by selecting the two ends of a word. A selection can run
-/// horizontally, vertically or diagonally, so its direction is part of the puzzle.
+/// Hledej CAT, DOG a TIGER v mřížce písmen výběrem obou konců slova. Výběr může vést vodorovně, svisle
+/// nebo úhlopříčně, takže směr je součástí hádanky.
 ///
-/// **Your mission:** Every selected word loses its last letter. Repair the counted loop in read so both
-/// selected endpoints contribute, while leaving the supplied direction calculation intact.
+/// **Tvoje mise:** Každé vybrané slovo ztrácí poslední písmeno. Oprav počítanou smyčku v read tak, aby
+/// přispěly oba vybrané konce; připravený výpočet směru zachovej.
 ///
-/// **Today you learn:** For loops and endpoints: a row of three cells has only two gaps. Here n counts
-/// the gaps; trace the successive i values to decide how many letters must be read.
+/// **Dnes trénuješ:** For loop (počítaná smyčka) a krajní body: řada tří políček má jen dvě mezery. Zde n
+/// počítá mezery; sleduj postupné hodnoty i a rozhodni, kolik písmen je potřeba přečíst.
 ///
-/// Use Run File and enter 1 1 1 3 to select CAT in the first row; the starter reads only CA and rejects
-/// the find.
-/// After your repair: Save → Test File → play again.
+/// Použij Run File a napiš 1 1 1 3 pro výběr CAT v prvním řádku; starter (výchozí program) přečte jen CA
+/// a nález odmítne.
+/// Po opravě: Save → Test File → zahraj si znovu.
 String read(int r, int c, int nr, int nc) {
     require(r >= 0 && r < 5 && c >= 0 && c < 5 && nr >= 0 && nr < 5 && nc >= 0 && nc < 5);
     int dr = Integer.signum(nr - r);
@@ -25,34 +25,34 @@ String read(int r, int c, int nr, int nc) {
     return word;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `for (int i = 0; i < n; i++)` — The three sections initialize i once, test before each pass and
-///   increase i after each pass; the semicolons separate them.
-/// - `String word = "";` — Start with no collected letters; the loop will build the selected word.
-/// - `word += grid[r + i * dr].charAt(c + i * dc);` — Append the letter at step i along the supplied
-///   direction. The prepared coordinate expression handles all straight directions.
-/// - `i < n` — This comparison decides whether another letter is read; test it at the final selected
-///   cell.
-/// - `return word;` — Pass the complete selection back to the game’s word check.
+/// - `for (int i = 0; i < n; i++)` — Tři části jednou nastaví i, před každým průchodem ověří podmínku a
+///   po průchodu i zvětší; středníky je oddělují.
+/// - `String word = "";` — Začni bez nasbíraných písmen; smyčka sestaví vybrané slovo.
+/// - `word += grid[r + i * dr].charAt(c + i * dc);` — Připoj písmeno v kroku i podél připraveného směru.
+///   Připravený výpočet souřadnic zvládá všechny přímé směry.
+/// - `i < n` — Toto porovnání rozhoduje, zda se přečte další písmeno; ověř je u posledního vybraného
+///   políčka.
+/// - `return word;` — Předej celý výběr zpět herní kontrole slov.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// require rejects off-board or bent selections. dr and dc are supplied single-step directions; n is the
-/// number of gaps. command compares read’s result with the target words and records finds; display prints
-/// the grid and main reads four player coordinates numbered from one.
+/// require odmítá výběry mimo desku nebo zalomené výběry. dr a dc jsou připravené směry jediného kroku; n
+/// je počet mezer. command porovná výsledek read s hledanými slovy a zaznamená nálezy; display vypisuje
+/// mřížku a main čte čtyři hráčské souřadnice číslované od jedné.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. The distance n counts gaps, not selected cells.
-/// 2. Indices 0, 1 and 2 contain three letters.
-/// 3. Run i from 0 while i <= n.
+/// 1. Vzdálenost n počítá mezery mezi políčky, nikoli vybraná políčka.
+/// 2. Index (indexy) 0, 1 a 2 obsahují tři písmena.
+/// 3. Nech i běžet od 0 při i <= n.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 String[] grid = {"CATER", "ADOGX", "TIGER", "XXXXX", "XXXXX"};
 Set<String> found;
 String outcome;
@@ -116,55 +116,58 @@ void require(boolean valid) {
     }
 }
 
-/// Prepared entry points: main, reset, command.
+/// Připravené vstupní body: main, reset, command.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `\` — Inside quoted text, starts an escape such as \n for a new line or \" for a quote.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `while` — Keeps repeating its body while its condition stays true.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `Set` — Stores distinct values; the same value is present at most once.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `\` — Uvnitř textu začíná escape (zvláštní zápis), například \n pro nový řádek nebo \" pro uvozovku.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `Set` — Uchovává různé hodnoty; stejná hodnota je přítomná nejvýše jednou.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
 // </editor-fold>
 

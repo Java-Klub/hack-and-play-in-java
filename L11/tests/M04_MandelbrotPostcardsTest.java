@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M04_MandelbrotPostcardsTest {
     static int checks;
     static final String[] CASES = {
-        "Changing seed changes the palette.",
-        "The same seed and window reproduce every pixel.",
-        "Escape geometry remains independent of palette choice."
+        "Změna seed (počáteční hodnoty) změní paletu.",
+        "Stejný seed a výřez zopakují každý pixel (bod obrazu).",
+        "Geometrie úniku zůstane nezávislá na paletě."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -56,7 +56,7 @@ public class M04_MandelbrotPostcardsTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I104: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I104: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

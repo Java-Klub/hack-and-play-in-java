@@ -1,20 +1,20 @@
 /// # L04.10 · WordleStyleWordHunt
 ///
-/// Guess a five-letter word using clues for exact positions, misplaced letters and absent letters.
-/// Repeated letters make the clues especially useful: one available copy cannot explain two different
-/// guesses.
+/// Hádej pětipísmenné slovo pomocí nápověd pro přesné pozice, přesunutá písmena a chybějící písmena.
+/// Opakovaná písmena jsou zvlášť zajímavá: jediný dostupný výskyt nemůže vysvětlit dva různé tipované
+/// znaky.
 ///
-/// **Your mission:** The training word LEVEL contains two L letters, but one yellow match disappears for
-/// ALLEY. Repair leftoverLetters so every unmatched secret letter contributes to its supplied counter
-/// without erasing earlier occurrences.
+/// **Tvoje mise:** Cvičné slovo LEVEL obsahuje dvě L, ale pro ALLEY jedna žlutá shoda zmizí. Oprav
+/// leftoverLetters tak, aby každé dosud nespárované tajné písmeno přispělo do svého připraveného counter
+/// (počítadla) bez smazání dřívějších výskytů.
 ///
-/// **Today you learn:** Several accumulators: the supplied counts has one counter per letter. Two
-/// unmatched L discoveries must both contribute to the same counter; exact-position matches have already
-/// been set aside.
+/// **Dnes trénuješ:** Více accumulator (průběžných součtů): připravené counts má jedno counter
+/// (počítadlo) pro každé písmeno. Dva objevy nespárovaného L musejí oba přispět do stejného počítadla;
+/// shody na přesné pozici jsou již oddělené.
 ///
-/// Use Run File and enter ALLEY against the training word LEVEL; compare the printed clue with the two L
-/// letters that can both match elsewhere.
-/// After your repair: Save → Test File → play again.
+/// Použij Run File a napiš ALLEY proti cvičnému slovu LEVEL; porovnej vypsanou nápovědu se dvěma L, která
+/// se obě mohou shodovat na jiném místě.
+/// Po opravě: Save → Test File → zahraj si znovu.
 int[] leftoverLetters(String guess, char[] result) {
     int[] counts = new int[26];
     for (int i = 0; i < 5; i++) {
@@ -28,36 +28,36 @@ int[] leftoverLetters(String guess, char[] result) {
     return counts;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `int[] counts = new int[26];` — The supplied storage starts twenty-six counters at zero, one for
-///   each capital letter.
-/// - `for (int i = 0; i < 5; i++)` — Inspect the five positions once each, using indices zero through
-///   four.
-/// - `result[i] = 'G';` — The prepared branch marks an exact-position match with the single character G.
-/// - `int letter = secret.charAt(i) - 'A';` — This supplied conversion chooses the letter’s counter: A is
-///   zero, B is one, and so on.
-/// - `counts[letter] = 1;` — The square brackets select one counter; this assignment currently replaces
-///   its previous count.
-/// - `return counts;` — Pass all remaining letter counts to the second clue-making pass.
+/// - `int[] counts = new int[26];` — Připravené úložiště založí dvacet šest counter (počítadel) s nulou,
+///   jedno pro každé velké písmeno.
+/// - `for (int i = 0; i < 5; i++)` — Prohlédni každou z pěti pozic jednou, s index (pozicemi) nula až
+///   čtyři.
+/// - `result[i] = 'G';` — Připravená větev označí přesnou shodu jediným znakem G.
+/// - `int letter = secret.charAt(i) - 'A';` — Tento připravený převod vybere counter (počítadlo) písmene:
+///   A má nulu, B jedničku a tak dále.
+/// - `counts[letter] = 1;` — Hranaté závorky vyberou jediné counter (počítadlo); toto assignment
+///   (přiřazení) nyní nahrazuje jeho předchozí počet.
+/// - `return counts;` — Předej všechny zbývající počty písmen druhému průchodu pro sestavení nápovědy.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// grade calls leftoverLetters, then spends those remaining counts on yellow matches so no secret letter
-/// is used twice. command checks the printed allowed-word list and stores up to six guesses; display
-/// explains G, Y and the dot. The first round uses LEVEL, while /r chooses a random word.
+/// grade volá leftoverLetters a potom zbývající počty spotřebovává na žluté shody, aby žádné tajné
+/// písmeno nepoužila dvakrát. command kontroluje vypsaný seznam povolených slov a uchovává nejvýše šest
+/// tipů; display vysvětluje G, Y a tečku. První kolo používá LEVEL, /r vybere náhodné slovo.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. For LEVEL versus ALLEY, both L letters remain unmatched initially.
-/// 2. counts[letter] is one prepared counter for that letter.
-/// 3. Use counts[letter] += 1 instead of = 1.
+/// 1. U LEVEL proti ALLEY zůstávají na začátku obě L bez přesné shody.
+/// 2. counts[letter] je jediný připravený counter (čítač) pro dané písmeno.
+/// 3. Použij counts[letter] += 1 místo = 1.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 String[] words = {"LEVEL", "LEVER", "RIVER", "ROBOT", "APPLE", "ALLEY", "EAGER", "EARTH", "STONE", "MONEY"};
 String secret;
 String outcome;
@@ -140,59 +140,64 @@ void require(boolean valid) {
     }
 }
 
-/// Prepared entry points: main, reset, command.
+/// Připravené vstupní body: main, reset, command.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `'` — Single quotes enclose one character, such as a board marker.
-/// - `char` — A type for one UTF-16 code unit, often a simple board character such as X. Text uses
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `'` — Jednoduché uvozovky ohraničují jeden character (znak), například značku na desce.
+/// - `char` — Type (typ) pro jednu UTF-16 jednotku, často jednoduchý znak desky jako X. Pro text slouží
 ///   String.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `!=` — Checks that two values differ.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `else` — The alternative when the preceding if condition is false.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `while` — Keeps repeating its body while its condition stays true.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `throw` — Reports a failure by creating or passing an exception.
-/// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
-/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `!=` — Ověří, že se dvě hodnoty liší.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `else` — Alternativní větev pro případ, že předchozí if condition (podmínka) neplatí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+/// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
+///   měnit velikost.
+/// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
+///   zopakuje stejnou posloupnost.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
 // </editor-fold>
 

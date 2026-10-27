@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M03_PhasingRhythmsTest {
     static int checks;
     static final String[] CASES = {
-        "Both role results contribute with gain 0.17.",
-        "Opposite replacement voices cancel.",
-        "Actual synthesis uses the composition and keeps duration guards."
+        "Oba výsledky rolí přispívají se zesílením 0.17.",
+        "Opačné náhradní hlasy se vyruší.",
+        "Skutečná syntéza používá composition (skládání) a zachová guard (podmínky) trvání."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -62,7 +62,7 @@ public class M03_PhasingRhythmsTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I133: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I133: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

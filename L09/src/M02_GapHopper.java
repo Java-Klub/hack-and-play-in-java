@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
@@ -8,18 +8,17 @@ import javax.swing.Timer;
 
 /// # L09.02 · GapHopper
 ///
-/// Keep a tiny flyer alive between moving pipes. The obstacles should form an endless course rather than
-/// quietly disappear behind you.
+/// Udrž malého letce mezi pohybujícími se trubkami. Překážky mají tvořit nekonečnou trať, ne postupně
+/// zmizet za zády.
 ///
-/// **Your mission:** A recycled pipe is inserted at the wrong end, eventually disrupting the course.
-/// Restore the ordered queue of obstacles without changing flight physics.
+/// **Tvoje mise:** Obnovená trubka se vloží na chybný konec a postupně rozbije trať. Obnov pořadí
+/// překážek beze změny pravidel letu.
 ///
-/// **Today you learn:** A List can represent left-to-right order, not just a bag of objects. Removing the
-/// expired first pipe and placing its replacement must preserve that meaning.
+/// **Dnes trénuješ:** List (seznam) může vyjadřovat pořadí zleva doprava, nejen hromadu objektů. Odebrání
+/// první zmizelé trubky i vložení náhrady musí tento význam zachovat.
 ///
-/// After Run File, keep the flyer between pipes by pressing Space or clicking, and press R to restart
-/// after a crash.
-/// After your repair: Save → Test File → play again.
+/// Po Run File udržuj letce mezi trubkami pomocí Space nebo klikání a po nárazu začni znovu klávesou R.
+/// Po opravě: Save → Test File → zahraj si znovu.
 void recyclePipes() {
     if (!pipes.isEmpty() && pipes.getFirst().x + PIPE_WIDTH < 0) {
         double furthest = pipes.getLast().x;
@@ -28,31 +27,30 @@ void recyclePipes() {
     }
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `!pipes.isEmpty()` — The ! reverses the answer: continue only when a first pipe exists.
-/// - `pipes.getLast().x` — Reads the farthest pipe position without removing that pipe.
-/// - `pipes.removeFirst()` — Removes the expired head and shifts the remaining order.
-/// - `pipes.addFirst` — Inserts at index zero; compare that choice with the new pipe’s far-right
-///   position.
+/// - `!pipes.isEmpty()` — Znak ! obrátí odpověď: pokračuj jen tehdy, když první trubka existuje.
+/// - `pipes.getLast().x` — Přečte pozici poslední trubky, aniž by ji odstranil.
+/// - `pipes.removeFirst()` — Odstraní první zmizelou trubku a posune zbývající pořadí.
+/// - `pipes.addFirst` — Vloží na index (pořadové číslo) nula; porovnej tento konec s novou pozicí úplně
+///   vpravo.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// Each step moves pipes and checks scoring and collisions before recyclePipes runs. newGap chooses a
-/// bounded opening; the supplied window handles the jump key, restart and timer cleanup.
+/// Každý step posune trubky a ověří body i srážky před voláním recyclePipes. NewGap vybere omezený otvor;
+/// připravené okno obslouží skok, restart a úklid timer (časovače).
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. The oldest obstacle is at index zero.
-/// 2. Read the last position before removing the expired first element.
-/// 3. Removal and append must preserve a two-obstacle order; do not mutate the list during the earlier
-///   for-each.
+/// 1. Nejstarší překážka má index (pořadové číslo) nula.
+/// 2. Před odstraněním prvního element (prvku) přečti pozici posledního.
+/// 3. Remove a add zachovají pořadí dvou překážek; List neměň během dřívějšího for-each.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 static class Pipe {
     double x;
     int gapY;
@@ -74,7 +72,7 @@ int newGap() {
     return 100 + random.nextInt(201);
 }
 
-/// Supplied restart: restore the initial model before the UI uses it.
+/// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
 void restart() {
     birdY = 180;
     velocityY = 0;
@@ -93,7 +91,7 @@ void flap() {
     velocityY = -5.5;
 }
 
-/// Supplied bounded update: one call means one model step; the active repair is described above.
+/// Připravený omezený update (aktualizace): jedno volání znamená jeden krok; aktivní oprava je popsaná výše.
 void step() {
     if (!running || lost) return;
     velocityY += 0.28;
@@ -113,7 +111,7 @@ void step() {
     recyclePipes();
 }
 
-/// Supplied drawing: reads model values; repainting is not another turn.
+/// Připravené kreslení: čte hodnoty model (modelu pravidel); repaint (překreslení) není další tah.
 void draw(Graphics g) {
     g.setColor(new Color(31, 51, 82));
     g.fillRect(0, 0, WIDTH, HEIGHT + 44);
@@ -137,13 +135,13 @@ void draw(Graphics g) {
     g.drawString("Space / click: flap     R: restart", 16, HEIGHT + 40);
 }
 
-/// Supplied Swing UI: create it on the EDT; timer cleanup stays with the window.
+/// Připravené Swing UI (rozhraní): vytváří se na EDT; úklid timer (časovače) patří k oknu.
 void showWindow() {
     var frame = new JFrame("Gap Hopper");
     var panel = new JPanel() {
         @Override protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-/// Supplied drawing: reads model values; repainting is not another turn.
+/// Připravené kreslení: čte hodnoty model (modelu pravidel); repaint (překreslení) není další tah.
             draw(g);
         }
     };
@@ -165,7 +163,7 @@ void showWindow() {
         @Override public void mousePressed(MouseEvent event) { flap(); }
     });
     var timer = new Timer(20, event -> {
-/// Supplied bounded update: one call means one model step; the active repair is described above.
+/// Připravený omezený update (aktualizace): jedno volání znamená jeden krok; aktivní oprava je popsaná výše.
         step();
         panel.repaint();
     });
@@ -185,81 +183,85 @@ void showWindow() {
     timer.start();
 }
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// restart positions two Pipe objects; flap changes the bird velocity.
-/// step handles bounded physics; draw reads it; showWindow owns the supplied timer and close cleanup.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// Restart umístí dvě Pipe; flap změní rychlost ptáka.
+/// Step řeší omezený pohyb; draw jej čte; showWindow spravuje připravený timer (časovač) i úklid po zavření.
 void main() {
-/// Supplied restart: restore the initial model before the UI uses it.
+/// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `final` — The named value cannot be assigned another value afterwards. A referenced mutable object
-///   can still change.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
-/// - `::` — A method reference: supplies an action without calling it yet.
-/// - `this` — The current game object: this particular run and its stored state.
-/// - `class` — Defines a kind of object. These compact source files already have an implicit class named
-///   after the file.
-/// - `static` — Belongs to the class rather than to one particular game object. A supplied test main
-///   often uses it.
-/// - `public` — Makes this declaration accessible to other code.
-/// - `protected` — A visibility keyword used by supplied library callbacks, such as paintComponent.
-/// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
-///   background first.
-/// - `List` — An ordered sequence that can be accessed by index; some Lists can change size.
-/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
-/// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
-/// - `JPanel` — A window area that can display the game’s drawing or controls.
-/// - `@Override` — Marks a supplied replacement for a library action, such as painting.
-/// - `SwingUtilities.invokeLater` — Schedules window work for Swing’s event thread; the action runs
-///   later.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `final` — Pojmenované hodnotě už nelze přiřadit jinou. Odkazovaný mutable object (měnitelný objekt)
+///   se ale dál měnit může.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+///   až při pozdějším volání.
+/// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
+/// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
+/// - `class` — Popisuje druh object (objektu). Tyto compact source file (stručné zdrojové soubory) už
+///   mají implicit class (automaticky danou třídu) podle jména souboru.
+/// - `static` — Patří ke class (třídě), nikoli k jednomu konkrétnímu objektu hry. Často je v připraveném
+///   test main.
+/// - `public` — Zpřístupňuje tuto declaration (deklaraci) dalšímu kódu.
+/// - `protected` — Visibility keyword (klíčové slovo přístupnosti) používané připraveným library callback
+///   (knihovním zpětným voláním), například paintComponent.
+/// - `super` — V super.paintComponent(g) požádá připravenou parent implementation (nadřazenou
+///   implementaci), aby nejprve vykreslila běžné pozadí.
+/// - `List` — Uspořádaná sequence (posloupnost) přístupná přes index (pořadové číslo); některé List mohou
+///   měnit velikost.
+/// - `Random` — Generuje pseudorandom choice (pseudonáhodné volby). Pevný seed (počáteční hodnota)
+///   zopakuje stejnou posloupnost.
+/// - `JFrame` — Okno dodané JDK knihovnou Swing.
+/// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.
+/// - `@Override` — Označuje dodanou náhradu knihovní akce, například kreslení.
+/// - `SwingUtilities.invokeLater` — Naplánuje práci s oknem na Swing event thread (vlákno událostí); akce
+///   se provede později.
 // </editor-fold>
 

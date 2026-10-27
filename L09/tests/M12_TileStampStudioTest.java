@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M12_TileStampStudioTest {
     static int checks;
     static final String[] CASES = {
-        "A valid typed value changes repeats.",
-        "Malformed and out-of-range values preserve the old value.",
-        "Bounds 1 and 12 change the real rendered dimensions."
+        "Platná zadaná hodnota změní repeats.",
+        "Nečíselná hodnota či hodnota mimo rozsah zachová původní hodnotu.",
+        "Hranice 1 a 12 změní skutečné rozměry obrazu."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -59,7 +59,7 @@ public class M12_TileStampStudioTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I142: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I142: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

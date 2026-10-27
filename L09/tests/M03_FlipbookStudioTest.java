@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M03_FlipbookStudioTest {
     static int checks;
     static final String[] CASES = {
-        "Two undos restore two latest colours in reverse order.",
-        "Undo on empty history returns false.",
-        "Undo targets the recorded frame; restart clears history."
+        "Dvě undo obnoví poslední dvě barvy v opačném pořadí.",
+        "Undo s prázdnou historií vrátí false.",
+        "Undo míří na uložený snímek; restart historii smaže."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -60,7 +60,7 @@ public class M03_FlipbookStudioTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I080: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I080: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

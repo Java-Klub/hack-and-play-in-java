@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M02_FlockPlaygroundTest {
     static int checks;
     static final String[] CASES = {
-        "Default strength respects the distance boundary.",
-        "A replacement role is observed by obstaclePush.",
-        "The real bird step changes when the role changes."
+        "Výchozí síla respektuje hranici vzdálenosti.",
+        "ObstaclePush používá náhradní roli.",
+        "Skutečný krok ptáka se při výměně role změní."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -60,7 +60,7 @@ public class M02_FlockPlaygroundTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I128: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I128: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

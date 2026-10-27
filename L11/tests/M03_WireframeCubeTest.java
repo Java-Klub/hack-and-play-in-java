@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M03_WireframeCubeTest {
     static int checks;
     static final String[] CASES = {
-        "Repeated and reversed pairs collapse to two distinct edges.",
-        "The surviving edge keys have smaller/larger order.",
-        "Invalid/self/empty data are safe; the real cube has twelve edges."
+        "Stejné a obrácené dvojice se sloučí na dvě různé hrany.",
+        "Zbývající edge key (klíče hran) mají pořadí menší/větší.",
+        "Neplatná data, smyčky i prázdný vstup jsou bezpečné; skutečná krychle má dvanáct hran."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -60,7 +60,7 @@ public class M03_WireframeCubeTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I122: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I122: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

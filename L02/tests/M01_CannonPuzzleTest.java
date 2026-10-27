@@ -1,4 +1,4 @@
-// Focused behaviour checks.
+// Kontroly chování právě opravovaného pravidla.
 import java.util.*;
 import java.awt.Color;
 import java.awt.image.BufferedImage;

@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M02_CirclePackingTest {
     static int checks;
     static final String[] CASES = {
-        "The first centre is stored and accepted.",
-        "A repeated centre is rejected; swapped coordinates are a different value.",
-        "The real garden can still place eight distinct bubbles."
+        "První střed se uloží a přijme.",
+        "Stejný střed se odmítne; prohozené coordinate (souřadnice) jsou jiná hodnota.",
+        "Skutečná zahrada dál umístí osm různých bublin."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -60,7 +60,7 @@ public class M02_CirclePackingTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I111: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I111: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

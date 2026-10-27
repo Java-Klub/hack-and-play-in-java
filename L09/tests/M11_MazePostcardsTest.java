@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M11_MazePostcardsTest {
     static int checks;
     static final String[] CASES = {
-        "Malformed text gives the 20-column maze.",
-        "Both inclusive bounds are accepted.",
-        "Out-of-range integers are rejected."
+        "Nečíselný text dá bludiště s 20 sloupci.",
+        "Obě zahrnuté hranice se přijmou.",
+        "Celá čísla mimo rozsah se odmítnou."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -58,7 +58,7 @@ public class M11_MazePostcardsTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I137: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I137: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

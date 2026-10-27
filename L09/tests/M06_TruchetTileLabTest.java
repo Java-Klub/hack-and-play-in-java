@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M06_TruchetTileLabTest {
     static int checks;
     static final String[] CASES = {
-        "Repeated LEFT tiles increase only the LEFT count.",
-        "A real 4×4 render records sixteen tiles.",
-        "A later 2×2 render resets the total to four."
+        "Další LEFT zvýší jen počet LEFT.",
+        "Skutečný render 4×4 započte šestnáct dlaždic.",
+        "Pozdější render 2×2 obnoví součet na čtyři."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -58,7 +58,7 @@ public class M06_TruchetTileLabTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I109: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I109: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

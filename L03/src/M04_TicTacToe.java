@@ -1,17 +1,17 @@
 /// # L03.04 · TicTacToe
 ///
-/// Play tic-tac-toe with a friend by choosing numbered empty squares. Try to make a line of three while
-/// blocking the other player’s line.
+/// Zahraj si s kamarádem piškvorky výběrem očíslovaných prázdných políček. Snaž se vytvořit řadu tří a
+/// současně blokovat soupeřovu řadu.
 ///
-/// **Your mission:** The bottom-right empty square is wrongly rejected. Repair the opening guard in play
-/// so every legal cell is accepted and invalid moves leave the board and turn untouched.
+/// **Tvoje mise:** Prázdné pravé dolní políčko je chybně odmítnuto. Oprav úvodní guard (ochranu) v play
+/// tak, aby přijímalo všechna platná políčka a neplatný tah nezměnil desku ani hráče.
 ///
-/// **Today you learn:** Guard clauses: return early when an action is forbidden, before any state
-/// changes. Test the last legal cell, a repeated cell and a number just outside the range.
+/// **Dnes trénuješ:** Guard clause (ochranná podmínka): pokud je akce zakázaná, vrať se včas před změnou
+/// stavu. Ověř poslední platné políčko, opakované políčko a číslo těsně mimo rozsah.
 ///
-/// Use Run File, choose cell 9 and then try it again; compare an accepted empty square with a rejected
-/// occupied square.
-/// After your repair: Save → Test File → play again.
+/// Použij Run File, vyber políčko 9 a potom jej zkus znovu; porovnej přijaté prázdné políčko s odmítnutým
+/// obsazeným.
+/// Po opravě: Save → Test File → zahraj si znovu.
 boolean play(int cell) {
     if (winner != '.' || cell < 1 || cell >= 9 || board[cell - 1] != '.') {
         return false;
@@ -28,35 +28,34 @@ boolean play(int cell) {
     return true;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `||` — Reject if any one of the joined bad situations is true; evaluation stops once a true
-///   rejection is found.
-/// - `cell >= 9` — The current upper test rejects nine itself as well as larger numbers.
-/// - `board[cell - 1]` — Read one slot in the supplied board: human cell numbers start at one, while
-///   slots start at zero.
-/// - `'.'` — Single quotes hold one character; a dot is the prepared marker for an empty square.
-/// - `return false;` — Finish this call as rejected before the protected board write.
-/// - `board[cell - 1] = player;` — The protected action writes the current player’s mark into the
-///   accepted square.
-/// - `moves++;` — Increase the accepted-move count by one; a rejected attempt must never reach this line.
+/// - `||` — Odmítni, pokud platí kterákoli spojená špatná situace; vyhodnocení skončí při nalezení
+///   platného důvodu odmítnutí.
+/// - `cell >= 9` — Současná horní kontrola odmítá samotnou devítku i větší čísla.
+/// - `board[cell - 1]` — Přečti jedno místo připravené desky: lidská čísla políček začínají jedničkou,
+///   zatímco místa se počítají od nuly.
+/// - `'.'` — Jednoduché uvozovky obsahují jediný znak; tečka je připravená značka prázdného políčka.
+/// - `return false;` — Dokonči call (volání) jako odmítnuté před chráněným zápisem do desky.
+/// - `board[cell - 1] = player;` — Chráněná akce zapíše značku současného hráče do přijatého políčka.
+/// - `moves++;` — Zvětši počet přijatých tahů o jednu; odmítnutý pokus k tomuto řádku nesmí dojít.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// The later body detects lines, draws and the next player. hasLine checks the supplied board; main
-/// prints numbered cells and reads moves. You repair the gate before these already prepared effects.
+/// Pozdější tělo rozpoznává řady, remízu a dalšího hráče. hasLine kontroluje připravenou desku; main
+/// vypisuje očíslovaná políčka a čte tahy. Opravuješ vstupní bránu před těmito připravenými účinky.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. The last legal input is nine, not eight.
-/// 2. The range guard must run before board[cell - 1].
-/// 3. Reject cell > 9 rather than cell >= 9.
+/// 1. Poslední platný input (vstup) je devět, nikoli osm.
+/// 2. Range guard (ochrana rozsahu) musí proběhnout před board[cell - 1].
+/// 3. Odmítej cell > 9 místo cell >= 9.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 char[] board = ".........".toCharArray();
 char player = 'X';
 char winner = '.';
@@ -115,58 +114,61 @@ void main() {
     }
 }
 
-/// Prepared entry points: main, reset.
+/// Připravené vstupní body: main, reset.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `'` — Single quotes enclose one character, such as a board marker.
-/// - `char` — A type for one UTF-16 code unit, often a simple board character such as X. Text uses
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `'` — Jednoduché uvozovky ohraničují jeden character (znak), například značku na desce.
+/// - `char` — Type (typ) pro jednu UTF-16 jednotku, často jednoduchý znak desky jako X. Pro text slouží
 ///   String.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `!=` — Checks that two values differ.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `else` — The alternative when the preceding if condition is false.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `while` — Keeps repeating its body while its condition stays true.
-/// - `null` — No object is present. IO.readln returns null when the input stream ends.
-/// - `try` — A block whose possible failures can be handled by the following catch.
-/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
-/// - `IO` — Console input and output. println writes a line; readln waits for one line of text.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `!=` — Ověří, že se dvě hodnoty liší.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `else` — Alternativní větev pro případ, že předchozí if condition (podmínka) neplatí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `while` — Opakuje svůj block (blok), dokud condition (podmínka) zůstává true.
+/// - `null` — Žádný object (objekt) tu není. IO.readln vrací null, když vstup skončí.
+/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+/// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
+///   řádek textu.
 // </editor-fold>
 

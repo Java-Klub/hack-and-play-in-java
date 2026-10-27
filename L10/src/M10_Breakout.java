@@ -1,4 +1,4 @@
-// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+// <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -7,18 +7,17 @@ import javax.swing.Timer;
 
 /// # L10.10 · Breakout
 ///
-/// Bounce a ball through a wall of bricks using a mouse-controlled bat. A win or a lost final life should
-/// leave a stable result to celebrate or retry.
+/// Odrážej míček pálkou ovládanou myší a rozeber zeď cihel. Výhra či ztráta posledního života mají nechat
+/// stabilní výsledek, který můžeš oslavit nebo zkusit znovu.
 ///
-/// **Your mission:** Only PAUSE stops the update; finished rounds can continue moving and losing lives.
-/// Restrict movement to the actual playing state.
+/// **Tvoje mise:** Aktualizaci zastaví jen PAUSE; dokončená kola se mohou dál hýbat a ztrácet životy.
+/// Omez pohyb na skutečně rozehraný state (stav).
 ///
-/// **Today you learn:** A lifecycle guard must describe when an update is permitted, including every stop
-/// state. One tick should not alter a game already marked won or over.
+/// **Dnes trénuješ:** Lifecycle guard (podmínka životního cyklu) má popsat povolení aktualizace včetně
+/// všech zastavených stavů. Tick (časový krok) nesmí měnit hru označenou jako vyhranou či ukončenou.
 ///
-/// After Run File, move the mouse to aim the bat and bounce the ball into bricks; press R for a new
-/// round.
-/// After your repair: Save → Test File → play again.
+/// Po Run File pohybem myši nastavuj pálku a odrážej míček do cihel; pomocí R spusť nové kolo.
+/// Po opravě: Save → Test File → zahraj si znovu.
 void step() {
     if (state.equals("PAUSE")) return;
     double previousX = ballX, previousY = ballY;
@@ -63,38 +62,37 @@ void step() {
     }
 }
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst právě tyto řádky
 ///
-/// - `state.equals("PAUSE")` — Recognises just one stopped state, leaving other non-playing states
-///   uncovered.
-/// - `return;` — Skips movement, collisions and life changes when the guard chooses to stop.
-/// - `if (score == 18) state = "YOU WIN";` — Marks a finished board; a later tick must respect that
-///   state.
+/// - `state.equals("PAUSE")` — Rozpozná jen jeden zastavený state (stav), další nerozehrané stavy
+///   nepokrývá.
+/// - `return;` — Přeskočí pohyb, srážky i změny životů, pokud guard (podmínka) zvolí zastavení.
+/// - `if (score == 18) state = "YOU WIN";` — Označí dokončenou desku; další tick (časový krok) musí tento
+///   state (stav) respektovat.
 ///
-/// ### What the prepared part already does
+/// ### Co už obstarává připravená část
 ///
-/// The long remainder of step already handles bounded wall, bat and brick collisions. Mouse input sets
-/// the bat position, restart starts a fresh board and drawing displays the current score, lives and
-/// state.
+/// Dlouhý zbytek step už řeší omezené srážky se stěnou, pálkou a cihlami. Myš nastavuje pozici pálky,
+/// restart založí novou desku a kreslení zobrazí body, životy i state (stav).
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Step-by-step hints">
-/// ## If you get stuck
+// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
+/// ## Když se zasekneš
 ///
-/// 1. The game uses PLAY, YOU WIN and GAME OVER.
-/// 2. Allow exactly PLAY rather than guessing one forbidden label.
-/// 3. Put the guard before all updates, including life loss.
+/// 1. Hra používá PLAY, YOU WIN a GAME OVER.
+/// 2. Povol přesně PLAY místo hádání jednoho zakázaného popisku.
+/// 3. Guard (podmínku) nech před všemi update (aktualizacemi), včetně ztráty života.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int WIDTH = 640, HEIGHT = 400, RADIUS = 7, BAT_WIDTH = 90, BAT_Y = 370;
 final boolean[][] bricks = new boolean[3][6];
 double ballX, ballY, velocityX, velocityY;
 int batX, lives, score;
 String state;
 
-/// Supplied restart: restore the initial model before the UI uses it.
+/// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
 void restart() {
     for (var row : bricks) java.util.Arrays.fill(row, true);
     batX = (WIDTH - BAT_WIDTH) / 2;
@@ -115,7 +113,7 @@ void aim(int mouseX) {
     batX = Math.max(0, Math.min(WIDTH - BAT_WIDTH, mouseX - BAT_WIDTH / 2));
 }
 
-/// Supplied drawing: reads model values; repainting is not another turn.
+/// Připravené kreslení: čte hodnoty model (modelu pravidel); repaint (překreslení) není další tah.
 void draw(Graphics g) {
     g.setColor(new Color(21, 22, 42));
     g.fillRect(0, 0, WIDTH, HEIGHT + 42);
@@ -140,13 +138,13 @@ void draw(Graphics g) {
     }
 }
 
-/// Supplied Swing UI: create it on the EDT; timer cleanup stays with the window.
+/// Připravené Swing UI (rozhraní): vytváří se na EDT; úklid timer (časovače) patří k oknu.
 void showWindow() {
     var frame = new JFrame("Breakout - Brick Bash");
     var panel = new JPanel() {
         @Override protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-/// Supplied drawing: reads model values; repainting is not another turn.
+/// Připravené kreslení: čte hodnoty model (modelu pravidel); repaint (překreslení) není další tah.
             draw(g);
         }
     };
@@ -162,7 +160,7 @@ void showWindow() {
         }
     });
     var timer = new Timer(16, event -> {
-/// Supplied bounded update: one call means one model step; the active repair is described above.
+/// Připravený omezený update (aktualizace): jedno volání znamená jeden krok; aktivní oprava je popsaná výše.
         step();
         panel.repaint();
     });
@@ -179,78 +177,80 @@ void showWindow() {
     timer.start();
 }
 
-/// Start the real program with Run File. Test File checks the rule without opening a window.
-/// step is the active boundary; the model exposes it for deterministic checks without a window.
-/// restart restores initial fields; draw reads state; showWindow supplies listeners, one timer and window-close cleanup.
+/// Skutečný program spusť přes Run File. Test File ověří pravidlo bez otevření okna.
+/// step je aktivní hranice; model (model pravidel) ji zpřístupňuje pro opakovatelné check (kontroly) bez okna.
+/// Restart obnoví počáteční field (položky objektu); draw čte state (stav); showWindow dodává listener (obsluhy), jeden timer (časovač) a úklid po zavření.
 void main() {
-/// Supplied restart: restore the initial model before the UI uses it.
+/// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
-/// ## An unfamiliar piece of Java?
+// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+/// ## Neznámý zápis?
 ///
-/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+/// dopředu.
 ///
-/// - `///` — Words for the reader. Java skips these comment lines when running.
-/// - `import` — Makes library names available in this file; it does not run the library.
-/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
-///   parts.
-/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
-///   mean no supplied arguments.
-/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
-/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
-/// - `void` — This method performs an action and returns no result value.
-/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
-///   earlier in the file.
-/// - `int` — A type for whole numbers within a fixed range.
-/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
-/// - `boolean` — A value that is either true or false.
-/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
-/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
-/// - `final` — The named value cannot be assigned another value afterwards. A referenced mutable object
-///   can still change.
-/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
-///   type.
-/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
-/// - `==` — Compares primitive values. For text contents, use equals instead.
-/// - `&&` — Both conditions must be true; if the first is false, Java skips the second.
-/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
-/// - `!` — In front of a boolean expression, reverses true and false.
-/// - `++` — Increases a numeric value by one.
-/// - `+=` — Adds to the old value and stores the result back under the same name.
-/// - `+` — Adds numbers. When a String is involved, joins text instead.
-/// - `-` — Subtracts numbers; in front of one number, changes its sign.
-/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
-///   available.
-/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
-/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
-///   direction. In List<String>, angle brackets describe the element type.
-/// - `?` — In condition ? first : second, chooses the first value when the condition is true, otherwise
-///   the second.
-/// - `:` — In for (int value : values), reads each element in turn. It also separates the two
-///   alternatives of ? : or follows a switch label.
-/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
-///   count.
-/// - `new` — Creates a fresh value or object, such as a new array or window.
-/// - `return` — Ends this method call, optionally handing a result back to its caller.
-/// - `if` — Runs its body only when the condition in parentheses is true.
-/// - `else` — The alternative when the preceding if condition is false.
-/// - `for` — Repeats a block over a range or a sequence of values.
-/// - `->` — In switch: a case result or action. In a lambda: describes an action to perform when called
-///   later.
-/// - `::` — A method reference: supplies an action without calling it yet.
-/// - `this` — The current game object: this particular run and its stored state.
-/// - `public` — Makes this declaration accessible to other code.
-/// - `protected` — A visibility keyword used by supplied library callbacks, such as paintComponent.
-/// - `super` — In super.paintComponent(g), asks the supplied parent implementation to paint its standard
-///   background first.
-/// - `JFrame` — A desktop window supplied by the JDK’s Swing library.
-/// - `JPanel` — A window area that can display the game’s drawing or controls.
-/// - `@Override` — Marks a supplied replacement for a library action, such as painting.
-/// - `SwingUtilities.invokeLater` — Schedules window work for Swing’s event thread; the action runs
-///   later.
+/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+///   části.
+/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+///   znamenají bez předávaných argument (argumentů).
+/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+///   proto, že jsou v souboru výše.
+/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+/// - `double` — Numeric type (číselný typ) pro přibližná desetinná čísla. Java používá desetinnou tečku.
+/// - `boolean` — Hodnota true nebo false: ano nebo ne.
+/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+///   textu nepatří.
+/// - `final` — Pojmenované hodnotě už nelze přiřadit jinou. Odkazovaný mutable object (měnitelný objekt)
+///   se ale dál měnit může.
+/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+/// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
+/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
+/// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
+/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+///   (balíčku).
+/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+///   List<String> lomené závorky popisují element type (typ prvku).
+/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+///   druhou.
+/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+///   možnosti ? : nebo následuje za značkou switch.
+/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+///   (prvek); length je počet prvků.
+/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+/// - `else` — Alternativní větev pro případ, že předchozí if condition (podmínka) neplatí.
+/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+///   až při pozdějším volání.
+/// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
+/// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
+/// - `public` — Zpřístupňuje tuto declaration (deklaraci) dalšímu kódu.
+/// - `protected` — Visibility keyword (klíčové slovo přístupnosti) používané připraveným library callback
+///   (knihovním zpětným voláním), například paintComponent.
+/// - `super` — V super.paintComponent(g) požádá připravenou parent implementation (nadřazenou
+///   implementaci), aby nejprve vykreslila běžné pozadí.
+/// - `JFrame` — Okno dodané JDK knihovnou Swing.
+/// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.
+/// - `@Override` — Označuje dodanou náhradu knihovní akce, například kreslení.
+/// - `SwingUtilities.invokeLater` — Naplánuje práci s oknem na Swing event thread (vlákno událostí); akce
+///   se provede později.
 // </editor-fold>
 

@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M01_WordLadderTest {
     static int checks;
     static final String[] CASES = {
-        "Two accepted moves keep all three route words in order.",
-        "A rejected move leaves the route unchanged.",
-        "Winning history and restart remain correct."
+        "Dva přijaté tahy zachovají všechna tři slova v pořadí.",
+        "Odmítnutý tah nechá cestu beze změny.",
+        "Vítězná historie i restart zůstanou správné."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -62,7 +62,7 @@ public class M01_WordLadderTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I026: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I026: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

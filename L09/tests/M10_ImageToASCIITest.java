@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class M10_ImageToASCIITest {
     static int checks;
     static final String[] CASES = {
-        "Malformed numeric text returns 80.",
-        "Both inclusive bounds and surrounding spaces work.",
-        "Out-of-range numeric input is rejected."
+        "Nečíselný text vrátí 80.",
+        "Obě zahrnuté hranice i okolní mezery fungují.",
+        "Číselný input (vstup) mimo rozsah se odmítne."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -58,7 +58,7 @@ public class M10_ImageToASCIITest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I114: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION I114: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
