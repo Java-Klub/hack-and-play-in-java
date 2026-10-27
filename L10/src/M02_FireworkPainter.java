@@ -27,9 +27,32 @@ import javax.swing.Timer;
 /// Po Run File klikej na různá místa plátna pro ohňostroje, pomocí Space zastav pohyb a klávesou C vymaž
 /// oblohu.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F28 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 java.util.function.BiConsumer<Integer, Integer> burstAction() {
     return this::burst;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F28">
+/// ### Callback (zpětné volání): akce na později
+///
+/// Callback je akce, kterou jiná část programu zavolá později, třeba po kliknutí. `Runnable` je akce
+/// bez předávaných argumentů a bez vraceného výsledku.
+///
+/// ```java
+/// Runnable cheer = () -> IO.println("Hooray!");
+/// IO.println("Ready");
+/// cheer.run();
+/// ```
+///
+/// Výstup je `Ready`, potom `Hooray!`. Vytvoření lambda (anonymní funkce) zápisem `() -> ...` její
+/// tělo nespustí. To udělá volání `run()`. Složené závorky dovolují uvnitř callbacku několik příkazů.
+/// Method reference (odkaz na metodu) jako `this::wave` obdobně předá metodu `wave` tohoto objektu
+/// pro pozdější použití; `wave()` ji zavolá hned. Připravené UI rozhoduje, kdy callback vyvolat.
+///
+/// Předpověz: co se vypíše, když poslední řádek nahradí dvě po sobě jdoucí volání `cheer.run()`?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -45,12 +68,16 @@ java.util.function.BiConsumer<Integer, Integer> burstAction() {
 /// částice, step posune jejich omezené životy a draw je vykreslí; pause, reset i uložení jsou připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. BiConsumer přijme dvě hodnoty později.
-/// 2. Předej je v pořadí x/y; při tvorbě callback (předané akce) burst nevolej.
-/// 3. Připravená burst už přidá šedesát částic a spustí pohyb.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// BiConsumer přijme dvě hodnoty později.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Předej je v pořadí x/y; při tvorbě callback (předané akce) burst nevolej.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Připravená burst už přidá šedesát částic a spustí pohyb.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

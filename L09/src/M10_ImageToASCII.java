@@ -19,6 +19,9 @@ import javax.imageio.ImageIO;
 /// Po Run File zadej šířku obrázku od 4 do 160 nebo zkus oops a potom prozkoumej znakový obrázek v Output
 /// i portrait.txt.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F31 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int readWidth(String text) {
     try {
         int value = Integer.parseInt(text.strip());
@@ -28,6 +31,34 @@ int readWidth(String text) {
         return 80;
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F31">
+/// ### Parse (převod), validation (ověření), potom uložení
+///
+/// Parsing převádí text; validation ověřuje, zda je výsledné číslo povolené. Každý krok může selhat
+/// jinak.
+///
+/// ```java
+/// int readCopies(String text) {
+///     try {
+///         int n = Integer.parseInt(text.strip());
+///         if (n < 1 || n > 5) {
+///             throw new IllegalArgumentException("Copies: 1..5");
+///         }
+///         return n;
+///     } catch (NumberFormatException invalid) {
+///         return 3;
+///     }
+/// }
+/// ```
+///
+/// `readCopies(" 2 ")` vrátí `2`: převod i ověření uspějí. `"oops"` selže při převodu a přes `catch`
+/// vrátí `3`. Číselný text `"8"` se převede, ale následně vyvolá jinou exception (výjimku); tento
+/// konkrétní catch ji nezachytí. `return` ukončí metodu; `throw` opustí běžnou cestu. Uložený stav
+/// hry měň až po úspěšném ověření.
+///
+/// Předpověz cestu pro `"five"`, `"5"` a `"0"`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -44,12 +75,27 @@ int readWidth(String text) {
 /// uloží stejný text do portrait.txt.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Neúspěšný převod není totéž co chybná číselná šířka
 ///
-/// 1. Před parsing (rozborem) odstraň okolní mezery.
-/// 2. Zachyť NumberFormatException, nikoli každou chybu programu.
-/// 3. Výchozí hodnota je 80; guard (podmínky) rozsahu zůstanou oddělené.
+/// Trasuj `" 12 "`: strip odstraní krajní mezery, parseInt vytvoří 12, guard (kontrola) projde a
+/// return vrátí 12. `"twelve"` selže uvnitř parseInt, takže konkrétní catch vybere náhradní hodnotu.
+/// `"200"` se převede, ale výslovná kontrola rozsahu vyvolá IllegalArgumentException; catch pro
+/// NumberFormatException tuto jinou chybu nezachytí. Předpověz cesty pro `"4"`, `"160"` a `"3"`.
+/// Zachovej přijetí obou krajních hodnot a porovnej cestu překlepu se šířkou slíbenou v prompt (výzvě
+/// ke vstupu).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Před parsing (rozborem) odstraň okolní mezery.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Zachyť NumberFormatException, nikoli každou chybu programu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Výchozí hodnota je 80; guard (podmínky) rozsahu zůstanou oddělené.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

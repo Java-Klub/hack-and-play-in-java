@@ -18,6 +18,9 @@ import javax.swing.Timer;
 ///
 /// Po Run File pohybem myši nastavuj pálku a odrážej míček do cihel; pomocí R spusť nové kolo.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F30 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void step() {
     if (!state.equals("PLAY")) return;
     double previousX = ballX, previousY = ballY;
@@ -62,6 +65,32 @@ void step() {
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F30">
+/// ### Input (vstup) požádá; tick (krok) posune čas
+///
+/// Event (událost) může zaznamenat záměr bez okamžité změny celé simulace. Tick provede jednu
+/// omezenou aktualizaci. Kreslení drž oddělené od obou činností.
+///
+/// ```java
+/// int height = 0;
+/// int pending = 0;
+/// void press() {
+///     pending = 2;
+/// }
+/// void tick() {
+///     height += pending;
+///     pending = 0;
+/// }
+/// ```
+///
+/// Po `press()` je height stále 0. Jeden `tick()` jej změní na 2 a požadavek spotřebuje; další tick
+/// jej ponechá na 2. Opakovaný vstup před tímto krokem stále zaznamená jeden požadavek místo dvou
+/// aktualizací. Připravený timer (časovač) může tick volat, ale pozastavená nebo dokončená hra nemá
+/// pokračovat. Restart musí obnovit počáteční stav.
+///
+/// Předpověz: co od počátečního stavu udělá pořadí press, tick, press, tick?
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
 ///
@@ -77,12 +106,16 @@ void step() {
 /// restart založí novou desku a kreslení zobrazí body, životy i state (stav).
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Hra používá PLAY, YOU WIN a GAME OVER.
-/// 2. Povol přesně PLAY místo hádání jednoho zakázaného popisku.
-/// 3. Guard (podmínku) nech před všemi update (aktualizacemi), včetně ztráty života.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Hra používá PLAY, YOU WIN a GAME OVER.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Povol přesně PLAY místo hádání jednoho zakázaného popisku.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Guard (podmínku) nech před všemi update (aktualizacemi), včetně ztráty života.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

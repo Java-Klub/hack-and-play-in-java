@@ -13,6 +13,9 @@
 /// Použij Run File a vezmi 2 kameny; porovnej další tah bota z 19 kamenů a pomocí r zkus stejný začátek
 /// znovu.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F07 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int botMove() {
     if (stones == 0) {
         return 0;
@@ -24,6 +27,33 @@ int botMove() {
         return remainder;
     }
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F07">
+/// `if` položí boolean question (logickou otázku). Jeho tělo běží jen při pravdivé odpovědi. `else
+/// if` položí další otázku teprve po neúspěchu předchozích; poslední `else` pokrývá všechny zbývající
+/// možnosti.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// int temperature = 10;
+/// if (temperature < 0) {
+///     IO.println("Frozen");
+/// } else if (temperature < 20) {
+///     IO.println("Cool");
+/// } else {
+///     IO.println("Warm");
+/// }
+/// ```
+///
+/// S desítkou se vypíše `Cool`: první comparison (porovnání) neplatí a druhé ano. Předpověz zprávy
+/// pro `-3` a `20`. Každé spuštění vypíše právě jednu zprávu. Na pořadí záleží: příliš široká
+/// dřívější branch (větev) může zabránit dosažení další. Uvnitř výpočtu může branch místo výpisu
+/// použít `return` výsledku. Ten okamžitě dokončí toto call (volání metody); neopustí pouze větev.
+/// Složené závorky ukazují, které statement (příkazy) patří k jednotlivým možnostem.
+///
+/// Nyní předpověz zprávu při přesně nula stupních.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -46,12 +76,26 @@ int botMove() {
 /// výpis hromádky, zadání tahů, restart a konec. Výpočet bota má tah vrátit, nikoli sám odebrat kameny.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Projdi sedm kamenů: remainder (zbytek) je tři.
-/// 2. Else branch (větev jinak) se má lišit od větve s nulovým zbytkem.
-/// 3. V else vrať remainder místo 1.
+// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
+/// Poslední kámen vyhrává; v tahu se berou jeden, dva nebo tři. Uvažuj odzadu: hráč před čtyřmi
+/// kameny nemůže zabránit soupeři, aby v dalším tahu vzal zbytek. Myšlenka se opakuje ve skupinách po
+/// čtyřech: na soupeřův odběr lze odpovědět tak, aby oba tahy společně odebraly čtyři. Z počtu
+/// nedělitelného čtyřmi se snaž soupeři nechat násobek čtyř. Z přesného kladného násobku žádný tah
+/// nezaručí výhru proti dokonalým odpovědím; tento bot používá platnou náhradní volbu jednoho kamene.
+/// Prázdná hromádka nemá tah. Přelož pravidlo do dvou připravených branch (větví), aniž by botMove
+/// samo kameny odstraňovalo.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Projdi sedm kamenů: remainder (zbytek) je tři.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Else branch (větev jinak) se má lišit od větve s nulovým zbytkem.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// V else vrať remainder místo 1.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

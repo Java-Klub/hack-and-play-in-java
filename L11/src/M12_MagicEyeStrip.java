@@ -18,9 +18,35 @@ import javax.imageio.ImageIO;
 /// Po Run File stiskni Enter pro čtení seed.txt, vytvořeného s 42 jen pokud chybí, a potom otevři
 /// magic-eye-strip.png.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F32 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 long readSeed(Path path) throws IOException {
     return Long.parseLong(Files.readString(path).strip());
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F32">
+/// ### Files (soubory): cíl a životnost prostředku
+///
+/// `Path` popisuje umístění; jeho vytvoření nevytvoří soubor. Uvnitř metody s deklarací `throws
+/// IOException` tento kód zapíše poznámku:
+///
+/// ```java
+/// Path file = Path.of("exports", "note.txt");
+/// Files.createDirectories(file.getParent());
+/// try (var writer = Files.newBufferedWriter(file)) {
+///     writer.write("Hi");
+/// }
+/// ```
+///
+/// Výsledek je exports/note.txt obsahující `Hi`. `getParent()` vybere exports; `getFileName()` vybere
+/// jen note.txt a zahodí složku. Try-with-resources (automatické uzavření prostředku) uzavře writer
+/// na konci bloku i při selhání zápisu. `throws` nechá I/O failure (chybu vstupu/výstupu) řešit
+/// volajícího; tady ji neřeší. Také obrazové a zvukové encodery (kodéry) potřebují skutečný cíl,
+/// nikoli nesouvisející paměťový buffer (vyrovnávací paměť).
+///
+/// Předpověz: pokud file změníš na `Path.of("cards", "one.txt")`, kam se poznámka zapíše?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -38,12 +64,16 @@ long readSeed(Path path) throws IOException {
 /// opakovatelné tečky a kopíruje je v rozestupech podle hloubky; save zapíše magic-eye-strip.png.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Path je umístění, nikoli uložený obsah.
-/// 2. Před převodem čísla použij Files.readString.
-/// 3. Mezery jsou povolené; chybný obsah a chybějící file (soubor) zůstanou různé chyby.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Path je umístění, nikoli uložený obsah.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Před převodem čísla použij Files.readString.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Mezery jsou povolené; chybný obsah a chybějící file (soubor) zůstanou různé chyby.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

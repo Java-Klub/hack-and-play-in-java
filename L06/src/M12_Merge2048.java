@@ -12,6 +12,9 @@
 /// Spusť Run File a napiš A potvrzené Enter pro posun vlevo, potom vyzkoušej další směry a přes Test File
 /// prověř řádkové příklady.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F33 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 record MergeExample(int[] input, int[] expected, int score) {
 }
 
@@ -22,6 +25,29 @@ MergeExample[] learnerChecks() {
     new MergeExample(new int[]{2, 2, 4, 0}, new int[]{4, 4, 0, 0}, 4),
     new MergeExample(new int[]{4, 4, 4, 4}, new int[]{8, 8, 0, 0}, 16)};
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F33">
+/// ### Checks: vyber příklad, který může nesouhlasit
+///
+/// Functional check (funkční kontrola) potřebuje input (vstup) a nezávisle předpovězený výsledek.
+/// Úspěšný příklad je slabý, pokud uvěřitelné chybné pravidlo odpoví stejně. Přečti samostatný
+/// výpočet a jeho příklad; comparison (porovnání) dává boolean (logickou hodnotu) oznamující shodu.
+///
+/// ```java
+/// int twice(int value) {
+///     return value + value;
+/// }
+///
+/// void main() {
+///     boolean agrees = twice(0) == 0;
+///     IO.println(agrees);
+/// }
+/// ```
+///
+/// Výpis je true: dvojnásobek nuly je nula. Projde také implementace vracející vždy nulu. Vyber jiný
+/// input a očekávaný výsledek odvoď sám. Jakou chybu nový příklad odhalí? Počáteční data každé check
+/// (kontroly) udržuj nezávislá, aby jeden příklad omylem nepřipravil další.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -38,12 +64,26 @@ MergeExample[] learnerChecks() {
 /// File zkouší pět chybných variant včetně té, která sloučí jen první dostupnou dvojici.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Ověř celý pozorovatelný výsledek
 ///
-/// 1. Každý příklad je čtyřpolový řádek posunutý doleva; body jsou součet vzniklých dílků.
-/// 2. [2,0,2,0] dá [4,0,0,0], ale [2,2,4,0] dá [4,4,0,0].
-/// 3. Otestuj také [4,4,4,4] -> [8,8,0,0] s 16 body; každé očekávání zdůvodni.
+/// MergeExample obsahuje input row (vstupní řádek), očekávaný řádek a získané body. Připravená check
+/// (kontrola) porovnává obsah array (polí). Pro orientaci: posun `[0,8,0,2]` doleva stlačí řádek na
+/// `[8,2,0,0]` bez sloučení či bodů. Nově sloučená dlaždice se v témže tahu neslučuje znovu. Nakresli
+/// jiný řádek pro toto pravidlo a další, který oddělí pohyb od bodování. Před sestavením record
+/// předpověz obě části.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Každý příklad je čtyřpolový řádek posunutý doleva; body jsou součet vzniklých dílků.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// [2,0,2,0] dá [4,0,0,0], ale [2,2,4,0] dá [4,4,0,0].
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Otestuj také [4,4,4,4] -> [8,8,0,0] s 16 body; každé očekávání zdůvodni.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

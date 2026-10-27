@@ -18,6 +18,9 @@ import javax.imageio.ImageIO;
 /// Po Run File stiskni Enter pro růst po úhlopříčce a crystal-new.png, potom spusť n pro porovnání s
 /// crystal-old.png.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F36 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean touching(boolean[][] grid, int x, int y, boolean diagonals) {
     for (int dy = -1; dy <= 1; dy++) {
         for (int dx = -1; dx <= 1; dx++) {
@@ -29,6 +32,28 @@ boolean touching(boolean[][] grid, int x, int y, boolean diagonals) {
     }
     return false;
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F36">
+/// ### Transfer (přenos): zachovej slib a přidej volbu
+///
+/// Extract helper (vyčlenění pomocné metody) pojmenuje jednu odpovědnost. Vstupy a výsledek tvoří
+/// contract (smlouvu), kterou můžeš využít jinde.
+///
+/// ```java
+/// String surround(String text, boolean stars) {
+///     String edge = stars ? "*" : "#";
+///     return edge + text + edge;
+/// }
+/// ```
+///
+/// `surround("hi", false)` vrátí `"#hi#"`; původní styl s mřížkami dál funguje. Volající může požádat
+/// o nový styl bez opakování celé operace. Ověř obě volby, prázdný vstup i jiné slovo. Tests (testy)
+/// ověří výsledky; vysvětlení, kdo vybírá styl a kdo sestavuje popisek, ověří rozdělení odpovědností.
+/// Úspěšný nový režim nemá potichu měnit původní.
+///
+/// Předpověz: co vytvoří `surround("", true)` a která část by se měnila při změně obklopujícího
+/// znaku?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -46,13 +71,17 @@ boolean touching(boolean[][] grid, int x, int y, boolean diagonals) {
 /// (kontroly) dokládají chování, ne čitelnost.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Staré pravidlo odmítá diagonální dvojice dx/dy.
-/// 2. Odmítej je jen tehdy, když diagonals je false.
-/// 3. Zachovej vynechání středu a hranice řádků; vysvětli, proč helper (pomocná funkce) vlastní sousedy a
-///   grow náhodnou chůzi.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Staré pravidlo odmítá diagonální dvojice dx/dy.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Odmítej je jen tehdy, když diagonals je false.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Zachovej vynechání středu a hranice řádků; vysvětli, proč helper (pomocná funkce) vlastní sousedy
+/// a grow náhodnou chůzi.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

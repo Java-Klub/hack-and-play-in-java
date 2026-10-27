@@ -10,11 +10,32 @@
 ///
 /// Spusť Run File a střídejte se v zadávání dosud volného čísla hrany od 1 do 12, vždy potvrzeného Enter.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F16 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int[] box(int n) {
     int r = n / 2;
     int c = n % 2;
     return new int[]{r * 2 + c, (r + 1) * 2 + c, 6 + r * 3 + c, 6 + r * 3 + c + 1};
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F16">
+/// ### Arrays: záleží na pozici
+///
+/// Array (pole) uchovává pevný počet hodnot jednoho element type (typu prvku). Hranaté závorky
+/// vybírají pozici: první index (pozice) je nula a `length` je počet. Čtení jednoho element (prvku)
+/// nemění ostatní. Použitý index musí existovat; prázdné array nemá první element.
+///
+/// ```java
+/// String[] tools = {"pen", "tape", "chalk"};
+/// int chosen = 1;
+/// IO.println(tools[chosen]);
+/// IO.println(tools.length);
+/// ```
+///
+/// Tyto statement (příkazy) patří dovnitř method (metody). Index jedna vybere `tape`; počet je tři.
+/// Co se změní při `chosen` rovném dvěma? Který index už bude první neplatný?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -30,12 +51,26 @@ int[] box(int n) {
 /// vyřídí body i další tah; tato pravidla jsou připravená.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### I hrany jsou hodnoty
 ///
-/// 1. Číslo čtverečku dává řádek n / 2 a sloupec n % 2.
-/// 2. Vodorovné hrany zabírají 0–5; svislé začínají na 6.
-/// 3. Vrať horní, dolní, levou a pravou hranu v novém int[].
+/// Vrácené int array (pole) uvádí čtyři edge index (pozice hran), nikoli čtyři rohy. Nakresli
+/// zobrazenou desku a očísluj hrany vnitřními index (pozicemi), o jednu menšími než vypsaná čísla. U
+/// vybraného čtverce zvlášť najdi horní, dolní, levou a pravou hranu. `new int[]{...}` sdruží čtyři
+/// čísla do výsledku. Než napíšeš obecný expression (výraz) pro n, předpověz jiný čtverec než levý
+/// horní.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Číslo čtverečku dává řádek n / 2 a sloupec n % 2.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Vodorovné hrany zabírají 0–5; svislé začínají na 6.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Vrať horní, dolní, levou a pravou hranu v novém int[].
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -20,6 +20,9 @@ import javax.swing.Timer;
 /// Po Run File posuň Coupling směrem k 2 a sleduj číslo sladění; pomocí Pause/Run či New phases porovnej
 /// záblesky.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F35 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void apply(Control control) {
     switch (control) {
         case Coupling(var value) when Double.isFinite(value) && value >= 0 && value <= 2 -> coupling = value;
@@ -28,6 +31,30 @@ void apply(Control control) {
         case Restart(var seed) -> reset(seed);
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F35">
+/// ### Record patterns (vzory záznamů): vyber typ a rozbal data
+///
+/// ```java
+/// sealed interface Badge permits Name, Stars {}
+/// record Name(String text) implements Badge {}
+/// record Stars(int count) implements Badge {}
+/// String label(Badge badge) {
+///     return switch (badge) {
+///         case Name(var text) -> text;
+///         case Stars(var n) when n > 0 -> n + " stars";
+///         case Stars(var n) -> "none";
+///     };
+/// }
+/// ```
+///
+/// `label(new Stars(2))` vrátí `"2 stars"`. Sealed uzavírá alternativy; permits je vyjmenovává.
+/// Record pattern rozpozná typ záznamu a dá hodnotám složek místní jména v pořadí deklarace. `var`
+/// odvodí jejich typy. Musí platit také when guard (dodatečná podmínka); jinak hledání pokračuje.
+/// Poslední Stars větev zpracuje nekladné počty. Každá povolená alternativa zde potřebuje zpracování.
+///
+/// Předpověz: která větev zpracuje `new Stars(0)` a jaký text vznikne pro `new Name("Nova")`?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -45,12 +72,27 @@ void apply(Control control) {
 /// seed (počáteční hodnoty).
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Guard (podmínka) nemaže rozpoznanou hodnotu
 ///
-/// 1. Guard (podmínka) už odděluje platné a neplatné hodnoty Coupling.
-/// 2. Rozpoznané var value je nová síla, nikoli pevná nula.
-/// 3. Zachovej náhradní case (větev) Coupling i úplné zpracování ostatních uzavřených alternativ.
+/// Trasuj Coupling s hodnotou 1.5: typ záznamu souhlasí a všechny tři guard conditions (dodatečné
+/// podmínky) platí. Hodnota je stále dostupná vybrané akci. Potom trasuj hodnotu -1: guard neprojde a
+/// následující Coupling větev záměrně nic nezmění. Začni od přijatého nastavení a předpověz nastavení
+/// po tomto odmítnutém příkazu. Toggle nemá žádné složky, zatímco Restart nese seed (počáteční
+/// hodnotu); ani jeden nemá omylem použít sílu vazby. Proto jsou rozpoznání typu, ověření podmínky a
+/// akce větve tři různé otázky.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Guard (podmínka) už odděluje platné a neplatné hodnoty Coupling.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Rozpoznané var value je nová síla, nikoli pevná nula.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Zachovej náhradní case (větev) Coupling i úplné zpracování ostatních uzavřených alternativ.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

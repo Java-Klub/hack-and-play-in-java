@@ -19,6 +19,9 @@ import javax.imageio.ImageIO;
 /// Po Run File napiš tajnou zprávu nebo stiskni Enter pro Pixel moon a potom v Output přečti text
 /// obnovený z exports/secret-course.png.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F32 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 String readMessage(Path path) throws IOException {
     try (var input = Files.newInputStream(path)) {
         var image = ImageIO.read(input);
@@ -26,6 +29,29 @@ String readMessage(Path path) throws IOException {
         return decode(image);
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F32">
+/// ### Files (soubory): cíl a životnost prostředku
+///
+/// `Path` popisuje umístění; jeho vytvoření nevytvoří soubor. Uvnitř metody s deklarací `throws
+/// IOException` tento kód zapíše poznámku:
+///
+/// ```java
+/// Path file = Path.of("exports", "note.txt");
+/// Files.createDirectories(file.getParent());
+/// try (var writer = Files.newBufferedWriter(file)) {
+///     writer.write("Hi");
+/// }
+/// ```
+///
+/// Výsledek je exports/note.txt obsahující `Hi`. `getParent()` vybere exports; `getFileName()` vybere
+/// jen note.txt a zahodí složku. Try-with-resources (automatické uzavření prostředku) uzavře writer
+/// na konci bloku i při selhání zápisu. `throws` nechá I/O failure (chybu vstupu/výstupu) řešit
+/// volajícího; tady ji neřeší. Také obrazové a zvukové encodery (kodéry) potřebují skutečný cíl,
+/// nikoli nesouvisející paměťový buffer (vyrovnávací paměť).
+///
+/// Předpověz: pokud file změníš na `Path.of("cards", "one.txt")`, kam se poznámka zapíše?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -42,13 +68,17 @@ String readMessage(Path path) throws IOException {
 /// spravuje jen načtení vybraného obrázku.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Celý Path obsahuje umístění zvolené volající částí.
-/// 2. Samotné getFileName vnořenou pohlednici nenajde.
-/// 3. ImageIO čte vlastní stream (proud); zachovej kontrolu null obrazu i existující bit decoder (čtečku
-///   bitů).
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Celý Path obsahuje umístění zvolené volající částí.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Samotné getFileName vnořenou pohlednici nenajde.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// ImageIO čte vlastní stream (proud); zachovej kontrolu null obrazu i existující bit decoder (čtečku
+/// bitů).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

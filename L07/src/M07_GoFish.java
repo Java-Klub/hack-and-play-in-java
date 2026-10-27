@@ -12,6 +12,9 @@
 /// Spusť Run File a požádej o hodnotu, kterou máš v ruce, zadáním jejího čísla od 2 do 14 potvrzeného
 /// Enter.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F25 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void collect(int who) {
     for (int rank = 2; rank <= 14; rank++) {
         if (Collections.frequency(hands.get(who), rank) == 4) {
@@ -22,6 +25,29 @@ void collect(int who) {
         }
     }
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F25">
+/// ### Invariant: slib po každé akci
+///
+/// Invariant (trvale platné pravidlo) je vztah, který má přežít přijaté akce. Některá akce množství
+/// pouze přesune mezi místy, nevytváří další. Před změnami ověř celý požadavek a potom jej proveď
+/// jednou. Odmítnutí má zachovat původní state (stav).
+///
+/// ```java
+/// int violet = 6;
+/// int gold = 2;
+/// int amount = 3;
+/// if (amount >= 0 && amount <= violet) {
+///     violet -= amount;
+///     gold += amount;
+/// }
+/// IO.println(violet + gold);
+/// ```
+///
+/// Nádoby mají tři a pět; součet zůstane osm, protože přesun obě strany vyrovná. Potom zvaž devět
+/// jednotek: co musí zůstat beze změny? Vysvětli, proč změna jediné strany poruší součet, přestože
+/// jednotlivé hodnoty mohou působit platně.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -39,12 +65,27 @@ void collect(int who) {
 /// rukou je hotová; upravuješ převod na hotové sady.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Počítej, co sada zastupuje
 ///
-/// 1. Před i po sběru počítej ruce + balíček + čtyřnásobek čtveřic.
-/// 2. Loop nyní odstraňuje jen tři odpovídající karty.
-/// 3. Odeber čtyři kopie a jednou zvyš books; ostatní hodnoty ponech.
+/// Book (hotová sada) je jedna položka skóre, ale zastupuje čtyři odebrané karty. Porovnej fyzické
+/// karty v rukou a balíčku spolu s kartami zastoupenými sadami před sesbíráním a po něm. Neutrální
+/// příklad: náhrada šesti žetonů dvěma balíčky po třech stále zastupuje šest žetonů. Počet balíčků
+/// potřebuje váhu jejich obsahu. Kterou veličinu musí hra zachovat? Připravené
+/// `remove(Integer.valueOf(rank))` odebírá hodnotu karty, zatímco odebrání int index (pozice) by
+/// vybíralo místo.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Před i po sběru počítej ruce + balíček + čtyřnásobek čtveřic.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Loop nyní odstraňuje jen tři odpovídající karty.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Odeber čtyři kopie a jednou zvyš books; ostatní hodnoty ponech.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

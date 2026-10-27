@@ -12,6 +12,9 @@
 /// Spusť Run File a zaber levý horní šestiúhelník zadáním 1 1, potom se s kamarádem střídejte ve volbě
 /// řádku a sloupce.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F17 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean connected(int who) {
     boolean[][] seen = new boolean[5][5];
     var queue = new ArrayDeque<int[]>();
@@ -41,6 +44,30 @@ boolean connected(int who) {
     return false;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F17">
+/// ### Traversal: vždy jedna otázka
+///
+/// Traversal (průchod) navštěvuje hodnoty; search (hledání) může skončit první shodou, count
+/// (počítání) musí prohlédnout všechny relevantní hodnoty. Ve for-each loop (cyklu pro každý prvek)
+/// dostane jméno před dvojtečkou jednu hodnotu ze sequence (posloupnosti) za ní. Průběžný počet založ
+/// mimo opakované tělo, aby dřívější shody přežily.
+///
+/// ```java
+/// int[] pulses = {2, 0, 4};
+/// int strong = 0;
+/// for (int pulse : pulses) {
+///     if (pulse > 1) {
+///         strong++;
+///     }
+/// }
+/// IO.println(strong);
+/// ```
+///
+/// Výsledek je dvě, protože pulzy dva a čtyři splňují condition (podmínku). Kdybys potřeboval pouze
+/// vědět, zda existuje nějaký silný pulz, kdy už můžeš odpovědět? Jaký počet má mít prázdné array
+/// (pole)?
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
 ///
@@ -56,12 +83,26 @@ boolean connected(int who) {
 /// políčko, zavolá connected() a při dosažení protějšího okraje oznámí výhru.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Hex adjacency (sousedství hexů) a připravená queue (fronta)
 ///
-/// 1. Vytištěné řádky jsou odsazené; nejde o čtvercová pole.
-/// 2. Kromě čtyř přímých posunů se dotýkají (+1,-1) a (-1,+1).
-/// 3. Přidej oba směry; seen[][] a logiku queue ponech.
+/// Vypsané řádky se sklánějí doprava. Buňka má šest dotýkajících se sousedů: nakresli dva posunuté
+/// řádky a sleduj společné strany místo úhlopříček čtvercové mřížky. Dvojice směru obsahuje posun
+/// řádku a potom sloupce. Připravená ArrayDeque je work queue (fronta práce): `add` naplánuje buňku,
+/// `remove` vezme další a `seen` brání opakování. Měníš jen definici sousedství. Předpověz spojení
+/// přecházející mezi posunutými řádky.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Vytištěné řádky jsou odsazené; nejde o čtvercová pole.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Kromě čtyř přímých posunů se dotýkají (+1,-1) a (-1,+1).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Přidej oba směry; seen[][] a logiku queue ponech.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -13,9 +13,35 @@
 /// Použij Run File, zadáním 9 1 prozkoumej sondu mimo mapu a sleduj počet Probes; /r obnoví kolo před
 /// skutečným hledáním pokladů.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F06 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean insideSea(int row, int column) {
     return row >= 0 && row < 8 && column >= 0 && column < 8;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F06">
+/// Boolean expression (logický výraz) dává `true` nebo `false`. `&&` vyžaduje obě condition
+/// (podmínky), `||` alespoň jednu a `!` obrátí logický výsledek. Comparison (porovnání) jako `>=`
+/// zahrnuje rovnost; `>` ji nezahrnuje.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// int age = 14;
+/// boolean hasTicket = false;
+/// boolean enter = age >= 12 && hasTicket;
+/// boolean recognised = "open".equals("OPEN");
+/// ```
+///
+/// Předpověz oba výsledky: každý je `false`. Věk stačí, ale podmínka vstupenky ne. `equals` porovnává
+/// obsah String (řetězců) a rozlišuje velikost písmen; `equalsIgnoreCase` ji záměrně ignoruje. U
+/// object (objektů) se `==` ptá, zda dva reference (odkazy) označují tentýž objekt, nikoli zda mají
+/// stejný text. Porovnání obsahu a rozsahu odpovídají na různé otázky. Než condition uvěříš, ověř
+/// hodnotu přesně na hranici a těsně za ní.
+///
+/// Nyní předpověz enter pro věk dvanáct s platnou vstupenkou.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -36,12 +62,16 @@ boolean insideSea(int row, int column) {
 /// vypočítá stopu a připravená historie uchovává každou starou stopu spojenou s původním okamžikem.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Vypsané souřadnice 1–8 se před tímto pravidlem převedou na 0–7.
-/// 2. Všechny čtyři hranice musejí platit současně.
-/// 3. Použij row < 8 a column < 8; zachovej obě kontroly >= 0.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Vypsané souřadnice 1–8 se před tímto pravidlem převedou na 0–7.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Všechny čtyři hranice musejí platit současně.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Použij row < 8 a column < 8; zachovej obě kontroly >= 0.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

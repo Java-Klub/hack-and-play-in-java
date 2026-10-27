@@ -20,10 +20,38 @@ import javax.swing.*;
 /// Po opravě: Save → Test File → zahraj si znovu.
 ///
 /// Řádky s `///` jsou průvodce pro tebe; při spuštění se neprovádějí.
+///
+/// Potřebuješ výklad? Připomenutí · F01 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void paintDisc(Graphics2D g, int i) {
     darkDisc(g, i);
     whiteBite(g, i);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F01">
+/// Method (metoda) je pojmenovaná akce. Její definice akci zpřístupní; call (volání) ji požádá o
+/// provedení. Java spustí tento compact program (stručný program) v `main`, i kdyby jiná method byla
+/// zapsaná první.
+///
+/// ```java
+/// void announce() {
+///     IO.println("Before");
+/// }
+///
+/// void main() {
+///     announce();
+///     IO.println("After");
+/// }
+/// ```
+///
+/// Před dalším čtením předpověz dva řádky output (výstupu). Call `announce();` vstoupí do této
+/// method, vypíše `Before` a potom se vrátí k dalšímu statement (příkazu) v `main`, který vypíše
+/// `After`. Uvnitř zavolané method běží tyto statement v pořadí. `void` znamená, že se nevrací
+/// výsledná hodnota; `()` zde nepředává žádné argument (argumenty). Složené závorky ohraničují tělo a
+/// středník ukončuje každé call. Comment (komentáře) program vysvětlují, ale neprovádějí se.
+///
+/// Nyní předpověz, co nastane, pokud main před posledním výpisem zavolá announce dvakrát.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -44,12 +72,16 @@ void paintDisc(Graphics2D g, int i) {
 /// zbývající část řeší otáčení a klikání.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Najdi dvě připravené kreslicí akce.
-/// 2. Bílý tvar musí být poslední vrstva.
-/// 3. Zavolej darkDisc(g, i) před whiteBite(g, i).
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Najdi dvě připravené kreslicí akce.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Bílý tvar musí být poslední vrstva.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Zavolej darkDisc(g, i) před whiteBite(g, i).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

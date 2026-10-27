@@ -19,6 +19,9 @@ import java.util.List;
 /// Pomocí Run File vytvoř voronoi-stained-glass.png a po opravě kolekce semínek otevři cestu vypsanou za
 /// Saved.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F22 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 List<Seed> seedList(Random random, int count) {
     if (count < 0 || count > 100) throw new IllegalArgumentException("Seeds: 0..100.");
     List<Seed> seeds = new ArrayList<>();
@@ -27,6 +30,28 @@ List<Seed> seedList(Random random, int count) {
     }
     return seeds;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F22">
+/// ### List (seznam): pořadí, které můžeš měnit
+///
+/// `List<String>` uchovává texty v pořadí. `new ArrayList<>()` vytvoří mutable list (měnitelný
+/// seznam): obsah lze měnit bez nahrazení samotného seznamu.
+///
+/// ```java
+/// List<String> snacks = new ArrayList<>();
+/// snacks.add("apple");
+/// snacks.add("nuts");
+/// IO.println(snacks.get(0));
+/// IO.println(snacks.size());
+/// ```
+///
+/// Výstup je `apple`, potom `2`. `add(value)` připojí jeden prvek na konec; `get(index)` přečte prvek
+/// bez odebrání. Indexes (indexy) začínají nulou. `isEmpty()` zjišťuje, zda seznam nemá prvky.
+/// `removeLast()` odebere a vrátí poslední prvek; volej jej jen u neprázdného seznamu. Seznam přímo z
+/// `List.of(...)` měnit nelze, ale `new ArrayList<>(List.of(...))` měnit lze.
+///
+/// Předpověz: po `snacks.removeLast()` jaká bude velikost a první prvek?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -42,12 +67,17 @@ List<Seed> seedList(Random random, int count) {
 /// semínka. Připravené Random, Seed record i PNG export zůstávají viditelné bez další knihovny.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. List.of vytvoří výsledek, který nelze měnit.
-/// 2. Zvol mutable implementation (měnitelnou implementaci) při zachování role List<Seed>.
-/// 3. Přidávej uvnitř counted loop (cyklu s počítadlem); nula dá prázdný mutable List (měnitelný seznam).
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// List.of vytvoří výsledek, který nelze měnit.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Zvol mutable implementation (měnitelnou implementaci) při zachování role List<Seed>.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Přidávej uvnitř counted loop (cyklu s počítadlem); nula dá prázdný mutable List (měnitelný
+/// seznam).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

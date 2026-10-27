@@ -20,6 +20,9 @@ import javax.swing.Timer;
 ///
 /// Spusť Run File a šipkami přeskakuj mezi projíždějícími auty až k zelenému břehu nahoře.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F25 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void hop(int dx, int dy) {
     if (lost || won) {
         return;
@@ -32,6 +35,29 @@ void hop(int dx, int dy) {
         won = true;
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F25">
+/// ### Invariant: slib po každé akci
+///
+/// Invariant (trvale platné pravidlo) je vztah, který má přežít přijaté akce. Některá akce množství
+/// pouze přesune mezi místy, nevytváří další. Před změnami ověř celý požadavek a potom jej proveď
+/// jednou. Odmítnutí má zachovat původní state (stav).
+///
+/// ```java
+/// int violet = 6;
+/// int gold = 2;
+/// int amount = 3;
+/// if (amount >= 0 && amount <= violet) {
+///     violet -= amount;
+///     gold += amount;
+/// }
+/// IO.println(violet + gold);
+/// ```
+///
+/// Nádoby mají tři a pět; součet zůstane osm, protože přesun obě strany vyrovná. Potom zvaž devět
+/// jednotek: co musí zůstat beze změny? Vysvětli, proč změna jediné strany poruší součet, přestože
+/// jednotlivé hodnoty mohou působit platně.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -47,12 +73,16 @@ void hop(int dx, int dy) {
 /// (časovač) posouvá dopravu; hop() řeší vstup hráče a zastavení po výhře či prohře.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Okraj podle poloměru hráče je 12 pixelů.
-/// 2. Po každém aktivním skoku má platit 12 <= x <= WIDTH-12.
-/// 3. Omez x+dx mezi tyto hranice; ponech kolize i kontrolu konce kola.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Okraj podle poloměru hráče je 12 pixelů.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Po každém aktivním skoku má platit 12 <= x <= WIDTH-12.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Omez x+dx mezi tyto hranice; ponech kolize i kontrolu konce kola.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -18,6 +18,9 @@ import java.awt.GridLayout;
 ///
 /// Spusť Run File a klikni na očíslovaný dílek hned vedle mezery, aby se přesunul na prázdné místo.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F14 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void reset(long seed) {
     for (int i = 0; i < 9; i++) {
         tiles[i] = (i + 1) % 9;
@@ -38,6 +41,28 @@ void reset(long seed) {
     moves = 0;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F14">
+/// ### Scope: které úložiště jméno označuje?
+///
+/// Field (položka objektu) patří aktuálnímu objektu a může přežít více volání. Local variable (místní
+/// proměnná) patří jedinému call (volání) či bloku. Declaration (deklarace) obsahuje type (typ);
+/// assignment (přiřazení) do existujícího jména nevytváří další proměnnou. Místní jméno může zastínit
+/// stejně napsaný field.
+///
+/// ```java
+/// int volume = 7;
+///
+/// void whisper() {
+///     int volume = 2;
+///     IO.println(volume);
+/// }
+/// ```
+///
+/// `whisper()` vypíše dvě, zatímco field zůstane sedm: local declaration (místní deklarace) vytvořila
+/// jiné úložiště. Předpověz pozdější čtení field; `this.volume` podle potřeby výslovně označí field.
+/// Která hodnota má přežít několik volání a která patří pouze dočasnému výpočtu?
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
 ///
@@ -52,12 +77,16 @@ void reset(long seed) {
 /// aby hlavolam zůstal řešitelný; reakce tlačítek a kreslení jsou připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Seed řídí pořadí dílků, nikoli počítadlo tahů.
-/// 2. Počítadlo zobrazené refresh() je field nad methods.
-/// 3. U resetovacího přiřazení odeber lokální deklaraci int.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Seed řídí pořadí dílků, nikoli počítadlo tahů.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Počítadlo zobrazené refresh() je field nad methods.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// U resetovacího přiřazení odeber lokální deklaraci int.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

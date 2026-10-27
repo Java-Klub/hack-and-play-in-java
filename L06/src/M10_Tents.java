@@ -20,6 +20,9 @@ import java.util.Arrays;
 /// Spusť Run File a klikni na prázdné políčko vedle stromu pro postavení stanu, potom přes Test File
 /// prověř své příklady čtení mapy.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F33 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 record TreeExample(int x, int y, boolean expected) {
 }
 
@@ -27,6 +30,29 @@ TreeExample[] learnerChecks() {
     return new TreeExample[]{new TreeExample(0, 0, true), new TreeExample(3, 0, true),
     new TreeExample(0, 3, false), new TreeExample(1, 3, true), new TreeExample(4, 4, true), new TreeExample(-1, 0, false)};
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F33">
+/// ### Checks: vyber příklad, který může nesouhlasit
+///
+/// Functional check (funkční kontrola) potřebuje input (vstup) a nezávisle předpovězený výsledek.
+/// Úspěšný příklad je slabý, pokud uvěřitelné chybné pravidlo odpoví stejně. Přečti samostatný
+/// výpočet a jeho příklad; comparison (porovnání) dává boolean (logickou hodnotu) oznamující shodu.
+///
+/// ```java
+/// int twice(int value) {
+///     return value + value;
+/// }
+///
+/// void main() {
+///     boolean agrees = twice(0) == 0;
+///     IO.println(agrees);
+/// }
+/// ```
+///
+/// Výpis je true: dvojnásobek nuly je nula. Projde také implementace vracející vždy nulu. Vyber jiný
+/// input a očekávaný výsledek odvoď sám. Jakou chybu nový příklad odhalí? Počáteční data každé check
+/// (kontroly) udržuj nezávislá, aby jeden příklad omylem nepřipravil další.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -44,12 +70,26 @@ TreeExample[] learnerChecks() {
 /// (hledání s návratem) pro přiřazení stromů ke stanům; tvé příklady prověřují čtení mapy.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Očekávání vychází z mapy
 ///
-/// 1. (0,0) je symetrické a záměnu souřadnic neodhalí.
-/// 2. Porovnej skutečný strom (3,0) s prázdnou převrácenou pozicí (0,3).
-/// 3. Přidej pozdější strom a souřadnici mimo plochu; každé očekávání musí souhlasit se skutečnou mapou.
+/// `TreeExample(x,y,expected)` popisuje jeden dotaz na přítomnost, nikoli posloupnost stavění stanů.
+/// Připravené `trees` array (pole) ukládá JDK Point s vodorovným `x` a svislým `y` field (položkou).
+/// Z těchto dat či viditelných stromů předpověz true nebo false. Vyber nesouměrnou pozici, kde
+/// prohození x a y změní odpověď, a potom prázdné místo. Vysvětli, co každý příklad vyloučí; kopie
+/// původního příkladu nepřidají důkaz.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// (0,0) je symetrické a záměnu souřadnic neodhalí.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Porovnej skutečný strom (3,0) s prázdnou převrácenou pozicí (0,3).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Přidej pozdější strom a souřadnici mimo plochu; každé očekávání musí souhlasit se skutečnou mapou.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

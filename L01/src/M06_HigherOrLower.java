@@ -12,7 +12,32 @@
 /// Použij Run File, zadej h pro vyšší nebo l pro nižší kartu a sleduj počet správných odhadů potřebných
 /// pro vypsané kolo.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F03 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int target = 10;
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F03">
+/// Variable (proměnná) pojmenuje uloženou hodnotu. Type (typ) popisuje přípustné hodnoty: `int`
+/// uchovává celá čísla a `double` může uchovat desetinnou část. Initialization (počáteční přiřazení)
+/// dodá první hodnotu; pozdější assignment (přiřazení) ji nahradí.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// int charge = 4;
+/// charge = charge + 3;
+/// IO.println(charge);
+/// ```
+///
+/// Předpověz output (výstup). Nejprve `charge` uchovává čtyřku. Na druhém řádku Java přečte starou
+/// hodnotu pro výpočet pravého expression (výrazu) a potom pod stejným jménem uloží sedmičku. `=` je
+/// assignment, nikoli matematické tvrzení, že obě strany mají navždy zůstat stejné. Další statement
+/// (příkazy) čtoucí toto jméno nyní dostanou sedmičku. Jméno se neaktualizuje samo: hodnotu musí
+/// změnit provedené assignment. Variable označenou `final` nelze znovu přiřadit.
+///
+/// Nyní předpověz konečné charge, pokud počáteční přiřazení použije šest místo čtyř.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -29,12 +54,25 @@ int target = 10;
 /// čte stejný target pro popisek skóre. main dodává input (vstup) a opakování kola.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Najdi jedinou initialization (inicializaci) target nahoře.
-/// 2. Připravený displej i porovnání výhry už čtou target.
-/// 3. Změň int target = 1; na int target = 10;
+// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
+/// Toto je první hra čekající na psaný console input (vstup do konzole). Po Run File klikni v
+/// **Output k aktuální výzvě**, napiš `h` nebo `l` a stiskem **Enter** odešli celý řádek. Piš do
+/// Output, nikoli do Java editoru. Vypsané `/r` restartuje kolo a `/q` ukončí program. Změnu source
+/// (zdrojového textu) ulož a načti novým spuštěním; restart již běžícího kola upravenou Javu nenačte.
+/// Náhodné karty mohou kolo ukončit před deseti správnými tipy, proto sdílený target (cíl) ověř i
+/// pomocí Test File.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Najdi jedinou initialization (inicializaci) target nahoře.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Připravený displej i porovnání výhry už čtou target.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Změň int target = 1; na int target = 10;
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

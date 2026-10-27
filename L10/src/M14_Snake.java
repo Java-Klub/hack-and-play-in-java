@@ -22,6 +22,9 @@ import javax.swing.Timer;
 ///
 /// Po Run File veď hada šipkami k jídlu a po skončení kola začni znovu klávesou R.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F30 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void turn(int x, int y) {
     if (turnQueued || lost || won || Math.abs(x) + Math.abs(y) != 1) return;
     if (x == -dx && y == -dy) return;
@@ -29,6 +32,32 @@ void turn(int x, int y) {
     plannedY = y;
     turnQueued = true;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F30">
+/// ### Input (vstup) požádá; tick (krok) posune čas
+///
+/// Event (událost) může zaznamenat záměr bez okamžité změny celé simulace. Tick provede jednu
+/// omezenou aktualizaci. Kreslení drž oddělené od obou činností.
+///
+/// ```java
+/// int height = 0;
+/// int pending = 0;
+/// void press() {
+///     pending = 2;
+/// }
+/// void tick() {
+///     height += pending;
+///     pending = 0;
+/// }
+/// ```
+///
+/// Po `press()` je height stále 0. Jeden `tick()` jej změní na 2 a požadavek spotřebuje; další tick
+/// jej ponechá na 2. Opakovaný vstup před tímto krokem stále zaznamená jeden požadavek místo dvou
+/// aktualizací. Připravený timer (časovač) může tick volat, ale pozastavená nebo dokončená hra nemá
+/// pokračovat. Restart musí obnovit počáteční stav.
+///
+/// Předpověz: co od počátečního stavu udělá pořadí press, tick, press, tick?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -45,12 +74,16 @@ void turn(int x, int y) {
 /// Okno převádí šipky na volání turn; restart vymaže čekající zatáčku.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Turn ukládá záměr; step jej provede.
-/// 2. Uvnitř turn nepřiřazuj dx/dy.
-/// 3. Zachovej turnQueued, aby druhá klávesa před tick (časovým krokem) nezvrátila první zatočení.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Turn ukládá záměr; step jej provede.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Uvnitř turn nepřiřazuj dx/dy.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Zachovej turnQueued, aby druhá klávesa před tick (časovým krokem) nezvrátila první zatočení.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

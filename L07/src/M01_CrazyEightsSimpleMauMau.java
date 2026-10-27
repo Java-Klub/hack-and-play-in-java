@@ -12,12 +12,38 @@
 /// Spusť Run File, prohlédni si očíslované karty a zahraj zadáním p a indexu karty; při osmičce přidej
 /// také číslo barvy.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F09 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean legal(int card) {
     return switch (rank(card)) {
         case 8 -> true;
         default -> rank(card) == rank(top) || card / 13 == suit;
     };
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F09">
+/// ### Switch: vyber jednu hodnotu
+///
+/// Switch expression (výraz s výběrem) vybírá výsledek podle selector (výběrové hodnoty). Každá arrow
+/// case (větev se šipkou) obslouží odpovídající hodnotu; nepokračuje do další větve. `default`
+/// pokrývá zbývající hodnoty. Koncový středník patří okolnímu assignment (přiřazení) či return
+/// statement (příkazu návratu).
+///
+/// ```java
+/// String weather = "mist";
+/// String colour = switch (weather) {
+///     case "mist" -> "silver";
+///     case "sun" -> "gold";
+///     default -> "indigo";
+/// };
+/// IO.println(colour);
+/// ```
+///
+/// Mist case (větev pro mlhu) vybere `silver`. Předpověz výstup pro `"sun"` a potom `"snow"`.
+/// Selector se porovnává s case label (označením větve); text za šipkou je výsledek. Změna jednoho
+/// zvláštního případu má zachovat význam náhradní větve.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -35,12 +61,16 @@ boolean legal(int card) {
 /// hledá prázdnou ruku; rozdávání i konzolový vstup jsou připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. rank(card) převádí zakódovanou kartu na hodnotu 1–13.
-/// 2. Switch expression vrací jednu boolean hodnotu.
-/// 3. Použij case 8 -> true; default ponech dodanou podmínku hodnoty/barvy.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// rank(card) převádí zakódovanou kartu na hodnotu 1–13.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Switch expression vrací jednu boolean hodnotu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Použij case 8 -> true; default ponech dodanou podmínku hodnoty/barvy.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

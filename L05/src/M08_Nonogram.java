@@ -19,6 +19,9 @@ import java.util.Arrays;
 ///
 /// Spusť Run File a podle čísel u řádků a sloupců označuj levým kliknutím černá a pravým bílá políčka.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F17 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int[] runs(int[] values) {
     var result = new ArrayList<Integer>();
     int count = 0;
@@ -39,6 +42,30 @@ int[] runs(int[] values) {
     return result.stream().mapToInt(Integer::intValue).toArray();
 }
 
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F17">
+/// ### Traversal: vždy jedna otázka
+///
+/// Traversal (průchod) navštěvuje hodnoty; search (hledání) může skončit první shodou, count
+/// (počítání) musí prohlédnout všechny relevantní hodnoty. Ve for-each loop (cyklu pro každý prvek)
+/// dostane jméno před dvojtečkou jednu hodnotu ze sequence (posloupnosti) za ní. Průběžný počet založ
+/// mimo opakované tělo, aby dřívější shody přežily.
+///
+/// ```java
+/// int[] pulses = {2, 0, 4};
+/// int strong = 0;
+/// for (int pulse : pulses) {
+///     if (pulse > 1) {
+///         strong++;
+///     }
+/// }
+/// IO.println(strong);
+/// ```
+///
+/// Výsledek je dvě, protože pulzy dva a čtyři splňují condition (podmínku). Kdybys potřeboval pouze
+/// vědět, zda existuje nějaký silný pulz, kdy už můžeš odpovědět? Jaký počet má mít prázdné array
+/// (pole)?
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
 ///
@@ -55,12 +82,26 @@ int[] runs(int[] values) {
 /// políček i převod seznamu na int[] jsou připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Dokončení run (souvislé skupiny)
 ///
-/// 1. Bílé pole uvnitř loop zapíše předchozí count.
-/// 2. Za posledním černým polem už bílé být nemusí.
-/// 3. Za loop jednou přidej count, pokud je kladný.
+/// `result` je připravený rostoucí List (seznam). Jeho `add(count)` připojí délku jedné dokončené run
+/// (souvislé skupiny); nenahrazuje dřívější délky. Závěrečný stream conversion (převod proudu) jen
+/// vrátí zaznamenané délky jako int[]. Soustřeď se na okamžik dokončení skupiny. Porovnej řádek
+/// končící bíle s řádkem končícím černě: co ukončí poslední skupinu? Prázdný či čistě bílý řádek
+/// nesmí vymyslet černou skupinu nulové délky.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Bílé pole uvnitř loop zapíše předchozí count.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Za posledním černým polem už bílé být nemusí.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Za loop jednou přidej count, pokud je kladný.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

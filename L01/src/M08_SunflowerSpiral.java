@@ -18,7 +18,32 @@ import javax.imageio.ImageIO;
 /// Použij Run File, obnov projekt v NetBeans Files a otevři sunflower-spiral.png, abys porovnal vzniklé
 /// uspořádání.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F03 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 double defaultAngle = 137.5;
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F03">
+/// Variable (proměnná) pojmenuje uloženou hodnotu. Type (typ) popisuje přípustné hodnoty: `int`
+/// uchovává celá čísla a `double` může uchovat desetinnou část. Initialization (počáteční přiřazení)
+/// dodá první hodnotu; pozdější assignment (přiřazení) ji nahradí.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// int charge = 4;
+/// charge = charge + 3;
+/// IO.println(charge);
+/// ```
+///
+/// Předpověz output (výstup). Nejprve `charge` uchovává čtyřku. Na druhém řádku Java přečte starou
+/// hodnotu pro výpočet pravého expression (výrazu) a potom pod stejným jménem uloží sedmičku. `=` je
+/// assignment, nikoli matematické tvrzení, že obě strany mají navždy zůstat stejné. Další statement
+/// (příkazy) čtoucí toto jméno nyní dostanou sedmičku. Jméno se neaktualizuje samo: hodnotu musí
+/// změnit provedené assignment. Variable označenou `final` nelze znovu přiřadit.
+///
+/// Nyní předpověz konečné charge, pokud počáteční přiřazení použije šest místo čtyř.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -35,12 +60,25 @@ double defaultAngle = 137.5;
 /// tvou výchozí hodnotu připravené matematice; vzorec spirály nemusíš přepisovat.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Současné otočení o 180 stupňů střídá pouze dva směry.
-/// 2. Desetinný oddělovač v Javě je tečka.
-/// 3. Nastav double defaultAngle = 137.5; a znovu vytvoř PNG.
+// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
+/// Toto je první PNG export: Run File skončí po zápisu obrázku; nemusí otevírat herní okno. Přečti
+/// `Saved:` v Output, otevři **Window → Files**, rozbal L01 a podle potřeby obnov seznam souborů,
+/// potom otevři `sunflower-spiral.png`. Pokud zůstane vidět starší náhled, zavři jej a znovu otevři
+/// nově zapsaný soubor. Po úpravě vytvoř obrázek znovu pomocí Run File; samotné Test File není tímto
+/// vizuálním porovnáním. Java používá ve source (zdrojovém textu) desetinnou tečku, i když místní
+/// číselný formát používá čárku. Zvolený úhel je ve stupních.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Současné otočení o 180 stupňů střídá pouze dva směry.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Desetinný oddělovač v Javě je tečka.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Nastav double defaultAngle = 137.5; a znovu vytvoř PNG.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

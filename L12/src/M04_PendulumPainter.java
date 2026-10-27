@@ -20,9 +20,38 @@ import javax.swing.Timer;
 /// Po Run File měň Length a Gravity, pomocí Pause/Run zastav pohyb a tlačítky Clear či Reset obnov pokus
 /// se stopou.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F34 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 double accelerationNow() {
     return acceleration.at(angle, length);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F34">
+/// ### Interface (rozhraní): požádej vybranou roli o práci
+///
+/// Interface pojmenovává operaci, kterou dodají jeho implementations (implementace). Volající používá
+/// tuto roli bez výběru jejího výpočtu.
+///
+/// ```java
+/// interface Points {
+///     int award(int n);
+/// }
+/// record DoublePoints() implements Points {
+///     public int award(int n) {
+///         return n * 2;
+///     }
+/// }
+/// ```
+///
+/// Při `Points rule = new DoublePoints();` vrátí `rule.award(3)` hodnotu 6. `implements Points`
+/// slibuje danou operaci; implementace musí dodat její public method (veřejnou metodu). Proměnná rule
+/// označuje vybraný objekt, proto volej jeho operaci se současným vstupem místo opakování pevného
+/// výpočtu ve volajícím. Jiná implementace může dodat jiná pravidla přes stejné rozhraní.
+///
+/// Předpověz: co tato implementace vrátí pro `rule.award(5)` a kde by se měnil kód pro trojnásobek
+/// vstupu?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -39,12 +68,16 @@ double accelerationNow() {
 /// oddělují ostatní odpovědnosti.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Role potřebuje aktuální hodnoty, nikoli počáteční konstanty.
-/// 2. Výchozí implementace používá field (položku objektu) posuvníku gravitace.
-/// 3. Interface field (položku rozhraní) zavolej jednou; 0.03 a tlumení nech v připraveném step.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Role potřebuje aktuální hodnoty, nikoli počáteční konstanty.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Výchozí implementace používá field (položku objektu) posuvníku gravitace.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Interface field (položku rozhraní) zavolej jednou; 0.03 a tlumení nech v připraveném step.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

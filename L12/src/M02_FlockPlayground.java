@@ -19,9 +19,38 @@ import javax.swing.Timer;
 /// Po Run File posouvej oranžovou překážku myší do dráhy ptáků a pomocí Pause/Run či New flock porovnej
 /// jejich reakci.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F34 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 double obstaclePush(double distance) {
     return avoidance.strength(distance);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F34">
+/// ### Interface (rozhraní): požádej vybranou roli o práci
+///
+/// Interface pojmenovává operaci, kterou dodají jeho implementations (implementace). Volající používá
+/// tuto roli bez výběru jejího výpočtu.
+///
+/// ```java
+/// interface Points {
+///     int award(int n);
+/// }
+/// record DoublePoints() implements Points {
+///     public int award(int n) {
+///         return n * 2;
+///     }
+/// }
+/// ```
+///
+/// Při `Points rule = new DoublePoints();` vrátí `rule.award(3)` hodnotu 6. `implements Points`
+/// slibuje danou operaci; implementace musí dodat její public method (veřejnou metodu). Proměnná rule
+/// označuje vybraný objekt, proto volej jeho operaci se současným vstupem místo opakování pevného
+/// výpočtu ve volajícím. Jiná implementace může dodat jiná pravidla přes stejné rozhraní.
+///
+/// Předpověz: co tato implementace vrátí pro `rule.award(5)` a kde by se měnil kód pro trojnásobek
+/// vstupu?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -37,12 +66,16 @@ double obstaclePush(double distance) {
 /// objektu) nesou vyměnitelné pravidlo; okno posouvá překážku a spravuje pause i reset.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Interface (rozhraní) dostane vzdálenost a dodá jen sílu.
-/// 2. Field (položka objektu) už obsahuje výchozí implementaci.
-/// 3. Volej tento field; nevracej konstantu a nekopíruj výchozí vzorec.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Interface (rozhraní) dostane vzdálenost a dodá jen sílu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Field (položka objektu) už obsahuje výchozí implementaci.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Volej tento field; nevracej konstantu a nekopíruj výchozí vzorec.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

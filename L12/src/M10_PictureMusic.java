@@ -21,10 +21,35 @@ import java.io.ByteArrayInputStream;
 /// Po Run File zadej 0 a potom spusť znovu s 12; v přehrávači otevři picture-music-0.wav a
 /// picture-music-12.wav pro porovnání výšky.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F36 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 double pitchFrequency(int row, int shift) {
     if (row < 0 || row >= 12 || shift < -12 || shift > 12) throw new IllegalArgumentException("Row 0..11; transpose -12..12.");
     return 220 * Math.pow(2, (11 - row + shift) / 12.0);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F36">
+/// ### Transfer (přenos): zachovej slib a přidej volbu
+///
+/// Extract helper (vyčlenění pomocné metody) pojmenuje jednu odpovědnost. Vstupy a výsledek tvoří
+/// contract (smlouvu), kterou můžeš využít jinde.
+///
+/// ```java
+/// String surround(String text, boolean stars) {
+///     String edge = stars ? "*" : "#";
+///     return edge + text + edge;
+/// }
+/// ```
+///
+/// `surround("hi", false)` vrátí `"#hi#"`; původní styl s mřížkami dál funguje. Volající může požádat
+/// o nový styl bez opakování celé operace. Ověř obě volby, prázdný vstup i jiné slovo. Tests (testy)
+/// ověří výsledky; vysvětlení, kdo vybírá styl a kdo sestavuje popisek, ověří rozdělení odpovědností.
+/// Úspěšný nový režim nemá potichu měnit původní.
+///
+/// Předpověz: co vytvoří `surround("", true)` a která část by se měnila při změně obklopujícího
+/// znaku?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -42,13 +67,17 @@ double pitchFrequency(int row, int shift) {
 /// operace, ne do každého caller (volající části).
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Změna výšky tónu patří do exponentu, nikoli hlasitosti.
-/// 2. Shift přičti k 11-row před dělením 12.0.
-/// 3. Zachovej guard (podmínky) row/shift a vysvětli, proč sampling (vzorkování) obrazu zůstává mimo
-///   helper.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Změna výšky tónu patří do exponentu, nikoli hlasitosti.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Shift přičti k 11-row před dělením 12.0.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Zachovej guard (podmínky) row/shift a vysvětli, proč sampling (vzorkování) obrazu zůstává mimo
+/// helper.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -19,6 +19,9 @@ import javax.swing.Timer;
 /// Spusť Run File a hrajte společně na jedné klávesnici, první člověk řídí pomocí W, A, S, D a druhý
 /// šipkami.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F09 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 Direction directionFor(int code) {
     return switch (code) {
         case KeyEvent.VK_W, KeyEvent.VK_UP -> new Direction(0, -1);
@@ -28,6 +31,29 @@ Direction directionFor(int code) {
         default -> null;
     };
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F09">
+/// ### Switch: vyber jednu hodnotu
+///
+/// Switch expression (výraz s výběrem) vybírá výsledek podle selector (výběrové hodnoty). Každá arrow
+/// case (větev se šipkou) obslouží odpovídající hodnotu; nepokračuje do další větve. `default`
+/// pokrývá zbývající hodnoty. Koncový středník patří okolnímu assignment (přiřazení) či return
+/// statement (příkazu návratu).
+///
+/// ```java
+/// String weather = "mist";
+/// String colour = switch (weather) {
+///     case "mist" -> "silver";
+///     case "sun" -> "gold";
+///     default -> "indigo";
+/// };
+/// IO.println(colour);
+/// ```
+///
+/// Mist case (větev pro mlhu) vybere `silver`. Předpověz výstup pro `"sun"` a potom `"snow"`.
+/// Selector se porovnává s case label (označením větve); text za šipkou je výsledek. Změna jednoho
+/// zvláštního případu má zachovat význam náhradní větve.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -44,12 +70,16 @@ Direction directionFor(int code) {
 /// prověří oba hráče na stejné desce před prodloužením kterékoli stopy.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Obrazovkové y roste dolů, takže nahoru má dy=-1.
-/// 2. Sdružené case labels mohou dvěma klávesám vracet stejný record.
-/// 3. Pro W i nahoru vrať Direction(0,-1); default zůstává null pro jiné klávesy.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Obrazovkové y roste dolů, takže nahoru má dy=-1.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Sdružené case labels mohou dvěma klávesám vracet stejný record.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Pro W i nahoru vrať Direction(0,-1); default zůstává null pro jiné klávesy.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -19,6 +19,9 @@ import javax.imageio.ImageIO;
 /// Po Run File stiskni Enter pro uložení exports/mirror.png a potom otevři toto PNG pro prozkoumání
 /// zahnutého zkreslení.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F32 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void save(Path path, long seed, double option) throws Exception {
     Files.createDirectories(path.toAbsolutePath().getParent());
     try (var output = Files.newOutputStream(path)) {
@@ -27,6 +30,29 @@ void save(Path path, long seed, double option) throws Exception {
         }
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F32">
+/// ### Files (soubory): cíl a životnost prostředku
+///
+/// `Path` popisuje umístění; jeho vytvoření nevytvoří soubor. Uvnitř metody s deklarací `throws
+/// IOException` tento kód zapíše poznámku:
+///
+/// ```java
+/// Path file = Path.of("exports", "note.txt");
+/// Files.createDirectories(file.getParent());
+/// try (var writer = Files.newBufferedWriter(file)) {
+///     writer.write("Hi");
+/// }
+/// ```
+///
+/// Výsledek je exports/note.txt obsahující `Hi`. `getParent()` vybere exports; `getFileName()` vybere
+/// jen note.txt a zahodí složku. Try-with-resources (automatické uzavření prostředku) uzavře writer
+/// na konci bloku i při selhání zápisu. `throws` nechá I/O failure (chybu vstupu/výstupu) řešit
+/// volajícího; tady ji neřeší. Také obrazové a zvukové encodery (kodéry) potřebují skutečný cíl,
+/// nikoli nesouvisející paměťový buffer (vyrovnávací paměť).
+///
+/// Předpověz: pokud file změníš na `Path.of("cards", "one.txt")`, kam se poznámka zapíše?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -43,12 +69,16 @@ void save(Path path, long seed, double option) throws Exception {
 /// stejné ImageIO encoding (kódování) naplnit tento soubor, aby jej běžný prohlížeč obrázků otevřel.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Otevřený file (soubor) nestačí, když encoder (zapisovač obrazu) píše jinam.
-/// 2. Proměnná z try-with-resources je skutečný file output (souborový výstup).
-/// 3. Do ImageIO.write předej output místo nového paměťového stream (proudu).
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Otevřený file (soubor) nestačí, když encoder (zapisovač obrazu) píše jinam.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Proměnná z try-with-resources je skutečný file output (souborový výstup).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Do ImageIO.write předej output místo nového paměťového stream (proudu).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

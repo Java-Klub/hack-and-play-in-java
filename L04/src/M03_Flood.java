@@ -21,6 +21,9 @@ import java.util.Random;
 /// Použij Run File a zvol barvu kliknutím na její políčko v paletě nebo stiskem 1–4; sleduj změny
 /// propojených políček a pomocí R obnov desku.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F10 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void spread(ArrayList<Point> queue, int old, int colour) {
     int index = 0;
     while (index < queue.size()) {
@@ -29,6 +32,31 @@ void spread(ArrayList<Point> queue, int old, int colour) {
         index++;
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F10">
+/// `while` ověřuje condition (podmínku) před každým průchodem včetně prvního. Je-li hned false
+/// (nepravda), tělo proběhne nula krát. Něco musí postupovat k ukončení nebo záměrně čekat na nový
+/// input (vstup).
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// int energy = 5;
+/// while (energy > 0) {
+///     IO.println(energy);
+///     energy -= 2;
+/// }
+/// ```
+///
+/// Předpověz vypsaná čísla a konečnou uloženou hodnotu. Output (výstup) je `5`, `3`, `1`; potom je
+/// energy `-1`, takže další condition neplatí. Podmínka se neověřuje uprostřed těla. `energy -= 2`
+/// odečte dvojku a uloží výsledek; bez postupu se loop opakuje donekonečna. `return` ukončí method
+/// (metodu); `break` ukončí loop (smyčku). Sleduj condition a měnící se hodnoty odděleně, zejména
+/// pokud prohledávaná data mohou přibývat. Samotná přítomnost while nezaručuje, že program někdy
+/// skončí; důvod ukončení musí vyplývat z prováděných kroků.
+///
+/// Nyní předpověz trace (stopu průběhu), pokud energy začíná na čtyřech.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -50,12 +78,25 @@ void spread(ArrayList<Point> queue, int old, int colour) {
 /// draw, key a část vytvářející okno jsou připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. visitNeighbours může do queue (fronty) přidat další buňky.
-/// 2. Po každé iteration (iteraci) znovu ověř aktuální queue.size().
-/// 3. Použij while (index < queue.size()); za návštěvou zachovej index++.
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// Zde je queue připravený pracovní seznam souřadnic objevených políček. index počítá již zpracované
+/// položky; queue.size() oznamuje dosud objevený počet. Například průchod začínající s index 0 a
+/// velikostí 1 může objevit dva sousedy: po posunu má index 1 a velikost je 3, takže práce zbývá.
+/// Velikost se záměrně ověřuje znovu. visitNeighbours každé nové políčko přebarví před přidáním, čímž
+/// brání opakovanému objevování téhož políčka. Deska má pouze 64 políček. Upravuješ pokračování loop
+/// (smyčky), nikoli připravenou práci se souřadnicemi a sousedy.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// visitNeighbours může do queue (fronty) přidat další buňky.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Po každé iteration (iteraci) znovu ověř aktuální queue.size().
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Použij while (index < queue.size()); za návštěvou zachovej index++.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -18,6 +18,9 @@ import java.awt.GridLayout;
 /// Spusť Run File a kliknutím odkryj políčko, potom podle čísla vybírej bezpečné sousedy nebo označuj
 /// miny v režimu Flag mode.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F18 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int adjacent(int row, int col) {
     int count = 0;
     for (int r = row - 1; r <= row + 1; r++) {
@@ -29,6 +32,25 @@ int adjacent(int row, int col) {
     }
     return count;
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F18">
+/// ### Grids: nejdřív řádek, potom sloupec
+///
+/// V array of rows (poli řádků) první index (pozice) vybírá řádek a druhý pozici v něm. Řádky mohou
+/// mít různé délky. Neighbour (soused) je posun od buňky, nikoli další absolutní pozice. Před
+/// kontrolou existence kandidáta urči povolené směry.
+///
+/// ```java
+/// int[][] mosaic = {{3, 6, 9}, {2, 4, 8}};
+/// int row = 0;
+/// int column = 1;
+/// IO.println(mosaic[row][column + 1]);
+/// ```
+///
+/// Výstup je devět: řádek nula a sloupec dva vyberou tento element (prvek). Pohyb dolů mění row;
+/// doprava mění column. Který z těchto pohybů z pravé horní cell (buňky) zůstane uvnitř? U úhlopříčky
+/// se mění obě souřadnice; bounds (meze) musíš ověřit před přístupem ke kandidátovi.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -44,12 +66,16 @@ int adjacent(int row, int col) {
 /// (rekurzivního rozlévání); hodnoty nápověd získává z adjacent(). Vlajky, miny i okno jsou připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Okolí 3 × 3 obsahuje střed a osm možných sousedů.
-/// 2. inside() zajišťuje bezpečné hranice rohů a okrajů.
-/// 3. Odeber omezení na stejný řádek/sloupec; ponech inside() a vynechání středu.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Okolí 3 × 3 obsahuje střed a osm možných sousedů.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// inside() zajišťuje bezpečné hranice rohů a okrajů.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Odeber omezení na stejný řádek/sloupec; ponech inside() a vynechání středu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

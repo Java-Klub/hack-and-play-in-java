@@ -18,12 +18,38 @@ import javax.imageio.ImageIO;
 /// Po Run File stiskni Enter pro úpravu připraveného obrázku do exports/pixel-sorted.png a potom otevři
 /// právě tento cíl.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F32 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void saveSorted(Path path, BufferedImage input, int threshold) throws IOException {
     Files.createDirectories(path.toAbsolutePath().getParent());
     if (!ImageIO.write(sort(input, threshold), "png", path.toFile())) {
         throw new IOException("PNG writer missing.");
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F32">
+/// ### Files (soubory): cíl a životnost prostředku
+///
+/// `Path` popisuje umístění; jeho vytvoření nevytvoří soubor. Uvnitř metody s deklarací `throws
+/// IOException` tento kód zapíše poznámku:
+///
+/// ```java
+/// Path file = Path.of("exports", "note.txt");
+/// Files.createDirectories(file.getParent());
+/// try (var writer = Files.newBufferedWriter(file)) {
+///     writer.write("Hi");
+/// }
+/// ```
+///
+/// Výsledek je exports/note.txt obsahující `Hi`. `getParent()` vybere exports; `getFileName()` vybere
+/// jen note.txt a zahodí složku. Try-with-resources (automatické uzavření prostředku) uzavře writer
+/// na konci bloku i při selhání zápisu. `throws` nechá I/O failure (chybu vstupu/výstupu) řešit
+/// volajícího; tady ji neřeší. Také obrazové a zvukové encodery (kodéry) potřebují skutečný cíl,
+/// nikoli nesouvisející paměťový buffer (vyrovnávací paměť).
+///
+/// Předpověz: pokud file změníš na `Path.of("cards", "one.txt")`, kam se poznámka zapíše?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -40,12 +66,16 @@ void saveSorted(Path path, BufferedImage input, int threshold) throws IOExceptio
 /// obrázek, zeptá se na cíl a volá saveSorted; ImageIO dodá PNG encoding (kódování).
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. ResolveSibling mění zadaný název.
-/// 2. Sort už tvoří nezávislý výstupní obraz.
-/// 3. Encoder (zapisovač obrazu) má použít původní Path; vytvoření adresářů zachovej.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// ResolveSibling mění zadaný název.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Sort už tvoří nezávislý výstupní obraz.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Encoder (zapisovač obrazu) má použít původní Path; vytvoření adresářů zachovej.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

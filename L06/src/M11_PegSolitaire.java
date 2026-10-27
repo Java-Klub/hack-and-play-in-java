@@ -12,6 +12,9 @@
 /// Spusť Run File a zadáním 1 2 3 2 proveď první skok krátkého hlavolamu s kolíky, potom přes Test File
 /// prověř své příklady.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F33 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 record JumpExample(int row, int column, int toRow, int toColumn, boolean expected) {
 }
 
@@ -20,6 +23,29 @@ JumpExample[] learnerChecks() {
     new JumpExample(0, 1, 2, 1, true), new JumpExample(2, 0, 2, 2, false),
     new JumpExample(0, 1, 1, 2, false), new JumpExample(-1, 1, 1, 1, false)};
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F33">
+/// ### Checks: vyber příklad, který může nesouhlasit
+///
+/// Functional check (funkční kontrola) potřebuje input (vstup) a nezávisle předpovězený výsledek.
+/// Úspěšný příklad je slabý, pokud uvěřitelné chybné pravidlo odpoví stejně. Přečti samostatný
+/// výpočet a jeho příklad; comparison (porovnání) dává boolean (logickou hodnotu) oznamující shodu.
+///
+/// ```java
+/// int twice(int value) {
+///     return value + value;
+/// }
+///
+/// void main() {
+///     boolean agrees = twice(0) == 0;
+///     IO.println(agrees);
+/// }
+/// ```
+///
+/// Výpis je true: dvojnásobek nuly je nula. Projde také implementace vracející vždy nulu. Vyber jiný
+/// input a očekávaný výsledek odvoď sám. Jakou chybu nový příklad odhalí? Počáteční data každé check
+/// (kontroly) udržuj nezávislá, aby jeden příklad omylem nepřipravil další.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -36,12 +62,26 @@ JumpExample[] learnerChecks() {
 /// na tvých příkladech zkouší toto pravidlo i záměrně chybná pravidla skoku.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### I povolení je výsledek
 ///
-/// 1. Jeden platný skok prokazuje možnost true, nikoli odmítání chybných tahů.
-/// 2. Na startu chybí u (2,0)->(2,2) prostřední kolík; (0,1)->(1,2) je diagonála.
-/// 3. Přidej tyto false případy a souřadnici mimo plochu; ponech platný (0,1)->(2,1).
+/// Každý JumpExample se ptá na tutéž pevnou počáteční desku, nepokračuje po tahu předchozího
+/// příkladu. `expected` znamená povolení, ne úspěch při vyřešení hry. Platný tah potřebuje kolík na
+/// začátku, přeskakovaný kolík mezi konci a prázdný cíl v přímém směru. Z této pozice předpověz
+/// přijatý i odmítnutý požadavek. Kterou část contract (smlouvy) by přehlíželo pravidlo přijímající
+/// každý požadavek?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Jeden platný skok prokazuje možnost true, nikoli odmítání chybných tahů.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Na startu chybí u (2,0)->(2,2) prostřední kolík; (0,1)->(1,2) je diagonála.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Přidej tyto false případy a souřadnici mimo plochu; ponech platný (0,1)->(2,1).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

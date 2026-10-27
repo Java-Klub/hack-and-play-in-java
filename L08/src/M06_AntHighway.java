@@ -19,6 +19,9 @@ import javax.swing.Timer;
 /// Spusť Run File a kliknutím na One step si prohlédni jeden krok mravence, potom pomocí Run/Pause nech
 /// vyrůst delší stopu.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F18 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void step() {
     direction = Math.floorMod(direction + (black[y][x] ? -1 : 1), 4);
     black[y][x] = !black[y][x];
@@ -28,6 +31,25 @@ void step() {
     y = Math.floorMod(y + dy[direction], 61);
     steps++;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F18">
+/// ### Grids: nejdřív řádek, potom sloupec
+///
+/// V array of rows (poli řádků) první index (pozice) vybírá řádek a druhý pozici v něm. Řádky mohou
+/// mít různé délky. Neighbour (soused) je posun od buňky, nikoli další absolutní pozice. Před
+/// kontrolou existence kandidáta urči povolené směry.
+///
+/// ```java
+/// int[][] mosaic = {{3, 6, 9}, {2, 4, 8}};
+/// int row = 0;
+/// int column = 1;
+/// IO.println(mosaic[row][column + 1]);
+/// ```
+///
+/// Výstup je devět: řádek nula a sloupec dva vyberou tento element (prvek). Pohyb dolů mění row;
+/// doprava mění column. Který z těchto pohybů z pravé horní cell (buňky) zůstane uvnitř? U úhlopříčky
+/// se mění obě souřadnice; bounds (meze) musíš ověřit před přístupem ke kandidátovi.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -44,12 +66,16 @@ void step() {
 /// kreslení ukazuje uložené barvy i mravence; step() tvoří celé pravidlo pohybu.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Směry 0,1,2,3 znamenají sever,východ,jih,západ.
-/// 2. Západ mění x o -1 a ponechává y.
-/// 3. Použij dx={0,1,0,-1}; dy už dodává {-1,0,1,0}.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Směry 0,1,2,3 znamenají sever,východ,jih,západ.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Západ mění x o -1 a ponechává y.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Použij dx={0,1,0,-1}; dy už dodává {-1,0,1,0}.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

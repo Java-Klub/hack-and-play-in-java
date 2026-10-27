@@ -14,6 +14,9 @@
 /// Použij Run File a tipni E, abys viděl vybranou nápovědu; potom pomocí Test File porovnej skupinu tří
 /// slov se skupinou jediného slova.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F12 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int familySize(List<String> family) {
     int total = 0;
     for (int i = 0; i < family.size(); i++) {
@@ -21,6 +24,29 @@ int familySize(List<String> family) {
     }
     return total;
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F12">
+/// Accumulator (průběžný výsledek) pamatuje rostoucí výsledek mezi průchody. Jeho počáteční hodnota
+/// patří před loop (smyčku); uvnitř by výsledek začínal znovu pro každou položku. Uloženým výsledkem
+/// může být text, nejen číslo.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// String receipt = "Items:";
+/// for (String item : List.of("tea", "cake")) {
+///     receipt += " " + item;
+/// }
+/// ```
+///
+/// Předpověz receipt po každém průchodu: `Items: tea`, potom `Items: tea cake`. `+=` spojí starou
+/// hodnotu s novým příspěvkem a výsledek uloží. Samotné `=` uloženou hodnotu nahradí. `List.of(...)`
+/// dodá pevnou sequence (posloupnost) uvedených hodnot; dvojtečka navštíví jednu položku za průchod.
+/// Sleduj aktuální položku a accumulator ve dvou sloupcích, abys zjistil, zda dřívější práce přežije.
+/// Počáteční hodnota má vzniknout jednou za celý výpočet, nikoli jednou za každou objevenou položku.
+///
+/// Nyní předpověz receipt, pokud připravený seznam obsahuje jen `"rice"`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -40,12 +66,16 @@ int familySize(List<String> family) {
 /// nápovědy a počítá chyby. display a main řeší tipy, restart i ukončení.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. total = 1 nahrazuje předchozí počet.
-/// 2. Accumulator (průběžný výsledek) musí pamatovat dřívější členy.
-/// 3. Použij total += 1 a total = 0 nech před cyklem.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// total = 1 nahrazuje předchozí počet.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Accumulator (průběžný výsledek) musí pamatovat dřívější členy.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Použij total += 1 a total = 0 nech před cyklem.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -25,12 +25,37 @@ import javax.swing.Timer;
 /// Po Run File namaluj políčko, změň barvu klávesou C, namaluj je znovu a stiskni Z pro vrácení;
 /// klávesami 1–4 přepínej snímky animace.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F22 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean undo() {
     if (history.isEmpty()) return false;
     Edit edit = history.removeLast();
     frames[edit.frame()][edit.y()][edit.x()] = edit.oldColour();
     return true;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F22">
+/// ### List (seznam): pořadí, které můžeš měnit
+///
+/// `List<String>` uchovává texty v pořadí. `new ArrayList<>()` vytvoří mutable list (měnitelný
+/// seznam): obsah lze měnit bez nahrazení samotného seznamu.
+///
+/// ```java
+/// List<String> snacks = new ArrayList<>();
+/// snacks.add("apple");
+/// snacks.add("nuts");
+/// IO.println(snacks.get(0));
+/// IO.println(snacks.size());
+/// ```
+///
+/// Výstup je `apple`, potom `2`. `add(value)` připojí jeden prvek na konec; `get(index)` přečte prvek
+/// bez odebrání. Indexes (indexy) začínají nulou. `isEmpty()` zjišťuje, zda seznam nemá prvky.
+/// `removeLast()` odebere a vrátí poslední prvek; volej jej jen u neprázdného seznamu. Seznam přímo z
+/// `List.of(...)` měnit nelze, ale `new ArrayList<>(List.of(...))` měnit lze.
+///
+/// Předpověz: po `snacks.removeLast()` jaká bude velikost a první prvek?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -48,12 +73,16 @@ boolean undo() {
 /// snímků, přehrávání náhledu i místní uložení obrázku jsou připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Další Edit se přidává na konec history.
-/// 2. Undo potřebuje poslední element (prvek) a musí jej také odstranit.
-/// 3. Obnov uložené frame/x/y/colour, nikoli právě zvolený snímek.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Další Edit se přidává na konec history.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Undo potřebuje poslední element (prvek) a musí jej také odstranit.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Obnov uložené frame/x/y/colour, nikoli právě zvolený snímek.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

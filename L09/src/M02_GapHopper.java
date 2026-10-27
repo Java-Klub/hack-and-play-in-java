@@ -19,6 +19,9 @@ import javax.swing.Timer;
 ///
 /// Po Run File udržuj letce mezi trubkami pomocí Space nebo klikání a po nárazu začni znovu klávesou R.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F22 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void recyclePipes() {
     if (!pipes.isEmpty() && pipes.getFirst().x + PIPE_WIDTH < 0) {
         double furthest = pipes.getLast().x;
@@ -26,6 +29,28 @@ void recyclePipes() {
         pipes.add(new Pipe(furthest + 260, newGap()));
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F22">
+/// ### List (seznam): pořadí, které můžeš měnit
+///
+/// `List<String>` uchovává texty v pořadí. `new ArrayList<>()` vytvoří mutable list (měnitelný
+/// seznam): obsah lze měnit bez nahrazení samotného seznamu.
+///
+/// ```java
+/// List<String> snacks = new ArrayList<>();
+/// snacks.add("apple");
+/// snacks.add("nuts");
+/// IO.println(snacks.get(0));
+/// IO.println(snacks.size());
+/// ```
+///
+/// Výstup je `apple`, potom `2`. `add(value)` připojí jeden prvek na konec; `get(index)` přečte prvek
+/// bez odebrání. Indexes (indexy) začínají nulou. `isEmpty()` zjišťuje, zda seznam nemá prvky.
+/// `removeLast()` odebere a vrátí poslední prvek; volej jej jen u neprázdného seznamu. Seznam přímo z
+/// `List.of(...)` měnit nelze, ale `new ArrayList<>(List.of(...))` měnit lze.
+///
+/// Předpověz: po `snacks.removeLast()` jaká bude velikost a první prvek?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -42,12 +67,16 @@ void recyclePipes() {
 /// připravené okno obslouží skok, restart a úklid timer (časovače).
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Nejstarší překážka má index (pořadové číslo) nula.
-/// 2. Před odstraněním prvního element (prvku) přečti pozici posledního.
-/// 3. Remove a add zachovají pořadí dvou překážek; List neměň během dřívějšího for-each.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Nejstarší překážka má index (pořadové číslo) nula.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Před odstraněním prvního element (prvku) přečti pozici posledního.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Remove a add zachovají pořadí dvou překážek; List neměň během dřívějšího for-each.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -18,6 +18,9 @@ import javax.imageio.ImageIO;
 /// Po Run File zadej úhel větvení od 10 do 70 nebo zkus oops a potom otevři PNG na cestě vypsané za
 /// Saved.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F31 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 double readAngle(String text) {
     try {
         double value = Double.parseDouble(text.strip());
@@ -27,6 +30,34 @@ double readAngle(String text) {
         return 28;
     }
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F31">
+/// ### Parse (převod), validation (ověření), potom uložení
+///
+/// Parsing převádí text; validation ověřuje, zda je výsledné číslo povolené. Každý krok může selhat
+/// jinak.
+///
+/// ```java
+/// int readCopies(String text) {
+///     try {
+///         int n = Integer.parseInt(text.strip());
+///         if (n < 1 || n > 5) {
+///             throw new IllegalArgumentException("Copies: 1..5");
+///         }
+///         return n;
+///     } catch (NumberFormatException invalid) {
+///         return 3;
+///     }
+/// }
+/// ```
+///
+/// `readCopies(" 2 ")` vrátí `2`: převod i ověření uspějí. `"oops"` selže při převodu a přes `catch`
+/// vrátí `3`. Číselný text `"8"` se převede, ale následně vyvolá jinou exception (výjimku); tento
+/// konkrétní catch ji nezachytí. `return` ukončí metodu; `throw` opustí běžnou cestu. Uložený stav
+/// hry měň až po úspěšném ověření.
+///
+/// Předpověz cestu pro `"five"`, `"5"` a `"0"`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -43,12 +74,27 @@ double readAngle(String text) {
 /// zkracuje větve a ukládací část zapíše výsledné PNG místně.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Trasuj tři různé cesty
 ///
-/// 1. Před parsing (rozborem) odstraň okolní mezery.
-/// 2. Zachyť NumberFormatException, nikoli každou chybu programu.
-/// 3. Výchozí hodnota je 28; guard (podmínky) rozsahu zůstanou oddělené.
+/// V readAngle se `" 24 "` očistí, převede a vrátí jako 24. `"oops"` převést nejde a vstoupí do catch
+/// pro NumberFormatException; porovnej současný výsledek s ohlášenou výchozí hodnotou. `"90"` se
+/// převede úspěšně, ale neprojde range guard (kontrolou mezí). Jeho IllegalArgumentException není
+/// NumberFormatException zachytávaná touto větví, proto pokračuje k volajícímu. NaN a nekonečno jsou
+/// také zvláštní číselné hodnoty, které odmítá isFinite. Předpověz, které řádky proběhnou pro `"70"`
+/// a `"9"`; každé selhání není důvod nahradit vstup výchozí hodnotou.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Před parsing (rozborem) odstraň okolní mezery.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Zachyť NumberFormatException, nikoli každou chybu programu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Výchozí hodnota je 28; guard (podmínky) rozsahu zůstanou oddělené.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

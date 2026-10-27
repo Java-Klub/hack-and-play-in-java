@@ -19,6 +19,9 @@ import javax.swing.Timer;
 ///
 /// Spusť Run File a kliknutím na kruh začni časované kolo, potom zasahuj další terče až do vypršení času.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F21 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 enum Phase {
     READY, RUNNING, FINISHED
 }
@@ -29,6 +32,28 @@ Phase afterTime(long now) {
     }
     return phase;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F21">
+/// ### Enum: jedna z pojmenovaných možností
+///
+/// Enum vymezí konečnou sadu hodnot jednoho type (typu). Jméno type a tečka určují konkrétní hodnotu.
+/// Překlep v enum value (hodnotě enum) způsobí compiler error (chybu překladu), na rozdíl od
+/// libovolného textu. Variable (proměnná) nese jednu volbu; `==` je pro tyto hodnoty vhodné.
+///
+/// ```java
+/// enum Voice {
+///     WHISPER, SING, SHOUT
+/// }
+///
+/// Voice voice = Voice.SING;
+/// IO.println(voice == Voice.SHOUT);
+/// ```
+///
+/// Declaration (deklarace) patří vedle method (metod); příkazy můžeš číst uvnitř metody. Porovnání
+/// vypíše false, protože SING a SHOUT jsou různé hodnoty. Předpověz je po přiřazení SHOUT. Může
+/// jediná variable tvrdit současně SING i SHOUT? Vysvětli, jaké rozporné kombinace by dovolily
+/// oddělené boolean (logické proměnné).
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -45,12 +70,16 @@ Phase afterTime(long now) {
 /// afterTime(); kreslení i vstup čtou phase, aby se shodly na povolených akcích.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. afterTime() dostává čas výslovně, takže hranici ověříš bez čekání.
-/// 2. Vypršet může jen RUNNING; READY a FINISHED se nemění.
-/// 3. Při now >= deadline vrať FINISHED, nikoli READY.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// afterTime() dostává čas výslovně, takže hranici ověříš bez čekání.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Vypršet může jen RUNNING; READY a FINISHED se nemění.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Při now >= deadline vrať FINISHED, nikoli READY.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -19,6 +19,9 @@ import javax.swing.Timer;
 ///
 /// Spusť Run File, běhej šipkami vlevo a vpravo a mezerníkem skákej směrem k plošinám a vlajce.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F25 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void step() {
     if (!started || won) {
         return;
@@ -49,6 +52,29 @@ void step() {
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F25">
+/// ### Invariant: slib po každé akci
+///
+/// Invariant (trvale platné pravidlo) je vztah, který má přežít přijaté akce. Některá akce množství
+/// pouze přesune mezi místy, nevytváří další. Před změnami ověř celý požadavek a potom jej proveď
+/// jednou. Odmítnutí má zachovat původní state (stav).
+///
+/// ```java
+/// int violet = 6;
+/// int gold = 2;
+/// int amount = 3;
+/// if (amount >= 0 && amount <= violet) {
+///     violet -= amount;
+///     gold += amount;
+/// }
+/// IO.println(violet + gold);
+/// ```
+///
+/// Nádoby mají tři a pět; součet zůstane osm, protože přesun obě strany vyrovná. Potom zvaž devět
+/// jednotek: co musí zůstat beze změny? Vysvětli, proč změna jediné strany poruší součet, přestože
+/// jednotlivé hodnoty mohou působit platně.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
 ///
@@ -63,12 +89,26 @@ void step() {
 /// vlajku a obnoví pokus po pádu; kreslení používá stejné obdélníky plošin.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Landing (přistání) je překročení, ne pouhý překryv
 ///
-/// 1. Současný překryv neříká, ze které strany hráč přišel.
-/// 2. Porovnej oldBottom s horní hranou plošiny před pohybem.
-/// 3. Vyžaduj vy>=0 a oldBottom<=p.y spolu s novým spodkem překračujícím p.y.
+/// Screen y (svislá souřadnice obrazovky) roste dolů, takže kladná svislá rychlost znamená pád.
+/// Porovnej původní dolní hranu, novou dolní hranu a vršek plošiny. V jiném příkladu hrana
+/// přecházející z 30 na 38 překročí povrch v 35, ale hrana původně pod 35 jej v tomto kroku
+/// nepřekročí. Předpověz skok vzhůru skrz plošinu. Vodorovný překryv je nutný, ale neurčí stranu, ze
+/// které hráč přišel.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Současný překryv neříká, ze které strany hráč přišel.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Porovnej oldBottom s horní hranou plošiny před pohybem.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Vyžaduj vy>=0 a oldBottom<=p.y spolu s novým spodkem překračujícím p.y.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

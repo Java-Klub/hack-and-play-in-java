@@ -13,6 +13,9 @@
 /// Použij Run File, přečti vypsaný slovník a napiš R; starter (výchozí program) chybně oznámí slepý
 /// začátek navzdory uvedeným slovům na R.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F10 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean possiblePrefix(String candidate) {
     int index = 0;
     while (index < words.length) {
@@ -23,6 +26,31 @@ boolean possiblePrefix(String candidate) {
     }
     return false;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F10">
+/// `while` ověřuje condition (podmínku) před každým průchodem včetně prvního. Je-li hned false
+/// (nepravda), tělo proběhne nula krát. Něco musí postupovat k ukončení nebo záměrně čekat na nový
+/// input (vstup).
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// int energy = 5;
+/// while (energy > 0) {
+///     IO.println(energy);
+///     energy -= 2;
+/// }
+/// ```
+///
+/// Předpověz vypsaná čísla a konečnou uloženou hodnotu. Output (výstup) je `5`, `3`, `1`; potom je
+/// energy `-1`, takže další condition neplatí. Podmínka se neověřuje uprostřed těla. `energy -= 2`
+/// odečte dvojku a uloží výsledek; bez postupu se loop opakuje donekonečna. `return` ukončí method
+/// (metodu); `break` ukončí loop (smyčku). Sleduj condition a měnící se hodnoty odděleně, zejména
+/// pokud prohledávaná data mohou přibývat. Samotná přítomnost while nezaručuje, že program někdy
+/// skončí; důvod ukončení musí vyplývat z prováděných kroků.
+///
+/// Nyní předpověz trace (stopu průběhu), pokud energy začíná na čtyřech.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -45,12 +73,16 @@ boolean possiblePrefix(String candidate) {
 /// restart i ukončení.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. index < 1 skončí po jediné položce slovníku.
-/// 2. Hranice má odpovídat words.length a po každém neúspěchu musí přijít index++.
-/// 3. Odstraň nadbytečné omezení index < 1; kontrolu délky zachovej.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// index < 1 skončí po jediné položce slovníku.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Hranice má odpovídat words.length a po každém neúspěchu musí přijít index++.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Odstraň nadbytečné omezení index < 1; kontrolu délky zachovej.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

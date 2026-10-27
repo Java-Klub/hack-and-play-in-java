@@ -24,12 +24,36 @@ import java.io.ByteArrayInputStream;
 /// Po Run File klikáním zapínej a vypínej noty, vyber BPM a pomocí Export WAV ulož rytmus, který můžeš
 /// otevřít v přehrávači.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F23 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean toggle(int row, int step) {
     if (row < 0 || row >= 4 || step < 0 || step >= 8) return false;
     Note note = new Note(row, step);
     if (!notes.remove(note)) notes.add(note);
     return true;
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F23">
+/// ### Set (množina): členství bez duplikátů
+///
+/// `Set` odpovídá, zda hodnota patří do kolekce. Každému vložení nepřiděluje indexovanou pozici.
+///
+/// ```java
+/// Set<String> stickers = new HashSet<>();
+/// IO.println(stickers.add("moon"));
+/// IO.println(stickers.add("moon"));
+/// IO.println(stickers.size());
+/// ```
+///
+/// Výstup je `true`, `false`, potom `1`. První add změní membership (členství); druhý najde stejnou
+/// hodnotu již uloženou. `contains(value)` se ptá bez změny množiny. `remove(value)` hodnotu odebere
+/// a oznámí, zda byla přítomna. Record (datový záznam) má automatické porovnání podle hodnot svých
+/// složek, takže dva samostatně vytvořené stejné záznamy představují stejného člena množiny. Na
+/// pořadí průchodu přes HashSet nespoléhej.
+///
+/// Předpověz: po odebrání moon a přidání sun jaká bude velikost a výsledek `contains("moon")`?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -44,12 +68,16 @@ boolean toggle(int row, int step) {
 /// spojuje konečné zvuky nástrojů a zapíše WAV ve zvoleném tempu; sama jej nepřehrává.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Rovné Note record pojmenovávají stejnou pozici mřížky.
-/// 2. Set.remove vrací, zda nota existovala.
-/// 3. Přidávej jen tehdy, když remove nic nenašlo; dvě přepnutí musí obnovit starý Set (množinu).
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Rovné Note record pojmenovávají stejnou pozici mřížky.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Set.remove vrací, zda nota existovala.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Přidávej jen tehdy, když remove nic nenašlo; dvě přepnutí musí obnovit starý Set (množinu).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

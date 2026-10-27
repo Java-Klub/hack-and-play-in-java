@@ -25,9 +25,35 @@ import javax.imageio.ImageIO;
 /// Použij Run File, šipkami vlevo/vpravo měň vnitřní poloměr a nahoru/dolů vzdálenost pera a porovnávej
 /// překreslené křivky.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F04 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 double radiusRatio(int outer, int innerRadius) {
     return (outer - innerRadius) / (double) innerRadius;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F04">
+/// Arithmetic (aritmetika) používá operand type (typy operandů) v okamžiku provedení operace. Jsou-li
+/// oba operand u `/` celočíselné, Java zahodí desetinnou část. Pozdější uložení výsledku do `double`
+/// ji nevrátí.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// int pages = 7;
+/// double first = pages / 2;
+/// double second = pages / 2.0;
+/// double third = (double) pages / 2;
+/// ```
+///
+/// Předpověz tři hodnoty: `3.0`, `3.5`, `3.5`. Cast (převod) `(double)` převede toto použití `pages`
+/// před dělením; nezmění deklarovaný type (typ) proměnné. Závorky seskupují výpočty, `*` násobí a `/`
+/// dělí. Kromě kladného input (vstupu) ověř i záporný a nulu. Pojmenuj jednotky: vzdálenost a
+/// rychlost jsou různé veličiny, i když obě používají `double`. O výsledku rozhoduje celý expression
+/// (výraz), nikoli jen type napsaný před jménem method (metody).
+///
+/// Nyní předpověz všechny tři výsledky, pokud pages obsahuje devítku.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -46,12 +72,25 @@ double radiusRatio(int outer, int innerRadius) {
 /// pozdější klávesnice a ukládání dodávají změny nastavení i export PNG.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Návratový typ double nevrátí desetinnou část ztracenou dřívějším celočíselným dělením.
-/// 2. Převeď jeden operand ještě před dělením.
-/// 3. Použij (outer - innerRadius) / (double) innerRadius.
+// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
+/// Poloměry přicházejí jako int parameter (celočíselné parametry), takže výraz tvořený jen těmito
+/// hodnotami může používat integer division (celočíselné dělení) i uvnitř method (metody) vracející
+/// double. Cast (převod) se vztahuje na hodnotu bezprostředně za ním. Neutrální příklad: se sedmi
+/// seats a čtyřmi rows dá `(double) seats / rows` hodnotu 1.75, zatímco `(double) (seats / rows)`
+/// pouze 1.0, protože desetinná část už zmizela. Cast nemění declaration (deklaraci) parametru. Nyní
+/// předpověz oba výrazy pro pět seats a dvě rows a potom rozhodni, kam převod patří ve tvém výpočtu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Návratový typ double nevrátí desetinnou část ztracenou dřívějším celočíselným dělením.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Převeď jeden operand ještě před dělením.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Použij (outer - innerRadius) / (double) innerRadius.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

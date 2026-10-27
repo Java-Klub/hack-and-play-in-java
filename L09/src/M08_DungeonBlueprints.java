@@ -19,10 +19,34 @@ import java.util.List;
 /// Pomocí Run File ulož dungeon-blueprints.png, potom jej otevři a porovnej místnosti s legendou SMALL a
 /// LARGE.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F24 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void countRoom(Room room) {
     String kind = room.width() * room.height() <= 42 ? "SMALL" : "LARGE";
     roomCounts.put(kind, roomCounts.getOrDefault(kind, 0) + 1);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F24">
+/// ### Map (mapa): hodnota podle klíče
+///
+/// `Map<String, Integer>` přiřazuje textovým keys (klíčům) celočíselné values (hodnoty). Jeden klíč
+/// má nejvýše jednu uloženou hodnotu.
+///
+/// ```java
+/// Map<String, Integer> badges = new HashMap<>();
+/// badges.put("moon", 4);
+/// IO.println(badges.getOrDefault("moon", 0));
+/// IO.println(badges.getOrDefault("sun", 0));
+/// ```
+///
+/// Výstup je `4`, potom `0`. `getOrDefault(key, fallback)` přečte existující hodnotu; při chybějícím
+/// klíči vrátí fallback (náhradní hodnotu). Toto čtení nic nevkládá. `put(key, value)` hodnotu uloží
+/// a případnou předchozí hodnotu téhož klíče přepíše; čísla automaticky nesčítá. `containsKey(key)`
+/// použij, když potřebuješ výslovně rozlišit chybějící klíč. V těchto příkladech neukládáme `null`.
+///
+/// Předpověz: po `badges.put("moon", 9)` co vrátí stejná dvě čtení?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -38,12 +62,16 @@ void countRoom(Room room) {
 /// připravené; popisek čte výsledné součty kategorií.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Hranice plochy zahrnuje přesně 42.
-/// 2. Různé Room object (objekty) mohou sdílet stejný druh jako key (klíč).
-/// 3. Použij starý počet nebo nulu a přičti jednu.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Hranice plochy zahrnuje přesně 42.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Různé Room object (objekty) mohou sdílet stejný druh jako key (klíč).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Použij starý počet nebo nulu a přičti jednu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

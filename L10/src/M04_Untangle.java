@@ -18,12 +18,35 @@ import java.awt.geom.Line2D;
 ///
 /// Po Run File tahej očíslované body a rozmotej křížení sítě; klávesou R ji můžeš znovu promíchat.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F29 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void drawNode(Graphics2D g, Point point, int label) {
     g.setColor(new Color(35, 55, 90));
     g.fillOval(point.x - 13, point.y - 13, 26, 26);
     g.setColor(Color.WHITE);
     g.drawString("" + label, point.x - 4, point.y + 4);
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F29">
+/// ### Rendering (vykreslení): ze stavu na pixely
+///
+/// Rendering čte model (stav programu) a kreslí jeho podobu. Screen x (obrazovkové x) roste doprava;
+/// screen y roste dolů. Kreslicí metody často přijímají levý horní roh a velikost, nikoli střed.
+///
+/// ```java
+/// int tileX = 3;
+/// int tileY = 2;
+/// int size = 10;
+/// g.fillRect(tileX * size, tileY * size, size, size);
+/// ```
+///
+/// `g` je připravený kreslicí nástroj `Graphics2D`. Příkaz vybarví čtverec 10 × 10 s levým horním
+/// rohem `(30, 20)`. Modelové souřadnice zůstanou `(3, 2)`. Repainting (překreslení) nemá posouvat
+/// objekty ani zahajovat další tah: okno může požadovat kreslení mnohokrát.
+///
+/// Předpověz: pokud se pouze tileY změní na 4, která obrazovková souřadnice se změní a o kolik?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -39,12 +62,16 @@ void drawNode(Graphics2D g, Point point, int label) {
 /// pouze maluje jeden bod, proto oprava nemá změnit rozmístění ani pravidla.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. FillOval přijímá levý horní roh, nikoli střed.
-/// 2. Od x a y samostatně odečti poloměr.
-/// 3. Použij nestejný bod jako (120,70), nikoli bod na diagonále, který prohození os skryje.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// FillOval přijímá levý horní roh, nikoli střed.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Od x a y samostatně odečti poloměr.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Použij nestejný bod jako (120,70), nikoli bod na diagonále, který prohození os skryje.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

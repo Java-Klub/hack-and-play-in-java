@@ -11,6 +11,9 @@
 ///
 /// Spusť Run File a zadáním 1 1 1 2 spoj první dvě sousední políčka, potom pokračuj dalšími sousedy.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F19 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 record Domino(int low, int high) {
 }
 
@@ -18,6 +21,27 @@ Domino pairKey(int a, int b) {
     int x = numbers[a / 10][a % 10], y = numbers[b / 10][b % 10];
     return new Domino(Math.min(x, y), Math.max(x, y));
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F19">
+/// ### Records: jedna pojmenovaná hodnota
+///
+/// Record sdružuje související component (složky). Constructor (konstruktor) je přijímá v pořadí
+/// declaration (deklarace); accessor (přístupová metoda) jako `ink()` je čte. Vlastní method (metody)
+/// uvnitř record mohou používat přímo jména složek. Vytvoření nové hodnoty původní složky nezmění.
+/// Připravené `equals` porovnává jejich hodnoty.
+///
+/// ```java
+/// record Frame(String ink, int dots) {
+///     Frame recoloured(String nextInk) {
+///         return new Frame(nextInk, dots);
+///     }
+/// }
+/// ```
+///
+/// Volání `recoloured("gold")` na `new Frame("violet", 6)` vrátí gold a šest; původní hodnota zůstane
+/// violet a šest. Rovná se další přebarvení zpět na violet původní hodnotě? Jména vysvětlují, co dvě
+/// jinak anonymní hodnoty znamenají.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -34,12 +58,25 @@ Domino pairKey(int a, int b) {
 /// množina zabrání opakování jen tehdy, když pairKey() vrací pro stejná domina stejné hodnoty.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Hodnoty a canonical representation (jednotná podoba)
 ///
-/// 1. Rovnost record porovnává hodnoty obou pojmenovaných složek.
-/// 2. Domino(0,1) a Domino(1,0) jsou různé records, pokud vstup nesjednotíš.
-/// 3. Vytvoř Domino(min(x,y), max(x,y)); dodaný Set pak odmítá opakování.
+/// `Math.min(a,b)` vybere menší číslo a `Math.max(a,b)` větší. Tyto query (dotazy) vstupy nemění.
+/// Domino porovnává uspořádané component (složky) low a high, nikoli fyzické otočení dílku. Nejprve
+/// přečti dvě hodnoty z `numbers`; index (pozice) vybraných buněk nejsou těmito hodnotami. Předpověz
+/// jednotnou dvojici složek pro hodnoty tři a osm v obou pořadích a také pro dvě stejné hodnoty.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Rovnost record porovnává hodnoty obou pojmenovaných složek.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Domino(0,1) a Domino(1,0) jsou různé records, pokud vstup nesjednotíš.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Vytvoř Domino(min(x,y), max(x,y)); dodaný Set pak odmítá opakování.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

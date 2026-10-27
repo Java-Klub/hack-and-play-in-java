@@ -20,12 +20,41 @@ import javax.swing.Timer;
 /// Po Run File klikni dovnitř vody pro vytvoření vln, pomocí Space zastav pohyb a klávesou R obnov
 /// klidnou nádrž.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F30 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void tap(int x, int y) {
     if (x > 0 && y > 0 && x < COLUMNS - 1 && y < ROWS - 1) {
         height[y][x] = Math.min(120, height[y][x] + 60);
         paused = false;
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F30">
+/// ### Input (vstup) požádá; tick (krok) posune čas
+///
+/// Event (událost) může zaznamenat záměr bez okamžité změny celé simulace. Tick provede jednu
+/// omezenou aktualizaci. Kreslení drž oddělené od obou činností.
+///
+/// ```java
+/// int height = 0;
+/// int pending = 0;
+/// void press() {
+///     pending = 2;
+/// }
+/// void tick() {
+///     height += pending;
+///     pending = 0;
+/// }
+/// ```
+///
+/// Po `press()` je height stále 0. Jeden `tick()` jej změní na 2 a požadavek spotřebuje; další tick
+/// jej ponechá na 2. Opakovaný vstup před tímto krokem stále zaznamená jeden požadavek místo dvou
+/// aktualizací. Připravený timer (časovač) může tick volat, ale pozastavená nebo dokončená hra nemá
+/// pokračovat. Restart musí obnovit počáteční stav.
+///
+/// Předpověz: co od počátečního stavu udělá pořadí press, tick, press, tick?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -42,12 +71,16 @@ void tap(int x, int y) {
 /// šíří výšky přes nezávislá další pole; kreslení barví aktuální výšky a restart obnovuje klidnou vodu.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Input handler (obsluha vstupu) má aktivovat existující hodiny, nikoli počítat vlnu.
-/// 2. Paused změň jen po platném klepnutí uvnitř.
-/// 3. Zachovej omezení výšky a nech step číst připravený double buffer (dvojici vyrovnávacích polí).
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Input handler (obsluha vstupu) má aktivovat existující hodiny, nikoli počítat vlnu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Paused změň jen po platném klepnutí uvnitř.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Zachovej omezení výšky a nech step číst připravený double buffer (dvojici vyrovnávacích polí).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

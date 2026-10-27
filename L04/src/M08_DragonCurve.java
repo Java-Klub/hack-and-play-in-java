@@ -21,6 +21,9 @@ import java.util.List;
 /// Použij Run File, obnov NetBeans Files a otevři dragon-curve.png; potom pomocí Test File porovnej
 /// přesné případy nuly a jednoho přehybu.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F11 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 List<Integer> foldTurns(int folds) {
     var turns = new ArrayList<Integer>();
     for (int fold = 0; fold < folds; fold++) {
@@ -32,6 +35,28 @@ List<Integer> foldTurns(int folds) {
     }
     return turns;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F11">
+/// Counted for (počítaná smyčka for) sdruží initialization (počáteční nastavení), podmínku
+/// pokračování a postup do jediného záhlaví. Nastavení proběhne jednou. Potom Java ověří condition
+/// (podmínku), při pravdě provede tělo, udělá postup a znovu ověří podmínku.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// for (int floor = 2; floor <= 4; floor++) {
+///     IO.println(floor);
+/// }
+/// ```
+///
+/// Předpověz navštívené hodnoty: `2`, `3`, `4`. Jsou to tři průchody, i když poslední vypsané číslo
+/// je čtyřka. Dva středníky oddělují tři části záhlaví; `floor++` přičte jedničku po průchodu.
+/// Složené závorky sdružují opakované statement (příkazy). Pokud počáteční hodnota podmínku už
+/// nesplňuje, neproběhne žádný průchod. Rozlišuj počet pozic a mezer: tři pozice mají dvě mezery. Než
+/// změníš hranici, napiš drobnou trace (stopu průběhu).
+///
+/// Nyní předpověz output (výstup), pokud floor začíná na pětce.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -54,12 +79,16 @@ List<Integer> foldTurns(int folds) {
 /// dragon-curve.png. Tento export neobsahuje okno ani posuvník přehybů.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Vyzkoušej folds = 1 se současným počátečním fold.
-/// 2. Vnější counter (čítač) má navštívit 0 až folds - 1.
-/// 3. Dej fold výchozí hodnotu 0; zachovej fold < folds.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Vyzkoušej folds = 1 se současným počátečním fold.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Vnější counter (čítač) má navštívit 0 až folds - 1.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Dej fold výchozí hodnotu 0; zachovej fold < folds.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

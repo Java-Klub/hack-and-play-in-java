@@ -12,6 +12,9 @@
 /// Použij Run File a třikrát zadej 1 1 pro vyřazení ruky, potom zkus čtvrté 1 1 a sleduj, zda neplatný
 /// zásah změní hráče.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F08 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean handsAlive(int own, int opposing) {
     if (own < 0 || own >= 2 || opposing < 0 || opposing >= 2) {
         return false;
@@ -21,6 +24,30 @@ boolean handsAlive(int own, int opposing) {
     }
     return true;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F08">
+/// Guard (ochranná podmínka) odmítne požadavek před chráněnou prací. Nejdřív přečti odmítané případy
+/// a potom se ptej, co zůstává povolené. Short-circuit (zkrácené vyhodnocení) je důležité: u `A || B`
+/// Java přeskočí B, pokud A už platí.
+///
+/// ```java
+/// boolean useSlot(int slot) {
+///     if (slot < 0 || slot >= 4) {
+///         return false;
+///     }
+///     IO.println("Using slot " + slot);
+///     return true;
+/// }
+/// ```
+///
+/// Předpověz výpis a vrácenou hodnotu pro `-1`, `3` a `4`. Jen trojka dojde k výpisu. Odmítnutí musí
+/// nastat před jakoukoli state change (změnou stavu), která se nemá provést. Přístup na desku sám
+/// může potřebovat kontrolu rozsahu, než jej lze bezpečně vyhodnotit. `return false` ukončí toto call
+/// (volání metody); automaticky nevrací zpět práci již provedenou předtím.
+///
+/// `useSlot(3)` předá trojku do `slot`; `boolean` před názvem říká, že výsledkem je true/false. Nyní
+/// předpověz slot nula.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -40,12 +67,16 @@ boolean handsAlive(int own, int opposing) {
 /// vyřazuje ruce, střídá hráče a odhaluje opakované pozice; main zobrazuje ruce obou hráčů.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Mrtvou ruku představuje nula, nikoli záporné číslo.
-/// 2. Ochranu index (indexů) zachovej před přečtením obou rukou.
-/// 3. Odmítni tah, když je kterákoli uložená hodnota ruky == 0.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Mrtvou ruku představuje nula, nikoli záporné číslo.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Ochranu index (indexů) zachovej před přečtením obou rukou.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Odmítni tah, když je kterákoli uložená hodnota ruky == 0.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

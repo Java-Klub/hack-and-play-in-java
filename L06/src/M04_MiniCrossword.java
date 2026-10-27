@@ -13,6 +13,9 @@
 /// Spusť Run File, jako první odpověď napiš 1 CAT a potvrď Enter, potom si přečti zbývající očíslované
 /// nápovědy.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F14 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void command(String input) {
     require(outcome.isEmpty());
     String[] p = input.toUpperCase(Locale.ROOT).split("\\s+");
@@ -37,6 +40,28 @@ void command(String input) {
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F14">
+/// ### Scope: které úložiště jméno označuje?
+///
+/// Field (položka objektu) patří aktuálnímu objektu a může přežít více volání. Local variable (místní
+/// proměnná) patří jedinému call (volání) či bloku. Declaration (deklarace) obsahuje type (typ);
+/// assignment (přiřazení) do existujícího jména nevytváří další proměnnou. Místní jméno může zastínit
+/// stejně napsaný field.
+///
+/// ```java
+/// int volume = 7;
+///
+/// void whisper() {
+///     int volume = 2;
+///     IO.println(volume);
+/// }
+/// ```
+///
+/// `whisper()` vypíše dvě, zatímco field zůstane sedm: local declaration (místní deklarace) vytvořila
+/// jiné úložiště. Předpověz pozdější čtení field; `this.volume` podle potřeby výslovně označí field.
+/// Která hodnota má přežít několik volání a která patří pouze dočasnému výpočtu?
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
 ///
@@ -51,12 +76,16 @@ void command(String input) {
 /// odpovědi do zobrazené křížovky; tvůj součet rozhoduje o závěrečném oznámení outcome.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. solved[] je trvalý stav; count je jen dočasný souhrn.
-/// 2. Po jedné, dvou a třech odpovědích dosáhne starý akumulátor 1+2+3.
-/// 3. Uvnitř command() těsně před průchodem deklaruj int count = 0 a odstraň field.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// solved[] je trvalý stav; count je jen dočasný souhrn.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Po jedné, dvou a třech odpovědích dosáhne starý akumulátor 1+2+3.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Uvnitř command() těsně před průchodem deklaruj int count = 0 a odstraň field.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

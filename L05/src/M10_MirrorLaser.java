@@ -18,11 +18,35 @@ import java.util.HashSet;
 ///
 /// Spusť Run File, kliknutím otoč zrcadlo a mezerníkem nech paprsek projít tvým uspořádáním.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F19 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 record RayState(int x, int y, int dx, int dy) {
     RayState advance() {
         return new RayState(x + dx, y + dy, dx, dy);
     }
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F19">
+/// ### Records: jedna pojmenovaná hodnota
+///
+/// Record sdružuje související component (složky). Constructor (konstruktor) je přijímá v pořadí
+/// declaration (deklarace); accessor (přístupová metoda) jako `ink()` je čte. Vlastní method (metody)
+/// uvnitř record mohou používat přímo jména složek. Vytvoření nové hodnoty původní složky nezmění.
+/// Připravené `equals` porovnává jejich hodnoty.
+///
+/// ```java
+/// record Frame(String ink, int dots) {
+///     Frame recoloured(String nextInk) {
+///         return new Frame(nextInk, dots);
+///     }
+/// }
+/// ```
+///
+/// Volání `recoloured("gold")` na `new Frame("violet", 6)` vrátí gold a šest; původní hodnota zůstane
+/// violet a šest. Rovná se další přebarvení zpět na violet původní hodnotě? Jména vysvětlují, co dvě
+/// jinak anonymní hodnoty znamenají.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -39,12 +63,26 @@ record RayState(int x, int y, int dx, int dy) {
 /// advance(). Připravené kreslení zobrazuje výslednou cestu.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Předpověz hodnotu, ne pohyb objektu
 ///
-/// 1. Record spojuje pozici a směr do jedné pojmenované hodnoty.
-/// 2. advance() vrací novou hodnotu; tento record nemění.
-/// 3. Do konstruktoru RayState předej v pořadí x+dx, y+dy, dx, dy.
+/// Před úpravou napiš čtyři component (složky) paprsku v `(7,3)` se směrem `(-1,0)`. Předpověz je po
+/// jediném advance: které popisují novou pozici a které stále směr? Pořadí constructor argument
+/// (argumentů konstruktoru) sleduje declaration (deklaraci) record. Potom vysvětli, proč jiná
+/// variable (proměnná) odkazující na předchozí RayState musí zachovat původní složky. Popis další
+/// hodnoty nepotřebuje field mutation (změnu položky objektu).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Record spojuje pozici a směr do jedné pojmenované hodnoty.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// advance() vrací novou hodnotu; tento record nemění.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Do konstruktoru RayState předej v pořadí x+dx, y+dy, dx, dy.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

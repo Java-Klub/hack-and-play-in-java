@@ -20,10 +20,33 @@ import javax.swing.Timer;
 /// Po Run File otáčej pomocí Left/Right, měň rozestupy mřížky pomocí Up/Down a klávesou Space rozhýbej
 /// překrytí.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F29 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 Point2D.Double gridPoint(int column, int row, double a) {
     double x = column * spacing, y = row * spacing;
     return new Point2D.Double(WIDTH / 2 + x * Math.cos(a) - y * Math.sin(a), HEIGHT / 2 + x * Math.sin(a) + y * Math.cos(a));
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F29">
+/// ### Rendering (vykreslení): ze stavu na pixely
+///
+/// Rendering čte model (stav programu) a kreslí jeho podobu. Screen x (obrazovkové x) roste doprava;
+/// screen y roste dolů. Kreslicí metody často přijímají levý horní roh a velikost, nikoli střed.
+///
+/// ```java
+/// int tileX = 3;
+/// int tileY = 2;
+/// int size = 10;
+/// g.fillRect(tileX * size, tileY * size, size, size);
+/// ```
+///
+/// `g` je připravený kreslicí nástroj `Graphics2D`. Příkaz vybarví čtverec 10 × 10 s levým horním
+/// rohem `(30, 20)`. Modelové souřadnice zůstanou `(3, 2)`. Repainting (překreslení) nemá posouvat
+/// objekty ani zahajovat další tah: okno může požadovat kreslení mnohokrát.
+///
+/// Předpověz: pokud se pouze tileY změní na 4, která obrazovková souřadnice se změní a o kolik?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -40,12 +63,16 @@ Point2D.Double gridPoint(int column, int row, double a) {
 /// tick (časové kroky) otáčení animují; gridPoint je společný převod pro skutečné kreslení.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Místní bod (0,0) má skončit ve středu plátna.
-/// 2. Výsledek y potřebuje posun středu stejně jako x.
-/// 3. Ověř (1,0) při čtvrtotočce; odhalí chybu osy či znaménka.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Místní bod (0,0) má skončit ve středu plátna.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Výsledek y potřebuje posun středu stejně jako x.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Ověř (1,0) při čtvrtotočce; odhalí chybu osy či znaménka.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

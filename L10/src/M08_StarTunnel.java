@@ -23,10 +23,33 @@ import javax.swing.Timer;
 /// Po Run File kliknutím či tažením spusť a řiď hvězdný tunel, pomocí Up/Down měň rychlost a klávesou
 /// Space zastav pohyb.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F29 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 Point2D.Double project(Star star, double depth) {
     double z = Math.max(5, depth);
     return new Point2D.Double(centreX + star.x * 260 / z, centreY + star.y * 260 / z);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F29">
+/// ### Rendering (vykreslení): ze stavu na pixely
+///
+/// Rendering čte model (stav programu) a kreslí jeho podobu. Screen x (obrazovkové x) roste doprava;
+/// screen y roste dolů. Kreslicí metody často přijímají levý horní roh a velikost, nikoli střed.
+///
+/// ```java
+/// int tileX = 3;
+/// int tileY = 2;
+/// int size = 10;
+/// g.fillRect(tileX * size, tileY * size, size, size);
+/// ```
+///
+/// `g` je připravený kreslicí nástroj `Graphics2D`. Příkaz vybarví čtverec 10 × 10 s levým horním
+/// rohem `(30, 20)`. Modelové souřadnice zůstanou `(3, 2)`. Repainting (překreslení) nemá posouvat
+/// objekty ani zahajovat další tah: okno může požadovat kreslení mnohokrát.
+///
+/// Předpověz: pokud se pouze tileY změní na 4, která obrazovková souřadnice se změní a o kolik?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -41,12 +64,16 @@ Point2D.Double project(Star star, double depth) {
 /// project pro viditelné pozice i stopy; input (vstup) řídí rychlost, směr, pause a reset.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Perspektiva dělí posun x/y hloubkou.
-/// 2. Omezení chrání nulovou či zápornou zkušební hloubku.
-/// 3. Použij max(5, depth) bez další vzdálenosti.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Perspektiva dělí posun x/y hloubkou.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Omezení chrání nulovou či zápornou zkušební hloubku.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Použij max(5, depth) bez další vzdálenosti.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

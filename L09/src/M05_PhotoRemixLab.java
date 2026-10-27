@@ -22,9 +22,33 @@ import javax.imageio.ImageIO;
 /// Po Run File klávesou M měň způsob úpravy měsíčního obrázku, šipkami jej upravuj a nad obrazem čti
 /// počítadlo bodů.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F24 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void countColour(int rgb) {
     colourCounts.put(rgb, colourCounts.getOrDefault(rgb, 0) + 1);
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F24">
+/// ### Map (mapa): hodnota podle klíče
+///
+/// `Map<String, Integer>` přiřazuje textovým keys (klíčům) celočíselné values (hodnoty). Jeden klíč
+/// má nejvýše jednu uloženou hodnotu.
+///
+/// ```java
+/// Map<String, Integer> badges = new HashMap<>();
+/// badges.put("moon", 4);
+/// IO.println(badges.getOrDefault("moon", 0));
+/// IO.println(badges.getOrDefault("sun", 0));
+/// ```
+///
+/// Výstup je `4`, potom `0`. `getOrDefault(key, fallback)` přečte existující hodnotu; při chybějícím
+/// klíči vrátí fallback (náhradní hodnotu). Toto čtení nic nevkládá. `put(key, value)` hodnotu uloží
+/// a případnou předchozí hodnotu téhož klíče přepíše; čísla automaticky nesčítá. `containsKey(key)`
+/// použij, když potřebuješ výslovně rozlišit chybějící klíč. V těchto příkladech neukládáme `null`.
+///
+/// Předpověz: po `badges.put("moon", 9)` co vrátí stejná dvě čtení?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -39,12 +63,29 @@ void countColour(int rgb) {
 /// sečte hodnoty Map pro viditelný popisek; připravený obrázek má opakované barvy, aby byla chyba patrná.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
+/// ### Před přepsáním nejdřív přečti
 ///
-/// 1. Put nahrazuje původní hodnotu.
-/// 2. Přečti existující počet; pro chybějící key (klíč) použij nulu.
-/// 3. Ke starému počtu přičti jednu a ulož jej pod stejným key (klíčem).
+/// Potřebné čtení je `map.getOrDefault(key, fallback)`. U tohoto `Map<Integer, Integer>` je key
+/// (klíč) celé číslo představující barvu a výsledek je její počet. Jestliže klíč 17 uchovává 6,
+/// `map.getOrDefault(17, 0)` vrátí 6; pro chybějící klíč 23 vrátí 0 a klíč nevloží. `map.put(key,
+/// value)` potom uloží přesně zadanou hodnotu a případný předchozí počet přepíše.
+///
+/// Předpověz potřebné počty po třech pixelech stejné barvy a jednom odlišném. Vysvětli, proč pomůže
+/// vyčistit mapu jednou před novým remixem, zatímco čištění uvnitř countColour by zapomnělo dřívější
+/// pixely.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Put nahrazuje původní hodnotu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Přečti existující počet; pro chybějící key (klíč) použij nulu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Ke starému počtu přičti jednu a ulož jej pod stejným key (klíčem).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

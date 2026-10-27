@@ -19,6 +19,9 @@ import javax.swing.Timer;
 ///
 /// Spusť Run File a šipkami nakláněj kuličku kolem bloků, přičemž před zeleným cílem přibrzdi.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F25 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void step() {
     if (!started || won) {
         return;
@@ -62,6 +65,29 @@ void step() {
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F25">
+/// ### Invariant: slib po každé akci
+///
+/// Invariant (trvale platné pravidlo) je vztah, který má přežít přijaté akce. Některá akce množství
+/// pouze přesune mezi místy, nevytváří další. Před změnami ověř celý požadavek a potom jej proveď
+/// jednou. Odmítnutí má zachovat původní state (stav).
+///
+/// ```java
+/// int violet = 6;
+/// int gold = 2;
+/// int amount = 3;
+/// if (amount >= 0 && amount <= violet) {
+///     violet -= amount;
+///     gold += amount;
+/// }
+/// IO.println(violet + gold);
+/// ```
+///
+/// Nádoby mají tři a pět; součet zůstane osm, protože přesun obě strany vyrovná. Potom zvaž devět
+/// jednotek: co musí zůstat beze změny? Vysvětli, proč změna jediné strany poruší součet, přestože
+/// jednotlivé hodnoty mohou působit platně.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
 ///
@@ -76,12 +102,16 @@ void step() {
 /// svislý pohyb; zvlášť obsluhuje stěny podnosu a pomalý příjezd do cíle.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Samotné obrácení vx ponechá střed v již pronikající pozici.
-/// 2. Směr srážky určuje stranu, odkud kulička přijela.
-/// 3. Při pohybu doprava nastav x=p.x-10, doleva x=p.x+p.width+10; potom tlum a obrať vx.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Samotné obrácení vx ponechá střed v již pronikající pozici.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Směr srážky určuje stranu, odkud kulička přijela.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Při pohybu doprava nastav x=p.x-10, doleva x=p.x+p.width+10; potom tlum a obrať vx.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

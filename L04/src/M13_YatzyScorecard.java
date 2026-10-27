@@ -14,6 +14,9 @@
 /// Použij Run File, napiš bank 13, potom zapiš jinou volnou kategorii ukazující nenulové body a porovnej
 /// vypsaný součet s oběma vyplněnými výsledky.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F12 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int total() {
     int sum = 0;
     int upper = 0;
@@ -27,6 +30,29 @@ int total() {
     }
     return sum + (upper >= 63 ? 35 : 0);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F12">
+/// Accumulator (průběžný výsledek) pamatuje rostoucí výsledek mezi průchody. Jeho počáteční hodnota
+/// patří před loop (smyčku); uvnitř by výsledek začínal znovu pro každou položku. Uloženým výsledkem
+/// může být text, nejen číslo.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// String receipt = "Items:";
+/// for (String item : List.of("tea", "cake")) {
+///     receipt += " " + item;
+/// }
+/// ```
+///
+/// Předpověz receipt po každém průchodu: `Items: tea`, potom `Items: tea cake`. `+=` spojí starou
+/// hodnotu s novým příspěvkem a výsledek uloží. Samotné `=` uloženou hodnotu nahradí. `List.of(...)`
+/// dodá pevnou sequence (posloupnost) uvedených hodnot; dvojtečka navštíví jednu položku za průchod.
+/// Sleduj aktuální položku a accumulator ve dvou sloupcích, abys zjistil, zda dřívější práce přežije.
+/// Počáteční hodnota má vzniknout jednou za celý výpočet, nikoli jednou za každou objevenou položku.
+///
+/// Nyní předpověz receipt, pokud připravený seznam obsahuje jen `"rice"`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -51,12 +77,16 @@ int total() {
 /// bonus, ale žádný Joker ani bonus opakovaného Yatzy.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. sum = scores[i] v každé vyplněné kategorii nahradí součet.
-/// 2. sum musí uchovat dřívější body; upper už sčítá správně.
-/// 3. Použij sum += scores[i].
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// sum = scores[i] v každé vyplněné kategorii nahradí součet.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// sum musí uchovat dřívější body; upper už sčítá správně.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Použij sum += scores[i].
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

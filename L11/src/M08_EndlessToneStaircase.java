@@ -20,6 +20,9 @@ import java.io.ByteArrayInputStream;
 /// Po Run File stiskni Enter pro uložení exports/shepard.wav a otevři jej v přehrávači spolu se
 /// srovnávacím .plain.wav.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F32 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void write(Path path, double[] signal) throws Exception {
     byte[] pcm = new byte[signal.length * 2];
     for (int i = 0; i < signal.length; i++) {
@@ -33,6 +36,29 @@ void write(Path path, double[] signal) throws Exception {
         AudioSystem.write(stream, AudioFileFormat.Type.WAVE, path.toFile());
     }
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F32">
+/// ### Files (soubory): cíl a životnost prostředku
+///
+/// `Path` popisuje umístění; jeho vytvoření nevytvoří soubor. Uvnitř metody s deklarací `throws
+/// IOException` tento kód zapíše poznámku:
+///
+/// ```java
+/// Path file = Path.of("exports", "note.txt");
+/// Files.createDirectories(file.getParent());
+/// try (var writer = Files.newBufferedWriter(file)) {
+///     writer.write("Hi");
+/// }
+/// ```
+///
+/// Výsledek je exports/note.txt obsahující `Hi`. `getParent()` vybere exports; `getFileName()` vybere
+/// jen note.txt a zahodí složku. Try-with-resources (automatické uzavření prostředku) uzavře writer
+/// na konci bloku i při selhání zápisu. `throws` nechá I/O failure (chybu vstupu/výstupu) řešit
+/// volajícího; tady ji neřeší. Také obrazové a zvukové encodery (kodéry) potřebují skutečný cíl,
+/// nikoli nesouvisející paměťový buffer (vyrovnávací paměť).
+///
+/// Předpověz: pokud file změníš na `Path.of("cards", "one.txt")`, kam se poznámka zapíše?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -49,12 +75,16 @@ void write(Path path, double[] signal) throws Exception {
 /// Write převádí sample (vzorky) na PCM a JDK zapíše WAV hlavičku; main vypíše, kde oba soubory otevřít.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. GetFileName záměrně zahazuje nadřazenou cestu.
-/// 2. Původní Path už ukazuje na zvolený cíl.
-/// 3. Použij jej v AudioSystem.write; zachovej createDirectories i try-with-resources.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// GetFileName záměrně zahazuje nadřazenou cestu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Původní Path už ukazuje na zvolený cíl.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Použij jej v AudioSystem.write; zachovej createDirectories i try-with-resources.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

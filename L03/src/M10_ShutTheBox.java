@@ -13,9 +13,37 @@
 /// Použij Run File, porovnej dvě vypsané hodnoty Dice s cílem rolled a potom napiš různá otevřená čísla,
 /// která mají tento součet vytvořit.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F13 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int diceTotal(int first, int second) {
     return first + second;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F13">
+/// Method (metoda) zabalí operaci pod jediné jméno. Parameter (parametry) jsou místní jména informací
+/// přijatých při každém call (volání); argument (argumenty) jsou skutečně předané hodnoty. `return`
+/// předá jediný výsledek zpět volající části.
+///
+/// ```java
+/// int remaining(int capacity, int used) {
+///     return capacity - used;
+/// }
+///
+/// void main() {
+///     IO.println(remaining(12, 5));
+///     IO.println(remaining(9, 4));
+/// }
+/// ```
+///
+/// Předpověz obě vypsané hodnoty: sedmičku a pětku. Čárka odděluje parameter či argument a jejich
+/// pořadí rozhoduje, kterou hodnotu jméno dostane. Jména popisují role; informace si sama
+/// nezískávají. Tato method počítá bez vypisování a změny připraveného state (stavu programu). Při
+/// opravě výpočtu vyzkoušej druhou dvojici argument, aby se za jediný případ nemohla schovat náhodná
+/// pevná odpověď. Method se provede až při skutečném call, nikoli samotným zapsáním definice.
+///
+/// Nyní předpověz remaining(10, 6).
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -33,12 +61,16 @@ int diceTotal(int first, int second) {
 /// políčka umožní splnit cíl, command zavře vybraná políčka a display ukáže zbývající volby.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Použij různé hodnoty, například 2 a 5, aby byl ignorovaný parametr vidět.
-/// 2. Oba parameter (parametry) patří tomuto konkrétnímu volání.
-/// 3. Vrať first + second.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Použij různé hodnoty, například 2 a 5, aby byl ignorovaný parametr vidět.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Oba parameter (parametry) patří tomuto konkrétnímu volání.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Vrať first + second.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -19,6 +19,9 @@ import javax.swing.Timer;
 /// Spusť Run File a kliknutím nad přihrádkou pusť kotouček, potom porovnej číslo přihrádky dopadu se
 /// získanými body.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F15 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int scoreAt(int index) {
     // Dodaná ochrana hlásí neplatný index; exception handling přijde v L09.
     if (index < 0 || index >= values.length) {
@@ -26,6 +29,26 @@ int scoreAt(int index) {
     }
     return values[index];
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F15">
+/// ### Contracts: ptej se bez změny světa
+///
+/// Contract (smlouva) popisuje přijímaný input (vstup) a význam výsledku. Pure calculation (čistý
+/// výpočet) používá své vstupy bez změny dalšího state (stavu). Query (dotaz) může číst aktuální
+/// model (model pravidel), ale má jej zachovat. Získání odpovědi a potvrzení akce jsou různé
+/// odpovědnosti.
+///
+/// ```java
+/// int contrast(int light, int dark) {
+///     return Math.abs(light - dark);
+/// }
+/// ```
+///
+/// `Math.abs` dává nezápornou velikost, odstraní tedy případné záporné znaménko. Tuto method (metodu)
+/// můžeš volat opakovaně, aniž by něco spotřebovala. Argument (argumenty) `(9, 4)` dávají pět: rozdíl
+/// je pět. Předpověz `(4, 9)`. Které uložené hodnoty porovnáš před dotazem a po něm, abys doložil
+/// nepřítomnost side effect (vedlejšího účinku)? Stejnou ochranu potřebuje odmítnutý kandidát.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -42,12 +65,16 @@ int scoreAt(int index) {
 /// (ochrannou kontrolu indexu) zachovej; exceptions (výjimky) a jejich zpracování přijdou v L09.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Array values je bodovací tabulka vykreslená pod deskou.
-/// 2. Volající už rozhoduje, kdy disk dopadl.
-/// 3. Dodaná ochrana už odmítá neplatné indexy. Vrať values[index]; udělení bodů zůstává v step().
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Array values je bodovací tabulka vykreslená pod deskou.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Volající už rozhoduje, kdy disk dopadl.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Dodaná ochrana už odmítá neplatné indexy. Vrať values[index]; udělení bodů zůstává v step().
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

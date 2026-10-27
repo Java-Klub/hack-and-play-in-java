@@ -12,6 +12,9 @@
 /// Spusť Run File a zadáním 1 přepni první očíslovanou hranu, potom dalšími hranami sestav jedinou
 /// uzavřenou smyčku.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F18 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int[] vertices(int edge) {
     if (edge < 12) {
         int r = edge / 3;
@@ -23,6 +26,25 @@ int[] vertices(int edge) {
     int c = n % 4;
     return new int[]{r * 4 + c, (r + 1) * 4 + c};
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F18">
+/// ### Grids: nejdřív řádek, potom sloupec
+///
+/// V array of rows (poli řádků) první index (pozice) vybírá řádek a druhý pozici v něm. Řádky mohou
+/// mít různé délky. Neighbour (soused) je posun od buňky, nikoli další absolutní pozice. Před
+/// kontrolou existence kandidáta urči povolené směry.
+///
+/// ```java
+/// int[][] mosaic = {{3, 6, 9}, {2, 4, 8}};
+/// int row = 0;
+/// int column = 1;
+/// IO.println(mosaic[row][column + 1]);
+/// ```
+///
+/// Výstup je devět: řádek nula a sloupec dva vyberou tento element (prvek). Pohyb dolů mění row;
+/// doprava mění column. Který z těchto pohybů z pravé horní cell (buňky) zůstane uvnitř? U úhlopříčky
+/// se mění obě souřadnice; bounds (meze) musíš ověřit před přístupem ke kandidátovi.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -38,12 +60,26 @@ int[] vertices(int edge) {
 /// počet spojení i souvislost; čísla uvnitř políček se kontrolují zvlášť.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Buňky a jejich rohy mají různé grid (mřížky)
 ///
-/// 1. Řádky polí mají šířku 3, ale řádky vrcholů šířku 4.
-/// 2. Pohyb o řádek vrcholů dolů přidá k lineárnímu indexu 4.
-/// 3. Pro svislou hranu vrať r*4+c a (r+1)*4+c.
+/// Řada dvou sousedních buněk má napříč tři corner vertex (rohové vrcholy). Cell grid (mřížka buněk)
+/// proto potřebuje o jeden řádek a sloupec vrcholů více. V jiném vertex grid (mřížce vrcholů) šířky
+/// tři leží index (pozice) jedna nad čtyřkou: pohyb dolů zachová sloupec a přeskočí tři pozice.
+/// Vodorovná hrana mění sloupec, svislá řádek. Před předpovědí konců očísluj vrcholy odděleně od
+/// čísel uvnitř buněk.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Řádky polí mají šířku 3, ale řádky vrcholů šířku 4.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Pohyb o řádek vrcholů dolů přidá k lineárnímu indexu 4.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Pro svislou hranu vrať r*4+c a (r+1)*4+c.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

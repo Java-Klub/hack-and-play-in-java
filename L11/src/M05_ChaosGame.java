@@ -18,10 +18,35 @@ import javax.imageio.ImageIO;
 /// Po Run File stiskni Enter pro seed (počáteční hodnotu) 42 a otevři chaos-game-42.png pro prozkoumání
 /// vzoru opakovaných skoků na polovinu.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F27 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int chooseVertex(Random random, int count) {
     if (count < 1) throw new IllegalArgumentException("No legal vertices.");
     return random.nextInt(count);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F27">
+/// ### Seeded randomness (náhoda se seedem): opakuj pokus
+///
+/// Pseudorandom generator (generátor pseudonáhodných hodnot) vytváří posloupnost. Seed (počáteční
+/// hodnota) určuje výchozí stav; stejné seedy a stejná volání zopakují stejné výsledky.
+///
+/// ```java
+/// var first = new Random(9);
+/// var second = new Random(9);
+/// int a = first.nextInt(4);
+/// int b = second.nextInt(4);
+/// IO.println(a == b);
+/// ```
+///
+/// Výstup je `true`. Každé nextInt posune příslušný generátor. `nextInt(4)` vybere celé číslo od 0 do
+/// 3; horní mez nepatří do výběru. V celém generovaném obrázku používej jeden generátor, aby další
+/// volby četly další místa posloupnosti. Opakované vytváření se stejným seedem uvnitř loop (cyklu)
+/// stále vrací první volbu. Různé seedy mohou náhodou dát stejný jednotlivý výsledek.
+///
+/// Předpověz: která čísla smí vrátit `nextInt(3)` a může vrátit 3?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -36,12 +61,16 @@ int chooseVertex(Random random, int count) {
 /// Omezený loop (cyklus) maluje návštěvy; main přijme seed (počáteční hodnotu) a uloží pohlednici.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Random.nextInt(bound) hranici bound nezahrnuje.
-/// 2. Odečtení jedné od count odstraní poslední platný vrchol.
-/// 3. Prázdný rozsah ověř před omezeným náhodným voláním.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Random.nextInt(bound) hranici bound nezahrnuje.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Odečtení jedné od count odstraní poslední platný vrchol.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Prázdný rozsah ověř před omezeným náhodným voláním.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

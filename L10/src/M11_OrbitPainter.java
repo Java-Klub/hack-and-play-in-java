@@ -24,6 +24,9 @@ import javax.swing.Timer;
 /// Po Run File klávesou Space spusť výchozí oběžnou dráhu, tažením vyber jiný start a pomocí C vymaž
 /// stopu.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F30 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void step() {
     if (paused) {
         return;
@@ -44,6 +47,32 @@ void step() {
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F30">
+/// ### Input (vstup) požádá; tick (krok) posune čas
+///
+/// Event (událost) může zaznamenat záměr bez okamžité změny celé simulace. Tick provede jednu
+/// omezenou aktualizaci. Kreslení drž oddělené od obou činností.
+///
+/// ```java
+/// int height = 0;
+/// int pending = 0;
+/// void press() {
+///     pending = 2;
+/// }
+/// void tick() {
+///     height += pending;
+///     pending = 0;
+/// }
+/// ```
+///
+/// Po `press()` je height stále 0. Jeden `tick()` jej změní na 2 a požadavek spotřebuje; další tick
+/// jej ponechá na 2. Opakovaný vstup před tímto krokem stále zaznamená jeden požadavek místo dvou
+/// aktualizací. Připravený timer (časovač) může tick volat, ale pozastavená nebo dokončená hra nemá
+/// pokračovat. Restart musí obnovit počáteční stav.
+///
+/// Předpověz: co od počátečního stavu udělá pořadí press, tick, press, tick?
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
 ///
@@ -57,12 +86,16 @@ void step() {
 /// rychlost, nakreslí úsek a zastaví uniklou částici; mazání pouze odstraní dosavadní plátno.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Paused je důvod neprovádět práci.
-/// 2. Return nech v branch (větvi) pro pauzu.
-/// 3. Přitažlivost a vzorec stopy pod guard (podmínkou) už jsou správné.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Paused je důvod neprovádět práci.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Return nech v branch (větvi) pro pauzu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Přitažlivost a vzorec stopy pod guard (podmínkou) už jsou správné.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

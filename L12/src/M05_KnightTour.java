@@ -19,6 +19,9 @@ import javax.swing.*;
 /// Po Run File klikni na zelený tah jezdce, například na sloupec 1 a řádek 2 při číslování od nuly, a
 /// klávesou R začni cestu znovu.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F35 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean apply(Command command) {
     return switch (command) {
         case Move(var xx, var yy) when xx >= 0 && yy >= 0 && xx < 5 && yy < 5 -> move(xx, yy);
@@ -26,6 +29,30 @@ boolean apply(Command command) {
         case Restart() -> { restart(); yield true; }
     };
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F35">
+/// ### Record patterns (vzory záznamů): vyber typ a rozbal data
+///
+/// ```java
+/// sealed interface Badge permits Name, Stars {}
+/// record Name(String text) implements Badge {}
+/// record Stars(int count) implements Badge {}
+/// String label(Badge badge) {
+///     return switch (badge) {
+///         case Name(var text) -> text;
+///         case Stars(var n) when n > 0 -> n + " stars";
+///         case Stars(var n) -> "none";
+///     };
+/// }
+/// ```
+///
+/// `label(new Stars(2))` vrátí `"2 stars"`. Sealed uzavírá alternativy; permits je vyjmenovává.
+/// Record pattern rozpozná typ záznamu a dá hodnotám složek místní jména v pořadí deklarace. `var`
+/// odvodí jejich typy. Musí platit také when guard (dodatečná podmínka); jinak hledání pokračuje.
+/// Poslední Stars větev zpracuje nekladné počty. Každá povolená alternativa zde potřebuje zpracování.
+///
+/// Předpověz: která větev zpracuje `new Stars(0)` a jaký text vznikne pro `new Name("Nova")`?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -42,13 +69,28 @@ boolean apply(Command command) {
 /// vzdálenost jezdce a navštívená políčka, kreslení zvýrazní platné možnosti.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Pořadí složek nese význam
 ///
-/// 1. Obě var jména označují component (složky), nikoli preview pattern (předběžný vzor) pro primitivní
-///   typ.
-/// 2. Move(1,2) musí dojít na x=1,y=2, i když je obrácený tah jezdce také platný.
-/// 3. Zachovej úplné zpracování alternativ; chybná coordinate (souřadnice) vrátí false před pohybem.
+/// Deklarace `Move(int x, int y)` určuje pořadí components (složek). Při rozpoznání Move vytvořeného
+/// z hodnot 2 a 1 získá xx hodnotu 2 a yy hodnotu 1; místní jména tyto hodnoty neprohodí. Před
+/// spuštěním předpověz požadované políčko a porovnej jej s políčkem předaným do move. Prohození
+/// souřadnic zde může být také platným skokem jezdce, takže samotné přijetí tahu není dostatečný
+/// důkaz. Trasuj i Move mimo desku: musí dojít k odmítající alternativě bez změny desky. Restart je
+/// jiná alternativa, nikoli dvojice souřadnic.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Přečti deklaraci record (datového záznamu) Move: první component (složka) je x a druhá y. Jména v
+/// pattern (vzoru) dostanou hodnoty v tomto pořadí.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Move(1,2) musí dojít na x=1,y=2, i když je obrácený tah jezdce také platný.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Zachovej úplné zpracování alternativ; chybná coordinate (souřadnice) vrátí false před pohybem.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

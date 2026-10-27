@@ -19,9 +19,38 @@ import javax.imageio.ImageIO;
 /// Pomocí Run File vytvoř reaction-diffusion-skins.png a po dokončení konečné chemické simulace otevři
 /// cestu vypsanou za Saved.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F34 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 double reactionAt(int x, int y) {
     return chemistry.reaction(a[y][x], b[y][x]);
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F34">
+/// ### Interface (rozhraní): požádej vybranou roli o práci
+///
+/// Interface pojmenovává operaci, kterou dodají jeho implementations (implementace). Volající používá
+/// tuto roli bez výběru jejího výpočtu.
+///
+/// ```java
+/// interface Points {
+///     int award(int n);
+/// }
+/// record DoublePoints() implements Points {
+///     public int award(int n) {
+///         return n * 2;
+///     }
+/// }
+/// ```
+///
+/// Při `Points rule = new DoublePoints();` vrátí `rule.award(3)` hodnotu 6. `implements Points`
+/// slibuje danou operaci; implementace musí dodat její public method (veřejnou metodu). Proměnná rule
+/// označuje vybraný objekt, proto volej jeho operaci se současným vstupem místo opakování pevného
+/// výpočtu ve volajícím. Jiná implementace může dodat jiná pravidla přes stejné rozhraní.
+///
+/// Předpověz: co tato implementace vrátí pro `rule.award(5)` a kde by se měnil kód pro trojnásobek
+/// vstupu?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -38,12 +67,16 @@ double reactionAt(int x, int y) {
 /// aktualizace i PNG export jsou připravené.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Chemistry pojmenovává roli výpočtu ze dvou hodnot.
-/// 2. Přečti a[y][x] a b[y][x] a předej obě do reaction v připraveném field (položce objektu).
-/// 3. Nepřepisuj jeden vzorec napevno; caller (volající část) musí fungovat i po výměně chemistry.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Chemistry pojmenovává roli výpočtu ze dvou hodnot.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Přečti a[y][x] a b[y][x] a předej obě do reaction v připraveném field (položce objektu).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Nepřepisuj jeden vzorec napevno; caller (volající část) musí fungovat i po výměně chemistry.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

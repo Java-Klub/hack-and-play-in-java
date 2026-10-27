@@ -12,6 +12,9 @@
 /// Spusť Run File, jako úvodní tah napiš 3 2 a potvrď Enter, potom nech dalšího hráče zvolit povolený
 /// řádek a sloupec.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F17 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean hasMove(int who) {
     for (int r = 0; r < 6; r++) {
         for (int c = 0; c < 6; c++) {
@@ -22,6 +25,30 @@ boolean hasMove(int who) {
     }
     return false;
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F17">
+/// ### Traversal: vždy jedna otázka
+///
+/// Traversal (průchod) navštěvuje hodnoty; search (hledání) může skončit první shodou, count
+/// (počítání) musí prohlédnout všechny relevantní hodnoty. Ve for-each loop (cyklu pro každý prvek)
+/// dostane jméno před dvojtečkou jednu hodnotu ze sequence (posloupnosti) za ní. Průběžný počet založ
+/// mimo opakované tělo, aby dřívější shody přežily.
+///
+/// ```java
+/// int[] pulses = {2, 0, 4};
+/// int strong = 0;
+/// for (int pulse : pulses) {
+///     if (pulse > 1) {
+///         strong++;
+///     }
+/// }
+/// IO.println(strong);
+/// ```
+///
+/// Výsledek je dvě, protože pulzy dva a čtyři splňují condition (podmínku). Kdybys potřeboval pouze
+/// vědět, zda existuje nějaký silný pulz, kdy už můžeš odpovědět? Jaký počet má mít prázdné array
+/// (pole)?
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -39,12 +66,16 @@ boolean hasMove(int who) {
 /// posuzuje vynechání; otáčení kamenů ani střídání hráčů nepřepisuj.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Vnější loop teď prochází jediný řádek.
-/// 2. Úspěšné hledání hned vrací true; neúspěšné musí dokončit všechny řádky.
-/// 3. Projdi všechny řádky i sloupce a false vrať až za oběma loops.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Vnější loop teď prochází jediný řádek.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Úspěšné hledání hned vrací true; neúspěšné musí dokončit všechny řádky.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Projdi všechny řádky i sloupce a false vrať až za oběma loops.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -13,9 +13,34 @@
 /// Použij Run File a v prvním kole napiš silent; po opravě vyzkoušej i směs velkých a malých písmen a
 /// sleduj, zda je posouzena stejně.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F05 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 String normalize(String input) {
     return input.strip().toUpperCase(Locale.ROOT);
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F05">
+/// `IO.readln` přijímá celý řádek včetně vnitřních mezer. String operation (operace nad řetězcem)
+/// vrací text, nemění původní String (řetězec). Potřebuješ-li výsledek, musíš jej uchovat.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// String raw = "  Quiet Room  ";
+/// String cleaned = raw.strip();
+/// String loud = cleaned.toUpperCase(Locale.ROOT);
+/// ```
+///
+/// Předpověz všechny tři hodnoty. `raw` stále obsahuje okrajové mezery, `cleaned` je `Quiet Room` a
+/// `loud` je `QUIET ROOM`. `strip()` odstraní okrajové whitespace (bílé znaky), nikoli mezeru mezi
+/// slovy. Tečka vybere operaci hodnoty vlevo; závorky předávají její argument (argumenty).
+/// `Locale.ROOT` žádá převod velikosti písmen nezávislý na jazyce místo místního nastavení počítače.
+/// Připravený input code (vstupní část) řeší `null` při konci vstupu; prázdný řádek je jiná hodnota.
+/// Samotné zavolání operace ještě nenahradí text uchovaný pod původním jménem.
+///
+/// Nyní předpověz cleaned a loud pro raw text `"  Soft Sky  "`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -33,12 +58,26 @@ String normalize(String input) {
 /// advance řídí pět kol a limit odhadů. Input loop (vstupní cyklus) už čte celé řádky a řeší opakování.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. strip už odstraňuje okrajové mezery.
-/// 2. Operace se String (řetězcem) vrací nový String; výsledek musíš použít.
-/// 3. Vrať input.strip().toUpperCase(Locale.ROOT).
+// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
+/// Chain (řetězení volání) používá vrácenou hodnotu každé operace jako receiver (příjemce) další
+/// operace. Například `"  Hi  ".strip().length()` nejprve vytvoří `Hi`, potom jeho délku 2. Nyní
+/// předpověz stejný chain pro `"  Hello  "`. Tvůj výpočet má stále vracet text, nikoli jeho délku.
+/// Dostupná operace převodu na velká písmena je `toUpperCase(Locale.ROOT)`; `Locale.ROOT` je
+/// připravená constant (konstanta) předávaná jako argument (argument), nikoli další call (volání
+/// metody). Udrží porovnání se slovníkem stejné při různých místních nastaveních. Při přidávání
+/// převodu velikosti písmen zachovej současné čištění okrajů.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// strip už odstraňuje okrajové mezery.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Operace se String (řetězcem) vrací nový String; výsledek musíš použít.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Vrať input.strip().toUpperCase(Locale.ROOT).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

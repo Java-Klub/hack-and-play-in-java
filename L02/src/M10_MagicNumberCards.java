@@ -13,9 +13,35 @@
 /// Použij Run File, mysli si 5 a na šest karet odpověz y, n, y, n, n, n, abys porovnal oznámené číslo
 /// před opravou a po ní.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F06 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean yesAnswer(String input) {
     return input.equalsIgnoreCase("y");
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F06">
+/// Boolean expression (logický výraz) dává `true` nebo `false`. `&&` vyžaduje obě condition
+/// (podmínky), `||` alespoň jednu a `!` obrátí logický výsledek. Comparison (porovnání) jako `>=`
+/// zahrnuje rovnost; `>` ji nezahrnuje.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// int age = 14;
+/// boolean hasTicket = false;
+/// boolean enter = age >= 12 && hasTicket;
+/// boolean recognised = "open".equals("OPEN");
+/// ```
+///
+/// Předpověz oba výsledky: každý je `false`. Věk stačí, ale podmínka vstupenky ne. `equals` porovnává
+/// obsah String (řetězců) a rozlišuje velikost písmen; `equalsIgnoreCase` ji záměrně ignoruje. U
+/// object (objektů) se `==` ptá, zda dva reference (odkazy) označují tentýž objekt, nikoli zda mají
+/// stejný text. Porovnání obsahu a rozsahu odpovídají na různé otázky. Než condition uvěříš, ověř
+/// hodnotu přesně na hranici a těsně za ní.
+///
+/// Nyní předpověz enter pro věk dvanáct s platnou vstupenkou.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -36,12 +62,16 @@ boolean yesAnswer(String input) {
 /// karet.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Zadaný text nemusí být tentýž String object (objekt řetězce) jako doslovný text v uvozovkách.
-/// 2. Porovnání bez rozlišení velikosti písmen zpracuje y i Y.
-/// 3. Vrať input.equalsIgnoreCase("y").
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Zadaný text nemusí být tentýž String object (objekt řetězce) jako doslovný text v uvozovkách.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Porovnání bez rozlišení velikosti písmen zpracuje y i Y.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Vrať input.equalsIgnoreCase("y").
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

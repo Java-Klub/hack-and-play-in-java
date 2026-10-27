@@ -13,9 +13,35 @@
 /// Použij Run File a zadej 1234 pro prozkoumání chybné cvičné výhry; po opravě zadej r a vyzkoušej nově
 /// ukrytý kód.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Nová dovednost · F06 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 boolean matchesCode(String guess) {
     return secret.equals(guess);
 }
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F06">
+/// Boolean expression (logický výraz) dává `true` nebo `false`. `&&` vyžaduje obě condition
+/// (podmínky), `||` alespoň jednu a `!` obrátí logický výsledek. Comparison (porovnání) jako `>=`
+/// zahrnuje rovnost; `>` ji nezahrnuje.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// int age = 14;
+/// boolean hasTicket = false;
+/// boolean enter = age >= 12 && hasTicket;
+/// boolean recognised = "open".equals("OPEN");
+/// ```
+///
+/// Předpověz oba výsledky: každý je `false`. Věk stačí, ale podmínka vstupenky ne. `equals` porovnává
+/// obsah String (řetězců) a rozlišuje velikost písmen; `equalsIgnoreCase` ji záměrně ignoruje. U
+/// object (objektů) se `==` ptá, zda dva reference (odkazy) označují tentýž objekt, nikoli zda mají
+/// stejný text. Porovnání obsahu a rozsahu odpovídají na různé otázky. Než condition uvěříš, ověř
+/// hodnotu přesně na hranici a těsně za ní.
+///
+/// Nyní předpověz enter pro věk dvanáct s platnou vstupenkou.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -34,12 +60,16 @@ boolean matchesCode(String guess) {
 /// výhry. První secret je 1234 pro zkoumání; reset pro další kola vytváří náhodné kódy.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Dvě samostatné String value (řetězcové hodnoty) mohou obsahovat stejný text.
-/// 2. Použij operaci porovnání obsahu String (řetězců).
-/// 3. Vrať secret.equals(guess).
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Dvě samostatné String value (řetězcové hodnoty) mohou obsahovat stejný text.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Použij operaci porovnání obsahu String (řetězců).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Vrať secret.equals(guess).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -19,6 +19,9 @@ import javax.swing.Timer;
 /// Spusť Run File, vyber Fire a kliknutím zapal strom, potom přes Step sleduj pohyb fronty, než vyzkoušíš
 /// Run/Pause.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F26 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int[][] nextForest(int[][] before) {
     int[][] next = new int[40][60];
     int[][] offsets = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
@@ -39,6 +42,29 @@ int[][] nextForest(int[][] before) {
     return next;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F26">
+/// ### Simultaneous updates: čti okamžik, sestav další
+///
+/// Simultaneous step (současný krok) dává všem výpočtům stejná původní data. Výsledky zapisuj do
+/// odděleného úložiště a zveřejni je po celém průchodu. Jinak se dřívější zápis skrytě stane
+/// pozdějším input (vstupem) a pořadí průchodu změní pravidlo.
+///
+/// ```java
+/// int[] tones = {2, 5, 9};
+/// int[] shifted = new int[tones.length];
+/// for (int i = 0; i < tones.length; i++) {
+///     shifted[i] = tones[(i + 1) % tones.length];
+/// }
+/// ```
+///
+/// Výsledek je `[5,9,2]`; tones zůstane `[2,5,9]`, protože se čte nezměněné. Změnil by obrácený
+/// průchod výsledek? Nové array začíná nulovými hodnotami, takže každý potřebný výstup musíš záměrně
+/// vypočítat. Zkopírovaný snapshot (snímek) a nový output buffer (výstupní prostor) plní různé role.
+///
+/// Zde `% tones.length` používá remainder (zbytek po dělení), aby se index za posledním element
+/// (prvkem) vrátil na nulu.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
 ///
@@ -53,12 +79,26 @@ int[][] nextForest(int[][] before) {
 /// timer (časovač), který se při zavření zastaví, řeší běh; jde o hračku šíření, ne předpověď požáru.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Rozhodni další význam každé output cell (výstupní buňky)
 ///
-/// 1. Zápis do before dovolí novému ohni okamžitě zapálit další strom podle pořadí průchodu.
-/// 2. Nová nulová matice také přirozeně nechá starý oheň zaniknout.
-/// 3. Vytvoř novou next matici 40 × 60; čti jen before a next zveřejni až po výpočtu všech polí.
+/// Hračka používá nulu pro prázdno, jedničku pro strom a dvojku pro oheň. Nové int grid (pole mřížky)
+/// začíná prázdné, protože buňky mají nulu. Transition contract (smlouva přechodu): staré prázdno
+/// zůstane, starý oheň zmizí a starý strom zůstane stromem, pokud nehořel některý původní soused ve
+/// čtyřech směrech. Nový oheň ovlivní až další generaci. Nakresli řadu tří stromů s ohněm na konci a
+/// předpověz dva kroky. Která data musí při výpočtu prvního kroku zůstat nezměněná?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Zápis do before dovolí novému ohni okamžitě zapálit další strom podle pořadí průchodu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Nová nulová matice také přirozeně nechá starý oheň zaniknout.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Vytvoř novou next matici 40 × 60; čti jen before a next zveřejni až po výpočtu všech polí.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

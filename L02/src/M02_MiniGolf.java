@@ -19,9 +19,35 @@ import javax.swing.Timer;
 /// Použij Run File, natáhni myš dozadu od stojícího míčku a pusť ji pro odpal; před dalším úderem počkej
 /// na zastavení nebo stiskni R pro nový začátek.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F04 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 double dragVelocity(double distance) {
     return distance / 12.5;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F04">
+/// Arithmetic (aritmetika) používá operand type (typy operandů) v okamžiku provedení operace. Jsou-li
+/// oba operand u `/` celočíselné, Java zahodí desetinnou část. Pozdější uložení výsledku do `double`
+/// ji nevrátí.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// int pages = 7;
+/// double first = pages / 2;
+/// double second = pages / 2.0;
+/// double third = (double) pages / 2;
+/// ```
+///
+/// Předpověz tři hodnoty: `3.0`, `3.5`, `3.5`. Cast (převod) `(double)` převede toto použití `pages`
+/// před dělením; nezmění deklarovaný type (typ) proměnné. Závorky seskupují výpočty, `*` násobí a `/`
+/// dělí. Kromě kladného input (vstupu) ověř i záporný a nulu. Pojmenuj jednotky: vzdálenost a
+/// rychlost jsou různé veličiny, i když obě používají `double`. O výsledku rozhoduje celý expression
+/// (výraz), nikoli jen type napsaný před jménem method (metody).
+///
+/// Nyní předpověz všechny tři výsledky, pokud pages obsahuje devítku.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -41,12 +67,24 @@ double dragVelocity(double distance) {
 /// údery; step dodává tření, odrazy a pomalé zachycení jamkou. Tato pravidla už fungují.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. Předpověz výsledek 100 / 125.
-/// 2. Převod potřebuje 8 jednotek rychlosti na 100 pixel (obrazových bodů), nikoli 0.8.
-/// 3. Použij return distance / 12.5;
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// Zde už distance má type (typ) double. Dělení celočíselným literal (doslovným číslem) 125 proto
+/// desetinné výsledky zachovává: chybné je měřítko, nikoli integer division (celočíselné dělení). Než
+/// začneš upravovat, odděl tato vysvětlení. Z uvedených příkladů vzdálenosti a rychlosti odvoď
+/// jednotný převod a zachovej znaménko směru. Připravené shoot už omezuje příliš silné rány; tvůj
+/// výpočet nemá přidávat další omezení ani vybírat směr míčku.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Předpověz výsledek 100 / 125.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Převod potřebuje 8 jednotek rychlosti na 100 pixel (obrazových bodů), nikoli 0.8.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Použij return distance / 12.5;
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

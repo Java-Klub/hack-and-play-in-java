@@ -15,6 +15,9 @@
 /// Použij Run File a napiš ALLEY proti cvičnému slovu LEVEL; porovnej vypsanou nápovědu se dvěma L, která
 /// se obě mohou shodovat na jiném místě.
 /// Po opravě: Save → Test File → zahraj si znovu.
+///
+/// Potřebuješ výklad? Připomenutí · F12 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 int[] leftoverLetters(String guess, char[] result) {
     int[] counts = new int[26];
     for (int i = 0; i < 5; i++) {
@@ -27,6 +30,29 @@ int[] leftoverLetters(String guess, char[] result) {
     }
     return counts;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F12">
+/// Accumulator (průběžný výsledek) pamatuje rostoucí výsledek mezi průchody. Jeho počáteční hodnota
+/// patří před loop (smyčku); uvnitř by výsledek začínal znovu pro každou položku. Uloženým výsledkem
+/// může být text, nejen číslo.
+///
+/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+///
+/// ```java
+/// String receipt = "Items:";
+/// for (String item : List.of("tea", "cake")) {
+///     receipt += " " + item;
+/// }
+/// ```
+///
+/// Předpověz receipt po každém průchodu: `Items: tea`, potom `Items: tea cake`. `+=` spojí starou
+/// hodnotu s novým příspěvkem a výsledek uloží. Samotné `=` uloženou hodnotu nahradí. `List.of(...)`
+/// dodá pevnou sequence (posloupnost) uvedených hodnot; dvojtečka navštíví jednu položku za průchod.
+/// Sleduj aktuální položku a accumulator ve dvou sloupcích, abys zjistil, zda dřívější práce přežije.
+/// Počáteční hodnota má vzniknout jednou za celý výpočet, nikoli jednou za každou objevenou položku.
+///
+/// Nyní předpověz receipt, pokud připravený seznam obsahuje jen `"rice"`.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky
@@ -49,12 +75,16 @@ int[] leftoverLetters(String guess, char[] result) {
 /// tipů; display vysvětluje G, Y a tečku. První kolo používá LEVEL, /r vybere náhodné slovo.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda po krocích">
-/// ## Když se zasekneš
-///
-/// 1. U LEVEL proti ALLEY zůstávají na začátku obě L bez přesné shody.
-/// 2. counts[letter] je jediný připravený counter (čítač) pro dané písmeno.
-/// 3. Použij counts[letter] += 1 místo = 1.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// U LEVEL proti ALLEY zůstávají na začátku obě L bez přesné shody.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// counts[letter] je jediný připravený counter (čítač) pro dané písmeno.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Použij counts[letter] += 1 místo = 1.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
