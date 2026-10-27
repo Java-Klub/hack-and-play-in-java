@@ -22,7 +22,7 @@ List<int[]> group(int row, int col) {
     var queue = new ArrayDeque<int[]>();
     queue.add(new int[]{row, col});
     seen[row][col] = true;
-    while (!queue.isEmpty() && result.isEmpty()) {
+    while (!queue.isEmpty()) {
         int[] p = queue.remove();
         result.add(p);
         for (int[] d : new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}) {

@@ -27,7 +27,7 @@ import javax.imageio.ImageIO;
 /// Po opravě: Save → Test File → zahraj si znovu.
 Point2D.Double transform(int x, int y, int copy, boolean reflect) {
     double dx = x - WIDTH / 2, dy = (y - HEIGHT / 2) * (reflect ? -1 : 1), a = 2 * Math.PI * copy / axes;
-    return new Point2D.Double(dx * Math.cos(a) - dy * Math.sin(a), HEIGHT / 2 + dx * Math.sin(a) + dy * Math.cos(a));
+    return new Point2D.Double(WIDTH / 2 + dx * Math.cos(a) - dy * Math.sin(a), HEIGHT / 2 + dx * Math.sin(a) + dy * Math.cos(a));
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

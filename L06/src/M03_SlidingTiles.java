@@ -35,7 +35,7 @@ void reset(long seed) {
     if (solved()) {
         slide(7);
     }
-    int moves = 0;
+    moves = 0;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

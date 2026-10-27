@@ -13,12 +13,12 @@
 /// políčko od 1 do 16.
 /// Po opravě: Save → Test File → zahraj si znovu.
 boolean won() {
-    for (int row = 0; row < 4; row++) {
-        if (line(row * 4, row * 4 + 1, row * 4 + 2, row * 4 + 3)) {
+    for (int i = 0; i < 4; i++) {
+        if (line(i * 4, i * 4 + 1, i * 4 + 2, i * 4 + 3) || line(i, i + 4, i + 8, i + 12)) {
             return true;
         }
     }
-    return false;
+    return line(0, 5, 10, 15) || line(3, 6, 9, 12);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

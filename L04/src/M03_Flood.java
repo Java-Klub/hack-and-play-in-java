@@ -23,7 +23,7 @@ import java.util.Random;
 /// Po opravě: Save → Test File → zahraj si znovu.
 void spread(ArrayList<Point> queue, int old, int colour) {
     int index = 0;
-    while (index < queue.size() && index < 1) {
+    while (index < queue.size()) {
         Point point = queue.get(index);
         visitNeighbours(queue, point, old, colour);
         index++;

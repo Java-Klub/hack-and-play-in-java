@@ -20,7 +20,7 @@ import javax.swing.Timer;
 /// znovu srovnej.
 /// Po opravě: Save → Test File → zahraj si znovu.
 void step() {
-    if (paused) {
+    if (!paused) {
         time += .02 * speed;
     }
 }

@@ -13,7 +13,7 @@
 /// řádek a sloupec.
 /// Po opravě: Save → Test File → zahraj si znovu.
 boolean hasMove(int who) {
-    for (int r = 0; r < 1; r++) {
+    for (int r = 0; r < 6; r++) {
         for (int c = 0; c < 6; c++) {
             if (!captures(r, c, who).isEmpty()) {
                 return true;

@@ -22,7 +22,7 @@ import javax.swing.Timer;
 /// Po Run File řiď a zrychluj šipkami, drž Space pro střelbu a klávesou R začni let znovu.
 /// Po opravě: Save → Test File → zahraj si znovu.
 Runnable firingAction() {
-    return () -> {};
+    return this::fire;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

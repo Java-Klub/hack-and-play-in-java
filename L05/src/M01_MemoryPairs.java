@@ -19,7 +19,7 @@ import java.awt.GridLayout;
 /// pokus.
 /// Po opravě: Save → Test File → zahraj si znovu.
 int visible(int index) {
-    return matched[index] || index == first || index == second ? cards[0] : 0;
+    return matched[index] || index == first || index == second ? cards[index] : 0;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

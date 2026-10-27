@@ -20,7 +20,7 @@ import javax.swing.Timer;
 /// na zastavení nebo stiskni R pro nový začátek.
 /// Po opravě: Save → Test File → zahraj si znovu.
 double dragVelocity(double distance) {
-    return distance / 125;
+    return distance / 12.5;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

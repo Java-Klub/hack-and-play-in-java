@@ -20,7 +20,7 @@ import javax.swing.Timer;
 /// jejich reakci.
 /// Po opravě: Save → Test File → zahraj si znovu.
 double obstaclePush(double distance) {
-    return 0;
+    return avoidance.strength(distance);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

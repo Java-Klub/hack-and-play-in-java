@@ -22,7 +22,7 @@ int adjacent(int row, int col) {
     int count = 0;
     for (int r = row - 1; r <= row + 1; r++) {
         for (int c = col - 1; c <= col + 1; c++) {
-            if (inside(r, c) && (r != row || c != col) && (r == row || c == col) && mines[r][c]) {
+            if (inside(r, c) && (r != row || c != col) && mines[r][c]) {
                 count++;
             }
         }

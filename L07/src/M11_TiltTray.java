@@ -30,7 +30,7 @@ void step() {
     x += vx;
     for (var p : obstacles) {
         if (hit(p)) {
-            x = x;
+            x = vx > 0 ? p.x - 10 : p.x + p.width + 10;
             vx *= -.3;
         }
     }

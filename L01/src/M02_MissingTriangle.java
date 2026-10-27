@@ -21,8 +21,8 @@ import javax.swing.*;
 ///
 /// Řádky s `///` jsou průvodce pro tebe; při spuštění se neprovádějí.
 void paintDisc(Graphics2D g, int i) {
-    whiteBite(g, i);
     darkDisc(g, i);
+    whiteBite(g, i);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

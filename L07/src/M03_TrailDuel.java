@@ -21,7 +21,7 @@ import javax.swing.Timer;
 /// Po opravě: Save → Test File → zahraj si znovu.
 Direction directionFor(int code) {
     return switch (code) {
-        case KeyEvent.VK_W, KeyEvent.VK_UP -> new Direction(0, 1);
+        case KeyEvent.VK_W, KeyEvent.VK_UP -> new Direction(0, -1);
         case KeyEvent.VK_S, KeyEvent.VK_DOWN -> new Direction(0, 1);
         case KeyEvent.VK_A, KeyEvent.VK_LEFT -> new Direction(-1, 0);
         case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> new Direction(1, 0);

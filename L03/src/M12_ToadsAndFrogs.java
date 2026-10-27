@@ -20,7 +20,11 @@ import java.util.Arrays;
 /// uspořádání.
 /// Po opravě: Save → Test File → zahraj si znovu.
 int direction(int piece) {
-    return 1;
+    if (piece == 1) {
+        return 1;
+    } else {
+        return -1;
+    }
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

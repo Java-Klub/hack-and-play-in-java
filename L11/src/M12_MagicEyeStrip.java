@@ -19,7 +19,7 @@ import javax.imageio.ImageIO;
 /// magic-eye-strip.png.
 /// Po opravě: Save → Test File → zahraj si znovu.
 long readSeed(Path path) throws IOException {
-    return Long.parseLong(path.toString());
+    return Long.parseLong(Files.readString(path).strip());
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

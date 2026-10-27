@@ -21,7 +21,7 @@ import java.util.Arrays;
 /// Po opravě: Save → Test File → zahraj si znovu.
 record Rule(int x, int y) {
     boolean satisfiedBy(int[][] values) {
-        return values[y][x] > values[y][x + 1];
+        return values[y][x] < values[y][x + 1];
     }
 }
 

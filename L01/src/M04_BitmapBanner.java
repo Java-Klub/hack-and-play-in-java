@@ -13,7 +13,7 @@
 /// vzdálenosti.
 /// Po opravě: Save → Test File → zahraj si znovu.
 String bannerMessage() {
-    return "     ";
+    return "JAVA CLUB!";
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

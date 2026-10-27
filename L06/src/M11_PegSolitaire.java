@@ -16,7 +16,9 @@ record JumpExample(int row, int column, int toRow, int toColumn, boolean expecte
 }
 
 JumpExample[] learnerChecks() {
-    return new JumpExample[]{new JumpExample(0, 1, 2, 1, true)};
+    return new JumpExample[]{
+    new JumpExample(0, 1, 2, 1, true), new JumpExample(2, 0, 2, 2, false),
+    new JumpExample(0, 1, 1, 2, false), new JumpExample(-1, 1, 1, 1, false)};
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

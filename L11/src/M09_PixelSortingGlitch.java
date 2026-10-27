@@ -20,7 +20,7 @@ import javax.imageio.ImageIO;
 /// Po opravě: Save → Test File → zahraj si znovu.
 void saveSorted(Path path, BufferedImage input, int threshold) throws IOException {
     Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(sort(input, threshold), "png", path.resolveSibling("lost-pixels.png").toFile())) {
+    if (!ImageIO.write(sort(input, threshold), "png", path.toFile())) {
         throw new IOException("PNG writer missing.");
     }
 }

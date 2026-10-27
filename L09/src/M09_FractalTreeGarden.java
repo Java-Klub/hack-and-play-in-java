@@ -24,7 +24,7 @@ double readAngle(String text) {
         if (!Double.isFinite(value) || value < 10 || value > 70) throw new IllegalArgumentException("angle: 10..70.");
         return value;
     } catch (NumberFormatException invalid) {
-        return 10;
+        return 28;
     }
 }
 

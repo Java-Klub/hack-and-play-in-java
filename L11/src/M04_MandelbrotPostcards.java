@@ -24,7 +24,7 @@ BufferedImage render(long seed, double span) {
         throw new IllegalArgumentException("Span must be 0.00001..6.");
     }
     var image = new BufferedImage(480, 360, BufferedImage.TYPE_INT_RGB);
-    float hue = new Random(0).nextFloat();
+    float hue = new Random(seed).nextFloat();
     for (int y = 0; y < 360; y++) {
         for (int x = 0; x < 480; x++) {
             int n = escape(centerX + (x / 479.0 - 0.5) * span, centerY + (y / 359.0 - 0.5) * span * 0.75);

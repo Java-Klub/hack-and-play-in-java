@@ -22,8 +22,8 @@ import javax.swing.*;
 ///
 /// Řádky s `///` jsou průvodce pro tebe; při spuštění se neprovádějí.
 void paintWall(Graphics2D g) {
-    paintTiles(g);
     paintBackground(g);
+    paintTiles(g);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

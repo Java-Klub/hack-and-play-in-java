@@ -21,7 +21,7 @@ import javax.swing.Timer;
 /// se stopou.
 /// Po opravě: Save → Test File → zahraj si znovu.
 double accelerationNow() {
-    return 0;
+    return acceleration.at(angle, length);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

@@ -20,7 +20,7 @@ import java.util.HashSet;
 /// Po opravě: Save → Test File → zahraj si znovu.
 record RayState(int x, int y, int dx, int dy) {
     RayState advance() {
-        return new RayState(x + dy, y + dx, dx, dy);
+        return new RayState(x + dx, y + dy, dx, dy);
     }
 }
 

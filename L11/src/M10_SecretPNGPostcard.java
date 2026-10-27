@@ -20,7 +20,7 @@ import javax.imageio.ImageIO;
 /// obnovený z exports/secret-course.png.
 /// Po opravě: Save → Test File → zahraj si znovu.
 String readMessage(Path path) throws IOException {
-    try (var input = Files.newInputStream(Path.of(path.getFileName().toString()))) {
+    try (var input = Files.newInputStream(path)) {
         var image = ImageIO.read(input);
         if (image == null) throw new IOException("Input is not a readable image.");
         return decode(image);

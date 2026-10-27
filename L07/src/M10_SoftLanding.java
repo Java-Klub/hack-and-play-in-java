@@ -24,7 +24,7 @@ void step() {
         return;
     }
     velocityY += 0.04;
-    if (left || right || up) {
+    if (fuel > 0 && (left || right || up)) {
         if (left) {
             velocityX -= 0.06;
         }

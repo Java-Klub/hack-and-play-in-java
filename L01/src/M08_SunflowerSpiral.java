@@ -18,7 +18,7 @@ import javax.imageio.ImageIO;
 /// Použij Run File, obnov projekt v NetBeans Files a otevři sunflower-spiral.png, abys porovnal vzniklé
 /// uspořádání.
 /// Po opravě: Save → Test File → zahraj si znovu.
-double defaultAngle = 180;
+double defaultAngle = 137.5;
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky

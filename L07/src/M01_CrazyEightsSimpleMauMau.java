@@ -14,7 +14,7 @@
 /// Po opravě: Save → Test File → zahraj si znovu.
 boolean legal(int card) {
     return switch (rank(card)) {
-        case 1 -> true;
+        case 8 -> true;
         default -> rank(card) == rank(top) || card / 13 == suit;
     };
 }

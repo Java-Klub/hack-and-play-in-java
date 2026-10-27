@@ -12,7 +12,7 @@
 /// Po opravě: Save → Test File → zahraj si znovu.
 int conflicts() {
     int n = 0;
-    for (int[] edge : new int[][]{adjacent[0]}) {
+    for (int[] edge : adjacent) {
         if (colours[edge[0]] != 0 && colours[edge[0]] == colours[edge[1]]) {
             n++;
         }

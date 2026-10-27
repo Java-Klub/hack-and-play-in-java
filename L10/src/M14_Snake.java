@@ -25,8 +25,8 @@ import javax.swing.Timer;
 void turn(int x, int y) {
     if (turnQueued || lost || won || Math.abs(x) + Math.abs(y) != 1) return;
     if (x == -dx && y == -dy) return;
-    dx = x;
-    dy = y;
+    plannedX = x;
+    plannedY = y;
     turnQueued = true;
 }
 

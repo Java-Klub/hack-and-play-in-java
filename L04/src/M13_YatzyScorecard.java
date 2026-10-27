@@ -19,7 +19,7 @@ int total() {
     int upper = 0;
     for (int i = 0; i < 13; i++) {
         if (scores[i] >= 0) {
-            sum = scores[i];
+            sum += scores[i];
             if (i < 6) {
                 upper += scores[i];
             }

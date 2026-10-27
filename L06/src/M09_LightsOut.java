@@ -23,7 +23,7 @@ record CrossExample(int row, int column, int expected) {
 }
 
 CrossExample[] learnerChecks() {
-    return new CrossExample[]{new CrossExample(2, 2, 5)};
+    return new CrossExample[]{new CrossExample(2, 2, 5), new CrossExample(0, 0, 3), new CrossExample(0, 2, 4)};
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

@@ -22,7 +22,7 @@ int[] leftoverLetters(String guess, char[] result) {
             result[i] = 'G';
         } else {
             int letter = secret.charAt(i) - 'A';
-            counts[letter] = 1;
+            counts[letter] += 1;
         }
     }
     return counts;
@@ -174,6 +174,7 @@ void require(boolean valid) {
 /// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
 /// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
 /// - `++` — Zvětší číselnou hodnotu o jedna.
+/// - `+=` — Přičte k původní hodnotě a výsledek uloží zpět pod stejné jméno.
 /// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
 /// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
 /// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.

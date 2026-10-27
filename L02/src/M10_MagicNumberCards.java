@@ -14,7 +14,7 @@
 /// před opravou a po ní.
 /// Po opravě: Save → Test File → zahraj si znovu.
 boolean yesAnswer(String input) {
-    return input == "y";
+    return input.equalsIgnoreCase("y");
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

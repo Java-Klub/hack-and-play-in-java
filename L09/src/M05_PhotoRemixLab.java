@@ -23,7 +23,7 @@ import javax.imageio.ImageIO;
 /// počítadlo bodů.
 /// Po opravě: Save → Test File → zahraj si znovu.
 void countColour(int rgb) {
-    colourCounts.put(rgb, 1);
+    colourCounts.put(rgb, colourCounts.getOrDefault(rgb, 0) + 1);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

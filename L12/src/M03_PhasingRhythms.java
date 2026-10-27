@@ -22,7 +22,7 @@ import java.io.ByteArrayInputStream;
 /// oběma rytmy.
 /// Po opravě: Save → Test File → zahraj si znovu.
 double mix(double time) {
-    return 0.17 * first.sample(time);
+    return 0.17 * (first.sample(time) + second.sample(time));
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

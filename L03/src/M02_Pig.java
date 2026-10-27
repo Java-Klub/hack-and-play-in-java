@@ -16,7 +16,7 @@ boolean roll(int die) {
     if (winner != -1 || die < 1 || die > 6) {
         return false;
     }
-    if (die == 6) {
+    if (die == 1) {
         turnTotal = 0;
         player = 1 - player;
     } else {

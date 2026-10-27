@@ -19,7 +19,7 @@ Map<String, List<String>> train(String text) {
     String[] words = text.strip().split("\\s+");
     var links = new LinkedHashMap<String, List<String>>();
     for (int i = 0; i < words.length; i++) {
-        if (true) {
+        if (!links.containsKey(words[i])) {
             links.put(words[i], new ArrayList<>());
         }
         if (i + 1 < words.length) {
@@ -129,6 +129,7 @@ void main(String[] args) throws Exception {
 /// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
 /// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
 /// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+/// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.
 /// - `++` — Zvětší číselnou hodnotu o jedna.
 /// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
 /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V

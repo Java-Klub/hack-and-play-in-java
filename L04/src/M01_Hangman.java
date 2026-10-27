@@ -16,7 +16,7 @@
 String mask() {
     String result = "";
     int index = 0;
-    while (index < word.length() - 1) {
+    while (index < word.length()) {
         String letter = word.substring(index, index + 1);
         if (tried.contains(letter)) {
             result += letter;

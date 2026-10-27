@@ -13,7 +13,7 @@
 /// prohlédni hotový příběh.
 /// Po opravě: Save → Test File → zahraj si znovu.
 String cleanWord(String word) {
-    return word;
+    return word.strip();
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

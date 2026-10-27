@@ -15,6 +15,10 @@
 String compareTotals(int human, int house) {
     if (human > 21) {
         return "You bust";
+    } else if (house > 21 || human > house) {
+        return "You win";
+    } else if (human == house) {
+        return "Draw";
     } else {
         return "Dealer wins";
     }

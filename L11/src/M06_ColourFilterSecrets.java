@@ -19,7 +19,7 @@ import javax.imageio.ImageIO;
 /// zašuměnou horní a odhalenou spodní polovinu, potom spusť 43.
 /// Po opravě: Save → Test File → zahraj si znovu.
 BufferedImage hide(BufferedImage mask, long seed) {
-    var random = new Random(0);
+    var random = new Random(seed);
     var image = new BufferedImage(mask.getWidth(), mask.getHeight(), BufferedImage.TYPE_INT_RGB);
     for (int y = 0; y < image.getHeight(); y++) {
         for (int x = 0; x < image.getWidth(); x++) {

@@ -14,7 +14,7 @@
 /// zprávou.
 /// Po opravě: Save → Test File → zahraj si znovu.
 String templateLine() {
-    return "IO.println(HELLO);";
+    return "IO.println(\"HELLO\");";
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
@@ -72,6 +72,7 @@ void main() {
 /// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
 /// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
 ///   textu nepatří.
+/// - `\` — Uvnitř textu začíná escape (zvláštní zápis), například \n pro nový řádek nebo \" pro uvozovku.
 /// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
 /// - `IO` — Console input/output (vstup a výstup konzole). println vypíše řádek; readln čeká na jeden
 ///   řádek textu.

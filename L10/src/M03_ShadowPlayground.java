@@ -21,7 +21,7 @@ import java.awt.geom.Area;
 /// Po Run File klikáním či tažením kolem překážek posouvej lampu a pomocí R obnov její počáteční pozici.
 /// Po opravě: Save → Test File → zahraj si znovu.
 java.util.function.BiConsumer<Integer, Integer> lightAction() {
-    return (x, y) -> {};
+    return this::moveLight;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
@@ -229,8 +229,6 @@ void main() {
 /// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
 /// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
 /// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
-/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
-///   až při pozdějším volání.
 /// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
 /// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
 /// - `public` — Zpřístupňuje tuto declaration (deklaraci) dalšímu kódu.

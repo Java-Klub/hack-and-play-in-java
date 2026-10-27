@@ -19,7 +19,7 @@ String read(int r, int c, int nr, int nc) {
     int n = Math.max(Math.abs(nr - r), Math.abs(nc - c));
     require(n > 0 && (r == nr || c == nc || Math.abs(nr - r) == Math.abs(nc - c)));
     String word = "";
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i <= n; i++) {
         word += grid[r + i * dr].charAt(c + i * dc);
     }
     return word;

@@ -22,7 +22,7 @@ boolean applyRepeats(String text) {
     try {
         int candidate = Integer.parseInt(text.strip());
         if (candidate < 1 || candidate > 12) return false;
-        repeats = 6;
+        repeats = candidate;
         return true;
     } catch (NumberFormatException invalid) {
         return false;

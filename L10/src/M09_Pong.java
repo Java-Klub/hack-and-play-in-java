@@ -20,7 +20,7 @@ import javax.swing.Timer;
 /// začni znovu.
 /// Po opravě: Save → Test File → zahraj si znovu.
 void step() {
-    if (winner == -1) return;
+    if (winner != 0) return;
     leftY = clampPaddle(leftY + (leftDown ? 5 : 0) - (leftUp ? 5 : 0));
     rightY = clampPaddle(rightY + (rightDown ? 5 : 0) - (rightUp ? 5 : 0));
     ballX += velocityX;

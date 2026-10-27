@@ -20,7 +20,7 @@ import javax.swing.Timer;
 /// Run/Pause.
 /// Po opravě: Save → Test File → zahraj si znovu.
 int[][] nextForest(int[][] before) {
-    int[][] next = before;
+    int[][] next = new int[40][60];
     int[][] offsets = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
     for (int y = 0; y < 40; y++) {
         for (int x = 0; x < 60; x++) {

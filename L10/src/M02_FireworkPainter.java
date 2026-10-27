@@ -28,7 +28,7 @@ import javax.swing.Timer;
 /// oblohu.
 /// Po opravě: Save → Test File → zahraj si znovu.
 java.util.function.BiConsumer<Integer, Integer> burstAction() {
-    return (x, y) -> {};
+    return this::burst;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

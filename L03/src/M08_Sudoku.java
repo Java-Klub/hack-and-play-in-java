@@ -19,7 +19,7 @@ import java.awt.GridLayout;
 /// 1.
 /// Po opravě: Save → Test File → zahraj si znovu.
 boolean place(int row, int col, int value) {
-    if (complete() || !valid(row, col, value) || clues[row][col] == 0) return false;
+    if (complete() || !valid(row, col, value) || clues[row][col] != 0) return false;
     board[row][col] = value;
     return true;
 }

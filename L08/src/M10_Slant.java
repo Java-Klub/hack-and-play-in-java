@@ -13,7 +13,11 @@
 /// úpravy.
 /// Po opravě: Save → Test File → zahraj si znovu.
 char[][] snapshot() {
-    return cells.clone();
+    char[][] copy = new char[cells.length][];
+    for (int row = 0; row < cells.length; row++) {
+        copy[row] = cells[row].clone();
+    }
+    return copy;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

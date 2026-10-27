@@ -23,7 +23,7 @@ import javax.swing.Timer;
 void tap(int x, int y) {
     if (x > 0 && y > 0 && x < COLUMNS - 1 && y < ROWS - 1) {
         height[y][x] = Math.min(120, height[y][x] + 60);
-        paused = true;
+        paused = false;
     }
 }
 

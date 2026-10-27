@@ -21,7 +21,7 @@ import java.util.ArrayList;
 /// smazat pravým kliknutím.
 /// Po opravě: Save → Test File → zahraj si znovu.
 ArrayList<Box> snapshot() {
-    return boxes;
+    return new ArrayList<>(boxes);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

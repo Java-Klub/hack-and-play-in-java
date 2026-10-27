@@ -23,7 +23,7 @@ import java.util.List;
 /// Po opravě: Save → Test File → zahraj si znovu.
 List<Integer> foldTurns(int folds) {
     var turns = new ArrayList<Integer>();
-    for (int fold = 1; fold < folds; fold++) {
+    for (int fold = 0; fold < folds; fold++) {
         int old = turns.size();
         turns.add(1);
         for (int i = old - 1; i >= 0; i--) {

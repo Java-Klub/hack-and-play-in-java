@@ -29,7 +29,7 @@ BufferedImage[] shares(BufferedImage secret, long seed) {
     for (int y = 0; y < secret.getHeight(); y++) {
         for (int x = 0; x < secret.getWidth(); x++) {
             var order = new ArrayList<>(List.of(0, 1, 2, 3));
-            Collections.shuffle(order, new Random(seed));
+            Collections.shuffle(order, random);
             boolean ink = (secret.getRGB(x, y) & 255) > 127;
             for (int i = 0; i < 4; i++) {
                 int dx = order.get(i) % 2;

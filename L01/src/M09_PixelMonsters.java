@@ -18,7 +18,7 @@ import javax.imageio.ImageIO;
 /// Použij Run File, přijmi monster.png a zadej seed (počáteční hodnotu) 42, potom obnov Files a otevři
 /// monster.png; pro porovnání opravených očí použij stejný seed.
 /// Po opravě: Save → Test File → zahraj si znovu.
-int eyeColour = Color.BLACK.getRGB();
+int eyeColour = Color.WHITE.getRGB();
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky

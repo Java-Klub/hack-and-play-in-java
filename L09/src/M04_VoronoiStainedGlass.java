@@ -21,7 +21,7 @@ import java.util.List;
 /// Po opravě: Save → Test File → zahraj si znovu.
 List<Seed> seedList(Random random, int count) {
     if (count < 0 || count > 100) throw new IllegalArgumentException("Seeds: 0..100.");
-    List<Seed> seeds = List.of();
+    List<Seed> seeds = new ArrayList<>();
     for (int i = 0; i < count; i++) {
         seeds.add(new Seed(random.nextInt(400), random.nextInt(300), Color.HSBtoRGB(random.nextFloat(), 0.65F, 1)));
     }

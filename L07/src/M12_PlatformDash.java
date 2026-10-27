@@ -29,9 +29,9 @@ void step() {
     vy += .25;
     y += vy;
     grounded = false;
-    if (true) {
+    if (vy >= 0) {
         for (var p : platforms) {
-            if (x + 20 > p.x && x < p.x + p.width && y + 28 >= p.y) {
+            if (x + 20 > p.x && x < p.x + p.width && oldBottom <= p.y && y + 28 >= p.y) {
                 y = p.y - 28;
                 vy = 0;
                 grounded = true;

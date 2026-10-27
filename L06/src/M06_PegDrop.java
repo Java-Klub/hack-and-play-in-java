@@ -24,7 +24,7 @@ int scoreAt(int index) {
     if (index < 0 || index >= values.length) {
         throw new IllegalArgumentException("Unknown bin");
     }
-    return values[0];
+    return values[index];
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

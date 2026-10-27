@@ -17,7 +17,6 @@ List<String> choices() {
     var list = new ArrayList<String>();
     for (String w : words) {
         if (!used.contains(w) && (last.isEmpty() || w.charAt(0) == last.charAt(last.length() - 1))) {
-            list.clear();
             list.add(w);
         }
     }

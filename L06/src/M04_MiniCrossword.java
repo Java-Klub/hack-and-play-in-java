@@ -26,6 +26,7 @@ void command(String input) {
         require(p[1].equals(answers[n]));
         solved[n] = true;
     }
+    int count = 0;
     for (boolean value : solved) {
         if (value) {
             count++;
@@ -59,8 +60,6 @@ void command(String input) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
-int count;
-
 String[] answers = {"CAT", "ARE", "TEN", "CAT", "ARE", "TEN"};
 String[] clues = {"Across row1: pet that meows", "Across row2: plural of is", "Across row3: number after nine", "Down col1: pet that meows", "Down col2: plural of is", "Down col3: number after nine"};
 boolean[] solved;

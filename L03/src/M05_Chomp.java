@@ -13,7 +13,7 @@
 /// když už tam není.
 /// Po opravě: Save → Test File → zahraj si znovu.
 boolean bite(int row, int column) {
-    if (winner != 0 || row < 1 || row >= 4 || column < 1 || column > widths[row - 1]) {
+    if (winner != 0 || row < 1 || row > 4 || column < 1 || column > widths[row - 1]) {
         return false;
     }
     for (int i = row - 1; i < widths.length; i++) {

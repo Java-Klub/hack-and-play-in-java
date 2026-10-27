@@ -33,7 +33,7 @@ int[] runs(int[] values) {
             }
         }
     }
-    if (false) {
+    if (count > 0) {
         result.add(count);
     }
     return result.stream().mapToInt(Integer::intValue).toArray();

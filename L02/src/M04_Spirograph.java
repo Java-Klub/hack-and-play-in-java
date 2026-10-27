@@ -26,7 +26,7 @@ import javax.imageio.ImageIO;
 /// překreslené křivky.
 /// Po opravě: Save → Test File → zahraj si znovu.
 double radiusRatio(int outer, int innerRadius) {
-    return (outer - innerRadius) / innerRadius;
+    return (outer - innerRadius) / (double) innerRadius;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

@@ -22,7 +22,7 @@ import javax.swing.Timer;
 /// Po opravě: Save → Test File → zahraj si znovu.
 void startingPosition() {
     x = 20;
-    x = -80;
+    x = x + 60;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

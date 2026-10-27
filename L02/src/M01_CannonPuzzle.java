@@ -21,7 +21,7 @@ import javax.swing.Timer;
 /// další pokus.
 /// Po opravě: Save → Test File → zahraj si znovu.
 double launchSpeed(double drag) {
-    return drag * (9 / 100);
+    return drag * 0.09;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

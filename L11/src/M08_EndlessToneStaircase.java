@@ -30,7 +30,7 @@ void write(Path path, double[] signal) throws Exception {
     Files.createDirectories(path.toAbsolutePath().getParent());
     var format = new AudioFormat(RATE, 16, 1, true, false);
     try (var stream = new AudioInputStream(new ByteArrayInputStream(pcm), format, signal.length)) {
-        AudioSystem.write(stream, AudioFileFormat.Type.WAVE, Path.of(path.getFileName().toString()).toFile());
+        AudioSystem.write(stream, AudioFileFormat.Type.WAVE, path.toFile());
     }
 }
 

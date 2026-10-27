@@ -19,7 +19,7 @@ import java.util.Arrays;
 /// Spusť Run File, kliknutím na domino změň polaritu a klávesou U zkus obnovit předchozí volbu.
 /// Po opravě: Save → Test File → zahraj si znovu.
 int[] copyState() {
-    return state;
+    return state.clone();
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

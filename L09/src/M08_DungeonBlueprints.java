@@ -21,7 +21,7 @@ import java.util.List;
 /// Po opravě: Save → Test File → zahraj si znovu.
 void countRoom(Room room) {
     String kind = room.width() * room.height() <= 42 ? "SMALL" : "LARGE";
-    roomCounts.put(kind, 1);
+    roomCounts.put(kind, roomCounts.getOrDefault(kind, 0) + 1);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

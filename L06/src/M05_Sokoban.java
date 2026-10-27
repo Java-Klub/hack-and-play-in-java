@@ -12,7 +12,7 @@
 /// Spusť Run File a zadávej W, A, S nebo D potvrzené Enter pro pohyb hráče a tlačení bedny k cíli.
 /// Po opravě: Save → Test File → zahraj si znovu.
 boolean floor(int px, int py) {
-    return py >= 0 && py < 5 && px >= 0 && px < 7;
+    return py >= 0 && py < 5 && px >= 0 && px < 7 && terrain[py].charAt(px) != '#';
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
@@ -148,6 +148,7 @@ void require(boolean valid) {
 /// - `'` — Jednoduché uvozovky ohraničují jeden character (znak), například značku na desce.
 /// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
 /// - `==` — Porovnává primitive value (primitivní hodnoty). Pro obsah textu použij equals.
+/// - `!=` — Ověří, že se dvě hodnoty liší.
 /// - `&&` — Obě condition (podmínky) musejí platit; je-li první false, Java druhou přeskočí.
 /// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
 /// - `!` — Před boolean expression (logickým výrazem) obrátí true na false a naopak.

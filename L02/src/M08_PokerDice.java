@@ -14,7 +14,7 @@
 /// pouze tyto dvě kostky a příkazem bank ulož body.
 /// Po opravě: Save → Test File → zahraj si znovu.
 boolean fullHouse(int largestGroup, int pairs) {
-    return largestGroup == 3 || pairs == 1;
+    return largestGroup == 3 && pairs == 1;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

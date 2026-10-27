@@ -21,7 +21,7 @@ import java.util.Arrays;
 /// vrátit.
 /// Po opravě: Save → Test File → zahraj si znovu.
 int[] snapshot() {
-    return bridges;
+    return bridges.clone();
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

@@ -25,7 +25,7 @@ int readWidth(String text) {
         if (value < 4 || value > 160) throw new IllegalArgumentException("width: 4..160.");
         return value;
     } catch (NumberFormatException invalid) {
-        return 4;
+        return 80;
     }
 }
 

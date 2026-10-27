@@ -14,7 +14,7 @@
 /// sleduj, zda je posouzena stejně.
 /// Po opravě: Save → Test File → zahraj si znovu.
 String normalize(String input) {
-    return input.strip();
+    return input.strip().toUpperCase(Locale.ROOT);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

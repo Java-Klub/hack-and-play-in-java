@@ -25,7 +25,7 @@ import javax.swing.Timer;
 /// stopu.
 /// Po opravě: Save → Test File → zahraj si znovu.
 void step() {
-    if (!paused) {
+    if (paused) {
         return;
     }
     double dx = WIDTH / 2 - x, dy = HEIGHT / 2 - y, r2 = dx * dx + dy * dy + 25 * 25;

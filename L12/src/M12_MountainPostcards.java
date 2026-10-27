@@ -20,7 +20,9 @@ import javax.imageio.ImageIO;
 /// mountain-new.png.
 /// Po opravě: Save → Test File → zahraj si znovu.
 double[] reverseRidge(double[] heights) {
-    return heights.clone();
+    double[] reversed = new double[heights.length];
+    for (int i = 0; i < heights.length; i++) reversed[i] = heights[heights.length - 1 - i];
+    return reversed;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

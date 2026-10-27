@@ -27,7 +27,7 @@ import java.io.ByteArrayInputStream;
 boolean toggle(int row, int step) {
     if (row < 0 || row >= 4 || step < 0 || step >= 8) return false;
     Note note = new Note(row, step);
-    notes.add(note);
+    if (!notes.remove(note)) notes.add(note);
     return true;
 }
 

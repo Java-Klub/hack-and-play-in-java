@@ -22,7 +22,7 @@ int snowflake(Graphics2D g, int level) {
     int[] xs = {270, 70, 470};
     int[] ys = {45, 390, 390};
     int segments = 0;
-    for (int side = 1; side < 3; side++) {
+    for (int side = 0; side < 3; side++) {
         int next = (side + 1) % 3;
         segments += edge(g, xs[side], ys[side], xs[next], ys[next], level);
     }

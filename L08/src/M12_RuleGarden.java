@@ -13,7 +13,7 @@
 /// pravidlem od 0 do 255.
 /// Po opravě: Save → Test File → zahraj si znovu.
 boolean[] nextRow(boolean[] current, int rule) {
-    boolean[] next = current;
+    boolean[] next = new boolean[current.length];
     for (int column = 0; column < current.length; column++) {
         int pattern = current[column] ? 2 : 0;
         if (column > 0 && current[column - 1]) {

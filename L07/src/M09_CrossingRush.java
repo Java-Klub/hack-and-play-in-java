@@ -25,7 +25,7 @@ void hop(int dx, int dy) {
         return;
     }
     started = true;
-    x = x + dx;
+    x = Math.max(12, Math.min(WIDTH - 12, x + dx));
     y = Math.min(370, y + dy);
     collide();
     if (!lost && y < 45) {

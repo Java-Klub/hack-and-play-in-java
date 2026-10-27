@@ -21,7 +21,7 @@ import java.io.ByteArrayInputStream;
 /// přehrávači, abys zprávu slyšel.
 /// Po opravě: Save → Test File → zahraj si znovu.
 String defaultMessage() {
-    return "1234";
+    return "JAVA";
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

@@ -20,7 +20,7 @@ import java.util.List;
 /// Saved.
 /// Po opravě: Save → Test File → zahraj si znovu.
 boolean claimCentre(Set<Centre> seen, int x, int y) {
-    return seen.contains(new Centre(x, y));
+    return seen.add(new Centre(x, y));
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

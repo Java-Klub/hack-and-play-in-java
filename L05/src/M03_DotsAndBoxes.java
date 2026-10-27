@@ -11,7 +11,9 @@
 /// Spusť Run File a střídejte se v zadávání dosud volného čísla hrany od 1 do 12, vždy potvrzeného Enter.
 /// Po opravě: Save → Test File → zahraj si znovu.
 int[] box(int n) {
-    return new int[]{0, 1, 6, 7};
+    int r = n / 2;
+    int c = n % 2;
+    return new int[]{r * 2 + c, (r + 1) * 2 + c, 6 + r * 3 + c, 6 + r * 3 + c + 1};
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

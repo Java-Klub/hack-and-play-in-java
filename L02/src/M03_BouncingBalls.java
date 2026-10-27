@@ -23,7 +23,7 @@ import javax.swing.Timer;
 /// vyprázdní.
 /// Po opravě: Save → Test File → zahraj si znovu.
 double bounceSpeed(double speed) {
-    return Math.abs(speed) * (3 / 4);
+    return Math.abs(speed) * 3.0 / 4;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

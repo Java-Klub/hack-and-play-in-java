@@ -19,7 +19,7 @@ import javax.imageio.ImageIO;
 /// RIGHT nahoře.
 /// Po opravě: Save → Test File → zahraj si znovu.
 void countOrientation(String orientation) {
-    orientationCounts.put(orientation, 1);
+    orientationCounts.put(orientation, orientationCounts.getOrDefault(orientation, 0) + 1);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

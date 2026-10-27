@@ -27,7 +27,7 @@ import javax.swing.Timer;
 /// Po opravě: Save → Test File → zahraj si znovu.
 boolean undo() {
     if (history.isEmpty()) return false;
-    Edit edit = history.removeFirst();
+    Edit edit = history.removeLast();
     frames[edit.frame()][edit.y()][edit.x()] = edit.oldColour();
     return true;
 }

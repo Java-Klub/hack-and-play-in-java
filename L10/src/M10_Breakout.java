@@ -19,7 +19,7 @@ import javax.swing.Timer;
 /// Po Run File pohybem myši nastavuj pálku a odrážej míček do cihel; pomocí R spusť nové kolo.
 /// Po opravě: Save → Test File → zahraj si znovu.
 void step() {
-    if (state.equals("PAUSE")) return;
+    if (!state.equals("PLAY")) return;
     double previousX = ballX, previousY = ballY;
     ballX += velocityX;
     ballY += velocityY;

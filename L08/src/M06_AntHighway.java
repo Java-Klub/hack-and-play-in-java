@@ -22,7 +22,7 @@ import javax.swing.Timer;
 void step() {
     direction = Math.floorMod(direction + (black[y][x] ? -1 : 1), 4);
     black[y][x] = !black[y][x];
-    int[] dx = {0, 1, 0, 1};
+    int[] dx = {0, 1, 0, -1};
     int[] dy = {-1, 0, 1, 0};
     x = Math.floorMod(x + dx[direction], 81);
     y = Math.floorMod(y + dy[direction], 61);

@@ -25,11 +25,11 @@ enum RoundState {
 }
 
 RoundState afterContact(boolean caught, int dotsLeft) {
-    if (dotsLeft == 0) {
-        return RoundState.WON;
-    }
     if (caught) {
         return RoundState.CAUGHT;
+    }
+    if (dotsLeft == 0) {
+        return RoundState.WON;
     }
     return RoundState.PLAY;
 }

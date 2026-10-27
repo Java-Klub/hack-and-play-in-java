@@ -28,7 +28,7 @@ boolean[][] connected() {
         var p = queue.get(i);
         for (int d = 0; d < 4; d++) {
             int x = p.x + dx[d], y = p.y + dy[d];
-            if (x >= 0 && y >= 0 && x < 4 && y < 4 && !reached[y][x] && (tiles[p.y][p.x]&(1<<d)) != 0) {
+            if (x >= 0 && y >= 0 && x < 4 && y < 4 && !reached[y][x] && (tiles[p.y][p.x]&(1<<d)) != 0 && (tiles[y][x]&(1<<((d + 2) % 4))) != 0) {
                 reached[y][x] = true;
                 queue.add(new Point(x, y));
             }

@@ -14,7 +14,11 @@
 /// dojde dolů.
 /// Po opravě: Save → Test File → zahraj si znovu.
 int goalRow(int who) {
-    return 0;
+    if (who == 1) {
+        return 0;
+    } else {
+        return 2;
+    }
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

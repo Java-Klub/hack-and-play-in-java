@@ -12,7 +12,7 @@
 /// Použij Run File, zadej h pro vyšší nebo l pro nižší kartu a sleduj počet správných odhadů potřebných
 /// pro vypsané kolo.
 /// Po opravě: Save → Test File → zahraj si znovu.
-int target = 1;
+int target = 10;
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
 /// ## Jak číst právě tyto řádky

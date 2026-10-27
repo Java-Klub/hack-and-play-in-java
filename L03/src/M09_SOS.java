@@ -14,7 +14,7 @@
 /// který nové SOS nevytvoří.
 /// Po opravě: Save → Test File → zahraj si znovu.
 int gainedPoints(int before, int after) {
-    return after + before;
+    return after - before;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

@@ -22,7 +22,7 @@ enum Holder {
 }
 
 Holder holderAfterSwap(boolean swap) {
-    return prizeA ? Holder.PLAYER_ONE : Holder.PLAYER_TWO;
+    return prizeA != swap ? Holder.PLAYER_ONE : Holder.PLAYER_TWO;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

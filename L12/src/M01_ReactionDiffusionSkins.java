@@ -20,7 +20,7 @@ import javax.imageio.ImageIO;
 /// cestu vypsanou za Saved.
 /// Po opravě: Save → Test File → zahraj si znovu.
 double reactionAt(int x, int y) {
-    return 0;
+    return chemistry.reaction(a[y][x], b[y][x]);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

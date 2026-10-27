@@ -26,7 +26,7 @@ double frequency(Sound sound, double t) {
     return switch (sound) {
         case Laser(var start, var ratio) -> start * Math.pow(ratio, t);
         case Jump(var base, var rise) -> base + rise * t;
-        case Wobble(var base, var depth) -> base;
+        case Wobble(var base, var depth) -> base + depth * Math.sin(t * Math.PI * 16);
     };
 }
 

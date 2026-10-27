@@ -14,7 +14,7 @@
 /// skutečným hledáním pokladů.
 /// Po opravě: Save → Test File → zahraj si znovu.
 boolean insideSea(int row, int column) {
-    return row >= 0 && row <= 8 && column >= 0 && column <= 8;
+    return row >= 0 && row < 8 && column >= 0 && column < 8;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

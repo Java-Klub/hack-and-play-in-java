@@ -14,7 +14,7 @@
 /// která mají tento součet vytvořit.
 /// Po opravě: Save → Test File → zahraj si znovu.
 int diceTotal(int first, int second) {
-    return first;
+    return first + second;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

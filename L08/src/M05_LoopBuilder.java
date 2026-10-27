@@ -21,7 +21,7 @@ int[] vertices(int edge) {
     int n = edge - 12;
     int r = n / 4;
     int c = n % 4;
-    return new int[]{r * 4 + c, r * 4 + c + 1};
+    return new int[]{r * 4 + c, (r + 1) * 4 + c};
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

@@ -21,7 +21,7 @@ import javax.swing.*;
 /// Po opravě: Save → Test File → zahraj si znovu.
 boolean apply(Command command) {
     return switch (command) {
-        case Move(var xx, var yy) when xx >= 0 && yy >= 0 && xx < 5 && yy < 5 -> move(yy, xx);
+        case Move(var xx, var yy) when xx >= 0 && yy >= 0 && xx < 5 && yy < 5 -> move(xx, yy);
         case Move(var xx, var yy) -> false;
         case Restart() -> { restart(); yield true; }
     };

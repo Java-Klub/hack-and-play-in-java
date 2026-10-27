@@ -20,7 +20,7 @@ import javax.imageio.ImageIO;
 /// Po opravě: Save → Test File → zahraj si znovu.
 int chooseVertex(Random random, int count) {
     if (count < 1) throw new IllegalArgumentException("No legal vertices.");
-    return random.nextInt(Math.max(1, count - 1));
+    return random.nextInt(count);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">

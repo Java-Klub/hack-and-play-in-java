@@ -23,8 +23,6 @@ import javax.swing.Timer;
 /// Po Run File odtáhni a pusť závaží, pomocí Space zastav pohyb a šipkami měň tuhost a tlumení pružiny.
 /// Po opravě: Save → Test File → zahraj si znovu.
 void draw(Graphics2D g) {
-// Připravený omezený update (aktualizace): jedno volání znamená jeden krok; aktivní oprava je popsaná výše.
-    step();
     g.setColor(new Color(225, 230, 240));
     for (int i = 1; i < trail.size(); i++) {
         g.draw(new Line2D.Double(trail.get(i - 1), trail.get(i)));

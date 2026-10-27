@@ -22,7 +22,7 @@ import javax.imageio.ImageIO;
 void save(Path path, long seed, double option) throws Exception {
     Files.createDirectories(path.toAbsolutePath().getParent());
     try (var output = Files.newOutputStream(path)) {
-        if (!ImageIO.write(render(seed, option), "png", new ByteArrayOutputStream())) {
+        if (!ImageIO.write(render(seed, option), "png", output)) {
             throw new IOException("PNG writer missing.");
         }
     }
