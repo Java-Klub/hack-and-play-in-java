@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 /// All level checks: `java Check.java`
 /// One game: `java Check.java M01_CafeWallLab.java`
 /// Checks call the test methods directly in this JVM.
+/// Games remain compact sources; the checks below access them through reflection.
 class Check {
     int failed;
     int checked;
@@ -43,6 +44,7 @@ class Check {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M01_CafeWallLabTest {
     static int checks;
 
@@ -54,11 +56,11 @@ class M01_CafeWallLabTest {
     }
 
     public static void main(String[] args) throws Exception {
-        var game = new M01_CafeWallLab();
-        game.restart();
+        var game = Reflect.create("M01_CafeWallLab");
+        Reflect.call(game, "restart");
         var image = new BufferedImage(640, 450, BufferedImage.TYPE_INT_RGB);
         var pen = image.createGraphics();
-        game.paintWall(pen);
+        Reflect.call(game, "paintWall", pen);
         pen.dispose();
         check(image.getRGB(100, 50) != new Color(145, 145, 145).getRGB(), "wall tiles must remain visible above the background");
         check(image.getRGB(5, 420) == new Color(145, 145, 145).getRGB(), "the unused border keeps its background");
@@ -66,6 +68,7 @@ class M01_CafeWallLabTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M02_MissingTriangleTest {
     static int checks;
 
@@ -77,11 +80,11 @@ class M02_MissingTriangleTest {
     }
 
     public static void main(String[] args) throws Exception {
-        var game = new M02_MissingTriangle();
-        game.restart();
+        var game = Reflect.create("M02_MissingTriangle");
+        Reflect.call(game, "restart");
         var image = new BufferedImage(600, 450, BufferedImage.TYPE_INT_RGB);
         var pen = image.createGraphics();
-        game.paintDisc(pen, 0);
+        Reflect.call(game, "paintDisc", pen, 0);
         pen.dispose();
         check(image.getRGB(300, 100) == Color.WHITE.getRGB(), "the top disc must keep its white bite");
         check(image.getRGB(300, 30) == Color.BLACK.getRGB(), "the uncut part remains black");
@@ -89,6 +92,7 @@ class M02_MissingTriangleTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M03_TypeMelodyTest {
     static int checks;
 
@@ -100,9 +104,9 @@ class M03_TypeMelodyTest {
     }
 
     public static void main(String[] args) throws Exception {
-        var game = new M03_TypeMelody();
-        check(game.defaultMessage().equals("JAVA"), "the opening melody must use the literal JAVA");
-        byte[] audio = game.synthesize(game.defaultMessage(), 42);
+        var game = Reflect.create("M03_TypeMelody");
+        check(((java.lang.String) Reflect.call(game, "defaultMessage")).equals("JAVA"), "the opening melody must use the literal JAVA");
+        byte[] audio = ((byte[]) Reflect.call(game, "synthesize", ((java.lang.String) Reflect.call(game, "defaultMessage")), 42));
         boolean audible = false;
         for (byte sample : audio) {
             audible |= sample != 0;
@@ -113,6 +117,7 @@ class M03_TypeMelodyTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M04_BitmapBannerTest {
     static int checks;
 
@@ -124,14 +129,15 @@ class M04_BitmapBannerTest {
     }
 
     public static void main(String[] args) throws Exception {
-        var game = new M04_BitmapBanner();
-        check(game.bannerMessage().equals("JAVA CLUB!"), "the default banner must say JAVA CLUB!");
-        String pixels = game.banner(game.bannerMessage(), '#');
+        var game = Reflect.create("M04_BitmapBanner");
+        check(((java.lang.String) Reflect.call(game, "bannerMessage")).equals("JAVA CLUB!"), "the default banner must say JAVA CLUB!");
+        String pixels = ((java.lang.String) Reflect.call(game, "banner", ((java.lang.String) Reflect.call(game, "bannerMessage")), '#'));
         check(pixels.contains("#") && pixels.lines().count() == 5, "the message produces five visible pixel rows");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M05_ProgramMirrorTest {
     static int checks;
 
@@ -143,13 +149,14 @@ class M05_ProgramMirrorTest {
     }
 
     public static void main(String[] args) throws Exception {
-        var game = new M05_ProgramMirror();
-        check(game.templateLine().equals("IO.println(\"HELLO\");"), "the printed statement needs literal quotation marks around HELLO");
-        check(!game.templateLine().equals("HELLO"), "the template is a printed Java statement, not its output");
+        var game = Reflect.create("M05_ProgramMirror");
+        check(((java.lang.String) Reflect.call(game, "templateLine")).equals("IO.println(\"HELLO\");"), "the printed statement needs literal quotation marks around HELLO");
+        check(!((java.lang.String) Reflect.call(game, "templateLine")).equals("HELLO"), "the template is a printed Java statement, not its output");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M06_HigherOrLowerTest {
     static int checks;
 
@@ -161,20 +168,21 @@ class M06_HigherOrLowerTest {
     }
 
     public static void main(String[] args) throws Exception {
-        var game = new M06_HigherOrLower();
-        game.reset();
-        game.current = 2;
-        game.deck = new ArrayDeque<>(List.of(3, 4, 5));
-        game.command("h");
-        check(game.outcome.isEmpty(), "one correct guess must not finish the ten-point round");
-        check(game.target == 10, "one named target supplies the round goal");
-        game.correct = 9;
-        game.command("h");
-        check(!game.outcome.isEmpty() && game.correct == 10, "the tenth correct guess ends the round");
+        var game = Reflect.create("M06_HigherOrLower");
+        Reflect.call(game, "reset");
+        Reflect.set(game, "current", 2);
+        Reflect.set(game, "deck", new ArrayDeque<>(List.of(3, 4, 5)));
+        Reflect.call(game, "command", "h");
+        check(((java.lang.String) Reflect.get(game, "outcome")).isEmpty(), "one correct guess must not finish the ten-point round");
+        check(((int) Reflect.get(game, "target")) == 10, "one named target supplies the round goal");
+        Reflect.set(game, "correct", 9);
+        Reflect.call(game, "command", "h");
+        check(!((java.lang.String) Reflect.get(game, "outcome")).isEmpty() && ((int) Reflect.get(game, "correct")) == 10, "the tenth correct guess ends the round");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M07_SteppingFeetTest {
     static int checks;
 
@@ -186,17 +194,18 @@ class M07_SteppingFeetTest {
     }
 
     public static void main(String[] args) throws Exception {
-        var game = new M07_SteppingFeet();
-        game.restart();
-        check(game.x == 80, "the later assignment must leave shared x at 80");
-        check(game.paused, "the prepared animation still waits for Space");
-        game.paused = false;
-        game.step();
-        check(Math.abs(game.x - 81.6) < 1e-8, "both supplied feet continue from the repaired shared coordinate");
+        var game = Reflect.create("M07_SteppingFeet");
+        Reflect.call(game, "restart");
+        check(((double) Reflect.get(game, "x")) == 80, "the later assignment must leave shared x at 80");
+        check(((boolean) Reflect.get(game, "paused")), "the prepared animation still waits for Space");
+        Reflect.set(game, "paused", false);
+        Reflect.call(game, "step");
+        check(Math.abs(((double) Reflect.get(game, "x")) - 81.6) < 1e-8, "both supplied feet continue from the repaired shared coordinate");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M08_SunflowerSpiralTest {
     static int checks;
 
@@ -208,15 +217,16 @@ class M08_SunflowerSpiralTest {
     }
 
     public static void main(String[] args) throws Exception {
-        var game = new M08_SunflowerSpiral();
-        check(Math.abs(game.defaultAngle - 137.5) < 1e-8, "the shared default angle must be 137.5 degrees");
-        double[] second = game.position(2, game.defaultAngle);
+        var game = Reflect.create("M08_SunflowerSpiral");
+        check(Math.abs(((double) Reflect.get(game, "defaultAngle")) - 137.5) < 1e-8, "the shared default angle must be 137.5 degrees");
+        double[] second = ((double[]) Reflect.call(game, "position", 2, ((double) Reflect.get(game, "defaultAngle"))));
         check(Math.abs(second[1] - 250) > 1, "the default must spread seeds beyond a single horizontal spoke");
-        check(game.render(42, game.defaultAngle).getWidth() == 500, "the actual PNG renderer accepts the repaired default");
+        check(((java.awt.image.BufferedImage) Reflect.call(game, "render", 42, ((double) Reflect.get(game, "defaultAngle")))).getWidth() == 500, "the actual PNG renderer accepts the repaired default");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M09_PixelMonstersTest {
     static int checks;
 
@@ -228,11 +238,169 @@ class M09_PixelMonstersTest {
     }
 
     public static void main(String[] args) throws Exception {
-        var game = new M09_PixelMonsters();
-        var image = game.render(42);
+        var game = Reflect.create("M09_PixelMonsters");
+        var image = ((java.awt.image.BufferedImage) Reflect.call(game, "render", 42));
         check(image.getRGB(5 * 16 + 8, 5 * 16 + 8) == Color.WHITE.getRGB(), "left eye must read the shared white eyeColour");
         check(image.getRGB(10 * 16 + 8, 5 * 16 + 8) == Color.WHITE.getRGB(), "right eye must read that same white eyeColour");
-        check(game.eyeColour == Color.WHITE.getRGB(), "one named value controls both eyes");
+        check(((int) Reflect.get(game, "eyeColour")) == Color.WHITE.getRGB(), "one named value controls both eyes");
         System.out.println("PASS " + checks + " checks");
+    }
+}
+
+// Prepared access to compact programs. Tests keep ordinary assertions, arrays and JDK collections.
+class Reflect {
+    static Class<?> type(String name) {
+        return switch (name) {
+            case "boolean" -> boolean.class;
+            case "byte" -> byte.class;
+            case "short" -> short.class;
+            case "char" -> char.class;
+            case "int" -> int.class;
+            case "long" -> long.class;
+            case "float" -> float.class;
+            case "double" -> double.class;
+            case "void" -> void.class;
+            default -> load(name);
+        };
+    }
+
+    private static Class<?> load(String name) {
+        try {
+            try {
+                return Class.forName(name);
+            } catch (ClassNotFoundException missing) {
+                int nested = name.indexOf('$');
+                if (nested < 0) throw missing;
+                Class.forName(name.substring(0, nested));
+                return Class.forName(name);
+            }
+        } catch (ClassNotFoundException failure) {
+            throw new IllegalStateException("Cannot find compact program type: " + name, failure);
+        }
+    }
+
+    static Object create(String name, Object... args) {
+        var matches = new ArrayList<Constructor<?>>();
+        for (var constructor : type(name).getDeclaredConstructors()) {
+            if (accepts(constructor.getParameterTypes(), args)) matches.add(constructor);
+        }
+        var constructor = one(matches, "constructor " + name);
+        try {
+            constructor.setAccessible(true);
+            return constructor.newInstance(args);
+        } catch (InvocationTargetException failure) {
+            throw Reflect.<RuntimeException>raise(failure.getCause());
+        } catch (ReflectiveOperationException failure) {
+            throw new IllegalStateException("Cannot construct " + name, failure);
+        }
+    }
+
+    static Object get(Object target, String name) {
+        try {
+            return field(target, name).get(target instanceof Class<?> ? null : target);
+        } catch (ReflectiveOperationException failure) {
+            throw new IllegalStateException("Cannot read field " + name, failure);
+        }
+    }
+
+    static Object set(Object target, String name, Object value) {
+        try {
+            var field = field(target, name);
+            Object receiver = target instanceof Class<?> ? null : target;
+            field.set(receiver, value);
+            return field.get(receiver);
+        } catch (ReflectiveOperationException failure) {
+            throw new IllegalStateException("Cannot write field " + name, failure);
+        }
+    }
+
+    private static Field field(Object target, String name) throws NoSuchFieldException {
+        Class<?> owner = target instanceof Class<?> type ? type : target.getClass();
+        for (var current = owner; current != null; current = current.getSuperclass()) {
+            try {
+                var field = current.getDeclaredField(name);
+                if (target instanceof Class<?> && !Modifier.isStatic(field.getModifiers())) {
+                    throw new IllegalStateException("An instance is required for field " + name);
+                }
+                field.setAccessible(true);
+                return field;
+            } catch (NoSuchFieldException missing) {
+                // Continue with inherited fields.
+            }
+        }
+        throw new NoSuchFieldException(owner.getName() + "." + name);
+    }
+
+    static Object call(Object target, String name, Object... args) {
+        Class<?> owner = target instanceof Class<?> type ? type : target.getClass();
+        var methods = new LinkedHashMap<String, Method>();
+        for (var current = owner; current != null; current = current.getSuperclass()) {
+            for (var method : current.getDeclaredMethods()) {
+                methods.putIfAbsent(method.getName() + Arrays.toString(method.getParameterTypes()), method);
+            }
+        }
+        for (var method : owner.getMethods()) {
+            methods.putIfAbsent(method.getName() + Arrays.toString(method.getParameterTypes()), method);
+        }
+        var matches = new ArrayList<Method>();
+        for (var method : methods.values()) {
+            if (!method.isBridge() && !method.isSynthetic()
+                    && method.getName().equals(name) && accepts(method.getParameterTypes(), args)
+                    && (!(target instanceof Class<?>) || Modifier.isStatic(method.getModifiers()))) {
+                matches.add(method);
+            }
+        }
+        var method = one(matches, "method " + owner.getName() + "." + name);
+        try {
+            method.setAccessible(true);
+            return method.invoke(target instanceof Class<?> ? null : target, args);
+        } catch (InvocationTargetException failure) {
+            throw Reflect.<RuntimeException>raise(failure.getCause());
+        } catch (ReflectiveOperationException failure) {
+            throw new IllegalStateException("Cannot call " + owner.getName() + "." + name, failure);
+        }
+    }
+
+    static Object array(String component, Object... values) {
+        Object result = Array.newInstance(type(component), values.length);
+        for (int index = 0; index < values.length; index++) Array.set(result, index, values[index]);
+        return result;
+    }
+
+    private static boolean accepts(Class<?>[] parameters, Object[] args) {
+        if (parameters.length != args.length) return false;
+        for (int index = 0; index < parameters.length; index++) {
+            Class<?> to = parameters[index];
+            Object value = args[index];
+            if (value == null) {
+                if (to.isPrimitive()) return false;
+            } else if (to.isPrimitive()) {
+                String targets = switch (value) {
+                    case Boolean ignored -> "boolean";
+                    case Byte ignored -> "byte short int long float double";
+                    case Short ignored -> "short int long float double";
+                    case Character ignored -> "char int long float double";
+                    case Integer ignored -> "int long float double";
+                    case Long ignored -> "long float double";
+                    case Float ignored -> "float double";
+                    case Double ignored -> "double";
+                    default -> "";
+                };
+                if (!Arrays.asList(targets.split(" ")).contains(to.getName())) return false;
+            } else if (!to.isInstance(value)) return false;
+        }
+        return true;
+    }
+
+    private static <T> T one(List<T> matches, String description) {
+        if (matches.size() != 1) {
+            throw new IllegalStateException((matches.isEmpty() ? "No compatible " : "Ambiguous ") + description);
+        }
+        return matches.getFirst();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Throwable> RuntimeException raise(Throwable failure) throws T {
+        throw (T) failure;
     }
 }
