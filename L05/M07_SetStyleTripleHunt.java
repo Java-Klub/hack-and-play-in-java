@@ -1,16 +1,17 @@
 /// # L05.07 · SetStyleTripleHunt
 ///
-/// Race a friend to spot three cards whose properties are each all equal or all different. The winning
-/// triple may hide in the final table slot.
+/// **Find the overlooked triple.** Submitting a correct triple already works. A different
+/// decision is faulty: whether any valid triple remains on the table. The `more` command and the
+/// end-of-game decision use that answer.
 ///
-/// **Your mission:** A valid triple using the last card is overlooked. Repair hasSet() so every distinct
-/// three-card combination can be considered.
+/// **Your task:** Fix the search in `hasSet` below. Examine every combination of three distinct
+/// cards, including combinations using the last card. The supplied `triple` already checks a
+/// chosen triple.
 ///
-/// **Today you learn:** Traversal and search: ordered indices enumerate combinations without repeating a
-/// card. Check the loop boundaries as carefully as the matching rule.
-///
-/// Inspect the displayed card attributes, and submit the numbers of three
-/// cards you think form a set.
+/// **Result:** `more` adds cards only when no valid triple remains. Check also tries a table
+/// whose only valid triple needs its last card; submitting an ordinary triple alone does not
+/// demonstrate this repair.
+
 boolean hasSet() {
     for (int a = 0; a < table.size(); a++) {
         for (int b = a + 1; b < table.size(); b++) {

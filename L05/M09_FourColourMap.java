@@ -1,19 +1,17 @@
 /// # L05.09 · FourColourMap
 ///
-/// Colour a tiny map without giving neighbouring regions the same colour. Two distant regions may happily
-/// match.
+/// **Redraw the map and catch the judge.** Find the `map` data and replace its rows with the
+/// single row `"AABCCDEE"`. Run the game and enter `B 2`, `C 1`, `D 1`, `E 2`. Only neighbouring
+/// C–D now share a colour, but the original judge reports three conflicts.
 ///
+/// **Your task:** Make neighbour detection read the actual A–E map rows. Redrawing the map should
+/// no longer require updating a separate border list. Sharing a side counts; touching at a corner
+/// does not.
 ///
-/// **Your mission:** Make the colour judge follow the drawn map automatically. Replacing its
-/// rectangular rows of A–E must change which regions share a side, without updating a second border
-/// list. Corner contact alone never counts. Count each conflicting region pair once, however long its
-/// shared boundary is, and keep the player colours unchanged while inspecting them.
-///
-/// **Today you learn:** A traversal can discover relationships from neighbouring data positions instead
-/// of trusting a duplicated hand-written list.
-///
-/// Try colouring the original map. Then replace only its row data with {"AABCCDEE"} and compare the
-/// drawn neighbours with the reported conflicts.
+/// **Result:** The test map with these colours has one conflict. Even a long shared border counts
+/// as one conflicting pair. Inspecting neighbours must preserve the player’s colours and work for
+/// other rectangular maps too.
+
 boolean touches(int first, int second) {
     int[][] borders = {{0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 4}, {2, 3}, {2, 4}, {3, 4}};
     for (int[] border : borders) {

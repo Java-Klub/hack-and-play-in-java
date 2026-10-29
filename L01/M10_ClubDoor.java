@@ -1,9 +1,14 @@
 /// # L01.10 · ClubDoor
 ///
-/// **Your mission · Find the hidden pass:** Open the workshop door. The working program checks a
-/// badge, but your visitor badge is refused. Read the small source, find the accepted pass and put it
-/// on your card. Keep the door’s ordinary check: it must still reject other badges. Run the file to
-/// see Badge and Door opened/locked.
+/// **Find the workshop pass.** Running the program prints Badge: VISITOR and Door locked. The
+/// door refuses the visitor badge.
+///
+/// **Your task:** Read the small program to find the text the door accepts. Replace VISITOR on
+/// your badge with that text. Keep the acceptance rule itself: other badges must still be
+/// refused.
+///
+/// **Result:** Running the program will print your changed badge and Door opened. The pass is in
+/// the source; you do not need to guess it or type it while the program runs.
 
 // <editor-fold defaultstate="expanded" desc="Learn · F03">
 /// Read a name backwards to its stored value, then forwards to its uses. main starts the story; a

@@ -1,16 +1,16 @@
 /// # L06.12 · Merge2048
 ///
-/// Slide numbered tiles into bigger pairs. Design tiny rows that can expose a fake 2048 engine before a
-/// full game hides its mistakes.
+/// **Catch a fake merging machine.** The game already merges tiles correctly. Your result will be
+/// a set of examples, not a changed game rule.
 ///
-/// **Your mission:** The empty-row check lets broken merge rules pass. Expand learnerChecks() to
-/// challenge compression, merging, independent pairs, and awarded points.
+/// **Your task:** Extend `learnerChecks` below. Each example contains a four-number input row,
+/// its expected row after moving left, and the earned points. Zero means a gap. A newly merged
+/// tile does not merge again in the same move; points are the sum of the newly created tiles.
 ///
-/// **Today you learn:** Writing functional checks: a result can have more than one observable part. State
-/// both the transformed row and its score, then choose cases that separate plausible mistakes.
-///
-/// Type A followed by Enter to slide left, then try other directions and
-/// run the checks to challenge your row examples.
+/// **Result:** The examples must expose ignored merging, gaps preventing a merge, merging a new
+/// tile again, lost points, and merging only the first of two independent pairs. They must still
+/// agree with the real game.
+
 record MergeExample(int[] input, int[] expected, int score) {
 }
 

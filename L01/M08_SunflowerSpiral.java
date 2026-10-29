@@ -5,15 +5,15 @@ import java.awt.image.BufferedImage;
 
 /// # L01.08 · SunflowerSpiral
 ///
-/// **Your mission · Follow a picture recipe:** The working picture uses a half-turn between seeds.
-/// Find where its launch recipe chooses that angle and make the ordinary run use 137.5 degrees. Leave
-/// the coordinate formula intact. Then follow the chosen value into rendering and into the
-/// coordinates of one seed.
+/// **Grow a spiral from two spokes.** The program plants coloured seeds one after another. It
+/// currently turns half a circle between seeds, leaving two opposite rows.
 ///
-/// The starter works by its original rules. The check already expects your new goal.
+/// **Your task:** Find the angle setting between successive seeds and change the value used by an
+/// ordinary run to `137.5` degrees. Use a decimal point. Keep the supplied coordinate calculation
+/// unchanged.
 ///
-/// Run to see the picture; close and rerun after editing. Compare the two-spoke starting image with
-/// your new spread-out flower.
+/// **Result:** A fresh run will spread the seeds into a spiral flower. Once you find the setting,
+/// also follow how its value reaches the drawing of one seed.
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F03">
 /// A variable gives a stored value a name. Its type describes the values it can hold: `int` holds

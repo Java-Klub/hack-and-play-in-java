@@ -1,18 +1,16 @@
 /// # L04.13 · YatzyScorecard
 ///
-/// Build a dice scorecard by deciding which dice to reroll and which category to spend. Each category can
-/// be filled only once, so taking points now may give up a better opportunity later.
+/// **Restore the dice total.** Save the first roll with `bank 13`. Chance receives points, but
+/// the starter’s `total` stays zero.
 ///
-/// **Your mission:** The score audit is unfinished and always reports zero. Build the loop body: add
-/// every nonnegative filled score to sum, and add filled categories 0–5 to upper as well. Keep unfilled
-/// -1 entries out; the supplied return awards the upper bonus.
+/// **Your task:** Fill the loop body in `total` below. Sum all filled categories; unfilled ones
+/// contain `-1` and do not count. Alongside the overall sum, total the first six categories
+/// (positions 0–5). The supplied end of the method adds a 35-point bonus when those six total at
+/// least 63.
 ///
-/// **Today you learn:** Running sum: preserve the previous total and incorporate each accepted score. Two
-/// separate accumulators are needed here because sum counts every category, while upper counts only the
-/// first six for a later bonus decision.
-///
-/// Bank category 13, then compare its nonzero score with Total. The missing audit still reports zero;
-/// your two running sums must account for the stored card.
+/// **Result:** After `bank 13`, its points also appear in `total`. Other filled categories
+/// increase the total; asking for it again must not award points again.
+
 int total() {
     int sum = 0;
     int upper = 0;

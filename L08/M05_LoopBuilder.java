@@ -1,16 +1,16 @@
 /// # L08.05 · LoopBuilder
 ///
-/// Toggle lines to form one closed loop around numbered cells. The numbers constrain the loop, but its
-/// corners must also really connect.
+/// **Connect lines to the correct corners.** The referee does not yet know which corners each
+/// line connects. You can toggle drawn lines, but it cannot judge a closed loop correctly.
 ///
-/// **Your mission:** Build vertices(edge) for every displayed edge. Horizontal indices 0–11 run three
-/// across each of four rows; vertical indices 12–23 run four across each of three gaps. Return the two
-/// vertex indices in a 4×4 vertex grid. Reject indices outside 0–23.
+/// **Your task:** Complete `vertices` below: given an edge number, return its two corner numbers.
+/// Sixteen corners form a 4×4 grid, numbered left to right by rows from 0 to 15. Edges 0–11 are
+/// horizontal, three per row. Edges 12–23 are vertical, four between each pair of rows. Reject
+/// numbers outside 0–23.
 ///
-/// **Today you learn:** Translate a small drawing into coordinates, bounds and neighbour relationships.
-///
-/// Run the program and enter 1 to toggle the first numbered edge, then add other edges to build
-/// a single loop.
+/// **Result:** Edge 0 has ends `[0, 1]`; edge 12 has `[0, 4]`. Check tests all 24 edges. Ordinary
+/// play numbers the edges from 1 to 24, one larger than their numbers in code.
+
 int[] vertices(int edge) {
     return new int[]{0, 0};
 }

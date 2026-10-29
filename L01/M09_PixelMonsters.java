@@ -5,17 +5,16 @@ import java.awt.image.BufferedImage;
 
 /// # L01.09 · PixelMonsters
 ///
-/// Generate a symmetric pixel monster and explore how one colour changes its expression. The
-/// transparent background makes its blocky shape stand out.
+/// **Light up the monster’s eyes.** The program already creates a colourful monster, but both
+/// eyes are black.
 ///
-/// **Your mission · Restore a monster face:** The monster has lost its bright eyes. Repair the one shared
-/// eyeColour so both eye
-/// blocks become white without editing each eye separately.
+/// **Your task:** On the `eyeColour` line below, select white instead of black. Keep the rest of
+/// the line, including `.getRGB();`; do not draw each eye separately. Available colour names
+/// include `Color.BLACK`, `Color.WHITE`, `Color.RED` and `Color.YELLOW`.
 ///
-/// **Today you learn:** One named value, several readers: both eyes receive the same stored colour. A
-/// single deliberate change should therefore affect two places in the picture.
-///
-/// Run the program: the picture appears immediately in a Java window.
+/// **Result:** A new window will show two white eyes on the same body. One changed value is used
+/// for both eyes.
+
 int eyeColour = Color.BLACK.getRGB();
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F03">

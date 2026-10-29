@@ -11,18 +11,16 @@ import javax.swing.Timer;
 
 /// # L10.02 · FireworkPainter
 ///
-/// Paint a night sky with fireworks that bloom wherever you click. Each burst should remember the place
-/// you chose, not a fixed point on the canvas.
+/// **Light the sky with paired fireworks.** Clicking creates no explosion yet: the supplied
+/// handler is waiting for your code.
 ///
-/// **Your mission:** Build a paired-firework callback: one click must launch a burst at (x, y) and
-/// another at (WIDTH - x, y). Write the callback body; creating it must launch nothing. Keep burst
-/// responsible for the particle physics.
+/// **Your task:** Fill the delayed action body in `burstAction` below. Each click creates two
+/// bursts: at `(x, y)` and its reflected position `(WIDTH - x, y)`. Use the supplied `burst` to
+/// create particles. Merely constructing the action without clicking must launch nothing.
 ///
-/// **Today you learn:** Build a callback body that runs only when the input event invokes it; local
-/// calculations can adapt event data before changing the model.
-///
-/// Run the program, then click the canvas to launch fireworks; Space pauses the motion and R
-/// clears and restarts the sky.
+/// **Result:** The sky starts empty. Clicking on the left also lights the matching position on
+/// the right, creating 120 particles. Space pauses motion and R clears the sky.
+
 java.util.function.BiConsumer<Integer, Integer> burstAction() {
     return (x, y) -> {
         // Build the two delayed calls here.

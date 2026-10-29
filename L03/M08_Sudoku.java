@@ -6,19 +6,17 @@ import java.awt.GridLayout;
 
 /// # L03.08 · Sudoku
 ///
-/// Complete a small 4×4 Sudoku using 1–4 once in every row, column and 2×2 block. The fixed clues give
-/// you a starting point, and empty squares are yours to fill.
+/// **Stop a forbidden number.** Select 1 and click the empty square immediately right of the
+/// top-left 1. The starter wrongly accepts it. In this 4×4 Sudoku, each number 1–4 must appear
+/// only once in each row, column and 2×2 block.
 ///
-/// **Your mission · Restore the clue locks:** The board accepts writes without its protections. Add
-/// guards before the supplied
-/// assignment: the game must be unfinished, valid(row, col, value) must permit the choice, and
-/// clues[row][col] must be zero. Ask valid before reading clues. A rejected choice changes nothing.
+/// **Your task:** Add guards to `place` below. Reject rule violations, invalid coordinates or
+/// values, changes to fixed clues, and changes after completion. The supplied `valid` already
+/// checks a proposed choice; coordinates must be valid before you index the board.
 ///
-/// **Today you learn:** Protect a write with an early return: combine the reasons to reject, then perform
-/// one write only after none applies. Coordinate validation must happen before reading the clue table.
-///
-/// Run the program, choose 2 in the number selector and click the empty square immediately
-/// right of the top-left 1.
+/// **Result:** Another 1 is refused without changing the board; a correct 2 in that square
+/// succeeds. Fixed clues stay protected even when `place` is called directly.
+
 boolean place(int row, int col, int value) {
     if (complete()) return false;
     board[row][col] = value;

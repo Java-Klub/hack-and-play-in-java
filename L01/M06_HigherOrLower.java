@@ -1,13 +1,16 @@
 /// # L01.06 · HigherOrLower
 ///
-/// **Your mission · Find the shared setting:** Turn the ten-point survival round into a three-correct
-/// sprint. Find the setting that controls both the displayed goal and winning. Restart must keep your
-/// new goal; do not replace the current score with a fixed number.
+/// **Shorten the card challenge.** Choose Higher to predict a higher next card, or Lower for a
+/// lower one. The game currently requires ten correct predictions; a wrong prediction ends the
+/// round.
 ///
-/// The starter works by its original rules. The check already expects your new goal.
+/// **Your task:** Search the supplied program for the one shared setting that determines how many
+/// correct predictions win. Change it to `3`. It must affect both the actual win and the goal
+/// shown in the window; keep the current score starting at zero.
 ///
-/// Read the goal in the Java window. Choose Higher/Lower; New round starts again. After editing,
-/// save, close and relaunch so both places use the new source.
+/// **Result:** The window will show a goal of 3 and the third correct prediction will win. New
+/// round will clear the score and keep the goal of 3. The staged hints below the lesson can help
+/// you find the setting.
 
 // <editor-fold defaultstate="expanded" desc="Learn · F03">
 /// A variable gives a stored value a name. Its type describes the values it can hold: `int` holds

@@ -5,41 +5,30 @@ import javax.sound.sampled.AudioSystem;
 
 /// # L01.03 · TypeMelody
 ///
-/// Turn a short written message into a tiny melody. Each letter gets a note, while other characters leave
-/// a quiet time slot, so different messages have different rhythms.
+/// **Turn a message into a melody.** Run the program and press Play / Replay. In `J4V4`, letters
+/// make sounds and digits leave silence.
 ///
-/// **Your mission · Decode a musical message:** Two digits interrupt the opening message. Change the
-/// message supplied by
-/// defaultMessage so the opening melody spells JAVA.
+/// **Your task:** In `defaultMessage` below, change only the characters between the double
+/// quotation marks. The new message must be exactly `JAVA`. Keep `return`, the outer quotation
+/// marks and the semicolon.
 ///
-/// **Today you learn:** Text literals: double quotes make their contents text data. For example, a quoted
-/// digit stays a character in the message; it does not become a calculation.
-///
-/// Run the program to open the Java player showing the message. Press Play / Replay; digits are
-/// silent rests: J4V4 alternates sound and silence. Stop ends playback.
+/// **Result:** A newly launched window will show Message: JAVA. Play / Replay will play four
+/// notes instead of two notes separated by silence.
+
 String defaultMessage() {
     return "J4V4";
 }
 
-// <editor-fold defaultstate="expanded" desc="Learn · F02">
-/// A String literal is text written between double quotes. Those outside quotes tell Java where the
-/// text begins and ends; they are not printed. Digits inside quotes are text too. An expression, by
-/// contrast, can calculate a value before printing it.
+// <editor-fold defaultstate="expanded" desc="String literals · F02">
+/// Text between double quotation marks is a String literal. For example, `"BEEP"` contains four
+/// characters: B, E, E, P. The outer quotation marks mark its boundaries and are not part of the
+/// text.
 ///
-/// These example statements belong inside a called method.
+/// `return` gives this text to the supplied program, which turns it into a melody and opens the
+/// player. Today you only change the returned message; the sound program is ready.
 ///
-/// ```java
-/// IO.println("Shelf 4");
-/// IO.println(4 + 2);
-/// IO.println("Shelf \"B\"");
-/// ```
-///
-/// Predict the three lines. They are `Shelf 4`, `6`, and `Shelf "B"`. In the last literal, each `\"`
-/// represents one quote belonging to the text. Its backslash is notation, not another printed
-/// character. `IO.println` prints its argument and ends the line. A space inside a literal remains a
-/// real space; changing comments does not change the printed message.
-///
-/// Now predict `IO.println(4 + 5);` and `IO.println("4 + 5");`.
+/// `"A2B"` has three slots: sound, silence, sound. How many sounds and silent slots will `"AB2C"`
+/// have?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
@@ -58,19 +47,6 @@ String defaultMessage() {
 /// main calls defaultMessage to get the text and opens the prepared Java audio player. synthesize
 /// turns its letters into sound samples, and the prepared player plays them. That audio machinery
 /// is supplied; the prepared player owns and closes its Java audio line.
-// </editor-fold>
-
-// <editor-fold defaultstate="expanded" desc="For this game">
-/// Java plays the sound directly; no file or separate player is needed. The panel shows the
-/// actual message. The starter digits are rests, not an audio failure. After editing
-/// defaultMessage, save, close the window and run the program again. The new window loads the
-/// edited message; Play / Replay repeats the current window's message.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
-/// A String literal is the text between double quotes. In `"A7"`, A makes a note and 7 leaves a rest;
-/// there are two time slots. In `"A 7"` there are three. The quotes mark the boundary in the source
-/// and do not become notes. Before listening, count the sounds and rests in your new message.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Your own version · optional">
