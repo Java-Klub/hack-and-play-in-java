@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>4.5 Choose a value with switch · Hack &amp; Play in Java</title><link rel="stylesheet" href="book.css"></head>
+<body>
+<a class="skip" href="#content">Skip to the lesson</a>
+<header class="masthead"><a href="index.html">Hack &amp; Play in Java</a></header>
+<div class="layout"><aside class="sidebar"><nav aria-label="Lessons"><ol><li><a href="index.html">Contents</a></li><li><a href="00-start.html">Set up your workshop</a></li></ol><details><summary>1. A program follows steps</summary><ol><li><a href="01-first-program.html">1.1 Your first program</a></li><li><a href="01-order.html">1.2 Statement order</a></li></ol></details><details><summary>2. Values and calculations</summary><ol><li><a href="02-values.html">2.1 Give a value a name</a></li><li><a href="02-change.html">2.2 Change a stored value</a></li><li><a href="02-calculations.html">2.3 Let the program calculate</a></li></ol></details><details><summary>3. Text and player input</summary><ol><li><a href="03-input.html">3.1 Ask the player</a></li><li><a href="03-text.html">3.2 Clean up an incoming signal</a></li><li><a href="03-stories.html">3.3 Let the player shape the story</a></li><li><a href="03-numbers.html">3.4 Turn an answer into a number</a></li></ol></details><details open><summary>4. Decisions and rules</summary><ol><li><a href="04-questions.html">4.1 Ask a question in code</a></li><li><a href="04-branches.html">4.2 Choose what happens</a></li><li><a href="04-logic.html">4.3 Combine rules</a></li><li><a href="04-guards.html">4.4 Stop an illegal move in time</a></li><li><a href="04-switch.html" aria-current="page">4.5 Choose a value with switch</a></li></ol></details><details><summary>5. Your own methods</summary><ol><li><a href="05-actions.html">5.1 Give your own step a name</a></li><li><a href="05-parameters.html">5.2 Send values to a method</a></li><li><a href="05-results.html">5.3 Return a result to the caller</a></li><li><a href="05-local-values.html">5.4 How far does a name reach?</a></li><li><a href="05-composition.html">5.5 Combine small referees</a></li></ol></details><details><summary>6. Loops</summary><ol><li><a href="06-while.html">6.1 Repeat while needed</a></li><li><a href="06-for.html">6.2 Give the counter its own place</a></li><li><a href="06-accumulators.html">6.3 Remember what has passed</a></li><li><a href="06-search.html">6.4 Stop at the first match</a></li><li><a href="06-game-loop.html">6.5 Read the next move</a></li></ol></details><details><summary>7. Arrays</summary><ol><li><a href="07-arrays.html">7.1 Give values numbered places</a></li><li><a href="07-traversal.html">7.2 Visit values without picking each one</a></li><li><a href="07-updates.html">7.3 Change the actual place</a></li><li><a href="07-search.html">7.4 Find a place that fits</a></li><li><a href="07-copies.html">7.5 A memory is not a second name</a></li></ol></details><details><summary>8. Grids and generations</summary><ol><li><a href="08-grids.html">8.1 Rows become a map</a></li><li><a href="08-bounds.html">8.2 Check the boundary first</a></li><li><a href="08-neighbours.html">8.3 Ask the neighbouring cells</a></li><li><a href="08-patterns.html">8.4 Make a pattern from coordinates</a></li><li><a href="08-generations.html">8.5 Read the past; write the future</a></li></ol></details><details><summary>9. Data that belong together</summary><ol><li><a href="09-records.html">9.1 Give related data a shape</a></li><li><a href="09-objects.html">9.2 One description, several objects</a></li><li><a href="09-references.html">9.3 Two names can point to the same thing</a></li><li><a href="09-data-methods.html">9.4 Data can know their operations</a></li><li><a href="09-enums.html">9.5 Name the allowed choices</a></li></ol></details><details><summary>10. Growing collections of data</summary><ol><li><a href="10-lists.html">10.1 A bag need not know its size ahead of time</a></li><li><a href="10-sets.html">10.2 Remember a first visit</a></li><li><a href="10-maps.html">10.3 Each name has its own account</a></li><li><a href="10-ordering.html">10.4 Pass an ordering rule</a></li><li><a href="10-streams.html">10.5 Send data through a filter</a></li></ol></details><details><summary>11. Stateful objects and repeatable experiments</summary><ol><li><a href="11-state.html">11.1 An object remembers a change</a></li><li><a href="11-instances.html">11.2 Each robot has its own battery</a></li><li><a href="11-invariants.html">11.3 Rejection must preserve state</a></li><li><a href="11-random.html">11.4 Chance proposes, a rule decides</a></li><li><a href="11-seeds.html">11.5 Same start, same experiment</a></li></ol></details><details><summary>12. Validation, recovery and files</summary><ol><li><a href="12-validation.html">12.1 Decide which values belong</a></li><li><a href="12-exceptions.html">12.2 Report a failed operation</a></li><li><a href="12-retry.html">12.3 Let the player correct a reply</a></li><li><a href="12-files.html">12.4 Read data from a real file</a></li><li><a href="12-save.html">12.5 Save only after the checks pass</a></li></ol></details><details><summary>13. Windows, events and animation</summary><ol><li><a href="13-drawing.html">13.1 Draw in a Java window</a></li><li><a href="13-input-events.html">13.2 Turn a click into a choice</a></li><li><a href="13-handlers.html">13.3 Give events one clear job</a></li><li><a href="13-timers.html">13.4 Advance a simulation in small steps</a></li><li><a href="13-model-view.html">13.5 Let painting observe the model</a></li></ol></details><details><summary>14. Checks, composition and exploration</summary><ol><li><a href="14-checks.html">14.1 Choose examples that catch mistakes</a></li><li><a href="14-interfaces.html">14.2 Compose objects by their behaviour</a></li><li><a href="14-patterns.html">14.3 Ask which kind of data arrived</a></li><li><a href="14-refactoring.html">14.4 Extract one shared idea</a></li><li><a href="14-recursion.html">14.5 Explore smaller problems and choices</a></li></ol></details><ol><li><a href="glossary.html">Glossary</a></li></ol></nav></aside>
+<main><article id="content">
+<h1>4.5 Choose a value with switch</h1>
+<p>A spell book takes a word and chooses an effect. You can give a few exact options their results in a clear, compact form.</p>
+<h2>One input, one chosen value</h2>
+<p>Open <code>code/SpellBook.java</code>.</p>
+<pre><code class="language-java" data-source="code/SpellBook.java">void main() {
+    String spell = IO.readln(&quot;Spell: &quot;).strip().toLowerCase(Locale.ROOT);
+    String effect = switch (spell) {
+        case &quot;red&quot;, &quot;r&quot; -&gt; &quot;Fire&quot;;
+        case &quot;blue&quot;, &quot;b&quot; -&gt; &quot;Ice&quot;;
+        case &quot;green&quot;, &quot;g&quot; -&gt; &quot;Vines&quot;;
+        default -&gt; &quot;Fizzle&quot;;
+    };
+    IO.println(&quot;Effect: &quot; + effect);
+}
+</code></pre><pre class="transcript"><code>Spell: <span class="typed"> B </span>
+Effect: Ice</code></pre>
+<p><code>toLowerCase(Locale.ROOT)</code> is the counterpart of toUpperCase from earlier: it gives you lowercase text. After cleaning and conversion, the answer <code> B </code> therefore becomes b.</p>
+<div class="table-wrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody>
+<tr><td><code>switch (spell)</code></td><td>Read the value of spell and choose the matching option.</td></tr>
+<tr><td><code>case "blue", "b" -&gt; "Ice";</code></td><td>For either exact value, give the text Ice. The comma groups the options.</td></tr>
+<tr><td><code>default -&gt; "Fizzle";</code></td><td>The result for anything that did not match a listed option.</td></tr>
+<tr><td><code>String effect = ...;</code></td><td>Store the chosen result under the name effect.</td></tr>
+</tbody></table></div>
+<p>We call this a switch expression because it has a value. Only the chosen option runs. The semicolon after <code>}</code> ends the whole assignment. Then println prints the stored effect.</p>
+<p>If conditions can check ranges and several different questions. This switch selects by the exact value of one input. All results chosen here are text, so they can be stored in a String.</p>
+<h2>Task: fix the broken radio</h2>
+<p>Open <code>code/RepairRadio.java</code>. It rejects a known command but translates an unknown one as Move.</p>
+<p><strong>Change the switch so that, after the supplied cleaning and letter conversion, it chooses these results. Group the short and long forms in one case.</strong></p>
+<div class="table-wrap"><table><thead><tr><th>Entered command</th><th>Action</th></tr></thead><tbody>
+<tr><td>go or g</td><td>Move</td></tr>
+<tr><td>look or l</td><td>Scan</td></tr>
+<tr><td>rest or r</td><td>Recharge</td></tr>
+<tr><td>Everything else, including an empty line</td><td>Unknown command</td></tr>
+</tbody></table></div>
+<p>Try every long and short form, and also <code>jump</code>. With the answer <code> L </code>, expect:</p>
+<pre class="transcript"><code>Command: <span class="typed"> L </span>
+Action: Scan</code></pre>
+<details><summary>Hint</summary><p>The result is chosen after the arrow. The print call then only joins this finished text to the label. Remember to fix default too, so that unknown commands do not get an ordinary action.</p></details>
+<h2>How to distinguish four combinations</h2>
+<p>In a game with two choices, giving each combination a different number can help. Open <code>code/ControlPanel.java</code>:</p>
+<pre><code class="language-java" data-source="code/ControlPanel.java">void main() {
+    boolean lights = true;
+    boolean music = false;
+    int mode = 0;
+    if (lights) {
+        mode = mode + 1;
+    }
+    if (music) {
+        mode = mode + 2;
+    }
+    IO.println(&quot;Mode: &quot; + mode);
+}
+</code></pre>
+<p>By changing the two initial boolean values, you can try all four modes:</p>
+<div class="table-wrap"><table><thead><tr><th>lights</th><th>music</th><th>mode</th></tr></thead><tbody>
+<tr><td>false</td><td>false</td><td>0</td></tr>
+<tr><td>true</td><td>false</td><td>1</td></tr>
+<tr><td>false</td><td>true</td><td>2</td></tr>
+<tr><td>true</td><td>true</td><td>3</td></tr>
+</tbody></table></div>
+<p>There are two separate if statements: when both choices are on, both contributions should be added. To choose a result from this mode, you can then use a switch with options 0, 1, 2 and 3. For numbers too, add default for the remaining values. The compiler cannot infer from this calculation that no other number can occur; the expression must provide a result for every possible int value.</p>
+<h2>Choose a reward or allow a card</h2>
+<ul>
+<li><code>L07/M02_CooperateOrDefect.java</code>: each player privately chooses cooperation or betrayal. The supplied reward action receives two boolean values and should return one numeric reward. Distinguish the four combinations and use switch to choose a reward according to the task's rules. The neutral ControlPanel example shows how to create a numeric key; do not confuse that key with the rewards it selects.</li>
+<li><code>L07/M01_CrazyEightsSimpleMauMau.java</code>: first reject a card code outside 0 to 51. The supplied rank(card) gives a value from 2 to 14; card / 13 gives the suit. An eight is always allowed; other cards must match the rank of top or the chosen suit. Use switch for the special value and combine two reasons for acceptance in the ordinary result. You only need to change the legal judge; dealing is supplied.</li>
+</ul>
+<p>Both tasks are checked by <code>L07/Check.java</code>; select the program you are working on in Program Arguments. The same if or switch can change the behaviour of many parts of a game when they all ask one shared judge.</p>
+<p><strong>You can now choose a result by an exact value and combine that choice with conditions and safe refusal.</strong></p>
+
+<p>Continue to <a href="05-actions.html">Name your own step</a>: create your own named parts of a program.</p>
+</article>
+<nav class="page-nav" aria-label="Previous and next lesson"><a href="04-guards.html">← 4.4 Stop an illegal move in time</a><a class="next" href="05-actions.html">5.1 Give your own step a name →</a></nav>
+</main></div></body></html>
