@@ -1,14 +1,15 @@
-# Local IDE settings and reproducible build output.
+# Compiled Java and local editor/IDE state.
+*.class
 .DS_Store
-/L??/build/
-/L??/dist/
-/L??/nbproject/private/
-/L??/nbproject/build-impl.xml
-/L??/nbproject/genfiles.properties
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
 
-# Pictures, sound and default data generated while playing.
-/L??/*.png
-/L??/*.wav
-/L??/exports/
-/L??/portrait.txt
-/L??/seed.txt
+# Files produced while playing the file missions.
+exports/
+seed.txt
+shepard.wav
+**/data/postcard.png
