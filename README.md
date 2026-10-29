@@ -6,7 +6,7 @@
 
 12 úrovní · 143 her, hádanek a tvořivých experimentů · 36 základních Java skills (dovedností)
 
-![Šest programů z Hack & Play in Java: MiniInvaders, MiniPacman, MirrorLaser, SunflowerSpiral, ReactionDiffusionSkins a FractalTreeGarden.](assets/readme/cover.png)
+![Šest programů z Hack & Play in Java: MiniInvaders, MiniPacman, MirrorLaser, SunflowerSpiral, ReactionDiffusionSkins a FractalTreeGarden.](cover.png)
 
 Zažeň vetřelce. Proveď laser mezi zrcadly. Z několika čísel vytvoř duhovou spirálu, rozvětvený strom nebo retro zvuk.
 
@@ -38,8 +38,21 @@ Průvodce najdeš **přímo v kódu**: krátká vysvětlení, vyložené příkl
 
 ## Začni hrát
 
-1. Připrav si **NetBeans a JDK 26 nebo novější**.
-2. Stáhni si svou jazykovou větev z odkazů nahoře. Přes **File → Open Project** otevři **[L01](L01/)** a v **Source Packages** najdi `M01_CafeWallLab.java`.
-3. Zvol **Run → Run File**. Přečti misi, uprav kód, použij **Save → Test File** a hraj znovu. První neúspěšná check (kontrola) je záměrná stopa; `PASS` znamená shodu s ověřenými případy.
+1. Připrav si **JDK 26 nebo novější**. Stáhni si svou jazykovou větev z odkazů nahoře a otevři Java soubory ve svém editoru nebo IDE.
+2. Otevři **[L01/M01_CafeWallLab.java](L01/M01_CafeWallLab.java)** a přečti misi uvnitř. V terminálu přejdi do hlavní stažené složky s tímto README a spusť:
+
+   ```text
+   java L01/M01_CafeWallLab.java
+   ```
+
+3. Zavři hru, uprav a ulož soubor. Zkontroluj tuto misi a potom hru spusť znovu:
+
+   ```text
+   java L01/Check.java M01_CafeWallLab.java
+   ```
+
+První RED ve výchozí verzi je záměrná stopa; `PASS` znamená shodu s ověřenými případy. Celou úroveň zkontroluješ pomocí `java L01/Check.java`; zahrnuje i dosud neopravené hry.
+
+Hry leží přímo ve složkách `L01` až `L12`, v pořadí podle čísla. Každý level má vlastní `Check.java`. Jsi už uvnitř `L01`? Celou úroveň ověří `java Check.java`, jednu misi `java Check.java M01_CafeWallLab.java`. Při řešení misí kontrolní soubory neměň. Sestavení projektu nastavovat nemusíš.
 
 Pro zvídavé začátečníky, programátorské kluby i společné lekce s učitelem. Když nějaký nápad potřebuje další kolo, vyber si další hru.
