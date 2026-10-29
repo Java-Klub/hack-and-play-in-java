@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Učebnice pro samostudium · Hack & Play in Java"><title>2.3 Nech program počítat · Hack & Play in Java</title><link rel="stylesheet" href="assets/book.css"></head><body><a class="skip" href="#content">Přejít na výklad</a><header class="masthead"><a href="index.html">Hack & Play in Java</a><small>Učebnice pro samostudium</small></header><div class="layout"><aside class="sidebar"><nav aria-label="Lekce učebnice"><p>Čti, vyzkoušej, tvoř</p><ol><li><a href="index.html">Obsah</a></li><li><a href="00-start.html">Připrav si dílnu</a></li><li><a href="01-first-program.html">1.1 Tvůj první program</a></li><li><a href="01-order.html">1.2 Pořadí příkazů</a></li><li><a href="02-values.html">2.1 Dej hodnotě jméno</a></li><li><a href="02-change.html">2.2 Změň uloženou hodnotu</a></li><li><a href="02-calculations.html" aria-current="page">2.3 Nech program počítat</a></li><li><a href="glossary.html">Slovníček</a></li></ol></nav></aside><main><article id="content"><h1>2.3 Nech program počítat</h1>
+<p>Stejný kód může vypočítat výsledek pro různé počty hráčů, energii nebo skóre. Místo ručně napsané odpovědi sestavíš expression (výraz), který odpověď vypočítá.</p>
+<h2>Základní výpočty</h2>
+<p>Následující výrazy můžeš vložit do <code>IO.println(...)</code> uvnitř známého <code>main</code>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Výraz</th>
+<th>Výsledek</th>
+<th>Význam</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>7 + 2</code></td>
+<td><code>9</code></td>
+<td>Sečti.</td>
+</tr>
+<tr>
+<td><code>7 - 2</code></td>
+<td><code>5</code></td>
+<td>Odečti.</td>
+</tr>
+<tr>
+<td><code>7 * 2</code></td>
+<td><code>14</code></td>
+<td>Vynásob; pro násobení piš hvězdičku.</td>
+</tr>
+<tr>
+<td><code>7 / 2</code></td>
+<td><code>3</code></td>
+<td>Vyděl dvě celá čísla; desetinná část se zahodí směrem k nule.</td>
+</tr>
+<tr>
+<td><code>7 % 2</code></td>
+<td><code>1</code></td>
+<td>Vrať zbytek po celočíselném dělení.</td>
+</tr>
+</tbody></table></div>
+<p>Násobení a dělení mají přednost před sčítáním a odčítáním. <code>2 + 3 * 4</code> dává 14. Závorkami vybereš jiný postup: <code>(2 + 3) * 4</code> dává 20. Stejnou přednost mají <code>/</code>, <code>*</code> a <code>%</code>; mezi nimi se postupuje zleva doprava.</p>
+<p>Jména lze použít místo čísel: <code>energy - cost</code> počítá z jejich právě uložených hodnot.</p>
+<h2>Celá a desetinná čísla</h2>
+<p><code>int</code> uchovává celá čísla. <code>double</code> umí také desetinnou část. V kódu používáme desetinnou <strong>tečku</strong>, například <code>2.5</code>.</p>
+<p>Otevři <a href="examples/02/Sharing.java">Sharing.java</a>:</p>
+<pre><code class="language-java">void main() {
+    double share = 5 / 2.0;
+    IO.println(share);
+}
+</code></pre>
+<p>Výsledek je <code>2.5</code>. Operace s desetinným číslem <code>2.0</code> použije desetinné dělení.</p>
+<p>Teď předpověz, co se stane, když změníš pouze <code>2.0</code> na <code>2</code>.</p>
+<details>
+<summary>Proč může vyjít překvapivý výsledek</summary>
+
+<p>Vypíše se <code>2.0</code>. Pravá strana <code>5 / 2</code> nejprve vydělí dvě celá čísla a vytvoří celé číslo 2. Až to se uloží do <code>double</code> jako 2.0. Samotné <code>double</code> vlevo ztracenou polovinu nevrátí.</p>
+</details>
+
+<p>Obnov původní <code>2.0</code>. U dělení hlídej také dělitele: nulou v těchto příkladech nedělíme. <code>double</code> ukládá některé desetinné hodnoty přibližně; k penězům nebo přesným desetinným výpočtům se vrátíme později. Pro dnešní rychlosti a rozdělení energie nám poslouží.</p>
+<h2>Úkol: rozděl energii paprsku</h2>
+<p>Otevři <a href="practice/02/BeamSplit.java">BeamSplit.java</a>. Máš <code>double energy = 9;</code> a <code>int beams = 2;</code>.</p>
+<p><strong>Uprav výpočet <code>perBeam</code>, aby rozdělil energii rovným dílem mezi paprsky.</strong> Výstup má být <code>4.5</code>. Využij obě jména, aby se program dal použít také s jiným nastavením.</p>
+<p>Potom změň pouze energii na 10 a počet paprsků na 4. Očekávej <code>2.5</code>. <code>energy</code> je už <code>double</code>, proto výpočet s jeho hodnotou zachová desetinnou část.</p>
+<details>
+<summary>Nápověda</summary>
+
+<p>Ptej se, kterou operací zjistíš rovný díl. Celkové množství i počet dílů už mají jména. Jejich hodnoty neopisuj přímo do výpočtu.</p>
+</details>
+
+<h2>Číselný součet a spojení textu</h2>
+<p>V Sharing můžeš původní výpis nahradit těmito dvěma řádky uvnitř <code>main</code>. Nejdřív předpověz jejich výstup:</p>
+<pre><code class="language-java">IO.println(&quot;Score: &quot; + 3 + 2);
+IO.println(&quot;Score: &quot; + (3 + 2));
+</code></pre>
+<details>
+<summary>Odpověď</summary>
+
+<pre><code class="language-text">Score: 32
+Score: 5
+</code></pre>
+<p>V prvním případě už <code>&quot;Score: &quot; + 3</code> vytváří text, ke kterému se připojí další 2. Závorky ve druhém řádku nejprve vypočítají číselný součet 5 a potom jej připojí ke zprávě.</p>
+</details>
+
+<h2>Úkol: sestav skóre pilota</h2>
+<p>Otevři <a href="practice/02/Scoreboard.java">Scoreboard.java</a>. Pilot má na začátku skóre 10.</p>
+<p><strong>Přidej 5 bodů do <code>score</code> a nahraď dva výpisy jediným řádkem</strong>, který sestaví zprávu z <code>pilot</code>, dvojtečky s mezerou a aktuálního <code>score</code>:</p>
+<pre><code class="language-text">Nova: 15
+</code></pre>
+<p>Při jiné počáteční hodnotě 2 a jménu Mika má stejný postup vypsat <code>Mika: 7</code>. Pro přidání bodů použij přiřazení; neskládej pouze zprávu s pevnou odpovědí.</p>
+<details>
+<summary>Nápověda</summary>
+
+<p>Nejdřív změň uložené skóre. Potom využij spojování textu z lekce 2.1. Textem je jen oddělovač <code>&quot;: &quot;</code>; jména hodnot do uvozovek nepatří.</p>
+</details>
+
+<h2>Použij čísla v obrázku</h2>
+<p><a href="../L01/M08_SunflowerSpiral.java">SunflowerSpiral</a> má připravený výpočet obrázku a jediný úhel k nalezení. Procvičíš čtení pojmenované desetinné hodnoty a její změnu. Vnitřní trigonometrické výpočty pro tuto misi psát nemusíš; popisuje je připravená část souboru.</p>
+<p><strong>Kapitolu zvládáš, když umíš napsat krátký program s vlastními hodnotami, změnit je výpočtem a vysvětlit rozdíl mezi <code>5 / 2</code> a <code>5 / 2.0</code>.</strong></p>
+<p>Další kapitola bude o textu a vstupu hráče. Zatím můžeš pokračovat vlastním pokusem: v novém malém programu spočítej odměnu pro různé počty hráčů a vypiš ji s popiskem. Každou předpověď porovnej se skutečným spuštěním.</p>
+<p><a href="index.html">Zpět na obsah učebnice</a></p>
+</article><nav class="page-nav" aria-label="Předchozí a další lekce"><a href="02-change.html">← 2.2 Změň uloženou hodnotu</a><a class="next" href="index.html">Zpět na obsah →</a></nav><p class="page-footer">Tato stránka funguje offline. Příklady spouštěj v Javě ze stažené složky kurzu.</p></main></div></body></html>

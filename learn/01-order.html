@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Učebnice pro samostudium · Hack & Play in Java"><title>1.2 Pořadí příkazů · Hack & Play in Java</title><link rel="stylesheet" href="assets/book.css"></head><body><a class="skip" href="#content">Přejít na výklad</a><header class="masthead"><a href="index.html">Hack & Play in Java</a><small>Učebnice pro samostudium</small></header><div class="layout"><aside class="sidebar"><nav aria-label="Lekce učebnice"><p>Čti, vyzkoušej, tvoř</p><ol><li><a href="index.html">Obsah</a></li><li><a href="00-start.html">Připrav si dílnu</a></li><li><a href="01-first-program.html">1.1 Tvůj první program</a></li><li><a href="01-order.html" aria-current="page">1.2 Pořadí příkazů</a></li><li><a href="02-values.html">2.1 Dej hodnotě jméno</a></li><li><a href="02-change.html">2.2 Změň uloženou hodnotu</a></li><li><a href="02-calculations.html">2.3 Nech program počítat</a></li><li><a href="glossary.html">Slovníček</a></li></ol></nav></aside><main><article id="content"><h1>1.2 Pořadí příkazů</h1>
+<p>Už umíš vypsat vlastní zprávy. Teď zjistíš, proč dva programy se stejnými kroky mohou dělat něco jiného.</p>
+<h2>Přečti, předpověz, spusť</h2>
+<p>Otevři <a href="examples/01/MissionControl.java">MissionControl.java</a>. Nejdřív zkus napsat jeho výstup na papír nebo do poznámky:</p>
+<pre><code class="language-java">void main() {
+    IO.println(&quot;Check power&quot;);
+    IO.println(&quot;Open gate&quot;);
+    IO.println(&quot;Go&quot;);
+}
+</code></pre>
+<details>
+<summary>Výstup pro porovnání</summary>
+
+<pre><code class="language-text">Check power
+Open gate
+Go
+</code></pre>
+<p>Uvnitř <code>main</code> se tato volání provedou shora dolů. První vypíše svoji zprávu a skončí; potom začne druhé a nakonec třetí.</p>
+</details>
+
+<p>Přesuň poslední volání před první. Co bude teď nahoře ve výstupu? Ulož a spusť. Změnil jsi pořadí kroků, jejich tři zprávy zůstaly stejné.</p>
+<h2>Příkazy a komentáře</h2>
+<p>Comment (komentář) je zpráva pro čtenáře kódu. Java podle něj neprovádí žádnou akci. Zápis <code>//</code> označuje komentář až do konce daného řádku:</p>
+<pre><code class="language-java">void main() {
+    // Say hello to the pilot.
+    IO.println(&quot;Hello&quot;);
+}
+</code></pre>
+<p>Tento program vypíše jen Hello. Řádek začínající <code>//</code> se při spuštění přeskočí. I <code>IO.println</code>, které napíšeš <strong>za <code>//</code> na stejném řádku</strong>, zůstane pouze komentářem.</p>
+<p>V hrách uvidíš také řádky s <code>///</code>: jsou to vysvětlující komentáře pro tebe. Šipky u některých sekcí v editoru dovolují delší výklad sbalit. Jestli tvůj editor sbalování nenabízí, komentáře lze normálně číst jako ostatní text.</p>
+<h2>Úkol: oprav startovací postup</h2>
+<p>Otevři <a href="practice/01/LaunchSequence.java">LaunchSequence.java</a>. Má všechny tři potřebné zprávy, ale ve špatném pořadí.</p>
+<p><strong>Přesuň celé řádky uvnitř <code>main</code> tak, aby výstup byl:</strong></p>
+<pre><code class="language-text">Doors closed
+Engine on
+Launch
+</code></pre>
+<p>Každou zprávu zachovej jednou. Samotné přepsání komentáře výstup nezmění. Po úpravě předpověz výstup a porovnej ho se spuštěním.</p>
+<details>
+<summary>Nápověda</summary>
+
+<p>Nejdřív se mají zavřít dveře. Pak může začít pracovat motor a teprve potom odstartovat loď. Přesouvej celé řádky včetně středníků.</p>
+</details>
+
+<h2>Použij stejnou myšlenku ve hře</h2>
+<p>Teď otevři <a href="../L01/M01_CafeWallLab.java">CafeWallLab</a> ve složce <code>L01</code>. Spuštění ukáže šedou plochu: dlaždice jsou schované pod pozdějším nátěrem. Zadání na začátku souboru označuje dva řádky k přesunutí.</p>
+<p>Tady místo výpisu textu voláš připravené kreslení. <code>paintTiles(g);</code> žádá o dlaždice a <code>paintBackground(g);</code> o šedý nátěr. <code>g</code> je dodané kreslicí pero. Tyto akce fungují; rozhoduješ o jejich pořadí. Popis <code>Graphics2D g</code> v záhlaví jen říká, jaké pero připravená část dodává. Dnes ho měnit nemusíš.</p>
+<p>Zavři staré okno, ulož změnu a spusť soubor znovu. Výsledek má ukázat dlaždice na šedém pozadí. Opravu ověř z hlavní složky kurzu:</p>
+<pre><code class="language-text">java L01/Check.java M01_CafeWallLab.java
+</code></pre>
+<p>GREEN potvrzuje ověřované případy. Jestli dostaneš RED, přečti zprávu a vrať se ke dvěma kreslicím krokům.</p>
+<p>Chceš ještě jiný obrázek? <a href="../L01/M02_MissingTriangle.java">MissingTriangle</a> procvičuje stejné pořadí. Jeho zadání tě nechá sestavit kresbu ze dvou připravených volání; na výběr nepotřebuješ znát jejich vnitřní kreslicí algoritmus.</p>
+<p><strong>Tuto lekci zvládáš, když předpovíš pořadí výpisů a vysvětlíš, proč pozdější kreslení může překrýt dřívější.</strong></p>
+<p>Pokračuj na <a href="02-values.html">Dej hodnotě jméno</a>.</p>
+</article><nav class="page-nav" aria-label="Předchozí a další lekce"><a href="01-first-program.html">← 1.1 Tvůj první program</a><a class="next" href="02-values.html">2.1 Dej hodnotě jméno →</a></nav><p class="page-footer">Tato stránka funguje offline. Příklady spouštěj v Javě ze stažené složky kurzu.</p></main></div></body></html>
