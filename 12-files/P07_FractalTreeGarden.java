@@ -1,0 +1,197 @@
+// <editor-fold defaultstate="collapsed" desc="Prepared tools">
+import java.awt.*;
+import java.awt.image.BufferedImage;
+// </editor-fold>
+
+/// # 12.07 · FractalTreeGarden
+///
+/// Grow a branching tree by changing one angle. A small turn can transform a narrow twig into a sprawling
+/// canopy worth saving as a postcard.
+///
+/// **Your mission:** Build readAngle(text): strip whitespace, parse a double, accept finite values
+/// 10–70 inclusive, use 28 only for malformed number text, and reject readable but invalid numbers. The
+/// unfinished parser currently ignores every requested tree shape.
+///
+/// **Today you learn:** Build a deliberate input boundary: distinguish conversion, validation and
+/// committing a live setting.
+///
+/// Run the program, then enter an angle 10–70 or try oops; read Chosen value and inspect the
+/// Java picture. Close it and run the program again for another input.
+double readAngle(String text) {
+    return 28;
+}
+
+// <editor-fold defaultstate="expanded" desc="Learn · F31">
+/// ### Text conversion and valid values are different questions
+///
+/// A number field starts as text. Conversion can fail because no number was written; validation can
+/// reject a perfectly readable number. Decide the two policies separately.
+///
+/// ```java
+/// int readZoom(String text) {
+///     try {
+///         int zoom = Integer.parseInt(text.strip());
+///         if (zoom < 1 || zoom > 4) throw new IllegalArgumentException("Zoom: 1..4");
+///         return zoom;
+///     } catch (NumberFormatException typo) {
+///         return 2;
+///     }
+/// }
+/// ```
+///
+/// Trace `" 3 "`: strip removes surrounding whitespace, parseInt produces 3, bounds accept it. `"oops"`
+/// cannot convert, so catch returns 2. `"7"` converts successfully but fails validation; the explicitly
+/// thrown IllegalArgumentException leaves this method. Catching only NumberFormatException keeps those
+/// paths distinct.
+///
+/// For a decimal, use Double.parseDouble; also consider NaN and infinity, which are readable but not
+/// finite numbers. For an interactive setting, parse into a local candidate before changing the stored
+/// field. Predict the path for `"0"`, `"two"` and `"4"`. Which inputs should preserve the previous live
+/// setting?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Read this code">
+/// ## Read this part
+///
+/// Double.parseDouble can read decimal angles as well as NaN and Infinity; Double.isFinite rejects the
+/// latter two. NumberFormatException means conversion failed, not that a successfully read value was
+/// within bounds. The main prompt reports your chosen value before rendering the tree. EOF cancels;
+/// blank chooses the documented default.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Separate malformed text from readable but unacceptable numbers.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// A finite test and both inclusive bounds belong before returning the number.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Catch only NumberFormatException for fallback 28; throw IllegalArgumentException for nonfinite or
+/// out-of-range parsed values.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Give the two branches different turn angles and compare a windswept tree with a symmetric one. Keep
+/// one chosen trunk and depth so the asymmetry is visible.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+double shortening = 0.7;
+
+int branches(Graphics2D g, double x, double y, double length, double heading, double fork, int depth) {
+    double nx = x + Math.cos(heading) * length;
+    double ny = y + Math.sin(heading) * length;
+    g.drawLine((int)x, (int)y, (int)nx, (int)ny);
+    if (depth == 0) {
+        return 1;
+    }
+    return 1
+        + branches(g, nx, ny, length * shortening, heading - fork, fork, depth - 1)
+        + branches(g, nx, ny, length * shortening, heading + fork, fork, depth - 1);
+}
+
+/// Supplied image creation: generation and drawing remain visible in this file.
+BufferedImage render(long seed, double angle) {
+    if (!Double.isFinite(angle) || angle < 10 || angle > 70 || shortening < 0.4 || shortening > 0.78) {
+        throw new IllegalArgumentException("Angle 10..70; optional shortening 0.4..0.78.");
+    }
+    var image = new BufferedImage(600, 480, BufferedImage.TYPE_INT_RGB);
+    var g = image.createGraphics();
+    try {
+        g.setColor(new Color(15, 24, 32));
+        g.fillRect(0, 0, 600, 480);
+        g.setColor(Color.getHSBColor(new Random(seed).nextFloat(), 0.6F, 1));
+        branches(g, 300, 470, 120, -Math.PI / 2, Math.toRadians(angle), 8);
+    } finally {
+        g.dispose();
+    }
+    return image;
+}
+
+
+void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
+    if (java.awt.GraphicsEnvironment.isHeadless()) return;
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        var frame = new javax.swing.JFrame(title);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        var pictures = new javax.swing.JPanel(new java.awt.GridLayout(1, images.length, 8, 8));
+        for (int i = 0; i < images.length; i++) {
+            var picture = new javax.swing.JPanel(new java.awt.BorderLayout());
+            picture.add(new javax.swing.JLabel(captions[i], javax.swing.SwingConstants.CENTER), java.awt.BorderLayout.NORTH);
+            double scale = Math.min(1, Math.min(900.0 / images.length / images[i].getWidth(), 550.0 / images[i].getHeight()));
+            var icon = new javax.swing.ImageIcon(images[i].getScaledInstance(
+                    Math.max(1, (int)(images[i].getWidth() * scale)),
+                    Math.max(1, (int)(images[i].getHeight() * scale)), java.awt.Image.SCALE_FAST));
+            picture.add(new javax.swing.JLabel(icon), java.awt.BorderLayout.CENTER);
+            pictures.add(picture);
+        }
+        frame.add(pictures);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    });
+}
+
+
+void main() {
+    String input = IO.readln("Angle 10..70 (blank/default 28, q quits): ");
+    if (input == null || input.strip().equalsIgnoreCase("q")) return;
+    try {
+        var option = readAngle(input);
+        IO.println("Chosen value: " + option);
+        showImages("Fractal Tree Garden", new String[]{"Value " + option}, new java.awt.image.BufferedImage[]{render(42, option)});
+    } catch (IllegalArgumentException failure) {
+        IO.println("Invalid input: " + failure.getMessage());
+    }
+}
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
+/// ## An unfamiliar piece of Java?
+///
+/// This small map is optional. Look up just the symbol or word you need; no need to learn it all first.
+///
+/// - `///` — Words for the reader. Java skips these comment lines when running.
+/// - `import` — Makes library names available in this file; it does not run the library.
+/// - `;` — Ends one statement, like a full stop. A semicolon inside a for header separates its three
+///   parts.
+/// - `()` — After a name: call an action, or list its parameters in its declaration. Empty parentheses
+///   mean no supplied arguments.
+/// - `{}` — Braces group a block of code. The opening and closing brace belong together.
+/// - `.` — Accesses something belonging to the value or type on its left, such as IO.println.
+/// - `void` — This method performs an action and returns no result value.
+/// - `main` — Java starts the program here. Other method declarations do not run just because they appear
+///   earlier in the file.
+/// - `int` — A type for whole numbers within a fixed range.
+/// - `double` — A type for approximate fractional numbers. Java uses a decimal point.
+/// - `String` — Text, such as "Red Fox". Double quotes mark text literally written in the code.
+/// - `"` — Double quotes enclose a text literal. The quotes themselves are not part of its text.
+/// - `long` — A type for whole numbers with a larger range than int. A trailing L marks a long literal.
+/// - `var` — Java infers the local value’s type from the expression on the right. It still has one fixed
+///   type.
+/// - `=` — Stores the value on the right under the name on the left. It does not compare them.
+/// - `==` — Compares primitive values. For text contents, use equals instead.
+/// - `||` — At least one condition must be true; if the first is true, Java skips the second.
+/// - `!` — In front of a boolean expression, reverses true and false.
+/// - `+` — Adds numbers. When a String is involved, joins text instead.
+/// - `-` — Subtracts numbers; in front of one number, changes its sign.
+/// - `*` — Multiplies numbers. In an import such as java.awt.*, makes that package’s type names
+///   available.
+/// - `/` — Divides numbers. Dividing two int values discards the fractional part.
+/// - `<` — Compares numbers: less than. <= also permits equality; > and >= compare in the other
+///   direction. In List<String>, angle brackets describe the element type.
+/// - `[]` — An array or an indexed access. Index 0 denotes the first element; length is the element
+///   count.
+/// - `new` — Creates a fresh value or object, such as a new array or window.
+/// - `return` — Ends this method call, optionally handing a result back to its caller.
+/// - `if` — Runs its body only when the condition in parentheses is true.
+/// - `null` — No object is present. IO.readln returns null when the input stream ends.
+/// - `try` — A block whose possible failures can be handled by the following catch.
+/// - `catch` — Handles the named kind of exception instead of leaving that failure unexplained.
+/// - `throw` — Reports a failure by creating or passing an exception.
+/// - `Random` — Generates pseudorandom choices. A fixed seed reproduces the same sequence.
+/// - `IO` — Console input and output. println writes a line. readln waits for a whole line of input.
+/// - `Graphics2D` — The drawing tool supplied while a window or image is being painted.
+// </editor-fold>

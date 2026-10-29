@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>5.5 Combine small referees · Hack &amp; Play in Java</title><link rel="stylesheet" href="../book.css"></head>
+<body>
+<a class="skip" href="#content">Skip to the lesson</a>
+<header class="masthead"><a href="../index.html">Hack &amp; Play in Java</a></header>
+<div class="layout"><aside class="sidebar"><nav aria-label="Lessons"><ol><li><a href="../index.html">Contents</a></li><li><a href="../00-setup/index.html">Set up your workshop</a></li></ol><details><summary>1. A program follows steps</summary><ol><li><a href="../01-first-steps/01-first-program.html">1.1 Your first program</a></li><li><a href="../01-first-steps/02-order.html">1.2 Statement order</a></li></ol></details><details><summary>2. Values and calculations</summary><ol><li><a href="../02-values/01-values.html">2.1 Give a value a name</a></li><li><a href="../02-values/02-change.html">2.2 Change a stored value</a></li><li><a href="../02-values/03-calculations.html">2.3 Let the program calculate</a></li></ol></details><details><summary>3. Text and player input</summary><ol><li><a href="../03-text-input/01-input.html">3.1 Ask the player</a></li><li><a href="../03-text-input/02-text.html">3.2 Clean up an incoming signal</a></li><li><a href="../03-text-input/03-stories.html">3.3 Let the player shape the story</a></li><li><a href="../03-text-input/04-numbers.html">3.4 Turn an answer into a number</a></li></ol></details><details><summary>4. Decisions and rules</summary><ol><li><a href="../04-decisions/01-questions.html">4.1 Ask a question in code</a></li><li><a href="../04-decisions/02-branches.html">4.2 Choose what happens</a></li><li><a href="../04-decisions/03-logic.html">4.3 Combine rules</a></li><li><a href="../04-decisions/04-guards.html">4.4 Stop an illegal move in time</a></li><li><a href="../04-decisions/05-switch.html">4.5 Choose a value with switch</a></li></ol></details><details open><summary>5. Your own methods</summary><ol><li><a href="01-actions.html">5.1 Give your own step a name</a></li><li><a href="02-parameters.html">5.2 Send values to a method</a></li><li><a href="03-results.html">5.3 Return a result to the caller</a></li><li><a href="04-local-values.html">5.4 How far does a name reach?</a></li><li><a href="05-composition.html" aria-current="page">5.5 Combine small referees</a></li></ol></details><details><summary>6. Loops</summary><ol><li><a href="../06-loops/01-while.html">6.1 Repeat while needed</a></li><li><a href="../06-loops/02-for.html">6.2 Give the counter its own place</a></li><li><a href="../06-loops/03-accumulators.html">6.3 Remember what has passed</a></li><li><a href="../06-loops/04-search.html">6.4 Stop at the first match</a></li><li><a href="../06-loops/05-game-loop.html">6.5 Read the next move</a></li></ol></details><details><summary>7. Arrays</summary><ol><li><a href="../07-arrays/01-arrays.html">7.1 Give values numbered places</a></li><li><a href="../07-arrays/02-traversal.html">7.2 Visit values without picking each one</a></li><li><a href="../07-arrays/03-updates.html">7.3 Change the actual place</a></li><li><a href="../07-arrays/04-search.html">7.4 Find a place that fits</a></li><li><a href="../07-arrays/05-copies.html">7.5 A memory is not a second name</a></li></ol></details><details><summary>8. Grids and generations</summary><ol><li><a href="../08-grids/01-grids.html">8.1 Rows become a map</a></li><li><a href="../08-grids/02-bounds.html">8.2 Check the boundary first</a></li><li><a href="../08-grids/03-neighbours.html">8.3 Ask the neighbouring cells</a></li><li><a href="../08-grids/04-patterns.html">8.4 Make a pattern from coordinates</a></li><li><a href="../08-grids/05-generations.html">8.5 Read the past; write the future</a></li></ol></details><details><summary>9. Data that belong together</summary><ol><li><a href="../09-data/01-records.html">9.1 Give related data a shape</a></li><li><a href="../09-data/02-objects.html">9.2 One description, several objects</a></li><li><a href="../09-data/03-references.html">9.3 Two names can point to the same thing</a></li><li><a href="../09-data/04-data-methods.html">9.4 Data can know their operations</a></li><li><a href="../09-data/05-enums.html">9.5 Name the allowed choices</a></li></ol></details><details><summary>10. Growing collections of data</summary><ol><li><a href="../10-collections/01-lists.html">10.1 A bag need not know its size ahead of time</a></li><li><a href="../10-collections/02-sets.html">10.2 Remember a first visit</a></li><li><a href="../10-collections/03-maps.html">10.3 Each name has its own account</a></li><li><a href="../10-collections/04-ordering.html">10.4 Pass an ordering rule</a></li><li><a href="../10-collections/05-streams.html">10.5 Send data through a filter</a></li></ol></details><details><summary>11. Stateful objects and repeatable experiments</summary><ol><li><a href="../11-state/01-state.html">11.1 An object remembers a change</a></li><li><a href="../11-state/02-instances.html">11.2 Each robot has its own battery</a></li><li><a href="../11-state/03-invariants.html">11.3 Rejection must preserve state</a></li><li><a href="../11-state/04-random.html">11.4 Chance proposes, a rule decides</a></li><li><a href="../11-state/05-seeds.html">11.5 Same start, same experiment</a></li></ol></details><details><summary>12. Validation, recovery and files</summary><ol><li><a href="../12-files/01-validation.html">12.1 Decide which values belong</a></li><li><a href="../12-files/02-exceptions.html">12.2 Report a failed operation</a></li><li><a href="../12-files/03-retry.html">12.3 Let the player correct a reply</a></li><li><a href="../12-files/04-files.html">12.4 Read data from a real file</a></li><li><a href="../12-files/05-save.html">12.5 Save only after the checks pass</a></li></ol></details><details><summary>13. Windows, events and animation</summary><ol><li><a href="../13-windows/01-drawing.html">13.1 Draw in a Java window</a></li><li><a href="../13-windows/02-input-events.html">13.2 Turn a click into a choice</a></li><li><a href="../13-windows/03-handlers.html">13.3 Give events one clear job</a></li><li><a href="../13-windows/04-timers.html">13.4 Advance a simulation in small steps</a></li><li><a href="../13-windows/05-model-view.html">13.5 Let painting observe the model</a></li></ol></details><details><summary>14. Checks, composition and exploration</summary><ol><li><a href="../14-checks-and-exploration/01-checks.html">14.1 Choose examples that catch mistakes</a></li><li><a href="../14-checks-and-exploration/02-interfaces.html">14.2 Compose objects by their behaviour</a></li><li><a href="../14-checks-and-exploration/03-patterns.html">14.3 Ask which kind of data arrived</a></li><li><a href="../14-checks-and-exploration/04-refactoring.html">14.4 Extract one shared idea</a></li><li><a href="../14-checks-and-exploration/05-recursion.html">14.5 Explore smaller problems and choices</a></li></ol></details><ol><li><a href="../glossary.html">Glossary</a></li></ol></nav></aside>
+<main><article id="content">
+<h1>5.5 Combine small referees</h1>
+<p>A spellbook has three jobs: clean the input, recognise an allowed spell, and choose an effect. Each part can have its own name and return a result to the next one.</p>
+<h2>From an answer to an effect</h2>
+<p>Open <code>05-methods/P15_SpellPipeline.java</code>. Run the program twice: first enter RED with spaces around it, then enter the unknown spell green on the second run.</p>
+<pre><code class="language-java" data-source="P15_SpellPipeline.java">void main() {
+    String input = IO.readln(&quot;Spell: &quot;);
+    String spell = clean(input);
+    IO.println(&quot;Effect: &quot; + effect(spell));
+}
+
+String clean(String input) {
+    return input.strip().toLowerCase(Locale.ROOT);
+}
+
+boolean isKnown(String spell) {
+    return spell.equals(&quot;red&quot;) || spell.equals(&quot;blue&quot;);
+}
+
+String effect(String spell) {
+    if (!isKnown(spell)) {
+        return &quot;Fizzle&quot;;
+    }
+    return switch (spell) {
+        case &quot;red&quot; -&gt; &quot;Fire&quot;;
+        default -&gt; &quot;Ice&quot;;
+    };
+}
+</code></pre><pre class="transcript"><code>Spell: <span class="typed"> RED </span>
+Effect: Fire</code></pre>
+<p>The main method handles reading and displaying. The method clean returns the cleaned text. The method effect asks isKnown for a boolean; if the spell is unknown, it returns Fizzle. Otherwise, it chooses an effect. The default branch in this switch now means blue, because all other possibilities were rejected before it.</p>
+<p>This is method composition. Follow one call: effect receives red → calls isKnown(red) → receives true → skips the rejection → chooses Fire → returns it to main. Returning true from isKnown ends only isKnown; effect still has work to do.</p>
+<p>The spell calculation does not read or print anything. To try it without asking the player for input, temporarily replace the body of main with the single statement <code>IO.println(effect("blue"));</code> and expect Ice. Keep the helper method definitions. Then restore the original body of main. The method effect receives text that has already been cleaned; for any other input, use clean first. Each method makes a small, specific promise.</p>
+<h2>Task: build the arena referee</h2>
+<p>Open <code>05-methods/P16_ArenaReferee.java</code>. The main method is complete. For now, the referee approves absolutely everything.</p>
+<p><strong>Complete three methods that work together. The method clean returns text with leading and trailing spaces removed and all letters in uppercase. The method cost receives a cleaned command: JUMP costs 3, DUCK costs 1, and an unknown command has a cost of 0. The method verdict first uses clean and cost; it returns UNKNOWN for an unknown command, TIRED for too little energy, and GO otherwise.</strong></p>
+<p>Reading and printing stay only in main. The method verdict uses both helpers instead of copying their rules. Try energy values of zero or more. Accepting a move does not subtract energy here: the program judges one proposed move.</p>
+<div class="table-wrap"><table><thead><tr><th>Move</th><th>Energy</th><th>Verdict</th></tr></thead><tbody>
+<tr><td><code> jump </code></td><td>3</td><td>GO</td></tr>
+<tr><td>JUMP</td><td>2</td><td>TIRED</td></tr>
+<tr><td>duck</td><td>1</td><td>GO</td></tr>
+<tr><td>DUCK</td><td>0</td><td>TIRED</td></tr>
+<tr><td>wait or an empty line</td><td>20</td><td>UNKNOWN</td></tr>
+</tbody></table></div>
+<details><summary>Hint 1: the path of the values</summary><p>The method verdict receives the original move, stores the result of clean under a new name, and only then passes this cleaned text to cost. The resulting cost is enough for the two rejection conditions.</p></details>
+<details><summary>Hint 2: the order of rejection</summary><p>A cost of 0 means an unknown command, not a free move. First reject an unknown command, then compare the energy with the cost. Energy equal to the cost is allowed.</p></details>
+<h2>Frogs need a direction, not a separate copy of the calculation</h2>
+<p>In <code>05-methods/P17_ToadsAndFrogs.java</code>, toads have the species number 1 and move right; frogs have number 2 and move left. The board starts like this:</p>
+<pre><code>positions:  0 1 2 3 4 5 6
+creatures:  T T T . F F F
+toads:      →
+frogs:      ←</code></pre>
+<p>The method direction returns the sign of the movement. The method destination receives origin (the internal position), distance (a positive step or jump length), and piece (the creature's species). It should call direction and return a candidate destination position. For example, origin 4, distance 1 and piece 2 should give 3. Origin 2, distance 1 and piece 1 also gives 3; so does a frog jumping a distance of 2 from position 5.</p>
+<p>Both methods only calculate. The supplied move checks for an empty square, a legal jump, and the board edges, then performs the actual move. Do not change the board. The on-screen positions are numbered 1 to 7 for the player: at the start, pressing 5 asks the first frog to move into the gap. R restores the starting position. Select the check in <code>05-methods/Check.java</code>.</p>
+<h2>Return to the story or the rewards</h2>
+<ul>
+<li><code>03-text-input/P10_MadLibsStoryMachine.java</code>: check how headline gets the cleaned name. If it repeats the cleaning code directly, replace that code with a call to cleanWord. If it already uses that method, do not copy anything. Explain the path of the name from input through the helper to the headline. The same rule should stay in one place.</li>
+<li><code>04-decisions/P19_CooperateOrDefect.java</code>: the supplied play asks reward twice, once for each player. Swapping the arguments in a call swaps the perspective on who is cooperating. Predict your own reward and your opponent's for one cooperation and one betrayal, then check by playing. You already know the reward rules from conditions.</li>
+</ul>
+<p><strong>You can now split a rule into smaller methods, follow the path of arguments and results, and keep input and output separate from calculations.</strong></p>
+<p>Continue to <a href="../06-loops/01-while.html">repetition with while</a>: teach the program to repeat familiar steps.</p>
+<section class="game-practice"><h2>Practise in a game</h2><ul>
+<li><strong>MiniGolf</strong> · <code>05-methods/P18_MiniGolf.java</code><br>MiniGolf needs both dragVelocity and its use for both axes in applyPull. Check inputs 100, -25 and 0; preserve the shot limiter.</li>
+</ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
+</article>
+<nav class="page-nav" aria-label="Previous and next lesson"><a href="04-local-values.html">← 5.4 How far does a name reach?</a><a class="next" href="../06-loops/01-while.html">6.1 Repeat while needed →</a></nav>
+</main></div></body></html>
