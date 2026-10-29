@@ -9,16 +9,19 @@
 <h1>8.4 Vyrob vzor podle souřadnic</h1>
 <p>Vzor nemusíš ukládat jako dlouhý seznam ručně napsaných znaků. U šachovnice nebo rámečku může o každém místě rozhodnout malé pravidlo souřadnic. Změna velikosti pak sama vytvoří jinou mapu.</p>
 <h2>Vytvoř, naplň, zobraz</h2>
-<p>Otevři <code>08-grids/P18_CheckerTiles.java</code>. Zadej velikost 3.</p>
-<pre><code class="language-java" data-source="P18_CheckerTiles.java">void main() {
-    int size = Integer.parseInt(IO.readln(&quot;Size: &quot;).strip());
+<p>Otevři <code>08-grids/P18_Example_CheckerTiles.java</code>. Zadej velikost 3.</p>
+<pre><code class="language-java" data-source="P18_Example_CheckerTiles.java">/// # Hotový příklad · 8.4 Vyrob vzor podle souřadnic
+/// Lekce: 04-patterns.html
+
+void main() {
+    int size = Integer.parseInt(IO.readln("Size: ").strip());
     String[][] tiles = new String[size][size];
     for (int y = 0; y &lt; size; y++) {
         for (int x = 0; x &lt; size; x++) {
             if ((x + y) % 2 == 0) {
-                tiles[y][x] = &quot;#&quot;;
+                tiles[y][x] = "#";
             } else {
-                tiles[y][x] = &quot;.&quot;;
+                tiles[y][x] = ".";
             }
         }
     }
@@ -27,7 +30,7 @@
 
 void show(String[][] tiles) {
     for (String[] row : tiles) {
-        String line = &quot;&quot;;
+        String line = "";
         for (String tile : row) {
             line += tile;
         }
@@ -41,15 +44,15 @@ void show(String[][] tiles) {
 <details><summary>Předpověď: velikost 2</summary><p>Vzniknou tyto dva řádky:</p><pre><code>#.
 .#</code></pre><p>Pro velikost 0 není žádná řada, takže za výzvou nic dalšího nepřibude. Příklad zkoušej pro velikosti 0 až 6.</p></details>
 <h2>Úkol: dutý panel</h2>
-<p>Otevři <code>08-grids/P19_HollowPanel.java</code>. Doplň frame: každý okraj čtverce má být # a všechna vnitřní místa tečky. Metody main a show zůstávají hotové. Měň pravidlo pro jednotlivou buňku, nikoli ručně vypsané řádky.</p>
+<p>Otevři <code>08-grids/P19_Task_HollowPanel.java</code>. Doplň frame: každý okraj čtverce má být # a všechna vnitřní místa tečky. Metody main a show zůstávají hotové. Měň pravidlo pro jednotlivou buňku, nikoli ručně vypsané řádky.</p>
 <p>Zkoušej velikosti 1 až 6. Pro 1 je celý výsledek jediný #. Pro 2 jsou oba řádky ##. Pro 4 čekej horní a dolní řadu #### a dvě prostřední řady #..#. Jediné místo velikosti 1 je současně všemi čtyřmi okraji.</p>
 <details><summary>Nápověda 1: čtyři možnosti okraje</summary><p>Buňka je na okraji, pokud patří prvnímu nebo poslednímu řádku, případně prvnímu nebo poslednímu sloupci. Stačí jedna možnost.</p></details>
 <details><summary>Nápověda 2: poslední index</summary><p>Poslední platný index je o jednu menší než velikost. Výplň musí dostat i ostatní buňky, jinak nezískají textový symbol.</p></details>
 <p>Příště pravidlo nebude záviset jen na souřadnicích, ale na okolí v předchozím stavu mřížky.</p>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>Quarto</strong> · <code>08-grids/P20_Quarto.java</code><br>Quarto pozná řádky, ale přehlíží sloupce a diagonály. Rozšiř won o chybějící skupiny a nech připravené line posoudit každou čtveřici.</li>
-<li><strong>Reversi</strong> · <code>08-grids/P21_Reversi.java</code><br>V Reversi oceň roh třemi body, jiný obsazený čtverec jedním. Stejná score musejí řídit průběžné zobrazení i konečného vítěze.</li>
-<li><strong>LightUp</strong> · <code>08-grids/P22_LightUp.java</code><br>LightUp má vidět žárovku po celé volné chodbě až ke zdi nebo hraně. Ve visible pokračuj dál než k bezprostřednímu sousedovi.</li>
+<li><strong>Quarto</strong> · <code>08-grids/P20_Task_Quarto.java</code><br>Quarto pozná řádky, ale přehlíží sloupce a diagonály. Rozšiř won o chybějící skupiny a nech připravené line posoudit každou čtveřici.</li>
+<li><strong>Reversi</strong> · <code>08-grids/P21_Task_Reversi.java</code><br>V Reversi oceň roh třemi body, jiný obsazený čtverec jedním. Stejná score musejí řídit průběžné zobrazení i konečného vítěze.</li>
+<li><strong>LightUp</strong> · <code>08-grids/P22_Task_LightUp.java</code><br>LightUp má vidět žárovku po celé volné chodbě až ke zdi nebo hraně. Ve visible pokračuj dál než k bezprostřednímu sousedovi.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="03-neighbours.html">← 8.3 Ptej se okolních buněk</a><a class="next" href="05-generations.html">8.5 Minulost čti, budoucnost zapisuj →</a></nav>

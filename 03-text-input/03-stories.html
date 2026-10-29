@@ -9,13 +9,16 @@
 <h1>3.3 Nech hráče měnit příběh</h1>
 <p>Krátký příběh může reagovat na jméno a místo, které dodá hráč. Místo několika ručních kopií připravíš jednu textovou šablonu.</p>
 <h2>Vyměň značky za odpovědi</h2>
-<p>Otevři <code>03-text-input/P05_StoryMachine.java</code>. Přečti si nejprve text v proměnné <code>story</code>. Kde se má objevit stejný pilot dvakrát?</p>
-<pre><code class="language-java" data-source="P05_StoryMachine.java">void main() {
-    String pilot = IO.readln(&quot;Pilot: &quot;);
-    String place = IO.readln(&quot;Place: &quot;);
-    String story = &quot;PLAYER shouts \&quot;Go!\&quot; in PLACE.\nPLAYER runs.&quot;;
-    story = story.replace(&quot;PLAYER&quot;, pilot);
-    story = story.replace(&quot;PLACE&quot;, place);
+<p>Otevři <code>03-text-input/P05_Example_StoryMachine.java</code>. Přečti si nejprve text v proměnné <code>story</code>. Kde se má objevit stejný pilot dvakrát?</p>
+<pre><code class="language-java" data-source="P05_Example_StoryMachine.java">/// # Hotový příklad · 3.3 Nech hráče měnit příběh
+/// Lekce: 03-stories.html
+
+void main() {
+    String pilot = IO.readln("Pilot: ");
+    String place = IO.readln("Place: ");
+    String story = "PLAYER shouts \"Go!\" in PLACE.\nPLAYER runs.";
+    story = story.replace("PLAYER", pilot);
+    story = story.replace("PLACE", place);
     IO.println(story);
 }
 </code></pre>
@@ -33,7 +36,7 @@ Nova runs.</code></pre>
 </tbody></table></div>
 <p>Říkáme tomu escape sequence (řídicí posloupnost). Vnější uvozovky ukončující celý String před sebou lomítko nemají. Nový řádek uvnitř <code>story</code> způsobí, že jedno volání println vypíše příběh na dva řádky.</p>
 <h2>Úkol: příběh zapomněl jméno i lup</h2>
-<p>Otevři <code>03-text-input/P06_SecretStory.java</code>. Čte jméno a předmět, ale místo nich stále tiskne NAME a ITEM.</p>
+<p>Otevři <code>03-text-input/P06_Task_SecretStory.java</code>. Čte jméno a předmět, ale místo nich stále tiskne NAME a ITEM.</p>
 <p><strong>Oprav uložení výsledku první náhrady a doplň druhou náhradu. Obě místa NAME musí použít přijaté jméno a ITEM přijatý předmět.</strong></p>
 <pre class="transcript"><code>Name: <span class="typed">Nova</span>
 Item: <span class="typed">a rubber duck</span>
@@ -50,11 +53,11 @@ Nova steals a rubber duck. Nova escapes.</code></pre>
 <p>První <code>String</code> říká, že výsledkem akce bude text; dřívější <code>void main()</code> žádnou výslednou hodnotu nevracelo. <code>label</code> je jméno akce. <code>String word</code> pojmenovává předaný text. <code>return</code> dává výsledek zpět tam, odkud přišlo volání: <code>label("map")</code> poskytne <code>"Found: map"</code>. Tato definice se sama nespustí; používá ji další část programu. Celý zápis vlastních akcí prozkoumáš v kapitole o methods (metodách). Pro nynější hry potřebuješ sledovat předaný text a upravit výraz za return.</p>
 <h2>Použij text ve hrách</h2>
 <ul>
-<li><code>03-text-input/P07_TypeMelody.java</code>: z textu vzniká melodie. Změň dodanou zprávu podle zadání a poslouchej rozdíl mezi písmeny a mezerami.</li>
-<li><code>03-text-input/P08_BitmapBanner.java</code>: rozsvítíš nápis úpravou jeho textu. Písmena se promění v připravené pixelové řádky.</li>
-<li><code>03-text-input/P09_ProgramMirror.java</code>: oprav text vypadající jako Java příkaz. Využiješ uvozovky uvnitř uvozovek.</li>
-<li><code>03-text-input/P10_MadLibsStoryMachine.java</code>: očisti krajní mezery a sestav titulek z přijatého jména. Připravený program potom použije tvůj titulek u delšího absurdního příběhu.</li>
-<li><code>03-text-input/P11_AnagramRounds.java</code>: hádáš přesmyčky, ale rozhodčí neuznává malá písmena. Oprav zpracování odpovědi a zachovej čištění krajních mezer. V připraveném řetězci volání další tečka vybírá operaci nad výsledkem předchozího volání.</li>
+<li><code>03-text-input/P07_Task_TypeMelody.java</code>: z textu vzniká melodie. Změň dodanou zprávu podle zadání a poslouchej rozdíl mezi písmeny a mezerami.</li>
+<li><code>03-text-input/P08_Task_BitmapBanner.java</code>: rozsvítíš nápis úpravou jeho textu. Písmena se promění v připravené pixelové řádky.</li>
+<li><code>03-text-input/P09_Task_ProgramMirror.java</code>: oprav text vypadající jako Java příkaz. Využiješ uvozovky uvnitř uvozovek.</li>
+<li><code>03-text-input/P10_Task_MadLibsStoryMachine.java</code>: očisti krajní mezery a sestav titulek z přijatého jména. Připravený program potom použije tvůj titulek u delšího absurdního příběhu.</li>
+<li><code>03-text-input/P11_Task_AnagramRounds.java</code>: hádáš přesmyčky, ale rozhodčí neuznává malá písmena. Oprav zpracování odpovědi a zachovej čištění krajních mezer. V připraveném řetězci volání další tečka vybírá operaci nad výsledkem předchozího volání.</li>
 </ul>
 <p>U každé úlohy nejprve přečti její konkrétní cíl. Pro kontrolu otevři Check.java ze stejné složky a v Program Arguments vyber právě řešený soubor. Postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p>
 <p><strong>Teď umíš vyplnit textovou šablonu, zapsat uvozovku uvnitř zprávy a sledovat text vrácený připravenou akcí.</strong></p>

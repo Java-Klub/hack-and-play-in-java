@@ -9,15 +9,18 @@
 <h1>4.2 Vyber, co se stane</h1>
 <p>Radar zná vzdálenost draka. Podle ní má vypsat jednu zprávu. Boolean odpověď teď použiješ k výběru dalšího kroku.</p>
 <h2>Jedna cesta podle odpovědi</h2>
-<p>Otevři <code>04-decisions/P05_DragonRadar.java</code>. Nejdřív předpověz výsledek pro -1, 3 a 4.</p>
-<pre><code class="language-java" data-source="P05_DragonRadar.java">void main() {
-    int distance = Integer.parseInt(IO.readln(&quot;Distance: &quot;).strip());
+<p>Otevři <code>04-decisions/P05_Example_DragonRadar.java</code>. Nejdřív předpověz výsledek pro -1, 3 a 4.</p>
+<pre><code class="language-java" data-source="P05_Example_DragonRadar.java">/// # Hotový příklad · 4.2 Vyber, co se stane
+/// Lekce: 02-branches.html
+
+void main() {
+    int distance = Integer.parseInt(IO.readln("Distance: ").strip());
     if (distance &lt; 0) {
-        IO.println(&quot;Behind you&quot;);
+        IO.println("Behind you");
     } else if (distance &lt;= 3) {
-        IO.println(&quot;Very close&quot;);
+        IO.println("Very close");
     } else {
-        IO.println(&quot;Far away&quot;);
+        IO.println("Far away");
     }
 }
 </code></pre>
@@ -26,7 +29,7 @@
 <p>Jakmile se v tomto řetězci vybere jedna branch (větev), ostatní se přeskočí. Při -1 je pravdivé také <code>distance &lt;= 3</code>, ale tato pozdější otázka už na řadu nepřijde.</p>
 <p>Blok může obsahovat více kroků: výpis, přiřazení i další volání. Složené závorky určují, které kroky do dané větve patří. Za uzavřením celého if/else řetězce tu další středník nepíšeme.</p>
 <h2>Úkol: poplach nesmí mluvit dvakrát</h2>
-<p>Otevři <code>04-decisions/P06_DroneAlarm.java</code>. Pro vzdálenost 2 vypíše Near i Danger. Přečti, kolik samostatných otázek se v něm provádí.</p>
+<p>Otevři <code>04-decisions/P06_Task_DroneAlarm.java</code>. Pro vzdálenost 2 vypíše Near i Danger. Přečti, kolik samostatných otázek se v něm provádí.</p>
 <p><strong>Přestav rozhodování na jeden if / else if / else řetězec s jedinou výslednou zprávou:</strong></p>
 <div class="table-wrap"><table><thead><tr><th>Vzdálenost</th><th>Zpráva</th></tr></thead><tbody>
 <tr><td>2 a méně</td><td>Danger</td></tr>
@@ -39,7 +42,7 @@ Danger</code></pre>
 <details><summary>Nápověda 1: kdo má přednost</summary><p>Uvažuj nejprve nejbližší vzdálenost. Pokud by se dřív vybralo vše do pěti, pro nejbližší případ už by v řetězci nezbyla příležitost.</p></details>
 <details><summary>Nápověda 2: samostatné if</summary><p>Dvě samostatná if se ptají nezávisle. Else if patří k předchozímu rozhodování a ptá se pouze tehdy, když předchozí větev neuspěla.</p></details>
 <h2>Rozhodni, kdo vyhrál</h2>
-<p>V <code>04-decisions/P07_BlackjackTwentyOne.java</code> dokončíš připravenou akci compareTotals. Dostane čísla human a house. Podle nich má <code>return</code> vrátit jednu zprávu:</p>
+<p>V <code>04-decisions/P07_Task_BlackjackTwentyOne.java</code> dokončíš připravenou akci compareTotals. Dostane čísla human a house. Podle nich má <code>return</code> vrátit jednu zprávu:</p>
 <div class="table-wrap"><table><thead><tr><th>human</th><th>house</th><th>Výsledek</th></tr></thead><tbody>
 <tr><td>20</td><td>19</td><td>You win</td></tr>
 <tr><td>21</td><td>21</td><td>Draw</td></tr>
@@ -47,7 +50,7 @@ Danger</code></pre>
 <tr><td>22</td><td>23</td><td>You bust</td></tr>
 <tr><td>18</td><td>20</td><td>Dealer wins</td></tr>
 </tbody></table></div>
-<p>Hráč nad 21 prohrál ještě před porovnáním běžných součtů. Po něm rozhoduje dealer nad 21, větší platný součet nebo rovnost. Jakmile se provede return, toto volání akce končí a předává text připravené hře. Zprávu tedy nevypisuj uvnitř compareTotals místo jejího vrácení. Pro kontrolu použij <code>04-decisions/Check.java</code> a <code>P07_BlackjackTwentyOne.java</code>.</p>
+<p>Hráč nad 21 prohrál ještě před porovnáním běžných součtů. Po něm rozhoduje dealer nad 21, větší platný součet nebo rovnost. Jakmile se provede return, toto volání akce končí a předává text připravené hře. Zprávu tedy nevypisuj uvnitř compareTotals místo jejího vrácení. Pro kontrolu použij <code>04-decisions/Check.java</code> a <code>P07_Task_BlackjackTwentyOne.java</code>.</p>
 <p><strong>Teď umíš vybrat jednu z několika cest a vysvětlit, proč na pořadí otázek záleží.</strong></p>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="01-questions.html">← 4.1 Polož otázku kódu</a><a class="next" href="03-logic.html">4.3 Spoj pravidla dohromady →</a></nav>

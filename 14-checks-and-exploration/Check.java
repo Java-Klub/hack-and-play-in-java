@@ -7,95 +7,125 @@ import java.io.*;
 import java.awt.Point;
 import javax.imageio.ImageIO;
 
-/// Chapter checks: java Check.java
-/// One game: java Check.java P03_Hanoi.java
-/// Tests call compact programs through reflection in this JVM.
+/// Kontrola herních úloh této kapitoly. Krátké učebnicové úkoly spouštěj samostatně.
 class Check {
     int failed;
     int checked;
     String selected;
+    final ArrayList<String> available = new ArrayList<>();
     interface Test { void run() throws Exception; }
 
     void main(String[] args) {
         System.setProperty("java.awt.headless", "true");
-        if (args.length > 1) throw new IllegalArgumentException("Use: java Check.java [game filename]");
+        if (args.length > 1) {
+            IO.println("Zadej nejvýše jeden název herního souboru. Bez argumentu se zkontrolují všechny herní úlohy kapitoly.");
+            System.exit(2);
+        }
         selected = args.length == 0 ? "" : Path.of(args[0]).getFileName().toString().replaceFirst("\\.java$", "");
-        run("P03_Hanoi", "14.03 Hanoi · F08", () -> P03_HanoiTest.main(new String[0]));
-        run("P04_LightsOut", "14.04 LightsOut · F33", () -> P04_LightsOutTest.main(new String[0]));
-        run("P05_Tents", "14.05 Tents · F33", () -> P05_TentsTest.main(new String[0]));
-        run("P06_PegSolitaire", "14.06 PegSolitaire · F33", () -> P06_PegSolitaireTest.main(new String[0]));
-        run("P07_Merge2048", "14.07 Merge2048 · F33", () -> P07_Merge2048Test.main(new String[0]));
-        run("P10_ReactionDiffusionSkins", "14.10 ReactionDiffusionSkins · F34", () -> P10_ReactionDiffusionSkinsTest.main(new String[0]));
-        run("P11_FlockPlayground", "14.11 FlockPlayground · F34", () -> P11_FlockPlaygroundTest.main(new String[0]));
-        run("P12_PhasingRhythms", "14.12 PhasingRhythms · F34", () -> P12_PhasingRhythmsTest.main(new String[0]));
-        run("P13_PendulumPainter", "14.13 PendulumPainter · F34", () -> P13_PendulumPainterTest.main(new String[0]));
-        run("P16_KnightTour", "14.16 KnightTour · F35", () -> P16_KnightTourTest.main(new String[0]));
-        run("P17_CipherPostcards", "14.17 CipherPostcards · F35", () -> P17_CipherPostcardsTest.main(new String[0]));
-        run("P18_RetroSoundForge", "14.18 RetroSoundForge · F35", () -> P18_RetroSoundForgeTest.main(new String[0]));
-        run("P19_FireflySynchrony", "14.19 FireflySynchrony · F35", () -> P19_FireflySynchronyTest.main(new String[0]));
-        run("P22_CrystalGrowth", "14.22 CrystalGrowth · F36", () -> P22_CrystalGrowthTest.main(new String[0]));
-        run("P23_MountainPostcards", "14.23 MountainPostcards · F36", () -> P23_MountainPostcardsTest.main(new String[0]));
-        if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " mission goals remaining.");
+        run("P03_Task_Hanoi", () -> P03_Task_HanoiTest.main(new String[0]));
+        run("P04_Task_LightsOut", () -> P04_Task_LightsOutTest.main(new String[0]));
+        run("P05_Task_Tents", () -> P05_Task_TentsTest.main(new String[0]));
+        run("P06_Task_PegSolitaire", () -> P06_Task_PegSolitaireTest.main(new String[0]));
+        run("P07_Task_Merge2048", () -> P07_Task_Merge2048Test.main(new String[0]));
+        run("P10_Task_ReactionDiffusionSkins", () -> P10_Task_ReactionDiffusionSkinsTest.main(new String[0]));
+        run("P11_Task_FlockPlayground", () -> P11_Task_FlockPlaygroundTest.main(new String[0]));
+        run("P12_Task_PhasingRhythms", () -> P12_Task_PhasingRhythmsTest.main(new String[0]));
+        run("P13_Task_PendulumPainter", () -> P13_Task_PendulumPainterTest.main(new String[0]));
+        run("P16_Task_KnightTour", () -> P16_Task_KnightTourTest.main(new String[0]));
+        run("P17_Task_CipherPostcards", () -> P17_Task_CipherPostcardsTest.main(new String[0]));
+        run("P18_Task_RetroSoundForge", () -> P18_Task_RetroSoundForgeTest.main(new String[0]));
+        run("P19_Task_FireflySynchrony", () -> P19_Task_FireflySynchronyTest.main(new String[0]));
+        run("P22_Task_CrystalGrowth", () -> P22_Task_CrystalGrowthTest.main(new String[0]));
+        run("P23_Task_MountainPostcards", () -> P23_Task_MountainPostcardsTest.main(new String[0]));
+        if (checked == 0) {
+            IO.println("Pro tento soubor zde není připravená herní kontrola: " + selected + ".java");
+            IO.println("Vyber jeden z těchto souborů: " + String.join(", ", available));
+            System.exit(2);
+        }
+        IO.println("Kontroly: " + checked + "; hotovo: " + (checked - failed) + "; zbývá: " + failed);
         if (failed > 0) System.exit(1);
     }
 
-    void run(String game, String label, Test test) {
+    void run(String game, Test test) {
+        available.add(game + ".java");
         if (!selected.isEmpty() && !selected.equals(game)) return;
         checked++;
         try {
             test.run();
-            IO.println("GREEN " + label);
+            IO.println("GREEN " + game + ".java");
         } catch (Throwable failure) {
             failed++;
-            IO.println("RED " + label + ": " + failure.getMessage());
+            IO.println("RED " + game + ".java");
+            String reason = failure.getMessage();
+            if (reason == null || reason.isBlank()) reason = "Kontrola nedostala očekávaný výsledek.";
+            if (!(failure instanceof AssertionError)) reason = "Program se při kontrole zastavil: " + failure.getClass().getSimpleName() + ": " + reason;
+            IO.println("  " + reason.replace("\n", "\n  "));
+            Throwable cause = failure;
+            while (cause.getCause() != null && cause.getCause() != cause) cause = cause.getCause();
+            if (cause != failure) IO.println("  " + cause.getClass().getSimpleName() + ": " + show(cause.getMessage()));
+            for (var frame : cause.getStackTrace()) {
+                if (frame.getClassName().equals(game) || frame.getClassName().startsWith(game + "$")) {
+                    IO.println("  " + "Místo v programu: " + frame.getFileName() + ":" + frame.getLineNumber());
+                    break;
+                }
+            }
         }
+    }
+
+    static String show(Object value) {
+        if (value != null && value.getClass().isArray()) {
+            int length = java.lang.reflect.Array.getLength(value);
+            var parts = new ArrayList<String>();
+            for (int i = 0; i < Math.min(length, 8); i++) parts.add(show(java.lang.reflect.Array.get(value, i)));
+            return parts + (length > 8 ? " … (" + length + " položek" + ")" : "");
+        }
+        String text = String.valueOf(value).replace("\n", "\\n").replace("\r", "\\r");
+        return text.length() <= 180 ? text : text.substring(0, 177) + "…";
     }
 }
 
 @SuppressWarnings("unchecked")
-class P03_HanoiTest {
+class P03_Task_HanoiTest {
     static int checks;
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) throw new AssertionError(reason);
     }
     public static void main(String[] args) throws Exception {
-        var p=Reflect.create("P03_Hanoi");
+        var p=Reflect.create("P03_Task_Hanoi");
         Reflect.call(p,"reset");
         String[] lines=((String)Reflect.call(p,"demonstration")).strip().split("\\R");
-        check(lines.length==2,"The shortest witness contains two attempts, got "+lines.length);
+        check(lines.length==2,"demonstration má obsahovat přesně dva pokusy o tah. Nalezený počet: "+lines.length);
         for(int i=0;i<2;i++) {
             String[] pair=lines[i].strip().toUpperCase(Locale.ROOT).split("\\s+");
-            check(pair.length==2 && pair[0].matches("[ABC]") && pair[1].matches("[ABC]"),"Use real peg commands, not invalid syntax.");
+            check(pair.length==2 && pair[0].matches("[ABC]") && pair[1].matches("[ABC]"),"Každý řádek demonstration potřebuje dvě písmena věží, například A B. Použij jen A, B a C.");
             int from=pair[0].charAt(0)-'A',to=pair[1].charAt(0)-'A';
             int[] sizes=((int[])Reflect.get(p,"sizes"));
             int[][] pegs=((int[][])Reflect.get(p,"pegs"));
-            check(from!=to && sizes[from]>0,"Each attempt needs a real movable top disc.");
-            if(i==1)check(sizes[to]>0 && pegs[from][sizes[from]-1]>pegs[to][sizes[to]-1],"The second attempt must expose the larger-on-smaller rule.");
+            check(from!=to && sizes[from]>0,"Vyber různé výchozí a cílové věže. Na výchozí věži musí být kotouč.");
+            if(i==1)check(sizes[to]>0 && pegs[from][sizes[from]-1]>pegs[to][sizes[to]-1],"Druhý pokus má zkusit položit větší kotouč na menší. Prohlédni si stav věží po prvním tahu.");
             int[][] before=Arrays.stream(pegs).map(int[]::clone).toArray(int[][]::new);
             boolean moved=(boolean)Reflect.call(p,"move",from,to);
-            check(moved==(i==0),"Only the first attempt is accepted.");
-            if(i==1)check(Arrays.deepEquals(before,(int[][])Reflect.get(p,"pegs")),"Rejection preserves both towers.");
+            check(moved==(i==0),"První tah má projít a druhý být odmítnut. Zkontroluj oba příkazy v demonstration.");
+            if(i==1)check(Arrays.deepEquals(before,(int[][])Reflect.get(p,"pegs")),"Odmítnutí druhého tahu má nechat všechny kotouče na místě. Zkontroluj move před změnou věží.");
         }
-        check((int)Reflect.get(p,"moves")==1,"Rejected evidence is not counted as a move.");
-        IO.println("PASS " + checks + " checks");
+        check((int)Reflect.get(p,"moves")==1,"Počítadlo moves má zvýšit jen přijatý první tah. Celkem má být jeden tah.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P04_LightsOutTest {
+class P04_Task_LightsOutTest {
     static int checks;
 
     static void expect(boolean correct, String message) {
         checks++;
-        if (!correct) throw new AssertionError("14.04/F33: " + message);
+        if (!correct) throw new AssertionError(message);
     }
 
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-                + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-                + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Očekáváno: " + Check.show(expected)
+                + "\n    Zjištěno: " + Check.show(actual));
     }
 
     static int count(boolean[][] board) {
@@ -134,43 +164,42 @@ class P04_LightsOutTest {
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P04_LightsOut");
+        var game = Reflect.create("P04_Task_LightsOut");
         var cases = (Object[]) Reflect.call(game, "learnerChecks");
-        expect(cases.length >= 1 && cases.length <= 2, "supply one or two concise two-click experiments");
+        expect(cases.length >= 1 && cases.length <= 2, "Z learnerChecks vrať jeden nebo dva příklady se dvěma kliknutími.");
         for (var sample : cases) {
             for (String coordinate : new String[]{"firstRow", "firstColumn", "secondRow", "secondColumn"}) {
                 int value = (int) Reflect.call(sample, coordinate);
-                expect(value >= 0 && value < 5, "experiment coordinates must name real cells 0..4");
+                expect(value >= 0 && value < 5, "V každém příkladu použij čísla řádků a sloupců od 0 do 4.");
             }
             int expected = (int) Reflect.call(sample, "expected");
-            expect(expected >= 0 && expected <= 25, "expected count must fit the board");
+            expect(expected >= 0 && expected <= 25, "Očekávaný počet rozsvícených polí musí být od 0 do 25.");
             Reflect.set(game, "lights", new boolean[5][5]);
             Reflect.call(game, "flip", Reflect.call(sample, "firstRow"), Reflect.call(sample, "firstColumn"));
             Reflect.call(game, "flip", Reflect.call(sample, "secondRow"), Reflect.call(sample, "secondColumn"));
-            equal(expected, count((boolean[][]) Reflect.get(game, "lights")), "your two-click prediction must accept the real rule");
+            equal(expected, count((boolean[][]) Reflect.get(game, "lights")), "Předpovězený počet světel neodpovídá dvěma kliknutím. Projdi oba kříže včetně polí přepnutých dvakrát.");
         }
-        String[] names = {"only the pressed cell changes", "the pressed cell is omitted", "diagonal neighbours replace side neighbours",
-                "crosses wrap around board edges", "clicks set lights on instead of toggling", "the second click is ignored"};
+        String[] names = {"kliknutí mění jen vlastní pole", "kliknutí nepřepne vlastní pole", "kliknutí mění šikmé sousedy místo sousedů přes hranu",
+                "kliknutí u okraje mění i pole na protějším okraji", "kliknutí na rozsvícené pole jej nechá svítit", "druhé kliknutí nic nezmění"};
         for (int mutant = 0; mutant < names.length; mutant++) {
             boolean caught = false;
             for (var sample : cases) {
                 if (count(counterfeit(sample, mutant)) != (int) Reflect.call(sample, "expected")) caught = true;
             }
-            expect(caught, "your experiments still accept this wrong rule: " + names[mutant]);
+            expect(caught, "Tvoje learnerChecks zatím neodhalí tuto chybu: " + names[mutant]);
         }
         boolean[][] before = new boolean[5][5];
         before[1][3] = true;
         Reflect.set(game, "lights", before);
         Reflect.set(game, "moves", 17);
         Reflect.call(game, "verifyExamples");
-        expect(before == Reflect.get(game, "lights") && before[1][3], "startup experiments restore the real board");
-        equal(17, Reflect.get(game, "moves"), "startup experiments do not spend player moves");
-        System.out.println("PASS " + checks + " checks");
+        expect(before == Reflect.get(game, "lights") && before[1][3], "verifyExamples musí po vyzkoušení příkladů obnovit hráčovu desku.");
+        equal(17, Reflect.get(game, "moves"), "verifyExamples nesmí změnit hráčovo počítadlo tahů.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P05_TentsTest {
+class P05_Task_TentsTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -180,17 +209,17 @@ class P05_TentsTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Očekáváno: " + Check.show(expected)
+                + "\n    Zjištěno: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P05_Tents");
+        var g = Reflect.create("P05_Task_Tents");
         Reflect.call(g, "restart");
         var cases = ((Object[]) Reflect.call(g, "learnerChecks"));
         for (var e : cases) {
-            equal(((boolean) Reflect.call(e, "expected")), ((boolean) Reflect.call(g, "treeAt", ((int) Reflect.call(e, "x")), ((int) Reflect.call(e, "y")))), "14.05/F33: expectations must accept actual tree positions");
+            equal(((boolean) Reflect.call(e, "expected")), ((boolean) Reflect.call(g, "treeAt", ((int) Reflect.call(e, "x")), ((int) Reflect.call(e, "y")))), "Očekávaný výsledek treeAt neodpovídá stromům na počáteční desce. Zkontroluj souřadnice a expected v learnerChecks.");
         }
-        String[] names = {"only the first tree is recognised", "x and y are exchanged", "every cell is called a tree"};
+        String[] names = {"rozpozná se jen první strom", "prohodí se x a y", "každé pole se označí za strom"};
         for (int mutant = 0; mutant < 3; mutant++) {
             boolean rejected = false;
             for (var e : cases) {
@@ -212,15 +241,14 @@ class P05_TentsTest {
                     rejected = true;
                 }
             }
-            expect(rejected, "14.05/F33: your examples still accept this wrong rule: " + names[mutant]);
+            expect(rejected, "Tvoje learnerChecks zatím neodhalí tuto chybu: " + names[mutant]);
         }
         Reflect.call(g, "verifyExamples");
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P06_PegSolitaireTest {
+class P06_Task_PegSolitaireTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -230,17 +258,17 @@ class P06_PegSolitaireTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Očekáváno: " + Check.show(expected)
+                + "\n    Zjištěno: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P06_PegSolitaire");
+        var g = Reflect.create("P06_Task_PegSolitaire");
         Reflect.call(g, "reset");
         var cases = ((Object[]) Reflect.call(g, "learnerChecks"));
         for (var e : cases) {
-            equal(((boolean) Reflect.call(e, "expected")), ((boolean) Reflect.call(g, "legal", ((int) Reflect.call(e, "row")), ((int) Reflect.call(e, "column")), ((int) Reflect.call(e, "toRow")), ((int) Reflect.call(e, "toColumn")))), "14.06/F33: expectations must accept actual legal()");
+            equal(((boolean) Reflect.call(e, "expected")), ((boolean) Reflect.call(g, "legal", ((int) Reflect.call(e, "row")), ((int) Reflect.call(e, "column")), ((int) Reflect.call(e, "toRow")), ((int) Reflect.call(e, "toColumn")))), "Očekávaný výsledek legal nesouhlasí s počáteční deskou. V learnerChecks ověř výchozí pole, přeskočené pole a cíl.");
         }
-        String[] names = {"jumping over an empty middle cell is allowed", "a diagonal jump is allowed", "every proposed jump is accepted"};
+        String[] names = {"povolí se skok přes prázdné prostřední pole", "povolí se šikmý skok", "povolí se libovolný navržený skok"};
         for (int mutant = 0; mutant < 3; mutant++) {
             boolean rejected = false;
             for (var e : cases) {
@@ -256,15 +284,14 @@ class P06_PegSolitaireTest {
                     rejected = true;
                 }
             }
-            expect(rejected, "14.06/F33: your examples still accept this wrong rule: " + names[mutant]);
+            expect(rejected, "Tvoje learnerChecks zatím neodhalí tuto chybu: " + names[mutant]);
         }
         Reflect.call(g, "verifyExamples");
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P07_Merge2048Test {
+class P07_Task_Merge2048Test {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -274,22 +301,22 @@ class P07_Merge2048Test {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Očekáváno: " + Check.show(expected)
+                + "\n    Zjištěno: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P07_Merge2048");
+        var g = Reflect.create("P07_Task_Merge2048");
         var cases = ((Object[]) Reflect.call(g, "learnerChecks"));
         for (var e : cases) {
-            expect(((int[]) Reflect.call(e, "input")).length == 4 && ((int[]) Reflect.call(e, "expected")).length == 4 && ((int) Reflect.call(e, "score")) >= 0, "14.07/F33: examples use four-cell rows and nonnegative scores");
+            expect(((int[]) Reflect.call(e, "input")).length == 4 && ((int[]) Reflect.call(e, "expected")).length == 4 && ((int) Reflect.call(e, "score")) >= 0, "Každý příklad potřebuje čtyři vstupní pole, čtyři očekávaná pole a nezáporné skóre.");
             for (int value : ((int[]) Reflect.call(e, "input"))) {
-                expect(value == 0 || value >= 2 && value <= 2048 && (value&(value - 1)) == 0, "14.07/F33: example inputs must be legal 2048 tile values");
+                expect(value == 0 || value >= 2 && value <= 2048 && (value&(value - 1)) == 0, "Prázdné pole označ nulou, jinak použij mocninu dvou od 2 do 2048. Zkontroluj input v learnerChecks.");
             }
             Reflect.set(g, "score", 0);
-            equal(((int[]) Reflect.call(e, "expected")), ((int[]) Reflect.call(g, "merge", ((int[]) Reflect.call(e, "input")).clone())), "14.07/F33: real merge output");
-            equal(((int) Reflect.call(e, "score")), ((int) Reflect.get(g, "score")), "14.07/F33: real merge score");
+            equal(((int[]) Reflect.call(e, "expected")), ((int[]) Reflect.call(g, "merge", ((int[]) Reflect.call(e, "input")).clone())), "Očekávaná řada neodpovídá tahu doleva. Před vyplněním expected projdi posun a sloučení dlaždic.");
+            equal(((int) Reflect.call(e, "score")), ((int) Reflect.get(g, "score")), "Očekávané skóre neodpovídá bodům získaným sloučením této řady.");
         }
-        String[] names = {"equal neighbours never merge", "gaps prevent equal tiles from meeting", "a newly merged tile merges again in the same move", "the row changes but earned points disappear", "only the first independent pair merges"};
+        String[] names = {"stejné sousední dlaždice se nikdy nesloučí", "prázdná pole brání setkání stejných dlaždic", "právě vzniklá dlaždice se během stejného tahu sloučí znovu", "sloučení změní řadu, ale nepřidá body", "sloučí se jen první shodná dvojice"};
         for (int mutant = 0; mutant < 5; mutant++) {
             boolean rejected = false;
             for (var e : cases) {
@@ -322,24 +349,23 @@ class P07_Merge2048Test {
                     rejected = true;
                 }
             }
-            expect(rejected, "14.07/F33: your examples still accept this wrong rule: " + names[mutant]);
+            expect(rejected, "Tvoje learnerChecks zatím neodhalí tuto chybu: " + names[mutant]);
         }
         Reflect.call(g, "verifyExamples");
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P10_ReactionDiffusionSkinsTest {
+class P10_Task_ReactionDiffusionSkinsTest {
     static int checks;
     static final String[] CASES = {
-        "Pokus použije tři zadané recepty se stejným seed i délkou.",
-        "Výměna role mění skutečné obrazy, ne jen nápisy.",
-        "Původní role se obnoví při úspěchu i chybě."
+        "compareSkins má vrátit tři obrázky pro zadané recepty se stejným seed a délkou pokusu. Ověř pořadí receptů a předávané hodnoty.",
+        "Tři recepty zatím dávají shodné obrázky. Ověř, že compareSkins před každým pokusem skutečně mění chemistry.",
+        "compareSkins neobnovilo původní roli chemistry. Vrať ji zpět i při chybě během pokusu."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 14.10: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Kontrolovaný případ / výsledek: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -348,7 +374,7 @@ class P10_ReactionDiffusionSkinsTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -358,7 +384,7 @@ class P10_ReactionDiffusionSkinsTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -374,15 +400,15 @@ class P10_ReactionDiffusionSkinsTest {
         return image;
     }
     public static void main(String[] args) throws Exception {
-        var p = Reflect.create("P10_ReactionDiffusionSkins");
-        Object originalRole = Reflect.function("P10_ReactionDiffusionSkins$Chemistry", values -> .03);
+        var p = Reflect.create("P10_Task_ReactionDiffusionSkins");
+        Object originalRole = Reflect.function("P10_Task_ReactionDiffusionSkins$Chemistry", values -> .03);
         Reflect.set(p, "chemistry", originalRole);
         BufferedImage[] pictures = (BufferedImage[]) Reflect.call(p, "compareSkins", 37L, 60);
         check(pictures.length == 3, 0, pictures.length);
-        var expected = Reflect.create("P10_ReactionDiffusionSkins");
+        var expected = Reflect.create("P10_Task_ReactionDiffusionSkins");
         for (int i = 0; i < 3; i++) {
             final int recipe = i;
-            Reflect.set(expected, "chemistry", Reflect.function("P10_ReactionDiffusionSkins$Chemistry", values -> {
+            Reflect.set(expected, "chemistry", Reflect.function("P10_Task_ReactionDiffusionSkins$Chemistry", values -> {
                 double a = (double) values[0];
                 double b = (double) values[1];
                 return recipe == 0 ? a * b * b : recipe == 1 ? .5 * a * b * b : 0;
@@ -393,21 +419,20 @@ class P10_ReactionDiffusionSkinsTest {
         check(Reflect.get(p, "chemistry") == originalRole, 2, "restored after success");
         reject(() -> Reflect.call(p, "compareSkins", 37L, 0), 2);
         check(Reflect.get(p, "chemistry") == originalRole, 2, "restored after failure");
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P11_FlockPlaygroundTest {
+class P11_Task_FlockPlaygroundTest {
     static int checks;
     static final String[] CASES = {
-        "Curious používá přesně opačnou hodnotu reakce Shy.",
-        "Přepnutí zachová stav ptáků, pauzu i překážku; dvojí přepnutí vrátí Shy.",
-        "Skutečný pohyb čte roli a nové hejno zachová zvolenou osobnost."
+        "Curious má pro stejnou vzdálenost vracet opačnou reakci než Shy. Zkontroluj pravidlo osobnosti.",
+        "Přepnutí osobnosti musí zachovat ptáky, překážku i pauzu. Dvě přepnutí mají vrátit Shy.",
+        "Ověř, že pohyb ptáků volá zvolenou roli osobnosti a New flock tuto volbu zachová."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 14.11: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Kontrolovaný případ / výsledek: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -416,7 +441,7 @@ class P11_FlockPlaygroundTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -426,7 +451,7 @@ class P11_FlockPlaygroundTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -442,7 +467,7 @@ class P11_FlockPlaygroundTest {
         return image;
     }
     public static void main(String[] args) throws Exception {
-        var p = Reflect.create("P11_FlockPlayground");
+        var p = Reflect.create("P11_Task_FlockPlayground");
         Reflect.call(p, "reset", 42L);
         double[] oldX = ((double[]) Reflect.get(p, "x")).clone();
         double[] oldY = ((double[]) Reflect.get(p, "y")).clone();
@@ -459,7 +484,7 @@ class P11_FlockPlaygroundTest {
         check((boolean)Reflect.get(p,"curious") && (double)Reflect.call(p,"obstaclePush",37.5) < 0, 2, "new flock, same personality");
         Reflect.call(p, "changePersonality");
         check(!(boolean)Reflect.get(p,"curious") && Math.abs((double)Reflect.call(p,"obstaclePush",37.5) - .1) < 1e-12, 1, "back to Shy");
-        var other = Reflect.create("P11_FlockPlayground");
+        var other = Reflect.create("P11_Task_FlockPlayground");
         Reflect.call(p,"reset",42L);Reflect.call(other,"reset",42L);
         Reflect.set(p,"obstacleX",300.0);Reflect.set(other,"obstacleX",300.0);
         for (Object bird : new Object[]{p,other}) {
@@ -471,21 +496,20 @@ class P11_FlockPlaygroundTest {
         Reflect.call(p,"changePersonality");
         Reflect.call(p,"step");Reflect.call(other,"step");
         check(((double[])Reflect.get(p,"vx"))[0] < ((double[])Reflect.get(other,"vx"))[0], 2, "Curious changes real steering");
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P12_PhasingRhythmsTest {
+class P12_Task_PhasingRhythmsTest {
     static int checks;
     static final String[] CASES = {
-        "Oba výsledky rolí přispívají se zesílením 0.17.",
-        "Opačné náhradní hlasy se vyruší.",
-        "Skutečná syntéza používá composition (skládání) a zachová guard (podmínky) trvání."
+        "Výsledek hlasu nebo mixu nesouhlasí. Ověř beat a gain v makeVoice, oba zapojené hlasy a připravené zesílení mixu.",
+        "Dva opačné hlasy se mají vyrušit do ticha. Ověř, že mix čte oba zvolené hlasy.",
+        "Vytvořený zvuk neodpovídá mixu nebo prošla neplatná délka. Zachovej propojení syntézy s hlasy i kontroly délky."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 14.12: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Kontrolovaný případ / výsledek: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -494,7 +518,7 @@ class P12_PhasingRhythmsTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -504,7 +528,7 @@ class P12_PhasingRhythmsTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -521,7 +545,7 @@ class P12_PhasingRhythmsTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P12_PhasingRhythms");
+            var p = Reflect.create("P12_Task_PhasingRhythms");
             Object authored = Reflect.call(p, "makeVoice", .2, .5);
             double expectedTap = .5 * (double) Reflect.call(p, "tap", .001, .2);
             check(Math.abs((double) Reflect.call(authored, "sample", .001) - expectedTap) < 1e-12, 0, "authored Voice gain");
@@ -529,34 +553,33 @@ class P12_PhasingRhythmsTest {
             double expectedMix = .17 * ((double) Reflect.call(p, "tap", .001, .12) + .7 * (double) Reflect.call(p, "tap", .001, .13));
             check(Math.abs((double) Reflect.call(p, "mix", .001) - expectedMix) < 1e-12, 0, "both authored voices installed");
             reject(() -> Reflect.call(p, "makeVoice", .1, 2.0), 0);
-            Reflect.set(p, "first", Reflect.function("P12_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return .2; }));Reflect.set(p, "second", Reflect.function("P12_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return .5; }));check(Math.abs(((double) Reflect.call(p, "mix", .4))-.119)<1e-12,0,((double) Reflect.call(p, "mix", .4)));
-            Reflect.set(p, "first", Reflect.function("P12_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return t+.2; }));Reflect.set(p, "second", Reflect.function("P12_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return .5-2*t; }));
+            Reflect.set(p, "first", Reflect.function("P12_Task_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return .2; }));Reflect.set(p, "second", Reflect.function("P12_Task_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return .5; }));check(Math.abs(((double) Reflect.call(p, "mix", .4))-.119)<1e-12,0,((double) Reflect.call(p, "mix", .4)));
+            Reflect.set(p, "first", Reflect.function("P12_Task_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return t+.2; }));Reflect.set(p, "second", Reflect.function("P12_Task_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return .5-2*t; }));
             check(Math.abs(((double) Reflect.call(p, "mix", .4))-.051)<1e-12&&Math.abs(((double) Reflect.call(p, "mix", .8))+.017)<1e-12,0,((double) Reflect.call(p, "mix", .8)));
-            Reflect.set(p, "first", Reflect.function("P12_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return -.2; }));Reflect.set(p, "second", Reflect.function("P12_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return .2; }));check(Math.abs(((double) Reflect.call(p, "mix", .8)))<1e-12,1,((double) Reflect.call(p, "mix", .8)));
-            Reflect.set(p, "first", Reflect.function("P12_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return .25; }));Reflect.set(p, "second", Reflect.function("P12_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return 0; }));var samples=((double[]) Reflect.call(p, "signal", 1));check(samples.length==22050&&Math.abs(samples[100]-.0425)<1e-12,2,samples[100]);
-            Reflect.set(p, "first", Reflect.function("P12_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return t*.25; }));Reflect.set(p, "second", Reflect.function("P12_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return -t*.1; }));samples=((double[]) Reflect.call(p, "signal", 1));
+            Reflect.set(p, "first", Reflect.function("P12_Task_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return -.2; }));Reflect.set(p, "second", Reflect.function("P12_Task_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return .2; }));check(Math.abs(((double) Reflect.call(p, "mix", .8)))<1e-12,1,((double) Reflect.call(p, "mix", .8)));
+            Reflect.set(p, "first", Reflect.function("P12_Task_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return .25; }));Reflect.set(p, "second", Reflect.function("P12_Task_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return 0; }));var samples=((double[]) Reflect.call(p, "signal", 1));check(samples.length==22050&&Math.abs(samples[100]-.0425)<1e-12,2,samples[100]);
+            Reflect.set(p, "first", Reflect.function("P12_Task_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return t*.25; }));Reflect.set(p, "second", Reflect.function("P12_Task_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return -t*.1; }));samples=((double[]) Reflect.call(p, "signal", 1));
             check(Math.abs(samples[100]-.17*.15*100/22050)<1e-12&&Math.abs(samples[1000]-.17*.15*1000/22050)<1e-12,2,samples[1000]);
             reject(()->Reflect.call(p, "signal", .5),2);
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 14.12: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("Program se při ověřování pravidla zastavil. Podrobnosti výjimky jsou níže.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P13_PendulumPainterTest {
+class P13_Task_PendulumPainterTest {
     static int checks;
     static final String[] CASES = {
-        "Výchozí role čte aktuální úhel, délku a gravitaci.",
-        "Konstantní jiné zrychlení změní skutečnou rychlost.",
-        "Nulové náhradní pravidlo zachová počáteční úhel při nulové počáteční rychlosti."
+        "Pravidlo zrychlení neodpovídá aktuálnímu úhlu, délce a gravitaci. Ověř makeAcceleration a zapojenou roli acceleration.",
+        "Simulace nepoužila náhradní pravidlo zrychlení. Ověř, že step získává zrychlení přes zvolenou roli.",
+        "Při nulovém zrychlení a počáteční rychlosti se úhel kyvadla nesmí měnit."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 14.13: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Kontrolovaný případ / výsledek: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -565,7 +588,7 @@ class P13_PendulumPainterTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -575,7 +598,7 @@ class P13_PendulumPainterTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -592,7 +615,7 @@ class P13_PendulumPainterTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P13_PendulumPainter");
+            var p = Reflect.create("P13_Task_PendulumPainter");
             Object authored = Reflect.call(p, "makeAcceleration");
             Reflect.set(p, "gravity", 200.0);
             check(Math.abs((double) Reflect.call(authored, "at", Math.PI / 2, 100.0) + 2) < 1e-12, 0, "authored restoring rule");
@@ -603,33 +626,32 @@ class P13_PendulumPainterTest {
             check(Math.abs((double) Reflect.call(p, "accelerationNow") + 1) < 1e-12, 0, "authored rule installed");
             Reflect.call(p, "reset", 42);double expected=-((double) Reflect.get(p, "gravity"))/((double) Reflect.get(p, "length"))*Math.sin(((double) Reflect.get(p, "angle")));check(Math.abs(((double) Reflect.call(p, "accelerationNow"))-expected)<1e-12,0,((double) Reflect.call(p, "accelerationNow")));
             Reflect.set(p, "angle", .4);Reflect.set(p, "length", 120);expected=-((double) Reflect.get(p, "gravity"))/((double) Reflect.get(p, "length"))*Math.sin(((double) Reflect.get(p, "angle")));check(Math.abs(((double) Reflect.call(p, "accelerationNow"))-expected)<1e-12,0,((double) Reflect.call(p, "accelerationNow")));
-            Reflect.set(p, "acceleration", Reflect.function("P13_PendulumPainter$Acceleration", values -> { double angle = (double) values[0]; double length = (double) values[1]; return angle+length/100; }));
+            Reflect.set(p, "acceleration", Reflect.function("P13_Task_PendulumPainter$Acceleration", values -> { double angle = (double) values[0]; double length = (double) values[1]; return angle+length/100; }));
             check(Math.abs(((double) Reflect.call(p, "accelerationNow"))-1.6)<1e-12,1,((double) Reflect.call(p, "accelerationNow")));
             Reflect.set(p, "angle", -.2);Reflect.set(p, "length", 50);check(Math.abs(((double) Reflect.call(p, "accelerationNow"))-.3)<1e-12,1,((double) Reflect.call(p, "accelerationNow")));
             Reflect.call(p, "step");check(Math.abs(((double) Reflect.get(p, "velocity"))-.3*.03*.999)<1e-12,1,((double) Reflect.get(p, "velocity")));
             Reflect.call(p, "reset", 42);
-            Reflect.set(p, "acceleration", Reflect.function("P13_PendulumPainter$Acceleration", values -> { double angle = (double) values[0]; double length = (double) values[1]; return 2; }));Reflect.call(p, "step");check(Math.abs(((double) Reflect.get(p, "velocity"))-.05994)<1e-12,1,((double) Reflect.get(p, "velocity")));
-            Reflect.set(p, "acceleration", Reflect.function("P13_PendulumPainter$Acceleration", values -> { double angle = (double) values[0]; double length = (double) values[1]; return 0; }));Reflect.call(p, "reset", 42);double before=((double) Reflect.get(p, "angle"));Reflect.call(p, "step");check(((double) Reflect.get(p, "angle"))==before&&((int) Reflect.get(p, "ticks"))==1,2,((double) Reflect.get(p, "angle")));
+            Reflect.set(p, "acceleration", Reflect.function("P13_Task_PendulumPainter$Acceleration", values -> { double angle = (double) values[0]; double length = (double) values[1]; return 2; }));Reflect.call(p, "step");check(Math.abs(((double) Reflect.get(p, "velocity"))-.05994)<1e-12,1,((double) Reflect.get(p, "velocity")));
+            Reflect.set(p, "acceleration", Reflect.function("P13_Task_PendulumPainter$Acceleration", values -> { double angle = (double) values[0]; double length = (double) values[1]; return 0; }));Reflect.call(p, "reset", 42);double before=((double) Reflect.get(p, "angle"));Reflect.call(p, "step");check(((double) Reflect.get(p, "angle"))==before&&((int) Reflect.get(p, "ticks"))==1,2,((double) Reflect.get(p, "angle")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 14.13: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("Program se při ověřování pravidla zastavil. Podrobnosti výjimky jsou níže.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P16_KnightTourTest {
+class P16_Task_KnightTourTest {
     static int checks;
     static final String[] CASES = {
-        "Move zachová pořadí record component (složek record).",
-        "Další platné tahy zvýší počet jednou.",
-        "Chybné coordinate (souřadnice) zachovají state (stav) a Restart obnoví počáteční desku."
+        "Move nedorazil na požadované pole. V apply zachovej sloupec a řádek nesené příkazem.",
+        "Další platný tah má projít a započítat se jednou. Posouzení tahu ponech připravené metodě move.",
+        "Ověř odmítnutí i Restart: neplatné souřadnice nesmí změnit desku a Restart musí obnovit počáteční stav."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 14.16: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Kontrolovaný případ / výsledek: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -638,7 +660,7 @@ class P16_KnightTourTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -648,7 +670,7 @@ class P16_KnightTourTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -665,31 +687,30 @@ class P16_KnightTourTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P16_KnightTour");
-            Reflect.call(p, "restart");check(((boolean) Reflect.call(p, "apply", Reflect.create("P16_KnightTour$Move", 1, 2)))&&((int) Reflect.get(p, "x"))==1&&((int) Reflect.get(p, "y"))==2,0,((int) Reflect.get(p, "x"))+","+((int) Reflect.get(p, "y")));
-            check(((boolean) Reflect.call(p, "apply", Reflect.create("P16_KnightTour$Move", 3, 3)))&&((int) Reflect.get(p, "count"))==3,1,((int) Reflect.get(p, "count")));
-            int x=((int) Reflect.get(p, "x")),y=((int) Reflect.get(p, "y"));check(!((boolean) Reflect.call(p, "apply", Reflect.create("P16_KnightTour$Move", 99, 0)))&&((int) Reflect.get(p, "x"))==x&&((int) Reflect.get(p, "y"))==y,2,((int) Reflect.get(p, "count")));
-            check(((boolean) Reflect.call(p, "apply", Reflect.create("P16_KnightTour$Restart")))&&((int) Reflect.get(p, "count"))==1&&((int) Reflect.get(p, "x"))==0&&((int) Reflect.get(p, "y"))==0,2,((int) Reflect.get(p, "count")));
+            var p = Reflect.create("P16_Task_KnightTour");
+            Reflect.call(p, "restart");check(((boolean) Reflect.call(p, "apply", Reflect.create("P16_Task_KnightTour$Move", 1, 2)))&&((int) Reflect.get(p, "x"))==1&&((int) Reflect.get(p, "y"))==2,0,((int) Reflect.get(p, "x"))+","+((int) Reflect.get(p, "y")));
+            check(((boolean) Reflect.call(p, "apply", Reflect.create("P16_Task_KnightTour$Move", 3, 3)))&&((int) Reflect.get(p, "count"))==3,1,((int) Reflect.get(p, "count")));
+            int x=((int) Reflect.get(p, "x")),y=((int) Reflect.get(p, "y"));check(!((boolean) Reflect.call(p, "apply", Reflect.create("P16_Task_KnightTour$Move", 99, 0)))&&((int) Reflect.get(p, "x"))==x&&((int) Reflect.get(p, "y"))==y,2,((int) Reflect.get(p, "count")));
+            check(((boolean) Reflect.call(p, "apply", Reflect.create("P16_Task_KnightTour$Restart")))&&((int) Reflect.get(p, "count"))==1&&((int) Reflect.get(p, "x"))==0&&((int) Reflect.get(p, "y"))==0,2,((int) Reflect.get(p, "count")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 14.16: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("Program se při ověřování pravidla zastavil. Podrobnosti výjimky jsou níže.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P17_CipherPostcardsTest {
+class P17_Task_CipherPostcardsTest {
     static int checks;
     static final String[] CASES = {
-        "Režim crack vypíše všech 26 dekódovaných posunů se správnými nápisy.",
-        "Nástroj zvládá jiné klíče, velikost písmen i interpunkci a nehádá vítěze.",
-        "Tři běžné šifrovací alternativy dál správně šifrují i dešifrují."
+        "crack má vypsat všech 26 posunů v pořadí. Ověř popisky Shift a že posun 3 převede KHOOR na HELLO.",
+        "Ověř crack s jinými klíči, velikostí písmen a interpunkcí. Vrať všechny kandidáty místo výběru vítěze.",
+        "Přidání crack změnilo některou původní šifru. Zachovej šifrování i dešifrování pro caesar, substitution a vigenere."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 14.17: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Kontrolovaný případ / výsledek: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -698,7 +719,7 @@ class P17_CipherPostcardsTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -708,7 +729,7 @@ class P17_CipherPostcardsTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -724,12 +745,12 @@ class P17_CipherPostcardsTest {
         return image;
     }
     public static void main(String[] args) throws Exception {
-        var p = Reflect.create("P17_CipherPostcards");
+        var p = Reflect.create("P17_Task_CipherPostcards");
         Object card;
         try {
             card = Reflect.call(p, "chooseCipher", "crack", "");
         } catch (IllegalArgumentException missing) {
-            check(false, 0, "crack mode rejected: " + missing.getMessage());
+            check(false, 0, "Režim crack byl odmítnut: " + missing.getMessage());
             return;
         }
         String report = (String) Reflect.call(p, "transform", "KHOOR", card, false);
@@ -738,7 +759,7 @@ class P17_CipherPostcardsTest {
         for (int key = 0; key < 26; key++) {
             String encoded = (String) Reflect.call(p, "applyText", "Meet π at 5!", "caesar", Integer.toString(key), false);
             String decoded = (String) Reflect.call(p, "transform", encoded, card, false);
-            check(decoded.split("\n", -1)[key].equals("Shift " + key + ": Meet π at 5!"), 1, "key " + key);
+            check(decoded.split("\n", -1)[key].equals("Shift " + key + ": Meet π at 5!"), 1, "zkoušený klíč: " + key);
         }
         for (String mode : new String[]{"caesar", "substitution", "vigenere"}) {
             String key = mode.equals("caesar") ? "7" : mode.equals("substitution") ? "ZYXWVUTSRQPONMLKJIHGFEDCBA" : "LEMON";
@@ -746,21 +767,20 @@ class P17_CipherPostcardsTest {
             String encoded = (String) Reflect.call(p, "transform", "Hello, Moon!", normal, false);
             check(Reflect.call(p, "transform", encoded, normal, true).equals("Hello, Moon!"), 2, mode);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P18_RetroSoundForgeTest {
+class P18_Task_RetroSoundForgeTest {
     static int checks;
     static final String[] CASES = {
-        "Wobble používá libovolné předané base a depth.",
-        "Jump a Laser zachovají své samostatné vzorce.",
-        "Neplatný čas se odmítne a skutečné zvukové předvolby se liší."
+        "Frekvence Wobble nesouhlasí. Použij předané base a depth a ověř osm kmitů popsaných v zadání.",
+        "Změnil se výsledek Jump nebo Laser. Při úpravě Wobble ponech tyto dvě větve připravené.",
+        "Ověř, že frequency odmítá čas mimo 0..1 a zvukové předvolby vytvářejí různé vzorky."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 14.18: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Kontrolovaný případ / výsledek: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -769,7 +789,7 @@ class P18_RetroSoundForgeTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -779,7 +799,7 @@ class P18_RetroSoundForgeTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -796,34 +816,33 @@ class P18_RetroSoundForgeTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P18_RetroSoundForge");
-            check(Math.abs(((double) Reflect.call(p, "frequency", Reflect.create("P18_RetroSoundForge$Wobble", 300, 90), 1.0/32))-390)<1e-9,0,((double) Reflect.call(p, "frequency", Reflect.create("P18_RetroSoundForge$Wobble", 300, 90), 1.0/32)));
-            check(Math.abs(((double) Reflect.call(p, "frequency", Reflect.create("P18_RetroSoundForge$Wobble", 300, 90), 3.0/32))-210)<1e-9,0,((double) Reflect.call(p, "frequency", Reflect.create("P18_RetroSoundForge$Wobble", 300, 90), 3.0/32)));
-            check(((double) Reflect.call(p, "frequency", Reflect.create("P18_RetroSoundForge$Wobble", 410, 25), 0))==410,0,((double) Reflect.call(p, "frequency", Reflect.create("P18_RetroSoundForge$Wobble", 410, 25), 0)));
-            check(Math.abs(((double) Reflect.call(p, "frequency", Reflect.create("P18_RetroSoundForge$Jump", 100, 200), .5))-200)<1e-9,1,"jump");
-            check(Math.abs(((double) Reflect.call(p, "frequency", Reflect.create("P18_RetroSoundForge$Laser", 100, .25), 1))-25)<1e-9,1,"laser");
-            reject(()->Reflect.call(p, "frequency", Reflect.create("P18_RetroSoundForge$Wobble", 300, 90), Double.NaN),2);
+            var p = Reflect.create("P18_Task_RetroSoundForge");
+            check(Math.abs(((double) Reflect.call(p, "frequency", Reflect.create("P18_Task_RetroSoundForge$Wobble", 300, 90), 1.0/32))-390)<1e-9,0,((double) Reflect.call(p, "frequency", Reflect.create("P18_Task_RetroSoundForge$Wobble", 300, 90), 1.0/32)));
+            check(Math.abs(((double) Reflect.call(p, "frequency", Reflect.create("P18_Task_RetroSoundForge$Wobble", 300, 90), 3.0/32))-210)<1e-9,0,((double) Reflect.call(p, "frequency", Reflect.create("P18_Task_RetroSoundForge$Wobble", 300, 90), 3.0/32)));
+            check(((double) Reflect.call(p, "frequency", Reflect.create("P18_Task_RetroSoundForge$Wobble", 410, 25), 0))==410,0,((double) Reflect.call(p, "frequency", Reflect.create("P18_Task_RetroSoundForge$Wobble", 410, 25), 0)));
+            check(Math.abs(((double) Reflect.call(p, "frequency", Reflect.create("P18_Task_RetroSoundForge$Jump", 100, 200), .5))-200)<1e-9,1,"jump");
+            check(Math.abs(((double) Reflect.call(p, "frequency", Reflect.create("P18_Task_RetroSoundForge$Laser", 100, .25), 1))-25)<1e-9,1,"laser");
+            reject(()->Reflect.call(p, "frequency", Reflect.create("P18_Task_RetroSoundForge$Wobble", 300, 90), Double.NaN),2);
             check(!Arrays.equals(((double[]) Reflect.call(p, "signal", "wobble", .1)),((double[]) Reflect.call(p, "signal", "laser", .1))),2,"different waves");
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 14.18: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("Program se při ověřování pravidla zastavil. Podrobnosti výjimky jsou níže.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P19_FireflySynchronyTest {
+class P19_Task_FireflySynchronyTest {
     static int checks;
     static final String[] CASES = {
-        "Platná hodnota Coupling dojde do modelu.",
-        "Horní hranice i zachování původní hodnoty po neplatném vstupu fungují.",
-        "Toggle a Restart se seed (počáteční hodnotou) volají správná samostatná pravidla."
+        "Platný příkaz Coupling nezměnil sílu propojení. V apply použij hodnotu nesenou příkazem.",
+        "Coupling má přijmout 2 a při neplatné hodnotě zachovat původní sílu. V apply ověř obě možnosti.",
+        "Toggle nebo Restart nebyl správně předán. Toggle mění running a Restart předává svůj seed do reset."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 14.19: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Kontrolovaný případ / výsledek: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -832,7 +851,7 @@ class P19_FireflySynchronyTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -842,7 +861,7 @@ class P19_FireflySynchronyTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -859,36 +878,35 @@ class P19_FireflySynchronyTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P19_FireflySynchrony");
-            Reflect.call(p, "reset", 42);Reflect.call(p, "apply", Reflect.create("P19_FireflySynchrony$Coupling", .35));check(((double) Reflect.get(p, "coupling"))==.35,0,((double) Reflect.get(p, "coupling")));
-            Reflect.call(p, "apply", Reflect.create("P19_FireflySynchrony$Coupling", 2));check(((double) Reflect.get(p, "coupling"))==2,1,((double) Reflect.get(p, "coupling")));
-            Reflect.call(p, "apply", Reflect.create("P19_FireflySynchrony$Coupling", 2.1));Reflect.call(p, "apply", Reflect.create("P19_FireflySynchrony$Coupling", Double.NaN));check(((double) Reflect.get(p, "coupling"))==2,1,((double) Reflect.get(p, "coupling")));
+            var p = Reflect.create("P19_Task_FireflySynchrony");
+            Reflect.call(p, "reset", 42);Reflect.call(p, "apply", Reflect.create("P19_Task_FireflySynchrony$Coupling", .35));check(((double) Reflect.get(p, "coupling"))==.35,0,((double) Reflect.get(p, "coupling")));
+            Reflect.call(p, "apply", Reflect.create("P19_Task_FireflySynchrony$Coupling", 2));check(((double) Reflect.get(p, "coupling"))==2,1,((double) Reflect.get(p, "coupling")));
+            Reflect.call(p, "apply", Reflect.create("P19_Task_FireflySynchrony$Coupling", 2.1));Reflect.call(p, "apply", Reflect.create("P19_Task_FireflySynchrony$Coupling", Double.NaN));check(((double) Reflect.get(p, "coupling"))==2,1,((double) Reflect.get(p, "coupling")));
             for(double invalid:new double[]{-.1,2.1,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY,Double.NaN}){
-                Reflect.call(p, "apply", Reflect.create("P19_FireflySynchrony$Coupling", .35));Reflect.call(p, "apply", Reflect.create("P19_FireflySynchrony$Coupling", invalid));check(((double) Reflect.get(p, "coupling"))==.35,1,((double) Reflect.get(p, "coupling")));
+                Reflect.call(p, "apply", Reflect.create("P19_Task_FireflySynchrony$Coupling", .35));Reflect.call(p, "apply", Reflect.create("P19_Task_FireflySynchrony$Coupling", invalid));check(((double) Reflect.get(p, "coupling"))==.35,1,((double) Reflect.get(p, "coupling")));
             }
-            Reflect.call(p, "apply", Reflect.create("P19_FireflySynchrony$Coupling", 0));check(((double) Reflect.get(p, "coupling"))==0,1,((double) Reflect.get(p, "coupling")));
-            boolean run=((boolean) Reflect.get(p, "running"));Reflect.call(p, "apply", Reflect.create("P19_FireflySynchrony$Toggle"));check(((boolean) Reflect.get(p, "running"))!=run,2,((boolean) Reflect.get(p, "running")));
-            var expected=Reflect.create("P19_FireflySynchrony");Reflect.call(expected, "reset", 17);Reflect.call(p, "apply", Reflect.create("P19_FireflySynchrony$Restart", 17));check(Arrays.equals(((double[]) Reflect.get(p, "phase")),((double[]) Reflect.get(expected, "phase"))),2,((double[]) Reflect.get(p, "phase"))[0]);
+            Reflect.call(p, "apply", Reflect.create("P19_Task_FireflySynchrony$Coupling", 0));check(((double) Reflect.get(p, "coupling"))==0,1,((double) Reflect.get(p, "coupling")));
+            boolean run=((boolean) Reflect.get(p, "running"));Reflect.call(p, "apply", Reflect.create("P19_Task_FireflySynchrony$Toggle"));check(((boolean) Reflect.get(p, "running"))!=run,2,((boolean) Reflect.get(p, "running")));
+            var expected=Reflect.create("P19_Task_FireflySynchrony");Reflect.call(expected, "reset", 17);Reflect.call(p, "apply", Reflect.create("P19_Task_FireflySynchrony$Restart", 17));check(Arrays.equals(((double[]) Reflect.get(p, "phase")),((double[]) Reflect.get(expected, "phase"))),2,((double[]) Reflect.get(p, "phase"))[0]);
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 14.19: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("Program se při ověřování pravidla zastavil. Podrobnosti výjimky jsou níže.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P22_CrystalGrowthTest {
+class P22_Task_CrystalGrowthTest {
     static int checks;
     static final String[] CASES = {
-        "Nový režim vidí samotného diagonálního souseda.",
-        "Původní čtyřsousední režim dál odmítá diagonály a přijímá kolmý dotyk.",
-        "Okraje/prázdná data jsou bezpečné a skutečný krystal dál přichycuje cell (buňky)."
+        "touching přehlédlo souseda dotýkajícího se jen rohem, přestože diagonals je true. Ověř povolené posuny v novém režimu.",
+        "Změnil se původní čtyřsousední režim. Při diagonals false přijmi dotyk přes hranu a odmítni samotný dotyk rohem.",
+        "Ověř touching u okrajů a s prázdnými řádky. Potom zkontroluj, že růst dál přichytává částice."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 14.22: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Kontrolovaný případ / výsledek: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -897,7 +915,7 @@ class P22_CrystalGrowthTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -907,7 +925,7 @@ class P22_CrystalGrowthTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -924,7 +942,7 @@ class P22_CrystalGrowthTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P22_CrystalGrowth");
+            var p = Reflect.create("P22_Task_CrystalGrowth");
             boolean[][] grid=new boolean[3][3];grid[0][0]=true;
             check(((boolean) Reflect.call(p, "touching", grid, 1, 1, true)),0,"diagonal");check(!((boolean) Reflect.call(p, "touching", grid, 1, 1, false)),1,"old mode");
             grid[0][1]=true;check(((boolean) Reflect.call(p, "touching", grid, 1, 1, false)),1,"orthogonal");
@@ -933,23 +951,22 @@ class P22_CrystalGrowthTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 14.22: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("Program se při ověřování pravidla zastavil. Podrobnosti výjimky jsou níže.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P23_MountainPostcardsTest {
+class P23_Task_MountainPostcardsTest {
     static int checks;
     static final String[] CASES = {
-        "Vrácený hřeben má opačné pořadí; zrcadlený a původní pohled se liší.",
-        "Vrácený array (pole) je nezávislý na původním.",
-        "Prázdný a jednoprvkový hřeben zachovají význam."
+        "reverseRidge neobrátilo výšky nebo je render nepoužilo. Porovnej první a poslední vrchol v zrcadleném obrázku.",
+        "reverseRidge má vrátit nové pole. Změna vráceného hřebene nesmí změnit vstupní pole.",
+        "reverseRidge musí zvládnout i prázdný hřeben a jedinou výšku bez ztráty nebo přidání hodnot."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 14.23: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Kontrolovaný případ / výsledek: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -958,7 +975,7 @@ class P23_MountainPostcardsTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -968,7 +985,7 @@ class P23_MountainPostcardsTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -985,7 +1002,7 @@ class P23_MountainPostcardsTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P23_MountainPostcards");
+            var p = Reflect.create("P23_Task_MountainPostcards");
             double[] input={3,7,2};var result=((double[]) Reflect.call(p, "reverseRidge", input));check(Arrays.equals(result,new double[]{2,7,3}),0,Arrays.toString(result));
             result[0]=99;check(Arrays.equals(input,new double[]{3,7,2}),1,Arrays.toString(input));
             check(((double[]) Reflect.call(p, "reverseRidge", new double[0])).length==0&&Arrays.equals(((double[]) Reflect.call(p, "reverseRidge", new double[]{4})),new double[]{4}),2,"bounds");
@@ -993,9 +1010,8 @@ class P23_MountainPostcardsTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 14.23: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("Program se při ověřování pravidla zastavil. Podrobnosti výjimky jsou níže.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
@@ -1026,7 +1042,7 @@ class Reflect {
                 return Class.forName(name);
             }
         } catch (ClassNotFoundException failure) {
-            throw new IllegalStateException("Cannot find compact program type: " + name, failure);
+            throw new IllegalStateException("Nelze načíst program. Ověř jeho soubor vedle Check.java: " + name, failure);
         }
     }
 
@@ -1035,14 +1051,14 @@ class Reflect {
         for (var constructor : type(name).getDeclaredConstructors()) {
             if (accepts(constructor.getParameterTypes(), args)) matches.add(constructor);
         }
-        var constructor = one(matches, "constructor " + name);
+        var constructor = one(matches, "vytvoření objektu " + name);
         try {
             constructor.setAccessible(true);
             return constructor.newInstance(args);
         } catch (InvocationTargetException failure) {
             throw Reflect.<RuntimeException>raise(failure.getCause());
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot construct " + name, failure);
+            throw new IllegalStateException("Nelze vytvořit objekt programu: " + name, failure);
         }
     }
 
@@ -1050,7 +1066,7 @@ class Reflect {
         try {
             return field(target, name).get(target instanceof Class<?> ? null : target);
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot read field " + name, failure);
+            throw new IllegalStateException("Nelze přečíst proměnnou: " + name, failure);
         }
     }
 
@@ -1061,7 +1077,7 @@ class Reflect {
             field.set(receiver, value);
             return field.get(receiver);
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot write field " + name, failure);
+            throw new IllegalStateException("Nelze změnit proměnnou: " + name, failure);
         }
     }
 
@@ -1071,7 +1087,7 @@ class Reflect {
             try {
                 var field = current.getDeclaredField(name);
                 if (target instanceof Class<?> && !Modifier.isStatic(field.getModifiers())) {
-                    throw new IllegalStateException("An instance is required for field " + name);
+                    throw new IllegalStateException("Pro tuto proměnnou je potřeba objekt: " + name);
                 }
                 field.setAccessible(true);
                 return field;
@@ -1101,14 +1117,14 @@ class Reflect {
                 matches.add(method);
             }
         }
-        var method = one(matches, "method " + owner.getName() + "." + name);
+        var method = one(matches, "metodu " + owner.getName() + "." + name);
         try {
             method.setAccessible(true);
             return method.invoke(target instanceof Class<?> ? null : target, args);
         } catch (InvocationTargetException failure) {
             throw Reflect.<RuntimeException>raise(failure.getCause());
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot call " + owner.getName() + "." + name, failure);
+            throw new IllegalStateException("Nelze zavolat metodu: " + owner.getName() + "." + name, failure);
         }
     }
 
@@ -1145,7 +1161,7 @@ class Reflect {
 
     private static <T> T one(List<T> matches, String description) {
         if (matches.size() != 1) {
-            throw new IllegalStateException((matches.isEmpty() ? "No compatible " : "Ambiguous ") + description);
+            throw new IllegalStateException((matches.isEmpty() ? "Nenalezeno odpovídající " : "Nalezeno více možností pro ") + description);
         }
         return matches.getFirst();
     }

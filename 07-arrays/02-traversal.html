@@ -9,15 +9,18 @@
 <h1>7.2 Projdi hodnoty bez ručního výběru</h1>
 <p>Tým robotů posílá své výkony v jednom poli. Tentokrát tě nezajímá číslo místa, ale hodnota každého robota. Pro takový průchod existuje kratší zápis.</p>
 <h2>Jedna hodnota za druhou</h2>
-<p>Otevři <code>07-arrays/P05_RobotPowers.java</code>. Než jej spustíš, sečti hodnoty pole.</p>
-<pre><code class="language-java" data-source="P05_RobotPowers.java">void main() {
+<p>Otevři <code>07-arrays/P05_Example_RobotPowers.java</code>. Než jej spustíš, sečti hodnoty pole.</p>
+<pre><code class="language-java" data-source="P05_Example_RobotPowers.java">/// # Hotový příklad · 7.2 Projdi hodnoty bez ručního výběru
+/// Lekce: 02-traversal.html
+
+void main() {
     int[] powers = {2, 7, 4};
     int total = 0;
     for (int power : powers) {
-        IO.println(&quot;Power: &quot; + power);
+        IO.println("Power: " + power);
         total += power;
     }
-    IO.println(&quot;Total: &quot; + total);
+    IO.println("Total: " + total);
 }
 </code></pre>
 <p>Enhanced for loop (rozšířený cyklus for), často zvaný for-each, přečte prvky v pořadí od začátku do konce. V zápisu <code>for (int power : powers)</code> označuje powers celé pole a power aktuální hodnotu. Dvojtečka se dá číst jako „pro každý výkon z výkonů“.</p>
@@ -25,16 +28,16 @@
 <p>Accumulator (střadač) total funguje stejně jako u čtených zásilek. Rozdíl je ve zdroji hodnot: tentokrát jsou už připravené v paměti. Pokud bys potřeboval zároveň číslo místa, použiješ běžný for s indexem a délkou pole.</p>
 <details><summary>Předpověď: přidej na konec 0</summary><p>Přibude výpis Power: 0. Součet zůstane 13. Počet navštívených prvků a jejich součet jsou různé věci.</p></details>
 <h2>Úkol: vyber roboty pro expedici</h2>
-<p>Otevři <code>07-arrays/P06_ExpeditionPowers.java</code>. Pole obsahuje výkony 4, 5, 9 a 0. Hráč zadá nejmenší přijatelný výkon. Program zatím počítá všechny roboty.</p>
+<p>Otevři <code>07-arrays/P06_Task_ExpeditionPowers.java</code>. Pole obsahuje výkony 4, 5, 9 a 0. Hráč zadá nejmenší přijatelný výkon. Program zatím počítá všechny roboty.</p>
 <p>Uprav průchod: Ready má být počet robotů s výkonem alespoň zadaným prahem. Power má být součet pouze těchto přijatých výkonů. Pro práh 5 čekej Ready: 2 a Power: 14. Pro 0 přijmi všechny čtyři, součet je 18. Pro 10 není přijat nikdo a oba výsledky jsou 0.</p>
 <details><summary>Nápověda 1: jeden test pro dva výsledky</summary><p>Počet i součet měň při splnění stejné podmínky. Rozhoduj podle aktuální hodnoty, ne podle délky pole.</p></details>
 <details><summary>Nápověda 2: hranice patří dovnitř</summary><p>Robot s výkonem přesně rovným prahu je přijat. Nejprve ověř ručně dvojici práh 5 a výkon 5.</p></details>
 <p>Příště prvky nejen přečteš, ale změníš. Tam bude důležité rozlišit kopii aktuální hodnoty a skutečné místo v poli.</p>
 <details><summary>Procházej také písmena textu</summary><p>U našich slov složených z A–Z můžeš písmeno číst pomocí <code>word.charAt(index)</code>. První pozice je 0 a počet pozic poskytne <code>word.length()</code>. Pozor na rozdíl proti poli: zde jsou za length závorky. Typ <code>char</code> uchovává jednu jednotku textu; písmeno zapíšeš do jednoduchých uvozovek, třeba <code>'A'</code>, zatímco <code>"A"</code> je String.</p><p><code>word.toCharArray()</code> poskytne pole pro průchod <code>for (char letter : word.toCharArray())</code>. Operace <code>word.indexOf(letter)</code> vrátí první nalezenou pozici nebo -1. Nula proto také znamená nalezené písmeno. Pro obrácené čtení začni na length minus jedna a ubírej index, dokud je nezáporný. Prázdný text nemá žádnou platnou pozici.</p></details>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>KochSnowflakeCards</strong> · <code>07-arrays/P07_KochSnowflakeCards.java</code><br>KochSnowflakeCards vynechává jednu stranu. Vnější smyčka snowflake musí navštívit indexy rohů 0, 1 a 2 jednou; rekurzivní edge je připravené.</li>
-<li><strong>Jotto</strong> · <code>07-arrays/P08_Jotto.java</code><br>Jotto zapomíná dřívější shody. V matches udržuj průběžný počet všech společných písmen a porovnej slovo s jednou i několika shodami.</li>
-<li><strong>YatzyScorecard</strong> · <code>07-arrays/P09_YatzyScorecard.java</code><br>V YatzyScorecard sečti vyplněné kategorie; -1 je nevyplněno. Zvlášť shromáždi prvních šest pro připravený bonus od 63 bodů.</li>
+<li><strong>KochSnowflakeCards</strong> · <code>07-arrays/P07_Task_KochSnowflakeCards.java</code><br>KochSnowflakeCards vynechává jednu stranu. Vnější smyčka snowflake musí navštívit indexy rohů 0, 1 a 2 jednou; rekurzivní edge je připravené.</li>
+<li><strong>Jotto</strong> · <code>07-arrays/P08_Task_Jotto.java</code><br>Jotto zapomíná dřívější shody. V matches udržuj průběžný počet všech společných písmen a porovnej slovo s jednou i několika shodami.</li>
+<li><strong>YatzyScorecard</strong> · <code>07-arrays/P09_Task_YatzyScorecard.java</code><br>V YatzyScorecard sečti vyplněné kategorie; -1 je nevyplněno. Zvlášť shromáždi prvních šest pro připravený bonus od 63 bodů.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="01-arrays.html">← 7.1 Dej hodnotám očíslovaná místa</a><a class="next" href="03-updates.html">7.3 Změň skutečné místo →</a></nav>

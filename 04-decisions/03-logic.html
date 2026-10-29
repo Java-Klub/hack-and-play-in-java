@@ -9,15 +9,18 @@
 <h1>4.3 Spoj pravidla dohromady</h1>
 <p>Do laboratoře patří dvě různé propustky. Kterákoli z nich stačí, ale zároveň potřebuješ energii a dveře nesmějí být zamčené.</p>
 <h2>Nebo, zároveň, opak</h2>
-<p>Otevři <code>04-decisions/P08_TwoKeys.java</code>.</p>
-<pre><code class="language-java" data-source="P08_TwoKeys.java">void main() {
-    String badge = IO.readln(&quot;Badge: &quot;).strip();
-    int energy = Integer.parseInt(IO.readln(&quot;Energy: &quot;).strip());
-    boolean trusted = badge.equals(&quot;SUN&quot;) || badge.equals(&quot;MOON&quot;);
+<p>Otevři <code>04-decisions/P08_Example_TwoKeys.java</code>.</p>
+<pre><code class="language-java" data-source="P08_Example_TwoKeys.java">/// # Hotový příklad · 4.3 Spoj pravidla dohromady
+/// Lekce: 03-logic.html
+
+void main() {
+    String badge = IO.readln("Badge: ").strip();
+    int energy = Integer.parseInt(IO.readln("Energy: ").strip());
+    boolean trusted = badge.equals("SUN") || badge.equals("MOON");
     boolean enough = energy &gt;= 3;
     boolean locked = false;
     boolean enter = trusted &amp;&amp; enough &amp;&amp; !locked;
-    IO.println(&quot;Access: &quot; + enter);
+    IO.println("Access: " + enter);
 }
 </code></pre><pre class="transcript"><code>Badge: <span class="typed">SUN</span>
 Energy: <span class="typed">3</span>
@@ -32,7 +35,7 @@ Access: true</code></pre>
 <p>Variable <code>trusted</code> odpovídá na jednu otázku o propustce. Variable <code>enough</code> odpovídá na otázku o energii. <code>!locked</code> znamená, že dveře nejsou zamčené. Poslední výraz potřebuje všechny tři souhlasy.</p>
 <p>Při míchání OR a AND pomohou závorky nebo pojmenované mezivýsledky, jako trusted. AND má přednost před OR; závorky umožní zvolit vlastní seskupení. Znak OR se píše dvěma svislými čarami, AND dvěma znaky &amp;.</p>
 <h2>Úkol: najdi falešné povolení</h2>
-<p>Otevři <code>04-decisions/P09_LabPermit.java</code>. Zkus cizí propustku STAR a energii 9. Program jí udělí přístup, i když do laboratoře nepatří.</p>
+<p>Otevři <code>04-decisions/P09_Task_LabPermit.java</code>. Zkus cizí propustku STAR a energii 9. Program jí udělí přístup, i když do laboratoře nepatří.</p>
 <p><strong>Oprav pravidla: platná je BLUE nebo GOLD, energie musí být alespoň 3 a locked musí být false. Všechny tři požadavky platí současně.</strong> Výsledkem zůstává jeden výpis Access.</p>
 <div class="table-wrap"><table><thead><tr><th>Badge</th><th>Energy</th><th>locked</th><th>Access</th></tr></thead><tbody>
 <tr><td>BLUE</td><td>3</td><td>false</td><td>true</td></tr>
@@ -53,8 +56,8 @@ IO.println(exact);
 <p>Vypíše se false. S pieces rovnými 3 vyjde true a s 5 false. Obrácení obou otázek by při nule začalo chybným dělením. Pořadí může chránit další výpočet.</p>
 <h2>Hackni zámek nebo oprav rozhodčího</h2>
 <ul>
-<li><code>04-decisions/P10_Codebreaker.java</code>: přidej servisní kód podle zadání. Obyčejný správný odhad musí stále fungovat a ostatní špatné odhady zůstat špatné. Hledej otázku rozhodující o výhře; připravenou kontrolu čtyř číslic zachovej.</li>
-<li><code>04-decisions/P11_PokerDice.java</code>: full house potřebuje trojici i dvojici. Připravená akce dostane dvě čísla: <code>largestGroup</code> je velikost největší skupiny stejných kostek a <code>pairs</code> počet skupin tvořených právě dvěma kostkami. Z těchto čísel vytvoříš dva boolean výsledky a společný verdikt. Samotná trojice má zůstat levnější výhrou. Pomoc s pravidly hry je přímo v okně Scoring help.</li>
+<li><code>04-decisions/P10_Task_Codebreaker.java</code>: přidej servisní kód podle zadání. Obyčejný správný odhad musí stále fungovat a ostatní špatné odhady zůstat špatné. Hledej otázku rozhodující o výhře; připravenou kontrolu čtyř číslic zachovej.</li>
+<li><code>04-decisions/P11_Task_PokerDice.java</code>: full house potřebuje trojici i dvojici. Připravená akce dostane dvě čísla: <code>largestGroup</code> je velikost největší skupiny stejných kostek a <code>pairs</code> počet skupin tvořených právě dvěma kostkami. Z těchto čísel vytvoříš dva boolean výsledky a společný verdikt. Samotná trojice má zůstat levnější výhrou. Pomoc s pravidly hry je přímo v okně Scoring help.</li>
 </ul>
 <p>Obě úlohy kontroluje <code>04-decisions/Check.java</code>. V Program Arguments vyber právě řešený soubor.</p>
 <p><strong>Teď umíš sestavit pravidlo z několika otázek a najít případ, který špatná spojka omylem propustí.</strong></p>

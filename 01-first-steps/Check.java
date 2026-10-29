@@ -3,84 +3,113 @@ import java.util.*;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-/// Chapter checks: java Check.java
-/// One game: java Check.java P06_CafeWallLab.java
-/// Tests call compact programs through reflection in this JVM.
+/// Kontrola herních úloh této kapitoly. Krátké učebnicové úkoly spouštěj samostatně.
 class Check {
     int failed;
     int checked;
     String selected;
+    final ArrayList<String> available = new ArrayList<>();
     interface Test { void run() throws Exception; }
 
     void main(String[] args) {
         System.setProperty("java.awt.headless", "true");
-        if (args.length > 1) throw new IllegalArgumentException("Use: java Check.java [game filename]");
+        if (args.length > 1) {
+            IO.println("Zadej nejvýše jeden název herního souboru. Bez argumentu se zkontrolují všechny herní úlohy kapitoly.");
+            System.exit(2);
+        }
         selected = args.length == 0 ? "" : Path.of(args[0]).getFileName().toString().replaceFirst("\\.java$", "");
-        run("P06_CafeWallLab", "01.06 CafeWallLab · F01", () -> P06_CafeWallLabTest.main(new String[0]));
-        run("P07_MissingTriangle", "01.07 MissingTriangle · F01", () -> P07_MissingTriangleTest.main(new String[0]));
-        if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " mission goals remaining.");
+        run("P06_Task_CafeWallLab", () -> P06_Task_CafeWallLabTest.main(new String[0]));
+        run("P07_Task_MissingTriangle", () -> P07_Task_MissingTriangleTest.main(new String[0]));
+        if (checked == 0) {
+            IO.println("Pro tento soubor zde není připravená herní kontrola: " + selected + ".java");
+            IO.println("Vyber jeden z těchto souborů: " + String.join(", ", available));
+            System.exit(2);
+        }
+        IO.println("Kontroly: " + checked + "; hotovo: " + (checked - failed) + "; zbývá: " + failed);
         if (failed > 0) System.exit(1);
     }
 
-    void run(String game, String label, Test test) {
+    void run(String game, Test test) {
+        available.add(game + ".java");
         if (!selected.isEmpty() && !selected.equals(game)) return;
         checked++;
         try {
             test.run();
-            IO.println("GREEN " + label);
+            IO.println("GREEN " + game + ".java");
         } catch (Throwable failure) {
             failed++;
-            IO.println("RED " + label + ": " + failure.getMessage());
+            IO.println("RED " + game + ".java");
+            String reason = failure.getMessage();
+            if (reason == null || reason.isBlank()) reason = "Kontrola nedostala očekávaný výsledek.";
+            if (!(failure instanceof AssertionError)) reason = "Program se při kontrole zastavil: " + failure.getClass().getSimpleName() + ": " + reason;
+            IO.println("  " + reason.replace("\n", "\n  "));
+            Throwable cause = failure;
+            while (cause.getCause() != null && cause.getCause() != cause) cause = cause.getCause();
+            if (cause != failure) IO.println("  " + cause.getClass().getSimpleName() + ": " + show(cause.getMessage()));
+            for (var frame : cause.getStackTrace()) {
+                if (frame.getClassName().equals(game) || frame.getClassName().startsWith(game + "$")) {
+                    IO.println("  " + "Místo v programu: " + frame.getFileName() + ":" + frame.getLineNumber());
+                    break;
+                }
+            }
         }
+    }
+
+    static String show(Object value) {
+        if (value != null && value.getClass().isArray()) {
+            int length = java.lang.reflect.Array.getLength(value);
+            var parts = new ArrayList<String>();
+            for (int i = 0; i < Math.min(length, 8); i++) parts.add(show(java.lang.reflect.Array.get(value, i)));
+            return parts + (length > 8 ? " … (" + length + " položek" + ")" : "");
+        }
+        String text = String.valueOf(value).replace("\n", "\\n").replace("\r", "\\r");
+        return text.length() <= 180 ? text : text.substring(0, 177) + "…";
     }
 }
 
 @SuppressWarnings("unchecked")
-class P06_CafeWallLabTest {
+class P06_Task_CafeWallLabTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("01.06 F01: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P06_CafeWallLab");
+        var game = Reflect.create("P06_Task_CafeWallLab");
         Reflect.call(game, "restart");
         var image = new BufferedImage(640, 450, BufferedImage.TYPE_INT_RGB);
         var pen = image.createGraphics();
         Reflect.call(game, "paintWall", pen);
         pen.dispose();
-        check(image.getRGB(100, 50) != new Color(145, 145, 145).getRGB(), "wall tiles must remain visible above the background");
-        check(image.getRGB(5, 420) == new Color(145, 145, 145).getRGB(), "the unused border keeps its background");
-        System.out.println("PASS " + checks + " checks");
+        check(image.getRGB(100, 50) != new Color(145, 145, 145).getRGB(), "Šedá plocha zakrývá dlaždice. Zkontroluj pořadí kreslení v paintWall, aby dlaždice zůstaly viditelné.");
+        check(image.getRGB(5, 420) == new Color(145, 145, 145).getRGB(), "Prázdný okraj má zůstat šedý. V paintWall zachovej pozadí kolem dlaždic.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P07_MissingTriangleTest {
+class P07_Task_MissingTriangleTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("01.07 F01: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P07_MissingTriangle");
+        var game = Reflect.create("P07_Task_MissingTriangle");
         Reflect.call(game, "restart");
         var image = new BufferedImage(600, 450, BufferedImage.TYPE_INT_RGB);
         var pen = image.createGraphics();
         Reflect.call(game, "paintDisc", pen, 0);
         pen.dispose();
-        check(image.getRGB(300, 100) == Color.WHITE.getRGB(), "the top disc must keep its white bite");
-        check(image.getRGB(300, 30) == Color.BLACK.getRGB(), "the uncut part remains black");
-        System.out.println("PASS " + checks + " checks");
+        check(image.getRGB(300, 100) == Color.WHITE.getRGB(), "Výsledkem paintDisc má být černý kruh s bílým výřezem. Zkontroluj obě kreslicí volání a jejich pořadí.");
+        check(image.getRGB(300, 30) == Color.BLACK.getRGB(), "Mimo bílý výřez má kruh zůstat černý. V paintDisc zachovej oba kreslicí kroky.");
     }
 }
 
@@ -111,7 +140,7 @@ class Reflect {
                 return Class.forName(name);
             }
         } catch (ClassNotFoundException failure) {
-            throw new IllegalStateException("Cannot find compact program type: " + name, failure);
+            throw new IllegalStateException("Nelze načíst program. Ověř jeho soubor vedle Check.java: " + name, failure);
         }
     }
 
@@ -120,14 +149,14 @@ class Reflect {
         for (var constructor : type(name).getDeclaredConstructors()) {
             if (accepts(constructor.getParameterTypes(), args)) matches.add(constructor);
         }
-        var constructor = one(matches, "constructor " + name);
+        var constructor = one(matches, "vytvoření objektu " + name);
         try {
             constructor.setAccessible(true);
             return constructor.newInstance(args);
         } catch (InvocationTargetException failure) {
             throw Reflect.<RuntimeException>raise(failure.getCause());
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot construct " + name, failure);
+            throw new IllegalStateException("Nelze vytvořit objekt programu: " + name, failure);
         }
     }
 
@@ -135,7 +164,7 @@ class Reflect {
         try {
             return field(target, name).get(target instanceof Class<?> ? null : target);
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot read field " + name, failure);
+            throw new IllegalStateException("Nelze přečíst proměnnou: " + name, failure);
         }
     }
 
@@ -146,7 +175,7 @@ class Reflect {
             field.set(receiver, value);
             return field.get(receiver);
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot write field " + name, failure);
+            throw new IllegalStateException("Nelze změnit proměnnou: " + name, failure);
         }
     }
 
@@ -156,7 +185,7 @@ class Reflect {
             try {
                 var field = current.getDeclaredField(name);
                 if (target instanceof Class<?> && !Modifier.isStatic(field.getModifiers())) {
-                    throw new IllegalStateException("An instance is required for field " + name);
+                    throw new IllegalStateException("Pro tuto proměnnou je potřeba objekt: " + name);
                 }
                 field.setAccessible(true);
                 return field;
@@ -186,14 +215,14 @@ class Reflect {
                 matches.add(method);
             }
         }
-        var method = one(matches, "method " + owner.getName() + "." + name);
+        var method = one(matches, "metodu " + owner.getName() + "." + name);
         try {
             method.setAccessible(true);
             return method.invoke(target instanceof Class<?> ? null : target, args);
         } catch (InvocationTargetException failure) {
             throw Reflect.<RuntimeException>raise(failure.getCause());
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot call " + owner.getName() + "." + name, failure);
+            throw new IllegalStateException("Nelze zavolat metodu: " + owner.getName() + "." + name, failure);
         }
     }
 
@@ -230,7 +259,7 @@ class Reflect {
 
     private static <T> T one(List<T> matches, String description) {
         if (matches.size() != 1) {
-            throw new IllegalStateException((matches.isEmpty() ? "No compatible " : "Ambiguous ") + description);
+            throw new IllegalStateException((matches.isEmpty() ? "Nenalezeno odpovídající " : "Nalezeno více možností pro ") + description);
         }
         return matches.getFirst();
     }

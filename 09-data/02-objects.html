@@ -9,26 +9,29 @@
 <h1>9.2 Jeden popis, více objektů</h1>
 <p>Mapa potřebuje výchozí bod i místo příjezdu. Mají stejný tvar, ale nemusejí mít stejné souřadnice. Type (typ) chápej jako popis a každý vytvořený object (objekt) jako jednu konkrétní sadu údajů.</p>
 <h2>Vytvoření převezme nynější hodnoty</h2>
-<pre><code class="language-java" data-source="P04_MapSnapshots.java">void main() {
+<pre><code class="language-java" data-source="P04_Example_MapSnapshots.java">/// # Hotový příklad · 9.2 Jeden popis, více objektů
+/// Lekce: 02-objects.html
+
+void main() {
     int x = 2;
     Point first = new Point(x, 3);
     x = 8;
     Point second = new Point(x, 3);
     Point copy = new Point(2, 3);
-    IO.println(&quot;First: &quot; + first.x() + &quot;,&quot; + first.y());
-    IO.println(&quot;Second: &quot; + second.x() + &quot;,&quot; + second.y());
-    IO.println(&quot;Same values: &quot; + first.equals(copy));
+    IO.println("First: " + first.x() + "," + first.y());
+    IO.println("Second: " + second.x() + "," + second.y());
+    IO.println("Same values: " + first.equals(copy));
 }
 
 record Point(int x, int y) {
 }
 </code></pre>
-<p>Otevři 09-data/P04_MapSnapshots.java. První constructor (vytváření objektu) dostane nynější hodnotu x, tedy 2. Pozdější přiřazení změní lokální proměnnou x na 8. Nezasáhne zpětně do již vytvořeného Point. Jeho složka zůstane 2.</p>
+<p>Otevři 09-data/P04_Example_MapSnapshots.java. První constructor (vytváření objektu) dostane nynější hodnotu x, tedy 2. Pozdější přiřazení změní lokální proměnnou x na 8. Nezasáhne zpětně do již vytvořeného Point. Jeho složka zůstane 2.</p>
 <p>Další new Point použije 8 a 3. Definice Point je napsaná jednou, ale vytváření může proběhnout mnohokrát s různými argumenty. Je to stejný princip předávání hodnot, který znáš z parametrů metod, tentokrát pro sestavení dat.</p>
 <p>Record (záznam) dodá equals pro porovnání hodnot složek. first.equals(copy) je true, protože oba body mají x rovno 2 a y rovno 3. Ptáme se na shodu dat, ne na shodu napsaných jmen proměnných. U textových složek porovnání záznamů porovnává i obsah textu.</p>
 <details><summary>Předpověz nový snímek</summary><p>Před vytvořením second znovu nastav x na 2. Oba vypsané body pak budou 2,3. Pozdější změna x stále nezmění ani jeden bod. Co vrátí first.equals(second)? True, protože hodnoty jejich složek souhlasí.</p></details>
 <h2>Úkol: ponech za sebou kontrolní bod</h2>
-<p>Otevři 09-data/P05_Checkpoint.java. Zachovej start a vytvoř finish o dva sloupce doprava a jeden řádek nahoru: k x přičti 2 a od y odečti 1. Použij čtecí metody start, aby nový bod vznikl z uložené pozice.</p>
+<p>Otevři 09-data/P05_Task_Checkpoint.java. Zachovej start a vytvoř finish o dva sloupce doprava a jeden řádek nahoru: k x přičti 2 a od y odečti 1. Použij čtecí metody start, aby nový bod vznikl z uložené pozice.</p>
 <p>Pro vstup 2 a 3 musí Start zůstat 2,3 a Finish být 4,2. Back at start musí být false. Vyzkoušej také -2 a 0: očekávej start -2,0 a finish 0,-1. Záporné souřadnice jsou povolené; neomezuj je nulou.</p>
 <details><summary>Nápověda 1: změněná pozice potřebuje nová data</summary><p>Přiřazení start do finish žádný pohyb nepočítá. Vytvoř Point se dvěma vypočtenými hodnotami složek.</p></details>
 <details><summary>Nápověda 2: zachovej kontrolní bod</summary><p>Při výpočtu finish nenahrazuj start. Dva řádky výpisu umožňují ověřit pohyb i zachování původního bodu.</p></details>

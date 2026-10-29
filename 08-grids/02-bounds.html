@@ -9,15 +9,18 @@
 <h1>8.2 Nejdřív zkontroluj okraj</h1>
 <p>Radar může dostat souřadnice za mapou. Nejsou to další skryté buňky. Program musí nejprve rozhodnout, zda místo existuje, a teprve pak číst jeho obsah.</p>
 <h2>Čtyři podmínky pro obdélník</h2>
-<p>Otevři <code>08-grids/P05_MapBoundary.java</code>. Vyzkoušej x = 2, y = 1 a potom x = 3, y = 1.</p>
-<pre><code class="language-java" data-source="P05_MapBoundary.java">void main() {
+<p>Otevři <code>08-grids/P05_Example_MapBoundary.java</code>. Vyzkoušej x = 2, y = 1 a potom x = 3, y = 1.</p>
+<pre><code class="language-java" data-source="P05_Example_MapBoundary.java">/// # Hotový příklad · 8.2 Nejdřív zkontroluj okraj
+/// Lekce: 02-bounds.html
+
+void main() {
     int[][] map = {{2, 0, 1}, {0, 3, 7}};
-    int x = Integer.parseInt(IO.readln(&quot;X: &quot;).strip());
-    int y = Integer.parseInt(IO.readln(&quot;Y: &quot;).strip());
+    int x = Integer.parseInt(IO.readln("X: ").strip());
+    int y = Integer.parseInt(IO.readln("Y: ").strip());
     if (inside(map, x, y)) {
-        IO.println(&quot;Value: &quot; + map[y][x]);
+        IO.println("Value: " + map[y][x]);
     } else {
-        IO.println(&quot;Outside&quot;);
+        IO.println("Outside");
     }
 }
 
@@ -30,16 +33,16 @@ boolean inside(int[][] map, int x, int y) {
 <p>Kontrola v main stojí před přístupem do pole. Výpis Outside nepotřebuje žádnou buňku přečíst. Stejně jako minule předpokládáme neprázdnou obdélníkovou mřížku; tento pomocník neřeší různě dlouhé řádky ani chybějící pole.</p>
 <details><summary>Předpověď: x = 0, y = -1</summary><p>X je v pořádku, ale záporné y odmítne celý výběr. Výsledek je Outside. Nestačí, aby vyhovovala jen jedna souřadnice.</p></details>
 <h2>Úkol: odemkni radar jen uvnitř mapy</h2>
-<p>Otevři <code>08-grids/P06_DroneRadar.java</code>. Připravené main už podle inside vybírá, zda ukázat signál. Pomocník zatím odmítá všechno. Doplň pravidlo pro skutečné rozměry předaného pole; rozměry nezapisuj napevno jako čísla.</p>
+<p>Otevři <code>08-grids/P06_Task_DroneRadar.java</code>. Připravené main už podle inside vybírá, zda ukázat signál. Pomocník zatím odmítá všechno. Doplň pravidlo pro skutečné rozměry předaného pole; rozměry nezapisuj napevno jako čísla.</p>
 <p>Pro 3, 1 čekej Signal: 9, pro 1, 0 Signal: 4. Pro 4, 1 a 0, 2 už čekej Outside. Stejně se odmítnou -1, 0 i 3, -1. Všimni si, že mapa je širší než vyšší: prohození rozměrů by pokazilo pravý okraj.</p>
 <p>Metoda nemá souřadnice opravovat ani je přesouvat na nejbližší okraj. Jen odpovídá, zda existují. Neplatný výběr tedy nesmí zobrazit obsah jiné buňky.</p>
 <details><summary>Nápověda 1: napiš meze zvlášť</summary><p>Pro každou souřadnici si nejprve napiš nejmenší a největší povolenou hodnotu. Potom z nich sestav společný test.</p></details>
 <details><summary>Nápověda 2: rozměry předaných dat</summary><p>Počet řádků patří vnějšímu poli. Šířku získáš délkou jeho prvního řádku. Obě délky už znáš z předchozí lekce.</p></details>
 <p>Příště se budou podobné kontroly opakovat pro sousední buňky. Jeden správný pomocník ochrání více různých návštěv.</p>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>TicTacToe</strong> · <code>08-grids/P07_TicTacToe.java</code><br>TicTacToe potřebuje mayPlay: odmítni konec hry, neplatné číslo a obsazené pole dřív, než dovolíš zápis. Zamítnutí nesmí předat tah.</li>
-<li><strong>Chomp</strong> · <code>08-grids/P08_Chomp.java</code><br>V Chomp oprav rozsah řádků, aby šlo ukousnout také čtvrtý. Zachovej odmítání neexistující nebo snědené čokolády.</li>
-<li><strong>Sudoku</strong> · <code>08-grids/P09_Sudoku.java</code><br>V Sudoku přidej guards do place: souřadnice ověř před indexováním, poté hodnotu, pevnou nápovědu, pravidla a konec hry. Valid už je připravené.</li>
+<li><strong>TicTacToe</strong> · <code>08-grids/P07_Task_TicTacToe.java</code><br>TicTacToe potřebuje mayPlay: odmítni konec hry, neplatné číslo a obsazené pole dřív, než dovolíš zápis. Zamítnutí nesmí předat tah.</li>
+<li><strong>Chomp</strong> · <code>08-grids/P08_Task_Chomp.java</code><br>V Chomp oprav rozsah řádků, aby šlo ukousnout také čtvrtý. Zachovej odmítání neexistující nebo snědené čokolády.</li>
+<li><strong>Sudoku</strong> · <code>08-grids/P09_Task_Sudoku.java</code><br>V Sudoku přidej guards do place: souřadnice ověř před indexováním, poté hodnotu, pevnou nápovědu, pravidla a konec hry. Valid už je připravené.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="01-grids.html">← 8.1 Z řad vznikne mapa</a><a class="next" href="03-neighbours.html">8.3 Ptej se okolních buněk →</a></nav>

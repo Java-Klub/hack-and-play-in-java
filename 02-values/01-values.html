@@ -9,7 +9,7 @@
 <h1>2.1 Dej hodnotě jméno</h1>
 <p>Program může uchovávat počet životů, jméno hráče nebo zvolený cíl. Když hodnotě přidělíš jméno, můžeš ji později použít vícekrát.</p>
 <h2>Dvě pojmenované hodnoty</h2>
-<p>Otevři <code>02-values/P01_Lives.java</code>:</p>
+<p>Otevři <code>02-values/P01_Example_Lives.java</code>:</p>
 <pre><code class="language-java">void main() {
     int lives = 3;
     String pilot = &quot;Nova&quot;;
@@ -67,14 +67,14 @@ IO.println(lives);
 <p>Uvozovky říkají „použij tyto znaky jako text“. Jméno bez uvozovek žádá hodnotu, která je pod ním uložená. Java nehledá variable uvnitř zprávy v uvozovkách.</p>
 </details>
 
-<p>V P01_Lives.java změň jméno pilota na <code>Mika</code> a počet životů na 5. Před spuštěním si řekni, které dva řádky se změní a proč.</p>
+<p>V P01_Example_Lives.java změň jméno pilota na <code>Mika</code> a počet životů na 5. Před spuštěním si řekni, které dva řádky se změní a proč.</p>
 <h2>Spoj zprávu a hodnotu</h2>
-<p>Znak <code>+</code> umí spojovat text. Můžeš v P01_Lives.java nahradit samotný výpis životů takto:</p>
+<p>Znak <code>+</code> umí spojovat text. Můžeš v P01_Example_Lives.java nahradit samotný výpis životů takto:</p>
 <pre><code class="language-java">IO.println(&quot;Lives: &quot; + lives);
 </code></pre>
 <p>Výsledek pro <code>lives</code> rovné 3 je <code>Lives: 3</code>. Uvnitř uvozovek je mezera za dvojtečkou. Jméno <code>lives</code> je venku, proto se použije jeho hodnota. Spojený text předá celý jeden výsledek akci <code>println</code>.</p>
 <h2>Malý vlastní úkol</h2>
-<p>Otevři prázdný program <code>02-values/P02_PilotCard.java</code>. Uvnitř <code>main</code> zaveď <code>String pilot</code> a <code>int lives</code> s vlastními hodnotami. Potom vypiš kartu na dva řádky, například:</p>
+<p>Otevři prázdný program <code>02-values/P02_Task_PilotCard.java</code>. Uvnitř <code>main</code> zaveď <code>String pilot</code> a <code>int lives</code> s vlastními hodnotami. Potom vypiš kartu na dva řádky, například:</p>
 <pre><code class="language-text">Pilot: Nova
 Lives: 3
 </code></pre>
@@ -82,7 +82,7 @@ Lives: 3
 <details>
 <summary>Nápověda</summary>
 
-<p>Oba údaje zaveď před výpisy. Textové popisky patří do uvozovek, jména použij za <code>+</code> bez uvozovek. Vzor začátku a konce souboru najdeš v P01_Lives.java.</p>
+<p>Oba údaje zaveď před výpisy. Textové popisky patří do uvozovek, jména použij za <code>+</code> bez uvozovek. Vzor začátku a konce souboru najdeš v P01_Example_Lives.java.</p>
 </details>
 
 <p><strong>Tuto lekci zvládáš, když odlišíš jméno od textu v uvozovkách a pomocí jména vypíšeš uloženou hodnotu.</strong></p>

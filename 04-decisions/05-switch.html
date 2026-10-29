@@ -9,16 +9,19 @@
 <h1>4.5 Vyber hodnotu pomocí switch</h1>
 <p>Kouzelnická kniha přijme slovo a vybere efekt. Několik přesných možností můžeš přehledně přiřadit k výsledkům.</p>
 <h2>Jeden vstup, jedna vybraná hodnota</h2>
-<p>Otevři <code>04-decisions/P16_SpellBook.java</code>.</p>
-<pre><code class="language-java" data-source="P16_SpellBook.java">void main() {
-    String spell = IO.readln(&quot;Spell: &quot;).strip().toLowerCase(Locale.ROOT);
+<p>Otevři <code>04-decisions/P16_Example_SpellBook.java</code>.</p>
+<pre><code class="language-java" data-source="P16_Example_SpellBook.java">/// # Hotový příklad · 4.5 Vyber hodnotu pomocí switch
+/// Lekce: 05-switch.html
+
+void main() {
+    String spell = IO.readln("Spell: ").strip().toLowerCase(Locale.ROOT);
     String effect = switch (spell) {
-        case &quot;red&quot;, &quot;r&quot; -&gt; &quot;Fire&quot;;
-        case &quot;blue&quot;, &quot;b&quot; -&gt; &quot;Ice&quot;;
-        case &quot;green&quot;, &quot;g&quot; -&gt; &quot;Vines&quot;;
-        default -&gt; &quot;Fizzle&quot;;
+        case "red", "r" -&gt; "Fire";
+        case "blue", "b" -&gt; "Ice";
+        case "green", "g" -&gt; "Vines";
+        default -&gt; "Fizzle";
     };
-    IO.println(&quot;Effect: &quot; + effect);
+    IO.println("Effect: " + effect);
 }
 </code></pre><pre class="transcript"><code>Spell: <span class="typed"> B </span>
 Effect: Ice</code></pre>
@@ -32,7 +35,7 @@ Effect: Ice</code></pre>
 <p>Tomuto zápisu říkáme switch expression (výraz switch), protože má hodnotu. Provede se jen vybraná možnost. Středník za <code>}</code> ukončuje celé přiřazení. Potom println vypíše uložený efekt.</p>
 <p>Podmínky if mohou posuzovat rozsahy a více různých otázek. Tento switch vybírá podle přesné hodnoty jediného vstupu. Všechny zde vybrané výsledky jsou text, aby šly uložit do String.</p>
 <h2>Úkol: oprav porouchané rádio</h2>
-<p>Otevři <code>04-decisions/P17_RepairRadio.java</code>. Známý povel odmítne, neznámý naopak přeloží jako Move.</p>
+<p>Otevři <code>04-decisions/P17_Task_RepairRadio.java</code>. Známý povel odmítne, neznámý naopak přeloží jako Move.</p>
 <p><strong>Uprav switch tak, aby po připraveném očištění a převodu písmen vybíral tyto výsledky. Krátké a dlouhé zápisy sdružuj do jednoho case.</strong></p>
 <div class="table-wrap"><table><thead><tr><th>Přijatý povel</th><th>Action</th></tr></thead><tbody>
 <tr><td>go nebo g</td><td>Move</td></tr>
@@ -45,8 +48,11 @@ Effect: Ice</code></pre>
 Action: Scan</code></pre>
 <details><summary>Nápověda</summary><p>Výsledek se vybírá už za šipkou. Výpis potom jen připojí tento hotový text k popisku. Nezapomeň opravit také default, aby neznámé povely nedostaly běžnou akci.</p></details>
 <h2>Jak rozlišit čtyři kombinace</h2>
-<p>Ve hře se dvěma volbami pomůže každé kombinaci přidělit jiné číslo. Otevři <code>04-decisions/P18_ControlPanel.java</code>:</p>
-<pre><code class="language-java" data-source="P18_ControlPanel.java">void main() {
+<p>Ve hře se dvěma volbami pomůže každé kombinaci přidělit jiné číslo. Otevři <code>04-decisions/P18_Example_ControlPanel.java</code>:</p>
+<pre><code class="language-java" data-source="P18_Example_ControlPanel.java">/// # Hotový příklad · 4.5 Vyber hodnotu pomocí switch
+/// Lekce: 05-switch.html
+
+void main() {
     boolean lights = true;
     boolean music = false;
     int mode = 0;
@@ -56,7 +62,7 @@ Action: Scan</code></pre>
     if (music) {
         mode = mode + 2;
     }
-    IO.println(&quot;Mode: &quot; + mode);
+    IO.println("Mode: " + mode);
 }
 </code></pre>
 <p>Změnou dvou počátečních boolean hodnot můžeš vyzkoušet všechny čtyři režimy:</p>
@@ -69,8 +75,8 @@ Action: Scan</code></pre>
 <p>Jsou tu dvě samostatná if: obě zapnuté volby se mají přičíst. Pro výběr výsledku podle tohoto mode pak můžeš použít switch s možnostmi 0, 1, 2 a 3. Také u čísel doplň default pro zbývající hodnoty. Překladač neumí z tohoto výpočtu odvodit, že jiné číslo nevznikne; výraz musí poskytovat výsledek pro každou možnou hodnotu int.</p>
 <h2>Vyber odměnu nebo povol kartu</h2>
 <ul>
-<li><code>04-decisions/P19_CooperateOrDefect.java</code>: každý hráč soukromě zvolí spolupráci nebo zradu. Připravené reward dostane dvě boolean hodnoty a má vrátit jednu číselnou odměnu. Rozliš čtyři kombinace a podle pravidel v zadání vyber odměnu pomocí switch. Neutrální ControlPanel ukazuje, jak si vytvořit číselný klíč; sčítané hodnoty odměn si s tímto klíčem nepleť.</li>
-<li><code>04-decisions/P20_CrazyEightsSimpleMauMau.java</code>: nejprve odmítni kód karty mimo 0 až 51. Připravené rank(card) poskytne hodnotu 2 až 14; barvu zjistíš pomocí card / 13. Osmička je povolená vždy, ostatní karty musejí odpovídat hodnotě karty top nebo barvě suit. Použij switch pro zvláštní hodnotu a v běžném výsledku spoj dvě možnosti přijetí. Stačí upravit rozhodčího legal; rozdělování karet je připravené.</li>
+<li><code>04-decisions/P19_Task_CooperateOrDefect.java</code>: každý hráč soukromě zvolí spolupráci nebo zradu. Připravené reward dostane dvě boolean hodnoty a má vrátit jednu číselnou odměnu. Rozliš čtyři kombinace a podle pravidel v zadání vyber odměnu pomocí switch. Neutrální ControlPanel ukazuje, jak si vytvořit číselný klíč; sčítané hodnoty odměn si s tímto klíčem nepleť.</li>
+<li><code>04-decisions/P20_Task_CrazyEightsSimpleMauMau.java</code>: nejprve odmítni kód karty mimo 0 až 51. Připravené rank(card) poskytne hodnotu 2 až 14; barvu zjistíš pomocí card / 13. Osmička je povolená vždy, ostatní karty musejí odpovídat hodnotě karty top nebo barvě suit. Použij switch pro zvláštní hodnotu a v běžném výsledku spoj dvě možnosti přijetí. Stačí upravit rozhodčího legal; rozdělování karet je připravené.</li>
 </ul>
 <p>Obě úlohy ověří <code>04-decisions/Check.java</code>; v Program Arguments vyber řešený program. Stejný if nebo switch může měnit chování mnoha částí hry, když se všechny ptají jednoho společného rozhodčího.</p>
 <p><strong>Teď umíš vybrat výsledek podle konkrétní hodnoty a zkombinovat výběr s podmínkami i bezpečným odmítnutím.</strong></p>

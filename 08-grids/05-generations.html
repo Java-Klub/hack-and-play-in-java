@@ -9,13 +9,16 @@
 <h1>8.5 Minulost čti, budoucnost zapisuj</h1>
 <p>Světelná mapa se mění v jednotlivých krocích. Všechny buňky mají reagovat na stejnou minulost. Kdybys už upravenou buňku použil pro výpočet jejího souseda, dostala by část mapy náskok.</p>
 <h2>Dva stavy místo přepisování při čtení</h2>
-<p>Otevři <code>08-grids/P23_SignalShift.java</code>. Podívej se na obě řady před posunem a po něm.</p>
-<pre><code class="language-java" data-source="P23_SignalShift.java">void main() {
+<p>Otevři <code>08-grids/P23_Example_SignalShift.java</code>. Podívej se na obě řady před posunem a po něm.</p>
+<pre><code class="language-java" data-source="P23_Example_SignalShift.java">/// # Hotový příklad · 8.5 Minulost čti, budoucnost zapisuj
+/// Lekce: 05-generations.html
+
+void main() {
     boolean[][] old = {{true, false, false, false}, {false, true, false, false}};
     boolean[][] next = shiftRight(old);
-    IO.println(&quot;Old&quot;);
+    IO.println("Old");
     show(old);
-    IO.println(&quot;Next&quot;);
+    IO.println("Next");
     show(next);
 }
 
@@ -39,17 +42,17 @@ void show(boolean[][] board) {
 <p>Pravidlo old nikdy nepřepisuje. Metoda main proto může po výpočtu stále zobrazit původní řady. Dvě různá pole oddělují čtení minulosti a zápis budoucnosti. Říkáme tomu double buffering (dvojice oddělených stavů). Samotné nové jméno by nestačilo, jak už znáš z kopírování polí.</p>
 <details><summary>Předpověď: posuň výsledek ještě jednou</summary><p>První řada bude [false, false, true, false], druhá [false, false, false, true]. Do dalšího volání předáš výsledek předchozího. Původní pole stále zůstane stejné.</p></details>
 <h2>Úkol: světlo se šíří jedním krokem</h2>
-<p>Otevři <code>08-grids/P24_LightBloom.java</code>. Zpočátku svítí jen střed třířádkové mapy. Doplň spread: v příštím stavu buňka svítí, pokud svítí nyní nebo má alespoň jednoho svítícího souseda vlevo, vpravo, nahoře či dole. Diagonála nestačí.</p>
+<p>Otevři <code>08-grids/P24_Task_LightBloom.java</code>. Zpočátku svítí jen střed třířádkové mapy. Doplň spread: v příštím stavu buňka svítí, pokud svítí nyní nebo má alespoň jednoho svítícího souseda vlevo, vpravo, nahoře či dole. Diagonála nestačí.</p>
 <p>Vrať nové pole a původní neměň. Metoda main provede zadaný počet kroků a zobrazí Start i After. Pro 0 zůstane jediný střed. Po 1 vznikne kříž pěti true, rohy jsou false. Po 2 svítí všech devět míst. Zkoušej 0 až 3 kroky.</p>
 <p>Připravené isOn bezpečně vrátí false za okrajem. Použij ho pro sousedy i vlastní buňku. Pravidlo není počet sousedů z předchozí lekce: tentokrát stačí jedna kladná odpověď. Propojíš tedy otázky pomocí OR.</p>
 <details><summary>Nápověda 1: rozliš vstup a výstup</summary><p>Vytvoř nové boolean pole stejných rozměrů. Všechny otázky pokládej nad now, všechna přiřazení dělej do nového pole.</p></details>
 <details><summary>Nápověda 2: kontrola náskoku</summary><p>Pokud po prvním kroku svítí roh, použil výpočet příliš čerstvou informaci nebo započítal diagonálu. Pokud se změnil výpis Start, přepisuješ minulost.</p></details>
 <p>Teď už můžeš pro jiný svět zvolit jiné pravidlo buňky a zachovat stejný bezpečný způsob výpočtu dalších kroků.</p>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>Slant</strong> · <code>08-grids/P25_Slant.java</code><br>Ve Slant oprav snapshot včetně kopií řádků. Obnovení musí fungovat i po vítězném tahu; samostatná vnější tabulka nestačí.</li>
-<li><strong>BinaryBalance</strong> · <code>08-grids/P26_BinaryBalance.java</code><br>BinaryBalance sdílí řádky odpovědí s pevnými nápovědami. V copyBoard odděl obě úrovně, aby vlastní odpověď nevytvořila novou zamčenou nápovědu.</li>
-<li><strong>RuleGarden</strong> · <code>08-grids/P27_RuleGarden.java</code><br>V RuleGarden počítej všechny buňky nextRow ze stejné staré generace. Porovnej výsledek s výpočtem měnícím řádek zleva doprava.</li>
-<li><strong>ForestFireSandbox</strong> · <code>08-grids/P28_ForestFireSandbox.java</code><br>ForestFireSandbox má šířit oheň jen ze západního souseda předchozí generace. Starý oheň zhasne; nesmí nastat obtékání ani dvojí šíření v ticku.</li>
+<li><strong>Slant</strong> · <code>08-grids/P25_Task_Slant.java</code><br>Ve Slant oprav snapshot včetně kopií řádků. Obnovení musí fungovat i po vítězném tahu; samostatná vnější tabulka nestačí.</li>
+<li><strong>BinaryBalance</strong> · <code>08-grids/P26_Task_BinaryBalance.java</code><br>BinaryBalance sdílí řádky odpovědí s pevnými nápovědami. V copyBoard odděl obě úrovně, aby vlastní odpověď nevytvořila novou zamčenou nápovědu.</li>
+<li><strong>RuleGarden</strong> · <code>08-grids/P27_Task_RuleGarden.java</code><br>V RuleGarden počítej všechny buňky nextRow ze stejné staré generace. Porovnej výsledek s výpočtem měnícím řádek zleva doprava.</li>
+<li><strong>ForestFireSandbox</strong> · <code>08-grids/P28_Task_ForestFireSandbox.java</code><br>ForestFireSandbox má šířit oheň jen ze západního souseda předchozí generace. Starý oheň zhasne; nesmí nastat obtékání ani dvojí šíření v ticku.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="04-patterns.html">← 8.4 Vyrob vzor podle souřadnic</a><a class="next" href="../09-data/01-records.html">9.1 Dej údajům společný tvar →</a></nav>

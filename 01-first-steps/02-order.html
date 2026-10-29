@@ -9,7 +9,7 @@
 <h1>1.2 Pořadí příkazů</h1>
 <p>Už umíš vypsat vlastní zprávy. Teď zjistíš, proč dva programy se stejnými kroky mohou dělat něco jiného.</p>
 <h2>Přečti, předpověz, spusť</h2>
-<p>Otevři <code>01-first-steps/P04_MissionControl.java</code>. Nejdřív zkus napsat jeho výstup na papír nebo do poznámky:</p>
+<p>Otevři <code>01-first-steps/P04_Example_MissionControl.java</code>. Nejdřív zkus napsat jeho výstup na papír nebo do poznámky:</p>
 <pre><code class="language-java">void main() {
     IO.println(&quot;Check power&quot;);
     IO.println(&quot;Open gate&quot;);
@@ -37,7 +37,7 @@ Go
 <p>Tento program vypíše jen Hello. Řádek začínající <code>//</code> se při spuštění přeskočí. I <code>IO.println</code>, které napíšeš <strong>za <code>//</code> na stejném řádku</strong>, zůstane pouze komentářem.</p>
 <p>V hrách uvidíš také řádky s <code>///</code>: jsou to vysvětlující komentáře pro tebe. Šipky u některých sekcí v editoru dovolují delší výklad sbalit. Jestli tvůj editor sbalování nenabízí, komentáře lze normálně číst jako ostatní text.</p>
 <h2>Úkol: oprav startovací postup</h2>
-<p>Otevři <code>01-first-steps/P05_LaunchSequence.java</code>. Má všechny tři potřebné zprávy, ale ve špatném pořadí.</p>
+<p>Otevři <code>01-first-steps/P05_Task_LaunchSequence.java</code>. Má všechny tři potřebné zprávy, ale ve špatném pořadí.</p>
 <p><strong>Přesuň celé řádky uvnitř <code>main</code> tak, aby výstup byl:</strong></p>
 <pre><code class="language-text">Doors closed
 Engine on
@@ -51,11 +51,11 @@ Launch
 </details>
 
 <h2>Použij stejnou myšlenku ve hře</h2>
-<p>Teď otevři <code>01-first-steps/P06_CafeWallLab.java</code>. Spuštění ukáže šedou plochu: dlaždice jsou schované pod pozdějším nátěrem. Zadání na začátku souboru označuje dva řádky k přesunutí.</p>
+<p>Teď otevři <code>01-first-steps/P06_Task_CafeWallLab.java</code>. Spuštění ukáže šedou plochu: dlaždice jsou schované pod pozdějším nátěrem. Zadání na začátku souboru označuje dva řádky k přesunutí.</p>
 <p>Tady místo výpisu textu voláš připravené kreslení. <code>paintTiles(g);</code> žádá o dlaždice a <code>paintBackground(g);</code> o šedý nátěr. <code>g</code> je dodané kreslicí pero. Tyto akce fungují; rozhoduješ o jejich pořadí. Popis <code>Graphics2D g</code> v záhlaví jen říká, jaké pero připravená část dodává. Dnes ho měnit nemusíš.</p>
-<p>Zavři staré okno, ulož změnu a spusť soubor znovu přes Run File. Výsledek má ukázat dlaždice na šedém pozadí. Pro ověření vyber <code>01-first-steps/Check.java</code>, v jeho Properties → Run Single File nastav Program Arguments na <code>P06_CafeWallLab.java</code> a spusť Run File. Podrobný postup najdeš v <a href="../00-setup/index.html#checks">přípravě</a>.</p>
+<p>Zavři staré okno, ulož změnu a spusť soubor znovu přes Run File. Výsledek má ukázat dlaždice na šedém pozadí. Pro ověření vyber <code>01-first-steps/Check.java</code>, v jeho Properties → Run Single File nastav Program Arguments na <code>P06_Task_CafeWallLab.java</code> a spusť Run File. Podrobný postup najdeš v <a href="../00-setup/index.html#checks">přípravě</a>.</p>
 <p>GREEN potvrzuje ověřované případy. Jestli dostaneš RED, přečti zprávu a vrať se ke dvěma kreslicím krokům.</p>
-<p>Chceš ještě jiný obrázek? <code>01-first-steps/P07_MissingTriangle.java</code> procvičuje stejné pořadí. Jeho zadání tě nechá sestavit kresbu ze dvou připravených volání; na výběr nepotřebuješ znát jejich vnitřní kreslicí algoritmus.</p>
+<p>Chceš ještě jiný obrázek? <code>01-first-steps/P07_Task_MissingTriangle.java</code> procvičuje stejné pořadí. Jeho zadání tě nechá sestavit kresbu ze dvou připravených volání; na výběr nepotřebuješ znát jejich vnitřní kreslicí algoritmus.</p>
 <p><strong>Tuto lekci zvládáš, když předpovíš pořadí výpisů a vysvětlíš, proč pozdější kreslení může překrýt dřívější.</strong></p>
 <p>Pokračuj na <a href="../02-values/01-values.html">Dej hodnotě jméno</a>.</p>
 </article>

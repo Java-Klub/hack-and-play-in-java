@@ -9,14 +9,17 @@
 <h1>4.1 Polož otázku kódu</h1>
 <p>Dveře potřebují tři jednotky energie. Dosud jsi počítal, kolik jí zbude. Teď zjistíš odpověď na otázku: stačí jí vůbec?</p>
 <h2>Odpověď true nebo false</h2>
-<p>Otevři <code>04-decisions/P01_DoorQuestion.java</code>. Zadej energii 3 a propustku MOON.</p>
-<pre><code class="language-java" data-source="P01_DoorQuestion.java">void main() {
-    int energy = Integer.parseInt(IO.readln(&quot;Energy: &quot;).strip());
-    String pass = IO.readln(&quot;Pass: &quot;);
+<p>Otevři <code>04-decisions/P01_Example_DoorQuestion.java</code>. Zadej energii 3 a propustku MOON.</p>
+<pre><code class="language-java" data-source="P01_Example_DoorQuestion.java">/// # Hotový příklad · 4.1 Polož otázku kódu
+/// Lekce: 01-questions.html
+
+void main() {
+    int energy = Integer.parseInt(IO.readln("Energy: ").strip());
+    String pass = IO.readln("Pass: ");
     boolean enough = energy &gt;= 3;
-    boolean recognised = pass.equals(&quot;MOON&quot;);
-    IO.println(&quot;Enough energy: &quot; + enough);
-    IO.println(&quot;Recognised pass: &quot; + recognised);
+    boolean recognised = pass.equals("MOON");
+    IO.println("Enough energy: " + enough);
+    IO.println("Recognised pass: " + recognised);
 }
 </code></pre><pre class="transcript"><code>Energy: <span class="typed">3</span>
 Pass: <span class="typed">MOON</span>
@@ -36,7 +39,7 @@ Recognised pass: true</code></pre>
 <p><code>pass.equals("MOON")</code> poskytne true, když je obsahem pass přesně MOON. Malé <code>moon</code> poskytne false: velikost písmen se počítá. Pro porovnání bez rozlišení velkých a malých písmen slouží <code>equalsIgnoreCase</code>, například <code>pass.equalsIgnoreCase("MOON")</code>.</p>
 <p>U String operátor <code>==</code> zjišťuje, zda jde o tentýž uložený objekt. Stejně znějící odpovědi proto nemusí tímto porovnáním projít. Pro shodu textového obsahu používej equals nebo equalsIgnoreCase. Podrobněji se k objektům vrátíš při práci s vlastními daty.</p>
 <h2>Úkol: oprav nespravedlivou bránu</h2>
-<p>Otevři <code>04-decisions/P02_FairGate.java</code>. Brána nesprávně odmítá přesně tři jednotky energie a používá chybné porovnání textu.</p>
+<p>Otevři <code>04-decisions/P02_Task_FairGate.java</code>. Brána nesprávně odmítá přesně tři jednotky energie a používá chybné porovnání textu.</p>
 <p><strong>Oprav obě boolean otázky: energie stačí od tří včetně; propustka MOON je rozpoznaná bez ohledu na velikost písmen.</strong> Zachovej dva samostatné výpisy.</p>
 <div class="table-wrap"><table><thead><tr><th>Energie</th><th>Propustka</th><th>Enough energy</th><th>Recognised pass</th></tr></thead><tbody>
 <tr><td>3</td><td>moon</td><td>true</td><td>true</td></tr>
@@ -45,12 +48,12 @@ Recognised pass: true</code></pre>
 </tbody></table></div>
 <details><summary>Nápověda</summary><p>Rovnost patří do pravidla pro energii. U textu hledej operaci, která porovnává obsah a záměrně ignoruje velikost písmen. Neměň přijatou odpověď na pevný text.</p></details>
 <h2>Oprav kouzelnický trik</h2>
-<p>Otevři <code>04-decisions/P03_MagicNumberCards.java</code>. Mysli si číslo a odpovídej, na kterých kartách se vyskytuje. Připravená akce yesAnswer musí považovat malé i velké y za souhlas a n za nesouhlas. <code>boolean</code> před jejím jménem říká, že vrací odpověď true/false. Výraz za return je místo k úpravě.</p>
-<p>Pro číslo 5 odpověz postupně <code>y, n, y, n, n, n</code>. Ověř, že funguje také Y. Kontrolu této hry vybereš v <code>04-decisions/Check.java</code> pomocí Program Arguments <code>P03_MagicNumberCards.java</code>.</p>
+<p>Otevři <code>04-decisions/P03_Task_MagicNumberCards.java</code>. Mysli si číslo a odpovídej, na kterých kartách se vyskytuje. Připravená akce yesAnswer musí považovat malé i velké y za souhlas a n za nesouhlas. <code>boolean</code> před jejím jménem říká, že vrací odpověď true/false. Výraz za return je místo k úpravě.</p>
+<p>Pro číslo 5 odpověz postupně <code>y, n, y, n, n, n</code>. Ověř, že funguje také Y. Kontrolu této hry vybereš v <code>04-decisions/Check.java</code> pomocí Program Arguments <code>P03_Task_MagicNumberCards.java</code>.</p>
 <p><strong>Teď umíš uložit výsledek porovnání a rozlišit číselnou rovnost od porovnání textového obsahu.</strong></p>
 <details><summary>Co znamená otazník ve dveřích klubu?</summary><p>V ClubDoor je výběr zprávy zapsaný zkratkou <code>condition ? first : second</code>. Je to conditional expression (podmíněný výraz): při true poskytne první hodnotu, jinak druhou. <code>IO.println(ready ? "Go" : "Wait");</code> tedy vypíše Go, pokud ready platí. Dnes tento připravený výběr nepřepisuješ; sleduješ údaje předané podmínce.</p></details>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>ClubDoor</strong> · <code>04-decisions/P04_ClubDoor.java</code><br>ClubDoor skrývá přijatou propustku přímo v kódu. Sleduj argument mayEnter a změň údaje průkazky, ne pravidlo přijetí.</li>
+<li><strong>ClubDoor</strong> · <code>04-decisions/P04_Task_ClubDoor.java</code><br>ClubDoor skrývá přijatou propustku přímo v kódu. Sleduj argument mayEnter a změň údaje průkazky, ne pravidlo přijetí.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="../03-text-input/04-numbers.html">← 3.4 Z odpovědi udělej číslo</a><a class="next" href="02-branches.html">4.2 Vyber, co se stane →</a></nav>

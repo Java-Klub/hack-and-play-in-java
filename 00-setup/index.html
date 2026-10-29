@@ -8,6 +8,7 @@
 <main><article id="content">
 <h1>Připrav si dílnu</h1>
 <p>V této lekci otevřeš kurz v NetBeans, spustíš první soubor a změníš jeho zprávu. Zápis programu rozebereme v další lekci.</p>
+<p>Soubor s <code>Example</code> v názvu je hotový příklad: spusť ho a prozkoumej, jak funguje. <code>Task</code> označuje úkol k procvičení; jeho zadání najdeš v příslušné lekci. Řádky začínající <code>///</code> jsou komentáře pro čtenáře, Java je neprovádí.</p>
 <h2>Co potřebuješ</h2>
 <ul>
 <li><strong>Nejnovější NetBeans a JDK.</strong> Stáhni si nejnovější verze <a href="https://netbeans.apache.org">Apache NetBeans</a> a JDK pro svůj systém, případně společný instalační balíček (bundle). JDK obsahuje Javu pro překlad a spouštění programů.</li>
@@ -25,7 +26,7 @@
 <ol>
 <li><p>Ve Favorites rozbal <code>01-first-steps</code>.</p>
 </li>
-<li><p>Dvojklikem otevři <strong>P01_WakeUp.java</strong>.</p>
+<li><p>Dvojklikem otevři <strong>P01_Example_WakeUp.java</strong>.</p>
 </li>
 <li><p>Zvol <strong>Run → Run File</strong> (<code>Shift+F6</code>). Tato volba spouští otevřený soubor.</p>
 </li>
@@ -39,7 +40,7 @@ Power on
 <h2>Změň, ulož, spusť</h2>
 <p>V otevřeném WakeUp změň text uvnitř uvozovek z <code>ARCADE</code> na <code>HELLO</code>. Zvol <strong>File → Save</strong> a znovu <strong>Run → Run File</strong>. První zpráva v Output má být HELLO. Potom můžeš původní text vrátit.</p>
 <p>Save uloží upravený text do souboru. Další spuštění načte tuto uloženou verzi. Již otevřené herní okno se samo nepřepíše: před novým spuštěním ho zavři.</p>
-<p>Další příklady i úkoly otevřeš stejným způsobem ve Favorites. Lekce vždy uvede cestu, například <code>01-first-steps/P02_SecretSignal.java</code>: rozbalíš <code>01-first-steps</code>, otevřeš soubor a použiješ Run File.</p>
+<p>Další příklady i úkoly otevřeš stejným způsobem ve Favorites. Lekce vždy uvede cestu, například <code>01-first-steps/P02_Task_SecretSignal.java</code>: rozbalíš <code>01-first-steps</code>, otevřeš soubor a použiješ Run File.</p>
 <p>Soubory upravuj v rozbalené složce kurzu. Kliknutí na náhled zdrojáku na webu nenahradí jeho otevření ve Favorites.</p>
 <p><a id="checks"></a></p>
 <h2>Ověř úkol přes Run File</h2>
@@ -47,7 +48,7 @@ Power on
 <p>Až tě lekce pošle k první hře, ověříš ji takto:</p>
 <ol>
 <li>Ve Favorites vyber <strong>01-first-steps/Check.java</strong>. Klikni na něj pravým tlačítkem a zvol <strong>Properties</strong>.</li>
-<li>V sekci <strong>Run Single File</strong> nastav <strong>Program Arguments</strong> na <code>P06_CafeWallLab.java</code>. Tím vybíráš jednu úlohu ke kontrole. Použij přesně jméno uvedené v lekci, včetně <code>.java</code>.</li>
+<li>V sekci <strong>Run Single File</strong> nastav <strong>Program Arguments</strong> na <code>P06_Task_CafeWallLab.java</code>. Tím vybíráš jednu úlohu ke kontrole. Použij přesně jméno uvedené v lekci, včetně <code>.java</code>.</li>
 <li>Otevři Check.java a použij <strong>Run → Run File</strong>. Výsledek najdeš v Output.</li>
 </ol>
 <p>Při kontrole další úlohy ve stejné složce změníš jen Program Arguments. NetBeans si tuto vlastnost pamatuje; samotný zdrojový kód Check.java neměň. <strong>Prázdné Program Arguments spustí kontroly všech herních úloh v kapitole</strong>, včetně těch, které jsi zatím neřešil.</p>

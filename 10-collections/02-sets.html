@@ -9,31 +9,34 @@
 <h1>10.2 Pamatuj si první návštěvu</h1>
 <p>Průzkumník má dostat zprávu o objevu jednou pro každé místo, i když chodí v kruhu. Mohl bys pokaždé prohledávat seznam, ale set (množina) přímo vyjadřuje příslušnost: hodnota je přítomná, nebo chybí. Opakované položky neukládá.</p>
 <h2>Jedna operace odpoví a zapamatuje</h2>
-<pre><code class="language-java" data-source="P13_BadgeSet.java">void main() {
+<pre><code class="language-java" data-source="P13_Example_BadgeSet.java">/// # Hotový příklad · 10.2 Pamatuj si první návštěvu
+/// Lekce: 02-sets.html
+
+void main() {
     Set&lt;String&gt; badges = new HashSet&lt;&gt;();
-    IO.println(&quot;First Moon: &quot; + badges.add(&quot;Moon&quot;));
-    IO.println(&quot;Second Moon: &quot; + badges.add(&quot;Moon&quot;));
-    badges.add(&quot;Sun&quot;);
-    IO.println(&quot;Has Sun: &quot; + badges.contains(&quot;Sun&quot;));
-    IO.println(&quot;Unique badges: &quot; + badges.size());
+    IO.println("First Moon: " + badges.add("Moon"));
+    IO.println("Second Moon: " + badges.add("Moon"));
+    badges.add("Sun");
+    IO.println("Has Sun: " + badges.contains("Sun"));
+    IO.println("Unique badges: " + badges.size());
 }
 </code></pre>
-<p>Otevři 10-collections/P13_BadgeSet.java. Set&lt;String&gt; popisuje jedinečné prvky String; HashSet je jeho připravená implementace. Diamond (prázdné lomené závorky) &lt;&gt; opět převezme typ prvku z definice. Množina má velikost a operace příslušnosti, ale žádnou číslovanou pozici typu get(0).</p>
+<p>Otevři 10-collections/P13_Example_BadgeSet.java. Set&lt;String&gt; popisuje jedinečné prvky String; HashSet je jeho připravená implementace. Diamond (prázdné lomené závorky) &lt;&gt; opět převezme typ prvku z definice. Množina má velikost a operace příslušnosti, ale žádnou číslovanou pozici typu get(0).</p>
 <p>Add vrátí true, když vloží nový prvek, a false, pokud už stejný prvek existuje. I po druhém volání si Moon stále pamatuje. Contains pouze klade otázku; nic nevkládá. Size počítá různé hodnoty, nikoli pokusy o vložení.</p>
 <p>HashSet neslibuje pořadí prvků. Neposuzuj zápisník objevů vypsáním celé množiny s očekáváním pořadí vstupu. Zprávu vypiš raději při vložení. Shoda String rozlišuje velikost písmen: Moon a moon jsou v této lekci různá jména.</p>
 <details><summary>Předpověz další odznak</summary><p>Opětovné přidání Sun vrátí false a ponechá velikost 2. Co vrátí contains(&quot;Star&quot;) před vložením? False. Opakované dotazování stále ponechá Star nepřítomné: otázka příslušnost nemění.</p></details>
 <h2>Úkol: oznamuj jen skutečné objevy</h2>
-<p>Otevři 10-collections/P14_FirstVisits.java. Připravená smyčka čte jména míst až do prázdné odpovědi. Nahraď bezpodmínečný výsledek first operací, která si místo zapamatuje a zároveň řekne, zda jde o první výskyt. Zachovej stávající podmínku i konečný počet.</p>
+<p>Otevři 10-collections/P14_Task_FirstVisits.java. Připravená smyčka čte jména míst až do prázdné odpovědi. Nahraď bezpodmínečný výsledek first operací, která si místo zapamatuje a zároveň řekne, zda jde o první výskyt. Zachovej stávající podmínku i konečný počet.</p>
 <p>Zadej Moon, Moon, Sun a potom prázdný řádek. Očekávej zprávy o objevu pouze pro Moon a Sun a Unique places: 2. Okamžité ukončení dá 0. Mezery okolo jména se před porovnáním odstraní; vnitřní zápis ani velikost písmen neměň.</p>
 <details><summary>Nápověda 1: vyber operaci se změnou</summary><p>Dotaz contains pozná opakování jen tehdy, když si již něco jméno uložilo. Najdi operaci vracející informaci, zda vložení proběhlo.</p></details>
 <details><summary>Nápověda 2: použij vrácený boolean</summary><p>Nech připravené if použít odpověď množiny. Druhé počítadlo ani další vyhledávací smyčka nejsou potřeba.</p></details>
 <p>Příště si nezapamatuješ jen výskyt místa, ale také související číslo, například jeho nasbírané skóre.</p>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>Hangman</strong> · <code>10-collections/P15_Hangman.java</code><br>Hangman už běží. V hintLetter hledej první skrytou samohlásku, jinak první jiný skrytý znak. Rada nesmí spotřebovat pokus ani odkrýt písmeno.</li>
-<li><strong>WordSearch</strong> · <code>10-collections/P16_WordSearch.java</code><br>WordSearch má uznat cíl z obou konců. Najdi, kde záleží na směru, a v targetName sjednoť CAT a TAC na tentýž cíl bez druhé odměny.</li>
-<li><strong>TinyStepSequencer</strong> · <code>10-collections/P17_TinyStepSequencer.java</code><br>V TinyStepSequencer implementuj toggle přes hodnotu Note: přítomnou odeber, chybějící přidej. Neplatné souřadnice nesmějí ovlivnit jiný krok.</li>
-<li><strong>CirclePacking</strong> · <code>10-collections/P18_CirclePacking.java</code><br>CirclePacking má uspět při prvním claimCentre a odmítnout opakování. Vyber operaci Set, která skutečně zaznamená nový střed.</li>
-<li><strong>WireframeCube</strong> · <code>10-collections/P19_WireframeCube.java</code><br>Ve WireframeCube sjednoť pořadí konců každé platné hrany, odstraň duplikáty a ponech první pořadí výskytu. Neplatné konce a vlastní smyčky přeskoč.</li>
+<li><strong>Hangman</strong> · <code>10-collections/P15_Task_Hangman.java</code><br>Hangman už běží. V hintLetter hledej první skrytou samohlásku, jinak první jiný skrytý znak. Rada nesmí spotřebovat pokus ani odkrýt písmeno.</li>
+<li><strong>WordSearch</strong> · <code>10-collections/P16_Task_WordSearch.java</code><br>WordSearch má uznat cíl z obou konců. Najdi, kde záleží na směru, a v targetName sjednoť CAT a TAC na tentýž cíl bez druhé odměny.</li>
+<li><strong>TinyStepSequencer</strong> · <code>10-collections/P17_Task_TinyStepSequencer.java</code><br>V TinyStepSequencer implementuj toggle přes hodnotu Note: přítomnou odeber, chybějící přidej. Neplatné souřadnice nesmějí ovlivnit jiný krok.</li>
+<li><strong>CirclePacking</strong> · <code>10-collections/P18_Task_CirclePacking.java</code><br>CirclePacking má uspět při prvním claimCentre a odmítnout opakování. Vyber operaci Set, která skutečně zaznamená nový střed.</li>
+<li><strong>WireframeCube</strong> · <code>10-collections/P19_Task_WireframeCube.java</code><br>Ve WireframeCube sjednoť pořadí konců každé platné hrany, odstraň duplikáty a ponech první pořadí výskytu. Neplatné konce a vlastní smyčky přeskoč.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="01-lists.html">← 10.1 Batoh nemusí znát délku předem</a><a class="next" href="03-maps.html">10.3 Každé jméno má svůj účet →</a></nav>

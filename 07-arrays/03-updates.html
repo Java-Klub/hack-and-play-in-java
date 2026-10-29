@@ -9,14 +9,17 @@
 <h1>7.3 Změň skutečné místo</h1>
 <p>Panel má několik světel. Kliknutí zde nahradíme číslem napsaným do Output: zvolená kontrolka má přepnout stav, ostatní mají zůstat stejné. Nestačí přepsat pracovní kopii hodnoty.</p>
 <h2>Hranaté závorky vlevo i vpravo</h2>
-<p>Otevři <code>07-arrays/P10_ChargeSlot.java</code>. Zadej slot 1.</p>
-<pre><code class="language-java" data-source="P10_ChargeSlot.java">void main() {
+<p>Otevři <code>07-arrays/P10_Example_ChargeSlot.java</code>. Zadej slot 1.</p>
+<pre><code class="language-java" data-source="P10_Example_ChargeSlot.java">/// # Hotový příklad · 7.3 Změň skutečné místo
+/// Lekce: 03-updates.html
+
+void main() {
     int[] charges = {2, 5, 1};
-    int slot = Integer.parseInt(IO.readln(&quot;Slot: &quot;).strip());
+    int slot = Integer.parseInt(IO.readln("Slot: ").strip());
     if (slot &gt;= 0 &amp;&amp; slot &lt; charges.length) {
         charges[slot] = charges[slot] + 2;
     } else {
-        IO.println(&quot;Invalid slot&quot;);
+        IO.println("Invalid slot");
     }
     IO.println(Arrays.toString(charges));
 }
@@ -26,15 +29,15 @@
 <p>U číselného pole by přiřazení do proměnné power uvnitř for-each změnilo jen tuto local variable (lokální proměnnou). Pro zápis do konkrétního element (prvku) potřebuješ samotné pole a jeho index. Vybraný index proto nejprve ověřujeme.</p>
 <details><summary>Předpověď: slot -1</summary><p>Vypíše se Invalid slot a potom nezměněné [2, 5, 1]. Odmítnutý výběr neprovede žádné přiřazení do pole.</p></details>
 <h2>Úkol: přepínač světla</h2>
-<p>Otevři <code>07-arrays/P11_LightSwitch.java</code>. Čtyři světla jsou na začátku vypnutá. Pro platný slot změň pouze vybrané světlo na opačnou boolean hodnotu. Tím bude tentýž krok umět zapínat i vypínat.</p>
+<p>Otevři <code>07-arrays/P11_Task_LightSwitch.java</code>. Čtyři světla jsou na začátku vypnutá. Pro platný slot změň pouze vybrané světlo na opačnou boolean hodnotu. Tím bude tentýž krok umět zapínat i vypínat.</p>
 <p>Pro slot 2 čekej [false, false, true, false]. Pro 0 má být true pouze první hodnota, pro 3 poslední. Pro -1 nebo 4 vypiš Invalid slot a potom čtyři false. Neplatná volba nemění ani jiné světlo.</p>
 <p>Po opravě změň počáteční druhé světlo na true a zadej 1. Musí se vypnout. Potom vrať původní počáteční pole. Tento pokus rozliší přepnutí od pouhého přiřazování true.</p>
 <details><summary>Nápověda 1: opačná odpověď</summary><p>Operátor NOT už znáš z podmínek. Umí z true vytvořit false i naopak.</p></details>
 <details><summary>Nápověda 2: cíl přiřazení</summary><p>Výsledek ulož do prvku na vybraném indexu, nikoli do čísla slot ani do celé proměnné lights.</p></details>
 <p>Příště nebude hráč znát potřebný index. Napíšeš hledání, které správné místo vybere podle jeho obsahu.</p>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>Chopsticks</strong> · <code>07-arrays/P12_Chopsticks.java</code><br>Chopsticks musí před přístupem do pole ověřit oba indexy a potom oba živé prsty. HandsAlive pouze odpovídá, nic nepřičítá.</li>
-<li><strong>WordleStyleWordHunt</strong> · <code>07-arrays/P13_WordleStyleWordHunt.java</code><br>Ve WordleStyleWordHunt oprav leftoverLetters, aby opakovaný znak zvyšoval dřívější počet místo jeho smazání. Porovnej LEVEL a ALLEY.</li>
+<li><strong>Chopsticks</strong> · <code>07-arrays/P12_Task_Chopsticks.java</code><br>Chopsticks musí před přístupem do pole ověřit oba indexy a potom oba živé prsty. HandsAlive pouze odpovídá, nic nepřičítá.</li>
+<li><strong>WordleStyleWordHunt</strong> · <code>07-arrays/P13_Task_WordleStyleWordHunt.java</code><br>Ve WordleStyleWordHunt oprav leftoverLetters, aby opakovaný znak zvyšoval dřívější počet místo jeho smazání. Porovnej LEVEL a ALLEY.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="02-traversal.html">← 7.2 Projdi hodnoty bez ručního výběru</a><a class="next" href="04-search.html">7.4 Najdi místo, které vyhovuje →</a></nav>

@@ -9,16 +9,19 @@
 <h1>7.1 Dej hodnotám očíslovaná místa</h1>
 <p>Tři schránky obsahují různé množství drahokamů. Tři samostatná jména by šla použít, ale pak by se obtížně vybíralo místo podle čísla od hráče. Array (pole) spojí hodnoty stejného typu do očíslované řady.</p>
 <h2>První místo má číslo nula</h2>
-<p>Otevři <code>07-arrays/P01_GemSlots.java</code>. Pro slot 2 předpověz obsah ještě před spuštěním.</p>
-<pre><code class="language-java" data-source="P01_GemSlots.java">void main() {
+<p>Otevři <code>07-arrays/P01_Example_GemSlots.java</code>. Pro slot 2 předpověz obsah ještě před spuštěním.</p>
+<pre><code class="language-java" data-source="P01_Example_GemSlots.java">/// # Hotový příklad · 7.1 Dej hodnotám očíslovaná místa
+/// Lekce: 01-arrays.html
+
+void main() {
     int[] gems = {3, 0, 5};
-    int slot = Integer.parseInt(IO.readln(&quot;Slot: &quot;).strip());
+    int slot = Integer.parseInt(IO.readln("Slot: ").strip());
     if (slot &lt; 0 || slot &gt;= gems.length) {
-        IO.println(&quot;Invalid slot&quot;);
+        IO.println("Invalid slot");
     } else {
-        IO.println(&quot;Gems: &quot; + gems[slot]);
+        IO.println("Gems: " + gems[slot]);
     }
-    IO.println(&quot;Slots: &quot; + gems.length);
+    IO.println("Slots: " + gems.length);
 }
 </code></pre>
 <p>Zápis <code>int[]</code> označuje pole celých čísel. Hodnoty ve složených závorkách vytvoří tři elements (prvky) v uvedeném pořadí. Zápis <code>gems[slot]</code> čte jeden prvek; číslo v hranatých závorkách je index (pořadové číslo místa).</p>
@@ -26,14 +29,14 @@
 <p>Nejdřív se ověří meze, až pak se čte prvek. Index -1 ani index rovný délce neoznačují platné místo. Java mimo pole přístup nepovolí; tady tomu předejdeme srozumitelnou zprávou. Hranaté závorky tedy nevymýšlejí nové místo podle potřeby.</p>
 <details><summary>Předpověď: slot 1 a slot 3</summary><p>Slot 1 obsahuje 0 a program také oznámí tři místa. Slot 3 je neplatný: vypíše Invalid slot a Slots: 3.</p></details>
 <h2>Úkol: kam vede vybraný portál?</h2>
-<p>Otevři <code>07-arrays/P02_PortalCodes.java</code>. Pole obsahuje SUN, MOON a STAR. Připravená kontrola mezí funguje, ale každý platný výběr hlásí první portál. Oprav čtení tak, aby použilo hráčem vybraný slot.</p>
+<p>Otevři <code>07-arrays/P02_Task_PortalCodes.java</code>. Pole obsahuje SUN, MOON a STAR. Připravená kontrola mezí funguje, ale každý platný výběr hlásí první portál. Oprav čtení tak, aby použilo hráčem vybraný slot.</p>
 <p>Pro 0 čekej Portal: SUN, pro 1 Portal: MOON a pro 2 Portal: STAR. Vstupy -1 a 3 mají oba dát No portal. Nevybírej text řetězcem podmínek pro každý jednotlivý index; potřebné údaje už leží v poli.</p>
 <details><summary>Nápověda 1: odděl místo a obsah</summary><p>Proměnná slot je číslo místa. Proměnná destination má dostat text, který na tom místě leží.</p></details>
 <details><summary>Nápověda 2: rozšiř data</summary><p>Po opravě můžeš přidat čtvrtý text COMET do pole. Délka a kontrola mezí se mají přizpůsobit bez dalších zvláštních větví.</p></details>
 <p>Příště projdeš všechna místa automaticky. Nebudeš potřebovat znát předem přesný počet hodnot ani každou pojmenovávat zvlášť.</p>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>DotsAndBoxes</strong> · <code>07-arrays/P03_DotsAndBoxes.java</code><br>DotsAndBoxes potřebuje správné čtyři hrany pro každé číslo boxu. V box rozliš horní, dolní a boční indexy; nevracej vždy první čtveřici.</li>
-<li><strong>PegDrop</strong> · <code>07-arrays/P04_PegDrop.java</code><br>V PegDrop vrať ze scoreAt hodnotu skutečně vybraného koše. Dotaz nesmí přičítat body; vyzkoušej první i poslední index.</li>
+<li><strong>DotsAndBoxes</strong> · <code>07-arrays/P03_Task_DotsAndBoxes.java</code><br>DotsAndBoxes potřebuje správné čtyři hrany pro každé číslo boxu. V box rozliš horní, dolní a boční indexy; nevracej vždy první čtveřici.</li>
+<li><strong>PegDrop</strong> · <code>07-arrays/P04_Task_PegDrop.java</code><br>V PegDrop vrať ze scoreAt hodnotu skutečně vybraného koše. Dotaz nesmí přičítat body; vyzkoušej první i poslední index.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="../06-loops/05-game-loop.html">← 6.5 Čti další tah</a><a class="next" href="02-traversal.html">7.2 Projdi hodnoty bez ručního výběru →</a></nav>

@@ -9,34 +9,37 @@
 <h1>10.3 Každé jméno má svůj účet</h1>
 <p>Několik týmů získává body ve smíšeném pořadí. Seznam čísel ztrácí jména a souběžná pole vyžadují pečlivé párování. Map (mapa) spojuje každý key (klíč) s jednou value (hodnotou), takže jméno týmu přímo vybere jeho průběžné skóre.</p>
 <h2>Vyhledej, vypočítej, ulož</h2>
-<pre><code class="language-java" data-source="P20_SignalCounts.java">void main() {
+<pre><code class="language-java" data-source="P20_Example_SignalCounts.java">/// # Hotový příklad · 10.3 Každé jméno má svůj účet
+/// Lekce: 03-maps.html
+
+void main() {
     Map&lt;String, Integer&gt; counts = new HashMap&lt;&gt;();
-    String[] signals = {&quot;Moon&quot;, &quot;Sun&quot;, &quot;Moon&quot;};
+    String[] signals = {"Moon", "Sun", "Moon"};
     for (String signal : signals) {
         int previous = counts.getOrDefault(signal, 0);
         counts.put(signal, previous + 1);
     }
-    IO.println(&quot;Moon: &quot; + counts.getOrDefault(&quot;Moon&quot;, 0));
-    IO.println(&quot;Sun: &quot; + counts.getOrDefault(&quot;Sun&quot;, 0));
-    IO.println(&quot;Star: &quot; + counts.getOrDefault(&quot;Star&quot;, 0));
-    IO.println(&quot;Names: &quot; + counts.size());
+    IO.println("Moon: " + counts.getOrDefault("Moon", 0));
+    IO.println("Sun: " + counts.getOrDefault("Sun", 0));
+    IO.println("Star: " + counts.getOrDefault("Star", 0));
+    IO.println("Names: " + counts.size());
 }
 </code></pre>
-<p>Otevři 10-collections/P20_SignalCounts.java. Map&lt;String, Integer&gt; má dva typové argumenty: klíče String a hodnoty Integer. Generic collections (kolekce s typovými argumenty) nemohou jako typový argument použít primitivní int. Integer je jeho object wrapper (objektový obal); Java int při ukládání automaticky zabalí a pro aritmetiku rozbalí. Stejně získáš List&lt;Integer&gt; pro seznam celých čísel; List&lt;int&gt; není platný zápis.</p>
+<p>Otevři 10-collections/P20_Example_SignalCounts.java. Map&lt;String, Integer&gt; má dva typové argumenty: klíče String a hodnoty Integer. Generic collections (kolekce s typovými argumenty) nemohou jako typový argument použít primitivní int. Integer je jeho object wrapper (objektový obal); Java int při ukládání automaticky zabalí a pro aritmetiku rozbalí. Stejně získáš List&lt;Integer&gt; pro seznam celých čísel; List&lt;int&gt; není platný zápis.</p>
 <p>GetOrDefault přečte hodnotu klíče, nebo dodá druhý argument, pokud přiřazení chybí. Výchozí hodnotu nevloží. Put uloží pod klíč jednu hodnotu a nahradí případnou předchozí. K existujícímu číslu nic automaticky nepřičítá.</p>
 <p>Vystopuj Moon: první návštěva přečte 0 a uloží 1; druhá přečte 1 a uloží 2. Sun získá samostatnou položku. Dotaz na Star vrátí 0 beze změny size, které počítá klíče. HashMap nezaručuje užitečné pořadí průchodu, proto se příklad ptá na konkrétní jména.</p>
 <details><summary>Předpověz nový signál</summary><p>Další Moon by dala Moon: 3 a Names: 2. Jedna Star by naopak dala Names: 3. Která operace vytvoří třetí položku? Put, nikoli předchozí dotaz getOrDefault.</p></details>
 <h2>Úkol: sčítej týmová skóre</h2>
-<p>Otevři 10-collections/P21_TeamScores.java. Doplň award, aby opakované položky stejnému týmu body přičítaly místo přepsání historie. Nový tým začíná od 0. Ostatní týmy zachovej a ponech připravenou smyčku čtení a dotazu.</p>
+<p>Otevři 10-collections/P21_Task_TeamScores.java. Doplň award, aby opakované položky stejnému týmu body přičítaly místo přepsání historie. Nový tým začíná od 0. Ostatní týmy zachovej a ponech připravenou smyčku čtení a dotazu.</p>
 <p>Zadej Moon se 4, Sun se 2, Moon se 3, potom prázdné jméno týmu a dotaz Moon. Očekávej Score: 7 a Teams: 2. Žádné položky a následný dotaz Star dají 0 a 0. Odměny 4 a pak -4 dají skóre 0, ale stále jeden tým.</p>
 <details><summary>Nápověda 1: zápis není přičtení</summary><p>Před voláním put zjisti původní hodnotu. Použij výchozí hodnotu, se kterou první odměna funguje bez zvláštní větve.</p></details>
 <details><summary>Nápověda 2: zachovej klíč</summary><p>Vypočtený součet ulož pod stejné jméno, které jsi vyhledával. Nepoužívej body jako klíč ani neodebírej týmy s nulovým skóre.</p></details>
 <p>Příště popíšeš pravidlo řazení prvků místo spoléhání na pořadí, které obal právě poskytne.</p>
 <details><summary>Další čtení online</summary><p><a href="https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/util/Map.html">Java 26 API: Map</a></p></details>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>TruchetTileLab</strong> · <code>10-collections/P22_TruchetTileLab.java</code><br>V TruchetTileLab udržuj počty LEFT a RIGHT. Preferenci změň jen při náskoku alespoň dva, přičti pouze vybranou možnost; neplatný text nesmí měnit mapu.</li>
-<li><strong>MarkovMischief</strong> · <code>10-collections/P23_MarkovMischief.java</code><br>MarkovMischief zapomíná starší následovníky opakovaného slova. Oprav shromažďování možností, aby se text nemusel zaseknout ve dvouslovné smyčce.</li>
-<li><strong>DungeonBlueprints</strong> · <code>10-collections/P24_DungeonBlueprints.java</code><br>V DungeonBlueprints hlídej samostatné kvóty SMALL a LARGE podle plochy. Zamítnutí nic nepřičítá; hraniční plocha 42 ještě patří do SMALL.</li>
+<li><strong>TruchetTileLab</strong> · <code>10-collections/P22_Task_TruchetTileLab.java</code><br>V TruchetTileLab udržuj počty LEFT a RIGHT. Preferenci změň jen při náskoku alespoň dva, přičti pouze vybranou možnost; neplatný text nesmí měnit mapu.</li>
+<li><strong>MarkovMischief</strong> · <code>10-collections/P23_Task_MarkovMischief.java</code><br>MarkovMischief zapomíná starší následovníky opakovaného slova. Oprav shromažďování možností, aby se text nemusel zaseknout ve dvouslovné smyčce.</li>
+<li><strong>DungeonBlueprints</strong> · <code>10-collections/P24_Task_DungeonBlueprints.java</code><br>V DungeonBlueprints hlídej samostatné kvóty SMALL a LARGE podle plochy. Zamítnutí nic nepřičítá; hraniční plocha 42 ještě patří do SMALL.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="02-sets.html">← 10.2 Pamatuj si první návštěvu</a><a class="next" href="04-ordering.html">10.4 Předej pravidlo řazení →</a></nav>

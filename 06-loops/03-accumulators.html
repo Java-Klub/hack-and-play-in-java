@@ -9,14 +9,17 @@
 <h1>6.3 Pamatuj si, co už prošlo</h1>
 <p>Posádka dodá palivo ve třech zásilkách. Jednotlivá čísla můžeš číst postupně; pro konečný výsledek potřebuješ uchovat jejich součet, ne seznam všech odpovědí.</p>
 <h2>Počítadlo kol není součet</h2>
-<p>Otevři <code>06-loops/P06_FuelDeliveries.java</code>. Zadej postupně 2, 0 a 4.</p>
-<pre><code class="language-java" data-source="P06_FuelDeliveries.java">void main() {
+<p>Otevři <code>06-loops/P06_Example_FuelDeliveries.java</code>. Zadej postupně 2, 0 a 4.</p>
+<pre><code class="language-java" data-source="P06_Example_FuelDeliveries.java">/// # Hotový příklad · 6.3 Pamatuj si, co už prošlo
+/// Lekce: 03-accumulators.html
+
+void main() {
     int total = 0;
     for (int delivery = 0; delivery &lt; 3; delivery++) {
-        int amount = Integer.parseInt(IO.readln(&quot;Fuel: &quot;).strip());
+        int amount = Integer.parseInt(IO.readln("Fuel: ").strip());
         total = total + amount;
     }
-    IO.println(&quot;Fuel total: &quot; + total);
+    IO.println("Fuel total: " + total);
 }
 </code></pre>
 <p>Accumulator (střadač) je zde proměnná total. Začíná na nule a každé kolo do ní přidá další příspěvek. Při těchto vstupech postupně drží 2, potom stále 2 a nakonec 6. Hodnota delivery mezitím jen řídí tři opakování.</p>
@@ -24,7 +27,7 @@
 <p>Výpočet <code>total = total + amount;</code> nejprve přečte starý total, přičte amount a teprve potom uloží nový výsledek. Není to matematická rovnost platná navždy. Kratší zápis <code>total += amount;</code> má pro tato celá čísla stejný účinek.</p>
 <details><summary>Předpověď: zásilky 5, 1, 2</summary><p>Hodnota total bude postupně 5, 6, 8. Konečný výpis je Fuel total: 8. Výpis uvnitř cyklu by ukázal tři průběžné výsledky místo jediného konečného.</p></details>
 <h2>Úkol: průzkum hluku</h2>
-<p>Otevři <code>06-loops/P07_NoiseSurvey.java</code>. Tři měření už čte, ale výsledky zůstávají nulové. Doplň během průchodu dvě nezávislé informace: součet všech měření a počet měření alespoň 10.</p>
+<p>Otevři <code>06-loops/P07_Task_NoiseSurvey.java</code>. Tři měření už čte, ale výsledky zůstávají nulové. Doplň během průchodu dvě nezávislé informace: součet všech měření a počet měření alespoň 10.</p>
 <p>Měření zkoušej od 0 do 20. Pro 9, 10, 14 čekej Total: 33 a Loud: 2. Pro tři nuly mají být oba výsledky 0. Pro 10, 10, 10 je součet 30 a počet 3. Hodnotu přesně 10 nevynech.</p>
 <details><summary>Nápověda 1: dvě různé otázky</summary><p>Každé měření patří do součtu. Do počtu hlasitých se přičítá jen při splnění podmínky, a přičítá se jedna, nikoli naměřená hodnota.</p></details>
 <details><summary>Nápověda 2: místo změn</summary><p>Oba výsledky připrav před cyklem, upravuj je uvnitř a vypiš až za ním. Čtení tří vstupů ponech.</p></details>

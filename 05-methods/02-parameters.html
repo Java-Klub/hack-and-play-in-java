@@ -9,14 +9,17 @@
 <h1>5.2 Pošli metodě hodnoty</h1>
 <p>Každé místo na mapě má jiné jméno a polohu. Jedna metoda může připravit všechny popisky, když jí při každém volání dodáš správné hodnoty.</p>
 <h2>Jména rolí a skutečné hodnoty</h2>
-<p>Otevři <code>05-methods/P03_MapLabels.java</code>. Předpověz oba řádky.</p>
-<pre><code class="language-java" data-source="P03_MapLabels.java">void main() {
-    mark(&quot;Portal&quot;, 2);
-    mark(&quot;Dragon&quot;, 7);
+<p>Otevři <code>05-methods/P03_Example_MapLabels.java</code>. Předpověz oba řádky.</p>
+<pre><code class="language-java" data-source="P03_Example_MapLabels.java">/// # Hotový příklad · 5.2 Pošli metodě hodnoty
+/// Lekce: 02-parameters.html
+
+void main() {
+    mark("Portal", 2);
+    mark("Dragon", 7);
 }
 
 void mark(String name, int position) {
-    IO.println(name + &quot; at &quot; + position);
+    IO.println(name + " at " + position);
 }
 </code></pre><pre class="transcript"><code>Portal at 2
 Dragon at 7</code></pre>
@@ -28,7 +31,7 @@ Dragon at 7</code></pre>
 <p>Čárka odděluje jednotlivé role i předané hodnoty. Jejich <strong>pořadí, počet a typy</strong> musejí souhlasit. Jméno parametru samo žádné údaje nevyhledává. Při dalším volání dostane nové hodnoty.</p>
 <p>Argumentem může být také proměnná nebo výpočet: <code>mark("Exit", 2 + 3);</code> předá polohu 5. V definici uvádíš typ a jméno, při volání jen hodnoty nebo výrazy, které je poskytují.</p>
 <h2>Úkol: portály vozí cestující špatně</h2>
-<p>Otevři <code>05-methods/P04_PortalRoutes.java</code>. Zadej Start Moon a Finish Mars. Místo cesty tam a zpět vidíš dvakrát Mars → Mars.</p>
+<p>Otevři <code>05-methods/P04_Task_PortalRoutes.java</code>. Zadej Start Moon a Finish Mars. Místo cesty tam a zpět vidíš dvakrát Mars → Mars.</p>
 <p><strong>Oprav první volání tak, aby vedlo ze start do finish. Druhé má vést zpátky. Uvnitř route oprav výpis tak, aby použil oba parametry ve správných rolích.</strong> Názvy planet nezapisuj napevno do výpisu.</p>
 <pre class="transcript"><code>Start: <span class="typed">Moon</span>
 Finish: <span class="typed">Mars</span>
@@ -37,7 +40,7 @@ Mars -&gt; Moon</code></pre>
 <p>Vyzkoušej také Red Planet a Club Base. Zůstávají celé názvy a správný směr? Oba argumenty mají typ String, takže překladač jejich prohození nerozpozná: význam rolí hlídáš ty.</p>
 <details><summary>Nápověda: přenes hodnoty do malé tabulky</summary><p>Pro každé volání si zapiš, jakou hodnotu dostane from a jakou to. Pořadí se určuje u volání, ne podle toho, zda se argument jmenuje stejně jako parametr.</p></details>
 <h2>Pošli otázku číselnému stroji</h2>
-<p>Otevři <code>05-methods/P05_NumberMachine.java</code>. Spusť jej a sleduj dvojice výsledků. V main přidej další volání compare s vlastním číslem, které pomůže odhalit pravidlo stroje. Zatím nech referenční machine sbalenou a imitation neřeš.</p>
+<p>Otevři <code>05-methods/P05_Task_NumberMachine.java</code>. Spusť jej a sleduj dvojice výsledků. V main přidej další volání compare s vlastním číslem, které pomůže odhalit pravidlo stroje. Zatím nech referenční machine sbalenou a imitation neřeš.</p>
 <p>Compare má parametr number, takže <code>compare(-3);</code> připraví jeden pokus se zápornou trojkou. Nepotřebuješ měnit jeho tělo pro každý nový vstup. Opiš si předpověď a skutečný výsledek; v další lekci vyrobíš vlastní napodobeninu.</p>
 <p><strong>Teď umíš rozlišit parametr od argumentu a určit, jaké hodnoty metoda při konkrétním volání dostane.</strong></p>
 </article>

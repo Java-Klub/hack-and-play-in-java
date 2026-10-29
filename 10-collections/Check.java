@@ -7,180 +7,206 @@ import java.io.*;
 import java.awt.Point;
 import javax.imageio.ImageIO;
 
-/// Chapter checks: java Check.java
-/// One game: java Check.java P03_Flood.java
-/// Tests call compact programs through reflection in this JVM.
+/// Kontrola herních úloh této kapitoly. Krátké učebnicové úkoly spouštěj samostatně.
 class Check {
     int failed;
     int checked;
     String selected;
+    final ArrayList<String> available = new ArrayList<>();
     interface Test { void run() throws Exception; }
 
     void main(String[] args) {
         System.setProperty("java.awt.headless", "true");
-        if (args.length > 1) throw new IllegalArgumentException("Use: java Check.java [game filename]");
+        if (args.length > 1) {
+            IO.println("Zadej nejvýše jeden název herního souboru. Bez argumentu se zkontrolují všechny herní úlohy kapitoly.");
+            System.exit(2);
+        }
         selected = args.length == 0 ? "" : Path.of(args[0]).getFileName().toString().replaceFirst("\\.java$", "");
-        run("P03_Flood", "10.03 Flood · F10", () -> P03_FloodTest.main(new String[0]));
-        run("P04_SameGame", "10.04 SameGame · F10", () -> P04_SameGameTest.main(new String[0]));
-        run("P05_DragonCurve", "10.05 DragonCurve · F11", () -> P05_DragonCurveTest.main(new String[0]));
-        run("P06_EvilHangman", "10.06 EvilHangman · F12", () -> P06_EvilHangmanTest.main(new String[0]));
-        run("P07_WordChain", "10.07 WordChain · F12", () -> P07_WordChainTest.main(new String[0]));
-        run("P08_Hex", "10.08 Hex · F17", () -> P08_HexTest.main(new String[0]));
-        run("P09_SetStyleTripleHunt", "10.09 SetStyleTripleHunt · F17", () -> P09_SetStyleTripleHuntTest.main(new String[0]));
-        run("P10_Shikaku", "10.10 Shikaku · F20", () -> P10_ShikakuTest.main(new String[0]));
-        run("P11_GapHopper", "10.11 GapHopper · F22", () -> P11_GapHopperTest.main(new String[0]));
-        run("P12_FlipbookStudio", "10.12 FlipbookStudio · F22", () -> P12_FlipbookStudioTest.main(new String[0]));
-        run("P15_Hangman", "10.15 Hangman · F10", () -> P15_HangmanTest.main(new String[0]));
-        run("P16_WordSearch", "10.16 WordSearch · F11", () -> P16_WordSearchTest.main(new String[0]));
-        run("P17_TinyStepSequencer", "10.17 TinyStepSequencer · F23", () -> P17_TinyStepSequencerTest.main(new String[0]));
-        run("P18_CirclePacking", "10.18 CirclePacking · F23", () -> P18_CirclePackingTest.main(new String[0]));
-        run("P19_WireframeCube", "10.19 WireframeCube · F23", () -> P19_WireframeCubeTest.main(new String[0]));
-        run("P22_TruchetTileLab", "10.22 TruchetTileLab · F24", () -> P22_TruchetTileLabTest.main(new String[0]));
-        run("P23_MarkovMischief", "10.23 MarkovMischief · F24", () -> P23_MarkovMischiefTest.main(new String[0]));
-        run("P24_DungeonBlueprints", "10.24 DungeonBlueprints · F24", () -> P24_DungeonBlueprintsTest.main(new String[0]));
-        run("P27_PhotoRemixLab", "10.27 PhotoRemixLab · F24", () -> P27_PhotoRemixLabTest.main(new String[0]));
-        run("P30_Nonogram", "10.30 Nonogram · F17", () -> P30_NonogramTest.main(new String[0]));
-        if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " mission goals remaining.");
+        run("P03_Task_Flood", () -> P03_Task_FloodTest.main(new String[0]));
+        run("P04_Task_SameGame", () -> P04_Task_SameGameTest.main(new String[0]));
+        run("P05_Task_DragonCurve", () -> P05_Task_DragonCurveTest.main(new String[0]));
+        run("P06_Task_EvilHangman", () -> P06_Task_EvilHangmanTest.main(new String[0]));
+        run("P07_Task_WordChain", () -> P07_Task_WordChainTest.main(new String[0]));
+        run("P08_Task_Hex", () -> P08_Task_HexTest.main(new String[0]));
+        run("P09_Task_SetStyleTripleHunt", () -> P09_Task_SetStyleTripleHuntTest.main(new String[0]));
+        run("P10_Task_Shikaku", () -> P10_Task_ShikakuTest.main(new String[0]));
+        run("P11_Task_GapHopper", () -> P11_Task_GapHopperTest.main(new String[0]));
+        run("P12_Task_FlipbookStudio", () -> P12_Task_FlipbookStudioTest.main(new String[0]));
+        run("P15_Task_Hangman", () -> P15_Task_HangmanTest.main(new String[0]));
+        run("P16_Task_WordSearch", () -> P16_Task_WordSearchTest.main(new String[0]));
+        run("P17_Task_TinyStepSequencer", () -> P17_Task_TinyStepSequencerTest.main(new String[0]));
+        run("P18_Task_CirclePacking", () -> P18_Task_CirclePackingTest.main(new String[0]));
+        run("P19_Task_WireframeCube", () -> P19_Task_WireframeCubeTest.main(new String[0]));
+        run("P22_Task_TruchetTileLab", () -> P22_Task_TruchetTileLabTest.main(new String[0]));
+        run("P23_Task_MarkovMischief", () -> P23_Task_MarkovMischiefTest.main(new String[0]));
+        run("P24_Task_DungeonBlueprints", () -> P24_Task_DungeonBlueprintsTest.main(new String[0]));
+        run("P27_Task_PhotoRemixLab", () -> P27_Task_PhotoRemixLabTest.main(new String[0]));
+        run("P30_Task_Nonogram", () -> P30_Task_NonogramTest.main(new String[0]));
+        if (checked == 0) {
+            IO.println("Pro tento soubor zde není připravená herní kontrola: " + selected + ".java");
+            IO.println("Vyber jeden z těchto souborů: " + String.join(", ", available));
+            System.exit(2);
+        }
+        IO.println("Kontroly: " + checked + "; hotovo: " + (checked - failed) + "; zbývá: " + failed);
         if (failed > 0) System.exit(1);
     }
 
-    void run(String game, String label, Test test) {
+    void run(String game, Test test) {
+        available.add(game + ".java");
         if (!selected.isEmpty() && !selected.equals(game)) return;
         checked++;
         try {
             test.run();
-            IO.println("GREEN " + label);
+            IO.println("GREEN " + game + ".java");
         } catch (Throwable failure) {
             failed++;
-            IO.println("RED " + label + ": " + failure.getMessage());
+            IO.println("RED " + game + ".java");
+            String reason = failure.getMessage();
+            if (reason == null || reason.isBlank()) reason = "Kontrola nedostala očekávaný výsledek.";
+            if (!(failure instanceof AssertionError)) reason = "Program se při kontrole zastavil: " + failure.getClass().getSimpleName() + ": " + reason;
+            IO.println("  " + reason.replace("\n", "\n  "));
+            Throwable cause = failure;
+            while (cause.getCause() != null && cause.getCause() != cause) cause = cause.getCause();
+            if (cause != failure) IO.println("  " + cause.getClass().getSimpleName() + ": " + show(cause.getMessage()));
+            for (var frame : cause.getStackTrace()) {
+                if (frame.getClassName().equals(game) || frame.getClassName().startsWith(game + "$")) {
+                    IO.println("  " + "Místo v programu: " + frame.getFileName() + ":" + frame.getLineNumber());
+                    break;
+                }
+            }
         }
+    }
+
+    static String show(Object value) {
+        if (value != null && value.getClass().isArray()) {
+            int length = java.lang.reflect.Array.getLength(value);
+            var parts = new ArrayList<String>();
+            for (int i = 0; i < Math.min(length, 8); i++) parts.add(show(java.lang.reflect.Array.get(value, i)));
+            return parts + (length > 8 ? " … (" + length + " položek" + ")" : "");
+        }
+        String text = String.valueOf(value).replace("\n", "\\n").replace("\r", "\\r");
+        return text.length() <= 180 ? text : text.substring(0, 177) + "…";
     }
 }
 
 @SuppressWarnings("unchecked")
-class P03_FloodTest {
+class P03_Task_FloodTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("10.03 F10: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P03_Flood");
+        var game = Reflect.create("P03_Task_Flood");
         Reflect.set(game, "board", new int[8][8]);
         ((int[][]) Reflect.get(game, "board"))[7][7] = 1;
         Reflect.call(game, "fill", 2);
-        check(((int[][]) Reflect.get(game, "board"))[7][6] == 2, "the expanding queue must be processed beyond the first cell");
+        check(((int[][]) Reflect.get(game, "board"))[7][6] == 2, "spread musí pokračovat i přes nově objevené buňky; změnit barvu musí také spojená buňka u vzdáleného rohu.");
         int changed = 0;
         for (int[] row : ((int[][]) Reflect.get(game, "board"))) { for (int value : row) { if (value == 2) changed++; } }
-        check(changed == 63 && ((int[][]) Reflect.get(game, "board"))[7][7] == 1, "all and only the connected old colour must change");
-        check(((int) Reflect.get(game, "moves")) == 1, "one completed flood counts as one move");
+        check(changed == 63 && ((int[][]) Reflect.get(game, "board"))[7][7] == 1, "fill musí přebarvit všech 63 spojených buněk a zachovat jinak obarvený roh.");
+        check(((int) Reflect.get(game, "moves")) == 1, "Jeden dokončený fill musí zvýšit moves přesně o jedna.");
         Reflect.call(game, "spread", new ArrayList<>(), 0, 1);
-        check(((int[][]) Reflect.get(game, "board"))[7][7] == 1, "an empty work queue performs no iteration");
-        System.out.println("PASS " + checks + " checks");
+        check(((int[][]) Reflect.get(game, "board"))[7][7] == 1, "Volání spread s prázdným pracovním seznamem musí ponechat desku beze změny.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P04_SameGameTest {
+class P04_Task_SameGameTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("10.04 F10: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P04_SameGame");
+        var game = Reflect.create("P04_Task_SameGame");
         Reflect.set(game, "board", new int[5][5]);
         for (int[] row : ((int[][]) Reflect.get(game, "board"))) Arrays.fill(row, 1);
-        check(((java.util.List<int[]>) Reflect.call(game, "group", 0, 0)).size() == 25, "the queue loop must discover the full connected group");
-        check(((java.util.List<int[]>) Reflect.call(game, "group", -1, 0)).isEmpty(), "an invalid start is rejected before queue access");
+        check(((java.util.List<int[]>) Reflect.call(game, "group", 0, 0)).size() == 25, "group(0, 0) musí na této jednobarevné desce najít všech 25 spojených buněk.");
+        check(((java.util.List<int[]>) Reflect.call(game, "group", -1, 0)).isEmpty(), "group(-1, 0) musí vrátit prázdnou skupinu bez přístupu na neplatnou buňku.");
         Reflect.set(game, "outcome", "");
         Reflect.call(game, "command", "1 1");
-        check(((java.lang.String) Reflect.get(game, "outcome")).startsWith("Board clear") && ((int) Reflect.get(game, "score")) == 600, "the actual complete group can be removed to win");
-        System.out.println("PASS " + checks + " checks");
+        check(((java.lang.String) Reflect.get(game, "outcome")).startsWith("Board clear") && ((int) Reflect.get(game, "score")) == 600, "Odebrání celé skupiny 25 buněk musí vyčistit desku a přiznat 600 bodů.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P05_DragonCurveTest {
+class P05_Task_DragonCurveTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("10.05 F11: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P05_DragonCurve");
-        check(((java.util.List<java.lang.Integer>) Reflect.call(game, "foldTurns", 1)).equals(List.of(1)), "one requested fold must run the outer loop once");
-        check(((java.util.List<java.lang.Integer>) Reflect.call(game, "foldTurns", 0)).isEmpty(), "zero folds must run zero times");
-        check(((java.util.List<java.lang.Integer>) Reflect.call(game, "foldTurns", 2)).equals(List.of(1,1,-1)), "two folds use two outer passes");
-        check(((java.util.List<java.awt.Point>) Reflect.call(game, "path", 3)).size() == 9, "the actual three-fold path has eight segments and nine points");
-        System.out.println("PASS " + checks + " checks");
+        var game = Reflect.create("P05_Task_DragonCurve");
+        check(((java.util.List<java.lang.Integer>) Reflect.call(game, "foldTurns", 1)).equals(List.of(1)), "foldTurns(1) musí provést jeden přehyb a vrátit [1].");
+        check(((java.util.List<java.lang.Integer>) Reflect.call(game, "foldTurns", 0)).isEmpty(), "foldTurns(0) nesmí provést žádný přehyb a musí vrátit prázdný seznam.");
+        check(((java.util.List<java.lang.Integer>) Reflect.call(game, "foldTurns", 2)).equals(List.of(1,1,-1)), "foldTurns(2) musí provést dva přehyby a vrátit [1, 1, -1].");
+        check(((java.util.List<java.awt.Point>) Reflect.call(game, "path", 3)).size() == 9, "path(3) musí po třech přehybech vytvořit devět bodů spojených osmi úseky.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P06_EvilHangmanTest {
+class P06_Task_EvilHangmanTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("10.06 F12: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P06_EvilHangman");
-        check(((int) Reflect.call(game, "familySize", List.of("ALLY","COOL","GOOD"))) == 3, "the family count must accumulate across all words");
-        check(((int) Reflect.call(game, "familySize", List.of())) == 0 && ((int) Reflect.call(game, "familySize", List.of("ALLY"))) == 1, "zero and one member are counted correctly");
+        var game = Reflect.create("P06_Task_EvilHangman");
+        check(((int) Reflect.call(game, "familySize", List.of("ALLY","COOL","GOOD"))) == 3, "familySize musí započítat všechna tři slova ALLY, COOL a GOOD, ne jen poslední slovo.");
+        check(((int) Reflect.call(game, "familySize", List.of())) == 0 && ((int) Reflect.call(game, "familySize", List.of("ALLY"))) == 1, "familySize musí vrátit 0 pro prázdnou rodinu a 1 pro rodinu s jedním slovem.");
         Reflect.call(game, "reset");
         Reflect.set(game, "pool", new ArrayList<>(List.of("ALLY","COOL","GOOD","BETA")));
         Reflect.call(game, "command", "E");
-        check(((java.util.List<java.lang.String>) Reflect.get(game, "pool")).size() == 3 && ((java.lang.String) Reflect.get(game, "mask")).equals("____"), "the actual adversary must keep the largest consistent family");
-        System.out.println("PASS " + checks + " checks");
+        check(((java.util.List<java.lang.String>) Reflect.get(game, "pool")).size() == 3 && ((java.lang.String) Reflect.get(game, "mask")).equals("____"), "Po zkoušeném tipu musí protivník zachovat největší rodinu tří slov s maskou ____.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P07_WordChainTest {
+class P07_Task_WordChainTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("10.07 F12: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P07_WordChain");
+        var game = Reflect.create("P07_Task_WordChain");
         Reflect.call(game, "reset");
-        check(((java.util.List<java.lang.String>) Reflect.call(game, "choices")).size() == 20, "the accumulated choices must retain all initially legal words");
+        check(((java.util.List<java.lang.String>) Reflect.call(game, "choices")).size() == 20, "choices musí zachovat všech 20 původně povolených slov v pořadí slovníku.");
         Reflect.set(game, "last", "APPLE");
-        check(((java.util.List<java.lang.String>) Reflect.call(game, "choices")).equals(List.of("EARTH","EAGLE","ELEPHANT","ECHO","ENGINE")), "all five E continuations survive the loop");
+        check(((java.util.List<java.lang.String>) Reflect.call(game, "choices")).equals(List.of("EARTH","EAGLE","ELEPHANT","ECHO","ENGINE")), "Po slovu končícím na E musí choices obsahovat EARTH, EAGLE, ELEPHANT, ECHO a ENGINE v tomto pořadí.");
         ((java.util.Set<java.lang.String>) Reflect.get(game, "used")).add("EARTH");
-        check(!((java.util.List<java.lang.String>) Reflect.call(game, "choices")).contains("EARTH") && ((java.util.List<java.lang.String>) Reflect.call(game, "choices")).size() == 4, "used words are excluded without losing other choices");
+        check(!((java.util.List<java.lang.String>) Reflect.call(game, "choices")).contains("EARTH") && ((java.util.List<java.lang.String>) Reflect.call(game, "choices")).size() == 4, "Po použití EARTH je choices musí vynechat a zachovat ostatní čtyři pokračování na E.");
         Reflect.call(game, "reset");
         Reflect.call(game, "command", "APPLE");
-        check(((java.lang.String) Reflect.get(game, "last")).equals("APPLE"), "the actual game accepts an early legal word, not only the final dictionary entry");
-        System.out.println("PASS " + checks + " checks");
+        check(((java.lang.String) Reflect.get(game, "last")).equals("APPLE"), "Skutečný command musí přijmout povolené APPLE, i když nejde o poslední slovo ve slovníku.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P08_HexTest {
+class P08_Task_HexTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -190,30 +216,29 @@ class P08_HexTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Očekáváno: " + Check.show(expected)
+                + "\n    Zjištěno: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P08_Hex");
+        var g = Reflect.create("P08_Task_Hex");
         Reflect.call(g, "reset");
         for (int r = 0; r < 5; r++) {
             ((int[][]) Reflect.get(g, "board"))[r][4 - r] = 1;
         }
-        expect(((boolean) Reflect.call(g, "connected", 1)), "10.08/F17: hex diagonal is a connected path");
+        expect(((boolean) Reflect.call(g, "connected", 1)), "connected(1) musí poznat připravený šikmý řetězec jako úplnou cestu v hexové síti. Ověř všech šest směrů sousedství.");
         ((int[][]) Reflect.get(g, "board"))[2][2] = 0;
-        expect(!((boolean) Reflect.call(g, "connected", 1)), "10.08/F17: gap breaks the path");
+        expect(!((boolean) Reflect.call(g, "connected", 1)), "Odebrání buňky z tohoto řetězce musí přerušit spojení hráče 1.");
         Reflect.call(g, "reset");
         for (int c = 0; c < 5; c++) {
             ((int[][]) Reflect.get(g, "board"))[2][c] = 2;
         }
-        expect(((boolean) Reflect.call(g, "connected", 2)), "10.08/F17: player two connects left to right");
-        expect(!((boolean) Reflect.call(g, "connected", 1)), "10.08/F17: opposing pieces are not traversed");
-        System.out.println("PASS " + checks + " checks");
+        expect(((boolean) Reflect.call(g, "connected", 2)), "connected(2) musí poznat cestu hráče 2 od levého okraje k pravému.");
+        expect(!((boolean) Reflect.call(g, "connected", 1)), "Cesta hráče 1 nesmí procházet buňkami obsazenými hráčem 2.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P09_SetStyleTripleHuntTest {
+class P09_Task_SetStyleTripleHuntTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -223,24 +248,23 @@ class P09_SetStyleTripleHuntTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Očekáváno: " + Check.show(expected)
+                + "\n    Zjištěno: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P09_SetStyleTripleHunt");
+        var g = Reflect.create("P09_Task_SetStyleTripleHunt");
         Reflect.set(g, "table", new java.util.ArrayList<>(java.util.List.of(0, 1, 2)));
-        expect(((boolean) Reflect.call(g, "hasSet")), "10.09/F17: the last card can complete the only triple");
+        expect(((boolean) Reflect.call(g, "hasSet")), "hasSet musí najít jedinou platnou trojici, i když obsahuje poslední kartu na stole.");
         Reflect.set(g, "table", new java.util.ArrayList<>(java.util.List.of(0, 1, 3)));
-        expect(!((boolean) Reflect.call(g, "hasSet")), "10.09/F17: near miss is not a triple");
+        expect(!((boolean) Reflect.call(g, "hasSet")), "hasSet musí pro tuto skoro shodnou trojici vrátit false: ne každé tři karty splňují pravidlo vlastností.");
         Reflect.set(g, "table", new java.util.ArrayList<>(java.util.List.of(0, 1)));
-        expect(!((boolean) Reflect.call(g, "hasSet")), "10.09/F17: fewer than three cards cannot work");
-        expect(((boolean) Reflect.call(g, "triple", 0, 1, 2)), "10.09/F17: supplied attribute rule still used");
-        System.out.println("PASS " + checks + " checks");
+        expect(!((boolean) Reflect.call(g, "hasSet")), "hasSet musí vrátit false, když jsou dostupné méně než tři karty.");
+        expect(((boolean) Reflect.call(g, "triple", 0, 1, 2)), "Připravené pravidlo triple(0, 1, 2) musí nadále poznat platnou kombinaci vlastností.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P10_ShikakuTest {
+class P10_Task_ShikakuTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -250,42 +274,41 @@ class P10_ShikakuTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Očekáváno: " + Check.show(expected)
+                + "\n    Zjištěno: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P10_Shikaku");
+        var g = Reflect.create("P10_Task_Shikaku");
         Reflect.call(g, "restart");
-        expect(((boolean) Reflect.call(g, "add", 0, 0, 1, 2)), "10.10/F20: valid rectangle added");
+        expect(((boolean) Reflect.call(g, "add", 0, 0, 1, 2)), "add(0, 0, 1, 2) musí nadále přijmout připravený platný obdélník.");
         Reflect.set(g, "startX", 2);
         Reflect.set(g, "message", "Rejected: earlier drag");
         Reflect.call(g, "undo");
-        equal(0, ((java.util.ArrayList<Object>) Reflect.get(g, "boxes")).size(), "10.10/F20: undo restores an independent list");
-        equal("Previous layout restored", ((java.lang.String) Reflect.get(g, "message")), "10.10/F20: undo feedback describes the restored board");
-        equal(-1, ((int) Reflect.get(g, "startX")), "10.10/F20: undo leaves no unfinished drag outline");
+        equal(0, ((java.util.ArrayList<Object>) Reflect.get(g, "boxes")).size(), "Undo po přidání prvního obdélníku musí obnovit prázdný seznam. Uložený seznam nesmí sdílet pozdější změny členství.");
+        equal("Previous layout restored", ((java.lang.String) Reflect.get(g, "message")), "Undo musí po obnovení předchozího rozložení oznámit Previous layout restored.");
+        equal(-1, ((int) Reflect.get(g, "startX")), "Undo musí vedle obnovení obdélníků zrušit i nedokončený výběr tažením.");
         Reflect.call(g, "add", 0, 0, 1, 2);
         Reflect.call(g, "remove", 0, 0);
         Reflect.call(g, "undo");
-        equal(1, ((java.util.ArrayList<Object>) Reflect.get(g, "boxes")).size(), "10.10/F20: removed rectangle can be restored");
+        equal(1, ((java.util.ArrayList<Object>) Reflect.get(g, "boxes")).size(), "Undo po odebrání obdélníku musí tento obdélník obnovit.");
         var copy = ((java.util.ArrayList<Object>) Reflect.call(g, "snapshot"));
         copy.clear();
-        equal(1, ((java.util.ArrayList<Object>) Reflect.get(g, "boxes")).size(), "10.10/F20: list edits are not shared");
-        expect(copy != ((java.util.ArrayList<Object>) Reflect.get(g, "boxes")), "10.10/F20: snapshot is a distinct mutable collection");
-        System.out.println("PASS " + checks + " checks");
+        equal(1, ((java.util.ArrayList<Object>) Reflect.get(g, "boxes")).size(), "Vymazání seznamu vráceného snapshot nesmí vymazat živý seznam obdélníků.");
+        expect(copy != ((java.util.ArrayList<Object>) Reflect.get(g, "boxes")), "snapshot musí vrátit samostatný měnitelný seznam místo dalšího odkazu na boxes.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P11_GapHopperTest {
+class P11_Task_GapHopperTest {
     static int checks;
     static final String[] CASES = {
-        "Prošlý object (objekt) zmizí a jeho následník zůstane.",
-        "Nová překážka vznikne za poslední; neprošlé překážky se neobnovují.",
-        "Prázdný List (seznam) je bezpečný."
+        "recyclePipes musí odebrat první vyřazenou trubku a zachovat následující existující trubku.",
+        "recyclePipes musí přidat novou trubku za nynější poslední s vynulovaným příznakem bodování; dosud nevyřazené trubky zůstanou.",
+        "recyclePipes musí přijmout prázdný seznam trubek bez přidávání překážek nebo chyby."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 10.11: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Kontrolovaný případ / výsledek: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -294,7 +317,7 @@ class P11_GapHopperTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -304,7 +327,7 @@ class P11_GapHopperTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -321,7 +344,7 @@ class P11_GapHopperTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P11_GapHopper");
+            var p = Reflect.create("P11_Task_GapHopper");
             Reflect.call(p, "restart"); var old = ((java.util.List<Object>) Reflect.get(p, "pipes")).getFirst(); var next = ((java.util.List<Object>) Reflect.get(p, "pipes")).getLast();
             Reflect.set(old, "x", -60); Reflect.set(next, "x", 200); Reflect.call(p, "recyclePipes");
             check(((java.util.List<Object>) Reflect.get(p, "pipes")).size()==2 && ((java.util.List<Object>) Reflect.get(p, "pipes")).getFirst()==next && !((java.util.List<Object>) Reflect.get(p, "pipes")).contains(old),0,((java.util.List<Object>) Reflect.get(p, "pipes")).size());
@@ -331,23 +354,22 @@ class P11_GapHopperTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 10.11: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("Program se při ověřování pravidla zastavil. Podrobnosti výjimky jsou níže.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P12_FlipbookStudioTest {
+class P12_Task_FlipbookStudioTest {
     static int checks;
     static final String[] CASES = {
-        "Dvě undo obnoví poslední dvě barvy v opačném pořadí.",
-        "Undo s prázdnou historií vrátí false.",
-        "Undo míří na uložený snímek; restart historii smaže."
+        "Dvě volání undo musejí obnovit dvě poslední původní barvy v opačném pořadí úprav a každou úpravu odebrat z historie.",
+        "undo musí při prázdné historii vrátit false bez změny snímku.",
+        "undo musí obnovit snímek a souřadnice uvedené v úpravě; restart musí vymazat původní historii."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 10.12: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Kontrolovaný případ / výsledek: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -356,7 +378,7 @@ class P12_FlipbookStudioTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -366,7 +388,7 @@ class P12_FlipbookStudioTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -383,7 +405,7 @@ class P12_FlipbookStudioTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P12_FlipbookStudio");
+            var p = Reflect.create("P12_Task_FlipbookStudio");
             Reflect.call(p, "restart");Reflect.call(p, "paintCell", 2, 3, 1);Reflect.call(p, "paintCell", 2, 3, 4);
             check(((boolean) Reflect.call(p, "undo")) && ((int[][][]) Reflect.get(p, "frames"))[0][3][2]==1 && ((java.util.List<Object>) Reflect.get(p, "history")).size()==1,0,((int[][][]) Reflect.get(p, "frames"))[0][3][2]);
             check(((boolean) Reflect.call(p, "undo")) && ((int[][][]) Reflect.get(p, "frames"))[0][3][2]==0 && ((java.util.List<Object>) Reflect.get(p, "history")).isEmpty(),0,((int[][][]) Reflect.get(p, "frames"))[0][3][2]);
@@ -393,29 +415,28 @@ class P12_FlipbookStudioTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 10.12: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("Program se při ověřování pravidla zastavil. Podrobnosti výjimky jsou níže.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P15_HangmanTest {
+class P15_Task_HangmanTest {
     static int checks;
 
     static void expect(boolean correct, String message) {
         checks++;
-        if (!correct) throw new AssertionError("10.15/F10: " + message);
+        if (!correct) throw new AssertionError(message);
     }
 
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-                + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-                + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Očekáváno: " + Check.show(expected)
+                + "\n    Zjištěno: " + Check.show(actual));
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P15_Hangman");
+        var game = Reflect.create("P15_Task_Hangman");
         String[][] samples = {{"BANANA", "", "A"}, {"BANANA", "A", "B"}, {"IDEA", "", "I"}, {"AUDIO", "A", "U"},
                 {"BYE", "Y", "E"}, {"RHYTHM", "H", "R"}, {"METER", "E", "M"},
                 {"EYE", "E", "Y"}, {"ALPHA", "ALPH", ""}, {"", "", ""}};
@@ -423,56 +444,55 @@ class P15_HangmanTest {
             Reflect.set(game, "word", sample[0]);
             Reflect.set(game, "tried", sample[1]);
             Reflect.set(game, "misses", 3);
-            equal(sample[2], Reflect.call(game, "hintLetter"), "advice for " + Arrays.toString(sample));
-            equal(sample[2], Reflect.call(game, "hintLetter"), "repeated advice is stable");
-            equal(sample[0], Reflect.get(game, "word"), "advice preserves the secret");
-            equal(sample[1], Reflect.get(game, "tried"), "advice is not a guess");
-            equal(3, Reflect.get(game, "misses"), "advice costs no miss");
+            equal(sample[2], Reflect.call(game, "hintLetter"), "hintLetter musí upřednostnit první skrytou samohlásku, jinak první skryté písmeno. Případ [slovo, zkoušená písmena, rada]: " + Arrays.toString(sample));
+            equal(sample[2], Reflect.call(game, "hintLetter"), "Opakované hintLetter bez tahu musí vrátit stejnou radu.");
+            equal(sample[0], Reflect.get(game, "word"), "Dotaz hintLetter nesmí změnit tajné slovo.");
+            equal(sample[1], Reflect.get(game, "tried"), "Dotaz hintLetter nesmí přidat písmeno do tried; rada není tip.");
+            equal(3, Reflect.get(game, "misses"), "Dotaz hintLetter musí zachovat počet chybných tipů, který je zde 3.");
         }
         Reflect.set(game, "word", "BANANA");
         Reflect.set(game, "tried", "A");
-        equal("_A_A_A", Reflect.call(game, "mask"), "ordinary word display remains available");
-        System.out.println("PASS " + checks + " checks");
+        equal("_A_A_A", Reflect.call(game, "mask"), "Běžná mask musí nadále ukázat _A_A_A pro BANANA po vyzkoušení A.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P16_WordSearchTest {
+class P16_Task_WordSearchTest {
     static int checks;
 
     static void expect(boolean correct, String message) {
         checks++;
-        if (!correct) throw new AssertionError("10.16/F11: " + message);
+        if (!correct) throw new AssertionError(message);
     }
 
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-                + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-                + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Očekáváno: " + Check.show(expected)
+                + "\n    Zjištěno: " + Check.show(actual));
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P16_WordSearch");
+        var game = Reflect.create("P16_Task_WordSearch");
         for (String[] sample : new String[][]{{"TAC", "CAT"}, {"GOD", "DOG"}, {"REGIT", "TIGER"},
                 {"CAT", "CAT"}, {"CAX", "CAX"}, {"", ""}}) {
-            equal(sample[1], Reflect.call(game, "targetName", sample[0]), "target identity for " + sample[0]);
+            equal(sample[1], Reflect.call(game, "targetName", sample[0]), "targetName musí vrátit stejné jméno cíle pro oba směry čtení a zachovat nesouvisející text. Vybraný text: " + sample[0]);
         }
-        equal("TAC", Reflect.call(game, "read", 0, 2, 0, 0), "the raw path still preserves selection order");
+        equal("TAC", Reflect.call(game, "read", 0, 2, 0, 0), "read musí zachovat zvolený směr: čtení CAT pozpátku vytvoří TAC.");
         Reflect.call(game, "reset");
         Reflect.call(game, "command", "1 3 1 1");
-        equal(Set.of("CAT"), Reflect.get(game, "found"), "reverse selection finds the canonical target");
+        equal(Set.of("CAT"), Reflect.get(game, "found"), "Obrácený výběr TAC musí uložit cíl CAT, nikoli nový cíl nazvaný TAC.");
         boolean rejected = false;
         try {
             Reflect.call(game, "command", "1 1 1 3");
         } catch (IllegalArgumentException expected) {
             rejected = true;
         }
-        expect(rejected, "the same word cannot be found again in its other direction");
-        equal(Set.of("CAT"), Reflect.get(game, "found"), "a duplicate changes no finds");
+        expect(rejected, "Opětovný nález CAT z druhého konce se musí odmítnout jako opakování.");
+        equal(Set.of("CAT"), Reflect.get(game, "found"), "Odmítnuté opakování musí ponechat ve found pouze CAT.");
         Reflect.call(game, "command", "2 4 2 2");
         Reflect.call(game, "command", "3 5 3 1");
-        equal(Set.of("CAT", "DOG", "TIGER"), Reflect.get(game, "found"), "all reverse targets are playable");
-        equal("All words found!", Reflect.get(game, "outcome"), "real round ends after three distinct finds");
+        equal(Set.of("CAT", "DOG", "TIGER"), Reflect.get(game, "found"), "Obrácený výběr každého cíle musí najít CAT, DOG a TIGER právě jednou.");
+        equal("All words found!", Reflect.get(game, "outcome"), "Po nálezu tří různých cílů musí skutečné kolo oznámit All words found!");
         Reflect.call(game, "reset");
         rejected = false;
         try {
@@ -480,7 +500,7 @@ class P16_WordSearchTest {
         } catch (IllegalArgumentException expected) {
             rejected = true;
         }
-        expect(rejected, "reversing does not make an unrelated path a target");
+        expect(rejected, "Obrácení nesouvisející cesty z ní nesmí udělat platný cíl.");
         for (String invalid : new String[]{"1 1 2 3", "0 1 1 3", "1 1 1 1"}) {
             rejected = false;
             try {
@@ -488,24 +508,23 @@ class P16_WordSearchTest {
             } catch (IllegalArgumentException expected) {
                 rejected = true;
             }
-            expect(rejected, "straight in-bounds multi-cell selection is still required: " + invalid);
-            equal(Set.of(), Reflect.get(game, "found"), "invalid selections do not invent a find");
+            expect(rejected, "Výběr musí zůstat přímý, uvnitř desky a delší než jedna buňka. Odmítaný vstup: " + invalid);
+            equal(Set.of(), Reflect.get(game, "found"), "Odmítnuté výběry musejí ponechat found prázdné místo vytvoření domnělého slova.");
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P17_TinyStepSequencerTest {
+class P17_Task_TinyStepSequencerTest {
     static int checks;
     static final String[] CASES = {
-        "Dvě přepnutí obnoví stejný Set (množinu) aktivních not.",
-        "Nová nota se objeví právě jednou.",
-        "Neplatná cell (buňka) zachová členství; prázdný Set (množina) vytvoří tiché zvukové vzorky."
+        "Dvojí přepnutí jedné noty musí obnovit původní aktivní noty a zachovat ostatní.",
+        "Přepnutí neaktivní platné buňky musí přidat právě jednu odpovídající Note a oznámit úspěch.",
+        "Neplatné souřadnice noty se musejí odmítnout beze změny notes; prázdná množina not musí vytvořit ticho."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 10.17: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Kontrolovaný případ / výsledek: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -514,7 +533,7 @@ class P17_TinyStepSequencerTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -524,7 +543,7 @@ class P17_TinyStepSequencerTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -541,33 +560,32 @@ class P17_TinyStepSequencerTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P17_TinyStepSequencer");
+            var p = Reflect.create("P17_Task_TinyStepSequencer");
             Reflect.call(p, "reset");var original=Set.copyOf(((java.util.Set<Object>) Reflect.get(p, "notes")));Reflect.call(p, "toggle", 0, 1);Reflect.call(p, "toggle", 0, 1);
             check(((java.util.Set<Object>) Reflect.get(p, "notes")).equals(original),0,((java.util.Set<Object>) Reflect.get(p, "notes")));
-            ((java.util.Set<Object>) Reflect.get(p, "notes")).clear();check(((boolean) Reflect.call(p, "toggle", 2, 4))&&((java.util.Set<Object>) Reflect.get(p, "notes")).contains(Reflect.create("P17_TinyStepSequencer$Note", 2, 4)),1,((java.util.Set<Object>) Reflect.get(p, "notes")));
+            ((java.util.Set<Object>) Reflect.get(p, "notes")).clear();check(((boolean) Reflect.call(p, "toggle", 2, 4))&&((java.util.Set<Object>) Reflect.get(p, "notes")).contains(Reflect.create("P17_Task_TinyStepSequencer$Note", 2, 4)),1,((java.util.Set<Object>) Reflect.get(p, "notes")));
             check(((boolean) Reflect.call(p, "toggle", 2, 4))&&((java.util.Set<Object>) Reflect.get(p, "notes")).isEmpty(),0,((java.util.Set<Object>) Reflect.get(p, "notes")));
             check(!((boolean) Reflect.call(p, "toggle", -1, 0))&&!((boolean) Reflect.call(p, "toggle", 4, 0))&&!((boolean) Reflect.call(p, "toggle", 0, 8))&&((java.util.Set<Object>) Reflect.get(p, "notes")).isEmpty(),2,((java.util.Set<Object>) Reflect.get(p, "notes")));
             check(Arrays.stream(((double[]) Reflect.call(p, "sequence", 1))).allMatch(v->v==0),2,"silence");
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 10.17: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("Program se při ověřování pravidla zastavil. Podrobnosti výjimky jsou níže.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P18_CirclePackingTest {
+class P18_Task_CirclePackingTest {
     static int checks;
     static final String[] CASES = {
-        "První střed se uloží a přijme.",
-        "Stejný střed se odmítne; prohozené coordinate (souřadnice) jsou jiná hodnota.",
-        "Skutečná zahrada dál umístí osm různých bublin."
+        "claimCentre musí přijmout nový střed a zapamatovat si jej pro další pokusy.",
+        "claimCentre musí odmítnout opakovaný střed, ale při různých x a y rozlišovat středy (x, y) a (y, x).",
+        "Skutečný pack musí nadále umět umístit osm různých kruhů. Ověř přijímání nových středů."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 10.18: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Kontrolovaný případ / výsledek: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -576,7 +594,7 @@ class P18_CirclePackingTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -586,7 +604,7 @@ class P18_CirclePackingTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -603,33 +621,32 @@ class P18_CirclePackingTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P18_CirclePacking");
+            var p = Reflect.create("P18_Task_CirclePacking");
             Set<Object> seen=new HashSet<>();
             check(((boolean) Reflect.call(p, "claimCentre", seen, 4, 7))&&seen.size()==1,0,seen);
             check(!((boolean) Reflect.call(p, "claimCentre", seen, 4, 7))&&seen.size()==1,1,seen);
             check(((boolean) Reflect.call(p, "claimCentre", seen, 7, 4))&&seen.size()==2,1,seen);
             var bubbles=((java.util.List<Object>) Reflect.call(p, "pack", 42, 8));check(bubbles.size()==8,2,bubbles.size());
-            check(bubbles.stream().map(b->Reflect.create("P18_CirclePacking$Centre", (int)((double) Reflect.call(b, "x")), (int)((double) Reflect.call(b, "y")))).distinct().count()==8,2,bubbles);
+            check(bubbles.stream().map(b->Reflect.create("P18_Task_CirclePacking$Centre", (int)((double) Reflect.call(b, "x")), (int)((double) Reflect.call(b, "y")))).distinct().count()==8,2,bubbles);
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 10.18: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("Program se při ověřování pravidla zastavil. Podrobnosti výjimky jsou níže.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P19_WireframeCubeTest {
+class P19_Task_WireframeCubeTest {
     static int checks;
     static final String[] CASES = {
-        "Stejné a obrácené dvojice se sloučí na dvě různé hrany.",
-        "Zbývající edge key (klíče hran) mají pořadí menší/větší.",
-        "Neplatná data, smyčky i prázdný vstup jsou bezpečné; skutečná krychle má dvanáct hran."
+        "uniqueEdges musí sloučit opakované i obrácené dvojice konců a v tomto příkladu zachovat dvě různé hrany.",
+        "Každá vrácená Edge musí mít menší konec první a zachované hrany musejí dodržet pořadí prvního výskytu.",
+        "uniqueEdges musí vynechat neplatné a stejné konce, přijmout prázdný vstup a zachovat všech dvanáct skutečných hran krychle."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 10.19: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Kontrolovaný případ / výsledek: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -638,7 +655,7 @@ class P19_WireframeCubeTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -648,7 +665,7 @@ class P19_WireframeCubeTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -665,33 +682,32 @@ class P19_WireframeCubeTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P19_WireframeCube");
+            var p = Reflect.create("P19_Task_WireframeCube");
             var edges=((java.util.Set<Object>) Reflect.call(p, "uniqueEdges", (Object) new int[][]{{0,1},{1,0},{0,1},{1,2}}));
             check(edges.size()==2,0,edges);
-            check(edges.contains(Reflect.create("P19_WireframeCube$Edge", 0, 1))&&edges.contains(Reflect.create("P19_WireframeCube$Edge", 1, 2)),1,edges);
+            check(edges.contains(Reflect.create("P19_Task_WireframeCube$Edge", 0, 1))&&edges.contains(Reflect.create("P19_Task_WireframeCube$Edge", 1, 2)),1,edges);
             check(((java.util.Set<Object>) Reflect.call(p, "uniqueEdges", (Object) new int[][]{{-1,0},{0,8},{2,2}})).isEmpty(),2,"invalid");
             check(((java.util.Set<Object>) Reflect.call(p, "uniqueEdges", (Object) new int[0][2])).isEmpty(),2,"empty");
             check(((java.util.Set<Object>) Reflect.call(p, "uniqueEdges", (Object) ((int[][]) Reflect.get(p, "edges")))).size()==12,0,((java.util.Set<Object>) Reflect.call(p, "uniqueEdges", (Object) ((int[][]) Reflect.get(p, "edges")))).size());
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 10.19: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("Program se při ověřování pravidla zastavil. Podrobnosti výjimky jsou níže.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P22_TruchetTileLabTest {
+class P22_Task_TruchetTileLabTest {
     static int checks;
     static final String[] CASES = {
-        "První přijatá orientace se vrátí a započte.",
-        "Preference s náskokem dvou se přesměruje na druhou orientaci.",
-        "Skutečné oblouky používají zvolenou orientaci; neznámý vstup nic nemění."
+        "chooseOrientation musí vrátit první platnou preferenci a zvýšit počet pouze této orientace.",
+        "Když preferovaná orientace už vede alespoň o dva, musí chooseOrientation vybrat a započítat druhou orientaci.",
+        "Vykreslené dílky musejí použít vrácenou orientaci a neznámá preference se musí odmítnout beze změny obou počtů."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 10.22: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Kontrolovaný případ / výsledek: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -700,7 +716,7 @@ class P22_TruchetTileLabTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -710,7 +726,7 @@ class P22_TruchetTileLabTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -726,7 +742,7 @@ class P22_TruchetTileLabTest {
         return image;
     }
     public static void main(String[] args) throws Exception {
-        var p = Reflect.create("P22_TruchetTileLab");
+        var p = Reflect.create("P22_Task_TruchetTileLab");
         var counts = (Map<String, Integer>) Reflect.get(p, "orientationCounts");
         check(Reflect.call(p, "chooseOrientation", "LEFT").equals("LEFT") && counts.equals(Map.of("LEFT", 1)), 0, counts);
         Reflect.call(p, "chooseOrientation", "LEFT");
@@ -738,21 +754,20 @@ class P22_TruchetTileLabTest {
         boolean rejected = false;
         try { Reflect.call(p, "chooseOrientation", "UP"); } catch (IllegalArgumentException invalid) { rejected = true; }
         check(rejected && counts.equals(before), 2, counts);
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P23_MarkovMischiefTest {
+class P23_Task_MarkovMischiefTest {
     static int checks;
     static final String[] CASES = {
-        "Opakované moon zachová cat, dog, cat v tomto pořadí.",
-        "Existující List (seznamy) následníků přežijí další výskyty.",
-        "Jediné slovo má prázdný List a prázdný text se odmítne."
+        "Po učení z moon cat moon dog moon cat musejí být pokračování moon [cat, dog, cat] v tomto pořadí.",
+        "train musí při dalším výskytu slova zachovat jeho dřívější pokračování včetně opakovaných.",
+        "Text tvořený jedním slovem musí pro toto slovo vytvořit prázdný seznam pokračování; prázdný text se musí odmítnout."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 10.23: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Kontrolovaný případ / výsledek: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -761,7 +776,7 @@ class P23_MarkovMischiefTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -771,7 +786,7 @@ class P23_MarkovMischiefTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -788,7 +803,7 @@ class P23_MarkovMischiefTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P23_MarkovMischief");
+            var p = Reflect.create("P23_Task_MarkovMischief");
             var links=((java.util.Map<java.lang.String, java.util.List<java.lang.String>>) Reflect.call(p, "train", "moon cat moon dog moon cat"));
             check(links.get("moon").equals(List.of("cat","dog","cat")),0,links);
             check(links.containsKey("cat")&&links.get("cat").equals(List.of("moon")),1,links);
@@ -797,23 +812,22 @@ class P23_MarkovMischiefTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 10.23: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("Program se při ověřování pravidla zastavil. Podrobnosti výjimky jsou níže.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P24_DungeonBlueprintsTest {
+class P24_Task_DungeonBlueprintsTest {
     static int checks;
     static final String[] CASES = {
-        "Plocha 42 patří do SMALL; první tři místnosti se přijmou.",
-        "Plné limity SMALL/LARGE odmítají beze změny Map.",
-        "Skutečně vytvořené místnosti dodržují oba limity kategorií."
+        "admitRoom musí plochu 42 zařadit jako SMALL a přijmout první tři místnosti SMALL.",
+        "admitRoom musí odmítnout čtvrtou SMALL nebo třetí LARGE místnost beze změny počtu v obou kategoriích.",
+        "Vytvořený dungeon musí obsahovat pouze přijaté místnosti a dodržet kvóty obou kategorií."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 10.24: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Kontrolovaný případ / výsledek: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -822,7 +836,7 @@ class P24_DungeonBlueprintsTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -832,7 +846,7 @@ class P24_DungeonBlueprintsTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "vstup byl přijat");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -848,10 +862,10 @@ class P24_DungeonBlueprintsTest {
         return image;
     }
     public static void main(String[] args) throws Exception {
-        var p = Reflect.create("P24_DungeonBlueprints");
+        var p = Reflect.create("P24_Task_DungeonBlueprints");
         var counts = (Map<String, Integer>) Reflect.get(p, "roomCounts");
-        Object small = Reflect.create("P24_DungeonBlueprints$Room", 1, 1, 6, 7);
-        Object large = Reflect.create("P24_DungeonBlueprints$Room", 1, 1, 7, 7);
+        Object small = Reflect.create("P24_Task_DungeonBlueprints$Room", 1, 1, 6, 7);
+        Object large = Reflect.create("P24_Task_DungeonBlueprints$Room", 1, 1, 7, 7);
         check((boolean) Reflect.call(p, "admitRoom", small), 0, counts);
         check((boolean) Reflect.call(p, "admitRoom", small) && (boolean) Reflect.call(p, "admitRoom", small), 0, counts);
         check(!(boolean) Reflect.call(p, "admitRoom", small) && counts.get("SMALL") == 3, 1, counts);
@@ -861,39 +875,39 @@ class P24_DungeonBlueprintsTest {
         Reflect.call(p, "generate", 42, 8);
         int total = counts.values().stream().mapToInt(Integer::intValue).sum();
         check(total > 0 && total <= 5 && counts.getOrDefault("SMALL", 0) <= 3 && counts.getOrDefault("LARGE", 0) <= 2, 2, counts);
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P27_PhotoRemixLabTest {
+class P27_Task_PhotoRemixLabTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
         if (!correct) throw new AssertionError(message);
     }
     static void equal(Object expected, Object actual, String message) {
-        expect(java.util.Objects.deepEquals(expected, actual), message + " | expected=" + expected + " actual=" + actual);
+        expect(java.util.Objects.deepEquals(expected, actual), message
+                + "\n    Očekáváno: " + Check.show(expected)
+                + "\n    Zjištěno: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P27_PhotoRemixLab");
+        var g = Reflect.create("P27_Task_PhotoRemixLab");
         var counts = (Map<Integer, Integer>) Reflect.get(g, "colourCounts");
         counts.put(-5, 2); counts.put(-7, 4); counts.put(-9, 2); counts.put(-11, 0);
         var before = new HashMap<>(counts);
-        equal(-9, Reflect.call(g, "spotlightColour"), "10.27: the rarest positive count wins, with smaller RGB for ties");
-        equal(before, counts, "10.27: examining the histogram does not rewrite it");
-        counts.clear(); equal(0, Reflect.call(g, "spotlightColour"), "10.27: empty histogram has neutral result");
-        counts.put(7, Integer.MAX_VALUE); equal(7, Reflect.call(g, "spotlightColour"), "10.27: any positive frequency is eligible");
+        equal(-9, Reflect.call(g, "spotlightColour"), "spotlightColour musí vybrat nejmenší kladnou četnost; při shodě rozhoduje menší RGB klíč včetně znaménka.");
+        equal(before, counts, "Volání spotlightColour nesmí změnit histogram barev.");
+        counts.clear(); equal(0, Reflect.call(g, "spotlightColour"), "spotlightColour musí při prázdném histogramu vrátit 0.");
+        counts.put(7, Integer.MAX_VALUE); equal(7, Reflect.call(g, "spotlightColour"), "Jediná barva s četností Integer.MAX_VALUE je stále přípustná a musí být vybrána.");
         Reflect.call(g, "restart");
         var result = (java.awt.image.BufferedImage) Reflect.get(g, "result");
-        equal(java.awt.Color.CYAN.getRGB(), result.getRGB(35, 40), "10.27: the hidden key is visibly revealed cyan");
-        expect(result.getRGB(200, 150) != java.awt.Color.CYAN.getRGB(), "10.27: the common moon no longer steals the spotlight");
-        System.out.println("PASS " + checks + " checks");
+        equal(java.awt.Color.CYAN.getRGB(), result.getRGB(35, 40), "Skutečný zvýrazněný obrázek musí ukázat skrytý klíč azurově včetně jeho bodu (35, 40).");
+        expect(result.getRGB(200, 150) != java.awt.Color.CYAN.getRGB(), "Častější měsíc nesmí dostat azurové zvýraznění místo vzácného klíče.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P30_NonogramTest {
+class P30_Task_NonogramTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -903,16 +917,15 @@ class P30_NonogramTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Očekáváno: " + Check.show(expected)
+                + "\n    Zjištěno: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P30_Nonogram");
-        equal(new int[]{3}, ((int[]) Reflect.call(g, "runs", new int[]{0, 1, 1, 1})), "10.30/F17: flush the run at the end of the array");
-        equal(new int[]{2, 1}, ((int[]) Reflect.call(g, "runs", new int[]{1, 1, 0, 1})), "10.30/F17: separate groups remain separate");
-        equal(new int[]{}, ((int[]) Reflect.call(g, "runs", new int[]{0, 0, 0})), "10.30/F17: blank line has no runs");
-        equal(new int[]{1}, ((int[]) Reflect.call(g, "runs", new int[]{1})), "10.30/F17: single-cell run");
-        System.out.println("PASS " + checks + " checks");
+        var g = Reflect.create("P30_Task_Nonogram");
+        equal(new int[]{3}, ((int[]) Reflect.call(g, "runs", new int[]{0, 1, 1, 1})), "runs([0, 1, 1, 1]) musí vrátit [3] a zachovat černou skupinu sahající až do poslední buňky.");
+        equal(new int[]{2, 1}, ((int[]) Reflect.call(g, "runs", new int[]{1, 1, 0, 1})), "runs([1, 1, 0, 1]) musí vrátit [2, 1] a zachovat obě oddělené černé skupiny.");
+        equal(new int[]{}, ((int[]) Reflect.call(g, "runs", new int[]{0, 0, 0})), "runs musí pro celý bílý řádek vrátit prázdné pole, nikoli skupinu nulové délky.");
+        equal(new int[]{1}, ((int[]) Reflect.call(g, "runs", new int[]{1})), "runs([1]) musí pro jedinou černou buňku vrátit [1].");
     }
 }
 
@@ -943,7 +956,7 @@ class Reflect {
                 return Class.forName(name);
             }
         } catch (ClassNotFoundException failure) {
-            throw new IllegalStateException("Cannot find compact program type: " + name, failure);
+            throw new IllegalStateException("Nelze načíst program. Ověř jeho soubor vedle Check.java: " + name, failure);
         }
     }
 
@@ -952,14 +965,14 @@ class Reflect {
         for (var constructor : type(name).getDeclaredConstructors()) {
             if (accepts(constructor.getParameterTypes(), args)) matches.add(constructor);
         }
-        var constructor = one(matches, "constructor " + name);
+        var constructor = one(matches, "vytvoření objektu " + name);
         try {
             constructor.setAccessible(true);
             return constructor.newInstance(args);
         } catch (InvocationTargetException failure) {
             throw Reflect.<RuntimeException>raise(failure.getCause());
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot construct " + name, failure);
+            throw new IllegalStateException("Nelze vytvořit objekt programu: " + name, failure);
         }
     }
 
@@ -967,7 +980,7 @@ class Reflect {
         try {
             return field(target, name).get(target instanceof Class<?> ? null : target);
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot read field " + name, failure);
+            throw new IllegalStateException("Nelze přečíst proměnnou: " + name, failure);
         }
     }
 
@@ -978,7 +991,7 @@ class Reflect {
             field.set(receiver, value);
             return field.get(receiver);
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot write field " + name, failure);
+            throw new IllegalStateException("Nelze změnit proměnnou: " + name, failure);
         }
     }
 
@@ -988,7 +1001,7 @@ class Reflect {
             try {
                 var field = current.getDeclaredField(name);
                 if (target instanceof Class<?> && !Modifier.isStatic(field.getModifiers())) {
-                    throw new IllegalStateException("An instance is required for field " + name);
+                    throw new IllegalStateException("Pro tuto proměnnou je potřeba objekt: " + name);
                 }
                 field.setAccessible(true);
                 return field;
@@ -1018,14 +1031,14 @@ class Reflect {
                 matches.add(method);
             }
         }
-        var method = one(matches, "method " + owner.getName() + "." + name);
+        var method = one(matches, "metodu " + owner.getName() + "." + name);
         try {
             method.setAccessible(true);
             return method.invoke(target instanceof Class<?> ? null : target, args);
         } catch (InvocationTargetException failure) {
             throw Reflect.<RuntimeException>raise(failure.getCause());
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot call " + owner.getName() + "." + name, failure);
+            throw new IllegalStateException("Nelze zavolat metodu: " + owner.getName() + "." + name, failure);
         }
     }
 
@@ -1062,7 +1075,7 @@ class Reflect {
 
     private static <T> T one(List<T> matches, String description) {
         if (matches.size() != 1) {
-            throw new IllegalStateException((matches.isEmpty() ? "No compatible " : "Ambiguous ") + description);
+            throw new IllegalStateException((matches.isEmpty() ? "Nenalezeno odpovídající " : "Nalezeno více možností pro ") + description);
         }
         return matches.getFirst();
     }

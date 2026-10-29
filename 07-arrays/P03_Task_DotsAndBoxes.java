@@ -1,0 +1,133 @@
+/// # Vyřešený úkol · DotsAndBoxes
+/// Lekce: 7.1 Dej hodnotám očíslovaná místa — 01-arrays.html
+///
+/// Původní zadání (tato verze je již vyřešená):
+///
+/// Střídejte se v zabírání čar mezi tečkami. Kdo uzavře čtvereček, získá bod a další tah.
+///
+/// **Tvoje mise:** Každý čtvereček teď sleduje stejné čtyři hrany. Oprav box(int n), aby bodování
+/// odpovídalo skutečně uzavřenému čtverečku.
+///
+/// Střídejte se v zadávání dosud volného čísla hrany od 1 do 12, vždy
+/// potvrzeného Enter.
+
+int[] box(int n) {
+    int r = n / 2;
+    int c = n % 2;
+    return new int[]{r * 2 + c, (r + 1) * 2 + c, 6 + r * 3 + c, 6 + r * 3 + c + 1};
+}
+
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### I hrany jsou hodnoty
+///
+/// Vrácené int array (pole) uvádí čtyři edge index (pozice hran), nikoli čtyři rohy. Nakresli
+/// zobrazenou desku a očísluj hrany vnitřními index (pozicemi), o jednu menšími než vypsaná čísla. U
+/// vybraného čtverce zvlášť najdi horní, dolní, levou a pravou hranu. `new int[]{...}` sdruží čtyři
+/// čísla do výsledku. Než napíšeš obecný expression (výraz) pro n, předpověz jiný čtverec než levý
+/// horní.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+boolean[] edges;
+int[] owners;
+int[] scores;
+int player;
+int moves;
+String outcome;
+
+void reset() {
+    edges = new boolean[12];
+    owners = new int[4];
+    scores = new int[3];
+    player = 1;
+    moves = 0;
+    outcome = "";
+}
+
+void command(String input) {
+    require(outcome.isEmpty());
+    int edge = Integer.parseInt(input) - 1;
+    require(edge >= 0 && edge < 12 && !edges[edge]);
+    edges[edge] = true;
+    moves++;
+    int gained = 0;
+    for (int b = 0; b < 4; b++) {
+        if (owners[b] != 0) {
+            continue;
+        }
+        boolean complete = true;
+        for (int e : box(b)) {
+            complete &= edges[e];
+        }
+        if (complete) {
+            owners[b] = player;
+            scores[player]++;
+            gained++;
+        }
+    }
+    if (moves == 12) {
+        outcome = scores[1] == scores[2] ? "Draw" : "Player " + (scores[1] > scores[2] ? 1 : 2) + " wins";
+    }
+    if (gained == 0) {
+        player = 3 - player;
+    }
+}
+
+String edge(int n) {
+    return edges[n] ? "##" : String.format("%02d", n + 1);
+}
+
+void display() {
+    IO.println("Player " + player + "; scores " + scores[1] + ":" + scores[2]);
+    for (int r = 0; r < 3; r++) {
+        IO.println("+--" + edge(r * 2) + "--+--" + edge(r * 2 + 1) + "--+");
+        if (r < 2) {
+            IO.println(edge(6 + r * 3) + "  " + owners[r * 2] + "   " + edge(7 + r * 3) + "  " + owners[r * 2 + 1] + "   " + edge(8 + r * 3));
+        }
+    }
+}
+
+void main() {
+    reset();
+    IO.println("Dots and Boxes");
+    IO.println("Take turns claiming numbered edges. Close a box to score and play again; most boxes wins.");
+    IO.println("Enter an unclaimed edge number 1-12. Completing a box grants another turn. /r restarts; /q quits.");
+    IO.println("Example: enter 1 to claim edge 01. ## means an edge is already taken.");
+    display();
+    while (true) {
+        String input = IO.readln(outcome.isEmpty() ? "> " : "Enter or /r: new round; /q: quit: ");
+        if (input == null) {
+            return;
+        }
+        input = input.strip();
+        if (input.equalsIgnoreCase("/q") || input.equalsIgnoreCase("q")) {
+            return;
+        }
+        if (input.equalsIgnoreCase("/r") || input.equalsIgnoreCase("r")
+                || (!outcome.isEmpty() && input.isEmpty())) {
+            reset();
+            display();
+            continue;
+        }
+        if (!outcome.isEmpty()) {
+            IO.println("That round is over. Press Enter to play again, or /q to quit.");
+            continue;
+        }
+        try {
+            command(input);
+            display();
+            if (!outcome.isEmpty()) {
+                IO.println(outcome);
+            }
+        } catch (IllegalArgumentException invalid) {
+            IO.println("Invalid move. " + "Enter an unclaimed edge number 1-12. Completing a box grants another turn. /r restarts; /q quits.");
+        }
+    }
+}
+
+void require(boolean valid) {
+    if (!valid) {
+        throw new IllegalArgumentException("Invalid move or command.");
+    }
+}
+// </editor-fold>

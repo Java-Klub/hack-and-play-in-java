@@ -9,21 +9,24 @@
 <h1>6.1 Opakuj, dokud je potřeba</h1>
 <p>Dron má prázdnou baterii. Nabíječka při každém kroku přidá dvě jednotky a vypíše nový stav. Nechceš stejný krok šestkrát opisovat; chceš popsat, kdy ještě pokračovat.</p>
 <h2>Otázka před každým kolem</h2>
-<p>Otevři <code>06-loops/P01_DroneCharge.java</code>. Nejdřív odhadni, kolik řádků program vypíše.</p>
-<pre><code class="language-java" data-source="P01_DroneCharge.java">void main() {
+<p>Otevři <code>06-loops/P01_Example_DroneCharge.java</code>. Nejdřív odhadni, kolik řádků program vypíše.</p>
+<pre><code class="language-java" data-source="P01_Example_DroneCharge.java">/// # Hotový příklad · 6.1 Opakuj, dokud je potřeba
+/// Lekce: 01-while.html
+
+void main() {
     int energy = 0;
     while (energy &lt; 6) {
         energy = energy + 2;
-        IO.println(&quot;Energy: &quot; + energy);
+        IO.println("Energy: " + energy);
     }
-    IO.println(&quot;Ready&quot;);
+    IO.println("Ready");
 }
 </code></pre>
 <p>While loop (cyklus while) opakuje tělo mezi složenými závorkami, dokud condition (podmínka) v kulatých závorkách platí. Otázku položí před prvním kolem i po každém dokončeném kole. S energií 0 projde první test, vznikne 2 a vypíše se. Další kola vytvoří 4 a 6. Pak už 6 není menší než 6 a pokračuje se za cyklem.</p>
 <p>Assignment (přiřazení) uvnitř těla mění hodnotu, kterou bude číst další test. Bez něj by energie zůstala nulová a vznikl by infinite loop (nekonečný cyklus). Kdyby se to při pokusu stalo, zastav spuštěný program tlačítkem Stop v Output. Samotná podmínka hodnotu neposouvá.</p>
 <details><summary>Předpověď: co když začneš na 6?</summary><p>Tělo neproběhne ani jednou. Uvidíš jen Ready. While neslibuje alespoň jedno kolo; nejprve se ptá.</p></details>
 <h2>Úkol: hlas odpočítává jen jednou</h2>
-<p>Otevři <code>06-loops/P02_LaunchCount.java</code>. Pro vstup 3 zatím zazní jen 3 a Launch. Nahraď jednorázový krok opakováním: vypiš všechna kladná čísla od zadané hodnoty dolů po jedné. Po dokončení vypiš Launch právě jednou.</p>
+<p>Otevři <code>06-loops/P02_Task_LaunchCount.java</code>. Pro vstup 3 zatím zazní jen 3 a Launch. Nahraď jednorázový krok opakováním: vypiš všechna kladná čísla od zadané hodnoty dolů po jedné. Po dokončení vypiš Launch právě jednou.</p>
 <p>Zkoušej počáteční hodnoty od 0 do 9. Pro 3 potřebuješ řádky 3, 2, 1, Launch. Pro 1 vznikne 1, Launch. Pro 0 pouze Launch; nulu do odpočtu nepřidávej. Výzva Start zůstává beze změny.</p>
 <details><summary>Nápověda 1: co se opakuje?</summary><p>Výpis aktuálního čísla a jeho snížení patří do stejného těla. Závěrečné Launch se opakovat nemá.</p></details>
 <details><summary>Nápověda 2: sleduj poslední kolo</summary><p>Po vypsání jedničky musí hodnota přejít na nulu. Další test ji odmítne. Sepiš si hodnoty před testem a po změně.</p></details>

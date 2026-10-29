@@ -9,30 +9,33 @@
 <h1>10.5 Nech data projít filtrem</h1>
 <p>Batoh obsahuje různé druhy kořisti, ale obchod má ukázat jen cenné předměty. Stream (proud zpracování) popisuje posloupnost kroků: vyber potřebné prvky, proměň je a shromáždi odpovědi. Původní kolekce může zůstat nedotčená.</p>
 <h2>Každá operace má jeden malý úkol</h2>
-<pre><code class="language-java" data-source="P28_SpellFilter.java">void main() {
-    List&lt;String&gt; words = List.of(&quot;sun&quot;, &quot;moon&quot;, &quot;star&quot;, &quot;a&quot;);
+<pre><code class="language-java" data-source="P28_Example_SpellFilter.java">/// # Hotový příklad · 10.5 Nech data projít filtrem
+/// Lekce: 05-streams.html
+
+void main() {
+    List&lt;String&gt; words = List.of("sun", "moon", "star", "a");
     List&lt;String&gt; loud = words.stream()
         .filter(word -&gt; word.length() &gt;= 4)
         .map(word -&gt; word.toUpperCase(Locale.ROOT))
         .toList();
-    IO.println(&quot;Selected: &quot; + loud);
-    IO.println(&quot;Original: &quot; + words);
+    IO.println("Selected: " + loud);
+    IO.println("Original: " + words);
 }
 </code></pre>
-<p>Otevři 10-collections/P28_SpellFilter.java. Stream zahájí zpracování prvků seznamu. Filter dostane lambdu vracející boolean: true nynější prvek zachová, false jej odmítne. Zde sun a a neprojdou, protože mají méně než čtyři znaky.</p>
+<p>Otevři 10-collections/P28_Example_SpellFilter.java. Stream zahájí zpracování prvků seznamu. Filter dostane lambdu vracející boolean: true nynější prvek zachová, false jej odmítne. Zde sun a a neprojdou, protože mají méně než čtyři znaky.</p>
 <p>Map dostane další lambdu, která pro každý zachovaný prvek vrátí náhradní hodnotu. Promění moon na MOON a star na STAR. Tato operace map není obal Map pro klíče a hodnoty: jedna prvky proměňuje, druhý uchovává přiřazení.</p>
 <p>ToList dokončí pipeline (posloupnost zpracování) a shromáždí výsledné hodnoty do neměnného seznamu. Zalomení řádku výraz neukončuje; tečky jej prodlužují až po středník. Bez dokončující operace by samotný popis těchto kroků zpracování neprovedl.</p>
 <p>Původní seznam se vypíše beze změny. Tyto lambdy pouze čtou prvky a vracejí odpovědi; do výchozího seznamu nepřidávají. Stream se spotřebuje jednou. Pro další výpočet zahaj další stream z kolekce místo ukládání a opětovného používání starého proudu.</p>
 <details><summary>Předpověz další slovo</summary><p>Přidání &quot;gate&quot; do zdroje vytvoří GATE na konci Selected. A co přidání &quot;go&quot;? Zůstane jen v Original, protože filter jej odmítne ještě před map.</p></details>
 <h2>Úkol: proměň užitečnou kořist v seznam jmen</h2>
-<p>Otevři 10-collections/P29_LootFilter.java. Doplň valuableNames: zachovej jen Loot s value přísně větší než 0 a potom vrať jejich jména v původním pořadí. Vrať List&lt;String&gt;, nikoli záznamy nebo jeden spojený text. Vstupní seznam neměň.</p>
+<p>Otevři 10-collections/P29_Task_LootFilter.java. Doplň valuableNames: zachovej jen Loot s value přísně větší než 0 a potom vrať jejich jména v původním pořadí. Vrať List&lt;String&gt;, nikoli záznamy nebo jeden spojený text. Vstupní seznam neměň.</p>
 <p>Očekávej Names: [Gem, Coin], Empty: [] a Original size: 4. Stone s 0 musí vypadnout stejně jako Debt s -2. Prázdný vstupní seznam přirozeně vrátí prázdný výstup bez čtení vstupu nebo přidávání náhradního jména.</p>
 <details><summary>Nápověda 1: odděl výběr a proměnu</summary><p>První lambda odpovídá na otázku o value. Druhá vrací name. Filtrování jmen před čtením value by potřebnou informaci ztratilo.</p></details>
 <details><summary>Nápověda 2: sleduj typ prvku</summary><p>Stream zprvu nese Loot. Po výběru stále nese Loot. Po převedení na jména nese String připravené pro toList.</p></details>
 <p>Příště přejdeš od neměnných snímků dat k objektům, jejichž vlastní stav se během hry mění.</p>
 <details><summary>Co znamená dvojtečka v připraveném převodu?</summary><p>V Nonogram je výsledný převod už hotový. <code>Integer::intValue</code> je method reference (odkaz na metodu), krátký zápis chování odpovídajícího <code>value -&gt; value.intValue()</code>. <code>mapToInt</code> vytváří stream základních int a <code>toArray()</code> z nich vytvoří int[]. Tím se nasbíraná délka každé skupiny dostane do pevného pole pro vykreslení. Tuto část při opravě poslední skupiny neměň.</p></details>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>Nonogram</strong> · <code>10-collections/P30_Nonogram.java</code><br>Nonogram zapomíná černou skupinu na konci řádku. Dokonči runs bez ztráty dřívějších skupin; ověř prázdný a čistě bílý řádek.</li>
+<li><strong>Nonogram</strong> · <code>10-collections/P30_Task_Nonogram.java</code><br>Nonogram zapomíná černou skupinu na konci řádku. Dokonči runs bez ztráty dřívějších skupin; ověř prázdný a čistě bílý řádek.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="04-ordering.html">← 10.4 Předej pravidlo řazení</a><a class="next" href="../11-state/01-state.html">11.1 Objekt si pamatuje změnu →</a></nav>
