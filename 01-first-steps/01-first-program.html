@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="cs">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>1.1 Tvůj první program · Hack &amp; Play in Java</title><link rel="stylesheet" href="../book.css"></head>
+<body>
+<a class="skip" href="#content">Přejít na výklad</a>
+<header class="masthead"><a href="../index.html">Hack &amp; Play in Java</a></header>
+<div class="layout"><aside class="sidebar"><nav aria-label="Lekce"><ol><li><a href="../index.html">Obsah</a></li><li><a href="../00-setup/index.html">Připrav si dílnu</a></li></ol><details open><summary>1. Program provádí kroky</summary><ol><li><a href="01-first-program.html" aria-current="page">1.1 Tvůj první program</a></li><li><a href="02-order.html">1.2 Pořadí příkazů</a></li></ol></details><details><summary>2. Hodnoty a výpočty</summary><ol><li><a href="../02-values/01-values.html">2.1 Dej hodnotě jméno</a></li><li><a href="../02-values/02-change.html">2.2 Změň uloženou hodnotu</a></li><li><a href="../02-values/03-calculations.html">2.3 Nech program počítat</a></li></ol></details><details><summary>3. Text a odpovědi hráče</summary><ol><li><a href="../03-text-input/01-input.html">3.1 Zeptej se hráče</a></li><li><a href="../03-text-input/02-text.html">3.2 Vyčisti přijatý signál</a></li><li><a href="../03-text-input/03-stories.html">3.3 Nech hráče měnit příběh</a></li><li><a href="../03-text-input/04-numbers.html">3.4 Z odpovědi udělej číslo</a></li></ol></details><details><summary>4. Rozhodování a pravidla</summary><ol><li><a href="../04-decisions/01-questions.html">4.1 Polož otázku kódu</a></li><li><a href="../04-decisions/02-branches.html">4.2 Vyber, co se stane</a></li><li><a href="../04-decisions/03-logic.html">4.3 Spoj pravidla dohromady</a></li><li><a href="../04-decisions/04-guards.html">4.4 Zastav neplatný tah včas</a></li><li><a href="../04-decisions/05-switch.html">4.5 Vyber hodnotu pomocí switch</a></li></ol></details><details><summary>5. Vlastní metody</summary><ol><li><a href="../05-methods/01-actions.html">5.1 Pojmenuj vlastní krok</a></li><li><a href="../05-methods/02-parameters.html">5.2 Pošli metodě hodnoty</a></li><li><a href="../05-methods/03-results.html">5.3 Vrať výsledek volajícímu</a></li><li><a href="../05-methods/04-local-values.html">5.4 Kam až dosáhne jméno</a></li><li><a href="../05-methods/05-composition.html">5.5 Slož malé rozhodčí</a></li></ol></details><details><summary>6. Opakování</summary><ol><li><a href="../06-loops/01-while.html">6.1 Opakuj, dokud je potřeba</a></li><li><a href="../06-loops/02-for.html">6.2 Dej počítadlu vlastní místo</a></li><li><a href="../06-loops/03-accumulators.html">6.3 Pamatuj si, co už prošlo</a></li><li><a href="../06-loops/04-search.html">6.4 Zastav na prvním nálezu</a></li><li><a href="../06-loops/05-game-loop.html">6.5 Čti další tah</a></li></ol></details><details><summary>7. Více hodnot pohromadě</summary><ol><li><a href="../07-arrays/01-arrays.html">7.1 Dej hodnotám očíslovaná místa</a></li><li><a href="../07-arrays/02-traversal.html">7.2 Projdi hodnoty bez ručního výběru</a></li><li><a href="../07-arrays/03-updates.html">7.3 Změň skutečné místo</a></li><li><a href="../07-arrays/04-search.html">7.4 Najdi místo, které vyhovuje</a></li><li><a href="../07-arrays/05-copies.html">7.5 Vzpomínka není druhé jméno</a></li></ol></details><details><summary>8. Mřížky a proměny</summary><ol><li><a href="../08-grids/01-grids.html">8.1 Z řad vznikne mapa</a></li><li><a href="../08-grids/02-bounds.html">8.2 Nejdřív zkontroluj okraj</a></li><li><a href="../08-grids/03-neighbours.html">8.3 Ptej se okolních buněk</a></li><li><a href="../08-grids/04-patterns.html">8.4 Vyrob vzor podle souřadnic</a></li><li><a href="../08-grids/05-generations.html">8.5 Minulost čti, budoucnost zapisuj</a></li></ol></details><details><summary>9. Data, která drží pohromadě</summary><ol><li><a href="../09-data/01-records.html">9.1 Dej údajům společný tvar</a></li><li><a href="../09-data/02-objects.html">9.2 Jeden popis, více objektů</a></li><li><a href="../09-data/03-references.html">9.3 Dvě jména mohou mířit na totéž</a></li><li><a href="../09-data/04-data-methods.html">9.4 Data mohou znát své operace</a></li><li><a href="../09-data/05-enums.html">9.5 Pojmenuj povolené možnosti</a></li></ol></details><details><summary>10. Proměnlivé sbírky dat</summary><ol><li><a href="../10-collections/01-lists.html">10.1 Batoh nemusí znát délku předem</a></li><li><a href="../10-collections/02-sets.html">10.2 Pamatuj si první návštěvu</a></li><li><a href="../10-collections/03-maps.html">10.3 Každé jméno má svůj účet</a></li><li><a href="../10-collections/04-ordering.html">10.4 Předej pravidlo řazení</a></li><li><a href="../10-collections/05-streams.html">10.5 Nech data projít filtrem</a></li></ol></details><details><summary>11. Objekty se stavem a opakovatelné pokusy</summary><ol><li><a href="../11-state/01-state.html">11.1 Objekt si pamatuje změnu</a></li><li><a href="../11-state/02-instances.html">11.2 Každý robot má vlastní baterii</a></li><li><a href="../11-state/03-invariants.html">11.3 Odmítnutí nesmí poškodit stav</a></li><li><a href="../11-state/04-random.html">11.4 Náhoda navrhuje, pravidlo rozhoduje</a></li><li><a href="../11-state/05-seeds.html">11.5 Stejný začátek, stejný pokus</a></li></ol></details><details><summary>12. Ověřování, zotavení a soubory</summary><ol><li><a href="../12-files/01-validation.html">12.1 Rozhodni, které hodnoty dávají smysl</a></li><li><a href="../12-files/02-exceptions.html">12.2 Oznam neúspěšnou operaci</a></li><li><a href="../12-files/03-retry.html">12.3 Nech hráče opravit odpověď</a></li><li><a href="../12-files/04-files.html">12.4 Přečti data ze skutečného souboru</a></li><li><a href="../12-files/05-save.html">12.5 Ukládej až po ověření</a></li></ol></details><details><summary>13. Okna, události a animace</summary><ol><li><a href="../13-windows/01-drawing.html">13.1 Kresli v okně Javy</a></li><li><a href="../13-windows/02-input-events.html">13.2 Proměň kliknutí ve volbu</a></li><li><a href="../13-windows/03-handlers.html">13.3 Dej událostem jeden jasný úkol</a></li><li><a href="../13-windows/04-timers.html">13.4 Posouvej simulaci po malých krocích</a></li><li><a href="../13-windows/05-model-view.html">13.5 Nech kreslení pozorovat model</a></li></ol></details><details><summary>14. Kontroly, skládání a prohledávání</summary><ol><li><a href="../14-checks-and-exploration/01-checks.html">14.1 Vyber příklady, které odhalí chyby</a></li><li><a href="../14-checks-and-exploration/02-interfaces.html">14.2 Skládej objekty podle jejich chování</a></li><li><a href="../14-checks-and-exploration/03-patterns.html">14.3 Zjisti, která datová varianta přišla</a></li><li><a href="../14-checks-and-exploration/04-refactoring.html">14.4 Vyčleň jednu společnou myšlenku</a></li><li><a href="../14-checks-and-exploration/05-recursion.html">14.5 Prozkoumej menší problémy a volby</a></li></ol></details><ol><li><a href="../glossary.html">Slovníček</a></li></ol></nav></aside>
+<main><article id="content">
+<h1>1.1 Tvůj první program</h1>
+<p>Tvým cílem je rozumět několika řádkům, které vypisují text, a napsat podobný program sám. Pokud soubor ještě neumíš spustit, vrať se k <a href="../00-setup/index.html#run">přípravě</a>.</p>
+<h2>Spusť dvě zprávy</h2>
+<p>Otevři v editoru <code>01-first-steps/P01_WakeUp.java</code>:</p>
+<pre><code class="language-java">void main() {
+    IO.println(&quot;ARCADE&quot;);
+    IO.println(&quot;Power on&quot;);
+}
+</code></pre>
+<p>Spuštění vypíše dva řádky:</p>
+<pre><code class="language-text">ARCADE
+Power on
+</code></pre>
+<p>Program po výpisu skončí. Žádné okno se nemusí otevřít.</p>
+<h2>Co znamená každý zápis</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Zápis</th>
+<th>Význam tady</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>void main()</code></td>
+<td>Popisuje akci <code>main</code>, kterou Java při spuštění zahájí. Pro dnešek tento první řádek opisuj beze změny. <code>void</code> říká, že akce nevrací výslednou hodnotu; prázdné <code>()</code> zde neuvádějí žádné vstupy.</td>
+</tr>
+<tr>
+<td><code>{</code> a <code>}</code></td>
+<td>Ohraničují tělo této akce. Mezi nimi jsou kroky, které se provedou. Každá otevírací závorka potřebuje svoji zavírací.</td>
+</tr>
+<tr>
+<td><code>IO.println</code></td>
+<td>Připravená akce Javy pro výpis jednoho řádku. Tečka vybírá <code>println</code> z <code>IO</code>; název rozlišuje velká a malá písmena.</td>
+</tr>
+<tr>
+<td><code>(&quot;ARCADE&quot;)</code></td>
+<td>Závorky předávají akci text, který má vypsat.</td>
+</tr>
+<tr>
+<td><code>&quot;ARCADE&quot;</code></td>
+<td>Text je mezi dvojitými uvozovkami. Uvozovky označí jeho začátek a konec; samy se nevypíšou.</td>
+</tr>
+<tr>
+<td><code>;</code></td>
+<td>Ukončuje tento statement (příkaz). Obě volání <code>IO.println</code> jej potřebují.</td>
+</tr>
+</tbody></table></div>
+<p>Celý řádek <code>IO.println(&quot;ARCADE&quot;);</code> je call (volání) připravené akce. Podobně jako tlačítko přehrávání požádá o přehrání, toto volání požádá o výpis.</p>
+<p>Před mezerami uvnitř uvozovek má Java respekt: <code>&quot;Power on&quot;</code> obsahuje mezeru mezi slovy. Mezery před <code>IO.println</code> pouze pomáhají člověku vidět, které řádky patří dovnitř <code>main</code>. Používáme čtyři, aby se kód dobře četl.</p>
+<h2>Předpověz a potom spusť</h2>
+<p>Co se vypíše, když druhou zprávu změníš na <code>&quot;Ready!&quot;</code>? Změň ji v souboru, ulož a ověř svoji předpověď.</p>
+<details>
+<summary>Porovnej výsledek</summary>
+
+<pre><code class="language-text">ARCADE
+Ready!
+</code></pre>
+<p>Změnil se pouze text druhého volání. První zůstalo stejné. Výsledkem jsou pořád dva řádky.</p>
+</details>
+
+<h2>Úkol: probuď robota</h2>
+<p>Otevři <code>01-first-steps/P02_SecretSignal.java</code>. Zatím vypisuje jediné Beep.</p>
+<p><strong>Doplň další dvě volání, aby po spuštění vypsal přesně:</strong></p>
+<pre><code class="language-text">Beep
+Beep
+Ready
+</code></pre>
+<p>Každou zprávu vypiš samostatným voláním. První řádek <code>void main() {</code> i poslední <code>}</code> zachovej.</p>
+<details>
+<summary>Nápověda: kde začít</summary>
+
+<p>Uvnitř <code>main</code> už máš jedno úplné volání. Můžeš celý jeho řádek zkopírovat a změnit text v uvozovkách. Nové řádky patří před zavírací <code>}</code>, aby zůstaly uvnitř akce.</p>
+</details>
+
+<details>
+<summary>Když překladač hlásí chybu</summary>
+
+<p>Porovnej zápis nových řádků s prvním: <code>IO.println</code>, kulaté závorky, dvojice dvojitých uvozovek a středník. Slovo <code>println</code> obsahuje písmeno l následované n, nikoli číslici 1. Piš obyčejné rovné uvozovky <code>&quot;</code>, které používá zdrojový soubor.</p>
+</details>
+
+<h2>Teď napiš vlastní malý program</h2>
+<p>Otevři připravený prázdný program <code>01-first-steps/P03_MySignal.java</code>. Mezi jeho <code>{</code> a <code>}</code> napiš tři vlastní zprávy. Zprávy mohou tvořit přístupový signál, krátký vtip nebo odpočet napsaný slovy.</p>
+<p>Ve Favorites otevři P03_MySignal.java a použij Run File stejně jako u předchozího programu.</p>
+<p><strong>Tuto lekci zvládáš, když umíš přidat vlastní zprávu, vysvětlit uvozovky a středník a napsat malý spustitelný soubor.</strong></p>
+<p>Pokračuj na <a href="02-order.html">Pořadí příkazů</a>.</p>
+</article>
+<nav class="page-nav" aria-label="Předchozí a další lekce"><a href="../00-setup/index.html">← Připrav si dílnu</a><a class="next" href="02-order.html">1.2 Pořadí příkazů →</a></nav>
+</main></div></body></html>
