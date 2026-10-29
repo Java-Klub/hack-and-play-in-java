@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>2.2 Change a stored value · Hack &amp; Play in Java</title><link rel="stylesheet" href="../book.css"></head>
+<body>
+<a class="skip" href="#content">Skip to the lesson</a>
+<header class="masthead"><a href="../index.html">Hack &amp; Play in Java</a></header>
+<div class="layout"><aside class="sidebar"><nav aria-label="Lessons"><ol><li><a href="../index.html">Contents</a></li><li><a href="../00-setup/index.html">Set up your workshop</a></li></ol><details><summary>1. A program follows steps</summary><ol><li><a href="../01-first-steps/01-first-program.html">1.1 Your first program</a></li><li><a href="../01-first-steps/02-order.html">1.2 Statement order</a></li></ol></details><details open><summary>2. Values and calculations</summary><ol><li><a href="01-values.html">2.1 Give a value a name</a></li><li><a href="02-change.html" aria-current="page">2.2 Change a stored value</a></li><li><a href="03-calculations.html">2.3 Let the program calculate</a></li></ol></details><details><summary>3. Text and player input</summary><ol><li><a href="../03-text-input/01-input.html">3.1 Ask the player</a></li><li><a href="../03-text-input/02-text.html">3.2 Clean up an incoming signal</a></li><li><a href="../03-text-input/03-stories.html">3.3 Let the player shape the story</a></li><li><a href="../03-text-input/04-numbers.html">3.4 Turn an answer into a number</a></li></ol></details><details><summary>4. Decisions and rules</summary><ol><li><a href="../04-decisions/01-questions.html">4.1 Ask a question in code</a></li><li><a href="../04-decisions/02-branches.html">4.2 Choose what happens</a></li><li><a href="../04-decisions/03-logic.html">4.3 Combine rules</a></li><li><a href="../04-decisions/04-guards.html">4.4 Stop an illegal move in time</a></li><li><a href="../04-decisions/05-switch.html">4.5 Choose a value with switch</a></li></ol></details><details><summary>5. Your own methods</summary><ol><li><a href="../05-methods/01-actions.html">5.1 Give your own step a name</a></li><li><a href="../05-methods/02-parameters.html">5.2 Send values to a method</a></li><li><a href="../05-methods/03-results.html">5.3 Return a result to the caller</a></li><li><a href="../05-methods/04-local-values.html">5.4 How far does a name reach?</a></li><li><a href="../05-methods/05-composition.html">5.5 Combine small referees</a></li></ol></details><details><summary>6. Loops</summary><ol><li><a href="../06-loops/01-while.html">6.1 Repeat while needed</a></li><li><a href="../06-loops/02-for.html">6.2 Give the counter its own place</a></li><li><a href="../06-loops/03-accumulators.html">6.3 Remember what has passed</a></li><li><a href="../06-loops/04-search.html">6.4 Stop at the first match</a></li><li><a href="../06-loops/05-game-loop.html">6.5 Read the next move</a></li></ol></details><details><summary>7. Arrays</summary><ol><li><a href="../07-arrays/01-arrays.html">7.1 Give values numbered places</a></li><li><a href="../07-arrays/02-traversal.html">7.2 Visit values without picking each one</a></li><li><a href="../07-arrays/03-updates.html">7.3 Change the actual place</a></li><li><a href="../07-arrays/04-search.html">7.4 Find a place that fits</a></li><li><a href="../07-arrays/05-copies.html">7.5 A memory is not a second name</a></li></ol></details><details><summary>8. Grids and generations</summary><ol><li><a href="../08-grids/01-grids.html">8.1 Rows become a map</a></li><li><a href="../08-grids/02-bounds.html">8.2 Check the boundary first</a></li><li><a href="../08-grids/03-neighbours.html">8.3 Ask the neighbouring cells</a></li><li><a href="../08-grids/04-patterns.html">8.4 Make a pattern from coordinates</a></li><li><a href="../08-grids/05-generations.html">8.5 Read the past; write the future</a></li></ol></details><details><summary>9. Data that belong together</summary><ol><li><a href="../09-data/01-records.html">9.1 Give related data a shape</a></li><li><a href="../09-data/02-objects.html">9.2 One description, several objects</a></li><li><a href="../09-data/03-references.html">9.3 Two names can point to the same thing</a></li><li><a href="../09-data/04-data-methods.html">9.4 Data can know their operations</a></li><li><a href="../09-data/05-enums.html">9.5 Name the allowed choices</a></li></ol></details><details><summary>10. Growing collections of data</summary><ol><li><a href="../10-collections/01-lists.html">10.1 A bag need not know its size ahead of time</a></li><li><a href="../10-collections/02-sets.html">10.2 Remember a first visit</a></li><li><a href="../10-collections/03-maps.html">10.3 Each name has its own account</a></li><li><a href="../10-collections/04-ordering.html">10.4 Pass an ordering rule</a></li><li><a href="../10-collections/05-streams.html">10.5 Send data through a filter</a></li></ol></details><details><summary>11. Stateful objects and repeatable experiments</summary><ol><li><a href="../11-state/01-state.html">11.1 An object remembers a change</a></li><li><a href="../11-state/02-instances.html">11.2 Each robot has its own battery</a></li><li><a href="../11-state/03-invariants.html">11.3 Rejection must preserve state</a></li><li><a href="../11-state/04-random.html">11.4 Chance proposes, a rule decides</a></li><li><a href="../11-state/05-seeds.html">11.5 Same start, same experiment</a></li></ol></details><details><summary>12. Validation, recovery and files</summary><ol><li><a href="../12-files/01-validation.html">12.1 Decide which values belong</a></li><li><a href="../12-files/02-exceptions.html">12.2 Report a failed operation</a></li><li><a href="../12-files/03-retry.html">12.3 Let the player correct a reply</a></li><li><a href="../12-files/04-files.html">12.4 Read data from a real file</a></li><li><a href="../12-files/05-save.html">12.5 Save only after the checks pass</a></li></ol></details><details><summary>13. Windows, events and animation</summary><ol><li><a href="../13-windows/01-drawing.html">13.1 Draw in a Java window</a></li><li><a href="../13-windows/02-input-events.html">13.2 Turn a click into a choice</a></li><li><a href="../13-windows/03-handlers.html">13.3 Give events one clear job</a></li><li><a href="../13-windows/04-timers.html">13.4 Advance a simulation in small steps</a></li><li><a href="../13-windows/05-model-view.html">13.5 Let painting observe the model</a></li></ol></details><details><summary>14. Checks, composition and exploration</summary><ol><li><a href="../14-checks-and-exploration/01-checks.html">14.1 Choose examples that catch mistakes</a></li><li><a href="../14-checks-and-exploration/02-interfaces.html">14.2 Compose objects by their behaviour</a></li><li><a href="../14-checks-and-exploration/03-patterns.html">14.3 Ask which kind of data arrived</a></li><li><a href="../14-checks-and-exploration/04-refactoring.html">14.4 Extract one shared idea</a></li><li><a href="../14-checks-and-exploration/05-recursion.html">14.5 Explore smaller problems and choices</a></li></ol></details><ol><li><a href="../glossary.html">Glossary</a></li></ol></nav></aside>
+<main><article id="content">
+<h1>2.2 Change a stored value</h1>
+<p>The starting number of lives is not the whole story of a game. After a crash, it should be smaller. A variable can hold different values over time.</p>
+<h2>Trace one change</h2>
+<p>Open <code>02-values/P03_Energy.java</code>:</p>
+<pre><code class="language-java">void main() {
+    int energy = 5;
+    IO.println(energy);
+    energy = energy - 2;
+    IO.println(energy);
+}
+</code></pre>
+<p>Predict the output, then run the program.</p>
+<details>
+<summary>Output and trace</summary>
+
+<pre><code class="language-text">5
+3
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Stored value of <code>energy</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>int energy = 5;</code></td>
+<td>5</td>
+</tr>
+<tr>
+<td>First print</td>
+<td>5; printing does not change it</td>
+</tr>
+<tr>
+<td><code>energy = energy - 2;</code></td>
+<td>3</td>
+</tr>
+<tr>
+<td>Second print</td>
+<td>3</td>
+</tr>
+</tbody></table></div>
+</details>
+
+<p>On the line <code>energy = energy - 2;</code>, Java reads the right-hand side first. It subtracts 2 from the current value, 5. Only then does it store the result, 3, under the name <code>energy</code>. This is called assignment.</p>
+<p>Here, <code>=</code> is not a mathematical statement that both sides must stay equal forever. It is an instruction to change a stored value. Do not write <code>int</code> again when changing it: the name was introduced above.</p>
+<p>What will be printed if the initial value is 9? Check your prediction. Then restore the initial value to 5 and move the line that changes it until after both print calls. Predict and check this output too.</p>
+<details>
+<summary>Compare your predictions</summary>
+
+<p>With an initial value of 9 and the change in its original place, you get 9 and 7. If you move the change in the original program until after both print calls, both print 5. Java does not go back and change a line already printed.</p>
+</details>
+
+<h2>Task: pay to open a door</h2>
+<p>Open <code>02-values/P04_EnergyCounter.java</code>. It should print energy twice: before opening the door and afterwards. The door costs 3 units, but the supplied program leaves the value unchanged.</p>
+<p><strong>Change the assignment between the print calls so it subtracts 3 from the energy currently stored.</strong> With an initial value of 8, expect:</p>
+<pre><code class="language-text">8
+5
+</code></pre>
+<p>Then change only the initial value to 14. The result must be 14 and 11. This checks that the program really calculates from the current value.</p>
+<details>
+<summary>Hint</summary>
+
+<p>Energy already shows the same kind of change. The right-hand side reads the stored energy and subtracts the cost; the left-hand side stores the result back. Do not write a fixed final number: a different starting value must give a different ending value.</p>
+</details>
+
+<h2>When several places read a value</h2>
+<p><code>02-values/P05_SharedSettings.java</code> has a setting before <code>main</code>:</p>
+<pre><code class="language-java">int goal = 6;
+
+void main() {
+    IO.println(&quot;Target: &quot; + goal);
+    IO.println(&quot;Win at: &quot; + goal);
+}
+</code></pre>
+<p>Both messages read the same <code>goal</code>. Change its initial value to 4 and check both printed lines.</p>
+<p>A value written outside <code>main</code> like this can also be available to other actions in the same program. Games use this to share settings such as a target. We will explore its lifetime in more detail when writing our own methods. For this change, you only need to find the named value and follow where it is read.</p>
+<h2>Choose some game practice</h2>
+<ul>
+<li><code>02-values/P06_HigherOrLower.java</code>: find the shared target setting and shorten the card challenge. You search the program; hints in its file will gradually guide you.</li>
+<li><code>02-values/P07_SteppingFeet.java</code>: change the second assignment to bring both rectangles back into the picture. Here, the place to edit is already marked.</li>
+</ul>
+<p>Each task gives its own target value. To check HigherOrLower, open <code>02-values/Check.java</code>, set Program Arguments to <code>P06_HigherOrLower.java</code> and use Run File. For SteppingFeet, use <code>P07_SteppingFeet.java</code>. See the <a href="../00-setup/index.html#checks">setup lesson</a> for the property steps.</p>
+<p><strong>You have understood this lesson when you can explain how an assignment reads the old value before storing the new one, and correctly predict several assignments in a row.</strong></p>
+<p>Continue to <a href="03-calculations.html">Let the program calculate</a>.</p>
+</article>
+<nav class="page-nav" aria-label="Previous and next lesson"><a href="01-values.html">← 2.1 Give a value a name</a><a class="next" href="03-calculations.html">2.3 Let the program calculate →</a></nav>
+</main></div></body></html>

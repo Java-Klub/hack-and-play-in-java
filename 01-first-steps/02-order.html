@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>1.2 Statement order · Hack &amp; Play in Java</title><link rel="stylesheet" href="../book.css"></head>
+<body>
+<a class="skip" href="#content">Skip to the lesson</a>
+<header class="masthead"><a href="../index.html">Hack &amp; Play in Java</a></header>
+<div class="layout"><aside class="sidebar"><nav aria-label="Lessons"><ol><li><a href="../index.html">Contents</a></li><li><a href="../00-setup/index.html">Set up your workshop</a></li></ol><details open><summary>1. A program follows steps</summary><ol><li><a href="01-first-program.html">1.1 Your first program</a></li><li><a href="02-order.html" aria-current="page">1.2 Statement order</a></li></ol></details><details><summary>2. Values and calculations</summary><ol><li><a href="../02-values/01-values.html">2.1 Give a value a name</a></li><li><a href="../02-values/02-change.html">2.2 Change a stored value</a></li><li><a href="../02-values/03-calculations.html">2.3 Let the program calculate</a></li></ol></details><details><summary>3. Text and player input</summary><ol><li><a href="../03-text-input/01-input.html">3.1 Ask the player</a></li><li><a href="../03-text-input/02-text.html">3.2 Clean up an incoming signal</a></li><li><a href="../03-text-input/03-stories.html">3.3 Let the player shape the story</a></li><li><a href="../03-text-input/04-numbers.html">3.4 Turn an answer into a number</a></li></ol></details><details><summary>4. Decisions and rules</summary><ol><li><a href="../04-decisions/01-questions.html">4.1 Ask a question in code</a></li><li><a href="../04-decisions/02-branches.html">4.2 Choose what happens</a></li><li><a href="../04-decisions/03-logic.html">4.3 Combine rules</a></li><li><a href="../04-decisions/04-guards.html">4.4 Stop an illegal move in time</a></li><li><a href="../04-decisions/05-switch.html">4.5 Choose a value with switch</a></li></ol></details><details><summary>5. Your own methods</summary><ol><li><a href="../05-methods/01-actions.html">5.1 Give your own step a name</a></li><li><a href="../05-methods/02-parameters.html">5.2 Send values to a method</a></li><li><a href="../05-methods/03-results.html">5.3 Return a result to the caller</a></li><li><a href="../05-methods/04-local-values.html">5.4 How far does a name reach?</a></li><li><a href="../05-methods/05-composition.html">5.5 Combine small referees</a></li></ol></details><details><summary>6. Loops</summary><ol><li><a href="../06-loops/01-while.html">6.1 Repeat while needed</a></li><li><a href="../06-loops/02-for.html">6.2 Give the counter its own place</a></li><li><a href="../06-loops/03-accumulators.html">6.3 Remember what has passed</a></li><li><a href="../06-loops/04-search.html">6.4 Stop at the first match</a></li><li><a href="../06-loops/05-game-loop.html">6.5 Read the next move</a></li></ol></details><details><summary>7. Arrays</summary><ol><li><a href="../07-arrays/01-arrays.html">7.1 Give values numbered places</a></li><li><a href="../07-arrays/02-traversal.html">7.2 Visit values without picking each one</a></li><li><a href="../07-arrays/03-updates.html">7.3 Change the actual place</a></li><li><a href="../07-arrays/04-search.html">7.4 Find a place that fits</a></li><li><a href="../07-arrays/05-copies.html">7.5 A memory is not a second name</a></li></ol></details><details><summary>8. Grids and generations</summary><ol><li><a href="../08-grids/01-grids.html">8.1 Rows become a map</a></li><li><a href="../08-grids/02-bounds.html">8.2 Check the boundary first</a></li><li><a href="../08-grids/03-neighbours.html">8.3 Ask the neighbouring cells</a></li><li><a href="../08-grids/04-patterns.html">8.4 Make a pattern from coordinates</a></li><li><a href="../08-grids/05-generations.html">8.5 Read the past; write the future</a></li></ol></details><details><summary>9. Data that belong together</summary><ol><li><a href="../09-data/01-records.html">9.1 Give related data a shape</a></li><li><a href="../09-data/02-objects.html">9.2 One description, several objects</a></li><li><a href="../09-data/03-references.html">9.3 Two names can point to the same thing</a></li><li><a href="../09-data/04-data-methods.html">9.4 Data can know their operations</a></li><li><a href="../09-data/05-enums.html">9.5 Name the allowed choices</a></li></ol></details><details><summary>10. Growing collections of data</summary><ol><li><a href="../10-collections/01-lists.html">10.1 A bag need not know its size ahead of time</a></li><li><a href="../10-collections/02-sets.html">10.2 Remember a first visit</a></li><li><a href="../10-collections/03-maps.html">10.3 Each name has its own account</a></li><li><a href="../10-collections/04-ordering.html">10.4 Pass an ordering rule</a></li><li><a href="../10-collections/05-streams.html">10.5 Send data through a filter</a></li></ol></details><details><summary>11. Stateful objects and repeatable experiments</summary><ol><li><a href="../11-state/01-state.html">11.1 An object remembers a change</a></li><li><a href="../11-state/02-instances.html">11.2 Each robot has its own battery</a></li><li><a href="../11-state/03-invariants.html">11.3 Rejection must preserve state</a></li><li><a href="../11-state/04-random.html">11.4 Chance proposes, a rule decides</a></li><li><a href="../11-state/05-seeds.html">11.5 Same start, same experiment</a></li></ol></details><details><summary>12. Validation, recovery and files</summary><ol><li><a href="../12-files/01-validation.html">12.1 Decide which values belong</a></li><li><a href="../12-files/02-exceptions.html">12.2 Report a failed operation</a></li><li><a href="../12-files/03-retry.html">12.3 Let the player correct a reply</a></li><li><a href="../12-files/04-files.html">12.4 Read data from a real file</a></li><li><a href="../12-files/05-save.html">12.5 Save only after the checks pass</a></li></ol></details><details><summary>13. Windows, events and animation</summary><ol><li><a href="../13-windows/01-drawing.html">13.1 Draw in a Java window</a></li><li><a href="../13-windows/02-input-events.html">13.2 Turn a click into a choice</a></li><li><a href="../13-windows/03-handlers.html">13.3 Give events one clear job</a></li><li><a href="../13-windows/04-timers.html">13.4 Advance a simulation in small steps</a></li><li><a href="../13-windows/05-model-view.html">13.5 Let painting observe the model</a></li></ol></details><details><summary>14. Checks, composition and exploration</summary><ol><li><a href="../14-checks-and-exploration/01-checks.html">14.1 Choose examples that catch mistakes</a></li><li><a href="../14-checks-and-exploration/02-interfaces.html">14.2 Compose objects by their behaviour</a></li><li><a href="../14-checks-and-exploration/03-patterns.html">14.3 Ask which kind of data arrived</a></li><li><a href="../14-checks-and-exploration/04-refactoring.html">14.4 Extract one shared idea</a></li><li><a href="../14-checks-and-exploration/05-recursion.html">14.5 Explore smaller problems and choices</a></li></ol></details><ol><li><a href="../glossary.html">Glossary</a></li></ol></nav></aside>
+<main><article id="content">
+<h1>1.2 Statement order</h1>
+<p>You can already print your own messages. Now you will find out why two programs with the same steps can do different things.</p>
+<h2>Read, predict, run</h2>
+<p>Open <code>01-first-steps/P04_MissionControl.java</code>. First, try writing its output on paper or in a note:</p>
+<pre><code class="language-java">void main() {
+    IO.println(&quot;Check power&quot;);
+    IO.println(&quot;Open gate&quot;);
+    IO.println(&quot;Go&quot;);
+}
+</code></pre>
+<details>
+<summary>Output to compare</summary>
+
+<pre><code class="language-text">Check power
+Open gate
+Go
+</code></pre>
+<p>Inside <code>main</code>, these calls run from top to bottom. The first prints its message and finishes; then the second starts, followed by the third.</p>
+</details>
+
+<p>Move the last call before the first. What will be at the top of the output now? Save and run it. You changed the order of the steps; their three messages stayed the same.</p>
+<h2>Statements and comments</h2>
+<p>A comment is a message for people reading the code. Java does not carry out an action because of it. <code>//</code> marks a comment that continues to the end of that line:</p>
+<pre><code class="language-java">void main() {
+    // Say hello to the pilot.
+    IO.println(&quot;Hello&quot;);
+}
+</code></pre>
+<p>This program prints only Hello. The line beginning with <code>//</code> is skipped when it runs. Even an <code>IO.println</code> written <strong>after <code>//</code> on the same line</strong> stays a comment.</p>
+<p>In games, you will also see lines beginning with <code>///</code>: these are explanatory comments for you. Arrows beside some sections in the editor let you collapse a longer explanation. If your editor does not offer folding, you can read the comments normally like any other text.</p>
+<h2>Task: fix the launch procedure</h2>
+<p>Open <code>01-first-steps/P05_LaunchSequence.java</code>. It has all three messages it needs, but in the wrong order.</p>
+<p><strong>Move whole lines inside <code>main</code> so the output is:</strong></p>
+<pre><code class="language-text">Doors closed
+Engine on
+Launch
+</code></pre>
+<p>Keep each message exactly once. Changing a comment alone will not change the output. After editing, predict the output and compare it with a run.</p>
+<details>
+<summary>Hint</summary>
+
+<p>The doors must close first. Then the engine can start, and only then can the ship launch. Move whole lines, including their semicolons.</p>
+</details>
+
+<h2>Use the same idea in a game</h2>
+<p>Now open <code>01-first-steps/P06_CafeWallLab.java</code>. Running it shows a grey surface: the tiles are hidden beneath a later coat of paint. The task at the start of the file identifies two lines to move.</p>
+<p>Here, you call supplied drawing actions instead of printing text. <code>paintTiles(g);</code> asks for tiles, and <code>paintBackground(g);</code> asks for grey paint. <code>g</code> is the supplied drawing tool. These actions work; you decide their order. <code>Graphics2D g</code> in the declaration simply describes the tool that the supplied code provides. You do not need to change it today.</p>
+<p>Close the old window, save your change and run the file again with Run File. The result should show tiles on a grey background. To check it, select <code>01-first-steps/Check.java</code>, set Program Arguments to <code>P06_CafeWallLab.java</code> under Properties → Run Single File, and use Run File. The <a href="../00-setup/index.html#checks">setup lesson</a> gives the full steps.</p>
+<p>GREEN confirms the checked cases. If you get RED, read the message and return to the two drawing steps.</p>
+<p>Want another picture? <code>01-first-steps/P07_MissingTriangle.java</code> practises the same ordering idea. Its task asks you to build a drawing from two supplied calls; you do not need to know their internal drawing algorithm to choose between them.</p>
+<p><strong>You have understood this lesson when you can predict the order of printed lines and explain why later drawing can cover earlier drawing.</strong></p>
+<p>Continue to <a href="../02-values/01-values.html">Give a value a name</a>.</p>
+</article>
+<nav class="page-nav" aria-label="Previous and next lesson"><a href="01-first-program.html">← 1.1 Your first program</a><a class="next" href="../02-values/01-values.html">2.1 Give a value a name →</a></nav>
+</main></div></body></html>
