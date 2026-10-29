@@ -85,11 +85,7 @@ Compare your new lines with the first one: `IO.println`, parentheses, a pair of 
 
 Create `MySignal.java` in the same folder as SecretSignal. Write the opening `void main() {`, three messages of your own and the closing `}`. Your messages could be an access signal, a short joke or a countdown written in words. We write program messages in English.
 
-Run this new file just like the previous one. From a terminal in the course's main folder, for example:
-
-```text
-java learn/practice/01/MySignal.java
-```
+Open your new MySignal.java from Favorites and use Run File just as you did for the previous program.
 
 **You have understood this lesson when you can add your own message, explain quotes and semicolons, and write a small file that runs.**
 
