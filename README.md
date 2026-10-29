@@ -12,6 +12,14 @@ Zažeň vetřelce. Proveď laser mezi zrcadly. Z několika čísel vytvoř duhov
 
 V každé misi dostaneš spustitelný program a malou část k dokončení, opravě či změně. Předpověz, co kód udělá, proveď svůj tah, ověř jej a hraj znovu. První oprava se může vejít do dvou řádků; pozdější přidá hře nové pravidlo nebo oživí simulaci.
 
+## Začni se učit
+
+**[Otevři učebnici pro samostudium →](learn/README.md)**
+
+Začneš krátkým úplným programem. Nový zápis si vysvětlíš, vyzkoušíš ho v malém úkolu a potom použiješ ve hře. Připravené jsou první dvě kapitoly: spuštění a čtení programu, pořadí příkazů, hodnoty a výpočty. Obsah ukazuje také plán dalších kapitol.
+
+Na GitHubu čti učebnici z odkazu výše. Pro čtení offline stáhni a rozbal celou větev a otevři `learn/index.html` v prohlížeči. Příklady a hry spouštěj ve svém editoru nebo terminálu podle úvodní lekce.
+
 ## První záhada
 
 Kreslení je připravené. Stěna je šedá. Který řádek ji schoval?
@@ -23,7 +31,7 @@ void paintWall(Graphics2D g) {
 }
 ```
 
-Začni tady a postupně se propracuj k bludištím, arkádám, generovaným obrázkům i zvukům. Nové nápady přicházejí po malých krocích a vracejí se v různých hrách.
+Tohle je ochutnávka první opravy. Učebnice nejprve vysvětlí volání a pořadí kroků na několika řádcích a potom tě k této hře přivede.
 
 ## Co se naučíš
 
@@ -34,11 +42,13 @@ Začni tady a postupně se propracuj k bludištím, arkádám, generovaným obr�
 | Rozhýbej ho | Callbacks (zpětná volání), coordinates (souřadnice), game ticks (časové kroky hry), seeded randomness (náhoda s počáteční hodnotou) a files (soubory) |
 | Vysvětli a rozšiř | Contracts (dohody o chování), functional checks (funkční kontroly), interfaces (rozhraní), composition (skládání), pattern matching (rozpoznávání vzorů) a refactoring (úpravy struktury) |
 
-Průvodce najdeš **přímo v kódu**: krátká vysvětlení, vyložené příklady a nápovědy otevírané po jedné. Ze zvědavosti prozkoumej i připravené části her. Po stažení fungují programy i kontroly offline a využívají JDK libraries (knihovny JDK).
+Výklad nových dovedností a krátká procvičení najdeš v **[učebnici](learn/README.md)**. Konkrétní herní zadání, popisy připravených částí a postupné nápovědy zůstávají přímo v kódu. Po stažení fungují učebnice, programy i kontroly offline; kód využívá JDK libraries (knihovny JDK).
 
 Hledej schovanou propustku. Přidej cheat kód. Sestav rádce, který ti pomůže porazit bota, nebo změň cenu rohů v Reversi. Jindy zachráníš rozbitou hru, vymyslíš pokus odhalující falešné pravidlo nebo napodobíš černou skříňku. Výklad ukazuje průchody konkrétními hodnotami; postupné nápovědy otevírej podle potřeby.
 
-## Začni hrát
+## Chceš rovnou vyzkoušet hru?
+
+Pokud už umíš spouštět a upravovat Java soubory, můžeš hry prozkoumávat přímo. Pro postupné učení používej pořadí lekcí učebnice.
 
 1. Připrav si **JDK 26 nebo novější**. Stáhni si svou jazykovou větev z odkazů nahoře a otevři Java soubory ve svém editoru nebo IDE.
 2. Otevři **[L01/M01_CafeWallLab.java](L01/M01_CafeWallLab.java)** a přečti misi uvnitř. V terminálu přejdi do hlavní stažené složky s tímto README a spusť:
@@ -62,9 +72,9 @@ Pro zvídavé začátečníky, programátorské kluby i společné lekce s učit
 **Po splnění mise můžeš tvořit po svém.** Každý program nabízí vlastní navazující experiment. Kontrola dál očekává přesné původní zadání; po záměrné změně pravidel proto může hlásit RED, i když tvoje nová verze funguje správně.
 
 <details>
-<summary>Doporučená cesta: vyber hry, procvič nové myšlenky</summary>
+<summary>Výběr z katalogu her</summary>
 
-Úroveň není jedna schůzka a všech 145 programů není povinný seznam. Tohle je výchozí výběr přes hlavní dovednosti; další hry nabízejí jiné téma nebo další procvičení. Pro první průzkum krátkého kompletního programu zkus také [ClubDoor](L01/M10_ClubDoor.java); pro odvozování pravidla [NumberMachine](L02/M11_NumberMachine.java). ProgramMirror je abstraktnější odbočka, Nim přidává strategii a Flood se SameGame navíc pracují s frontou.
+Složky L01–L12 tvoří současný katalog her. Pro samostudium sleduj lekce učebnice a jejich odkazy na procvičení; následující výběr slouží k volnému prozkoumávání. Všech 145 programů není povinný seznam.
 
 | Úroveň | Výchozí výběr |
 | --- | --- |

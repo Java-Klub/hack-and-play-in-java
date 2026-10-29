@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Učebnice pro samostudium · Hack & Play in Java"><title>2.2 Změň uloženou hodnotu · Hack & Play in Java</title><link rel="stylesheet" href="assets/book.css"></head><body><a class="skip" href="#content">Přejít na výklad</a><header class="masthead"><a href="index.html">Hack & Play in Java</a><small>Učebnice pro samostudium</small></header><div class="layout"><aside class="sidebar"><nav aria-label="Lekce učebnice"><p>Čti, vyzkoušej, tvoř</p><ol><li><a href="index.html">Obsah</a></li><li><a href="00-start.html">Připrav si dílnu</a></li><li><a href="01-first-program.html">1.1 Tvůj první program</a></li><li><a href="01-order.html">1.2 Pořadí příkazů</a></li><li><a href="02-values.html">2.1 Dej hodnotě jméno</a></li><li><a href="02-change.html" aria-current="page">2.2 Změň uloženou hodnotu</a></li><li><a href="02-calculations.html">2.3 Nech program počítat</a></li><li><a href="glossary.html">Slovníček</a></li></ol></nav></aside><main><article id="content"><h1>2.2 Změň uloženou hodnotu</h1>
+<p>Počáteční počet životů není celý příběh hry. Po nehodě má být menší. Variable (proměnná) může postupně uchovávat různé hodnoty.</p>
+<h2>Sleduj jednu změnu</h2>
+<p>Otevři <a href="examples/02/Energy.java">Energy.java</a>:</p>
+<pre><code class="language-java">void main() {
+    int energy = 5;
+    IO.println(energy);
+    energy = energy - 2;
+    IO.println(energy);
+}
+</code></pre>
+<p>Předpověz výstup, potom spusť program.</p>
+<details>
+<summary>Výstup a průchod</summary>
+
+<pre><code class="language-text">5
+3
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Krok</th>
+<th>Uložená hodnota <code>energy</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>int energy = 5;</code></td>
+<td>5</td>
+</tr>
+<tr>
+<td>První výpis</td>
+<td>5, výpis ji nemění</td>
+</tr>
+<tr>
+<td><code>energy = energy - 2;</code></td>
+<td>3</td>
+</tr>
+<tr>
+<td>Druhý výpis</td>
+<td>3</td>
+</tr>
+</tbody></table></div>
+</details>
+
+<p>Na řádku <code>energy = energy - 2;</code> Java nejprve přečte pravou stranu. Z dosavadních 5 odečte 2. Teprve potom uloží výsledek 3 pod jméno <code>energy</code>. Tomu říkáme assignment (přiřazení).</p>
+<p><code>=</code> zde není matematické tvrzení o věčné rovnosti. Je to pokyn změnit uloženou hodnotu. Při změně už znovu nepíšeš <code>int</code>: nové jméno bylo zavedeno výše.</p>
+<p>Co se vypíše, když počáteční hodnota bude 9? Předpověď ověř. Potom vrať počáteční hodnotu na 5 a přesuň řádek se změnou až za oba výpisy. Předpověz a ověř také tento výstup.</p>
+<details>
+<summary>Porovnej předpovědi</summary>
+
+<p>S počáteční hodnotou 9 a změnou na původním místě dostaneš 9 a 7. Pokud z původního programu přesuneš změnu až za oba výpisy, oba vypíšou 5. Java nezmění už vypsaný řádek zpětně.</p>
+</details>
+
+<h2>Úkol: zaplať za otevření dveří</h2>
+<p>Otevři <a href="practice/02/EnergyCounter.java">EnergyCounter.java</a>. Má dvakrát vypsat energii: před otevřením dveří a po něm. Dveře spotřebují 3 jednotky, ale připravený program zatím nechá stejnou hodnotu.</p>
+<p><strong>Změň přiřazení mezi výpisy tak, aby odečetlo 3 od právě uložené energie.</strong> Při počáteční hodnotě 8 čekej:</p>
+<pre><code class="language-text">8
+5
+</code></pre>
+<p>Potom změň jen počáteční hodnotu na 14. Výsledek musí být 14 a 11. Tím ověříš, že program skutečně počítá z dosavadní hodnoty.</p>
+<details>
+<summary>Nápověda</summary>
+
+<p>V Energy už máš stejný druh změny. Pravá strana čte uloženou energii a odečítá cenu; levá uloží výsledek zpět. Nepiš pevný konečný počet, protože pro jiný začátek musí vyjít jiný konec.</p>
+</details>
+
+<h2>Když hodnotu čte více míst</h2>
+<p><a href="examples/02/SharedSettings.java">SharedSettings.java</a> má nastavení před <code>main</code>:</p>
+<pre><code class="language-java">int goal = 6;
+
+void main() {
+    IO.println(&quot;Target: &quot; + goal);
+    IO.println(&quot;Win at: &quot; + goal);
+}
+</code></pre>
+<p>Obě zprávy čtou stejné <code>goal</code>. Změň jeho počáteční hodnotu na 4 a ověř oba výpisy.</p>
+<p>Hodnota zapsaná takto mimo <code>main</code> může být dostupná také dalším akcím téhož programu. V hrách se tak sdílí například nastavení cíle. Podrobněji jeho životnost prozkoumáme při psaní vlastních metod. Pro tuto změnu stačí najít pojmenovanou hodnotu a sledovat její čtení.</p>
+<h2>Vyber si procvičení ve hře</h2>
+<ul>
+<li><a href="../L01/M06_HigherOrLower.java">HigherOrLower</a>: najdi společné nastavení cíle a zkrať karetní výzvu. Hledáš v programu; nápovědy v jeho souboru tě postupně navedou.</li>
+<li><a href="../L01/M07_SteppingFeet.java">SteppingFeet</a>: uprav druhé přiřazení a vrať oba obdélníky do obrázku. Tady už máš označené místo k úpravě.</li>
+</ul>
+<p>Každé zadání obsahuje vlastní cílovou hodnotu. Po hraní můžeš spustit právě jeho kontrolu, například:</p>
+<pre><code class="language-text">java L01/Check.java M06_HigherOrLower.java
+</code></pre>
+<p><strong>Tuto lekci zvládáš, když vysvětlíš čtení staré hodnoty před uložením nové a správně předpovíš několik přiřazení za sebou.</strong></p>
+<p>Pokračuj na <a href="02-calculations.html">Nech program počítat</a>.</p>
+</article><nav class="page-nav" aria-label="Předchozí a další lekce"><a href="02-values.html">← 2.1 Dej hodnotě jméno</a><a class="next" href="02-calculations.html">2.3 Nech program počítat →</a></nav><p class="page-footer">Tato stránka funguje offline. Příklady spouštěj v Javě ze stažené složky kurzu.</p></main></div></body></html>

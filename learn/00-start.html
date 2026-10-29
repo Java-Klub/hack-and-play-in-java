@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Učebnice pro samostudium · Hack & Play in Java"><title>Připrav si dílnu · Hack & Play in Java</title><link rel="stylesheet" href="assets/book.css"></head><body><a class="skip" href="#content">Přejít na výklad</a><header class="masthead"><a href="index.html">Hack & Play in Java</a><small>Učebnice pro samostudium</small></header><div class="layout"><aside class="sidebar"><nav aria-label="Lekce učebnice"><p>Čti, vyzkoušej, tvoř</p><ol><li><a href="index.html">Obsah</a></li><li><a href="00-start.html" aria-current="page">Připrav si dílnu</a></li><li><a href="01-first-program.html">1.1 Tvůj první program</a></li><li><a href="01-order.html">1.2 Pořadí příkazů</a></li><li><a href="02-values.html">2.1 Dej hodnotě jméno</a></li><li><a href="02-change.html">2.2 Změň uloženou hodnotu</a></li><li><a href="02-calculations.html">2.3 Nech program počítat</a></li><li><a href="glossary.html">Slovníček</a></li></ol></nav></aside><main><article id="content"><h1>Připrav si dílnu</h1>
+<p>V této lekci poprvé spustíš připravený soubor a zjistíš, kde uvidíš výsledek. Zápis programu rozebereme v další lekci.</p>
+<h2>Co potřebuješ</h2>
+<ol>
+<li><strong>JDK 26 nebo novější.</strong> Obsahuje program <code>java</code>, který tvůj kód přeloží a spustí. Samotný editor Javu nenahrazuje. Pokud JDK ještě nemáš, před prací offline si jej nainstaluj; základní postup najdeš na oficiální stránce <a href="https://dev.java/learn/getting-started/">Getting Started with Java</a>.</li>
+<li><strong>Staženou složku celého kurzu.</strong> V její hlavní složce leží <code>README.md</code>, <code>learn</code>, <code>L01</code> a další hry. ZIP nejprve rozbal. Jednotlivý náhled souboru na GitHubu ke spuštění celého kurzu nestačí.</li>
+<li><strong>Editor pro Java soubory.</strong> Můžeš použít NetBeans, IntelliJ IDEA, VS Code nebo textový editor. Soubory v kurzu jsou běžné <code>.java</code> soubory, které umí spouštět přímo JDK.</li>
+</ol>
+<p>První programy pouze vypisují text. Po vypsání skončí. Je v pořádku, když se neotevře žádné herní okno.</p>
+<p><a id="run"></a></p>
+<h2>První spuštění z terminálu</h2>
+<p>Terminal (terminál) je okno pro zadávání příkazů počítači. Může být samostatné nebo součástí editoru. Následující postup funguje i tehdy, když editor zatím nemá nastavené spouštění Javy.</p>
+<ol>
+<li><p>Otevři terminál <strong>v hlavní složce rozbaleného kurzu</strong>. Ve Windows lze v Průzkumníku kliknout do adresního řádku této složky, napsat <code>cmd</code> a potvrdit Enter. Na macOS lze u složky ve Finderu použít službu <strong>New Terminal at Folder</strong>; v Linuxu obvykle nabídku <strong>Open in Terminal</strong>.</p>
+</li>
+<li><p>Ověř dostupnost Javy:</p>
+<pre><code class="language-text">java --version
+</code></pre>
+<p>Ve výpisu musí být verze 26 nebo vyšší. Pokud příkaz není nalezen nebo ukazuje starší verzi, vyřeš nejprve výběr či instalaci JDK. U editoru a terminálu mohou být vybrané různé JDK.</p>
+</li>
+<li><p>Spusť připravený soubor:</p>
+<pre><code class="language-text">java learn/examples/01/WakeUp.java
+</code></pre>
+<p>Správný výsledek je:</p>
+<pre><code class="language-text">ARCADE
+Power on
+</code></pre>
+<p>Potom se vrátí místo pro další příkaz. Program svoji práci dokončil.</p>
+</li>
+</ol>
+<p>Pokud Java hlásí, že soubor nemůže najít, ověř složku terminálu. V ní mají být přímo adresáře <code>learn</code> a <code>L01</code>. Celý kurz můžeš mít v libovolně pojmenované složce.</p>
+<h3>Jak spustíš další soubory</h3>
+<p>Za <code>java</code> píšeš cestu k vybranému souboru z hlavní složky kurzu, včetně koncovky <code>.java</code>. Pro první krátký úkol tedy použiješ:</p>
+<pre><code class="language-text">java learn/practice/01/SecretSignal.java
+</code></pre>
+<p>U dalšího příkladu či úkolu změníš celou cestu podle souboru uvedeného v lekci. Terminál přitom zůstává v hlavní složce kurzu. V editoru se spouštěním Javy místo toho vybereš odpovídající soubor.</p>
+<h2>Otevření a změna souboru</h2>
+<p>V editoru otevři soubor <code>learn/examples/01/WakeUp.java</code>. <strong>Soubor má končit <code>.java</code>, nikoli <code>.java.txt</code>.</strong> Pokud jej otevřeš odkazem v prohlížeči, uvidíš jeho text nebo se stáhne; pro úpravy jej otevři ve svém editoru.</p>
+<p>Změň v uvozovkách <code>ARCADE</code> na <code>HELLO</code>, ulož a znovu spusť stejný soubor. První vypsaný řádek se má změnit na HELLO. Potom můžeš původní text vrátit.</p>
+<p><code>Save</code> uloží upravený text do souboru. Další spuštění načte tuto uloženou verzi. Již otevřené herní okno se samo nepřepíše: před novým spuštěním ho zavři.</p>
+<h2>Stejná práce v NetBeans</h2>
+<p>Pokud používáš NetBeans s JDK 26 nebo novějším, můžeš program spouštět přímo z editoru:</p>
+<ol>
+<li>Zvol <strong>File → Open File…</strong> a otevři <code>learn/examples/01/WakeUp.java</code> ze stažené složky kurzu. Projekt vytvářet nemusíš.</li>
+<li>Po úpravě zvol <strong>File → Save</strong>.</li>
+<li>Zvol <strong>Run → Run File</strong> (<code>Shift+F6</code>). Tato volba spouští vybraný soubor.</li>
+<li>Text najdeš v okně <strong>Output</strong>. Když ho nevidíš, otevři <strong>Window → Output</strong>. Grafické hry později otevřou vlastní okno.</li>
+</ol>
+<p>Další úkoly otevírej a spouštěj stejně. Pokud spouštění v editoru ještě nemáš nastavené, použij postup z terminálu výše. Pro kontrolu jediné hry použij terminálový příkaz v části <a href="#checks">Jak později ověříš opravu hry</a>.</p>
+<p><a id="errors"></a></p>
+<h2>Když se něco nepovede</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Co vidíš</th>
+<th>Co to znamená a co zkusit</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Příkaz <code>java</code> není nalezen.</td>
+<td>Terminál nemá dostupné JDK. Ověř instalaci a nastavení podle stránky výše.</td>
+</tr>
+<tr>
+<td>Java nemůže najít <code>WakeUp.java</code>.</td>
+<td>Ověř složku terminálu a cestu <code>learn/examples/01/WakeUp.java</code>.</td>
+</tr>
+<tr>
+<td>Hlášení obsahuje <code>error:</code> a jméno souboru s číslem řádku.</td>
+<td>Compiler (překladač) nerozumí zapsanému programu. Začni prvním hlášením; zkontroluj uvozovky, závorky a středníky u označeného místa.</td>
+</tr>
+<tr>
+<td>Po úpravě pořád vidíš starý výsledek.</td>
+<td>Ulož soubor a ověř, že spouštíš stejnou kopii, kterou upravuješ. Staré herní okno zavři.</td>
+</tr>
+<tr>
+<td>Po výpisu se nic dalšího neděje.</td>
+<td>U prvních příkladů je to konec programu. Další příkaz zadáváš terminálu.</td>
+</tr>
+</tbody></table></div>
+<p>Na konci výpisu může být více hlášení vyvolaných jednou chybou. Oprav nejprve tu první a spusť soubor znovu. Příkaz Undo v editoru umí vrátit poslední změnu.</p>
+<p><a id="checks"></a></p>
+<h2>Jak později ověříš opravu hry</h2>
+<p>Malé úkoly v učebnici mají přímo uvedený očekávaný výstup. Porovnáš s ním vlastní spuštění. Hry mají navíc připravené funkční kontroly ve svém <code>Check.java</code>.</p>
+<p>Například pro první hru, ze stejné hlavní složky:</p>
+<pre><code class="language-text">java L01/Check.java M01_CafeWallLab.java
+</code></pre>
+<ul>
+<li><strong>GREEN</strong> znamená, že tato hra splnila ověřované případy zadání.</li>
+<li><strong>RED</strong> znamená, že některý ověřovaný případ zatím nesouhlasí. Přečti zprávu za názvem hry.</li>
+<li><strong>Compiler error</strong> znamená chybu zápisu, kvůli které se příslušný kód nepodařilo přeložit.</li>
+</ul>
+<p>Na začátku může být hra RED, přestože se spustí. Úkol po tobě chce opravu nebo nové pravidlo. <code>Check.java</code> při řešení neupravuj. Až přijdeš k první hře, lekce uvede právě její kontrolu.</p>
+<p><strong>Můžeš pokračovat, když dokážeš spustit WakeUp, změnit první zprávu a po uložení vidět novou.</strong></p>
+<p>Pokračuj na <a href="01-first-program.html">Tvůj první program</a>.</p>
+</article><nav class="page-nav" aria-label="Předchozí a další lekce"><a href="index.html">← Obsah</a><a class="next" href="01-first-program.html">1.1 Tvůj první program →</a></nav><p class="page-footer">Tato stránka funguje offline. Příklady spouštěj v Javě ze stažené složky kurzu.</p></main></div></body></html>
