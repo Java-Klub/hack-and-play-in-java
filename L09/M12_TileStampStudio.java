@@ -1,269 +1,272 @@
 // <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
+import module java.base;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 // </editor-fold>
 
-/// # L09.12 · TileStampStudio
-///
-/// Otiskni vlastní dlaždici po ploše a sleduj, jak z malého motivu vznikne vzor. Ovládání opakování má
-/// dovolit řídký i hustý obrazec.
-///
-/// **Tvoje mise:** Každé přijaté číslo se změní na šest opakování. Nech platnou volbu dojít do živého
-/// vzoru a při odmítnutém textu zachovej předchozí nastavení.
-///
-/// **Dnes trénuješ:** Nejprve proveď parsing (rozbor) a ověření candidate (kandidáta), teprve potom změň
-/// sdílený state (stav). Úspěch má znamenat skutečné použití požadované volby, ne pouhý zdařený převod.
-///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L09/M12_TileStampStudio.java`
-/// - Kontrola této mise: `java L09/Check.java M12_TileStampStudio.java`
-///
-/// Po spuštění programu klikáním zapínej či vypínej barvu políček; napiš 3 a klikni na Repeats pro
-/// změnu hustoty vzoru. Clear obnoví dlaždici. Po opravě: ulož soubor, spusť uvedenou kontrolu a
-/// zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F31 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
-boolean applyRepeats(String text) {
-    try {
-        int candidate = Integer.parseInt(text.strip());
-        if (candidate < 1 || candidate > 12) return false;
-        repeats = candidate;
+class M12_TileStampStudio {
+    /// # L09.12 · TileStampStudio
+    ///
+    /// Otiskni vlastní dlaždici po ploše a sleduj, jak z malého motivu vznikne vzor. Ovládání opakování má
+    /// dovolit řídký i hustý obrazec.
+    ///
+    /// **Tvoje mise:** Každé přijaté číslo se změní na šest opakování. Nech platnou volbu dojít do živého
+    /// vzoru a při odmítnutém textu zachovej předchozí nastavení.
+    ///
+    /// **Dnes trénuješ:** Nejprve proveď parsing (rozbor) a ověření candidate (kandidáta), teprve potom změň
+    /// sdílený state (stav). Úspěch má znamenat skutečné použití požadované volby, ne pouhý zdařený převod.
+    ///
+    /// Z hlavní složky obsahující README.md:
+    /// - Hraní: `java L09/M12_TileStampStudio.java`
+    /// - Kontrola této mise: `java L09/Check.java M12_TileStampStudio.java`
+    ///
+    /// Po spuštění programu klikáním zapínej či vypínej barvu políček; napiš 3 a klikni na Repeats pro
+    /// změnu hustoty vzoru. Clear obnoví dlaždici. Po opravě: ulož soubor, spusť uvedenou kontrolu a
+    /// zahraj si znovu.
+    ///
+    /// Potřebuješ výklad? Připomenutí · F31 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
+    /// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+    boolean applyRepeats(String text) {
+        try {
+            int candidate = Integer.parseInt(text.strip());
+            if (candidate < 1 || candidate > 12) return false;
+            repeats = candidate;
+            return true;
+        } catch (NumberFormatException invalid) {
+            return false;
+        }
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="Připomenutí · F31">
+    /// ### Parse (převod), validation (ověření), potom uložení
+    ///
+    /// Parsing převádí text; validation ověřuje, zda je výsledné číslo povolené. Každý krok může selhat
+    /// jinak.
+    ///
+    /// ```java
+    /// int readCopies(String text) {
+    ///     try {
+    ///         int n = Integer.parseInt(text.strip());
+    ///         if (n < 1 || n > 5) {
+    ///             throw new IllegalArgumentException("Copies: 1..5");
+    ///         }
+    ///         return n;
+    ///     } catch (NumberFormatException invalid) {
+    ///         return 3;
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// `readCopies(" 2 ")` vrátí `2`: převod i ověření uspějí. `"oops"` selže při převodu a přes `catch`
+    /// vrátí `3`. Číselný text `"8"` se převede, ale následně vyvolá jinou exception (výjimku); tento
+    /// konkrétní catch ji nezachytí. `return` ukončí metodu; `throw` opustí běžnou cestu. Uložený stav
+    /// hry měň až po úspěšném ověření.
+    ///
+    /// Předpověz cestu pro `"five"`, `"5"` a `"0"`.
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+    /// ## Jak číst právě tyto řádky
+    ///
+    /// - `int candidate` — Odděluje navrženou hodnotu od aktuálního repeats field (položky objektu).
+    /// - `candidate < 1 || candidate > 12` — Odmítne integer (celé číslo) mimo povolené opakování před změnou
+    ///   model (modelu pravidel).
+    /// - `repeats = 6` — Potvrdí konstantu místo převedeného návrhu.
+    /// - `return false;` — Oznámí odmítnutí, aby caller (volající část) mohl zachovat předchozí nastavení
+    ///   vzoru.
+    ///
+    /// ### Co už obstarává připravená část
+    ///
+    /// Každé kliknutí přepne zdrojové políčko mezi barvou a prázdným místem. render dlaždici opakuje a
+    /// tlačítko Repeats volá applyRepeats pro skutečný náhled; Clear obnoví dlaždici.
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+    /// ### Před změnou razítka ověř vstup
+    ///
+    /// Parsing (převod) a změna modelu jsou dva kroky. Jestliže repeats bylo 4, chybný text `"oops"` musí
+    /// vrátit false a ponechat uloženou 4. Číselné `"13"` také ponechá 4, protože neprojde kontrolou
+    /// rozsahu; toto odmítnutí používá return false místo vyvolání výjimky. Pro přijaté `"3"` musí
+    /// uložený počet opakování odpovídat přijatému požadavku. Trasuj současný kód: který řádek ukládá
+    /// konstantu až poté, co candidate prošel ověřením? Předpověz uloženou hodnotu po platném vstupu a
+    /// následném překlepu; neúspěšný druhý pokus nesmí smazat první úspěch.
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+    /// Parsing (rozbor) míří do dočasného candidate, nikoli přímo do field (položky objektu).
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+    /// Obě hranice ověř před assignment (přiřazením).
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+    /// Při úspěchu přiřaď candidate místo původní výchozí hodnoty.
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+    int[][] tile = new int[8][8];
+    int[] palette = {0xFFFFFF, 0x182030};
+    JButton[][] buttons = new JButton[8][8];
+
+    boolean paint(int row, int col, int colour) {
+        if (row < 0 || row >= 8 || col < 0 || col >= 8 || colour < 0 || colour >= palette.length) {
+            return false;
+        }
+        tile[row][col] = colour;
         return true;
-    } catch (NumberFormatException invalid) {
-        return false;
     }
-}
 
-// <editor-fold defaultstate="collapsed" desc="Připomenutí · F31">
-/// ### Parse (převod), validation (ověření), potom uložení
-///
-/// Parsing převádí text; validation ověřuje, zda je výsledné číslo povolené. Každý krok může selhat
-/// jinak.
-///
-/// ```java
-/// int readCopies(String text) {
-///     try {
-///         int n = Integer.parseInt(text.strip());
-///         if (n < 1 || n > 5) {
-///             throw new IllegalArgumentException("Copies: 1..5");
-///         }
-///         return n;
-///     } catch (NumberFormatException invalid) {
-///         return 3;
-///     }
-/// }
-/// ```
-///
-/// `readCopies(" 2 ")` vrátí `2`: převod i ověření uspějí. `"oops"` selže při převodu a přes `catch`
-/// vrátí `3`. Číselný text `"8"` se převede, ale následně vyvolá jinou exception (výjimku); tento
-/// konkrétní catch ji nezachytí. `return` ukončí metodu; `throw` opustí běžnou cestu. Uložený stav
-/// hry měň až po úspěšném ověření.
-///
-/// Předpověz cestu pro `"five"`, `"5"` a `"0"`.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
-///
-/// - `int candidate` — Odděluje navrženou hodnotu od aktuálního repeats field (položky objektu).
-/// - `candidate < 1 || candidate > 12` — Odmítne integer (celé číslo) mimo povolené opakování před změnou
-///   model (modelu pravidel).
-/// - `repeats = 6` — Potvrdí konstantu místo převedeného návrhu.
-/// - `return false;` — Oznámí odmítnutí, aby caller (volající část) mohl zachovat předchozí nastavení
-///   vzoru.
-///
-/// ### Co už obstarává připravená část
-///
-/// Každé kliknutí přepne zdrojové políčko mezi barvou a prázdným místem. render dlaždici opakuje a
-/// tlačítko Repeats volá applyRepeats pro skutečný náhled; Clear obnoví dlaždici.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
-/// ### Před změnou razítka ověř vstup
-///
-/// Parsing (převod) a změna modelu jsou dva kroky. Jestliže repeats bylo 4, chybný text `"oops"` musí
-/// vrátit false a ponechat uloženou 4. Číselné `"13"` také ponechá 4, protože neprojde kontrolou
-/// rozsahu; toto odmítnutí používá return false místo vyvolání výjimky. Pro přijaté `"3"` musí
-/// uložený počet opakování odpovídat přijatému požadavku. Trasuj současný kód: který řádek ukládá
-/// konstantu až poté, co candidate prošel ověřením? Předpověz uloženou hodnotu po platném vstupu a
-/// následném překlepu; neúspěšný druhý pokus nesmí smazat první úspěch.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Parsing (rozbor) míří do dočasného candidate, nikoli přímo do field (položky objektu).
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Obě hranice ověř před assignment (přiřazením).
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Při úspěchu přiřaď candidate místo původní výchozí hodnoty.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
-int[][] tile = new int[8][8];
-int[] palette = {0xFFFFFF, 0x182030};
-JButton[][] buttons = new JButton[8][8];
-
-boolean paint(int row, int col, int colour) {
-    if (row < 0 || row >= 8 || col < 0 || col >= 8 || colour < 0 || colour >= palette.length) {
-        return false;
+    /// Připravená tvorba obrazu: generování a kreslení zůstávají viditelné v tomto file (souboru).
+    BufferedImage render(int repeats) {
+        if (repeats < 1 || repeats > 12) {
+            throw new IllegalArgumentException("Repeats: 1..12.");
+        }
+        int size = repeats * 8 * 6;
+        var image = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                image.setRGB(x, y, palette[tile[y / 6 % 8][x / 6 % 8]]);
+            }
+        }
+        return image;
     }
-    tile[row][col] = colour;
-    return true;
-}
 
-/// Připravená tvorba obrazu: generování a kreslení zůstávají viditelné v tomto file (souboru).
-BufferedImage render(int repeats) {
-    if (repeats < 1 || repeats > 12) {
-        throw new IllegalArgumentException("Repeats: 1..12.");
-    }
-    int size = repeats * 8 * 6;
-    var image = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
-    for (int y = 0; y < size; y++) {
-        for (int x = 0; x < size; x++) {
-            image.setRGB(x, y, palette[tile[y / 6 % 8][x / 6 % 8]]);
+    void refresh() {
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                buttons[row][col].setBackground(new Color(palette[tile[row][col]]));
+                buttons[row][col].setOpaque(true);
+            }
         }
     }
-    return image;
-}
 
-void refresh() {
-    for (int row = 0; row < 8; row++) {
-        for (int col = 0; col < 8; col++) {
-            buttons[row][col].setBackground(new Color(palette[tile[row][col]]));
-            buttons[row][col].setOpaque(true);
-        }
-    }
-}
-
-/// Připravené Swing UI (rozhraní): vytváří se na EDT; úklid timer (časovače) patří k oknu.
-void showWindow() {
-    var frame = new JFrame("Tile Stamp Studio");
-    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    var preview = new JPanel(){
+    /// Připravené Swing UI (rozhraní): vytváří se na EDT; úklid timer (časovače) patří k oknu.
+    void showWindow() {
+        var frame = new JFrame("Tile Stamp Studio");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        var preview = new JPanel(){
         
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            g.drawImage(render(repeats), 0, 0, null);
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(render(repeats), 0, 0, null);
+            }
+        };
+        preview.setPreferredSize(new Dimension(288, 288));
+        var grid = new JPanel(new GridLayout(8, 8, 1, 1));
+        grid.setPreferredSize(new Dimension(288, 288));
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                int r = row;
+                int c = col;
+                var button = new JButton();
+                buttons[row][col] = button;
+                button.addActionListener(event -> {
+                    paint(r, c, tile[r][c] == 0 ? 1 : 0);
+                    refresh();
+                    preview.repaint();
+                });
+                grid.add(button);
+            }
         }
-    };
-    preview.setPreferredSize(new Dimension(288, 288));
-    var grid = new JPanel(new GridLayout(8, 8, 1, 1));
-    grid.setPreferredSize(new Dimension(288, 288));
-    for (int row = 0; row < 8; row++) {
-        for (int col = 0; col < 8; col++) {
-            int r = row;
-            int c = col;
-            var button = new JButton();
-            buttons[row][col] = button;
-            button.addActionListener(event -> {
-                paint(r, c, tile[r][c] == 0 ? 1 : 0);
-                refresh();
-                preview.repaint();
-            });
-            grid.add(button);
-        }
-    }
-    var controls = new JPanel();
-    var clear = new JButton("Clear");
-    clear.addActionListener(event -> {
-        tile = new int[8][8];
+        var controls = new JPanel();
+        var clear = new JButton("Clear");
+        clear.addActionListener(event -> {
+            tile = new int[8][8];
+            refresh();
+            preview.repaint();
+        });
+        var status = new JLabel("Repeated preview");
+        var repeatText = new JTextField("6", 3);
+        var apply = new JButton("Repeats");
+        apply.addActionListener(event -> {
+            boolean accepted = applyRepeats(repeatText.getText());
+            status.setText(accepted ? "Repeats: " + repeats : "Use a whole number 1..12");
+            preview.repaint();
+        });
+        controls.add(repeatText);
+        controls.add(apply);
+        controls.add(clear);
+        frame.add(grid, BorderLayout.WEST);
+        frame.add(preview, BorderLayout.CENTER);
+        frame.add(controls, BorderLayout.SOUTH);
+        frame.add(status, BorderLayout.NORTH);
         refresh();
-        preview.repaint();
-    });
-    var status = new JLabel("Repeated preview");
-    var repeatText = new JTextField("6", 3);
-    var apply = new JButton("Repeats");
-    apply.addActionListener(event -> {
-        boolean accepted = applyRepeats(repeatText.getText());
-        status.setText(accepted ? "Repeats: " + repeats : "Use a whole number 1..12");
-        preview.repaint();
-    });
-    controls.add(repeatText);
-    controls.add(apply);
-    controls.add(clear);
-    frame.add(grid, BorderLayout.WEST);
-    frame.add(preview, BorderLayout.CENTER);
-    frame.add(controls, BorderLayout.SOUTH);
-    frame.add(status, BorderLayout.NORTH);
-    refresh();
-    frame.pack();
-    frame.setLocationByPlatform(true);
-    frame.setVisible(true);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
+    }
+
+    int repeats = 6;
+
+    /// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
+    /// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
+    void main() {
+        SwingUtilities.invokeLater(this::showWindow);
+    }
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
+    /// ## Neznámý zápis?
+    ///
+    /// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
+    /// dopředu.
+    ///
+    /// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
+    /// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
+    /// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
+    ///   části.
+    /// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
+    ///   znamenají bez předávaných argument (argumentů).
+    /// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
+    /// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
+    /// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
+    /// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
+    ///   proto, že jsou v souboru výše.
+    /// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
+    /// - `boolean` — Hodnota true nebo false: ano nebo ne.
+    /// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
+    /// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
+    ///   textu nepatří.
+    /// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
+    /// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
+    /// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
+    /// - `++` — Zvětší číselnou hodnotu o jedna.
+    /// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
+    /// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
+    /// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
+    /// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
+    ///   (balíčku).
+    /// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
+    /// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
+    ///   List<String> lomené závorky popisují element type (typ prvku).
+    /// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
+    ///   druhou.
+    /// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
+    ///   možnosti ? : nebo následuje za značkou switch.
+    /// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
+    ///   (prvek); length je počet prvků.
+    /// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
+    /// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
+    /// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
+    /// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
+    /// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
+    ///   až při pozdějším volání.
+    /// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
+    /// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
+    /// - `protected` — Visibility keyword (klíčové slovo přístupnosti) používané připraveným library callback
+    ///   (knihovním zpětným voláním), například paintComponent.
+    /// - `super` — V super.paintComponent(g) požádá připravenou parent implementation (nadřazenou
+    ///   implementaci), aby nejprve vykreslila běžné pozadí.
+    /// - `null` — Žádný object (objekt) tu není.
+    /// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
+    /// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
+    /// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
+    /// - `JFrame` — Okno dodané JDK knihovnou Swing.
+    /// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.
+    /// - `SwingUtilities.invokeLater` — Naplánuje práci s oknem na Swing event thread (vlákno událostí); akce
+    ///   se provede později.
+    // </editor-fold>
+
 }
-
-int repeats = 6;
-
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
-void main() {
-    SwingUtilities.invokeLater(this::showWindow);
-}
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
-/// ## Neznámý zápis?
-///
-/// Tato malá mapa je dobrovolná. Najdi jen znak nebo slovo, kterému nerozumíš. Není třeba se ji učit
-/// dopředu.
-///
-/// - `///` — Slova pro čtenáře. Java tyto comment (komentářové) řádky při spuštění přeskočí.
-/// - `import` — Zpřístupní v souboru jména z knihovny; knihovnu tím nespustí.
-/// - `;` — Ukončuje jeden statement (příkaz), podobně jako tečka větu. V záhlaví for odděluje jeho tři
-///   části.
-/// - `()` — Za jménem: volání akce nebo seznam parameter (parametrů) při jejím popisu. Prázdné závorky
-///   znamenají bez předávaných argument (argumentů).
-/// - `{}` — Složené závorky ohraničují block (blok kódu). Otevírací a uzavírací závorka patří k sobě.
-/// - `.` — Zpřístupňuje něco patřícího hodnotě nebo type (typu) vlevo, například IO.println.
-/// - `void` — Tato method (metoda) provede akci a nevrací výslednou hodnotu.
-/// - `main` — Tady Java program zahajuje. Ostatní method declaration (popisy metod) se neprovedou jen
-///   proto, že jsou v souboru výše.
-/// - `int` — Whole-number type (typ pro celá čísla) s omezeným rozsahem.
-/// - `boolean` — Hodnota true nebo false: ano nebo ne.
-/// - `String` — Text, například "Red Fox". Dvojité uvozovky označují text přímo napsaný v kódu.
-/// - `"` — Dvojité uvozovky ohraničují text literal (text přímo zapsaný v kódu). Samotné uvozovky do
-///   textu nepatří.
-/// - `var` — Java odvodí type (typ) místní hodnoty z expression (výrazu) vpravo. Type zůstává pevný.
-/// - `=` — Uloží hodnotu vpravo pod jméno vlevo. Není to comparison (porovnání).
-/// - `||` — Musí platit aspoň jedna condition (podmínka); je-li první true, Java druhou přeskočí.
-/// - `++` — Zvětší číselnou hodnotu o jedna.
-/// - `%` — Remainder (zbytek po dělení); hodí se pro opakující se pozice nebo tahy.
-/// - `+` — Sčítá čísla. Pokud je součástí String, spojuje text.
-/// - `-` — Odčítá čísla; před jedním číslem mění jeho znaménko.
-/// - `*` — Násobí čísla. V import jako java.awt.* zpřístupňuje jména type (typů) z daného package
-///   (balíčku).
-/// - `/` — Dělí čísla. Dělení dvou int hodnot zahodí desetinnou část.
-/// - `<` — Porovnává čísla: menší než. <= připouští i rovnost; > a >= porovnávají opačným směrem. V
-///   List<String> lomené závorky popisují element type (typ prvku).
-/// - `?` — V condition ? first : second vybere první hodnotu, když condition (podmínka) platí, jinak
-///   druhou.
-/// - `:` — Ve for (int value : values) znamená čtení jednotlivých element (prvků). Odděluje také dvě
-///   možnosti ? : nebo následuje za značkou switch.
-/// - `[]` — Array (pole) nebo přístup přes index (pořadové číslo). Index 0 označuje první element
-///   (prvek); length je počet prvků.
-/// - `new` — Vytvoří novou hodnotu nebo object (objekt), například nové array (pole) či okno.
-/// - `return` — Ukončí právě toto volání method (metody), případně předá výsledek volající části.
-/// - `if` — Provede svůj block (blok), jen když condition (podmínka) v závorkách platí.
-/// - `for` — Opakuje block (blok) pro zvolený rozsah nebo posloupnost hodnot.
-/// - `->` — Ve switch: výsledek nebo akce větve. V lambda (anonymní funkci): popis akce, která se provede
-///   až při pozdějším volání.
-/// - `::` — Method reference (odkaz na metodu): předá akci, aniž ji hned zavolá.
-/// - `this` — Aktuální game object (objekt hry): právě tento běh a jeho uložený state (stav).
-/// - `protected` — Visibility keyword (klíčové slovo přístupnosti) používané připraveným library callback
-///   (knihovním zpětným voláním), například paintComponent.
-/// - `super` — V super.paintComponent(g) požádá připravenou parent implementation (nadřazenou
-///   implementaci), aby nejprve vykreslila běžné pozadí.
-/// - `null` — Žádný object (objekt) tu není.
-/// - `try` — Block (blok), jehož případné selhání může zpracovat následující catch.
-/// - `catch` — Zpracuje uvedený druh exception (výjimky), aby selhání nezůstalo bez vysvětlení.
-/// - `throw` — Oznámí selhání vytvořením nebo předáním exception (výjimky).
-/// - `JFrame` — Okno dodané JDK knihovnou Swing.
-/// - `JPanel` — Plocha okna, která může zobrazit kresbu hry či ovládací prvky.
-/// - `SwingUtilities.invokeLater` — Naplánuje práci s oknem na Swing event thread (vlákno událostí); akce
-///   se provede později.
-// </editor-fold>
-
