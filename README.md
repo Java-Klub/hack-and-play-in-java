@@ -8,4 +8,4 @@ Nauč se Javu na malých hrách, hádankách a tvořivých programech.
 
 **[Stáhnout český kurz (ZIP)](https://github.com/Java-Klub/hack-and-play-in-java/archive/refs/heads/ceska-verze.zip)**
 
-Rozbal ZIP a otevři `learn/index.html` v prohlížeči. Učebnice tě provede přípravou NetBeans i řešením úloh. Po stažení funguje offline.
+Rozbal ZIP a otevři `index.html` v prohlížeči. Učebnice tě provede přípravou NetBeans i řešením úloh. Po stažení funguje offline.
