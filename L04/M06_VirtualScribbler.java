@@ -13,19 +13,22 @@ import javax.swing.Timer;
 /// Let a restless pen grow a drawing across the canvas, then steer its drift and jitter. Pause at
 /// an interesting pattern to examine it before clearing the canvas for another experiment.
 ///
-/// **Your mission:** The burst action currently moves the pen zero times. Build a for loop that calls
-/// step exactly count times for accepted counts 0–60. Preserve the supplied rejection and the pause
-/// behaviour inside step.
 ///
-/// **Today you learn:** Counted repetition: choose a for range by its number of passes. For count equal
-/// to one, the body must run once; for zero it must not run at all.
+/// **Your mission:** Turn the Signature button into a repeatable square stamp: start at the centre,
+/// travel four straight equal sides of six pen steps, and stop paused at the starting point. The
+/// counter must show 24. Previous drift, jitter, position and drawings must not affect the stamp. The
+/// drawing toy and step buttons already work.
 ///
-/// Click 1 step and then 12 steps. These one-shot buttons pause automatic drawing so you can compare
-/// the visible Steps count. The unfinished burst leaves it at zero.
-void burst(int count) {
-    if (count < 0 || count > 60) {
-        return;
-    }
+/// **Today you learn:** A for loop can repeat a small program containing several actions. Calls change
+/// the state that the next action sees.
+///
+/// Click Signature, then use Space and the arrows to explore the pen. Click Signature again: its
+/// present recipe gives a fresh straight line, not a square.
+void signature() {
+    restart();
+    drift = 0;
+    jitter = 0;
+    oneShot(24);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F11">
@@ -51,45 +54,51 @@ void burst(int count) {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Read this code">
-/// The guard already rejects counts outside 0–60. Your loop belongs after that guard; one iteration
-/// makes one call to step.
+/// A repeated drawing is a program, not a picture file. List the actions of one side and what must
+/// change before the next side begins; then decide what belongs inside the repetition and what belongs
+/// outside it.
 ///
-/// | count | calls required | example visited counter values |
-/// | --- | --- | --- |
-/// | 0 | 0 | none |
-/// | 1 | 1 | 0 |
-/// | 4 | 4 | 0, 1, 2, 3 |
-///
-/// Choose initialization, continuation and progress together. A counter's last value is not the number
-/// of passes. Predict the calls for count 12 before using its button. step keeps the canvas, randomness
-/// and paused check. oneShot temporarily enables drawing, calls your burst, then leaves automatic
-/// drawing paused; the timer uses the same burst for continuous play.
+/// For a separate three-part recipe that draws two steps each time, the counter progresses 0 → 2 → 4 →
+/// 6. A turn changes direction but does not draw a step. Predict the count for five such parts. Follow
+/// the actual Signature button to its action and compare it with the ordinary step buttons.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="For this game">
-/// Pause before comparing counts. Each one-shot button ends paused, even if continuous drawing was
-/// running. The visible Steps value is the witness; no change to the pen physics is required.
+// <editor-fold defaultstate="expanded" desc="For this game">
+/// The pen moves 2.2 pixels per step. `angle` is measured in radians: 0 points right, Math.PI / 2 down,
+/// Math.PI left, and 3 * Math.PI / 2 up. Adding Math.PI / 2 makes a quarter-turn. drift and jitter both
+/// zero preserve the chosen heading. paused true prevents drawing; restart gives a clean canvas and
+/// centred pen. These are existing model values, not a new drawing API.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Write the required call counts for zero, one and four before writing the for header.
+/// Separate setup, a repeated side, and the final pause. Which actions must happen exactly once?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Each pass should do just step(); progress belongs in the loop header.
+/// Signature calls signature. burst draws a requested number of steps; angle sets heading, while drift
+/// and jitter perturb it before a step.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// A zero-based counter below count gives count passes. Keep the existing guard before the loop.
+/// Reset once, remove drift and jitter, repeat a six-step side followed by a quarter-turn four times,
+/// then pause. A side requires drawing enabled.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Make it yours">
-/// Design a pulse rhythm: alternating iterations make one and two calls to step. Keep a separate
-/// written trace for a four-iteration burst before changing the drawing. Give the rhythm a name and
-/// compare it with the ordinary one-call-per-iteration version.
+/// Invent a second signature with two different repeated motifs. Name it, predict its step count before
+/// drawing, and let a partner reconstruct its recipe from the trace.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+void burst(int count) {
+    if (count < 0 || count > 60) {
+        return;
+    }
+    for (int i = 0; i < count; i++) {
+        step();
+    }
+}
+
 final int WIDTH = 640, HEIGHT = 450;
 
 BufferedImage canvas;
@@ -213,6 +222,14 @@ void showWindow() {
     var controls = new JPanel(new BorderLayout());
     controls.add(help, BorderLayout.NORTH);
     var buttons = new JPanel();
+    var stamp = new JButton("Signature");
+    stamp.setFocusable(false);
+    stamp.addActionListener(e -> {
+        signature();
+        panel.repaint();
+        panel.requestFocusInWindow();
+    });
+    buttons.add(stamp);
     for (int count : new int[]{1, 12}) {
         var button = new JButton(count == 1 ? "1 step" : "12 steps");
         button.setFocusable(false);

@@ -5,21 +5,19 @@ import java.awt.image.BufferedImage;
 
 /// # L11.12 · MagicEyeStrip
 ///
-/// Grow a repeating dot strip that can hide a depth shape when your eyes match neighbouring patterns. The
-/// seed file lets you save and recreate a particular field of dots.
+/// Keep a notebook of dot-field experiments rather than one anonymous number. Comments should explain
+/// your choices while the last saved experiment recreates the picture.
 ///
-/// **Your mission:** The program tries to parse the filename as a number rather than reading the number
-/// inside it. Repair seed loading, including whitespace, bad content and a missing file.
+/// **Your mission:** Let seed.txt become an experiment notebook: skip blank lines and lines beginning
+/// with # after surrounding whitespace is removed, and use the last remaining integer as the selected
+/// seed. Bad numeric lines and a notebook with no seed must still report failure. The ordinary
+/// single-number file must keep working.
 ///
-/// **Today you learn:** A Path names a location; its text is not that location’s contents. Read the file
-/// before numeric conversion so missing data and malformed data remain distinct failures.
+/// **Investigation:** Infer and implement a small persisted experiment-log format.
 ///
-/// The program loads the number stored in seed.txt and uses it for the Java dot picture. If
-/// absent, seed.txt is created with 42; existing contents stay untouched. A bad read reports
-/// failure.
-long readSeed(Path path) throws IOException {
-    return Long.parseLong(path.toString());
-}
+/// Run once to create seed.txt if absent. Edit it to include a # comment, 42 and a later -7 on
+/// separate lines, then run again. The terminal reports the chosen seed and the Java window shows its
+/// dot field.
 
 // <editor-fold defaultstate="collapsed" desc="Your next version · optional">
 /// ### Make it yours
@@ -52,33 +50,49 @@ long readSeed(Path path) throws IOException {
 /// Predict: if file becomes `Path.of("cards", "one.txt")`, where is the note written?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Investigator notebook · worked example">
+/// ### A file format is a set of promises
 ///
-/// - `Path path` — The selected location of a text file, not the numeric seed itself.
-/// - `path.toString()` — Produces a path such as seed.txt, not the text stored inside seed.txt.
-/// - `Long.parseLong` — Converts a numeric string into a long and rejects malformed content.
-/// - `throws IOException` — Allows a genuine file-reading failure to reach the caller’s error handling.
+/// Files.readAllLines(path) returns a List<String>, one entry per line without line-ending
+/// characters. startsWith("#") asks whether a string begins with #. A format decides what each line
+/// means; the filename is not the content.
 ///
-/// ### What the prepared part already does
+/// ```java
+/// String last = null;
+/// for (String line : List.of("  red ", "", "blue")) {
+///     String text = line.strip();
+///     if (text.isEmpty()) continue;
+///     last = text;
+/// }
+/// ```
 ///
-/// main creates a default seed.txt only when absent, then readSeed loads its text number. render
-/// uses that actual seed for the dot picture; a bad read is reported without a substitute seed.
+/// This neutral traversal leaves last as blue. Predict the result if blue is replaced by spaces. A
+/// sentinel such as null distinguishes no accepted value from an accepted zero. Numeric conversion
+/// should happen for every data line, so a typo is not silently hidden by a later valid number. Read
+/// errors and malformed content are separate failures; neither justifies overwriting the file with a
+/// fallback.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// A Path is a location, not the stored content.
+/// Locate the read that supplies the seed printed by main. Try a one-number file before introducing
+/// notebook lines.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Use Files.readString before numeric conversion.
+/// readSeed currently converts the complete file at once. Read lines, strip each one, and classify
+/// comment/blank/data before conversion.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Whitespace is allowed; bad content and a missing file stay distinct failures.
+/// Remember the last successfully parsed long, but parse every data line. At the end reject no
+/// accepted value; return the selected value without writing the file.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="expanded" desc="Program to explore">
+long readSeed(Path path) throws IOException {
+    return Long.parseLong(Files.readString(path).strip());
+}
+
 BufferedImage render(long seed, double option) {
     int depth = (int)option;
     if (!Double.isFinite(option) || depth < 1 || depth > 24) {
@@ -129,7 +143,7 @@ void main() {
         IO.println("Loaded seed from seed.txt: " + seed);
         showImages("Magic Eye Strip", new String[]{"Seed " + seed}, new java.awt.image.BufferedImage[]{render(seed, 16)});
     } catch (IOException | IllegalArgumentException failure) {
-        IO.println("Cannot load seed.txt: " + failure.getMessage() + ". Repair readSeed; Save the source, run its check command, then play again.");
+        IO.println("Cannot load seed.txt: " + failure.getMessage() + ". Check the notebook data lines.");
     }
 }
 // </editor-fold>

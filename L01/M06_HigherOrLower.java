@@ -1,18 +1,13 @@
 /// # L01.06 · HigherOrLower
 ///
-/// Guess whether the next card will be higher or lower and try to build a streak before one wrong
-/// prediction ends it. Equal cards give you another chance without a penalty.
+/// **Your mission · Find the shared setting:** Turn the ten-point survival round into a three-correct
+/// sprint. Find the setting that controls both the displayed goal and winning. Restart must keep your
+/// new goal; do not replace the current score with a fixed number.
 ///
-/// **Your mission · Set a shared challenge:** The cabinet celebrates after just one correct guess. Repair
-/// the shared target so
-/// both the score display and the winning rule describe a ten-correct round.
+/// The starter works by its original rules. The check already expects your new goal.
 ///
-/// **Today you learn:** Named values: target stores one fact that several parts can read. Changing one
-/// initialization should keep the displayed goal and the actual goal in agreement.
-///
-/// Run the program, read Current card and click Higher or Lower to predict the next rank. The
-/// result and target stay visible; New round restarts play.
-int target = 1;
+/// Read the goal in the Java window. Choose Higher/Lower; New round starts again. After editing,
+/// save, close and relaunch so both places use the new source.
 
 // <editor-fold defaultstate="expanded" desc="Learn · F03">
 /// A variable gives a stored value a name. Its type describes the values it can hold: `int` holds
@@ -36,56 +31,34 @@ int target = 1;
 /// Now predict the final charge if its initialization uses six instead of four.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
-///
-/// - `int` — The stored value is a whole number, suitable for counting correct guesses.
-/// - `target` — The English name identifies the shared goal; it is different from correct, the score that
-///   changes during play.
-/// - `=` — Store the value on the right under the name on the left.
-/// - `1` — The current numeric literal is one, which explains the too-short round.
-/// - `;` — End the declaration and its initialization.
-///
-/// ### What the prepared part already does
-///
-/// reset builds and shuffles the deck. command applies a prediction and reads target when deciding
-/// a win; The prepared window reads the same target for the score label. main supplies the buttons
-/// and restart.
+// <editor-fold defaultstate="expanded" desc="Explore and experiment">
+/// Separate a chosen goal from a changing score. A variable can be read by several actions. First
+/// find where the window describes success, then where play decides it. Which stored fact do both
+/// read? Keep the deck and predictions unchanged. Neutral example: two signs reading `int limit = 4;`
+/// will both see a later chosen limit; editing only one printed sign cannot change a rule.
 // </editor-fold>
 
-// <editor-fold defaultstate="expanded" desc="For this game">
-/// The default main provides cards and buttons directly in Java. Jack is 11, Queen 12, King 13
-/// and Ace 14. An equal card does not count a correct guess or lose. Both the target display
-/// and win rule read the same target. After changing target, save, close the old window and run
-/// the program again; New round does not reload edited Java.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · search area">
+/// Look among the stored game values before the window-building code.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
-/// In `int lives = 3;`, int names a whole-number type, lives is your chosen name, = stores the value,
-/// and ; ends the statement. Reading lives elsewhere gives that stored value; it does not copy the
-/// declaration. Our target is one shared fact. Predict what would go wrong if the display used ten
-/// while the finish rule used three.
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a concrete route">
+/// Search for the comparison that ends a successful round and follow its right-hand name.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Possible change · reveals the direction">
+/// The shared field is target. Set its initial value to 3; leave correct and reset alone.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Your own version · optional">
-/// After the ten-point round works, choose a sprint target for a friend and a longer survival target
-/// for yourself. Change only target, then check that both the displayed goal and finish agree.
-/// Discuss whether a longer round is more exciting or merely more punishing.
+/// Make a sprint and a survival version for two players, then compare how often a round ends. Explain
+/// why changing the score itself would not be a new goal.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Find the one initialization of target near the top.
-// </editor-fold>
+// <editor-fold defaultstate="collapsed" desc="Program · explore as needed">
+int target = 10;
 
-// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The supplied display and win comparison already read target.
-// </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Change int target = 1; to int target = 10;
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
 ArrayDeque<Integer> deck;
 int current;
 int correct;
@@ -187,8 +160,6 @@ void require(boolean valid) {
         throw new IllegalArgumentException("Invalid move or command.");
     }
 }
-
-/// Prepared entry points: main, reset, command.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">

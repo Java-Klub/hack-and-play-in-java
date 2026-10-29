@@ -7,73 +7,21 @@ import javax.swing.Timer;
 
 /// # L07.03 · TrailDuel
 ///
-/// Share one keyboard and steer two glowing trails until someone runs out of safe space. A steering
-/// mistake leaves a permanent wall behind you.
+/// A perfectly ordinary trail duel is working. Give both riders a quarter-turn control curse, then
+/// learn to drive your altered arcade cabinet.
 ///
-/// **Your mission:** Build directionFor(): W/Up means (0,-1), S/Down (0,1), A/Left (-1,0), and D/Right
-/// (1,0). Return null for unrelated keys. Both riders currently ignore all steering.
+/// **Your mission:** Turn every requested direction clockwise: Up/W sends right, Right/D sends down,
+/// Down/S sends left, and Left/A sends up. Preserve both players, ignored unrelated keys and the ban on
+/// instant reversal. First prove the normal controls work, then find where a key becomes a direction.
 ///
-/// **Today you learn:** Build a value selector from stated cases; trace its selector and returned value
-/// separately from the supplied game state changes.
+/// **Today you learn:** Follow a value through input translation and a switch expression. Change the
+/// translation, not the collision world.
 ///
-/// Run the program and play together on one keyboard, with one person steering using W, A, S, D
-/// and the other using the arrow keys.
-Direction directionFor(int code) {
-    return null;
-}
+/// Play together using WASD and arrow keys; R restarts. Try Up from the opening position before
+/// editing. After the hack, use Right/D for the first downward turn and compare your prediction with
+/// the trail.
 
-// <editor-fold defaultstate="collapsed" desc="Recall · F09">
-/// ### A switch chooses a value
-///
-/// An expression has a value. A switch expression reads one selector and chooses the value after the
-/// matching arrow. `return` then hands that value to the caller. Read this small sound selector before
-/// touching the game:
-///
-/// ```java
-/// String sound(int taps) {
-///     return switch (taps) {
-///         case 0 -> "silence";
-///         case 1, 2 -> "tap";
-///         default -> "drum";
-///     };
-/// }
-/// ```
-///
-/// Trace `sound(2)`: the selector is 2, the grouped case includes 2, so the result is `"tap"`. No other
-/// case runs. For 7, no listed case matches, so `default` provides `"drum"`. The semicolon closes the
-/// whole switch expression. The returned values must fit the method's declared return type.
-///
-/// A switch can select a boolean, number, or record just as it selects a String here. It does not
-/// automatically change a field: returning a proposed direction and storing that direction are separate
-/// actions. Predict `sound(0)` and `sound(-1)`, and point to the case each uses.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read this part
-///
-/// `KeyEvent.VK_...` are JDK integer names for keys. Group two keys after one case to share a result.
-/// `new Direction(dx, dy)` creates the prepared two-component record. Negative y points up on this
-/// screen. The key handler ignores null and separately prevents instant reversal.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Write the four coordinate changes on a small compass.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Pair WASD with its matching arrow key instead of duplicating the whole rule.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Return a Direction for each grouped pair and null in default; do not change the trail grid here.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
-/// Rotate one player’s controls by a quarter turn and announce the handicap. Can two players still
-/// coordinate a fair starting duel?
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="expanded" desc="Program · explore the rules">
 final int WIDTH = 600, HEIGHT = 430;
 
 int[][] trail;
@@ -101,6 +49,16 @@ boolean blocked(int x, int y) {
 }
 
 /// turn(): Queues at most one non-reversing turn for the chosen player.
+Direction directionFor(int code) {
+    return switch (code) {
+        case KeyEvent.VK_W, KeyEvent.VK_UP -> new Direction(0, -1);
+        case KeyEvent.VK_S, KeyEvent.VK_DOWN -> new Direction(0, 1);
+        case KeyEvent.VK_A, KeyEvent.VK_LEFT -> new Direction(-1, 0);
+        case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> new Direction(1, 0);
+        default -> null;
+    };
+}
+
 void turn(boolean first, int dx, int dy) {
     if (result != 0) {
         return;
@@ -232,6 +190,69 @@ void main() {
 record Direction(int dx, int dy) {
 }
 // </editor-fold>
+
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F09">
+/// ### A switch chooses a value
+///
+/// An expression has a value. A switch expression reads one selector and chooses the value after the
+/// matching arrow. `return` then hands that value to the caller. Read this small sound selector before
+/// touching the game:
+///
+/// ```java
+/// String sound(int taps) {
+///     return switch (taps) {
+///         case 0 -> "silence";
+///         case 1, 2 -> "tap";
+///         default -> "drum";
+///     };
+/// }
+/// ```
+///
+/// Trace `sound(2)`: the selector is 2, the grouped case includes 2, so the result is `"tap"`. No other
+/// case runs. For 7, no listed case matches, so `default` provides `"drum"`. The semicolon closes the
+/// whole switch expression. The returned values must fit the method's declared return type.
+///
+/// A switch can select a boolean, number, or record just as it selects a String here. It does not
+/// automatically change a field: returning a proposed direction and storing that direction are separate
+/// actions. Predict `sound(0)` and `sound(-1)`, and point to the case each uses.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Read this code">
+/// ### Observe, then trace the flow
+///
+/// There are three separate questions: which key arrived, what direction it requests, and whether that
+/// direction is safe now. Trace only the first two. A record can carry a pair of coordinate changes;
+/// the movement rule later decides whether to accept it. Screen y grows downward. Before searching,
+/// draw the four arrows and rotate that drawing on paper.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Experiment and replay">
+/// Record a normal opening turn. Rotate the paper compass, make one edit, and replay from R with the
+/// same key. Test both keyboard layouts and an unrelated key. If a turn seems ignored, distinguish the
+/// requested direction from the separate reversal guard.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Predict the requested result of each arrow without considering walls. The same key must still belong
+/// to the same player.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Bound the search to the input translation: look for the four grouped key cases rather than the
+/// drawing or trail array.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Find directionFor. Its switch returns Direction records. Rotate the four returned pairs; leave turn,
+/// key ownership and the default result alone.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Make only one rider cursed while the other keeps normal steering. Agree on a handicap and compare
+/// two swapped rounds.
+// </editor-fold>
+
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
 /// ## An unfamiliar piece of Java?

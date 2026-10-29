@@ -1,29 +1,23 @@
 /// # L12.06 · CipherPostcards
 ///
-/// Send a puzzle postcard in one of three toy ciphers and decode it again. Changing the cipher card
-/// should change the transformation while keeping spaces and punctuation recognisable.
+/// You received a shifted postcard without a key. The normal cipher machine already works; turn it
+/// into your own decoding assistant and choose the readable candidate yourself.
 ///
-/// **Your mission:** Build the whole typed dispatcher in transform. Caesar forwards its shift as text
-/// to applyText with mode caesar; Substitution forwards its alphabet with mode substitution; Vigenere
-/// forwards its keyword with mode vigenere. All three must preserve the caller’s decode flag.
+/// **Your mission:** Add a crack mode for a Caesar postcard whose shift is unknown. It must display
+/// all 26 decoded candidates, one per line as Shift 0: ... through Shift 25: ..., so the player can
+/// recognise a message. Keep the three normal cipher modes and their decoding intact. The tool
+/// enumerates possibilities; it must not pretend to know which sentence is meaningful.
 ///
-/// **Today you learn:** Build a complete record-pattern dispatcher. Match the alternative, unpack its
-/// own components and preserve the boundary between routing and each supplied algorithm.
+/// **Investigation:** Build a tool to solve a puzzle by enumerating candidates and extending typed
+/// dispatch.
 ///
-/// Run the program, then press Enter for vigenere and ORANGE, then type ATTACK AT DAWN!; read
-/// the selected cipher and compare Result with your original message: the Vigenere branch
-/// should change its letters.
-String transform(String text, Cipher cipher, boolean decode) {
-    // Select the typed card and forward its own data to applyText.
-    return text;
-}
+/// Choose a normal cipher to confirm the starter works. Your new mode is crack and needs no key; try
+/// KHOOR, then solve a friend’s Caesar postcard.
 
 // <editor-fold defaultstate="collapsed" desc="Your next version · optional">
-/// ### Make it yours
-///
-/// Add a fourth toy cipher card that reverses text. Introduce its record, add it to permits, route
-/// its switch case and expose it in chooseCipher. Before running, predict which exhaustive switch
-/// will complain if you forget the new alternative.
+/// Add another toy cipher card that reverses text. Connect its data shape, selection and
+/// interpretation. Predict which exhaustive switch will need another alternative, then make a puzzle
+/// for a friend.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F35">
@@ -50,51 +44,52 @@ String transform(String text, Cipher cipher, boolean decode) {
 /// Predict: which case handles `new Stars(0)`, and what text does `new Name("Nova")` produce?
 // </editor-fold>
 
-// <editor-fold defaultstate="expanded" desc="Read this code">
-/// ### A card's type chooses a route; its components supply data
+// <editor-fold defaultstate="expanded" desc="Investigator notebook · worked example">
+/// ### A new alternative must reach both selection and interpretation
 ///
-/// The sealed Cipher family contains three records. They do not all carry the same kind of value:
-/// Caesar has an int, while the others carry String. Integer.toString converts the shift for the
-/// existing text-based algorithm. The switch must use a matched component, not a field left over from
-/// another card.
+/// A sealed family lists the allowed data shapes. Adding a record changes what can be selected; an
+/// exhaustive switch must also know how to interpret that alternative. Keep the existing algorithms
+/// as reusable tools.
 ///
-/// Neutral example: a Shipping family might contain Pickup(String desk) and Delivery(String address).
-/// `case Pickup(var desk) -> "Collect at " + desk;` yields "Collect at Blue" for Pickup("Blue").
-/// Delivery needs its own case. Predict what changes when a Pickup carries "Red" instead; the rule
-/// should not hard-code Blue.
+/// ```java
+/// var lines = new StringBuilder();
+/// for (int n = 0; n < 3; n++) {
+///     if (n > 0) lines.append('\n');
+///     lines.append("Try ").append(n);
+/// }
+/// ```
 ///
-/// Here applyText owns letter arithmetic and key validation. transform owns only the
-/// type-to-algorithm adapter. With decode false a card encodes, and the same card with decode true
-/// must recover the text. Test a nondefault key and punctuation; identity output for a zero shift
-/// alone proves little.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="For this game">
-/// ### Match the card, then use its own data
-///
-/// For a Vigenere record carrying `"CAT"`, the matched keyword is CAT, regardless of the local
-/// variable's name. Predict whether changing that card to `"DOG"` should change the encoded letters.
-/// Compare two calls with the same message and key but opposite decode values; forwarding the
-/// caller's choice is part of the contract. The prepared applyText accepts a message, a mode name,
-/// its key text and the decode flag. The matching case chooses which prepared algorithm receives
-/// those values. Punctuation should survive that routing choice.
+/// This neutral tool builds three lines, Try 0 through Try 2, with no empty line at the end. Predict
+/// the text if the upper bound is 1. A line-oriented candidate tool makes its output inspectable and
+/// preserves ambiguous possibilities. Compose the tool from the supplied decoder rather than
+/// duplicating letter arithmetic; a separate mode can return a report instead of a single guessed
+/// answer.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Match all three record types and name each component locally.
+/// Follow how a mode string becomes a typed card, then how the card chooses an algorithm. There is
+/// more than one place to extend.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The mode strings are caesar, substitution and vigenere; only the Caesar int needs conversion to
-/// String.
+/// Add a component-free Crack record to the Cipher family, a crack choice in chooseCipher and its
+/// switch case in transform. Keep normal alternatives.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Return an exhaustive switch expression whose cases forward text, the matching mode and key, and
-/// unchanged decode.
+/// Build the report by decoding the input with Caesar shifts 0..25 through applyText. Use Shift n:
+/// prefixes, newline separators and no trailing newline; the crack input flow skips the key prompt.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="expanded" desc="Program to explore">
+String transform(String text, Cipher cipher, boolean decode) {
+    return switch (cipher) {
+        case Caesar(var shift) -> applyText(text, "caesar", Integer.toString(shift), decode);
+        case Substitution(var alphabet) -> applyText(text, "substitution", alphabet, decode);
+        case Vigenere(var keyword) -> applyText(text, "vigenere", keyword, decode);
+    };
+}
+
 String applyText(String text, String mode, String key, boolean decode) {
     String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     String upper = key.toUpperCase(Locale.ROOT);

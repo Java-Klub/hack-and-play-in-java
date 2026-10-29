@@ -35,7 +35,7 @@ class Check {
         run("M13_RippleTank", "L10.13 RippleTank · F30", () -> M13_RippleTankTest.main(new String[0]));
         run("M14_Snake", "L10.14 Snake · F30", () -> M14_SnakeTest.main(new String[0]));
         if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " still need repair.");
+        IO.println(checked + " missions; " + failed + " mission goals remaining.");
         if (failed > 0) System.exit(1);
     }
 
@@ -56,9 +56,9 @@ class Check {
 class M01_AsteroidDriftTest {
     static int checks;
     static final String[] CASES = {
-        "Creating a callback does not fire.",
-        "Invoking the callback and the real held-key path fire once.",
-        "Cooldown and a lost game still prevent a new shot."
+        "F fires through the actual held-key path and keeps cooldown.",
+        "Space brakes both velocity components without firing.",
+        "Restart and a lost game keep their original boundaries."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -97,18 +97,30 @@ class M01_AsteroidDriftTest {
         return image;
     }
     public static void main(String[] args) throws Exception {
-        try {
-            var p = Reflect.create("M01_AsteroidDrift");
-            Reflect.call(p, "restart");var action=((java.lang.Runnable) Reflect.call(p, "firingAction"));check(((java.util.ArrayList<Object>) Reflect.get(p, "shots")).isEmpty(),0,((java.util.ArrayList<Object>) Reflect.get(p, "shots")).size());
-            action.run();check(((java.util.ArrayList<Object>) Reflect.get(p, "shots")).size()==1&&((int) Reflect.get(p, "cooldown"))==10,1,((java.util.ArrayList<Object>) Reflect.get(p, "shots")).size());
-            action.run();check(((java.util.ArrayList<Object>) Reflect.get(p, "shots")).size()==1,2,((java.util.ArrayList<Object>) Reflect.get(p, "shots")).size());
-            Reflect.call(p, "restart");Reflect.call(p, "key", java.awt.event.KeyEvent.VK_SPACE, true);Reflect.call(p, "step");check(((java.util.ArrayList<Object>) Reflect.get(p, "shots")).size()==1,1,((java.util.ArrayList<Object>) Reflect.get(p, "shots")).size());
-            Reflect.set(p, "lost", true);Reflect.set(p, "cooldown", 0);((java.lang.Runnable) Reflect.call(p, "firingAction")).run();check(((java.util.ArrayList<Object>) Reflect.get(p, "shots")).size()==1,2,((java.util.ArrayList<Object>) Reflect.get(p, "shots")).size());
-        } catch (AssertionError failure) {
-            throw failure;
-        } catch (Exception failure) {
-            throw new AssertionError("MISSION L10.01: Unexpected failure while checking the active rule.", failure);
-        }
+        var p = Reflect.create("M01_AsteroidDrift");
+        Reflect.call(p, "restart");
+        Reflect.call(p, "key", java.awt.event.KeyEvent.VK_F, true);
+        Reflect.call(p, "step");
+        check(((java.util.List<?>) Reflect.get(p, "shots")).size() == 1, 0, "shots after F: " + ((java.util.List<?>) Reflect.get(p, "shots")).size());
+        Reflect.call(p, "step");
+        check(((java.util.List<?>) Reflect.get(p, "shots")).size() == 1, 0, "cooldown");
+        Reflect.call(p, "key", java.awt.event.KeyEvent.VK_F, false);
+        Reflect.call(p, "restart");
+        Reflect.call(p, "key", java.awt.event.KeyEvent.VK_UP, true);
+        Reflect.call(p, "key", java.awt.event.KeyEvent.VK_UP, false);
+        Reflect.set(p, "vx", 2.0);
+        Reflect.set(p, "vy", 1.0);
+        Reflect.call(p, "key", java.awt.event.KeyEvent.VK_SPACE, true);
+        Reflect.call(p, "step");
+        check(((java.util.List<?>) Reflect.get(p, "shots")).isEmpty(), 1, "Space must not fire");
+        check(Math.abs((double) Reflect.get(p, "vx") - 1.84) < 1e-12 && Math.abs((double) Reflect.get(p, "vy") - .92) < 1e-12, 1, Reflect.get(p, "vx") + ", " + Reflect.get(p, "vy"));
+        Reflect.call(p, "key", java.awt.event.KeyEvent.VK_R, true);
+        boolean clear = true;
+        for (boolean held : (boolean[]) Reflect.get(p, "held")) clear &= !held;
+        check(clear && !(boolean) Reflect.get(p, "started") && (int) Reflect.get(p, "cooldown") == 0, 2, "fresh controls");
+        Reflect.set(p, "lost", true);
+        ((Runnable) Reflect.call(p, "firingAction")).run();
+        check(((java.util.List<?>) Reflect.get(p, "shots")).isEmpty(), 2, "lost flight");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -533,9 +545,9 @@ class M08_StarTunnelTest {
 class M09_PongTest {
     static int checks;
     static final String[] CASES = {
-        "Paused, queued or normal input respects the stated tick boundary.",
-        "An active tick changes the model exactly once; a finished/paused tick cannot drift.",
-        "Invalid boundaries, restart or input cleanup remain correct."
+        "The selected bot follows the current ball at three pixels per tick.",
+        "Dead-zone boundaries, manual speed and paddle clamps remain correct.",
+        "Switching, restart and a finished match preserve lifecycle promises."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -574,14 +586,31 @@ class M09_PongTest {
         return image;
     }
     public static void main(String[] args) throws Exception {
-        try {
-            var p = Reflect.create("M09_Pong");
-            Reflect.call(p, "restart");double x=((double) Reflect.get(p, "ballX")),y=((double) Reflect.get(p, "ballY"));Reflect.call(p, "step");check(((double) Reflect.get(p, "ballX"))==x+4&&((double) Reflect.get(p, "ballY"))==y+2.5,0,((double) Reflect.get(p, "ballX")));Reflect.set(p, "winner", 1);x=((double) Reflect.get(p, "ballX"));y=((double) Reflect.get(p, "ballY"));Reflect.set(p, "leftDown", true);Reflect.call(p, "step");check(((double) Reflect.get(p, "ballX"))==x&&((double) Reflect.get(p, "ballY"))==y&&((double) Reflect.get(p, "leftY"))==160,1,((double) Reflect.get(p, "ballX")));Reflect.call(p, "clearKeys");check(!((boolean) Reflect.get(p, "leftDown"))&&!((boolean) Reflect.get(p, "leftUp"))&&!((boolean) Reflect.get(p, "rightUp"))&&!((boolean) Reflect.get(p, "rightDown")),2,((boolean) Reflect.get(p, "leftDown")));Reflect.call(p, "restart");check(((int) Reflect.get(p, "winner"))==0&&((int) Reflect.get(p, "leftScore"))==0&&((int) Reflect.get(p, "rightScore"))==0,2,((int) Reflect.get(p, "winner")));
-        } catch (AssertionError failure) {
-            throw failure;
-        } catch (Exception failure) {
-            throw new AssertionError("MISSION L10.09: Unexpected failure while checking the active rule.", failure);
-        }
+        var p = Reflect.create("M09_Pong");
+        Reflect.call(p, "restart");
+        Reflect.set(p, "ballY", 300.0);
+        double before = (double) Reflect.get(p, "rightY");
+        Reflect.set(p, "rightUp", true);
+        Reflect.call(p, "toggleBot");
+        check((double) Reflect.get(p, "rightY") == before && !(boolean) Reflect.get(p, "rightUp"), 2, "switch without a move or held key");
+        Reflect.call(p, "step");
+        check((double) Reflect.get(p, "rightY") == before + 3, 0, "rightY=" + Reflect.get(p, "rightY"));
+        check((int) Reflect.call(p, "botDirection", 148.0, 100.0) == 0 && (int) Reflect.call(p, "botDirection", 132.0, 100.0) == 0, 1, "inclusive quiet boundaries");
+        check((int) Reflect.call(p, "botDirection", 148.1, 100.0) == 1 && (int) Reflect.call(p, "botDirection", 131.9, 100.0) == -1, 1, "both directions");
+        Reflect.set(p, "rightY", 319.0);
+        Reflect.set(p, "ballY", 390.0);
+        Reflect.call(p, "step");
+        check((double) Reflect.get(p, "rightY") == 320, 1, "bottom clamp");
+        Reflect.call(p, "toggleBot");
+        Reflect.set(p, "rightUp", true);
+        Reflect.call(p, "step");
+        check((double) Reflect.get(p, "rightY") == 315, 1, "human speed");
+        Reflect.set(p, "winner", 1);
+        double stopped = (double) Reflect.get(p, "ballX");
+        Reflect.call(p, "step");
+        check((double) Reflect.get(p, "rightY") == 315 && (double) Reflect.get(p, "ballX") == stopped, 2, "finished match");
+        Reflect.call(p, "restart");
+        check(!(boolean) Reflect.get(p, "bot") && !(boolean) Reflect.get(p, "rightUp") && (int) Reflect.get(p, "winner") == 0, 2, "restart");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -590,9 +619,9 @@ class M09_PongTest {
 class M10_BreakoutTest {
     static int checks;
     static final String[] CASES = {
-        "Paused, queued or normal input respects the stated tick boundary.",
-        "An active tick changes the model exactly once; a finished/paused tick cannot drift.",
-        "Invalid boundaries, restart or input cleanup remain correct."
+        "Repeated misses serve another ball without finishing the practice round.",
+        "A miss preserves cleared bricks and score.",
+        "The last brick still wins and freezes motion; restart restores the whole wall."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -631,14 +660,36 @@ class M10_BreakoutTest {
         return image;
     }
     public static void main(String[] args) throws Exception {
-        try {
-            var p = Reflect.create("M10_Breakout");
-            Reflect.call(p, "restart");double x=((double) Reflect.get(p, "ballX")),y=((double) Reflect.get(p, "ballY"));Reflect.call(p, "step");check(Math.abs(((double) Reflect.get(p, "ballX"))-x-3.2)<1e-9&&Math.abs(((double) Reflect.get(p, "ballY"))-y+3.5)<1e-9,0,((double) Reflect.get(p, "ballX")));Reflect.set(p, "state", "GAME OVER");x=((double) Reflect.get(p, "ballX"));y=((double) Reflect.get(p, "ballY"));Reflect.call(p, "step");check(((double) Reflect.get(p, "ballX"))==x&&((double) Reflect.get(p, "ballY"))==y&&((int) Reflect.get(p, "lives"))==3,1,((double) Reflect.get(p, "ballY")));Reflect.set(p, "state", "YOU WIN");Reflect.call(p, "step");check(((double) Reflect.get(p, "ballX"))==x&&((double) Reflect.get(p, "ballY"))==y,1,((double) Reflect.get(p, "ballX")));Reflect.call(p, "restart");check(((java.lang.String) Reflect.get(p, "state")).equals("PLAY")&&((int) Reflect.get(p, "lives"))==3&&((int) Reflect.get(p, "score"))==0,2,((java.lang.String) Reflect.get(p, "state")));
-        } catch (AssertionError failure) {
-            throw failure;
-        } catch (Exception failure) {
-            throw new AssertionError("MISSION L10.10: Unexpected failure while checking the active rule.", failure);
+        var p = Reflect.create("M10_Breakout");
+        Reflect.call(p, "restart");
+        boolean[][] bricks = (boolean[][]) Reflect.get(p, "bricks");
+        bricks[0][0] = false;
+        Reflect.set(p, "score", 1);
+        for (int miss = 0; miss < 4096; miss++) {
+            Reflect.set(p, "ballX", 320.0);
+            Reflect.set(p, "ballY", 420.0);
+            Reflect.set(p, "velocityY", 2.0);
+            Reflect.call(p, "step");
+            check(Reflect.get(p, "state").equals("PLAY") && (double) Reflect.get(p, "ballY") < 400, 0, "miss " + (miss + 1) + ": " + Reflect.get(p, "state"));
         }
+        check((int) Reflect.get(p, "score") == 1 && !bricks[0][0], 1, "progress after misses");
+        Reflect.call(p, "restart");
+        int count = 0;
+        for (boolean[] row : bricks) for (boolean brick : row) if (brick) count++;
+        check(count == 18 && (int) Reflect.get(p, "score") == 0, 2, "fresh wall");
+        for (boolean[] row : bricks) Arrays.fill(row, false);
+        bricks[0][0] = true;
+        Reflect.set(p, "score", 17);
+        Reflect.set(p, "ballX", 76.0);
+        Reflect.set(p, "ballY", 47.0);
+        Reflect.set(p, "velocityX", 0.0);
+        Reflect.set(p, "velocityY", 1.0);
+        Reflect.call(p, "step");
+        check(Reflect.get(p, "state").equals("YOU WIN") && (int) Reflect.get(p, "score") == 18, 2, "last brick");
+        double stoppedX = (double) Reflect.get(p, "ballX");
+        double stoppedY = (double) Reflect.get(p, "ballY");
+        Reflect.call(p, "step");
+        check((double) Reflect.get(p, "ballX") == stoppedX && (double) Reflect.get(p, "ballY") == stoppedY, 2, "win is stable");
         System.out.println("PASS " + checks + " checks");
     }
 }

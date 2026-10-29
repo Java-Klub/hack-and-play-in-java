@@ -8,90 +8,21 @@ import java.util.Arrays;
 
 /// # L08.07 · Bridges
 ///
-/// Connect islands with single or double bridges until all counts agree. Try a risky link and use undo to
-/// compare the result.
+/// The bridge puzzle has a working one-use undo. Turn it into a two-way time lens: compare the last two
+/// versions repeatedly before committing to a route.
 ///
-/// **Your mission:** Undo restores the same already-changed bridge array, so nothing is undone. Repair
-/// snapshot() to preserve the bridge counts from before the edit.
+/// **Your mission:** After a real bridge edit, every press of U must alternate between its before and
+/// after states, for any number of presses. Each snapshot stays independent of future edits. A new edit
+/// establishes a new pair; R clears the pair and U then does nothing. Preserve the puzzle rules and
+/// bridge counts.
 ///
-/// **Today you learn:** Copies and aliasing: returning another reference to an array is not copying its
-/// values. A saved snapshot must survive later writes to the working state.
+/// **Today you learn:** Use independent array copies to exchange two hypotheses. Saving an old value
+/// before replacing it is different from keeping another alias to the same mutable array.
 ///
-/// Run the program, click a faint connection to change its bridge count, and press U to try
-/// undoing that edit.
-int[] snapshot() {
-    return bridges;
-}
+/// Click one faint connection, then press U several times. The starter restores it once; the new time
+/// lens alternates the two pictures on every press. R restarts the puzzle.
 
-// <editor-fold defaultstate="expanded" desc="Learn · F20">
-/// ### A second name is not a saved past
-///
-/// An array variable holds a reference to an array. Assignment copies that reference, so two names can
-/// still reach the same mutable cells.
-///
-/// ```java
-/// int[] live = {1, 2};
-/// int[] shared = live;
-/// int[] saved = live.clone();
-/// live[0] = 7;
-/// IO.println(shared[0] + " / " + saved[0]);
-/// ```
-///
-/// This prints `7 / 1`: shared follows the change; saved owns a separate array. `clone()` copies one
-/// array's cells. For `int[][]`, those cells contain references to rows. Cloning only the outside
-/// therefore still shares rows; copy the rows as well when their contents must survive later edits.
-///
-/// ```text
-/// shared ──→ [7,2] ←── live
-/// saved  ──→ [1,2]
-/// ```
-///
-/// Undo needs the old state, so take its snapshot before the live edit. Copying after the edit
-/// faithfully saves the wrong moment. Predict what happens if the last assignment is instead `saved[0]
-/// = 9`. Which of the three names sees 9? For a list of immutable records, copying membership is
-/// enough: the records themselves cannot have their components reassigned.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
-///
-/// - `int[]` — Bridge counts are plain int elements in one array, with no mutable nested rows.
-/// - `snapshot()` — The caller expects a saved model state, not a new visible game action.
-/// - `return bridges` — Returns a reference to the current array; both names would observe future writes.
-///
-/// ### What the prepared part already does
-///
-/// choose() saves a snapshot before a real edge change. undo() restores it once; crossing() supplies
-/// bridge geometry and won() checks counts and connectivity, so those algorithms stay as prepared.
-// </editor-fold>
-
-// <editor-fold defaultstate="expanded" desc="For this game">
-/// ### Apply the model here
-///
-/// `snapshot()` is called before a bridge changes. `int[] alias = bridges` shares the live array;
-/// `clone()` creates independent int cells. Try a neutral array `{2,0}`: after saving a copy and
-/// setting the live first cell to 1, the copy still reads 2. Predict what undo should restore after
-/// changing one bridge twice.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Assigning bridges to another variable copies the reference, not its cells.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// A one-dimensional int[] contains values, so one clone is enough.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Return bridges.clone(); the supplied undo() then restores an independent state.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
-/// Create a tiny island layout with two tempting links; try both branches using undo and explain which
-/// one traps the remaining bridge counts.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="expanded" desc="Program · explore the rules">
 final int WIDTH = 470, HEIGHT = 420;
 
 Point[] islands = {new Point(0, 0), new Point(2, 0), new Point(4, 0), new Point(0, 2), new Point(4, 2), new Point(0, 4), new Point(2, 4), new Point(4, 4)};
@@ -153,6 +84,10 @@ boolean won() {
         }
     }
     return true;
+}
+
+int[] snapshot() {
+    return bridges.clone();
 }
 
 void choose(int x, int y) {
@@ -271,7 +206,7 @@ void main() {
 
 int[] previousBridges;
 
-/// undo(): Restores exactly one saved model snapshot and consumes that undo opportunity.
+/// undo(): Switches the displayed version when a previous model is available.
 void undo() {
     if (previousBridges != null) {
         bridges = previousBridges;
@@ -279,6 +214,71 @@ void undo() {
     }
 }
 // </editor-fold>
+
+
+// <editor-fold defaultstate="expanded" desc="Learn · F20">
+/// ### A second name is not a saved past
+///
+/// An array variable holds a reference to an array. Assignment copies that reference, so two names can
+/// still reach the same mutable cells.
+///
+/// ```java
+/// int[] live = {1, 2};
+/// int[] shared = live;
+/// int[] saved = live.clone();
+/// live[0] = 7;
+/// IO.println(shared[0] + " / " + saved[0]);
+/// ```
+///
+/// This prints `7 / 1`: shared follows the change; saved owns a separate array. `clone()` copies one
+/// array's cells. For `int[][]`, those cells contain references to rows. Cloning only the outside
+/// therefore still shares rows; copy the rows as well when their contents must survive later edits.
+///
+/// ```text
+/// shared ──→ [7,2] ←── live
+/// saved  ──→ [1,2]
+/// ```
+///
+/// Undo needs the old state, so take its snapshot before the live edit. Copying after the edit
+/// faithfully saves the wrong moment. Predict what happens if the last assignment is instead `saved[0]
+/// = 9`. Which of the three names sees 9? For a list of immutable records, copying membership is
+/// enough: the records themselves cannot have their components reassigned.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Read this code">
+/// ### Observe, then trace the flow
+///
+/// A before/after pair needs two independent arrays. Imagine swapping two paper sketches: if you throw
+/// one away before keeping it, you cannot swap back. First trace when a real click saves the earlier
+/// board and when the keyboard requests the saved board. Keep the geometry and victory test out of this
+/// experiment.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Experiment and replay">
+/// Add one bridge, then count six presses of U: the pictures must alternate without fading or
+/// accumulating bridges. Edit a different connection while viewing one version and compare the new
+/// pair. Restart, press U, and confirm no old puzzle returns.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Write A → B → A → B for repeated U. Which version must still exist after the first return?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The click path already saves an independent snapshot. Investigate the keyboard’s restore path and
+/// the moment it discards the previous state.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Find undo and previousBridges. Save a fresh snapshot of the current bridges before restoring the
+/// previous array; make the saved current version the next previous version instead of clearing it.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Use the time lens to compare two plausible links on a tiny island layout you design. Explain which
+/// version strands an island and why.
+// </editor-fold>
+
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
 /// ## An unfamiliar piece of Java?

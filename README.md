@@ -2,9 +2,9 @@
 
 **[English](https://github.com/Java-Klub/hack-and-play-in-java/tree/main) · [Česky](https://github.com/Java-Klub/hack-and-play-in-java/tree/ceska-verze)**
 
-**Learn Java by fixing little games — then make them your own.**
+**Learn Java: explore a game, change its rules and make it your own.**
 
-12 levels · 143 games, puzzles and creative experiments · 36 core Java skills
+12 levels · 145 games, puzzles and creative experiments · 36 core Java skills
 
 ![Six programs from Hack & Play in Java: MiniInvaders, MiniPacman, MirrorLaser, SunflowerSpiral, ReactionDiffusionSkins and FractalTreeGarden.](cover.png)
 
@@ -36,7 +36,7 @@ Start here, then work towards mazes, arcade games, generative pictures and sound
 
 The guide lives **inside the code**: short explanations, worked examples and hints that open one at a time. Explore the supplied game parts when curious. Once downloaded, the programs and checks work offline using JDK libraries.
 
-Switch roles as you play: rescue a broken game, build its referee, close a cheating loophole, write a rule or create a puzzle for a friend. Worked explanations follow concrete values; hints and repair outlines stay separate.
+Find a hidden pass. Install a cheat code. Build a coach to help beat a bot, or change the value of corners in Reversi. Other missions ask you to rescue a broken game, expose a fake rule with an experiment or reconstruct a black box. Worked explanations follow concrete values; open the staged hints when you need them.
 
 ## Start playing
 
@@ -53,7 +53,7 @@ Switch roles as you play: rescue a broken game, build its referee, close a cheat
    java L01/Check.java M01_CafeWallLab.java
    ```
 
-The starter's first failed check is an intentional clue; `PASS` means the checked cases agree with your repair. To check a whole level, use `java L01/Check.java`; this includes games you have not repaired yet.
+Checks judge the mission goal: `GREEN` means the checked cases passed; `RED` means the goal is not yet complete. Some games start broken; others already work and wait for your new rule or tool. A working original game can therefore still show `RED`. To check a whole level, use `java L01/Check.java`; this includes missions you have not attempted yet.
 
 Games live directly in `L01` through `L12`, in numbered order. Each level has its own `Check.java`. Already inside `L01`? Use `java Check.java` for the level or `java Check.java M01_CafeWallLab.java` for one mission. Keep check files unchanged while solving missions. No project build setup is needed.
 
@@ -64,7 +64,7 @@ Designed for curious beginners, coding clubs and guided workshops. Choose extra 
 <details>
 <summary>A suggested route: choose games, practise new ideas</summary>
 
-A level is not one meeting, and all 143 programs are not a compulsory checklist. This selection crosses the core skills; other games offer another theme or more practice. ProgramMirror is a more abstract detour, Nim adds strategy, and Flood and SameGame also use a queue.
+A level is not one meeting, and all 145 programs are not a compulsory checklist. This selection crosses the core skills; other games offer another theme or more practice. For a first exploration of a tiny complete program, also try [ClubDoor](L01/M10_ClubDoor.java); for inferring a rule, try [NumberMachine](L02/M11_NumberMachine.java). ProgramMirror is a more abstract detour, Nim adds strategy, and Flood and SameGame also use a queue.
 
 | Level | Starting selection |
 | --- | --- |

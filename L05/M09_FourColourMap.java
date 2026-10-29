@@ -3,18 +3,26 @@
 /// Colour a tiny map without giving neighbouring regions the same colour. Two distant regions may happily
 /// match.
 ///
-/// **Your mission:** The empty border audit reports zero even when neighbours share a colour. Build the
-/// traversal over adjacent: count a border only when both endpoints have the same nonzero colour. Count
-/// borders, not regions, and leave the colouring unchanged.
 ///
-/// **Today you learn:** Traversal and search: scan a list of relationships, not just a list of regions.
-/// Each border names the two colour entries to compare.
+/// **Your mission:** Make the colour judge follow the drawn map automatically. Replacing its
+/// rectangular rows of A–E must change which regions share a side, without updating a second border
+/// list. Corner contact alone never counts. Count each conflicting region pair once, however long its
+/// shared boundary is, and keep the player colours unchanged while inspecting them.
 ///
-/// A starts in colour 1. Enter B 1 and then C 1: three shared borders now clash, but the unfinished
-/// audit still reports zero.
-int conflicts() {
-    int n = 0;
-    return n;
+/// **Today you learn:** A traversal can discover relationships from neighbouring data positions instead
+/// of trusting a duplicated hand-written list.
+///
+/// Try colouring the original map. Then replace only its row data with {"AABCCDEE"} and compare the
+/// drawn neighbours with the reported conflicts.
+boolean touches(int first, int second) {
+    int[][] borders = {{0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 4}, {2, 3}, {2, 4}, {3, 4}};
+    for (int[] border : borders) {
+        if ((border[0] == first && border[1] == second)
+                || (border[0] == second && border[1] == first)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F17">
@@ -41,43 +49,49 @@ int conflicts() {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Read this code">
-/// Each adjacent entry is a pair of region indices. colours[edge[0]] and colours[edge[1]] read the two
-/// ends of that border. Zero means uncoloured.
+/// Repeated contact is still one relationship between regions. Inspecting grid cells and counting
+/// conflicting region pairs are therefore different traversals.
 ///
-/// | colours of A,B,C | AB | AC | BC | total |
-/// | --- | --- | --- | --- | --- |
-/// | 1,0,0 | 0 | 0 | 0 | 0 |
-/// | 1,1,0 | 1 | 0 | 0 | 1 |
-/// | 1,1,1 | 1 | 1 | 1 | 3 |
-///
-/// Other borders touching an uncoloured region do not contribute. Start n once, visit every stored
-/// pair, and increment for each conflicting edge. Predict one case with distant equal colours but no
-/// shared border. The supplied solved query combines this audit with the requirement that every region
-/// be coloured.
+/// For a separate map AB / BA, A and B share four cell edges but form just one neighbouring region
+/// pair. For AB / CD, A and D touch only at a corner and are not neighbours. Predict the relationships
+/// in AA / BB. A row String provides charAt(column); the next row or column must exist before it is
+/// inspected. All actual map letters lie in A–E.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Read one edge as two region indices, not as a colour.
+/// Compare the geography that display prints with the information the judge reads.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Compare both colours and exclude the uncoloured marker before counting.
+/// conflicts now asks touches for each region pair. touches still consults a fixed border table, so it
+/// cannot notice an edited map.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Traverse adjacent with one edge at a time, increment n for equal nonzero endpoint colours, then
-/// return n.
+/// Scan each cell and its existing right/down neighbour. For the requested pair accept either order of
+/// its two letters, returning true on the first side contact. Return false only after the scan.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Make it yours">
-/// Add one currently absent border to adjacent and find a colouring that used to work but now fails.
-/// Solve your altered map, then challenge a partner to use fewer colours. Use the counterexample to
-/// identify which new border made the difference.
+/// Author a map with a long border and a narrow corridor, then give it to a partner with a colouring
+/// that fails in exactly one region pair. Can their judge identify the same conflict after the corridor
+/// moves?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+int conflicts() {
+    int total = 0;
+    for (int first = 0; first < colours.length; first++) {
+        for (int second = first + 1; second < colours.length; second++) {
+            if (colours[first] != 0 && colours[first] == colours[second] && touches(first, second)) {
+                total++;
+            }
+        }
+    }
+    return total;
+}
+
 String[] map = {"AABB", "ACCB", "DDEE"};
-int[][] adjacent = {{0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 4}, {2, 3}, {2, 4}, {3, 4}};
 int[] colours;
 String outcome;
 

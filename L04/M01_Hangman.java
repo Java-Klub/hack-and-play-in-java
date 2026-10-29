@@ -3,20 +3,27 @@
 /// Reveal a hidden word one letter at a time before six wrong guesses end the round. Repeated letters can
 /// uncover several places at once, so each clue can change your next guess.
 ///
-/// **Your mission:** The word display is empty. Build mask with a while scan: each character becomes
-/// its revealed letter if tried contains it, otherwise an underscore. Visit every position exactly
-/// once; an empty word needs no lookup.
 ///
-/// **Today you learn:** While loops: test a condition before each pass, do one piece of work, then move
-/// towards the end. For a six-letter word the valid character indices are 0 through 5; the next index
-/// must stop the loop.
+/// **Your mission:** Make /hint suggest the first still-hidden vowel in the word, reading left to
+/// right. If no hidden vowel remains, suggest the first other hidden letter; if nothing is hidden, say
+/// so. Asking must not reveal a letter, spend a guess, or change the round. The ordinary game already
+/// works.
 ///
-/// The training word is BANANA. Enter A: the unfinished mask stays empty instead of showing six places.
-/// Your scan must produce _A_A_A.
-String mask() {
-    String result = "";
+/// **Today you learn:** Search with a while loop: keep scanning while a better candidate may still
+/// appear, and remember a useful fallback.
+///
+/// Try /hint before any guess, then A, then /hint twice. Compare the suggestion with Tried and Misses
+/// rather than treating advice as a played guess.
+String hintLetter() {
     int index = 0;
-    return result;
+    while (index < word.length()) {
+        String letter = word.substring(index, index + 1);
+        if (!tried.contains(letter)) {
+            return letter;
+        }
+        index++;
+    }
+    return "";
 }
 
 // <editor-fold defaultstate="expanded" desc="Learn · F10">
@@ -44,40 +51,53 @@ String mask() {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Read this code">
-/// `result` starts empty; `index` names the next character. Build the repeated part before return.
+/// A query can inspect secret data without committing a move. Separate three questions: what is hidden,
+/// which hidden letter is preferred, and what changes when a guess is accepted.
 ///
-/// | word | tried | required mask |
-/// | --- | --- | --- |
-/// | STAR | AS | S_A_ |
-/// | A | empty | _ |
-/// | empty | any | empty |
+/// For the separate word METER with tried E, the hidden letters are M, T, R. No hidden vowel remains,
+/// so the fallback is M. Predict the advice before E has been tried. `substring(i, i + 1)` reads one
+/// character as a String; `contains` asks whether text contains it. Empty text means there is no
+/// suggestion.
 ///
-/// For STAR, index zero reads S and appends S; index one reads T and appends _. Advancing index changes
-/// which character is read next. `word.substring(index, index + 1)` supplies one character as text;
-/// `tried.contains(letter)` asks whether it has been guessed. Predict the mask for word BEE with tried
-/// E. The supplied guess handling and win/loss rules use your returned mask.
+/// Find the path from the /hint command to the text it prints. Keep guess handling and the already
+/// working word display intact.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Draw one output place per input character before writing the loop.
+/// Which part only answers a question, and which part changes Tried or Misses?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Each pass reads, chooses a revealed letter or underscore, appends it, and advances index.
+/// Follow /hint to hintLetter. Its present scan returns at the first hidden letter, before it can
+/// discover a later vowel.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Repeat while index is smaller than word.length(); append to result and increment index once per
-/// pass.
+/// Remember the first hidden letter as a fallback, keep scanning for AEIOU, and return the fallback
+/// only after an unsuccessful search.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Make it yours">
-/// Make a coach mode that reveals a character group you choose, such as vowels, before any guess. Use
-/// the same word scan; decide which group is helpful without revealing everything. Show a friend two
-/// masks and ask them to infer your rule.
+/// Give a friend two coaches with different preferred letter groups. Let them infer each preference
+/// from three queries without seeing the code.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+String mask() {
+    String result = "";
+    int index = 0;
+    while (index < word.length()) {
+        String letter = word.substring(index, index + 1);
+        if (tried.contains(letter)) {
+            result += letter;
+        } else {
+            result += "_";
+        }
+        index++;
+    }
+    return result;
+}
+
 String[] words = {"LEVEL", "ROBOT", "GALAXY", "JAVA", "PIXEL", "PUZZLE", "PLANET", "BANANA"};
 String word = "BANANA";
 String tried = "";
@@ -113,7 +133,7 @@ void main() {
     IO.println("Training word: BANANA. /r chooses a random word.");
     IO.println("HANGMAN: reveal the word before six wrong letters.");
     IO.println("Repeated letters cost nothing. Every letter accepts either case.");
-    IO.println("/r chooses a new word; /q quits.");
+    IO.println("/hint suggests a letter without playing it; /r chooses a new word; /q quits.");
     boolean showState = true;
     while (true) {
         if (showState) {
@@ -123,7 +143,7 @@ void main() {
             }
             showState = false;
         }
-        String input = IO.readln(over() ? "Enter or /r: new round; /q: quit: " : "Guess A-Z, /r restart, /q quit: ");
+        String input = IO.readln(over() ? "Enter or /r: new round; /q: quit: " : "Guess A-Z, /hint advice, /r restart, /q quit: ");
         if (input == null || input.trim().equalsIgnoreCase("/q")) {
             return;
         }
@@ -131,6 +151,11 @@ void main() {
         if ((input.equalsIgnoreCase("/r") || (over() && input.isBlank()))) {
             reset();
             showState = true;
+            continue;
+        }
+        if (input.equalsIgnoreCase("/hint")) {
+            String suggestion = hintLetter();
+            IO.println(suggestion.isEmpty() ? "No hidden letters remain." : "Coach suggests " + suggestion);
             continue;
         }
         if (over()) {

@@ -29,7 +29,7 @@ class Check {
         run("M12_RuleGarden", "L08.12 RuleGarden · F26", () -> M12_RuleGardenTest.main(new String[0]));
         run("M13_ForestFireSandbox", "L08.13 ForestFireSandbox · F26", () -> M13_ForestFireSandboxTest.main(new String[0]));
         if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " still need repair.");
+        IO.println(checked + " missions; " + failed + " mission goals remaining.");
         if (failed > 0) System.exit(1);
     }
 
@@ -51,30 +51,35 @@ class M01_MinesweeperTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
-        if (!correct) {
-            throw new AssertionError(message);
-        }
+        if (!correct) throw new AssertionError(message);
     }
     static void equal(Object expected, Object actual, String message) {
-        expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+        expect(java.util.Objects.deepEquals(expected, actual), message + " | expected=" + expected + " actual=" + actual);
     }
     public static void main(String[] args) throws Exception {
         var g = Reflect.create("M01_Minesweeper");
-        Reflect.set(g, "mines", new boolean[6][6]);
-        ((boolean[][]) Reflect.get(g, "mines"))[0][0] = true;
-        equal(1, ((int) Reflect.call(g, "adjacent", 1, 1)), "L08.01/F18: diagonal mine is a neighbour");
-        equal(0, ((int) Reflect.call(g, "adjacent", 0, 0)), "L08.01/F18: centre does not count itself");
-        ((boolean[][]) Reflect.get(g, "mines"))[0][1] = ((boolean[][]) Reflect.get(g, "mines"))[1][0] = ((boolean[][]) Reflect.get(g, "mines"))[1][1] = true;
-        equal(3, ((int) Reflect.call(g, "adjacent", 0, 0)), "L08.01/F18: clipped corner has three neighbours");
-        Reflect.set(g, "mines", new boolean[6][6]);
-        for (int r = 1; r <= 3; r++) {
-            for (int c = 1; c <= 3; c++) {
-                ((boolean[][]) Reflect.get(g, "mines"))[r][c] = true;
-            }
+        boolean[][] mines = new boolean[6][6];
+        mines[1][1] = true; mines[2][2] = true; mines[3][3] = true; mines[5][5] = true;
+        Reflect.set(g, "mines", (Object) mines);
+        Reflect.call(g, "inspect", 2, 2);
+        boolean[][] lens = (boolean[][]) Reflect.get(g, "inspected");
+        expect(lens[1][1] && lens[2][2] && lens[3][3] && !lens[5][5], "L08.01: a lens includes diagonal, centre and all local mines only");
+        var buttons = (javax.swing.JButton[][]) Reflect.get(g, "buttons");
+        for (int r = 0; r < 6; r++) {
+            for (int c = 0; c < 6; c++) buttons[r][c] = new javax.swing.JButton();
         }
-        equal(8, ((int) Reflect.call(g, "adjacent", 2, 2)), "L08.01/F18: all eight surrounding cells counted");
+        Reflect.call(g, "refresh");
+        equal("*", buttons[1][1].getText(), "L08.01: a scanned diagonal mine is really shown on its button");
+        expect((int) Reflect.get(g, "opened") == 0 && !(boolean) Reflect.get(g, "lost"), "L08.01: inspection does not play a turn or lose");
+        equal(new boolean[6][6], Reflect.get(g, "revealed"), "L08.01: the safe-cell progress is untouched");
+        Reflect.call(g, "inspect", 5, 5);
+        lens = (boolean[][]) Reflect.get(g, "inspected");
+        expect(lens[5][5] && !lens[1][1], "L08.01: moving the lens replaces rather than accumulates its view");
+        Reflect.call(g, "inspect", -1, 0);
+        equal(new boolean[6][6], Reflect.get(g, "inspected"), "L08.01: outside inspection clears the lens safely");
+        equal(2, Reflect.call(g, "adjacent", 2, 2), "L08.01: ordinary mine clues remain correct");
+        Reflect.call(g, "reset", 42L);
+        equal(new boolean[6][6], Reflect.get(g, "inspected"), "L08.01: a new board clears the inspection");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -246,29 +251,31 @@ class M07_BridgesTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
-        if (!correct) {
-            throw new AssertionError(message);
-        }
+        if (!correct) throw new AssertionError(message);
     }
     static void equal(Object expected, Object actual, String message) {
-        expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+        expect(java.util.Objects.deepEquals(expected, actual), message + " | expected=" + expected + " actual=" + actual);
     }
     public static void main(String[] args) throws Exception {
         var g = Reflect.create("M07_Bridges");
         Reflect.call(g, "restart");
-        Reflect.call(g, "choose", 140, 45);
-        equal(1, ((int[]) Reflect.get(g, "bridges"))[0], "L08.07/F20: edge changed");
+        Reflect.call(g, "choose", 145, 45);
+        equal(1, ((int[]) Reflect.get(g, "bridges"))[0], "L08.07: a real click adds a bridge");
+        for (int n = 0; n < 6; n++) {
+            Reflect.call(g, "key", java.awt.event.KeyEvent.VK_U, true);
+            equal(n % 2, ((int[]) Reflect.get(g, "bridges"))[0], "L08.07: repeated U alternates both hypotheses");
+        }
+        Reflect.call(g, "choose", 295, 45);
         Reflect.call(g, "undo");
-        equal(0, ((int[]) Reflect.get(g, "bridges"))[0], "L08.07/F20: undo needs an independent previous array");
-        int[] copy = ((int[]) Reflect.call(g, "snapshot"));
-        copy[0] = 2;
-        equal(0, ((int[]) Reflect.get(g, "bridges"))[0], "L08.07/F20: changing snapshot cannot alter live network");
-        Reflect.call(g, "choose", 140, 45);
-        Reflect.call(g, "choose", 140, 45);
+        equal(0, ((int[]) Reflect.get(g, "bridges"))[1], "L08.07: a new real edit establishes the latest pair");
         Reflect.call(g, "undo");
-        equal(1, ((int[]) Reflect.get(g, "bridges"))[0], "L08.07/F20: undo restores exactly the preceding state");
+        equal(1, ((int[]) Reflect.get(g, "bridges"))[1], "L08.07: the new pair also switches back");
+        int[] saved = (int[]) Reflect.call(g, "snapshot");
+        ((int[]) Reflect.get(g, "bridges"))[0] = 2;
+        equal(1, saved[0], "L08.07: a saved hypothesis is independent of later edits");
+        Reflect.call(g, "restart");
+        Reflect.call(g, "undo");
+        equal(new int[10], Reflect.get(g, "bridges"), "L08.07: no previous choice after restart");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -485,58 +492,29 @@ class M13_ForestFireSandboxTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
-        if (!correct) {
-            throw new AssertionError(message);
-        }
+        if (!correct) throw new AssertionError(message);
     }
     static void equal(Object expected, Object actual, String message) {
-        expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+        expect(java.util.Objects.deepEquals(expected, actual), message + " | expected=" + expected + " actual=" + actual);
     }
     public static void main(String[] args) throws Exception {
         var g = Reflect.create("M13_ForestFireSandbox");
-        Reflect.set(g, "cells", new int[40][60]);
-        ((int[][]) Reflect.get(g, "cells"))[20][10] = 2;
-        for (int x = 11; x <= 14; x++) {
-            ((int[][]) Reflect.get(g, "cells"))[20][x] = 1;
-        }
-        ((int[][]) Reflect.get(g, "cells"))[21][11] = 1;
-        Reflect.call(g, "step");
-        equal(1, ((int[][]) Reflect.get(g, "cells"))[20][12], "L08.13/F26: fire advances one neighbour, not across the row in one tick");
-        equal(0, ((int[][]) Reflect.get(g, "cells"))[20][10], "L08.13/F26: old burning tree becomes empty");
-        equal(2, ((int[][]) Reflect.get(g, "cells"))[20][11], "L08.13/F26: adjacent old tree ignites");
-        equal(1, ((int[][]) Reflect.get(g, "cells"))[21][11], "L08.13/F26: newly burning tree cannot ignite another during the same tick");
-        Reflect.call(g, "step");
-        equal(2, ((int[][]) Reflect.get(g, "cells"))[20][12], "L08.13/F26: next tick advances the front");
         int[][] old = new int[40][60];
-        old[0][0] = 2;
-        old[0][1] = 1;
-        int[][] copy = java.util.Arrays.stream(old).map(int[]::clone).toArray(int[][]::new);
-        Reflect.call(g, "nextForest", (Object) old);
-        equal(copy, old, "L08.13/F26: source forest remains unchanged");
-        var random = new java.util.Random(7);
-        int[][] forest = new int[40][60];
-        for (var row : forest) {
-            for (int x = 0; x < 60; x++) {
-                row[x] = random.nextInt(3);
-            }
-        }
-        int[][] expected = new int[40][60];
-        for (int y = 39; y >= 0; y--) {
-            for (int x = 59; x >= 0; x--) {
-                if (forest[y][x] == 1) {
-                    expected[y][x] = 1;
-                    for (var d : new int[][]{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}) {
-                        int xx = x + d[0], yy = y + d[1];
-                        if (xx >= 0 && xx < 60 && yy >= 0 && yy < 40 && forest[yy][xx] == 2) {
-                            expected[y][x] = 2;
-                        }
-                    }
-                }
-            }
-        }
-        equal(expected, ((int[][]) Reflect.call(g, "nextForest", (Object) forest)), "L08.13/F26: reversing both traversals leaves simultaneous update unchanged");
+        old[20][10] = 2; old[20][9] = 1; old[20][11] = 1; old[20][12] = 1;
+        old[19][10] = 1; old[21][10] = 1; old[21][11] = 1;
+        int[][] snapshot = java.util.Arrays.stream(old).map(int[]::clone).toArray(int[][]::new);
+        int[][] next = (int[][]) Reflect.call(g, "nextForest", (Object) old);
+        expect(next[20][11] == 2 && next[20][12] == 1, "L08.13: wind advances exactly one cell east");
+        expect(next[20][9] == 1 && next[19][10] == 1 && next[21][10] == 1 && next[21][11] == 1, "L08.13: no west, north, south or diagonal ignition");
+        equal(0, next[20][10], "L08.13: old flame burns out");
+        equal(snapshot, old, "L08.13: old forest remains unchanged");
+        Reflect.set(g, "cells", (Object) old); Reflect.call(g, "step");
+        equal(next, Reflect.get(g, "cells"), "L08.13: actual Step uses the wind rule");
+        Reflect.call(g, "step");
+        equal(2, ((int[][]) Reflect.get(g, "cells"))[20][12], "L08.13: replay advances the next generation");
+        old = new int[40][60]; old[0][59] = 2; old[0][0] = 1;
+        next = (int[][]) Reflect.call(g, "nextForest", (Object) old);
+        expect(next[0][0] == 1 && next[0][59] == 0, "L08.13: wind does not wrap across a border");
         System.out.println("PASS " + checks + " checks");
     }
 }

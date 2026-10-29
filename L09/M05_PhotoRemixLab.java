@@ -7,75 +7,22 @@ import java.awt.image.BufferedImage;
 
 /// # L09.05 · PhotoRemixLab
 ///
-/// Remix a generated picture into a colour spotlight. Find its most common original colour and make
-/// every pixel of that colour glow cyan against a two-tone poster.
+/// A huge moon steals the spotlight while a tiny key is almost lost in the poster. Become an image
+/// detective: use colour-frequency evidence to reveal the small object instead.
 ///
-/// **Your mission:** Build dominantColour(): choose the colour key with the largest stored count; break
-/// ties by the smaller signed RGB integer. Return 0 for an empty Map and leave all counts unchanged.
-/// The prepared remix uses your result to highlight every pixel of that colour in cyan; the unfinished
-/// selector highlights nothing in the demo.
+/// **Your mission:** The working starter highlights the most frequent source colour. Change the lens to
+/// select the least frequent positive count, using the smaller signed RGB key to break ties. Empty data
+/// returns 0; examining counts must not change them. Keep the real cyan highlight connected to your
+/// choice so the tiny key becomes visible, not only a new caption.
 ///
-/// **Today you learn:** Use stored key/value relationships to make a real picture or generation
-/// decision, not just a caption.
+/// **Today you learn:** Read a histogram as evidence and trace a selected key into a second image pass.
+/// The important change is which data wins, not how the window is drawn.
 ///
-/// Run the program and look for a cyan moon; Up/Down changes the poster threshold and R restores the
-/// demo. The unfinished selector leaves the moon yellow instead.
-int dominantColour() {
-    return 0;
-}
+/// Run the poster and note what glows cyan. Up/Down changes the poster threshold; R restores the scene.
+/// After the detective lens is changed, the little key at the upper left glows cyan while the common
+/// moon does not.
 
-// <editor-fold defaultstate="expanded" desc="Learn · F24">
-/// ### A Map remembers a value for each key
-///
-/// A List remembers positions. A Map remembers an association: each key leads to one current value.
-/// Here a colour name leads to a count.
-///
-/// ```java
-/// Map<String, Integer> marbles = new HashMap<>();
-/// marbles.put("blue", 2);
-/// int before = marbles.getOrDefault("blue", 0);
-/// marbles.put("blue", before + 1);
-/// IO.println(marbles.getOrDefault("gold", 0));
-/// ```
-///
-/// Blue now has count 3; the printed gold count is 0. `getOrDefault(key, fallback)` reads the fallback
-/// for an absent key without inserting it. `put` replaces that key's old value: it does not add
-/// automatically. Other keys remain unchanged.
-///
-/// Use `containsKey` when absence itself matters. Use `entrySet()` to visit key/value pairs: each entry
-/// provides `getKey()` and `getValue()`. A Map does not promise that the first entry is the largest;
-/// compare values explicitly when choosing a winner. Predict blue after another identical update. Then
-/// predict what `getOrDefault("gold", 9)` returns and whether gold is now stored.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read this part
-///
-/// `colourCounts.entrySet()` exposes each key/count pair. `entry.getKey()` reads the RGB integer;
-/// getValue() reads its frequency. Track the best key and best count separately: Map order is not a
-/// ranking. The supplied countColour builds counts before dominantColour is called. Then remix paints
-/// the selected original colour cyan, so your decision changes the actual picture, not only a caption.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Treat the empty Map as a separate result, then compare candidates.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// A candidate wins with a higher count, or with an equal count and a smaller key.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Traverse entrySet, remember the best key/count, update on either winning comparison, and return the
-/// key without editing the Map.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
-/// Create a different spotlight rule: highlight the rarest colour, or colour each region by its
-/// frequency. Compare your visual choice on the same demo before changing the source picture.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="expanded" desc="Program · explore the rules">
 void countColour(int rgb) {
     colourCounts.put(rgb, colourCounts.getOrDefault(rgb, 0) + 1);
 }
@@ -87,17 +34,35 @@ int threshold;
 /// Supplied restart: restore the initial model before the UI uses it.
 void restart() {
     source = new BufferedImage(400, 300, BufferedImage.TYPE_INT_RGB);
-    for (int y = 0; y < 300; y++) {
-        for (int x = 0; x < 400; x++) {
-            source.setRGB(x, y, new Color(x * 255 / 399, y * 255 / 299, (x + y) * 255 / 698).getRGB());
-        }
+    var picture = source.createGraphics();
+    for (int stripe = 0; stripe < 8; stripe++) {
+        picture.setColor(new Color(20 + stripe * 12, 35, 70));
+        picture.fillRect(stripe * 50, 0, 50, 300);
     }
-    var moon = source.createGraphics();
-    moon.setColor(Color.WHITE);
-    moon.fillOval(120, 70, 150, 150);
-    moon.dispose();
+    picture.setColor(Color.WHITE);
+    picture.fillOval(120, 70, 150, 150);
+    picture.setColor(Color.YELLOW);
+    picture.fillRect(310, 40, 10, 10);
+    picture.fillRect(335, 65, 10, 10);
+    picture.setColor(Color.MAGENTA);
+    picture.fillRect(35, 40, 6, 6);
+    picture.fillRect(40, 42, 18, 2);
+    picture.fillRect(52, 44, 2, 5);
+    picture.dispose();
     threshold = 128;
     remix();
+}
+
+int spotlightColour() {
+    int bestColour = 0, bestCount = -1;
+    for (var entry : colourCounts.entrySet()) {
+        int colour = entry.getKey(), count = entry.getValue();
+        if (count > bestCount || count == bestCount && colour < bestColour) {
+            bestColour = colour;
+            bestCount = count;
+        }
+    }
+    return bestColour;
 }
 
 void remix() {
@@ -106,7 +71,7 @@ void remix() {
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) countColour(source.getRGB(x, y));
     }
-    int selected = dominantColour();
+    int selected = spotlightColour();
     result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
@@ -128,7 +93,7 @@ void adjust(int amount) {
 void draw(Graphics2D g) {
     g.drawImage(result, (WIDTH - result.getWidth()) / 2, 45, null);
     g.setColor(Color.BLACK);
-    g.drawString("Spotlight most common colour | Threshold " + threshold, 12, 22);
+    g.drawString("Spotlight | Threshold " + threshold, 12, 22);
     g.drawString("Pixels counted: " + countedPixels() + " / " + source.getWidth() * source.getHeight(), 12, 420);
 }
 
@@ -189,6 +154,68 @@ void main() {
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
+
+
+// <editor-fold defaultstate="expanded" desc="Learn · F24">
+/// ### A Map remembers a value for each key
+///
+/// A List remembers positions. A Map remembers an association: each key leads to one current value.
+/// Here a colour name leads to a count.
+///
+/// ```java
+/// Map<String, Integer> marbles = new HashMap<>();
+/// marbles.put("blue", 2);
+/// int before = marbles.getOrDefault("blue", 0);
+/// marbles.put("blue", before + 1);
+/// IO.println(marbles.getOrDefault("gold", 0));
+/// ```
+///
+/// Blue now has count 3; the printed gold count is 0. `getOrDefault(key, fallback)` reads the fallback
+/// for an absent key without inserting it. `put` replaces that key's old value: it does not add
+/// automatically. Other keys remain unchanged.
+///
+/// Use `containsKey` when absence itself matters. Use `entrySet()` to visit key/value pairs: each entry
+/// provides `getKey()` and `getValue()`. A Map does not promise that the first entry is the largest;
+/// compare values explicitly when choosing a winner. Predict blue after another identical update. Then
+/// predict what `getOrDefault("gold", 9)` returns and whether gold is now stored.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Read this code">
+/// ### Observe, then trace the flow
+///
+/// The picture pipeline first gathers evidence, then chooses one colour, then paints every matching
+/// source pixel. A histogram associates a colour key with its frequency. You can temporarily print the
+/// pairs after they are gathered and compare a “largest wins” hypothesis with a “smallest wins”
+/// hypothesis. Remove diagnostic prints when the experiment is clear. Do not recolour the source data
+/// to fake the result.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Experiment and replay">
+/// Before editing, write “moon” as the current spotlight result. Inspect or temporarily print the
+/// colour counts, choose your rarity hypothesis, then change the selection. Verify the key appears even
+/// when you adjust the threshold, and that R reproduces the same evidence.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Which object occupies the most pixels, and which appears only in a small patch? Predict their
+/// histogram order.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Find the selection between the counting pass and the recolouring pass. Compare its entry values
+/// rather than changing drawing coordinates.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Find spotlightColour and its entrySet loop. Track the smallest positive count, handle an empty Map
+/// and equal-count RGB ties, and leave the Map unchanged. remix already uses the returned colour.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Hide your own small single-colour symbol in a scene with larger colour regions. Give a partner the
+/// normal most-common-colour lens and ask them to recover your symbol.
+// </editor-fold>
+
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
 /// ## An unfamiliar piece of Java?

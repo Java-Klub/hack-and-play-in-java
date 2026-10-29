@@ -26,8 +26,9 @@ class Check {
         run("M07_SteppingFeet", "L01.07 SteppingFeet · F03", () -> M07_SteppingFeetTest.main(new String[0]));
         run("M08_SunflowerSpiral", "L01.08 SunflowerSpiral · F03", () -> M08_SunflowerSpiralTest.main(new String[0]));
         run("M09_PixelMonsters", "L01.09 PixelMonsters · F03", () -> M09_PixelMonstersTest.main(new String[0]));
+        run("M10_ClubDoor", "L01.10 ClubDoor · F03", () -> M10_ClubDoorTest.main(new String[0]));
         if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " still need repair.");
+        IO.println(checked + " missions; " + failed + " mission goals remaining.");
         if (failed > 0) System.exit(1);
     }
 
@@ -159,26 +160,25 @@ class M05_ProgramMirrorTest {
 @SuppressWarnings("unchecked")
 class M06_HigherOrLowerTest {
     static int checks;
-
     static void check(boolean okay, String reason) {
         checks++;
-        if (!okay) {
-            throw new AssertionError("L01.06 F03: " + reason);
-        }
+        if (!okay) throw new AssertionError(reason);
     }
-
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("M06_HigherOrLower");
-        Reflect.call(game, "reset");
-        Reflect.set(game, "current", 2);
-        Reflect.set(game, "deck", new ArrayDeque<>(List.of(3, 4, 5)));
-        Reflect.call(game, "command", "h");
-        check(((java.lang.String) Reflect.get(game, "outcome")).isEmpty(), "one correct guess must not finish the ten-point round");
-        check(((int) Reflect.get(game, "target")) == 10, "one named target supplies the round goal");
-        Reflect.set(game, "correct", 9);
-        Reflect.call(game, "command", "h");
-        check(!((java.lang.String) Reflect.get(game, "outcome")).isEmpty() && ((int) Reflect.get(game, "correct")) == 10, "the tenth correct guess ends the round");
-        System.out.println("PASS " + checks + " checks");
+        var p = Reflect.create("M06_HigherOrLower");
+        Reflect.call(p, "reset");
+        check(((int)Reflect.get(p,"target")) == 3, "The displayed and actual sprint goal must be three.");
+        Reflect.set(p,"current",2);
+        Reflect.set(p,"deck",new ArrayDeque<>(List.of(3,4,5,6)));
+        Reflect.call(p,"command","h");
+        check(((String)Reflect.get(p,"outcome")).isEmpty(),"One prediction is not yet the three-correct goal.");
+        Reflect.call(p,"command","h");
+        check(((String)Reflect.get(p,"outcome")).isEmpty(),"Two predictions are not yet the goal.");
+        Reflect.call(p,"command","h");
+        check(((int)Reflect.get(p,"correct")) == 3 && !((String)Reflect.get(p,"outcome")).isEmpty(),"The third correct prediction ends the sprint.");
+        Reflect.call(p,"reset");
+        check(((int)Reflect.get(p,"target"))==3 && ((int)Reflect.get(p,"correct"))==0,"Restart keeps the new goal and clears only the score.");
+        IO.println("PASS " + checks + " checks");
     }
 }
 
@@ -244,6 +244,21 @@ class M09_PixelMonstersTest {
         check(image.getRGB(10 * 16 + 8, 5 * 16 + 8) == Color.WHITE.getRGB(), "right eye must read that same white eyeColour");
         check(((int) Reflect.get(game, "eyeColour")) == Color.WHITE.getRGB(), "one named value controls both eyes");
         System.out.println("PASS " + checks + " checks");
+    }
+}
+
+class M10_ClubDoorTest {
+    static int checks;
+    static void check(boolean okay, String reason) {
+        checks++;
+        if (!okay) throw new AssertionError(reason);
+    }
+    public static void main(String[] args) throws Exception {
+        var p=Reflect.create("M10_ClubDoor");
+        check((boolean)Reflect.call(p,"mayEnter",Reflect.get(p,"cardCode")),"The actual badge must open the workshop door.");
+        check((boolean)Reflect.call(p,"mayEnter",new String("ORBIT")),"The original pass must remain valid.");
+        check(!(boolean)Reflect.call(p,"mayEnter","VISITOR") && !(boolean)Reflect.call(p,"mayEnter","orbit"),"Other badges stay refused.");
+        IO.println("PASS " + checks + " checks");
     }
 }
 

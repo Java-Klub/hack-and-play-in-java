@@ -7,77 +7,22 @@ import javax.swing.Timer;
 
 /// # L07.10 · SoftLanding
 ///
-/// Pilot a lander toward the pad and brake before touchdown. A limited tank makes a gentle landing a
-/// planning challenge.
+/// The limited-tank lander already works. Turn it into a flight trainer so you can practise the landing
+/// rather than ration a shrinking tank.
 ///
-/// **Your mission:** Build applyThrust(). With fuel and at least one held direction, Left changes
-/// velocityX by -0.06, Right by +0.06, and Up changes velocityY by -0.09. Spend one fuel per powered
-/// tick, even with several keys. Without fuel or keys, change neither velocity nor fuel. The lander
-/// currently has no powered control.
+/// **Your mission:** Make thrust work even with a zero fuel counter and never spend that counter.
+/// Preserve the original engine strengths, independent gravity, combined controls, touchdown rules and
+/// terminal crashes. Find which conditions actually restrict powered motion; simply drawing a larger
+/// flame is not enough.
 ///
-/// **Today you learn:** Build one complete action that preserves an invariant across all related
-/// fields.
+/// **Today you learn:** Separate the invariant you intentionally remove from the physical rules you
+/// keep. A visual effect and an acceleration are different observations.
 ///
-/// Run the program, press Up to begin braking the fall, and use Left and Right thrust to line
-/// up with the landing pad.
-void applyThrust() {
-}
+/// Up brakes the fall; Left/Right steer; R restarts. In the normal game, watch fuel fall while
+/// thrusting. After the hack it stays fixed, but releasing all keys still lets gravity accelerate the
+/// fall.
 
-// <editor-fold defaultstate="collapsed" desc="Recall · F25">
-/// ### An invariant survives each action
-///
-/// An invariant is a promise about valid state. It is useful before and after a move, not merely when
-/// the game ends. Think of moving glow stones between two jars:
-///
-/// ```java
-/// int violet = 6;
-/// int gold = 2;
-/// int amount = 3;
-/// if (amount >= 0 && amount <= violet) {
-///     violet -= amount;
-///     gold += amount;
-/// }
-/// IO.println(violet + gold);
-/// ```
-///
-/// Trace: `(6, 2)` becomes `(3, 5)`, and the printed total is still 8. The two assignments belong to
-/// one accepted action. Changing only one jar would silently create or destroy stones. A request for 9
-/// fails the guard and changes neither jar.
-///
-/// Write the promise before writing the repair: a total stays constant, a resource stays non-negative,
-/// or a shape stays outside a wall. Then list every field that one action must change together. Predict
-/// the two jar values for amount 0 and amount 7. An invariant describes the intended world; it does not
-/// forbid inventing a different, clearly stated rule in your own variant.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read this part
-///
-/// `left`, `right` and `up` may all be true in one tick. They are independent switches, not exclusive
-/// alternatives. Opposing horizontal thrust cancels but still uses one fuel. Prepared step() adds
-/// gravity before applyThrust(), then moves and checks touchdown. This method must not remove that
-/// independent gravity.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Separate whether a powered tick is allowed from which engines contribute.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Several true keys can contribute, but fuel is charged once outside those individual changes.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Return if fuel is empty or no direction is held; apply each held engine independently, then spend
-/// one fuel.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
-/// Make a Moon mode by changing gravity and the initial tank. Try landing with only three planned
-/// braking bursts and describe the new fuel promise.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="expanded" desc="Program · explore the rules">
 void step() {
     if (!state.equals("FLYING")) {
         return;
@@ -96,6 +41,14 @@ void step() {
         boolean gentle = Math.abs(velocityX) <= 1.2 && velocityY >= 0 && velocityY <= 1.5;
         state = onPad && gentle ? "LANDED!" : "CRASH";
     }
+}
+
+void applyThrust() {
+    if (fuel <= 0 || !(left || right || up)) return;
+    if (left) velocityX -= 0.06;
+    if (right) velocityX += 0.06;
+    if (up) velocityY -= 0.09;
+    fuel--;
 }
 
 final int WIDTH = 600, HEIGHT = 420, GROUND = 385, PAD_X = 380, PAD_WIDTH = 140, HALF = 12;
@@ -237,6 +190,70 @@ void main() {
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
+
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F25">
+/// ### An invariant survives each action
+///
+/// An invariant is a promise about valid state. It is useful before and after a move, not merely when
+/// the game ends. Think of moving glow stones between two jars:
+///
+/// ```java
+/// int violet = 6;
+/// int gold = 2;
+/// int amount = 3;
+/// if (amount >= 0 && amount <= violet) {
+///     violet -= amount;
+///     gold += amount;
+/// }
+/// IO.println(violet + gold);
+/// ```
+///
+/// Trace: `(6, 2)` becomes `(3, 5)`, and the printed total is still 8. The two assignments belong to
+/// one accepted action. Changing only one jar would silently create or destroy stones. A request for 9
+/// fails the guard and changes neither jar.
+///
+/// Write the promise before changing the rule: a total stays constant, a resource stays non-negative,
+/// or a shape stays outside a wall. Then list every field that one action must change together. Predict
+/// the two jar values for amount 0 and amount 7. An invariant describes the intended world; it does not
+/// forbid inventing a different, clearly stated rule in your own variant.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Read this code">
+/// ### Observe, then trace the flow
+///
+/// An input can influence a simulation through several stages: a held-key flag, an acceleration, a
+/// changed position and finally a drawing. Trace the acceleration path first. The training rule removes
+/// scarcity; it does not remove falling, collisions or the need for a gentle landing. Opposing
+/// horizontal engines can cancel while the upward engine still works.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Experiment and replay">
+/// Compare three short replays: no keys, Up only, and Up with both horizontal keys. The counter must
+/// stay fixed in all three. Speed still reveals gravity and engine effects. A crash must remain stopped
+/// until R; unlimited fuel is not invulnerability.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Watch the counter and vertical speed separately. Which must change after releasing Up?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Bound the search to the small engine action and the separate gravity update, not the landing
+/// geometry. Search the counter’s reads and writes.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// applyThrust contains the fuel gate and fuel decrement. Remove the scarcity rules while retaining the
+/// independent key contributions; step still adds gravity. The flame condition in draw should agree
+/// with unlimited training thrust.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Create a low-gravity training planet, then try to land using only three planned bursts. Keep the
+/// training tank unlimited so only your flight plan changes.
+// </editor-fold>
+
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
 /// ## An unfamiliar piece of Java?

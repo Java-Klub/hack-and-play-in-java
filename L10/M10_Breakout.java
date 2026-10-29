@@ -7,19 +7,93 @@ import javax.swing.Timer;
 
 /// # L10.10 · Breakout
 ///
-/// Bounce a ball through a wall of bricks using a mouse-controlled bat. A win or a lost final life should
-/// leave a stable result to celebrate or retry.
+/// The brick game is already playable. Make a practice edition for learning difficult rebounds, where
+/// one bad moment does not erase the wall you have chipped away.
 ///
-/// **Your mission:** Only PAUSE stops the update; finished rounds can continue moving and losing lives.
-/// Restrict movement to the actual playing state.
+/// **Your mission:** Turn the normal three-attempt game into unlimited practice. A miss must serve
+/// another ball forever while keeping cleared bricks and score. Restart still restores the whole
+/// wall; clearing the wall still wins and stops motion. A very large attempt count is not the rule:
+/// remove the loss dependency and make the display honest.
 ///
-/// **Today you learn:** A lifecycle guard must describe when an update is permitted, including every stop
-/// state. One tick should not alter a game already marked won or over.
+/// **Investigation:** Hack a working game rule by tracing every consequence of a miss.
 ///
-/// Run the program, then read the board, then press Space or click to start; move the mouse to
-/// aim the bat. Clear all 18 bricks before three misses; R resets and waits for another start.
+/// Space or click launches; move the mouse to aim the bat. Deliberately miss several times before the
+/// hack, then repeat afterwards. R rebuilds the wall and waits for a fresh launch.
+
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Author a brick mosaic by choosing which entries of bricks begin true. Make a pattern with at least
+/// one deliberate gap and update the win target to the number you actually placed. Can a friend clear
+/// your design?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F30">
+/// ### Input requests; a tick advances time
+///
+/// An event can record an intention without changing the whole simulation immediately. A tick
+/// performs one bounded update. Keep drawing separate from both.
+///
+/// ```java
+/// int height = 0;
+/// int pending = 0;
+/// void press() {
+///     pending = 2;
+/// }
+/// void tick() {
+///     height += pending;
+///     pending = 0;
+/// }
+/// ```
+///
+/// After `press()`, height is still 0. One `tick()` changes it to 2 and consumes the request; another
+/// tick leaves it at 2. Repeating the input before that tick still records one request, rather than
+/// two updates. A supplied timer can call tick, but paused or finished games should reject further
+/// advancement. Restart must restore the initial state.
+///
+/// Predict: from the initial state, what happens after press, tick, press, tick?
+// </editor-fold>
+
+// <editor-fold defaultstate="expanded" desc="Investigator notebook · worked example">
+/// ### State is a graph of permitted transitions
+///
+/// A stopped round is a state, not merely a message drawn on screen. Read what a collision changes,
+/// which later guard observes it, and what restart restores.
+///
+/// ```java
+/// String state = "RUN";
+/// void finish() { state = "DONE"; }
+/// void tick() {
+///     if (!state.equals("RUN")) return;
+///     IO.println("Advance");
+/// }
+/// ```
+///
+/// tick prints Advance before finish, but not after it. Predict finish, tick, tick. Keeping a win
+/// state while removing a loss transition does not mean deleting the shared stopped-state guard.
+/// Write three promises before changing the game: what a miss preserves, what a win freezes, and what
+/// restart recreates. Test them separately; changing the visible label alone changes none of the
+/// transitions.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Find the branch reached when the ball is below the room, then follow every value changed there
+/// into drawing and restart.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// The miss branch in step changes lives and may set GAME OVER. serve already prepares one new ball
+/// without rebuilding bricks.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Use serve for each miss, keep the PLAY guard and YOU WIN transition, and remove the obsolete lives
+/// state and attempt display. Verify restart and the last brick.
+// </editor-fold>
+
+// <editor-fold defaultstate="expanded" desc="Program to explore">
 void step() {
-    if (state.equals("PAUSE")) return;
+    if (!state.equals("PLAY")) return;
     double previousX = ballX, previousY = ballY;
     ballX += velocityX;
     ballY += velocityY;
@@ -62,69 +136,6 @@ void step() {
     }
 }
 
-// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
-/// ### Make it yours
-///
-/// Author a brick mosaic by choosing which entries of bricks begin true. Make a pattern with at least
-/// one deliberate gap and update the win target to the number you actually placed. Can a friend clear
-/// your design?
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Recall · F30">
-/// ### Input requests; a tick advances time
-///
-/// An event can record an intention without changing the whole simulation immediately. A tick
-/// performs one bounded update. Keep drawing separate from both.
-///
-/// ```java
-/// int height = 0;
-/// int pending = 0;
-/// void press() {
-///     pending = 2;
-/// }
-/// void tick() {
-///     height += pending;
-///     pending = 0;
-/// }
-/// ```
-///
-/// After `press()`, height is still 0. One `tick()` changes it to 2 and consumes the request; another
-/// tick leaves it at 2. Repeating the input before that tick still records one request, rather than
-/// two updates. A supplied timer can call tick, but paused or finished games should reject further
-/// advancement. Restart must restore the initial state.
-///
-/// Predict: from the initial state, what happens after press, tick, press, tick?
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
-///
-/// - `state.equals("PAUSE")` — Recognises just one stopped state, leaving other non-playing states
-///   uncovered.
-/// - `return;` — Skips movement, collisions and life changes when the guard chooses to stop.
-/// - `if (score == 18) state = "YOU WIN";` — Marks a finished board; a later tick must respect that
-///   state.
-///
-/// ### What the prepared part already does
-///
-/// The long remainder of step already handles bounded wall, bat and brick collisions. Mouse input sets
-/// the bat position, restart starts a fresh board and drawing displays the current score, lives and
-/// state.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// The game uses PLAY, YOU WIN and GAME OVER.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Allow exactly PLAY rather than guessing one forbidden label.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Put the guard before all updates, including life loss.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
 final int WIDTH = 640, HEIGHT = 400, RADIUS = 7, BAT_WIDTH = 90, BAT_Y = 370;
 final boolean[][] bricks = new boolean[3][6];
 double ballX, ballY, velocityX, velocityY;

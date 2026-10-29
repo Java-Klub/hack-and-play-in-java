@@ -5,29 +5,24 @@ import java.awt.image.BufferedImage;
 
 /// # L12.01 · ReactionDiffusionSkins
 ///
-/// Let two virtual chemicals spread and react until spots or stripes emerge. A tiny local recipe can
-/// change the whole skin of the creature you imagine wearing it.
+/// The creature-skin simulation already runs. Become its experiment designer: change one local recipe
+/// at a time and test whether your explanation matches the pattern you actually obtain.
 ///
-/// **Your mission:** Author makeChemistry and install its result in chemistry. Return a Chemistry
-/// lambda implementing a × b², using its arguments rather than fixed grid cells. reactionAt is now a
-/// supplied adapter: keep it forwarding each cell to the installed role.
+/// **Your mission:** Build a fair three-skin experiment: use the same seed and step count for
+/// reaction recipes a×b², half that reaction, and zero reaction. Swap only the selected chemistry
+/// role; reuse the same diffusion and rendering. Return the three pictures in that order and restore
+/// the caller’s original role afterwards, including when a run fails.
 ///
-/// **Today you learn:** Author an implementation of a small interface and install it in the running
-/// program. Keep its calculation separate from input, updates and drawing.
+/// **Investigation:** Investigate composition by swapping one role under controlled conditions.
 ///
-/// Run the program and compare the picture before and after your repair.
-Chemistry makeChemistry() {
-    return (a, b) -> 0;
-}
-
-Chemistry chemistry = (a, b) -> 0;
+/// The window compares Standard, Half reaction and No reaction from the same starting state. In the
+/// starter they are copies of the same recipe. After your experiment tool is connected, compare all
+/// three without changing the seed.
 
 // <editor-fold defaultstate="collapsed" desc="Your next version · optional">
-/// ### Make it yours
-///
-/// Invent a creature skin by changing only your Chemistry implementation. Try halving its reaction
-/// strength, then compare equal seeds and equal step counts. Do not promise a particular animal
-/// pattern: name the pattern you actually see and keep its recipe.
+/// Invent a fourth recipe after the three controlled comparisons. Change only the local reaction and
+/// give the observed pattern a creature name. Keep the same seed and duration so another pupil can
+/// reproduce your experiment.
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Learn · F34">
@@ -56,48 +51,55 @@ Chemistry chemistry = (a, b) -> 0;
 /// award three times the input?
 // </editor-fold>
 
-// <editor-fold defaultstate="expanded" desc="Read this code">
-/// ### Implement a role, then install it
+// <editor-fold defaultstate="expanded" desc="Investigator notebook · worked example">
+/// ### Change one cause; restore what you borrowed
 ///
-/// interface Chemistry promises reaction(double a, double b). A lambda with two arguments and a
-/// double result can fulfil that promise. The factory makeChemistry returns the implementation; the
-/// chemistry field stores the selected implementation. You must do both jobs. Creating an unused
-/// correct rule does not change the picture.
-///
-/// Neutral example:
+/// An interface field selects a calculation. Changing the selected implementation is different from
+/// rewriting the caller or changing the initial data. Controlled comparison needs equal inputs and a
+/// clear result order.
 ///
 /// ```java
-/// interface Price { double forCount(int n); }
-/// Price makePrice() {
-///     return n -> {
-///         double subtotal = n * 3.0;
-///         return subtotal + 2;
-///     };
+/// var before = rule;
+/// try {
+///     rule = alternative;
+///     runExperiment();
+/// } finally {
+///     rule = before;
 /// }
 /// ```
 ///
-/// A stored rule `Price price = makePrice()` returns 11 for price.forCount(3). Predict the result for
-/// count 5 and explain when the lambda body runs.
-///
-/// For this skin's specified reaction, a = 0.5 and b = 0.4 give 0.08. reactionAt reads a[y][x] and
-/// b[y][x]; step applies the result to fresh next-state grids. The chemistry rule must not update
-/// either grid itself.
+/// This independent pattern restores rule whether runExperiment finishes or throws. Predict which
+/// rule a later call uses if the experiment throws before returning. finally is a cleanup promise,
+/// not an error-hiding catch. Capture each finished image before beginning the next run. Your
+/// conclusions should name observed shapes rather than promise that every setting makes a particular
+/// animal skin.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// The lambda arguments are the concentrations for the current cell, not coordinates.
+/// Trace the displayed picture back to the selected calculation, and find where each new render
+/// resets its input grids.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Make the factory return a rule that multiplies a by b twice. The rule should only calculate.
+/// compareSkins currently repeats render without changing chemistry. The Chemistry interface supplies
+/// just the reaction, while render resets the seed and advances diffusion.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Initialise chemistry with makeChemistry(), not a second unrelated lambda. Keep reactionAt
-/// forwarding to that field.
+/// Save the original Chemistry, install each of the three recipe lambdas and render equal inputs,
+/// then restore the original in finally. Do not change step or its buffers.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="expanded" desc="Program to explore">
+Chemistry makeChemistry() {
+    return (a, b) -> {
+        double activated = a * b;
+        return activated * b;
+    };
+}
+
+Chemistry chemistry = makeChemistry();
+
 double reactionAt(int x, int y) {
     return chemistry.reaction(a[y][x], b[y][x]);
 }
@@ -201,11 +203,15 @@ void showImages(String title, String[] captions, java.awt.image.BufferedImage[] 
 }
 
 
+BufferedImage[] compareSkins(long seed, int steps) {
+    return new BufferedImage[]{render(seed, steps), render(seed, steps), render(seed, steps)};
+}
+
 void main() {
     try {
-        showImages("Reaction Diffusion Skins", new String[]{"Result"}, new java.awt.image.BufferedImage[]{render(42, 1200)});
+        showImages("Skin Experiments", new String[]{"Standard", "Half reaction", "No reaction"}, compareSkins(42, 1200));
     } catch (Exception failure) {
-        IO.println("Cannot draw this result; check the editable rule: " + failure);
+        IO.println("Cannot run the experiment: " + failure.getMessage());
     }
 }
 // </editor-fold>

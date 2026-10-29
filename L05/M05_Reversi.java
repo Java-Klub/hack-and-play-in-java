@@ -3,17 +3,27 @@
 /// Trap your opponent’s discs between your own to flip them. A player may pass only when there is truly
 /// nowhere to play.
 ///
-/// **Your mission:** The unfinished search allows a pass even when a capture exists. Build
-/// hasMove(who): examine the whole six-by-six board and return true at the first cell whose captures
-/// result is nonempty. Return false only after every candidate fails.
 ///
-/// **Today you learn:** Traversal and search: examine candidate positions until a legal move is found.
-/// Only a fully unsuccessful search can justify returning false.
+/// **Your mission:** Create corner-prize Reversi: each occupied corner is worth three points and every
+/// other occupied square one. Empty squares earn nothing. Show both scores during play and use those
+/// same scores to decide the result after two passes. Moves, captures and legal passing stay as they
+/// are. Construct one tiny board where disc count and prize score name different leaders.
 ///
-/// Type 3 2 for an opening move and press Enter, then let the next player
-/// choose a legal row and column.
-boolean hasMove(int who) {
-    return false;
+/// **Today you learn:** Traversal can aggregate a weighted score. A calculation used only for display
+/// cannot change a game result unless the result actually calls it.
+///
+/// Play an opening with 2 3. Read the displayed scores, then trace what happens after both players have
+/// no legal move and pass.
+int score(int who) {
+    int total = 0;
+    for (int[] row : board) {
+        for (int cell : row) {
+            if (cell == who) {
+                total++;
+            }
+        }
+    }
+    return total;
 }
 
 // <editor-fold defaultstate="expanded" desc="Learn · F17">
@@ -40,40 +50,46 @@ boolean hasMove(int who) {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Read this code">
-/// A board search visits pairs of indices: for each row, try every column. The prepared
-/// captures(r,c,who) already answers which discs a candidate would flip and changes nothing.
+/// Keep the rule for earning a square separate from the rule for valuing it. The same board may produce
+/// different leaders under different scores.
 ///
-/// | candidates examined | capture found? | next action |
-/// | --- | --- | --- |
-/// | first cell | no | next column |
-/// | end of a row | no | first column of next row |
-/// | any later cell | yes | return true now |
-/// | all 36 cells | no | return false |
-///
-/// Finding a legal move is enough; this query need not choose the best move or play it. Predict the
-/// number of candidates needed if only the last cell works. Prepared turn handling uses your answer to
-/// permit passing or end the round.
+/// In a separate three-cell row with values [1, 2, 1] and positional weights [2, 1, 2], player 1 earns
+/// four and player 2 one. Predict the scores if the middle value becomes 1. A square contributes to
+/// only its owner. Inspect both the live display and the final outcome so they cannot silently use
+/// different accounting.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Choose one counter for row and another for column.
+/// Follow the points from an occupied cell all the way to the winner announcement.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The inner loop tests captures for the current pair; success returns immediately.
+/// score(who) currently counts every owned disc as one. Both display and the two-pass result call it;
+/// hasMove and captures already work.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Use two ranges 0..5, return true for a nonempty capture list, and keep final false after both loops.
+/// Visit every row and column, add only for the requested owner, and give a square the corner weight
+/// only when both its row and column are boundary indices.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Make it yours">
-/// Invent a weighted final score that values corners more than ordinary squares. Keep legal moves
-/// unchanged. Build one board where disc count and your weighted score disagree about the leader; ask a
-/// partner to choose a move under each scoring rule.
+/// Invent your own positional prizes. Exchange only the prize map with a partner and challenge them to
+/// construct the smallest disagreement with ordinary disc count.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+boolean hasMove(int who) {
+    for (int r = 0; r < 6; r++) {
+        for (int c = 0; c < 6; c++) {
+            if (!captures(r, c, who).isEmpty()) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 int[][] board = new int[6][6];
 int player;
 int passes;
@@ -137,18 +153,15 @@ void command(String input) {
     }
     player = 3 - player;
     if (passes == 2) {
-        int[] counts = new int[3];
-        for (int[] row : board) {
-            for (int cell : row) {
-                counts[cell]++;
-            }
-        }
-        outcome = counts[1] == counts[2] ? "Draw" : "Player " + (counts[1] > counts[2] ? 1 : 2) + " wins";
+        int firstScore = score(1);
+        int secondScore = score(2);
+        outcome = firstScore == secondScore ? "Draw" : "Player " + (firstScore > secondScore ? 1 : 2) + " wins";
     }
 }
 
 /// display(): Presents the current board and the legal input choices in the console.
 void display() {
+    IO.println("Score P1: " + score(1) + "  P2: " + score(2));
     IO.println("Columns 1-6; player " + player + ". 1=X, 2=O, 0=empty");
     for (int r = 0; r < 6; r++) {
         IO.println((r + 1) + " " + Arrays.toString(board[r]));
@@ -161,7 +174,7 @@ void display() {
 void main() {
     reset();
     IO.println("Reversi");
-    IO.println("Place a disc to trap an enemy line between two of yours; trapped discs flip. Most discs wins after both players pass.");
+    IO.println("Place a disc to trap an enemy line between two of yours; trapped discs flip. Higher displayed score wins after both players pass.");
     IO.println("Enter row column (1-6), or pass when blocked. /r restarts; /q quits.");
     IO.println("Example: 2 3 is an opening move for Player 1. Enter pass only when you have no legal move.");
     display();

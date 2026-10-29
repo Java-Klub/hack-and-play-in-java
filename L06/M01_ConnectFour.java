@@ -3,20 +3,24 @@
 /// Drop discs into columns and race a friend to connect four. A replay should give you a fresh board and
 /// a fresh round.
 ///
-/// **Your mission:** The board clears, but the round still remembers its old turn, winner and move
-/// count. Reconstruct reset’s field assignments: first player X, no winner '.', and zero moves. Do not
-/// create replacement locals; keep the supplied board clearing.
 ///
-/// **Today you learn:** Scope and state lifetime: a new local variable can hide a longer-lived field with
-/// the same name. Identify which moves belongs to the whole round.
+/// **Your mission:** Make rematches alternate the opening player: the first round starts with X, the
+/// next with O, then X again. This must not depend on who moved last or who won. Every rematch still
+/// clears the board, winner and move count. Use the visible turn and Moves to investigate which facts
+/// live for a round and which must survive across rounds.
 ///
-/// Enter 4, then r. The board is empty again, but Moves and the next player expose the unfinished
-/// reset. A fresh round must show zero and start with X.
+/// **Today you learn:** State lifetime: a match fact must survive a round reset, while temporary
+/// calculations and old round facts must not.
+///
+/// Start a round, enter 4 and then r. Compare the next opening player with another restart made before
+/// any disc is dropped. The current game always opens with X.
 void reset() {
     for (char[] row : board) {
         Arrays.fill(row, '.');
     }
-    int moves = 0;
+    player = 'X';
+    winner = '.';
+    moves = 0;
 }
 
 // <editor-fold defaultstate="expanded" desc="Learn · F14">
@@ -41,37 +45,34 @@ void reset() {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Read this code">
-/// A field survives calls; a new local inside reset does not replace it. The board clearing is
-/// supplied. Complete the three round facts that other methods read.
+/// An active turn and a round opener answer different questions. One changes after ordinary moves; the
+/// other changes only when a new round begins.
 ///
-/// | moment | moves field | player field | winner field |
-/// | --- | --- | --- | --- |
-/// | an unfinished old round | 41 | O | . |
-/// | after reset | 0 | X | . |
-/// | first new disc | 1 | O | . |
-///
-/// If the old 41 survives, one new disc reaches 42 and can falsely announce a draw. A local
-/// `int moves = 0` hides rather than resets the field. player and winner also belong to the round.
-/// Predict a restart after a completed X win. display now shows Moves so the same contract can be
-/// inspected while playing.
+/// For a separate quiz alternating team A/B, a local variable declared during restart forgets its
+/// earlier value when the call ends. A field can remember the previous opener, but clearing that field
+/// on every restart defeats the memory. Predict the opener sequence after rounds containing zero, one
+/// and four moves; the lengths must not matter. Trace where a new round is requested and where a normal
+/// move changes the turn.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// List the round facts that must be identical after every reset, regardless of the old round.
+/// List what must reset and what must remember the previous round. Do not infer the opener from the
+/// last disc.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Compare a declaration with a type to an assignment naming an existing field.
+/// reset clears the round and chooses player. drop changes player during ordinary play, so that field
+/// alone cannot remember who opened.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// After clearing the rows, assign player X, winner dot and moves zero to the existing fields.
+/// Keep a separate remembered opener, initially arranged so the first reset selects X. Alternate it
+/// once per reset, copy it to player, and keep clearing board, winner and moves.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Make it yours">
-/// Add a best-of-three match score that survives a round reset. Decide which fields belong to the round
-/// and which to the match, then add a separate match reset. Demonstrate a completed round followed by
-/// replay without losing the match score.
+/// Create a best-of-three match whose score survives rematches. Decide whether a separate new-match
+/// action should also reset the opening-player schedule.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

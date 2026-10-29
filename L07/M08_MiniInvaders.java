@@ -7,76 +7,22 @@ import javax.swing.Timer;
 
 /// # L07.08 · MiniInvaders
 ///
-/// Give your ship a working hit action and clear the descending alien formation. One pulse of the
-/// weapon earns one hit, so aiming and timing become meaningful.
+/// Your ship already fights fairly: one shot destroys one alien. Hack the weapon into a controlled
+/// piercing pulse that can cut through two targets, but never drill through the entire formation.
 ///
-/// **Your mission:** Build hitAlien(row, column), the missing hit action. A live bullet hitting a live
-/// alien removes that alien, consumes the bullet and earns exactly one point. If either is already
-/// inactive, change nothing. The prepared collision loop supplies valid coordinates and calls this
-/// action during real play.
+/// **Your mission:** Make each newly fired pulse survive its first distinct hit and end after its
+/// second. Each alien scores once; a spent pulse scores nothing, and a new shot starts with a fresh
+/// two-hit allowance. Keep movement, aiming, win/loss and restart working. Observe the normal one-hit
+/// lifetime before locating how a shot is born and ends.
 ///
-/// **Today you learn:** Build one complete action that preserves an invariant across all related
-/// fields.
+/// **Today you learn:** Replace one invariant with another: a pulse has a finite hit allowance, and
+/// consuming that allowance must agree with the projectile lifetime.
 ///
-/// Run the program, steer with Left and Right, and hold Space to fire again whenever the
-/// previous bullet has finished.
-void hitAlien(int row, int column) {
-}
+/// Steer with Left/Right and fire with Space; R restarts. Aim at a vertical column. Before the hack
+/// each pulse stops at the first alien; afterwards watch the same pulse remove a second alien and then
+/// disappear.
 
-// <editor-fold defaultstate="collapsed" desc="Recall · F25">
-/// ### An invariant survives each action
-///
-/// An invariant is a promise about valid state. It is useful before and after a move, not merely when
-/// the game ends. Think of moving glow stones between two jars:
-///
-/// ```java
-/// int violet = 6;
-/// int gold = 2;
-/// int amount = 3;
-/// if (amount >= 0 && amount <= violet) {
-///     violet -= amount;
-///     gold += amount;
-/// }
-/// IO.println(violet + gold);
-/// ```
-///
-/// Trace: `(6, 2)` becomes `(3, 5)`, and the printed total is still 8. The two assignments belong to
-/// one accepted action. Changing only one jar would silently create or destroy stones. A request for 9
-/// fails the guard and changes neither jar.
-///
-/// Write the promise before writing the repair: a total stays constant, a resource stays non-negative,
-/// or a shape stays outside a wall. Then list every field that one action must change together. Predict
-/// the two jar values for amount 0 and amount 7. An invariant describes the intended world; it does not
-/// forbid inventing a different, clearly stated rule in your own variant.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read this part
-///
-/// `bulletActive` records whether this projectile still exists. `aliens[row][column]` says whether the
-/// target exists. One accepted hit must update both facts and score together. Prepared step() already
-/// handles movement, aiming, firing, and win/loss. Its `break hit` ends the search for this tick, not
-/// the bullet lifetime.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Which three facts change together when a hit is accepted?
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Return before changing anything if the bullet or target is already gone.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Guard both live states, then clear the target, consume the bullet, and increment score once.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
-/// Design an intentional two-hit piercing shot with a remaining-hit counter. State the new rule before
-/// changing it: at most two different aliens may score from one shot.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="expanded" desc="Program · explore the rules">
 void step() {
     if (!state.equals("PLAY")) {
         return;
@@ -134,6 +80,13 @@ void step() {
             }
         }
     }
+}
+
+void hitAlien(int row, int column) {
+    if (!bulletActive || !aliens[row][column]) return;
+    aliens[row][column] = false;
+    bulletActive = false;
+    score++;
 }
 
 final int WIDTH = 600, HEIGHT = 420, SHIP_Y = 388;
@@ -283,6 +236,71 @@ void main() {
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
+
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F25">
+/// ### An invariant survives each action
+///
+/// An invariant is a promise about valid state. It is useful before and after a move, not merely when
+/// the game ends. Think of moving glow stones between two jars:
+///
+/// ```java
+/// int violet = 6;
+/// int gold = 2;
+/// int amount = 3;
+/// if (amount >= 0 && amount <= violet) {
+///     violet -= amount;
+///     gold += amount;
+/// }
+/// IO.println(violet + gold);
+/// ```
+///
+/// Trace: `(6, 2)` becomes `(3, 5)`, and the printed total is still 8. The two assignments belong to
+/// one accepted action. Changing only one jar would silently create or destroy stones. A request for 9
+/// fails the guard and changes neither jar.
+///
+/// Write the promise before changing the rule: a total stays constant, a resource stays non-negative,
+/// or a shape stays outside a wall. Then list every field that one action must change together. Predict
+/// the two jar values for amount 0 and amount 7. An invariant describes the intended world; it does not
+/// forbid inventing a different, clearly stated rule in your own variant.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Read this code">
+/// ### Observe, then trace the flow
+///
+/// Treat a projectile as a small life story: creation, movement, accepted contact, and expiry. The
+/// score is a consequence of a real contact, not a timer tick. A removed target cannot be hit again.
+/// First locate those events from their visible effects; then decide which state must travel with the
+/// current shot. A counter can express a finite allowance without changing the formation geometry.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Experiment and replay">
+/// Use the same column for a before/after comparison. Record whether the pulse survives one hit, two
+/// hits, and a miss. Check that the score grows once per removed alien and that restarting does not
+/// carry a half-used pulse into the next battle.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// One immortal boolean is not enough to express exactly two contacts. Describe the allowance before
+/// and after each accepted hit.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Find the input-to-shot creation branch and the alien-contact action. A fresh allowance belongs at
+/// creation, while a contact consumes it.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// The shot is created in step and contact is handled by hitAlien. Add a per-shot counter, initialise
+/// it for each new shot, decrease only for a live target, and end the bullet at zero. Reset that state
+/// on restart.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Make a third-hit charge that costs a long pause before firing again. Decide how the player can see
+/// the tradeoff instead of merely making the weapon stronger.
+// </editor-fold>
+
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
 /// ## An unfamiliar piece of Java?

@@ -10,19 +10,22 @@ import java.awt.Color;
 /// Turn every light off by clicking crosses of cells. Become the tester who catches convincing but unfair
 /// copies of the toggle rule.
 ///
-/// **Your mission:** The centre-only example cannot catch every wrong rule. Expand learnerChecks() with
-/// valid board examples that distinguish different cross shapes.
 ///
-/// **Today you learn:** Writing functional checks: choose inputs and expected results that could disprove
-/// a broken rule. The learner’s work is the examples, not a replacement flip() algorithm.
+/// **Your mission:** Design at most two experiments that catch all six counterfeit click rules
+/// described below. Each experiment starts all-off, makes two clicks, and predicts the final number of
+/// lit cells. Both clicks may target the same cell. Your evidence must also accept the real cross rule.
+/// Derive each expectation before running it; the game itself already works.
 ///
-/// Click cells to try extinguishing every light, then run the checks to see
-/// which wrong rule your examples still miss.
-record CrossExample(int row, int column, int expected) {
+/// **Today you learn:** A functional check tests a sequence and its final state. Overlapping effects
+/// can cancel, so two one-click counts cannot simply be added.
+///
+/// Play the ordinary cross-toggle game. Then compare Check’s surviving counterfeit with your two-click
+/// experiment on an all-off sketch of the board.
+record CrossExample(int firstRow, int firstColumn, int secondRow, int secondColumn, int expected) {
 }
 
 CrossExample[] learnerChecks() {
-    return new CrossExample[]{new CrossExample(2, 2, 5)};
+    return new CrossExample[]{new CrossExample(2, 2, 2, 2, 0)};
 }
 
 // <editor-fold defaultstate="expanded" desc="Learn · F33">
@@ -49,63 +52,52 @@ CrossExample[] learnerChecks() {
 /// another.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// Toggle means invert, not set on. A cell touched twice returns to off. For a separate three-cell
+/// strip, action A flips positions 0 and 1; action B flips 1 and 2. A then B leaves positions 0 and 2
+/// lit, so the result is two rather than four. Predict A then A.
 ///
-/// - `record CrossExample(int row, int column, int expected)` — One example bundles a click position with
-///   the expected number of lit cells on an empty board.
-/// - `CrossExample[]` — An array lets the checker run several independent examples.
-/// - `new CrossExample(2, 2, 5)` — The existing example selects a legal centre cell and its expected
-///   result.
-/// - `return` — Hands your example data to both the game's startup check and the mission
-///   checks.
-///
-/// ### What the prepared part already does
-///
-/// flip() is already correct, so the game remains playable. Startup checks examples against
-/// that rule; the mission checks also try named wrong rules and report which one your examples
-/// failed to reject.
+/// The real game flips the pressed cell and existing up/down/left/right neighbours. Your example
+/// bundles both zero-based click positions with one final expected count. Try to distinguish location,
+/// boundary handling, overlap and whether the second click actually happens; a larger pile of repeated
+/// examples does not provide new evidence.
 // </editor-fold>
 
-// <editor-fold defaultstate="expanded" desc="For this game">
-/// ### Derive the expectation before constructing the check
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// ### Six counterfeit rules to investigate
 ///
-/// Use a different toy to practise: on a three-row, two-column panel, a press lights itself and the
-/// cell immediately below, when present.
+/// Each counterfeit keeps the five-by-five board but changes one rule:
 ///
-/// ```java
-/// record Probe(int row, int column, int expectedLit) {}
-/// Probe sample = new Probe(0, 1, 2);
-/// ```
+/// - Only the pressed cell changes.
+/// - Side neighbours change, but the pressed cell does not.
+/// - The pressed cell and diagonal neighbours change instead of side neighbours.
+/// - A cross continues across a border to the opposite side of the board.
+/// - Affected cells are set on, even if they were already on.
+/// - The second click is ignored entirely.
 ///
-/// Both coordinates are internal indices. That sample's two cells can be listed on paper
-/// independently of any implementation. Now return to the actual cross rule. Each CrossExample
-/// starts from a fresh all-off five-by-five board and makes one click; `expected` counts lit
-/// cells afterwards. Array entries are separated by commas. Draw your own boundary click and
-/// list its distinct affected cells. Which plausible wrong cross would disagree with your
-/// expectation? Supply your own counterexample and explain it before running the checks.
+/// A useful experiment gives a different final count for the real rule and at least one counterfeit.
+/// The same experiment may expose several. Check reports a surviving rule by its description; you do
+/// not need to read the check runner.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Draw an all-off board and mark exactly which cells one chosen click should toggle. Derive the
-/// expected count from those marks before calling the implementation.
+/// Mark both sets of affected cells on paper; erase cells touched twice before counting.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The existing click is far from every border. Choose another legal position where the border
-/// changes the shape; name a wrong rule that your new expectation would reject.
+/// learnerChecks provides CrossExample(firstRow, firstColumn, secondRow, secondColumn, expected). Check
+/// names each wrong rule your current examples still accept.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Try a corner, counting the clicked cell and only its existing cardinal neighbours. Construct its
-/// CrossExample from your own coordinates and count, then derive a different boundary case that the
-/// corner alone cannot replace.
+/// Use overlap and a boundary to make shapes disagree; also consider clicking the same cell twice to
+/// expose setting-on or ignoring the second click. Supply at most two valid independently derived
+/// cases.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Make it yours">
-/// Invent a new click shape, such as centre plus diagonal neighbours. Describe it on paper, predict a
-/// centre, edge and corner click, then adapt flip and your examples together. Exchange the written rule
-/// and ask a partner to supply one extra counterexample.
+/// Exchange an invented toggle rule with a partner. Each author writes one deceptive implementation and
+/// the other gets only two experiments to expose it. Agree on the rule before judging the evidence.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
@@ -220,22 +212,23 @@ void verifyExamples() {
     boolean[][] saved = lights;
     try {
         for (var example : learnerChecks()) {
-            if (example.row()<0 || example.row() >= SIZE || example.column()<0 || example.column() >= SIZE) {
-                throw new IllegalArgumentException("Cross examples must use valid game cells 0..4");
+            int[] coordinates = {example.firstRow(), example.firstColumn(), example.secondRow(), example.secondColumn()};
+            for (int coordinate : coordinates) {
+                if (coordinate < 0 || coordinate >= SIZE) {
+                    throw new IllegalArgumentException("Cross examples must use valid game cells 0..4");
+                }
             }
             lights = new boolean[SIZE][SIZE];
-            flip(example.row(), example.column());
+            flip(example.firstRow(), example.firstColumn());
+            flip(example.secondRow(), example.secondColumn());
             int count = 0;
             for (var row : lights) {
                 for (boolean on : row) {
-                    if (on) {
-                        count++;
-                    }
+                    if (on) count++;
                 }
             }
             if (count != example.expected()) {
-                throw new IllegalStateException("Click row " + example.row() + ", column " + example.column()
-                    + ": expected " + example.expected() + " lit cells, actual " + count);
+                throw new IllegalStateException("Two-click example: expected " + example.expected() + " lit cells, actual " + count);
             }
         }
     } finally {
