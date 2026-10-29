@@ -2,9 +2,9 @@
 
 **[English](https://github.com/Java-Klub/hack-and-play-in-java/tree/main) · [Česky](https://github.com/Java-Klub/hack-and-play-in-java/tree/ceska-verze)**
 
-**Uč se Javu opravováním malých her — a pak si je předělej po svém.**
+**Uč se Javu: prozkoumej hru, změň pravidla a hraj po svém.**
 
-12 úrovní · 143 her, hádanek a tvořivých experimentů · 36 základních Java skills (dovedností)
+12 úrovní · 145 her, hádanek a tvořivých experimentů · 36 základních Java skills (dovedností)
 
 ![Šest programů z Hack & Play in Java: MiniInvaders, MiniPacman, MirrorLaser, SunflowerSpiral, ReactionDiffusionSkins a FractalTreeGarden.](cover.png)
 
@@ -36,7 +36,7 @@ Začni tady a postupně se propracuj k bludištím, arkádám, generovaným obr�
 
 Průvodce najdeš **přímo v kódu**: krátká vysvětlení, vyložené příklady a nápovědy otevírané po jedné. Ze zvědavosti prozkoumej i připravené části her. Po stažení fungují programy i kontroly offline a využívají JDK libraries (knihovny JDK).
 
-Při hraní střídáš různé role: zachraňuješ rozbitou hru, sestavuješ rozhodčího, odhaluješ podvodný tah, píšeš vlastní pravidlo nebo vytváříš hádanku pro spolužáka. Výklad ukazuje průchody konkrétními hodnotami; nápovědy a možná oprava zůstávají oddělené.
+Hledej schovanou propustku. Přidej cheat kód. Sestav rádce, který ti pomůže porazit bota, nebo změň cenu rohů v Reversi. Jindy zachráníš rozbitou hru, vymyslíš pokus odhalující falešné pravidlo nebo napodobíš černou skříňku. Výklad ukazuje průchody konkrétními hodnotami; postupné nápovědy otevírej podle potřeby.
 
 ## Začni hrát
 
@@ -53,7 +53,7 @@ Při hraní střídáš různé role: zachraňuješ rozbitou hru, sestavuješ ro
    java L01/Check.java M01_CafeWallLab.java
    ```
 
-První RED ve výchozí verzi je záměrná stopa; `PASS` znamená shodu s ověřenými případy. Celou úroveň zkontroluješ pomocí `java L01/Check.java`; zahrnuje i dosud neopravené hry.
+Kontrola hodnotí cíl mise: `GREEN` znamená, že ověřované případy prošly, `RED` že cíl zatím splněný není. Některé hry jsou na začátku rozbité, jiné už fungují a čekají na tvé nové pravidlo nebo nástroj. I fungující původní hra proto může mít `RED`. Celou úroveň zkontroluješ pomocí `java L01/Check.java`; zahrnuje i dosud neřešené mise.
 
 Hry leží přímo ve složkách `L01` až `L12`, v pořadí podle čísla. Každý level má vlastní `Check.java`. Jsi už uvnitř `L01`? Celou úroveň ověří `java Check.java`, jednu misi `java Check.java M01_CafeWallLab.java`. Při řešení misí kontrolní soubory neměň. Sestavení projektu nastavovat nemusíš.
 
@@ -64,7 +64,7 @@ Pro zvídavé začátečníky, programátorské kluby i společné lekce s učit
 <details>
 <summary>Doporučená cesta: vyber hry, procvič nové myšlenky</summary>
 
-Úroveň není jedna schůzka a všech 143 programů není povinný seznam. Tohle je výchozí výběr přes hlavní dovednosti; další hry nabízejí jiné téma nebo další procvičení. ProgramMirror je abstraktnější odbočka, Nim přidává strategii a Flood se SameGame navíc pracují s frontou.
+Úroveň není jedna schůzka a všech 145 programů není povinný seznam. Tohle je výchozí výběr přes hlavní dovednosti; další hry nabízejí jiné téma nebo další procvičení. Pro první průzkum krátkého kompletního programu zkus také [ClubDoor](L01/M10_ClubDoor.java); pro odvozování pravidla [NumberMachine](L02/M11_NumberMachine.java). ProgramMirror je abstraktnější odbočka, Nim přidává strategii a Flood se SameGame navíc pracují s frontou.
 
 | Úroveň | Výchozí výběr |
 | --- | --- |

@@ -6,80 +6,23 @@ import java.awt.image.BufferedImage;
 
 /// # L09.12 · TileStampStudio
 ///
-/// Otiskni vlastní dlaždici po ploše a sleduj, jak z malého motivu vznikne vzor. Ovládání opakování má
-/// dovolit řídký i hustý obrazec.
+/// Editor otisků už přijímá čísla. Dej mu malý jazyk příkazů, aby plánovaná posloupnost měnila hustotu
+/// bez ručního počítání každého dalšího čísla.
 ///
-/// **Tvoje mise:** Vytvoř applyRepeats(text): přijmi po odstranění okolních mezer whole number (celé
-/// číslo) 1–12 včetně, ulož přijatý candidate (návrh) do repeats a vrať true. Pro překlep i číslo mimo
-/// bounds (hranice) vrať false a zachovej staré repeats. Náhled 288×288 musí viditelně měnit hustotu
-/// vzoru.
+/// **Tvoje mise:** Přidej denser pro zdvojnásobení současného počtu a sparser pro polovinu jen při
+/// sudém počtu. Příkazy ignorují velikost písmen i okolní mezery. Zachovej číselné volby 1–12. Překlep,
+/// půlení lichého čísla i výsledek mimo 1–12 odmítni beze změny vzoru. Příkaz vychází z posledního
+/// přijatého nastavení, ne stále z počátečního.
 ///
-/// **Dnes trénuješ:** Vytvoř přesné input boundary (rozhraní vstupu): odliš parsing (převod),
-/// validation (ověření platnosti) a uložení živého nastavení.
+/// **Dnes trénuješ:** Prozkoumej boundary (hranici) mezi textem, navrženou value (hodnotou) a uloženým
+/// živým nastavením. Named command (pojmenovaný příkaz) i číslo sdílí validation (ověření platnosti),
+/// ale jinou cestu převodu.
 ///
-/// Po spuštění programu klikáním zapínej či vypínej barvu políček; napiš 3 a klikni na Repeats
-/// pro změnu hustoty vzoru. Clear obnoví dlaždici.
-boolean applyRepeats(String text) {
-    return false;
-}
+/// Nakresli nesouměrný dílek. Zadej 3 a klikni Repeats, pak zkus denser, denser, sparser. Výchozí
+/// editor slova odmítá; tvůj nástroj musí viditelně vytvořit hustoty 6, 12, 6. Clear maže kresbu,
+/// nikoli hustotu.
 
-// <editor-fold defaultstate="collapsed" desc="Připomenutí · F31">
-/// ### Parsing (převod textu) a platná hodnota jsou dvě otázky
-///
-/// Číselný vstup začíná jako text. Parsing může selhat, protože text není číslo; validation (ověření
-/// platnosti) může odmítnout správně zapsané číslo. Obě pravidla rozhoduj zvlášť.
-///
-/// ```java
-/// int readZoom(String text) {
-///     try {
-///         int zoom = Integer.parseInt(text.strip());
-///         if (zoom < 1 || zoom > 4) throw new IllegalArgumentException("Zoom: 1..4");
-///         return zoom;
-///     } catch (NumberFormatException typo) {
-///         return 2;
-///     }
-/// }
-/// ```
-///
-/// Trace (průchod) pro `" 3 "`: `strip` odstraní okolní mezery, `parseInt` vrátí 3, bounds (hranice) je
-/// přijmou. `"oops"` nejde převést, takže `catch` vrátí 2. `"7"` se převede, ale neprojde validation;
-/// vyvolaná IllegalArgumentException tuto method (metodu) opustí. Úzký `catch` pro
-/// NumberFormatException tyto cesty odliší.
-///
-/// Desetinný vstup používá `Double.parseDouble`; NaN a infinity (nekonečno) jsou čitelné, ale nejsou
-/// finite (konečná čísla). U živého nastavení nejdřív vytvoř local candidate (místní návrh), teprve po
-/// validation změň field (sdílenou proměnnou). Předpověz cestu pro `"0"`, `"two"` a `"4"`. Které vstupy
-/// mají zachovat předchozí nastavení?
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst tuto část
-///
-/// Live field (živá sdílená proměnná) repeats začíná na 6. Parsing (převod) proveď do local candidate
-/// (místního návrhu), aby odmítnutí nepoškodilo nastavení. Zde format failure (chybný zápis) i range
-/// failure (chybný rozsah) vracejí false; na rozdíl od stromu špatný rozsah nevyvolává exception
-/// (výjimku). Připravené render(repeats) vměstná daný počet opakování do stejného náhledu, takže 3 a 9
-/// skutečně vypadají jinak.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Odděl navržené číslo od aktuálně zobrazeného nastavení.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Do field (sdílené proměnné) repeats smí jen plně přijatý candidate (návrh).
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Zkus parsing (převod); pro chybný rozsah či zápis vrať false, jinak ulož candidate a vrať true.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
-/// Nakresli nesouměrný tile (dílek) 8×8 a porovnej tři a devět opakování. Potom zkus v render()
-/// posunout každý druhý row (řádek) otisků do vzoru podobného cihlám.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+// <editor-fold defaultstate="expanded" desc="Program · prozkoumej pravidla">
 int[][] tile = new int[8][8];
 int[] palette = {0xFFFFFF, 0x182030};
 JButton[][] buttons = new JButton[8][8];
@@ -105,6 +48,17 @@ BufferedImage render(int repeats) {
         }
     }
     return image;
+}
+
+boolean applyRepeats(String text) {
+    try {
+        int candidate = Integer.parseInt(text.strip());
+        if (candidate < 1 || candidate > 12) return false;
+        repeats = candidate;
+        return true;
+    } catch (NumberFormatException invalid) {
+        return false;
+    }
 }
 
 void refresh() {
@@ -178,6 +132,73 @@ void main() {
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
+
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F31">
+/// ### Parsing (převod textu) a platná hodnota jsou dvě otázky
+///
+/// Číselný vstup začíná jako text. Parsing může selhat, protože text není číslo; validation (ověření
+/// platnosti) může odmítnout správně zapsané číslo. Obě pravidla rozhoduj zvlášť.
+///
+/// ```java
+/// int readZoom(String text) {
+///     try {
+///         int zoom = Integer.parseInt(text.strip());
+///         if (zoom < 1 || zoom > 4) throw new IllegalArgumentException("Zoom: 1..4");
+///         return zoom;
+///     } catch (NumberFormatException typo) {
+///         return 2;
+///     }
+/// }
+/// ```
+///
+/// Trace (průchod) pro `" 3 "`: `strip` odstraní okolní mezery, `parseInt` vrátí 3, bounds (hranice) je
+/// přijmou. `"oops"` nejde převést, takže `catch` vrátí 2. `"7"` se převede, ale neprojde validation;
+/// vyvolaná IllegalArgumentException tuto method (metodu) opustí. Úzký `catch` pro
+/// NumberFormatException tyto cesty odliší.
+///
+/// Desetinný vstup používá `Double.parseDouble`; NaN a infinity (nekonečno) jsou čitelné, ale nejsou
+/// finite (konečná čísla). U živého nastavení nejdřív vytvoř local candidate (místní návrh), teprve po
+/// validation změň field (sdílenou proměnnou). Předpověz cestu pro `"0"`, `"two"` a `"4"`. Které vstupy
+/// mají zachovat předchozí nastavení?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ### Pozoruj a sleduj tok
+///
+/// Sleduj text od tlačítka přes převod k navrženému nastavení a potom do živého náhledu. Záměrné slovo
+/// není špatně napsané číslo: rozpoznej je před numeric parsing (převodem čísla). Relativní příkaz čte
+/// současnou přijatou value (hodnotu). Pracuj s local candidate (místním návrhem), aby odmítnutí
+/// nepoškodilo obrázek. Sudost poznáš přes remainder (zbytek): zbytek po dělení celého čísla dvěma je
+/// nula právě pro sudá čísla.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Pokus a opakování">
+/// Nakresli značku mimo střed a proveď plán 3 → denser → denser → sparser. Každou viditelnou hustotu
+/// porovnej s plánem. Zkus denser na dvanácti, sparser na třech a překlep: původní obrázek zůstane.
+/// Nakonec znovu zadej obyčejné číslo.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Napiš očekávanou hustotu po každém z 3, denser, denser, sparser. Potom předpověz další denser z
+/// dvanácti.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Najdi, kde tlačítko Repeats převádí text. Rozpoznej dvě slova před dosavadním integer parser
+/// (převodem na celé číslo) a potom zachovej společnou range check (kontrolu rozsahu).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Najdi applyRepeats. Z repeats vypočti local candidate (místní návrh) pro denser/sparser, odmítni
+/// liché půlení, jinak přečti číslo. Ulož jen návrh v 1–12 a při každém odmítnutí nech starou hodnotu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Vymysli příkaz pro návrat k oblíbené řídké hustotě. Rozhodni, zda má také smazat dílek, a tento
+/// rozdíl jasně ukaž v ovládání.
+// </editor-fold>
+
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
 /// ## Neznámý zápis?

@@ -7,33 +7,22 @@ import javax.swing.Timer;
 
 /// # L12.02 · FlockPlayground
 ///
-/// Veď hejno pohybem překážky do jeho dráhy. Sleduj, jak místní volby směru promění mnoho samostatných
-/// ptáků v plynoucí skupinu.
+/// Hejno už uhýbá oranžové překážce. Dej mu druhou osobnost a předpověz, zda přitahování vytvoří
+/// shluk, vír nebo něco jiného.
 ///
-/// **Tvoje mise:** Vytvoř makeAvoidance(radius) a do avoidance zapoj makeAvoidance(75). Vrácená role
-/// dává nulu pro distance <= 0 nebo >= radius; uvnitř má strength (sílu) 0.2 × (1 - distance /
-/// radius). obstaclePush nech jako připravený adapter (propojení).
+/// **Tvoje mise:** Ať tlačítko osobnosti změní chování, nejen nápis. Shy používá existující
+/// odpuzování; Curious přesně jeho opačnou hodnotu při stejné vzdálenosti. Přepnutí zachová polohy i
+/// rychlosti ptáků, pauzu i překážku. Dvojí přepnutí vrátí Shy; nové hejno zachová zvolenou osobnost.
 ///
-/// **Dnes trénuješ:** Napíšeš implementation (implementaci) malého interface (rozhraní) a zapojíš ji
-/// do běžícího programu. Výpočet odděl od vstupu, aktualizace a kreslení.
+/// **Zkoumání:** Za běhu vyměň roli chování a otestuj hypotézu pohybu.
 ///
-/// Po spuštění programu posouvej oranžovou překážku myší do dráhy ptáků a pomocí Pause/Run či
-/// New flock porovnej jejich reakci.
-Avoidance makeAvoidance(double radius) {
-    if (!Double.isFinite(radius) || radius <= 0) {
-        throw new IllegalArgumentException("Positive finite radius required.");
-    }
-    return distance -> 0;
-}
-
-Avoidance avoidance = distance -> 0;
+/// Pohybuj oranžovou překážkou mezi ptáky. Porovnávej pomocí Shy/Curious, Pause/Run a New flock; ve
+/// starter tlačítko osobnosti mění jen nápis.
 
 // <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
-/// ### Udělej z toho vlastní věc
-///
-/// Navrhni plaché a zvědavé hejno pomocí dvou Avoidance implementations (implementací reakce), které
-/// poblíž překážky reagují opačně. Zachovej bezpečné vzdálenosti a malou sílu. Kamarád má osobnost
-/// poznat z pohybu bez čtení vzorce.
+/// Navrhni třetí osobnost: velmi blízké ptáky odpuzuje, vzdálenější uvnitř stávajícího poloměru
+/// přitahuje. Předpověz tvar a potom popiš skutečný pohyb hejna. Roli pojmenuj, ale neslibuj stabilní
+/// kruh.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F34">
@@ -62,41 +51,50 @@ Avoidance avoidance = distance -> 0;
 /// vstupu?
 // </editor-fold>
 
-// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
-/// ### Rule (pravidlo) si pamatuje parametr factory
+// <editor-fold defaultstate="expanded" desc="Deník průzkumníka · vyložený příklad">
+/// ### Slož novou reakci z existující
 ///
-/// Vrácená lambda může používat radius i po návratu z makeAvoidance. Tento captured parameter
-/// (zapamatovaný parametr) není současná vzdálenost ptáka: distance přichází při každém volání
-/// strength. Neutrální factory:
+/// Replaceable role (vyměnitelná role) nemusí kopírovat původní vzorec. Může zavolat jinou
+/// implementaci a upravit její výsledek včetně zachování mezí.
 ///
 /// ```java
-/// IntUnaryOperator offset(int amount) {
-///     return value -> value + amount;
-/// }
+/// DoubleUnaryOperator original = x -> x * x;
+/// DoubleUnaryOperator opposite = x -> -original.applyAsDouble(x);
 /// ```
 ///
-/// JDK role IntUnaryOperator převádí int na int; factory vytvoří offset(3). Pravidlo změní 8 na 11 i
-/// po ukončení volání factory. Předpověz výsledek offset(5) pro 8.
-///
-/// Pro samostatný radius 100 dává distance 25 sílu 0.15 a distance 100 nulu. Předpověz distance 50.
-/// Připravený guard ověřuje radius; tvé tělo řeší interval distance. obstaclePush předává aktuální
-/// vzdálenost do vybraného avoidance. step hlídá směr, rychlost a pohyb. Tvoje role jen počítá sílu;
-/// ptáky neposouvá a okno nezavírá. Výsledek factory zapoj, aby jej skutečné hejno použilo.
+/// JDK role převádí double na double. Original vrací pro 3 číslo 9, opposite -9. Předpověz oba
+/// výsledky pro -2. Jde o composition (skládání), nikoli změnu original. Vrací-li pravidlo mimo
+/// poloměr nulu, negace tam dál vrací nulu. Směrový vektor i omezení rychlosti mohou zůstat stejné;
+/// jiný pohyb způsobí samotná změna síly. Vybranou roli odděl od obnovy dat hejna.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Zachovej připravený guard pro radius. Vrácená lambda dostane distance později.
+/// Sleduj novou událost tlačítka a najdi uloženou roli používanou při převodu vzdálenosti na sílu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Uvnitř poloměru klesá lineární faktor téměř od jedné k nule. Na hranici vrať nulu.
+/// changePersonality už přepíná curious. makeAvoidance vytvoří pravidlo Shy; obstaclePush už předává
+/// do field avoidance.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Sestav pravidlo se dvěma větvemi, vrať jej a nastav avoidance = makeAvoidance(75).
+/// Pro Shy zapoj základní roli a pro Curious lambda vracející její zápornou strength. Reset, pole,
+/// pauzu i souřadnice překážky nech být.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+// <editor-fold defaultstate="expanded" desc="Program k prozkoumání">
+Avoidance makeAvoidance(double radius) {
+    if (!Double.isFinite(radius) || radius <= 0) {
+        throw new IllegalArgumentException("Positive finite radius required.");
+    }
+    return distance -> {
+        if (distance <= 0 || distance >= radius) return 0;
+        return 0.2 * (1 - distance / radius);
+    };
+}
+
+Avoidance avoidance = makeAvoidance(75);
+
 double obstaclePush(double distance) {
     return avoidance.strength(distance);
 }
@@ -215,6 +213,12 @@ void showWindow() {
         reset(System.nanoTime());
         canvas.repaint();
     });
+    var personality = new JButton("Shy: switch to Curious");
+    personality.addActionListener(event -> {
+        changePersonality();
+        personality.setText(curious ? "Curious: switch to Shy" : "Shy: switch to Curious");
+    });
+    controls.add(personality);
     controls.add(pause);
     controls.add(restart);
     var timer = new Timer(25, event -> {
@@ -240,6 +244,12 @@ void showWindow() {
 
 interface Avoidance { double strength(double distance); }
 
+
+boolean curious;
+
+void changePersonality() {
+    curious = !curious;
+}
 
 void main() {
 /// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.

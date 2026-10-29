@@ -5,20 +5,18 @@ import java.awt.image.BufferedImage;
 
 /// # L11.12 · MagicEyeStrip
 ///
-/// Vytvoř opakovaný tečkovaný pás, který může skrývat prostorový tvar při spojení sousedních vzorů očima.
-/// Seed file (soubor počáteční hodnoty) dovolí uložit a zopakovat konkrétní tečky.
+/// Místo anonymního čísla si veď deník tečkovaných pokusů. Komentáře vysvětlí volby a poslední
+/// uložený pokus znovu vytvoří obraz.
 ///
-/// **Tvoje mise:** Program převádí název souboru na číslo místo čtení čísla uvnitř. Oprav načítání seed
-/// (počáteční hodnoty) včetně mezer, chybného obsahu a chybějícího souboru.
+/// **Tvoje mise:** Proměň seed.txt v deník pokusů: po odstranění okrajových mezer přeskoč prázdné
+/// řádky i řádky začínající # a jako zvolený seed použij poslední zbývající celé číslo. Chybný
+/// číselný řádek i deník bez seed mají dál ohlásit chybu. Běžný soubor s jediným číslem musí stále
+/// fungovat.
 ///
-/// **Dnes trénuješ:** Path (cesta) pojmenovává umístění; jeho text není obsahem tohoto místa. Před
-/// převodem čísla přečti file (soubor), aby chybějící a chybně zapsaná data zůstala různými chybami.
+/// **Zkoumání:** Odvoď a implementuj malý formát uchovaného deníku pokusů.
 ///
-/// Program načte číslo uložené v seed.txt a použije je pro Java obrázek z teček. Chybějící seed.txt
-/// vznikne s 42; existující obsah zůstane zachovaný. Chyba čtení se výslovně oznámí.
-long readSeed(Path path) throws IOException {
-    return Long.parseLong(path.toString());
-}
+/// Spusť jednou pro vytvoření chybějícího seed.txt. Na samostatné řádky přidej # komentář, 42 a
+/// pozdější -7 a spusť znovu. Terminál oznámí vybraný seed a Java okno jeho tečkované pole.
 
 // <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
 /// ### Udělej z toho vlastní věc
@@ -51,36 +49,47 @@ long readSeed(Path path) throws IOException {
 /// Předpověz: pokud file změníš na `Path.of("cards", "one.txt")`, kam se poznámka zapíše?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Deník průzkumníka · vyložený příklad">
+/// ### File format (formát souboru) je sada dohod
 ///
-/// - `Path path` — Vybrané umístění textového file (souboru), nikoli samotný číselný seed (počáteční
-///   hodnota).
-/// - `path.toString()` — Vytvoří cestu jako seed.txt, ne text uložený uvnitř seed.txt.
-/// - `Long.parseLong` — Převede číselný String (text) na long a odmítne chybný obsah.
-/// - `throws IOException` — Umožní skutečné chybě čtení file (souboru) dojít k obsluze chyby u caller
-///   (volající části).
+/// Files.readAllLines(path) vrací List<String>, jednu položku pro každý řádek bez jeho zakončení.
+/// startsWith("#") se ptá, zda řetězec začíná #. Formát určuje význam řádků; název souboru není jeho
+/// obsah.
 ///
-/// ### Co už obstarává připravená část
+/// ```java
+/// String last = null;
+/// for (String line : List.of("  red ", "", "blue")) {
+///     String text = line.strip();
+///     if (text.isEmpty()) continue;
+///     last = text;
+/// }
+/// ```
 ///
-/// main vytvoří výchozí seed.txt pouze při neexistenci; readSeed potom načte jeho textové číslo.
-/// render použije skutečný seed (počáteční číslo) pro tečkový obrázek; chybu čtení oznámí bez
-/// náhrady.
+/// Tento neutrální průchod nechá last jako blue. Předpověz výsledek po nahrazení blue mezerami.
+/// Sentinel (rozlišovací hodnota), například null, odliší žádnou přijatou hodnotu od přijaté nuly. Na
+/// číslo převáděj každý datový řádek, aby pozdější platné číslo nezakrylo překlep. Chyba čtení a
+/// chybný obsah jsou různé chyby; ani jedna neopravňuje soubor přepsat náhradní hodnotou.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Path je umístění, nikoli uložený obsah.
+/// Najdi čtení dodávající seed vypisovaný v main. Před deníkem vyzkoušej jedno číslo.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Před převodem čísla použij Files.readString.
+/// readSeed nyní převádí celý soubor najednou. Čti řádky, každý očisti a před převodem rozliš
+/// komentář, prázdný řádek a data.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Mezery jsou povolené; chybný obsah a chybějící file (soubor) zůstanou různé chyby.
+/// Pamatuj si poslední úspěšně převedený long, ale převáděj každý datový řádek. Nakonec odmítni
+/// chybějící hodnotu; vybranou vrať bez zápisu do souboru.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+// <editor-fold defaultstate="expanded" desc="Program k prozkoumání">
+long readSeed(Path path) throws IOException {
+    return Long.parseLong(Files.readString(path).strip());
+}
+
 BufferedImage render(long seed, double option) {
     int depth = (int)option;
     if (!Double.isFinite(option) || depth < 1 || depth > 24) {
@@ -131,7 +140,7 @@ void main() {
         IO.println("Loaded seed from seed.txt: " + seed);
         showImages("Magic Eye Strip", new String[]{"Seed " + seed}, new java.awt.image.BufferedImage[]{render(seed, 16)});
     } catch (IOException | IllegalArgumentException failure) {
-        IO.println("Cannot load seed.txt: " + failure.getMessage() + ". Repair readSeed; Save the source, run its check command, then play again.");
+        IO.println("Cannot load seed.txt: " + failure.getMessage() + ". Check the notebook data lines.");
     }
 }
 // </editor-fold>

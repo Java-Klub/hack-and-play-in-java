@@ -28,7 +28,7 @@ class Check {
         run("M11_Dominosa", "L05.11 Dominosa · F19", () -> M11_DominosaTest.main(new String[0]));
         run("M12_InequalityLatin", "L05.12 InequalityLatin · F19", () -> M12_InequalityLatinTest.main(new String[0]));
         if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " still need repair.");
+        IO.println(checked + " missions; " + failed + " mission goals remaining.");
         if (failed > 0) System.exit(1);
     }
 
@@ -48,29 +48,49 @@ class Check {
 @SuppressWarnings("unchecked")
 class M01_MemoryPairsTest {
     static int checks;
+
     static void expect(boolean correct, String message) {
         checks++;
-        if (!correct) {
-            throw new AssertionError(message);
-        }
+        if (!correct) throw new AssertionError("L05.01/F16: " + message);
     }
+
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
+                + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
     }
+
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("M01_MemoryPairs");
-        Reflect.call(g, "reset", 12);
-        Reflect.set(g, "cards", new int[]{1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6});
-        Reflect.set(g, "first", 4);
-        equal(5, ((int) Reflect.call(g, "visible", 4)), "L05.01/F16: reveal the chosen slot, not card zero");
-        equal(0, ((int) Reflect.call(g, "visible", 3)), "L05.01/F16: covered card remains hidden");
-        Reflect.set(g, "second", 8);
-        equal(3, ((int) Reflect.call(g, "visible", 8)), "L05.01/F16: second chosen slot visible");
-        Reflect.set(g, "first", ((int) Reflect.set(g, "second", -1)));
-        ((boolean[]) Reflect.get(g, "matched"))[11] = true;
-        equal(6, ((int) Reflect.call(g, "visible", 11)), "L05.01/F16: last matched card stays visible");
+        var game = Reflect.create("M01_MemoryPairs");
+        Reflect.call(game, "reset", 12L);
+        int[] cards = {4, 2, 6, 3, 1, 5, 3, 6, 2, 5, 4, 1};
+        Reflect.set(game, "cards", cards.clone());
+        Reflect.set(game, "xray", true);
+        equal(0, Reflect.call(game, "visible", 0), "x-ray without a selected card must not expose the deck");
+        Reflect.call(game, "play", 4);
+        equal(false, Reflect.get(game, "xray"), "a valid play clears the extra view");
+        Reflect.set(game, "xray", true);
+        equal(1, Reflect.call(game, "visible", 11), "the selected card's partner is revealed");
+        equal(0, Reflect.call(game, "visible", 0), "unrelated cards stay private");
+        equal(1, Reflect.call(game, "visible", 4), "the selected card remains visible");
+        Reflect.set(game, "first", 2);
+        equal(6, Reflect.call(game, "visible", 7), "a different selected value locates a different partner");
+        equal(0, Reflect.call(game, "visible", 11), "the previous value receives no special privilege");
+        equal(cards, Reflect.get(game, "cards"), "view queries never rearrange cards");
+        equal(0, Reflect.get(game, "attempts"), "view queries spend no attempts");
+        equal(0, Reflect.get(game, "pairs"), "view queries award no pairs");
+        equal(new boolean[12], Reflect.get(game, "matched"), "view queries never mark hidden cards as matched");
+        equal(2, Reflect.get(game, "first"), "queries preserve the selected position");
+        expect(!((boolean) Reflect.call(game, "play", -1)), "an invalid card is rejected");
+        equal(true, Reflect.get(game, "xray"), "a rejected click does not turn the view off");
+        Reflect.set(game, "xray", false);
+        equal(0, Reflect.call(game, "visible", 7), "turning x-ray off hides its extra reveal");
+        ((boolean[]) Reflect.get(game, "matched"))[0] = true;
+        equal(4, Reflect.call(game, "visible", 0), "matched cards remain visible without x-ray");
+        Reflect.set(game, "second", 8);
+        equal(2, Reflect.call(game, "visible", 8), "ordinary second selection remains visible");
+        Reflect.call(game, "reset", 99L);
+        equal(false, Reflect.get(game, "xray"), "new cards do not retain a previous x-ray");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -177,27 +197,52 @@ class M04_QuartoTest {
 @SuppressWarnings("unchecked")
 class M05_ReversiTest {
     static int checks;
+
     static void expect(boolean correct, String message) {
         checks++;
-        if (!correct) {
-            throw new AssertionError(message);
-        }
+        if (!correct) throw new AssertionError("L05.05/F17: " + message);
     }
+
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
+                + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
     }
+
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("M05_Reversi");
-        Reflect.call(g, "reset");
-        expect(((boolean) Reflect.call(g, "hasMove", 1)), "L05.05/F17: search must find a move outside the top row");
-        Reflect.set(g, "board", new int[6][6]);
-        ((int[][]) Reflect.get(g, "board"))[5][4] = 2;
-        ((int[][]) Reflect.get(g, "board"))[5][5] = 1;
-        expect(((boolean) Reflect.call(g, "hasMove", 1)), "L05.05/F17: legal move in the final row is not skipped");
-        Reflect.set(g, "board", new int[6][6]);
-        expect(!((boolean) Reflect.call(g, "hasMove", 1)), "L05.05/F17: empty board has no bracketed captures");
+        var game = Reflect.create("M05_Reversi");
+        Reflect.call(game, "reset");
+        equal(2, Reflect.call(game, "score", 1), "ordinary opening discs still earn one each");
+        int[][] board = new int[6][6];
+        board[0][0] = 1;
+        board[2][2] = board[2][3] = 2;
+        Reflect.set(game, "board", board);
+        equal(3, Reflect.call(game, "score", 1), "one owned corner is worth three");
+        equal(2, Reflect.call(game, "score", 2), "two ordinary discs are worth two");
+        expect(!((boolean) Reflect.call(game, "hasMove", 1)) && !((boolean) Reflect.call(game, "hasMove", 2)), "counterexample board has no legal capture for either player");
+        Reflect.call(game, "command", "pass");
+        Reflect.call(game, "command", "pass");
+        equal("Player 1 wins", Reflect.get(game, "outcome"), "the actual outcome uses prize score, not disc count");
+        var output = new java.io.ByteArrayOutputStream();
+        var before = System.out;
+        try (var capture = new java.io.PrintStream(output)) {
+            System.setOut(capture);
+            Reflect.call(game, "display");
+        } finally {
+            System.setOut(before);
+        }
+        expect(output.toString().contains("Score P1: 3  P2: 2"), "the live display uses the same score");
+        board = new int[6][6];
+        board[0][0] = board[0][5] = board[5][0] = board[5][5] = 2;
+        board[0][3] = board[4][5] = 1;
+        Reflect.set(game, "board", board);
+        int[][] snapshot = new int[6][];
+        for (int row = 0; row < board.length; row++) snapshot[row] = board[row].clone();
+        equal(12, Reflect.call(game, "score", 2), "all four distinct corners contribute");
+        equal(2, Reflect.call(game, "score", 1), "a non-corner edge is still ordinary");
+        equal(snapshot, Reflect.get(game, "board"), "scoring preserves every board cell");
+        equal(2, board[5][5], "scoring leaves the board unchanged");
+        equal(0, board[3][3], "empty squares remain empty and earn nothing");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -289,28 +334,40 @@ class M08_NonogramTest {
 @SuppressWarnings("unchecked")
 class M09_FourColourMapTest {
     static int checks;
+
     static void expect(boolean correct, String message) {
         checks++;
-        if (!correct) {
-            throw new AssertionError(message);
-        }
+        if (!correct) throw new AssertionError("L05.09/F17: " + message);
     }
+
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
+                + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
     }
+
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("M09_FourColourMap");
-        Reflect.call(g, "reset");
-        Reflect.set(g, "colours", new int[]{1, 2, 3, 4, 4});
-        equal(1, ((int) Reflect.call(g, "conflicts")), "L05.09/F17: conflict on the last adjacency must count");
-        Reflect.set(g, "colours", new int[]{1, 2, 3, 4, 1});
-        equal(0, ((int) Reflect.call(g, "conflicts")), "L05.09/F17: non-adjacent equal colours allowed");
-        Reflect.set(g, "colours", new int[]{1, 1, 1, 0, 0});
-        equal(3, ((int) Reflect.call(g, "conflicts")), "L05.09/F17: count every coloured conflicting edge");
-        Reflect.call(g, "reset");
-        equal(0, ((int) Reflect.call(g, "conflicts")), "L05.09/F17: uncoloured regions are not conflicts");
+        var game = Reflect.create("M09_FourColourMap");
+        Reflect.call(game, "reset");
+        Reflect.set(game, "map", new String[]{"AABCCDEE"});
+        expect(!((boolean) Reflect.call(game, "touches", 0, 3)), "changing geography removes an obsolete A-D border");
+        expect((boolean) Reflect.call(game, "touches", 0, 1), "horizontal contact is discovered");
+        expect((boolean) Reflect.call(game, "touches", 1, 0), "neighbour order is symmetric");
+        expect(!((boolean) Reflect.call(game, "touches", 0, 0)), "a region is not its own neighbouring region");
+        Reflect.set(game, "map", new String[]{"AB", "CD"});
+        expect((boolean) Reflect.call(game, "touches", 0, 2), "vertical A-C contact is discovered");
+        expect((boolean) Reflect.call(game, "touches", 1, 3), "a new vertical B-D border is discovered");
+        expect(!((boolean) Reflect.call(game, "touches", 0, 3)), "corner-only A-D contact does not count");
+        Reflect.set(game, "map", new String[]{"AA", "BB"});
+        int[] colours = {1, 1, 0, 0, 0};
+        Reflect.set(game, "colours", colours.clone());
+        equal(1, Reflect.call(game, "conflicts"), "a two-cell shared boundary is one conflicting region pair");
+        equal(colours, Reflect.get(game, "colours"), "inspection preserves the colouring");
+        Reflect.set(game, "map", new String[]{"ABCDE", "ABCDE"});
+        Reflect.set(game, "colours", new int[]{2, 2, 2, 2, 2});
+        equal(4, Reflect.call(game, "conflicts"), "all and only the four neighbouring pairs conflict");
+        Reflect.set(game, "colours", new int[]{1, 2, 1, 2, 1});
+        equal(true, Reflect.call(game, "solved"), "real solved query follows the new geography");
         System.out.println("PASS " + checks + " checks");
     }
 }

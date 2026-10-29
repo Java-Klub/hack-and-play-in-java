@@ -3,17 +3,27 @@
 /// Sevři soupeřovy kameny mezi své a otoč je. Hráč smí vynechat tah jen tehdy, když opravdu nemá kam
 /// hrát.
 ///
-/// **Tvoje mise:** Nehotové hledání dovolí pasovat, i když existuje zajetí. Sestav hasMove(who): projdi
-/// celou desku 6×6 a vrať true při první buňce s neprázdným captures. False vrať až po neúspěchu všech
-/// kandidátů.
 ///
-/// **Dnes trénuješ:** Traversal and search (průchod a hledání): procházej kandidátní pozice, dokud
-/// nenajdeš legální tah. Výsledek false (ne) patří až úplnému neúspěšnému hledání.
+/// **Tvoje mise:** Vytvoř Reversi s cenou za rohy: obsazený roh má tři body, každé jiné obsazené
+/// políčko jeden. Prázdná pole nedávají nic. Ukazuj skóre obou hráčů během hry a stejným skóre rozhodni
+/// výsledek po dvou pass (vynecháních tahu). Tahy, zajímání i pravidlo pass zachovej. Sestav malou
+/// desku, na které počet kamenů a nové skóre určí jiného vedoucího.
 ///
-/// Jako úvodní tah napiš 3 2 a potvrď Enter, potom nech dalšího hráče zvolit
-/// povolený řádek a sloupec.
-boolean hasMove(int who) {
-    return false;
+/// **Dnes se učíš:** Traversal (průchod) může sčítat vážené skóre. Výpočet použitý jen při zobrazení
+/// nezmění vítěze, dokud jej skutečné rozhodnutí nevolá.
+///
+/// Zahraj úvodní 2 3. Přečti zobrazená skóre a potom sleduj, co nastane, když oba hráči nemají tah a
+/// zvolí pass.
+int score(int who) {
+    int total = 0;
+    for (int[] row : board) {
+        for (int cell : row) {
+            if (cell == who) {
+                total++;
+            }
+        }
+    }
+    return total;
 }
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F17">
@@ -41,40 +51,46 @@ boolean hasMove(int who) {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
-/// Hledání na desce navštěvuje dvojice indexů: pro každý řádek zkus každý sloupec. Připravené
-/// captures(r,c,who) vrátí zajaté kameny kandidáta a nic nemění.
+/// Odděl pravidlo získání políčka od jeho bodové hodnoty. Stejná deska může při jiném skóre dát jiného
+/// vedoucího.
 ///
-/// | prohlédnutí kandidáti | nalezeno zajetí? | další krok |
-/// | --- | --- | --- |
-/// | první buňka | ne | další sloupec |
-/// | konec řádku | ne | první sloupec dalšího řádku |
-/// | některá další buňka | ano | hned return true |
-/// | všech 36 buněk | ne | return false |
-///
-/// Stačí nalézt platný tah; query (dotaz) nemusí vybírat nejlepší tah ani jej provést. Předpověz počet
-/// kandidátů, funguje-li až poslední buňka. Připravené tahy používají odpověď pro pasování či konec
-/// kola.
+/// V jiném třípolíčkovém řádku s hodnotami [1, 2, 1] a vahami pozic [2, 1, 2] získá hráč 1 čtyři body a
+/// hráč 2 jeden. Předpověz skóre po změně prostřední hodnoty na 1. Políčko přispívá jen vlastníkovi.
+/// Prozkoumej průběžné zobrazení i konečný outcome (výsledek), aby nemohly potichu používat jiné
+/// účtování.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Zvol jedno počítadlo pro řádek a druhé pro sloupec.
+/// Sleduj body od obsazeného políčka až k oznámení vítěze.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Vnitřní smyčka zkouší captures pro aktuální dvojici; při úspěchu vrať výsledek hned.
+/// score(who) nyní počítá každý vlastní kámen za jeden. Volá ho display i výsledek po dvou pass;
+/// hasMove a captures už fungují.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Použij dva rozsahy 0..5, při neprázdném seznamu zajetí vrať true a závěrečné false nech za oběma
-/// smyčkami.
+/// Navštiv všechny řádky a sloupce, přičítej jen vlastníkovi a rohovou váhu dej poli jen tehdy, když
+/// řádek i sloupec leží na hranici.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
-/// Vymysli závěrečné skóre, které cení rohy více než běžná políčka. Platnost tahů neměň. Sestav desku,
-/// kde počet kamenů a tvé váhy dávají jiného vedoucího hráče; spolužák má pro obě pravidla zvolit tah.
+/// Vymysli vlastní ceny pozic. Vyměň se spolužákem jen jejich mapu a najděte nejmenší rozpor s
+/// obyčejným počtem kamenů.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+boolean hasMove(int who) {
+    for (int r = 0; r < 6; r++) {
+        for (int c = 0; c < 6; c++) {
+            if (!captures(r, c, who).isEmpty()) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 int[][] board = new int[6][6];
 int player;
 int passes;
@@ -138,18 +154,15 @@ void command(String input) {
     }
     player = 3 - player;
     if (passes == 2) {
-        int[] counts = new int[3];
-        for (int[] row : board) {
-            for (int cell : row) {
-                counts[cell]++;
-            }
-        }
-        outcome = counts[1] == counts[2] ? "Draw" : "Player " + (counts[1] > counts[2] ? 1 : 2) + " wins";
+        int firstScore = score(1);
+        int secondScore = score(2);
+        outcome = firstScore == secondScore ? "Draw" : "Player " + (firstScore > secondScore ? 1 : 2) + " wins";
     }
 }
 
 /// display(): Zobrazuje aktuální desku a volby zadávání v konzoli.
 void display() {
+    IO.println("Score P1: " + score(1) + "  P2: " + score(2));
     IO.println("Columns 1-6; player " + player + ". 1=X, 2=O, 0=empty");
     for (int r = 0; r < 6; r++) {
         IO.println((r + 1) + " " + Arrays.toString(board[r]));
@@ -162,7 +175,7 @@ void display() {
 void main() {
     reset();
     IO.println("Reversi");
-    IO.println("Place a disc to trap an enemy line between two of yours; trapped discs flip. Most discs wins after both players pass.");
+    IO.println("Place a disc to trap an enemy line between two of yours; trapped discs flip. Higher displayed score wins after both players pass.");
     IO.println("Enter row column (1-6), or pass when blocked. /r restarts; /q quits.");
     IO.println("Example: 2 3 is an opening move for Player 1. Enter pass only when you have no legal move.");
     display();

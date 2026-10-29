@@ -7,77 +7,21 @@ import javax.swing.Timer;
 
 /// # L07.10 · SoftLanding
 ///
-/// Veď přistávací modul k plošině a před dotykem zabrzdi. Omezená nádrž dělá z měkkého přistání plánovací
-/// výzvu.
+/// Modul s omezenou nádrží už funguje. Změň jej v letecký trenažér: místo šetření ubývající nádrže
+/// můžeš procvičovat samotné přistání.
 ///
-/// **Tvoje mise:** Vytvoř applyThrust(). Při zásobě paliva a alespoň jednom drženém směru změní Left
-/// velocityX o -0.06, Right o +0.06 a Up velocityY o -0.09. Spotřebuj jedno palivo za powered tick
-/// (krok s tahem), i při více key (klávesách). Bez paliva nebo key neměň rychlost ani palivo.
-/// Přistávací modul nyní nemá motorové řízení.
+/// **Tvoje mise:** Tah musí fungovat i při nulovém počítadle paliva a nikdy jej spotřebovávat. Zachovej
+/// původní sílu motorů, nezávislou gravity (gravitaci), kombinace řízení, pravidla přistání i konečný
+/// pád. Najdi, které condition (podmínky) opravdu omezují motorový pohyb; větší nakreslený plamen
+/// nestačí.
 ///
-/// **Dnes trénuješ:** Vytvoř celou akci, která zachová invariant (trvale platné pravidlo) napříč
-/// souvisejícími field (sdílenými proměnnými).
+/// **Dnes trénuješ:** Odděl invariant (trvale platné pravidlo), který záměrně rušíš, od fyzikálních
+/// pravidel, která zachováváš. Vizuální efekt a acceleration (zrychlení) jsou různá pozorování.
 ///
-/// Spusť program, šipkou nahoru začni brzdit pád a tahem vlevo či vpravo se srovnej nad
-/// přistávací plošinu.
-void applyThrust() {
-}
+/// Up brzdí pád, Left/Right řídí a R začíná znovu. V běžné hře sleduj ubývání paliva při tahu. Po
+/// úpravě se nemění, ale po uvolnění všech key (kláves) gravity (gravitace) stále zrychluje pád.
 
-// <editor-fold defaultstate="collapsed" desc="Připomenutí · F25">
-/// ### Invariant (trvale platné pravidlo) přežije akci
-///
-/// Invariant je slib o platném state (stavu). Platí před tahem i po něm, ne až na konci hry. Představ
-/// si přesun svítících kamínků mezi nádobami:
-///
-/// ```java
-/// int violet = 6;
-/// int gold = 2;
-/// int amount = 3;
-/// if (amount >= 0 && amount <= violet) {
-///     violet -= amount;
-///     gold += amount;
-/// }
-/// IO.println(violet + gold);
-/// ```
-///
-/// Trace (průchod): z `(6, 2)` vznikne `(3, 5)`, součet ve výpisu zůstane 8. Oba assignment
-/// (přiřazovací příkazy) patří k jedné přijaté akci. Změna jediné nádoby by kamínky tiše vytvářela nebo
-/// mazala. Požadavek 9 neprojde guard (vstupní podmínkou) a nezmění ani jednu nádobu.
-///
-/// Nejdřív napiš slib: součet zůstává stejný, zásoba neklesá pod nulu nebo tvar nezůstane ve zdi. Potom
-/// vyjmenuj všechny field (sdílené proměnné), které musí akce změnit společně. Předpověz obě nádoby pro
-/// amount 0 a 7. Ve vlastní variantě smíš vymyslet jiná pravidla; musíš ale říct, jaký invariant pro ně
-/// platí.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst tuto část
-///
-/// `left`, `right` a `up` mohou být true ve stejném tick (kroku). Jsou nezávislé, nikoli výlučné volby.
-/// Opačný vodorovný tah se vyruší, ale stále stojí jedno palivo. Připravené step() přidá gravity
-/// (gravitaci) před applyThrust(), pak posune modul a ověří přistání. Tato method (metoda) nesmí
-/// gravity rušit.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Odděl povolení powered tick (kroku s tahem) od příspěvků jednotlivých motorů.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Více true key (kláves) může přispět, ale palivo odečti jen jednou mimo jejich jednotlivé změny.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Vrať se bez paliva nebo bez směru; každý držený motor uplatni samostatně a pak spotřebuj jedno
-/// palivo.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
-/// Vytvoř Moon mode (měsíční režim) změnou gravity (gravitace) a počáteční nádrže. Zkus přistát třemi
-/// předem naplánovanými zážehy a popiš nové pravidlo paliva.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+// <editor-fold defaultstate="expanded" desc="Program · prozkoumej pravidla">
 void step() {
     if (!state.equals("FLYING")) {
         return;
@@ -96,6 +40,14 @@ void step() {
         boolean gentle = Math.abs(velocityX) <= 1.2 && velocityY >= 0 && velocityY <= 1.5;
         state = onPad && gentle ? "LANDED!" : "CRASH";
     }
+}
+
+void applyThrust() {
+    if (fuel <= 0 || !(left || right || up)) return;
+    if (left) velocityX -= 0.06;
+    if (right) velocityX += 0.06;
+    if (up) velocityY -= 0.09;
+    fuel--;
 }
 
 final int WIDTH = 600, HEIGHT = 420, GROUND = 385, PAD_X = 380, PAD_WIDTH = 140, HALF = 12;
@@ -237,6 +189,70 @@ void main() {
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
+
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F25">
+/// ### Invariant (trvale platné pravidlo) přežije akci
+///
+/// Invariant je slib o platném state (stavu). Platí před tahem i po něm, ne až na konci hry. Představ
+/// si přesun svítících kamínků mezi nádobami:
+///
+/// ```java
+/// int violet = 6;
+/// int gold = 2;
+/// int amount = 3;
+/// if (amount >= 0 && amount <= violet) {
+///     violet -= amount;
+///     gold += amount;
+/// }
+/// IO.println(violet + gold);
+/// ```
+///
+/// Trace (průchod): z `(6, 2)` vznikne `(3, 5)`, součet ve výpisu zůstane 8. Oba assignment
+/// (přiřazovací příkazy) patří k jedné přijaté akci. Změna jediné nádoby by kamínky tiše vytvářela nebo
+/// mazala. Požadavek 9 neprojde guard (vstupní podmínkou) a nezmění ani jednu nádobu.
+///
+/// Nejdřív napiš slib: součet zůstává stejný, zásoba neklesá pod nulu nebo tvar nezůstane ve zdi. Potom
+/// vyjmenuj všechny field (sdílené proměnné), které musí akce změnit společně. Předpověz obě nádoby pro
+/// amount 0 a 7. Ve vlastní variantě smíš vymyslet jiná pravidla; musíš ale říct, jaký invariant pro ně
+/// platí.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ### Pozoruj a sleduj tok
+///
+/// Vstup ovlivňuje simulation (napodobení světa) několika kroky: held-key flag (údaj o držené klávese),
+/// acceleration (zrychlení), změna pozice a nakonec obrázek. Nejdřív sleduj cestu zrychlení. Trénink
+/// ruší nedostatek paliva, nikoli pád, kolize nebo potřebu jemně přistát. Opačné vodorovné motory se
+/// mohou vyrušit, zatímco horní stále funguje.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Pokus a opakování">
+/// Porovnej tři krátké pokusy: bez key (kláves), jen Up a Up s oběma vodorovnými key. Počítadlo zůstává
+/// vždy stejné. Rychlost stále ukazuje gravity (gravitaci) i motory. Pád musí čekat na R; neomezené
+/// palivo není nezranitelnost.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Sleduj počítadlo a svislou rychlost odděleně. Co se musí měnit po uvolnění Up?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Omez hledání na malou motorovou akci a samostatnou gravity update (změnu gravitací), ne na geometrii
+/// přistání. Najdi čtení i zápisy počítadla.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// applyThrust obsahuje fuel gate (palivové omezení) i odečet paliva. Odstraň nedostatek a zachovej
+/// nezávislé příspěvky key (kláves); step stále přidává gravity (gravitaci). Podmínka plamene v draw má
+/// odpovídat neomezenému tréninku.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Vytvoř tréninkovou planetu se slabou gravity (gravitací) a přistaň pouze třemi plánovanými zážehy.
+/// Nádrž nech neomezenou, aby se měnil jen letový plán.
+// </editor-fold>
+
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
 /// ## Neznámý zápis?

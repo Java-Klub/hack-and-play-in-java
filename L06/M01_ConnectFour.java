@@ -3,20 +3,23 @@
 /// Pouštěj kameny do sloupců a spoj čtyři dřív než kamarád. Odveta má začít s čistou deskou i novým
 /// kolem.
 ///
-/// **Tvoje mise:** Deska se vyčistí, ale kolo si pamatuje starý tah, vítěze i počet tahů. Sestav
-/// přiřazení do field (uložených hodnot) v reset: první hráč X, žádný vítěz '.' a nula tahů. Nevytvářej
-/// náhradní local variable (místní proměnné); čištění desky zachovej.
 ///
-/// **Dnes trénuješ:** Scope and state lifetime (platnost jména a životnost stavu): nová lokální proměnná
-/// může zastínit stejnojmenný field (proměnnou programu). Rozliš, které moves patří celému kolu.
+/// **Tvoje mise:** Nech odvety střídat začínajícího hráče: první kolo začne X, další O, potom znovu X.
+/// Nezáleží na posledním tahu ani vítězi. Každá odveta dál vyčistí desku, vítěze a počet tahů. Podle
+/// zobrazeného hráče a Moves vyšetři, které údaje patří kolu a které musí přežít několik kol.
 ///
-/// Zadej 4 a potom r. Deska je opět prázdná, ale Moves a další hráč odhalí nehotový reset. Nové kolo
-/// musí ukázat nulu a začít hráčem X.
+/// **Dnes se učíš:** State lifetime (životnost stavu): údaj zápasu musí přežít reset kola, zatímco
+/// dočasný výpočet a staré údaje kola nemají.
+///
+/// Začni kolo, zadej 4 a potom r. Porovnej dalšího začínajícího hráče s restartem ještě před prvním
+/// kamenem. Současná hra vždy začne X.
 void reset() {
     for (char[] row : board) {
         Arrays.fill(row, '.');
     }
-    int moves = 0;
+    player = 'X';
+    winner = '.';
+    moves = 0;
 }
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F14">
@@ -42,36 +45,32 @@ void reset() {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
-/// Field (uložená hodnota objektu) přežije volání; nový local uvnitř reset jej nenahradí. Čištění desky
-/// je připravené. Doplň tři údaje kola, které čtou další metody.
+/// Právě aktivní tah a začínající hráč odpovídají na jiné otázky. První se mění po běžném tahu; druhý
+/// až při novém kole.
 ///
-/// | okamžik | moves field | player field | winner field |
-/// | --- | --- | --- | --- |
-/// | staré nedokončené kolo | 41 | O | . |
-/// | po reset | 0 | X | . |
-/// | první nový kámen | 1 | O | . |
-///
-/// Zůstane-li starých 41, nový kámen dosáhne 42 a může mylně vyhlásit remízu. Local `int moves = 0`
-/// field pouze zakryje. player a winner také patří kolu. Předpověz restart po vítězství X. display nyní
-/// ukazuje Moves, takže stejný kontrakt lze sledovat při hraní.
+/// V jiném kvízu střídajícím týmy A/B zapomene local variable (místní proměnná) z restartu svoji
+/// hodnotu po skončení volání. Field (proměnná programu) si předchozího začínajícího pamatuje, ale
+/// mazání při každém restartu paměť zničí. Předpověz začátky po kolech s nula, jedním a čtyřmi tahy;
+/// délky nesmějí rozhodovat. Sleduj požadavek na nové kolo a změnu běžného tahu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Vypiš údaje, které mají být po každém reset stejné bez ohledu na staré kolo.
+/// Vypiš, co se musí vymazat a co si má pamatovat minulé kolo. Neodvozuj začátek od posledního kamene.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Porovnej declaration (založení jména) s typem a assignment (přiřazení) do existujícího fieldu.
+/// reset maže kolo a volí player. drop mění player při běžné hře; tato jediná hodnota si proto
+/// nepamatuje začátek.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Po vyčištění řádků přiřaď existujícím field hodnoty player X, winner tečka a moves nula.
+/// Uchovej zvlášť začínajícího, s počáteční hodnotou dávající při prvním resetu X. Při resetu jej
+/// jednou vystřídej, zkopíruj do player a dál maž desku, vítěze a moves.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
-/// Přidej skóre zápasu na tři kola, které přežije reset kola. Rozhodni, které field (uložené hodnoty)
-/// patří kolu a které zápasu, a vytvoř samostatný reset zápasu. Ukaž dohrané kolo a nové kolo bez
-/// ztráty celkového skóre.
+/// Vytvoř zápas na dvě vítězství, jehož skóre přežije odvetu. Rozhodni, zda samostatný nový zápas
+/// obnoví i pořadí začínajících.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

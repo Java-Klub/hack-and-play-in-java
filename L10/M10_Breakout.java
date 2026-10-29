@@ -7,19 +7,90 @@ import javax.swing.Timer;
 
 /// # L10.10 · Breakout
 ///
-/// Odrážej míček pálkou ovládanou myší a rozeber zeď cihel. Výhra či ztráta posledního života mají nechat
-/// stabilní výsledek, který můžeš oslavit nebo zkusit znovu.
+/// Hra s cihlami je už hratelná. Vytvoř tréninkovou edici na obtížné odrazy, kde špatný okamžik
+/// nesmaže postupně vykousanou zeď.
 ///
-/// **Tvoje mise:** Aktualizaci zastaví jen PAUSE; dokončená kola se mohou dál hýbat a ztrácet životy.
-/// Omez pohyb na skutečně rozehraný state (stav).
+/// **Tvoje mise:** Proměň běžnou hru se třemi pokusy v neomezený trénink. Každé minutí má znovu podat
+/// míček a zachovat zničené cihly i skóre. Restart dál obnoví celou zeď; její vyčištění dál vyhrává a
+/// zastaví pohyb. Velký počet pokusů není pravidlo: odstraň závislost prohry na počítadle a uprav
+/// pravdivě displej.
 ///
-/// **Dnes trénuješ:** Lifecycle guard (podmínka životního cyklu) má popsat povolení aktualizace včetně
-/// všech zastavených stavů. Tick (časový krok) nesmí měnit hru označenou jako vyhranou či ukončenou.
+/// **Zkoumání:** Změň pravidlo fungující hry sledováním všech následků minutí.
 ///
-/// Po spuštění programu si prohlédni plochu a potom stiskni Space nebo klikni pro start; myší
-/// miř pálku. Odstraň všech 18 cihel před třetím pádem; R obnoví začátek a čeká na další start.
+/// Space nebo kliknutí odstartuje; myší řiď pálku. Před úpravou několikrát záměrně miň a potom pokus
+/// zopakuj. R obnoví zeď a počká na nový start.
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Navrhni mozaiku cihel volbou položek bricks, které začnou jako true. Vytvoř vzor alespoň s jednou
+/// záměrnou mezerou a změň cíl výhry na skutečný počet cihel. Dokáže kamarád tvůj návrh vyčistit?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F30">
+/// ### Input (vstup) požádá; tick (krok) posune čas
+///
+/// Event (událost) může zaznamenat záměr bez okamžité změny celé simulace. Tick provede jednu
+/// omezenou aktualizaci. Kreslení drž oddělené od obou činností.
+///
+/// ```java
+/// int height = 0;
+/// int pending = 0;
+/// void press() {
+///     pending = 2;
+/// }
+/// void tick() {
+///     height += pending;
+///     pending = 0;
+/// }
+/// ```
+///
+/// Po `press()` je height stále 0. Jeden `tick()` jej změní na 2 a požadavek spotřebuje; další tick
+/// jej ponechá na 2. Opakovaný vstup před tímto krokem stále zaznamená jeden požadavek místo dvou
+/// aktualizací. Připravený timer (časovač) může tick volat, ale pozastavená nebo dokončená hra nemá
+/// pokračovat. Restart musí obnovit počáteční stav.
+///
+/// Předpověz: co od počátečního stavu udělá pořadí press, tick, press, tick?
+// </editor-fold>
+
+// <editor-fold defaultstate="expanded" desc="Deník průzkumníka · vyložený příklad">
+/// ### State (stav) tvoří síť povolených přechodů
+///
+/// Ukončené kolo je state, ne jen nakreslená zpráva. Čti, co mění kolize, který pozdější guard
+/// (ochrana) to pozoruje a co obnovuje restart.
+///
+/// ```java
+/// String state = "RUN";
+/// void finish() { state = "DONE"; }
+/// void tick() {
+///     if (!state.equals("RUN")) return;
+///     IO.println("Advance");
+/// }
+/// ```
+///
+/// Tick před finish vypíše Advance, po něm už ne. Předpověz finish, tick, tick. Zachovat výhru a
+/// odstranit přechod do prohry neznamená odstranit společnou ochranu hotové hry. Před změnou napiš
+/// tři sliby: co minutí zachová, co výhra zmrazí a co restart vytvoří znovu. Ověřuj je odděleně;
+/// samotná změna viditelné zprávy žádný přechod nezmění.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Najdi větev pro míček pod místností a sleduj všechny její změny do kreslení a restartu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Větev minutí v step mění lives a může nastavit GAME OVER. serve už připraví nový míček bez obnovy
+/// cihel.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Pro každé minutí použij serve, zachovej ochranu PLAY i přechod YOU WIN a odstraň nepotřebné lives
+/// i zobrazení pokusů. Ověř restart a poslední cihlu.
+// </editor-fold>
+
+// <editor-fold defaultstate="expanded" desc="Program k prozkoumání">
 void step() {
-    if (state.equals("PAUSE")) return;
+    if (!state.equals("PLAY")) return;
     double previousX = ballX, previousY = ballY;
     ballX += velocityX;
     ballY += velocityY;
@@ -62,67 +133,6 @@ void step() {
     }
 }
 
-// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
-/// ### Udělej z toho vlastní věc
-///
-/// Navrhni mozaiku cihel volbou položek bricks, které začnou jako true. Vytvoř vzor alespoň s jednou
-/// záměrnou mezerou a změň cíl výhry na skutečný počet cihel. Dokáže kamarád tvůj návrh vyčistit?
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Připomenutí · F30">
-/// ### Input (vstup) požádá; tick (krok) posune čas
-///
-/// Event (událost) může zaznamenat záměr bez okamžité změny celé simulace. Tick provede jednu
-/// omezenou aktualizaci. Kreslení drž oddělené od obou činností.
-///
-/// ```java
-/// int height = 0;
-/// int pending = 0;
-/// void press() {
-///     pending = 2;
-/// }
-/// void tick() {
-///     height += pending;
-///     pending = 0;
-/// }
-/// ```
-///
-/// Po `press()` je height stále 0. Jeden `tick()` jej změní na 2 a požadavek spotřebuje; další tick
-/// jej ponechá na 2. Opakovaný vstup před tímto krokem stále zaznamená jeden požadavek místo dvou
-/// aktualizací. Připravený timer (časovač) může tick volat, ale pozastavená nebo dokončená hra nemá
-/// pokračovat. Restart musí obnovit počáteční stav.
-///
-/// Předpověz: co od počátečního stavu udělá pořadí press, tick, press, tick?
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
-///
-/// - `state.equals("PAUSE")` — Rozpozná jen jeden zastavený state (stav), další nerozehrané stavy
-///   nepokrývá.
-/// - `return;` — Přeskočí pohyb, srážky i změny životů, pokud guard (podmínka) zvolí zastavení.
-/// - `if (score == 18) state = "YOU WIN";` — Označí dokončenou desku; další tick (časový krok) musí tento
-///   state (stav) respektovat.
-///
-/// ### Co už obstarává připravená část
-///
-/// Dlouhý zbytek step už řeší omezené srážky se stěnou, pálkou a cihlami. Myš nastavuje pozici pálky,
-/// restart založí novou desku a kreslení zobrazí body, životy i state (stav).
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Hra používá PLAY, YOU WIN a GAME OVER.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Povol přesně PLAY místo hádání jednoho zakázaného popisku.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Guard (podmínku) nech před všemi update (aktualizacemi), včetně ztráty života.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int WIDTH = 640, HEIGHT = 400, RADIUS = 7, BAT_WIDTH = 90, BAT_Y = 370;
 final boolean[][] bricks = new boolean[3][6];
 double ballX, ballY, velocityX, velocityY;

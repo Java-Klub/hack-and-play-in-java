@@ -1,21 +1,13 @@
 /// # L03.09 · SOS
 ///
-/// Dva hráči vkládají S nebo O na společnou desku a bodují za každé nově vzniklé SOS. Bodující tah
-/// ponechá hráči další tah, proto hledej umístění dokončující i více řad.
+/// **Tvoje mise · Vystopuj a změň odměnu:** Zaveď combo odměnu: jedna nová SOS má jeden bod, dvě nebo
+/// více v jediném tahu mají dvojnásobek počtu nových řad. Staré řady se znovu neodměňují. Vystopuj
+/// cestu od vloženého písmena ke skóre; hledání řad a bonusové tahy zachovej.
 ///
-/// **Tvoje mise · Odměň jen nové objevy:** Skóre zahrnuje i řady SOS existující před tahem. Oprav
-/// gainedPoints tak, aby
-/// odměňovalo pouze nově vytvořené řady.
+/// Výchozí program funguje podle původních pravidel. Kontrola už očekává tvůj nový cíl.
 ///
-/// **Dnes trénuješ:** Význam parameter (parametrů) a return value (vrácené hodnoty): before a after
-/// popisují dva okamžiky stejného počtu. Pokud oba obsahují tři řady, žádná nová řada nemá být odměněna;
-/// method (metoda) tento jediný výsledek vrátí volající části.
-///
-/// Spusť program a jako samostatné tahy zadej 1 S, 2 O, 3 S a 4 S; porovnej odměnu za poslední
-/// tah, který nové SOS nevytvoří.
-int gainedPoints(int before, int after) {
-    return after + before;
-}
+/// Hraj číslem pole a S nebo O. /r restartuje a /q ukončí hru. Standardní začátek dává jeden bod za
+/// novou řadu. Zkus jedním tahem vytvořit dvě řady přes střed a uvidíš nové pravidlo.
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F13">
 /// Method (metoda) zabalí operaci pod jediné jméno. Parameter (parametry) jsou místní jména informací
@@ -42,57 +34,36 @@ int gainedPoints(int before, int after) {
 /// Nyní předpověz remaining(10, 6).
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
-///
-/// - `int gainedPoints(int before, int after)` — Přijmi nejdřív starý počet a potom nový; vrať jedinou
-///   celočíselnou odměnu.
-/// - `before` — Počet uložený před změnou desky tímto tahem.
-/// - `after` — Počet získaný z desky po provedení tahu.
-/// - `+` — Toto nyní sčítá dva časové snímky počtu a zahrnuje staré řady dvakrát.
-/// - `return` — Předej odměnu do command; samo pravidlo skóre nemění.
-///
-/// ### Co už obstarává připravená část
-///
-/// triples počítá všechny SOS na skutečné desce. command uloží počet před tahem, vloží písmeno, požádá
-/// gainedPoints o odměnu a potom řeší skóre a bonusové tahy. Procházení desky a input (vstup) jsou
-/// připravené.
+// <editor-fold defaultstate="expanded" desc="Průzkum a pokus">
+/// Odděl počet všech existujících řad od odměny jednoho tahu. Sleduj uložení starého počtu, změnu
+/// desky a získání nového počtu. Upravený výpočet má přijmout tyto dva počty a vrátit odměnu; nemusí
+/// znát desku ani hráče. Neutrální příklad: dva počty položek mohou popsat přírůstek bez zpřístupnění
+/// celého skladu.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
-/// before a after počítají úplné řady SOS na celé desce; nejsou to dosavadní skóre obou hráčů.
-/// Jsou-li oba počty stejné, tento tah nevytvořil žádnou novou řadu. Připravená volající část přičte
-/// vrácenou odměnu ke skóre aktuálního hráče. Volitelný transfer (přenos znalosti): vymysli dvě různé
-/// dvojice before/after se stejnou odměnou a potom jednu dvojici s jinou odměnou. Vysvětli, proč
-/// tvoje pravidlo zvládne všechny tři bez znalosti desky a bez vypisování.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · oblast hledání">
+/// Najdi místo přičítání hráčova skóre a sleduj přičítanou hodnotu.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
-/// Pro gainedPoints(2, 3) dostane before hodnotu 2 a after hodnotu 3 jen pro toto call (volání).
-/// Výsledek jde zpět k aktualizaci skóre; method (metoda) neví, kdo je na tahu. Pevně vrácená 1 by
-/// seděla na příklad, ale selhala při stejném počtu nebo dvou nových řadách. Předpověz
-/// gainedPoints(4, 4) a gainedPoints(1, 3).
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · konkrétní cesta">
+/// command tuto hodnotu získá z gainedPoints(before, triples()). triples zachovej.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná úprava · prozrazuje postup">
+/// Spočítej after - before; od dvou výš přírůstek zdvojnásob, jinak jej vrať nezměněný.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
-/// Navrhni bonus za dvě SOS v jediném tahu a doplň jej v gainedPoints beze změny triples. Zachovej
-/// běžnou odměnu za jednu řadu. Kamarádovi dej dva příklady before/after a nech jej odvodit tvé
-/// bonusové pravidlo.
+/// Připrav pozici, ve které střed dokončí dvě řady, a potom navrhni jinou combo tabulku. Kamarád má
+/// mít možnost odvodit pravidlo ze tří bodovaných příkladů.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Parameter (parametry) jsou počty ze dvou okamžiků, nikoli dvě odměny.
-// </editor-fold>
+// <editor-fold defaultstate="collapsed" desc="Program · prozkoumej podle potřeby">
+int gainedPoints(int before, int after) {
+    return after - before;
+}
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Nezměněný počet musí vrátit nulu.
-// </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Vrať after - before.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 char[] board;
 int player;
 int moves;
@@ -194,8 +165,6 @@ void require(boolean valid) {
         throw new IllegalArgumentException("Invalid move or command.");
     }
 }
-
-/// Připravené vstupní body: main, reset, command.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">

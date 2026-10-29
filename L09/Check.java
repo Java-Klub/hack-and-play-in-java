@@ -33,7 +33,7 @@ class Check {
         run("M11_MazePostcards", "L09.11 MazePostcards · F31", () -> M11_MazePostcardsTest.main(new String[0]));
         run("M12_TileStampStudio", "L09.12 TileStampStudio · F31", () -> M12_TileStampStudioTest.main(new String[0]));
         if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " still need repair.");
+        IO.println(checked + " missions; " + failed + " mission goals remaining.");
         if (failed > 0) System.exit(1);
     }
 
@@ -53,63 +53,32 @@ class Check {
 @SuppressWarnings("unchecked")
 class M01_WordLadderTest {
     static int checks;
-    static final String[] CASES = {
-        "Dva přijaté tahy zachovají všechna tři slova v pořadí.",
-        "Odmítnutý tah nechá cestu beze změny.",
-        "Vítězná historie i restart zůstanou správné."
-    };
-    static void check(boolean okay, int example, Object actual) {
+    static void expect(boolean correct, String message) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION L09.01: " + CASES[example] + " | actual=" + actual);
+        if (!correct) throw new AssertionError(message);
     }
-    static void reject(Runnable action, int example) {
-        try {
-            action.run();
-        } catch (IllegalArgumentException expected) {
-            check(true, example, expected.getClass().getSimpleName());
-            return;
-        }
-        check(false, example, "accepted");
-    }
-    interface IOAction { void run() throws Exception; }
-    static void ioFailure(IOAction action, int example) throws Exception {
-        try {
-            action.run();
-        } catch (IOException expected) {
-            check(true, example, expected.getClass().getSimpleName());
-            return;
-        }
-        check(false, example, "accepted");
-    }
-    static long hash(BufferedImage image) {
-        long result = 1;
-        for (int y = 0; y < image.getHeight(); y++) {
-            for (int x = 0; x < image.getWidth(); x++) result = result * 31 + image.getRGB(x, y);
-        }
-        return result;
-    }
-    static BufferedImage draw(java.util.function.Consumer<java.awt.Graphics2D> painter, int width, int height) {
-        var image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        var graphics = image.createGraphics();
-        try { painter.accept(graphics); } finally { graphics.dispose(); }
-        return image;
+    static void equal(Object expected, Object actual, String message) {
+        expect(java.util.Objects.deepEquals(expected, actual), message + " | expected=" + expected + " actual=" + actual);
     }
     public static void main(String[] args) throws Exception {
-        try {
-            var p = Reflect.create("M01_WordLadder");
-            Reflect.call(p, "reset"); Reflect.call(p, "command", "CORD"); Reflect.call(p, "command", "CARD");
-            check(((java.util.List<java.lang.String>) Reflect.get(p, "history")).equals(List.of("COLD","CORD","CARD")),0,((java.util.List<java.lang.String>) Reflect.get(p, "history")));
-            var before = List.copyOf(((java.util.List<java.lang.String>) Reflect.get(p, "history")));
-            reject(() -> Reflect.call(p, "command", "WARM"),1);
-            check(((java.util.List<java.lang.String>) Reflect.get(p, "history")).equals(before),1,((java.util.List<java.lang.String>) Reflect.get(p, "history")));
-            Reflect.call(p, "command", "WARD"); Reflect.call(p, "command", "WARM");
-            check(((java.util.List<java.lang.String>) Reflect.get(p, "history")).size()==5 && !((java.lang.String) Reflect.get(p, "outcome")).isEmpty(),2,((java.util.List<java.lang.String>) Reflect.get(p, "history")));
-            Reflect.call(p, "reset"); check(((java.util.List<java.lang.String>) Reflect.get(p, "history")).equals(List.of("COLD")),2,((java.util.List<java.lang.String>) Reflect.get(p, "history")));
-        } catch (AssertionError failure) {
-            throw failure;
-        } catch (Exception failure) {
-            throw new AssertionError("MISSION L09.01: Neočekávané selhání při kontrole aktivního pravidla.", failure);
-        }
+        var g = Reflect.create("M01_WordLadder");
+        Reflect.call(g, "reset");
+        Reflect.call(g, "command", " cord  card ");
+        equal(List.of("COLD", "CORD", "CARD"), Reflect.get(g, "history"), "L09.01: a planned route preserves every stop");
+        Object before = List.copyOf((List<?>) Reflect.get(g, "history"));
+        boolean rejected = false;
+        try { Reflect.call(g, "command", "WARD COLD"); } catch (IllegalArgumentException invalid) { rejected = true; }
+        expect(rejected, "L09.01: an invalid later step refuses the whole route");
+        equal(before, Reflect.get(g, "history"), "L09.01: refused route keeps its original history");
+        equal("CARD", Reflect.get(g, "current"), "L09.01: refused route keeps its current word");
+        Reflect.call(g, "command", "WARD WARM");
+        equal("Reached WARM in 4 moves!", Reflect.get(g, "outcome"), "L09.01: winning batch counts moves, not batches");
+        Reflect.call(g, "reset");
+        rejected = false;
+        try { Reflect.call(g, "command", "CORD CARD WARD WARM WARD"); } catch (IllegalArgumentException invalid) { rejected = true; }
+        expect(rejected && ((List<?>) Reflect.get(g, "history")).equals(List.of("COLD")), "L09.01: nothing may continue past the target in one batch");
+        Reflect.call(g, "command", "CORD");
+        equal("CORD", Reflect.get(g, "current"), "L09.01: a single ordinary move still works");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -309,58 +278,26 @@ class M04_VoronoiStainedGlassTest {
 @SuppressWarnings("unchecked")
 class M05_PhotoRemixLabTest {
     static int checks;
-    static final String[] CASES = {
-        "Prázdná Map vrací 0.",
-        "Vyhrává nejvyšší počet; při shodě menší RGB key, bez změny počtů.",
-        "Vybraná původní barva se ve skutečném obrázku zvýrazní azurově."
-    };
-    static void check(boolean okay, int example, Object actual) {
+    static void expect(boolean correct, String message) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION L09.05: " + CASES[example] + " | actual=" + actual);
+        if (!correct) throw new AssertionError(message);
     }
-    static void reject(Runnable action, int example) {
-        try {
-            action.run();
-        } catch (IllegalArgumentException expected) {
-            check(true, example, expected.getClass().getSimpleName());
-            return;
-        }
-        check(false, example, "accepted");
-    }
-    interface IOAction { void run() throws Exception; }
-    static void ioFailure(IOAction action, int example) throws Exception {
-        try {
-            action.run();
-        } catch (IOException expected) {
-            check(true, example, expected.getClass().getSimpleName());
-            return;
-        }
-        check(false, example, "accepted");
-    }
-    static long hash(BufferedImage image) {
-        long result = 1;
-        for (int y = 0; y < image.getHeight(); y++) {
-            for (int x = 0; x < image.getWidth(); x++) result = result * 31 + image.getRGB(x, y);
-        }
-        return result;
-    }
-    static BufferedImage draw(java.util.function.Consumer<java.awt.Graphics2D> painter, int width, int height) {
-        var image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        var graphics = image.createGraphics();
-        try { painter.accept(graphics); } finally { graphics.dispose(); }
-        return image;
+    static void equal(Object expected, Object actual, String message) {
+        expect(java.util.Objects.deepEquals(expected, actual), message + " | expected=" + expected + " actual=" + actual);
     }
     public static void main(String[] args) throws Exception {
-        var p = Reflect.create("M05_PhotoRemixLab");
-        check(((int) Reflect.call(p, "dominantColour")) == 0, 0, "empty palette");
-        var counts = (Map<Integer, Integer>) Reflect.get(p, "colourCounts");
-        counts.put(-5, 2); counts.put(-7, 4); counts.put(-9, 4);
+        var g = Reflect.create("M05_PhotoRemixLab");
+        var counts = (Map<Integer, Integer>) Reflect.get(g, "colourCounts");
+        counts.put(-5, 2); counts.put(-7, 4); counts.put(-9, 2); counts.put(-11, 0);
         var before = new HashMap<>(counts);
-        check(((int) Reflect.call(p, "dominantColour")) == -9, 1, "most frequent; smaller RGB wins a tie");
-        check(counts.equals(before), 1, counts);
-        Reflect.call(p, "restart");
-        var image = (java.awt.image.BufferedImage) Reflect.get(p, "result");
-        check(image.getRGB(200, 150) == java.awt.Color.CYAN.getRGB(), 2, "the frequent white moon is highlighted");
+        equal(-9, Reflect.call(g, "spotlightColour"), "L09.05: the rarest positive count wins, with smaller RGB for ties");
+        equal(before, counts, "L09.05: examining the histogram does not rewrite it");
+        counts.clear(); equal(0, Reflect.call(g, "spotlightColour"), "L09.05: empty histogram has neutral result");
+        counts.put(7, Integer.MAX_VALUE); equal(7, Reflect.call(g, "spotlightColour"), "L09.05: any positive frequency is eligible");
+        Reflect.call(g, "restart");
+        var result = (java.awt.image.BufferedImage) Reflect.get(g, "result");
+        equal(java.awt.Color.CYAN.getRGB(), result.getRGB(35, 40), "L09.05: the hidden key is visibly revealed cyan");
+        expect(result.getRGB(200, 150) != java.awt.Color.CYAN.getRGB(), "L09.05: the common moon no longer steals the spotlight");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -734,65 +671,29 @@ class M11_MazePostcardsTest {
 @SuppressWarnings("unchecked")
 class M12_TileStampStudioTest {
     static int checks;
-    static final String[] CASES = {
-        "Platný napsaný počet změní repeats.",
-        "Chybný zápis i rozsah zachová dosavadní repeats.",
-        "Meze 1 a 12 jsou přijaty; hustota vzoru se mění ve stejném náhledu 288 pixelů."
-    };
-    static void check(boolean okay, int example, Object actual) {
+    static void expect(boolean correct, String message) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION L09.12: " + CASES[example] + " | actual=" + actual);
+        if (!correct) throw new AssertionError(message);
     }
-    static void reject(Runnable action, int example) {
-        try {
-            action.run();
-        } catch (IllegalArgumentException expected) {
-            check(true, example, expected.getClass().getSimpleName());
-            return;
-        }
-        check(false, example, "accepted");
-    }
-    interface IOAction { void run() throws Exception; }
-    static void ioFailure(IOAction action, int example) throws Exception {
-        try {
-            action.run();
-        } catch (IOException expected) {
-            check(true, example, expected.getClass().getSimpleName());
-            return;
-        }
-        check(false, example, "accepted");
-    }
-    static long hash(BufferedImage image) {
-        long result = 1;
-        for (int y = 0; y < image.getHeight(); y++) {
-            for (int x = 0; x < image.getWidth(); x++) result = result * 31 + image.getRGB(x, y);
-        }
-        return result;
-    }
-    static BufferedImage draw(java.util.function.Consumer<java.awt.Graphics2D> painter, int width, int height) {
-        var image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        var graphics = image.createGraphics();
-        try { painter.accept(graphics); } finally { graphics.dispose(); }
-        return image;
+    static void equal(Object expected, Object actual, String message) {
+        expect(java.util.Objects.deepEquals(expected, actual), message + " | expected=" + expected + " actual=" + actual);
     }
     public static void main(String[] args) throws Exception {
-        try {
-            var p = Reflect.create("M12_TileStampStudio");
-            check(((boolean) Reflect.call(p, "applyRepeats", " 3 "))&&((int) Reflect.get(p, "repeats"))==3,0,((int) Reflect.get(p, "repeats")));
-            check(!((boolean) Reflect.call(p, "applyRepeats", "banana"))&&((int) Reflect.get(p, "repeats"))==3,1,((int) Reflect.get(p, "repeats")));
-            check(!((boolean) Reflect.call(p, "applyRepeats", "0"))&&!((boolean) Reflect.call(p, "applyRepeats", "13"))&&((int) Reflect.get(p, "repeats"))==3,1,((int) Reflect.get(p, "repeats")));
-            check(((boolean) Reflect.call(p, "applyRepeats", "1"))&&((java.awt.image.BufferedImage) Reflect.call(p, "render", ((int) Reflect.get(p, "repeats")))).getWidth()==288,2,((int) Reflect.get(p, "repeats")));
-            check(((boolean) Reflect.call(p, "applyRepeats", "12"))&&((java.awt.image.BufferedImage) Reflect.call(p, "render", ((int) Reflect.get(p, "repeats")))).getWidth()==288,2,((int) Reflect.get(p, "repeats")));
-        Reflect.call(p, "paint", 0, 0, 1);
-        var six = (java.awt.image.BufferedImage) Reflect.call(p, "render", 6);
-        var twelve = (java.awt.image.BufferedImage) Reflect.call(p, "render", 12);
-        check(six.getWidth() == 288 && twelve.getHeight() == 288, 2, "same visible area");
-        check(six.getRGB(3, 0) != twelve.getRGB(3, 0), 2, "density changes within the visible area");
-        } catch (AssertionError failure) {
-            throw failure;
-        } catch (Exception failure) {
-            throw new AssertionError("MISSION L09.12: Neočekávané selhání při kontrole aktivního pravidla.", failure);
-        }
+        var g = Reflect.create("M12_TileStampStudio");
+        expect((boolean) Reflect.call(g, "applyRepeats", "3"), "L09.12: ordinary numeric choice still works");
+        expect((boolean) Reflect.call(g, "applyRepeats", " DENSER "), "L09.12: a relative command accepts whitespace and case");
+        equal(6, Reflect.get(g, "repeats"), "L09.12: denser doubles the current setting");
+        Reflect.call(g, "applyRepeats", "denser");
+        equal(12, Reflect.get(g, "repeats"), "L09.12: a command sequence reaches twelve");
+        expect(!(boolean) Reflect.call(g, "applyRepeats", "denser") && (int) Reflect.get(g, "repeats") == 12, "L09.12: oversized relative choice preserves its setting");
+        Reflect.call(g, "applyRepeats", "sparser"); equal(6, Reflect.get(g, "repeats"), "L09.12: sparser halves an even setting");
+        Reflect.call(g, "applyRepeats", "3");
+        expect(!(boolean) Reflect.call(g, "applyRepeats", "sparser") && (int) Reflect.get(g, "repeats") == 3, "L09.12: odd halving is refused without rounding");
+        expect(!(boolean) Reflect.call(g, "applyRepeats", "oops") && (int) Reflect.get(g, "repeats") == 3, "L09.12: typo preserves the live setting");
+        Reflect.call(g, "paint", 0, 0, 1);
+        var three = (java.awt.image.BufferedImage) Reflect.call(g, "render", 3);
+        var six = (java.awt.image.BufferedImage) Reflect.call(g, "render", 6);
+        expect(three.getWidth() == 288 && six.getWidth() == 288 && three.getRGB(6, 0) != six.getRGB(6, 0), "L09.12: relative choices have visible density feedback");
         System.out.println("PASS " + checks + " checks");
     }
 }

@@ -1,75 +1,21 @@
 /// # L09.01 · WordLadder
 ///
-/// Proměň COLD ve WARM změnou jediného písmene při každém tahu. Součástí hádanky je celá cesta: dosáhneš
-/// cíle, aniž bys zapomněl, kudy jsi šel?
+/// Žebřík po jednom slově funguje. Staň se plánovačem: pošli několik promyšlených zastávek najednou a
+/// zajisti, aby tě chybný plán nenechal v polovině.
 ///
-/// **Tvoje mise:** Vytvoř command(input): odstraň okolní mezery, převeď na uppercase (velká písmena) s
-/// Locale.ROOT a přijmi jen slovo ze slovníku lišící se právě jedním písmenem. Změň current a připoj
-/// slovo do history. WARM nastaví outcome s history.size()-1 tahy. Neplatný tah nebo dokončené kolo
-/// odmítni před změnou current i history.
+/// **Tvoje mise:** Přijmi trasu slov oddělených mezerami i samotné slovo. Každá zastávka musí být ve
+/// slovníku a lišit se od předchozí právě jedním písmenem; okolní mezery a velikost písmen ignoruj.
+/// Celou trasu ověř před změnou hry. Chyba pozdější zastávky nechá původní slovo i history (cestu) beze
+/// změny. WARM smí být jen poslední zastávka; počítají se jednotlivé tahy, ne odeslání.
 ///
-/// **Dnes trénuješ:** Vytvoř práci s ordered mutable collection (uspořádanou měnitelnou kolekcí) a
-/// určuj přijetí i prázdný případ.
+/// **Dnes trénuješ:** Sestav a ověř candidate List (navržený seznam) před zveřejněním. Pořadí má význam
+/// mezi plánovanými slovy i mezi zastávkami uložené cesty.
 ///
-/// Po spuštění programu napiš CORD a potom CARD a posouvej se od COLD; /r obnoví začátek a /q
-/// ukončí hru. Po výhře Enter zahájí novou cestu.
-void command(String input) {
-    require(outcome.isEmpty());
-}
+/// Použij vypsaný slovník k plánování. Výchozí hra přijme samostatně CORD a pak CARD. Nový plánovač
+/// musí přijmout cord card jedním odesláním. Z CARD zkus WARD COLD: celý chybný plán se odmítne. /r
+/// začíná znovu, /q končí.
 
-// <editor-fold defaultstate="expanded" desc="Nová dovednost · F22">
-/// ### List (seznam) drží pořadí měnících se věcí
-///
-/// Array (pole) má pevný počet míst. Mutable List (měnitelný seznam) může růst i ubývat a zachovává
-/// pořadí. `List<T>` popisuje přístup k prvkům typu T; `ArrayList<T>` je měnitelná JDK implementation
-/// (implementace).
-///
-/// ```java
-/// List<String> trail = new ArrayList<>();
-/// trail.add("north");
-/// trail.add("east");
-/// String latest = trail.removeLast();
-/// IO.println(trail + " / " + latest);
-/// ```
-///
-/// Výsledek je `[north] / east`. `add` připojí na konec; `removeLast` poslední prvek odstraní a zároveň
-/// vrátí. Před odebráním z prázdného List ověř `isEmpty`. Queue (fronta) odebírá vpředu a přidává
-/// vzadu, zatímco undo stack (zásobník změn) odebírá nejnovější prvek. Správný konec určuje význam
-/// pořadí.
-///
-/// `List.of("north", "east")` vytvoří unmodifiable List (neměnitelný seznam): čtení funguje, přidávání
-/// ne. `new ArrayList<>(existing)` vytvoří mutable List s dosavadními prvky. Předpověz obsah trail po
-/// přidání `"south"`. Když vracíš dvě změny, která má zmizet jako první?
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst tuto část
-///
-/// `words` je konečný slovník, při hraní jej vypíše /words. Připravené `adjacent(a,b)` ověřuje rozdíl
-/// jednoho písmene. `require(false)` odmítá akci pomocí IllegalArgumentException. Počáteční slovo už je
-/// v history, proto se počet navštívených slov a tahů liší o jednu. Console loop (textové opakování)
-/// obstará restart i konec.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Celý navržený word (slovo) ověř před změnou cesty.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Použij připravený slovník a adjacent; přijatá slova history prodlužují, nenahrazují.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Po obou guard (vstupních podmínkách) ulož normalizované slovo, připoj je do history a pro WARM
-/// použij počet tahů, nikoli navštívených slov.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
-/// Vytvoř nový čtyřpísmenný slovník, začátek i cíl s alespoň jednou známou cestou. Povolená slova
-/// vypiš, aby šla hádanka objevovat offline.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+// <editor-fold defaultstate="expanded" desc="Program · prozkoumej pravidla">
 String[] words = {"COLD", "CORD", "CARD", "WARD", "WARM", "WORD", "WORM", "GOLD", "SOLD", "TOLD", "HOLD"};
 String current;
 String outcome;
@@ -80,6 +26,15 @@ void reset() {
     current = "COLD";
     history = new ArrayList<>(List.of(current));
     outcome = "";
+}
+
+void command(String input) {
+    require(outcome.isEmpty());
+    String word = input.strip().toUpperCase(Locale.ROOT);
+    require(List.of(words).contains(word) && adjacent(current, word));
+    current = word;
+    history.add(word);
+    if (word.equals("WARM")) outcome = "Reached WARM in " + (history.size() - 1) + " moves!";
 }
 
 boolean adjacent(String a, String b) {
@@ -122,7 +77,7 @@ void main() {
             display();
             if (!outcome.isEmpty()) IO.println(outcome);
         } catch (IllegalArgumentException invalid) {
-            IO.println("Invalid move. Change one letter to a listed word; the trail has not changed.");
+            IO.println("Invalid route. Use listed words one letter apart; the trail has not changed.");
         }
     }
 }
@@ -133,6 +88,69 @@ void require(boolean valid) {
     }
 }
 // </editor-fold>
+
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F22">
+/// ### List (seznam) drží pořadí měnících se věcí
+///
+/// Array (pole) má pevný počet míst. Mutable List (měnitelný seznam) může růst i ubývat a zachovává
+/// pořadí. `List<T>` popisuje přístup k prvkům typu T; `ArrayList<T>` je měnitelná JDK implementation
+/// (implementace).
+///
+/// ```java
+/// List<String> trail = new ArrayList<>();
+/// trail.add("north");
+/// trail.add("east");
+/// String latest = trail.removeLast();
+/// IO.println(trail + " / " + latest);
+/// ```
+///
+/// Výsledek je `[north] / east`. `add` připojí na konec; `removeLast` poslední prvek odstraní a zároveň
+/// vrátí. Před odebráním z prázdného List ověř `isEmpty`. Queue (fronta) odebírá vpředu a přidává
+/// vzadu, zatímco undo stack (zásobník změn) odebírá nejnovější prvek. Správný konec určuje význam
+/// pořadí.
+///
+/// `List.of("north", "east")` vytvoří unmodifiable List (neměnitelný seznam): čtení funguje, přidávání
+/// ne. `new ArrayList<>(existing)` vytvoří mutable List s dosavadními prvky. Předpověz obsah trail po
+/// přidání `"south"`. Když vracíš dvě změny, která má zmizet jako první?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ### Pozoruj a sleduj tok
+///
+/// Plán a provedená cesta jsou různé List (seznamy). Během ověřování zastávek smíš prodlužovat dočasnou
+/// kopii; zveřejni ji až po všech kontrolách. Předchozí slovo dalšího plánovaného kroku je poslední
+/// candidate (návrh), ne stále skutečné aktuální slovo. String.split("\\s+") vrací slova oddělená
+/// jedním či více bílými znaky; zdvojené zpětné lomítko předává jedno lomítko pravidlu oddělení.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Pokus a opakování">
+/// Odešli CORD CARD, zapiš celou cestu a zkus WARD COLD. Po odmítnutí musí zůstat na konci CARD. WARD
+/// WARM dokončí hru čtyřmi tahy. Po restartu vyzkoušej i jediné slovo; plánovací nástroj zachovává
+/// běžné hraní.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Naplánuj platný první krok a chybný druhý. Které skutečné hodnoty musí odpovídat podobě před
+/// pokusem?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Sleduj odeslání z console (textového vstupu) k akci přechodu slov. Návrhy ověřuj v pořadí nad kopií
+/// uspořádané history (cesty).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Najdi command. Normalizuj a rozděl vstup, zkopíruj history do mutable route (měnitelné trasy) a
+/// každý candidate (návrh) ověř vůči předchozímu. Teprve potom jednou nahraď history/current a vypočti
+/// konec WARM.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Navrhni nový malý slovník a napiš dva plány: nejkratší známou a delší vyhlídkovou cestu. Nech
+/// spoluhráče předpovědět, který odeslaný plán bude odmítnut.
+// </editor-fold>
+
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
 /// ## Neznámý zápis?

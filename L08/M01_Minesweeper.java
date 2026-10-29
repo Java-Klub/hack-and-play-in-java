@@ -6,89 +6,45 @@ import java.awt.GridLayout;
 
 /// # L08.01 · Minesweeper
 ///
-/// Odkrývej bezpečná políčka a podle čísel se vyhýbej skrytým minám. Nápověda pomůže jen tehdy, když
-/// započítá každé okolní nebezpečí.
+/// Běžná hra s minami i bodová prohlížecí lupa už fungují. Rozšiř lupu na místní rentgen a pomocí
+/// získaných údajů naplánuj bezpečnou cestu.
 ///
-/// **Tvoje mise:** Vytvoř adjacent(row, col): spočítej miny ve všech existujících okolních cell
-/// (políčkách), včetně diagonal (úhlopříčných), ale nikdy v samotné dotazované cell. Na okraji počítej
-/// jen existující cell. Prázdné pravidlo nyní všude ukazuje nulu.
+/// **Tvoje mise:** S volbou Inspect musí kliknutí ukázat všechny miny v okolí 3×3 včetně středu, ale
+/// žádnou mimo něj. Nové prohlédnutí nahrazuje staré. Prohlídka nesmí odkrývat bezpečná políčka, stavět
+/// vlajky, zvyšovat postup ani prohrát kolo. Rohy se bezpečně oříznou; New board lupu smaže. Běžné
+/// odkrývání i čísla min zůstanou.
 ///
-/// **Dnes trénuješ:** Převeď malý nákres na coordinates (souřadnice), bounds (hranice) a vztahy
-/// neighbour (sousedů).
+/// **Dnes trénuješ:** Prozkoumej, jak kliknutí aktualizuje samostatný pohled na grid data (data
+/// mřížky). Bounds (hranice) a coordinates (souřadnice) okolí patří nástroji; skutečný herní state
+/// (stav) musí zůstat nezávislý.
 ///
-/// Spusť program a kliknutím odkryj políčko, potom podle čísla vybírej bezpečné sousedy nebo
-/// označuj miny v režimu Flag mode.
-int adjacent(int row, int col) {
-    return 0;
-}
+/// Zapni Inspect a klikni: výchozí lupa nahlédne jen do tohoto políčka. Po rozšíření klikni vedle
+/// podezřelé miny a uvidíš i diagonal neighbour (úhlopříčné sousedy). Pro běžné odkrývání Inspect
+/// vypni; Flag mode a New board fungují dál.
 
-// <editor-fold defaultstate="expanded" desc="Nová dovednost · F18">
-/// ### Coordinates (souřadnice) popisují sousedy
-///
-/// Grid (mřížka) ukládá nejdřív row (řádek): `board[y][x]`. Rostoucí x vede doprava, rostoucí y na
-/// obrazovce dolů. Neighbour (soused) vznikne přičtením malého offset (posunu).
-///
-/// ```text
-///           (0,-1)
-/// (-1,0)    HERE    (1,0)
-///           (0,1)
-/// ```
-///
-/// ```java
-/// int[][] board = {{2, 5, 8}, {1, 4, 7}};
-/// int x = 1, y = 0;
-/// int nx = x + 0, ny = y + 1;
-/// if (ny >= 0 && ny < board.length && nx >= 0 && nx < board[ny].length) {
-///     IO.println(board[ny][nx]);
-/// }
-/// ```
-///
-/// Přesun vede z 5 na 4, vypíše se tedy 4. Bounds (hranice) kontrolujeme před indexováním: array (pole)
-/// za okrajem žádné cell (políčko) nemá. Diagonal (úhlopříčný posun) mění obě coordinates. Corridor
-/// (chodba) opakuje stejný offset; neighbourhood (okolí) zkouší několik offset. Jde o různé postupy se
-/// stejným modelem.
-///
-/// Předpověz výsledek offset `(-1,0)` ze stejného začátku. Který offset opustí tento board (hrací
-/// plochu)? Než spojíš směry do loop (opakování), zakresli začátek a cíl na papír.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst tuto část
-///
-/// Neighbourhood (okolí) 3×3 tvoří row-1..row+1 a col-1..col+1. Připravené `inside(r,c)` ověřuje bounds
-/// (hranice). `mines[r][c]` je true pro minu. Centre (střed) vyřaď zvlášť, i kdyby obsahoval minu.
-/// reveal() tvůj počet používá na skutečném tlačítku.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Nakresli kolem políčka okolí 3×3 a označ centre (střed).
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Projdi obě rozmezí coordinates (souřadnic); počítej jen existující miny mimo centre.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Použij nested loops (vnořená opakování) a local count (místní počet); vrať jej až po všech
-/// kandidátech.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
-/// Navrhni spoluhráči malé pevné rozmístění min s bezpečným prvním políčkem a pravdivými čísly. Dokážou
-/// první čísla vynutit zajímavé rozhodnutí?
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+// <editor-fold defaultstate="expanded" desc="Program · prozkoumej pravidla">
 final int SIZE = 6;
 final int MINE_COUNT = 6;
 boolean[][] mines = new boolean[SIZE][SIZE];
 boolean[][] revealed = new boolean[SIZE][SIZE];
 boolean[][] flags = new boolean[SIZE][SIZE];
 boolean lost;
+boolean[][] inspected = new boolean[SIZE][SIZE];
 int opened;
 JButton[][] buttons = new JButton[SIZE][SIZE];
 JLabel status = new JLabel();
 JToggleButton flagMode = new JToggleButton("Flag mode");
+JToggleButton inspectMode = new JToggleButton("Inspect");
+
+int adjacent(int row, int col) {
+    int count = 0;
+    for (int r = row - 1; r <= row + 1; r++) {
+        for (int c = col - 1; c <= col + 1; c++) {
+            if (inside(r, c) && (r != row || c != col) && mines[r][c]) count++;
+        }
+    }
+    return count;
+}
 
 boolean inside(int row, int col) {
     return row >= 0 && row < SIZE && col >= 0 && col < SIZE;
@@ -99,6 +55,7 @@ void reset(long seed) {
     mines = new boolean[SIZE][SIZE];
     revealed = new boolean[SIZE][SIZE];
     flags = new boolean[SIZE][SIZE];
+    inspected = new boolean[SIZE][SIZE];
     var random = new Random(seed);
     int placed = 0;
     while (placed < MINE_COUNT) {
@@ -139,6 +96,11 @@ boolean reveal(int row, int col) {
     return true;
 }
 
+void inspect(int row, int col) {
+    inspected = new boolean[SIZE][SIZE];
+    if (inside(row, col)) inspected[row][col] = mines[row][col];
+}
+
 boolean toggleFlag(int row, int col) {
     if (!inside(row, col) || revealed[row][col] || lost || won()) {
         return false;
@@ -152,7 +114,7 @@ boolean toggleFlag(int row, int col) {
 void refresh() {
     for (int r = 0; r < SIZE; r++) {
         for (int c = 0; c < SIZE; c++) {
-            String text = flags[r][c] ? "F" : "?";
+            String text = inspected[r][c] ? "*" : flags[r][c] ? "F" : "?";
             if (revealed[r][c] || (lost && mines[r][c])) {
                 int count = adjacent(r, c);
                 text = mines[r][c] ? "*" : count == 0 ? "" : Integer.toString(count);
@@ -176,7 +138,10 @@ void show() {
             var button = new JButton();
             buttons[r][c] = button;
             button.addActionListener(event -> {
-                if (flagMode.isSelected()) {
+                if (inspectMode.isSelected()) {
+                    inspect(row, col);
+                }
+                else if (flagMode.isSelected()) {
                     toggleFlag(row, col);
                 }
                 else {
@@ -192,8 +157,10 @@ void show() {
     restart.addActionListener(event -> {
         reset(System.nanoTime());
         flagMode.setSelected(false);
+        inspectMode.setSelected(false);
         refresh();
     });
+    controls.add(inspectMode);
     controls.add(flagMode);
     controls.add(restart);
     frame.add(status, BorderLayout.NORTH);
@@ -211,6 +178,72 @@ void main() {
     SwingUtilities.invokeLater(this::show);
 }
 // </editor-fold>
+
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F18">
+/// ### Coordinates (souřadnice) popisují sousedy
+///
+/// Grid (mřížka) ukládá nejdřív row (řádek): `board[y][x]`. Rostoucí x vede doprava, rostoucí y na
+/// obrazovce dolů. Neighbour (soused) vznikne přičtením malého offset (posunu).
+///
+/// ```text
+///           (0,-1)
+/// (-1,0)    HERE    (1,0)
+///           (0,1)
+/// ```
+///
+/// ```java
+/// int[][] board = {{2, 5, 8}, {1, 4, 7}};
+/// int x = 1, y = 0;
+/// int nx = x + 0, ny = y + 1;
+/// if (ny >= 0 && ny < board.length && nx >= 0 && nx < board[ny].length) {
+///     IO.println(board[ny][nx]);
+/// }
+/// ```
+///
+/// Přesun vede z 5 na 4, vypíše se tedy 4. Bounds (hranice) kontrolujeme před indexováním: array (pole)
+/// za okrajem žádné cell (políčko) nemá. Diagonal (úhlopříčný posun) mění obě coordinates. Corridor
+/// (chodba) opakuje stejný offset; neighbourhood (okolí) zkouší několik offset. Jde o různé postupy se
+/// stejným modelem.
+///
+/// Předpověz výsledek offset `(-1,0)` ze stejného začátku. Který offset opustí tento board (hrací
+/// plochu)? Než spojíš směry do loop (opakování), zakresli začátek a cíl na papír.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ### Pozoruj a sleduj tok
+///
+/// Lupa je pozorování, nikoli tah. Sleduj kliknutí podle zvoleného input mode (režimu vstupu), potom
+/// odliš text tlačítka od políček skutečně započtených jako otevřená. Mask (maska) je stejně velký
+/// boolean grid (mřížka ano/ne), která označuje právě viditelné miny. Výměna mask zabrání zůstávání
+/// starých nálezů na obrazovce.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Pokus a opakování">
+/// Prohlédni dvě různá místa: hvězdičky z prvního pohledu musí zmizet. Počet bezpečných políček se
+/// nemění ani při nalezení miny. Zkus roh a před plánovaným bezpečným tahem Inspect vypni. New board
+/// musí starou prohlídku smazat.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Porovnej Inspect s běžným odkrytím: počet postupu se mění jen při odkrytí.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Sleduj akci tlačítka Inspect. Jeho grid (mřížku) drž odděleně od vlajek i skutečně odkrytých
+/// políček; dosavadní počítání čísel neměň.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Najdi inspect. Nyní do inspected kopíruje jen minu v místě kliknutí. Nahraď bod průchodem omezených
+/// row/column (řádků/sloupců) o krok kolem kliknutí, pokaždé s novou mask (maskou).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Omez lupu na tři použití za kolo a ukaž zbývající zásobu. Pomůže i tato menší výhoda spoluhráči
+/// dokončit hru?
+// </editor-fold>
+
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
 /// ## Neznámý zápis?

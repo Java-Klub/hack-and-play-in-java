@@ -1,29 +1,14 @@
 /// # L03.02 · Nim
 ///
-/// Ber ze společné hromádky jeden, dva nebo tři kameny a snaž se vzít poslední dřív než bot. Sleduj, jak
-/// ponechaná velikost hromádky změní další volbu bota.
+/// **Tvoje mise · Napiš nástroj k vítězství:** Pozoruj fungujícího bota, odvoď, jakou hromádku chce
+/// zanechat, a proměň tuto myšlenku v rádce člověku. Otazník má doporučit 3 ze sedmi a 1 z osmi.
+/// Check se rádce ptá také na prázdnou hromádku: vrať 0, protože tam žádný tah neexistuje. Dotaz jen
+/// radí: nesmí odebrat kameny ani předat tah. Bota zachovej.
 ///
-/// **Tvoje mise · Nauč bota strategii:** Bot bere jeden kámen i tehdy, když je užitečná jiná platná
-/// volba. Oprav dvě cesty v
-/// botMove a zachovej bezpečné chování prázdné hromádky.
+/// Výchozí program funguje podle původních pravidel. Kontrola už očekává tvůj nový cíl.
 ///
-/// **Dnes trénuješ:** If/else branching (větvení): jediná condition (podmínka) vybere vrácený výsledek.
-/// Porovnej hromádky sedmi a osmi kamenů: jejich zbytky se liší, proto má záležet na vybrané branch
-/// (větvi).
-///
-/// Spusť program a vezmi 2 kameny; porovnej další tah bota z 19 kamenů a pomocí r zkus stejný
-/// začátek znovu.
-int botMove() {
-    if (stones == 0) {
-        return 0;
-    }
-    int remainder = stones % 4;
-    if (remainder == 0) {
-        return 1;
-    } else {
-        return 1;
-    }
-}
+/// Hraj pomocí 1–3, otazník žádá radu, r restartuje a q ukončí hru. Výchozí program už dovoluje hrát
+/// proti botovi; nedokončený rádce říká 0.
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F07">
 /// `if` položí boolean question (logickou otázku). Jeho tělo běží jen při pravdivé odpovědi. `else
@@ -52,63 +37,49 @@ int botMove() {
 /// Nyní předpověz zprávu při přesně nula stupních.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
-///
-/// - `int botMove()` — Výpočet bez input (vstupu), který vrací jediný celočíselný tah; čte připravenou
-///   hodnotu stones.
-/// - `if (stones == 0)` — Vyhodnoť číselnou rovnost v závorkách a tuto branch (větev) vyber jen pro
-///   prázdnou hromádku.
-/// - `return 0;` — Okamžitě dokonči výpočet bez tahu; pozdější statement (příkazy) tohoto call (volání)
-///   se neprovedou.
-/// - `stones % 4` — Remainder (zbytek) po dělení velikosti hromádky čtyřmi; například sedm zanechá zbytek
-///   tři.
-/// - `if (remainder == 0)` — Vyber náhradní branch (větev) pro násobek čtyř.
-/// - `else` — Alternativní tělo se provede, když if condition (podmínka) neplatí; složené závorky toto
-///   tělo sdružují.
-///
-/// ### Co už obstarává připravená část
-///
-/// take ověřuje a provádí tahy, střídá hráče a zapisuje vítěze. main volá botMove při tahu bota a dodává
-/// výpis hromádky, zadání tahů, restart a konec. Výpočet bota má tah vrátit, nikoli sám odebrat kameny.
+// <editor-fold defaultstate="expanded" desc="Průzkum a pokus">
+/// Před čtením strategie pozoruj dvě různé volby bota. Potom najdi výpočet výběru tahu a odliš výběr
+/// od provedení. Rádce dostává zkoumanou hromádku jako parameter (parametr), proto smí poradit i k
+/// jiné pozici bez změny hry. Neutrální příklad: pomocník předpovídá pro dodanou teplotu bez změny
+/// uložené dnešní teploty. Použij myšlenku, nikoli čtení nesouvisející globální hodnoty.
 // </editor-fold>
 
-// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
-/// Poslední kámen vyhrává; v tahu se berou jeden, dva nebo tři. Uvažuj odzadu: hráč před čtyřmi
-/// kameny nemůže zabránit soupeři, aby v dalším tahu vzal zbytek. Myšlenka se opakuje ve skupinách po
-/// čtyřech: na soupeřův odběr lze odpovědět tak, aby oba tahy společně odebraly čtyři. Z počtu
-/// nedělitelného čtyřmi se snaž soupeři nechat násobek čtyř. Z přesného kladného násobku žádný tah
-/// nezaručí výhru proti dokonalým odpovědím; tento bot používá platnou náhradní volbu jednoho kamene.
-/// Prázdná hromádka nemá tah. Přelož pravidlo do dvou připravených branch (větví), aniž by botMove
-/// samo kameny odstraňovalo.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · oblast hledání">
+/// Najdi vstupní větev pro ?. Jakou vrácenou hodnotu vypisuje? Porovnej pomocníka s rozhodováním
+/// bota.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
-/// Strategie je volba, nikoli tah provedený uvnitř botMove. Ze sedmi kamenů odebrání tří ponechá
-/// čtyři. Z osmi tento bot volí povolenou zálohu jedna. If vybere výsledek; připravené take jej
-/// provede později. Nulu sleduj zvlášť, protože nemá platný tah. Pokud je strategie další příliš
-/// velká hádanka, začni hrou Pig.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · konkrétní cesta">
+/// advice(pile) má zkoumat pile; botMove čte stones. Stejnou myšlenku větvení lze použít bez pohybu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná úprava · prozrazuje postup">
+/// Použij pile % 4: pro nulu vrať 0, pro kladný násobek čtyř 1 a jinak zbytek.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
-/// Po zprovoznění strategie se zbytkem ji nahraď záměrně slabší strategií, například vždy odeber
-/// jeden dostupný kámen. Oba boty porovnej stejným zahájením. Které velikosti hromádky slabší
-/// strategii prozradí? Potom vyzvi kamaráda proti původnímu botovi.
+/// Dej kamarádovi záměrně slabého rádce a zachovej silného bota. Vysvětli hromádku, kde slabá rada
+/// promarní výhodu. Vrať silného rádce a porovnej stejnou pozici.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Projdi sedm kamenů: remainder (zbytek) je tři.
-// </editor-fold>
+// <editor-fold defaultstate="collapsed" desc="Program · prozkoumej podle potřeby">
+int advice(int pile) {
+    return 0;
+}
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Else branch (větev jinak) se má lišit od větve s nulovým zbytkem.
-// </editor-fold>
+int botMove() {
+    if (stones == 0) {
+        return 0;
+    }
+    int remainder = stones % 4;
+    if (remainder == 0) {
+        return 1;
+    } else {
+        return remainder;
+    }
+}
 
-// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// V else vrať remainder místo 1.
-// </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 int stones = 21;
 boolean humanTurn = true;
 int winner;
@@ -134,7 +105,7 @@ boolean take(int amount) {
 
 void main() {
     IO.println("NIM: take 1-3 stones. Taking the last stone wins.");
-    IO.println("You play first against the bot. r restarts; q quits.");
+    IO.println("You play first against the bot. ?: coach; r restarts; q quits.");
     boolean showState = true;
     while (true) {
         if (showState) {
@@ -163,6 +134,10 @@ void main() {
             IO.println("Round finished. Press Enter or /r for a new round; /q quits.");
             continue;
         }
+        if (input.equals("?")) {
+            IO.println("Coach suggests: " + advice(stones));
+            continue;
+        }
         try {
             if (take(Integer.parseInt(input))) {
                 showState = true;
@@ -174,8 +149,6 @@ void main() {
         }
     }
 }
-
-/// Připravené vstupní body: main, reset.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">

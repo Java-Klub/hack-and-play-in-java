@@ -10,20 +10,17 @@ import javax.swing.Timer;
 
 /// # L10.01 · AsteroidDrift
 ///
-/// Řiď malou loď mezi letícími asteroidy a střelbou si uvolňuj cestu. Ovládání palby ztichlo, přestože
-/// ostatní let stále funguje.
+/// Proleť s malou lodí mezi pěti kameny. Základní let funguje; tentokrát jsi hacker ovládání, ne
+/// opravář jediné chyby.
 ///
-/// **Tvoje mise:** Držení Space nevytváří střely, protože uložená akce palby nic nedělá. Připoj odloženou
-/// akci, ale nestřílej už při jejím vytváření.
+/// **Tvoje mise:** Přestav ovládání fungujícího letu: F má střílet, Space při každém aktivním tick
+/// (kroku) násobí obě složky rychlosti 0.92 a šipky dál řídí. Střelba stále dodržuje cooldown
+/// (prodlevu). Nejdřív načrtni cestu od klávesy k nové střele a skutečnou cestu najdi v kódu.
 ///
-/// **Dnes trénuješ:** Callback (předaná akce) je kód připravený pro pozdější event (událost).
-/// FiringAction vrací tento balíček; herní loop (cyklus) rozhoduje, kdy jej při držení Space spustí.
+/// **Zkoumání:** Sleduj vstup přes odložené akce a potom změň ovládání.
 ///
-/// Po spuštění programu řiď a zrychluj šipkami, drž Space pro střelbu a klávesou R začni let
-/// znovu.
-Runnable firingAction() {
-    return () -> {};
-}
+/// Začni šipkou. Vyzkoušej Space i F a po úpravě je porovnej znovu. R obnovuje kolo; okno ukazuje
+/// ovládání skutečně implementované v tvé verzi.
 
 // <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
 /// ### Udělej z toho vlastní věc
@@ -53,34 +50,48 @@ Runnable firingAction() {
 /// Předpověz: co se vypíše, když poslední řádek nahradí dvě po sobě jdoucí volání `cheer.run()`?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Deník průzkumníka · vyložený příklad">
+/// ### Sleduj zprávu, nejen jméno metody
 ///
-/// - `Runnable` — JDK role pro akci bez argument (argumentů) a bez vráceného výsledku.
-/// - `firingAction()` — Vytváří akci; název neznamená, že má střela vzniknout okamžitě.
-/// - `() -> {}` — Lambda (anonymní funkce) bez parameter (parametrů) a s prázdným tělem: nyní nic
-///   nezmění.
+/// Key listener (obsluha klávesy) může teď uložit boolean (ano/ne), který timer (časovač) přečte
+/// později. Timer může spustit Runnable (odloženou akci), jejíž tělo zavolá další operaci. Při čtení
+/// tyto šipky nakresli: definice se liší od spuštění.
 ///
-/// ### Co už obstarává připravená část
+/// ```java
+/// boolean requested;
+/// Runnable signal = () -> IO.println("Ping");
+/// void press() { requested = true; }
+/// void tick() {
+///     if (requested) signal.run();
+/// }
+/// ```
 ///
-/// Připravená fire method (metoda) řeší prodlevu i vznik střely. Update (aktualizace) při držení klávesy
-/// spouští fireCallback a potom posouvá střely i asteroidy; Swing okno obslouží klávesy a při zavření
-/// zastaví timer (časovač).
+/// Samotné press nic nevypíše; tick vypíše Ping a další tick znovu, protože requested zůstalo true.
+/// Předpověz výsledek, kdyby tick po spuštění signal nastavil requested na false. KeyEvent constant
+/// (konstanta klávesy), například VK_P, označuje fyzickou klávesu P. Odděl event (událost), stored
+/// state (uložený stav) a callback; změna těla callback sama nezmění klávesu, která jej žádá.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Runnable představuje akci, nikoli její výsledek.
+/// Začni v keyPressed, potom sleduj uložené klávesy do aktualizace časovače. Označ volání, které
+/// skutečně vytvoří Shot.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Vrať method reference (odkaz na metodu) nebo lambda, která fire zavolá později.
+/// Čtení držené klávesy v step nyní žádá střelbu pomocí VK_SPACE. Callback nakonec dojde do fire;
+/// tato operace hlídá prodlevu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Zachovej guard (podmínky) cooldown/lost v fire; nekopíruj je do callback (předané akce).
+/// Střelbu žádej pomocí VK_F, dovol F odstartovat let a drženému Space dej dvě násobení rychlosti.
+/// Uprav viditelné ovládání; zachovej ochrany fire i reset.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+// <editor-fold defaultstate="expanded" desc="Program k prozkoumání">
+Runnable firingAction() {
+    return this::fire;
+}
+
 final int WIDTH = 600, HEIGHT = 420;
 
 record Rock(double x, double y, double vx, double vy, double radius) {

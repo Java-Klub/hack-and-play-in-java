@@ -33,7 +33,7 @@ class Check {
         run("M11_SecretBeeps", "L12.11 SecretBeeps · F36", () -> M11_SecretBeepsTest.main(new String[0]));
         run("M12_MountainPostcards", "L12.12 MountainPostcards · F36", () -> M12_MountainPostcardsTest.main(new String[0]));
         if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " still need repair.");
+        IO.println(checked + " missions; " + failed + " mission goals remaining.");
         if (failed > 0) System.exit(1);
     }
 
@@ -54,9 +54,9 @@ class Check {
 class M01_ReactionDiffusionSkinsTest {
     static int checks;
     static final String[] CASES = {
-        "Výchozí chemistry přijme skutečné aktuální hodnoty cell (buňky).",
-        "Výměna implementace interface (rozhraní) změní výsledek.",
-        "Skutečný step používá náhradní reakci v obou polích příštího stavu."
+        "Pokus použije tři zadané recepty se stejným seed i délkou.",
+        "Výměna role mění skutečné obrazy, ne jen nápisy.",
+        "Původní role se obnoví při úspěchu i chybě."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -95,24 +95,25 @@ class M01_ReactionDiffusionSkinsTest {
         return image;
     }
     public static void main(String[] args) throws Exception {
-        try {
-            var p = Reflect.create("M01_ReactionDiffusionSkins");
-            Object authored = Reflect.call(p, "makeChemistry");
-            check(Math.abs((double) Reflect.call(authored, "reaction", .2, .5) - .05) < 1e-12, 0, "authored Chemistry");
-            Reflect.call(p, "reset", 42);((double[][]) Reflect.get(p, "a"))[0][0]=.5;((double[][]) Reflect.get(p, "b"))[0][0]=.4;check(Math.abs(((double) Reflect.call(p, "reactionAt", 0, 0))-.08)<1e-12,0,((double) Reflect.call(p, "reactionAt", 0, 0)));
-            ((double[][]) Reflect.get(p, "a"))[3][2]=.7;((double[][]) Reflect.get(p, "b"))[3][2]=.2;check(Math.abs(((double) Reflect.call(p, "reactionAt", 2, 3))-.028)<1e-12,0,((double) Reflect.call(p, "reactionAt", 2, 3)));
-            Reflect.set(p, "chemistry", Reflect.function("M01_ReactionDiffusionSkins$Chemistry", values -> { double a = (double) values[0]; double b = (double) values[1]; return .1*a+.05*b; }));check(Math.abs(((double) Reflect.call(p, "reactionAt", 2, 3))-.08)<1e-12,1,((double) Reflect.call(p, "reactionAt", 2, 3)));
-            double expectedA=Math.clamp(((double[][]) Reflect.get(p, "a"))[3][2]+((double) Reflect.call(p, "laplace", ((double[][]) Reflect.get(p, "a")), 2, 3))-.08+.055*(1-((double[][]) Reflect.get(p, "a"))[3][2]),0,1);
-            double expectedB=Math.clamp(((double[][]) Reflect.get(p, "b"))[3][2]+.5*((double) Reflect.call(p, "laplace", ((double[][]) Reflect.get(p, "b")), 2, 3))+.08-.117*((double[][]) Reflect.get(p, "b"))[3][2],0,1);
-            Reflect.call(p, "step");check(Math.abs(((double[][]) Reflect.get(p, "a"))[3][2]-expectedA)<1e-12&&Math.abs(((double[][]) Reflect.get(p, "b"))[3][2]-expectedB)<1e-12,2,((double[][]) Reflect.get(p, "b"))[3][2]);
-            Reflect.set(p, "chemistry", Reflect.function("M01_ReactionDiffusionSkins$Chemistry", values -> { double a = (double) values[0]; double b = (double) values[1]; return .07; }));check(Math.abs(((double) Reflect.call(p, "reactionAt", 0, 0))-.07)<1e-12,1,((double) Reflect.call(p, "reactionAt", 0, 0)));
-            for(var row:((double[][]) Reflect.get(p, "a")))Arrays.fill(row,.5);for(var row:((double[][]) Reflect.get(p, "b")))Arrays.fill(row,.4);Reflect.call(p, "step");
-            check(Math.abs(((double[][]) Reflect.get(p, "a"))[0][0]-.4575)<1e-9&&Math.abs(((double[][]) Reflect.get(p, "b"))[0][0]-.4232)<1e-9,2,((double[][]) Reflect.get(p, "b"))[0][0]);
-        } catch (AssertionError failure) {
-            throw failure;
-        } catch (Exception failure) {
-            throw new AssertionError("MISSION L12.01: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+        var p = Reflect.create("M01_ReactionDiffusionSkins");
+        Object originalRole = Reflect.function("M01_ReactionDiffusionSkins$Chemistry", values -> .03);
+        Reflect.set(p, "chemistry", originalRole);
+        BufferedImage[] pictures = (BufferedImage[]) Reflect.call(p, "compareSkins", 37L, 60);
+        check(pictures.length == 3, 0, pictures.length);
+        var expected = Reflect.create("M01_ReactionDiffusionSkins");
+        for (int i = 0; i < 3; i++) {
+            final int recipe = i;
+            Reflect.set(expected, "chemistry", Reflect.function("M01_ReactionDiffusionSkins$Chemistry", values -> {
+                double a = (double) values[0];
+                double b = (double) values[1];
+                return recipe == 0 ? a * b * b : recipe == 1 ? .5 * a * b * b : 0;
+            }));
+            check(hash(pictures[i]) == hash((BufferedImage) Reflect.call(expected, "render", 37L, 60.0)), 0, "recipe " + i);
         }
+        check(hash(pictures[0]) != hash(pictures[1]) && hash(pictures[1]) != hash(pictures[2]), 1, "three observable results");
+        check(Reflect.get(p, "chemistry") == originalRole, 2, "restored after success");
+        reject(() -> Reflect.call(p, "compareSkins", 37L, 0), 2);
+        check(Reflect.get(p, "chemistry") == originalRole, 2, "restored after failure");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -121,9 +122,9 @@ class M01_ReactionDiffusionSkinsTest {
 class M02_FlockPlaygroundTest {
     static int checks;
     static final String[] CASES = {
-        "Výchozí síla respektuje hranici vzdálenosti.",
-        "obstaclePush používá náhradní roli.",
-        "Skutečný krok ptáka se při výměně role změní."
+        "Curious používá přesně opačnou hodnotu reakce Shy.",
+        "Přepnutí zachová stav ptáků, pauzu i překážku; dvojí přepnutí vrátí Shy.",
+        "Skutečný pohyb čte roli a nové hejno zachová zvolenou osobnost."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -162,25 +163,35 @@ class M02_FlockPlaygroundTest {
         return image;
     }
     public static void main(String[] args) throws Exception {
-        try {
-            var p = Reflect.create("M02_FlockPlayground");
-            Object authored = Reflect.call(p, "makeAvoidance", 100.0);
-            check(Math.abs((double) Reflect.call(authored, "strength", 25.0) - .15) < 1e-12, 0, "authored near strength");
-            check(Math.abs((double) Reflect.call(authored, "strength", 50.0) - .1) < 1e-12, 0, "captured radius");
-            check((double) Reflect.call(authored, "strength", 0.0) == 0 && (double) Reflect.call(authored, "strength", 100.0) == 0, 0, "distance boundaries");
-            check(Math.abs((double) Reflect.call(p, "obstaclePush", 37.5) - .1) < 1e-12, 0, "installed factory rule");
-            reject(() -> Reflect.call(p, "makeAvoidance", 0.0), 0);
-            Reflect.call(p, "reset", 42);check(Math.abs(((double) Reflect.call(p, "obstaclePush", 20)) - .2 * (1 - 20.0 / 75)) < 1e-12&&((double) Reflect.call(p, "obstaclePush", 75))==0,0,((double) Reflect.call(p, "obstaclePush", 20)));
-            Reflect.set(p, "avoidance", Reflect.function("M02_FlockPlayground$Avoidance", values -> { double d = (double) values[0]; return d/100; }));check(((double) Reflect.call(p, "obstaclePush", 35))==.35&&((double) Reflect.call(p, "obstaclePush", 90))==.9,1,((double) Reflect.call(p, "obstaclePush", 35)));
-            Reflect.set(p, "avoidance", Reflect.function("M02_FlockPlayground$Avoidance", values -> { double d = (double) values[0]; return .7; }));check(((double) Reflect.call(p, "obstaclePush", 20))==.7,1,((double) Reflect.call(p, "obstaclePush", 20)));
-            var other=Reflect.create("M02_FlockPlayground");Reflect.call(other, "reset", 42);Reflect.set(other, "avoidance", Reflect.function("M02_FlockPlayground$Avoidance", values -> { double d = (double) values[0]; return 0; }));
-            ((double[]) Reflect.get(p, "x"))[0]=((double[]) Reflect.get(other, "x"))[0]=310;((double[]) Reflect.get(p, "y"))[0]=((double[]) Reflect.get(other, "y"))[0]=200;((double[]) Reflect.get(p, "vx"))[0]=((double[]) Reflect.get(other, "vx"))[0]=0;((double[]) Reflect.get(p, "vy"))[0]=((double[]) Reflect.get(other, "vy"))[0]=0;
-            Reflect.call(p, "step");Reflect.call(other, "step");check(Math.abs(((double[]) Reflect.get(p, "vx"))[0]-((double[]) Reflect.get(other, "vx"))[0])>1e-6,2,((double[]) Reflect.get(p, "vx"))[0]);
-        } catch (AssertionError failure) {
-            throw failure;
-        } catch (Exception failure) {
-            throw new AssertionError("MISSION L12.02: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+        var p = Reflect.create("M02_FlockPlayground");
+        Reflect.call(p, "reset", 42L);
+        double[] oldX = ((double[]) Reflect.get(p, "x")).clone();
+        double[] oldY = ((double[]) Reflect.get(p, "y")).clone();
+        double[] oldVx = ((double[]) Reflect.get(p, "vx")).clone();
+        double[] oldVy = ((double[]) Reflect.get(p, "vy")).clone();
+        Reflect.set(p, "running", false);
+        Reflect.set(p, "obstacleX", 100.0);
+        Reflect.call(p, "changePersonality");
+        check(Math.abs((double) Reflect.call(p, "obstaclePush", 37.5) + .1) < 1e-12, 0, Reflect.call(p, "obstaclePush", 37.5));
+        check((double) Reflect.call(p, "obstaclePush", 75.0) == 0, 0, "same radius boundary");
+        check(Arrays.equals(oldX,(double[])Reflect.get(p,"x")) && Arrays.equals(oldY,(double[])Reflect.get(p,"y")) && Arrays.equals(oldVx,(double[])Reflect.get(p,"vx")) && Arrays.equals(oldVy,(double[])Reflect.get(p,"vy")), 1, "all bird arrays preserved");
+        check(!(boolean)Reflect.get(p,"running") && (double)Reflect.get(p,"obstacleX") == 100, 1, "pause and obstacle preserved");
+        Reflect.call(p, "reset", 23L);
+        check((boolean)Reflect.get(p,"curious") && (double)Reflect.call(p,"obstaclePush",37.5) < 0, 2, "new flock, same personality");
+        Reflect.call(p, "changePersonality");
+        check(!(boolean)Reflect.get(p,"curious") && Math.abs((double)Reflect.call(p,"obstaclePush",37.5) - .1) < 1e-12, 1, "back to Shy");
+        var other = Reflect.create("M02_FlockPlayground");
+        Reflect.call(p,"reset",42L);Reflect.call(other,"reset",42L);
+        Reflect.set(p,"obstacleX",300.0);Reflect.set(other,"obstacleX",300.0);
+        for (Object bird : new Object[]{p,other}) {
+            ((double[])Reflect.get(bird,"x"))[0]=310;
+            ((double[])Reflect.get(bird,"y"))[0]=200;
+            ((double[])Reflect.get(bird,"vx"))[0]=0;
+            ((double[])Reflect.get(bird,"vy"))[0]=0;
         }
+        Reflect.call(p,"changePersonality");
+        Reflect.call(p,"step");Reflect.call(other,"step");
+        check(((double[])Reflect.get(p,"vx"))[0] < ((double[])Reflect.get(other,"vx"))[0], 2, "Curious changes real steering");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -393,9 +404,9 @@ class M05_KnightTourTest {
 class M06_CipherPostcardsTest {
     static int checks;
     static final String[] CASES = {
-        "LEMON převede ATTACK AT DAWN! na LXFOPV EF RNHR!.",
-        "Decoding (dešifrování) používá stejný předaný keyword (klíčové slovo) a obnoví text.",
-        "Jiné alternativy, interpunkce a neplatné klíče zachovají své contract (smlouvy)."
+        "Režim crack vypíše všech 26 dekódovaných posunů se správnými nápisy.",
+        "Nástroj zvládá jiné klíče, velikost písmen i interpunkci a nehádá vítěze.",
+        "Tři běžné šifrovací alternativy dál správně šifrují i dešifrují."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -434,20 +445,27 @@ class M06_CipherPostcardsTest {
         return image;
     }
     public static void main(String[] args) throws Exception {
+        var p = Reflect.create("M06_CipherPostcards");
+        Object card;
         try {
-            var p = Reflect.create("M06_CipherPostcards");
-            var cipher=Reflect.create("M06_CipherPostcards$Vigenere", "LEMON");String coded=((java.lang.String) Reflect.call(p, "transform", "ATTACK AT DAWN!", cipher, false));
-            check(coded.equals("LXFOPV EF RNHR!"),0,coded);
-            check(((java.lang.String) Reflect.call(p, "transform", coded, cipher, true)).equals("ATTACK AT DAWN!"),1,coded);
-            var orange=Reflect.create("M06_CipherPostcards$Vigenere", "ORANGE");String other=((java.lang.String) Reflect.call(p, "transform", "ATTACK AT DAWN!", orange, false));
-            check(other.equals("OKTNIO OK DNCR!")&&((java.lang.String) Reflect.call(p, "transform", other, orange, true)).equals("ATTACK AT DAWN!"),1,other);
-            check(((java.lang.String) Reflect.call(p, "transform", "AbZ", Reflect.create("M06_CipherPostcards$Caesar", 3), false)).equals("DeC"),2,"Caesar");
-            check(((java.lang.String) Reflect.call(p, "transform", "A!", Reflect.create("M06_CipherPostcards$Substitution", "ZYXWVUTSRQPONMLKJIHGFEDCBA"), false)).equals("Z!"),2,"Substitution");
-            reject(()->Reflect.call(p, "transform", "A", Reflect.create("M06_CipherPostcards$Vigenere", "123"), false),2);
-        } catch (AssertionError failure) {
-            throw failure;
-        } catch (Exception failure) {
-            throw new AssertionError("MISSION L12.06: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            card = Reflect.call(p, "chooseCipher", "crack", "");
+        } catch (IllegalArgumentException missing) {
+            check(false, 0, "crack mode rejected: " + missing.getMessage());
+            return;
+        }
+        String report = (String) Reflect.call(p, "transform", "KHOOR", card, false);
+        String[] lines = report.split("\n", -1);
+        check(lines.length == 26 && lines[0].equals("Shift 0: KHOOR") && lines[3].equals("Shift 3: HELLO") && lines[25].startsWith("Shift 25: "), 0, report);
+        for (int key = 0; key < 26; key++) {
+            String encoded = (String) Reflect.call(p, "applyText", "Meet π at 5!", "caesar", Integer.toString(key), false);
+            String decoded = (String) Reflect.call(p, "transform", encoded, card, false);
+            check(decoded.split("\n", -1)[key].equals("Shift " + key + ": Meet π at 5!"), 1, "key " + key);
+        }
+        for (String mode : new String[]{"caesar", "substitution", "vigenere"}) {
+            String key = mode.equals("caesar") ? "7" : mode.equals("substitution") ? "ZYXWVUTSRQPONMLKJIHGFEDCBA" : "LEMON";
+            Object normal = Reflect.call(p, "chooseCipher", mode, key);
+            String encoded = (String) Reflect.call(p, "transform", "Hello, Moon!", normal, false);
+            check(Reflect.call(p, "transform", encoded, normal, true).equals("Hello, Moon!"), 2, mode);
         }
         System.out.println("PASS " + checks + " checks");
     }

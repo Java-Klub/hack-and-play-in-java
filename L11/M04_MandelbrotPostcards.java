@@ -5,24 +5,17 @@ import java.awt.image.BufferedImage;
 
 /// # L11.04 · MandelbrotPostcards
 ///
-/// Pošli pohlednici z okraje Mandelbrotovy množiny, kde změna měřítka odhaluje nové detaily. Seed
-/// (počáteční hodnoty) mají dát stejné krajině různé, opakovatelné barevné nálady.
+/// Pohlednice dorazila bez barevného receptu. Krajinu umíš znovu nakreslit; malý barevný proužek je
+/// stopa k chybějícímu seed.
 ///
-/// **Tvoje mise:** Vytvoř palette: sestav 16 jasných barev pomocí jediného Random vytvořeného ze
-/// seed. Pro každou barvu vezmi další náhodný integer hue (odstín) 0 až 359, vyděl jej 360.0 a použij
-/// saturation (sytost) 0.8 a brightness (jas) 1. Pole vrať připravenému kreslení fraktálu.
+/// **Tvoje mise:** Tajemná paleta pochází z některého seed mezi 0 a 255. Vytvoř hledač všech seedů,
+/// jejichž paleta začíná předaným vzorkem barev, ve vzestupném pořadí. Nemožný vzorek nemá kandidáty.
+/// Běžné kreslení pohlednice zachovej; seed pro obrázek vyber svým nástrojem místo hádání.
 ///
-/// **Dnes trénuješ:** Vytvoříš jediný seeded random generator (generátor s počátečním stavem) a jeho
-/// opakovatelnou posloupností sestavíš celou paletu.
+/// **Zkoumání:** Vyřeš deterministickou záhadu vlastním nástrojem pro omezené hledání.
 ///
-/// Po spuštění zvol palette seed (počáteční stav palety) a horizontal span (šířku záběru), nebo
-/// potvrď Enter pro 42 a 3.2. Před dalším spuštěním obrázek zavři. Stejný seed zopakuje paletu; span
-/// mění záběr.
-int[] palette(long seed) {
-    int[] colours = new int[16];
-    // Vytvoř jediný generátor se seed a naplň každou položku barev.
-    return colours;
-}
+/// Přečti tajemný vzorek i zprávu o kandidátech, potom vyber seed palety a span (šířku záběru).
+/// Obrázek ukáže referenční barevný proužek. Enter nechá běžné výchozí hodnoty; /q skončí.
 
 // <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
 /// ### Udělej z toho vlastní věc
@@ -54,34 +47,53 @@ int[] palette(long seed) {
 /// Předpověz: která čísla smí vrátit `nextInt(3)` a může vrátit 3?
 // </editor-fold>
 
-// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
-/// ### Opakovatelnost znamená posloupnost, ne jediný skoro stejný tah
+// <editor-fold defaultstate="expanded" desc="Deník průzkumníka · vyložený příklad">
+/// ### Projdi malý prostor; stopa není odpověď
 ///
-/// Generator (generátor) vytvoř jednou před plněním pole. Každé nextInt(360) jej posune a vrátí
-/// 0..359. Nové Random(seed) uvnitř cyklu by opakovalo první odstín ve všech položkách. Neutrální
-/// příklad: `var r = new Random(7); int a = r.nextInt(6); int b = r.nextInt(6);` udělá dva tahy; jiný
-/// generátor se seed 7 dvojici zopakuje. Nemusí být a jiné než b. Předpověz důsledek změny seed jen
-/// druhého generátoru na 8.
+/// Seeded generation (generování s počátečním stavem) se opakuje při stejném pořadí volání. Hledání
+/// může kandidáty znovu vygenerovat a porovnat jejich výsledky; nemusí obracet vnitřní matematiku
+/// Random.
 ///
-/// HSBtoRGB převádí hue, saturation a brightness na zabalenou barvu pro setRGB. Připravený renderer
-/// (kreslení) volí položku palety podle počtu kroků úniku bodu; vnitřní body nechá černé. Seed barví
-/// krajinu, neposouvá ji. Span je viditelná vodorovná šířka a centreX/centreY určují její střed.
-/// Těmito údaji lze prohlížet menší oblast.
+/// ```java
+/// var matches = new ArrayList<Integer>();
+/// for (int n = 0; n <= 20; n++) {
+///     if (n * n % 10 == 6) matches.add(n);
+/// }
+/// ```
+///
+/// Neutrální hledání najde 4, 6, 14 a 16. Předpověz výsledek pro horní mez 10. Vracej všechny shody:
+/// krátká stopa může odpovídat více možnostem. Barevný sample (vzorek) je prefix (začátek), nemusí
+/// tvořit celou paletu. Jeho položky porovnávej se začátkem vygenerovaného pole; při první neshodě
+/// další srovnávání tohoto kandidáta ukonči. Stejná jednotlivá barva neprokazuje stejnou paletu;
+/// důkazem je posloupnost.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Random vytvoř jednou, potom projdi všech 16 položek.
+/// Najdi operaci převádějící seed na celou posloupnost barev. Ověř, kudy tajemný vzorek přichází do
+/// zprávy.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Použij nextInt(360); před převodem HSB na RGB děl desetinnou hodnotou 360.
+/// Nedokončený nástroj matchingSeeds je vedle main. Může znovu použít palette bez změny escape nebo
+/// kreslení.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Do každé položky ulož výsledek HSBtoRGB a vrať hotové pole. Renderer už palette volá.
+/// Zkus seed 0..255, porovnej každou položku vzorku s prefixem palety a shodující long seed přidej do
+/// výsledku. Připravenou ochranu délky vzorku zachovej.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+// <editor-fold defaultstate="expanded" desc="Program k prozkoumání">
+int[] palette(long seed) {
+    var random = new Random(seed);
+    int[] colours = new int[16];
+    for (int i = 0; i < colours.length; i++) {
+        float hue = random.nextInt(360) / 360.0F;
+        colours[i] = Color.HSBtoRGB(hue, 0.8F, 1);
+    }
+    return colours;
+}
+
 BufferedImage render(long seed, double span) {
     if (!Double.isFinite(span) || span <= 1.0E-5 || span > 6 || !Double.isFinite(centerX + centerY)) {
         throw new IllegalArgumentException("Span must be 0.00001..6.");
@@ -137,19 +149,36 @@ void showImages(String title, String[] captions, java.awt.image.BufferedImage[] 
 }
 
 
+java.util.List<Long> matchingSeeds(int[] sample) {
+    if (sample.length < 1 || sample.length > 16) {
+        throw new IllegalArgumentException("Supply 1..16 palette colours.");
+    }
+    return java.util.List.of();
+}
+
+BufferedImage paletteStrip(int[] colours) {
+    var image = new BufferedImage(colours.length * 30, 40, BufferedImage.TYPE_INT_RGB);
+    for (int y = 0; y < image.getHeight(); y++) {
+        for (int x = 0; x < image.getWidth(); x++) image.setRGB(x, y, colours[x / 30]);
+    }
+    return image;
+}
+
 void main() {
+    int[] mystery = {-13420801, -13369474, -52415, -13369522, -13369416, -27085, -13369386, -6684877, -5112013, -52256, -13369355, -35789, -52405, -6684877, -13369372, -13409281};
     try {
+        IO.println("Mystery palette: " + java.util.Arrays.toString(mystery));
+        IO.println("Matching seeds 0..255: " + matchingSeeds(mystery));
         String seedText = IO.readln("Palette seed [42], /q to quit: ");
         if (seedText == null || seedText.strip().equalsIgnoreCase("/q")) return;
-        String spanText = IO.readln("Horizontal span [3.2], smaller means a closer view, /q to quit: ");
+        String spanText = IO.readln("Horizontal span [3.2], /q to quit: ");
         if (spanText == null || spanText.strip().equalsIgnoreCase("/q")) return;
         long seed = seedText.isBlank() ? 42 : Long.parseLong(seedText.strip());
-        double span = spanText.isBlank() ? 3.2 : Double.parseDouble(spanText.strip());
-        var image = render(seed, span);
-        IO.println("Centre: " + centerX + ", " + centerY + "; span: " + span + "; palette seed: " + seed);
-        showImages("Mandelbrot Postcards", new String[]{"Seed " + seed + ", span " + span}, new BufferedImage[]{image});
+        double size = spanText.isBlank() ? 3.2 : Double.parseDouble(spanText.strip());
+        showImages("Mandelbrot Mystery", new String[]{"Mystery palette", "Chosen seed " + seed},
+                   new BufferedImage[]{paletteStrip(mystery), render(seed, size)});
     } catch (Exception failure) {
-        IO.println("Cannot draw this view: " + failure.getMessage());
+        IO.println("Cannot draw this experiment: " + failure.getMessage());
     }
 }
 // </editor-fold>

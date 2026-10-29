@@ -10,19 +10,22 @@ import java.awt.Color;
 /// Zhasni všechna světla klikáním na kříže políček. Staň se testerem, který odhalí přesvědčivé, ale nefér
 /// kopie pravidla přepínání.
 ///
-/// **Tvoje mise:** Samotný příklad ze středu neodhalí všechna chybná pravidla. Rozšiř learnerChecks() o
-/// platné příklady z desky, které rozliší různé tvary kříže.
 ///
-/// **Dnes trénuješ:** Writing functional checks (psaní funkčních kontrol): vyber vstupy a očekávané
-/// výsledky, které vyvrátí chybná pravidla. Tvou prací jsou příklady, nikoli náhradní algoritmus flip().
+/// **Tvoje mise:** Navrhni nejvýše dva experimenty, které odhalí všech šest padělaných pravidel
+/// popsaných níže. Každý začíná zhasnutý, provede dva kliky a předpoví konečný počet svítících buněk.
+/// Oba kliky mohou mířit na stejné pole. Důkazy musí zároveň přijmout skutečné křížové pravidlo.
+/// Očekávání odvoď před spuštěním; hra už funguje.
 ///
-/// Zkus klikáním zhasnout všechna světla, potom pomocí kontroly hry zjisti,
-/// které chybné pravidlo tvé příklady ještě přehlížejí.
-record CrossExample(int row, int column, int expected) {
+/// **Dnes se učíš:** Functional check (funkční kontrola) může testovat sekvenci a konečný stav.
+/// Překryté účinky se ruší; dva počty po jediném kliku proto nelze prostě sečíst.
+///
+/// Zahraj běžné křížové přepínání. Potom porovnej padělek přeživší Check se svým dvouklikovým
+/// experimentem na nakreslené zhasnuté desce.
+record CrossExample(int firstRow, int firstColumn, int secondRow, int secondColumn, int expected) {
 }
 
 CrossExample[] learnerChecks() {
-    return new CrossExample[]{new CrossExample(2, 2, 5)};
+    return new CrossExample[]{new CrossExample(2, 2, 2, 2, 0)};
 }
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F33">
@@ -48,60 +51,50 @@ CrossExample[] learnerChecks() {
 /// (kontroly) udržuj nezávislá, aby jeden příklad omylem nepřipravil další.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// Toggle (přepnutí) obrací hodnotu, nikoli nastavuje svit. Dvakrát zasažená buňka zase zhasne. Na
+/// jiném třípolíčkovém pruhu přepne akce A pozice 0 a 1; akce B pozice 1 a 2. A následované B nechá
+/// svítit 0 a 2, tedy dvě buňky místo čtyř. Předpověz A následované A.
 ///
-/// - `record CrossExample(int row, int column, int expected)` — Jeden example (příklad) spojuje místo
-///   kliknutí s očekávaným počtem rozsvícených políček na prázdné desce.
-/// - `CrossExample[]` — Array (pole) dovoluje kontrole spustit několik samostatných příkladů.
-/// - `new CrossExample(2, 2, 5)` — Existující příklad vybírá platné středové políčko a jeho očekávaný
-///   výsledek.
-/// - `return` — Předá tvá data příkladů úvodní kontrole i kontrole hry.
-///
-/// ### Co už obstarává připravená část
-///
-/// flip() je správně, takže hra zůstává hratelná. Start ověří příklady proti tomuto pravidlu;
-/// Kontrola hry zkouší také pojmenovaná chybná pravidla a hlásí, které tvé příklady neodmítly.
+/// Skutečná hra přepíná stisknuté pole a existující sousedy nahoře/dole/vlevo/vpravo. Příklad spojuje
+/// dvě dvojice zero-based (od nuly počítaných) souřadnic s jedním konečným počtem. Rozlišuj polohu,
+/// okraj, překryv a skutečné provedení druhého kliku; hromada opakovaných příkladů nepřidává důkaz.
 // </editor-fold>
 
-// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
-/// ### Očekávání odvoď před sestavením check (kontroly)
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// ### Šest padělaných pravidel k prozkoumání
 ///
-/// Nacvič jinou hračku: na panelu se třemi řádky a dvěma sloupci rozsvítí stisk vlastní cell (buňku)
-/// a případnou buňku přímo pod ní.
+/// Každý padělek zachová desku 5×5, ale změní jedno pravidlo:
 ///
-/// ```java
-/// record Probe(int row, int column, int expectedLit) {}
-/// Probe sample = new Probe(0, 1, 2);
-/// ```
+/// - Mění se jen stisknuté pole.
+/// - Mění se sousedé přes hranu, ale stisknuté pole ne.
+/// - Mění se stisknuté pole a diagonální sousedé místo sousedů přes hranu.
+/// - Kříž pokračuje přes okraj na protější stranu desky.
+/// - Zasažená pole se vždy rozsvítí, i když už svítila.
+/// - Druhý klik se úplně vynechá.
 ///
-/// Souřadnice jsou vnitřní index (pozice). Dvě buňky příkladu vypíšeš na papír nezávisle na
-/// implementaci. Vrať se ke skutečnému kříži. Každý CrossExample začíná na nové zhasnuté desce pět
-/// krát pět a provede jediné kliknutí; `expected` počítá rozsvícené buňky. Element (položky) array
-/// oddělují čárky. Nakresli vlastní kliknutí u hranice a vypiš odlišné zasažené buňky. Který chybný
-/// kříž by nesouhlasil? Před kontrolou hry dodej a vysvětli vlastní counterexample (protipříklad).
+/// Užitečný experiment dá jiný konečný počet pro skutečné pravidlo a alespoň jeden padělek. Stejný
+/// experiment jich může odhalit několik. Check pojmenuje přeživší pravidlo tímto popisem; není třeba
+/// číst spouštěč kontrol.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Nakresli zhasnutou desku a označ přesně buňky přepnuté jediným vybraným kliknutím. Očekávaný počet
-/// odvoď ze značek před voláním implementace.
+/// Označ obě množiny zasažených buněk; před počítáním vymaž ty zasažené dvakrát.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Původní kliknutí je daleko od všech okrajů. Vyber jiné platné místo, kde hranice změní tvar;
-/// pojmenuj chybné pravidlo, které nové očekávání odmítne.
+/// learnerChecks dodává CrossExample(firstRow, firstColumn, secondRow, secondColumn, expected). Check
+/// jmenuje každé chybné pravidlo přijímané tvými příklady.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Zkus roh a započti stisknutou buňku i pouze existující sousedy ve čtyřech směrech. Sestav
-/// CrossExample z vlastních souřadnic a počtu, potom odvoď jiný hraniční případ, který samotný roh
-/// nenahradí.
+/// Použij překryv a hranici pro rozpor tvarů; zvaž i dvojí klik na totéž pole pro odhalení nastavování
+/// svitu nebo vynechání druhého kliku. Dodej nejvýše dva platné nezávisle odvozené případy.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
-/// Vymysli nový tvar kliknutí, například střed a diagonální sousedy. Popiš jej na papíře, předpověz
-/// středový, krajní a rohový zásah a potom společně uprav flip a své příklady. Spolužák má k psanému
-/// pravidlu doplnit další protipříklad.
+/// Vyměň si se spolužákem vlastní pravidlo přepínání. Autor napíše jeden klamný program a druhý dostane
+/// jen dva experimenty k odhalení. Pravidlo si dohodněte před hodnocením důkazů.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
@@ -215,22 +208,23 @@ void verifyExamples() {
     boolean[][] saved = lights;
     try {
         for (var example : learnerChecks()) {
-            if (example.row()<0 || example.row() >= SIZE || example.column()<0 || example.column() >= SIZE) {
-                throw new IllegalArgumentException("Cross examples must use valid game cells 0..4");
+            int[] coordinates = {example.firstRow(), example.firstColumn(), example.secondRow(), example.secondColumn()};
+            for (int coordinate : coordinates) {
+                if (coordinate < 0 || coordinate >= SIZE) {
+                    throw new IllegalArgumentException("Cross examples must use valid game cells 0..4");
+                }
             }
             lights = new boolean[SIZE][SIZE];
-            flip(example.row(), example.column());
+            flip(example.firstRow(), example.firstColumn());
+            flip(example.secondRow(), example.secondColumn());
             int count = 0;
             for (var row : lights) {
                 for (boolean on : row) {
-                    if (on) {
-                        count++;
-                    }
+                    if (on) count++;
                 }
             }
             if (count != example.expected()) {
-                throw new IllegalStateException("Click row " + example.row() + ", column " + example.column()
-                    + ": expected " + example.expected() + " lit cells, actual " + count);
+                throw new IllegalStateException("Two-click example: expected " + example.expected() + " lit cells, actual " + count);
             }
         }
     } finally {

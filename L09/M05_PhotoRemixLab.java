@@ -7,75 +7,21 @@ import java.awt.image.BufferedImage;
 
 /// # L09.05 · PhotoRemixLab
 ///
-/// Proměň připravený obrázek v barevné zvýraznění. Najdi jeho nejčastější původní barvu a nech všechny
-/// její pixely svítit azurově na dvoubarevném plakátu.
+/// Obrovský měsíc přitahuje pozornost, zatímco malý klíč téměř mizí v plakátu. Staň se obrazovým
+/// detektivem: pomocí četností barev zvýrazni malý předmět.
 ///
-/// **Tvoje mise:** Vytvoř dominantColour(): vyber colour key (klíč barvy) s největším uloženým počtem;
-/// při shodě zvol menší signed RGB integer (celé RGB číslo se znaménkem). Pro prázdnou Map (mapu) vrať
-/// 0 a počty neměň. Připravený remix tvým výsledkem zvýrazní pixely této barvy azurově; nedokončený
-/// výběr v ukázce nezvýrazní nic.
+/// **Tvoje mise:** Funkční výchozí nástroj zvýrazňuje nejčastější původní barvu. Změň lupu na nejnižší
+/// kladný počet; při shodě vybírej menší signed RGB key (číselný klíč barvy se znaménkem). Prázdná data
+/// vracejí 0; zkoumání počty nemění. Zachovej propojení volby se skutečným azurovým zvýrazněním: musí
+/// se objevit malý klíč, ne jen nový popisek.
 ///
-/// **Dnes trénuješ:** Použij uložené vztahy key/value (klíč/hodnota) k rozhodnutí o skutečném obrázku
-/// nebo jeho vzniku, ne jen popisku.
+/// **Dnes trénuješ:** Čti histogram (četnosti) jako důkaz a sleduj vybraný key (klíč) do druhého
+/// průchodu obrázkem. Mění se vítězná data, nikoli stavba okna.
 ///
-/// Spusť program a hledej azurový měsíc; Up/Down mění práh plakátu a R obnoví ukázku. Nedokončený výběr
-/// zatím nechává měsíc žlutý.
-int dominantColour() {
-    return 0;
-}
+/// Spusť plakát a poznamenej, co svítí azurově. Up/Down mění práh plakátu, R obnoví scénu. Po změně
+/// detektivní lupy svítí malý klíč vlevo nahoře, běžný měsíc už ne.
 
-// <editor-fold defaultstate="expanded" desc="Nová dovednost · F24">
-/// ### Map (mapa) pamatuje hodnotu pro každý key (klíč)
-///
-/// List (seznam) drží pozice. Map drží vztah: každý key vede k jedné aktuální value (hodnotě). Zde
-/// jméno barvy vede k počtu.
-///
-/// ```java
-/// Map<String, Integer> marbles = new HashMap<>();
-/// marbles.put("blue", 2);
-/// int before = marbles.getOrDefault("blue", 0);
-/// marbles.put("blue", before + 1);
-/// IO.println(marbles.getOrDefault("gold", 0));
-/// ```
-///
-/// Blue má nyní počet 3; pro gold se vypíše 0. `getOrDefault(key, fallback)` vrátí fallback (náhradní
-/// hodnotu), když key chybí, ale nic nevloží. `put` nahradí dosavadní value daného key: samo nepřičítá.
-/// Ostatní key zůstanou beze změny.
-///
-/// `containsKey` zjišťuje samotnou přítomnost. `entrySet()` umožní projít dvojice key/value: každý
-/// entry (položka) poskytuje `getKey()` a `getValue()`. Map neslibuje, že první entry má nejvyšší
-/// value; vítěze musíš vybrat porovnáváním. Předpověz blue po dalším stejném kroku. Potom předpověz
-/// výsledek `getOrDefault("gold", 9)` a rozhodni, zda se tím gold uložilo.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst tuto část
-///
-/// `colourCounts.entrySet()` zpřístupní dvojice key/count (klíč/počet). `entry.getKey()` čte RGB číslo,
-/// getValue() jeho frequency (četnost). Sleduj nejlepší key i nejlepší count zvlášť: pořadí Map (mapy)
-/// není žebříček. Připravené countColour naplní počty před voláním dominantColour. Remix pak vybranou
-/// původní barvu vykreslí azurově, takže tvoje volba mění obrázek, nejen popisek.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Prázdná Map (mapa) má samostatný výsledek; jinak porovnávej kandidáty.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Kandidát vyhraje vyšším count (počtem), nebo stejným count a menším key (klíčem).
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Projdi entrySet, pamatuj nejlepší key/count, aktualizuj při jedné ze dvou vítězných možností a vrať
-/// key bez změn Map.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
-/// Navrhni jiné spotlight rule (pravidlo zvýraznění): nejvzácnější barvu nebo zbarvení podle frequency
-/// (četnosti). Porovnej vlastní volbu na stejné ukázce, než změníš zdrojový obrázek.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+// <editor-fold defaultstate="expanded" desc="Program · prozkoumej pravidla">
 void countColour(int rgb) {
     colourCounts.put(rgb, colourCounts.getOrDefault(rgb, 0) + 1);
 }
@@ -87,17 +33,35 @@ int threshold;
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
 void restart() {
     source = new BufferedImage(400, 300, BufferedImage.TYPE_INT_RGB);
-    for (int y = 0; y < 300; y++) {
-        for (int x = 0; x < 400; x++) {
-            source.setRGB(x, y, new Color(x * 255 / 399, y * 255 / 299, (x + y) * 255 / 698).getRGB());
-        }
+    var picture = source.createGraphics();
+    for (int stripe = 0; stripe < 8; stripe++) {
+        picture.setColor(new Color(20 + stripe * 12, 35, 70));
+        picture.fillRect(stripe * 50, 0, 50, 300);
     }
-    var moon = source.createGraphics();
-    moon.setColor(Color.WHITE);
-    moon.fillOval(120, 70, 150, 150);
-    moon.dispose();
+    picture.setColor(Color.WHITE);
+    picture.fillOval(120, 70, 150, 150);
+    picture.setColor(Color.YELLOW);
+    picture.fillRect(310, 40, 10, 10);
+    picture.fillRect(335, 65, 10, 10);
+    picture.setColor(Color.MAGENTA);
+    picture.fillRect(35, 40, 6, 6);
+    picture.fillRect(40, 42, 18, 2);
+    picture.fillRect(52, 44, 2, 5);
+    picture.dispose();
     threshold = 128;
     remix();
+}
+
+int spotlightColour() {
+    int bestColour = 0, bestCount = -1;
+    for (var entry : colourCounts.entrySet()) {
+        int colour = entry.getKey(), count = entry.getValue();
+        if (count > bestCount || count == bestCount && colour < bestColour) {
+            bestColour = colour;
+            bestCount = count;
+        }
+    }
+    return bestColour;
 }
 
 void remix() {
@@ -106,7 +70,7 @@ void remix() {
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) countColour(source.getRGB(x, y));
     }
-    int selected = dominantColour();
+    int selected = spotlightColour();
     result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
@@ -128,7 +92,7 @@ void adjust(int amount) {
 void draw(Graphics2D g) {
     g.drawImage(result, (WIDTH - result.getWidth()) / 2, 45, null);
     g.setColor(Color.BLACK);
-    g.drawString("Spotlight most common colour | Threshold " + threshold, 12, 22);
+    g.drawString("Spotlight | Threshold " + threshold, 12, 22);
     g.drawString("Pixels counted: " + countedPixels() + " / " + source.getWidth() * source.getHeight(), 12, 420);
 }
 
@@ -189,6 +153,66 @@ void main() {
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
+
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F24">
+/// ### Map (mapa) pamatuje hodnotu pro každý key (klíč)
+///
+/// List (seznam) drží pozice. Map drží vztah: každý key vede k jedné aktuální value (hodnotě). Zde
+/// jméno barvy vede k počtu.
+///
+/// ```java
+/// Map<String, Integer> marbles = new HashMap<>();
+/// marbles.put("blue", 2);
+/// int before = marbles.getOrDefault("blue", 0);
+/// marbles.put("blue", before + 1);
+/// IO.println(marbles.getOrDefault("gold", 0));
+/// ```
+///
+/// Blue má nyní počet 3; pro gold se vypíše 0. `getOrDefault(key, fallback)` vrátí fallback (náhradní
+/// hodnotu), když key chybí, ale nic nevloží. `put` nahradí dosavadní value daného key: samo nepřičítá.
+/// Ostatní key zůstanou beze změny.
+///
+/// `containsKey` zjišťuje samotnou přítomnost. `entrySet()` umožní projít dvojice key/value: každý
+/// entry (položka) poskytuje `getKey()` a `getValue()`. Map neslibuje, že první entry má nejvyšší
+/// value; vítěze musíš vybrat porovnáváním. Předpověz blue po dalším stejném kroku. Potom předpověz
+/// výsledek `getOrDefault("gold", 9)` a rozhodni, zda se tím gold uložilo.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ### Pozoruj a sleduj tok
+///
+/// Obrazový postup nejdřív shromáždí důkazy, potom vybere barvu a pak přebarví každý odpovídající
+/// původní pixel. Histogram (četnosti) přiřazuje colour key (klíči barvy) počet. Po shromáždění můžeš
+/// dvojice dočasně vypsat a porovnat hypotézu „největší vyhraje“ s „nejmenší vyhraje“. Až bude pokus
+/// jasný, diagnostické výpisy smaž. Nepřebarvuj zdrojová data, abys výsledek předstíral.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Pokus a opakování">
+/// Před úpravou zapiš „měsíc“ jako současný výsledek. Prohlédni nebo dočasně vypiš počty barev, zvol
+/// hypotézu vzácnosti a změň výběr. Ověř, že klíč zůstává i při změně prahu a R zopakuje stejné důkazy.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Který předmět zabírá nejvíce pixelů a který jen malou skvrnu? Předpověz jejich pořadí podle
+/// četností.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Najdi výběr mezi průchodem počítání a přebarvení. Porovnávej entry value (hodnoty položek), neměň
+/// coordinates (souřadnice) kresby.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Najdi spotlightColour a jeho entrySet loop (průchod položkami). Sleduj nejmenší kladný počet, řeš
+/// prázdnou Map (mapu) i shodu RGB a Map neměň. remix už vrácenou barvu používá.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Skryj vlastní malý jednobarevný znak ve scéně s většími barevnými plochami. Dej spoluhráči běžnou
+/// lupu nejčastější barvy a nech jej znak odhalit.
+// </editor-fold>
+
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
 /// ## Neznámý zápis?

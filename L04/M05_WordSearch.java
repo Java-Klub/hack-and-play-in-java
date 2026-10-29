@@ -3,23 +3,18 @@
 /// Hledej CAT, DOG a TIGER v mřížce písmen výběrem obou konců slova. Výběr může vést vodorovně, svisle
 /// nebo úhlopříčně, takže směr je součástí hádanky.
 ///
-/// **Tvoje mise:** Vybraná cesta nyní nevrací žádná písmena. Sestav smyčku for, která do word připojí
-/// každou vybranou buňku včetně obou konců. Použij připravené dr, dc a počet mezer n; zachovej ověření
-/// vstupu.
 ///
-/// **Dnes trénuješ:** For loop (počítaná smyčka) a krajní body: řada tří políček má jen dvě mezery. Zde n
-/// počítá mezery; sleduj postupné hodnoty i a rozhodni, kolik písmen je potřeba přečíst.
+/// **Tvoje mise:** Dovol vybrat každé cílové slovo od kteréhokoli konce. CAT i TAC zapíšou stejný cíl
+/// CAT, takže obrácený výběr už nalezeného slova nepřidá další nález. Zachovej ověření přímé cesty a
+/// odmítej cesty bez cílového slova. Nejdřív hrou zjisti, kde dnes záleží na směru.
 ///
-/// Vyber první řádek pomocí 1 1 1 3. Nehotové čtení vrátí prázdný text; celá cesta musí přečíst CAT.
-/// Opačné konce musí dát TAC.
-String read(int r, int c, int nr, int nc) {
-    require(r >= 0 && r < 5 && c >= 0 && c < 5 && nr >= 0 && nr < 5 && nc >= 0 && nc < 5);
-    int dr = Integer.signum(nr - r);
-    int dc = Integer.signum(nc - c);
-    int n = Math.max(Math.abs(nr - r), Math.abs(nc - c));
-    require(n > 0 && (r == nr || c == nc || Math.abs(nr - r) == Math.abs(nc - c)));
-    String word = "";
-    return word;
+/// **Dnes se učíš:** For loop (smyčka for) může sestavit nový String (řetězec) v jiném pořadí bez změny
+/// grid (mřížky) i původního výběru.
+///
+/// V čerstvých kolech porovnej 1 1 1 3 a 1 3 1 1. Oba výběry navštíví stejné buňky, hra ale zatím
+/// přijme jen jeden směr.
+String targetName(String selected) {
+    return selected;
 }
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F11">
@@ -45,38 +40,48 @@ String read(int r, int c, int nr, int nc) {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
-/// Připravený výpočet dává počátek (r,c), směr jednoho kroku (dr,dc) a n mezer. Lomené cesty a pozice
-/// mimo desku už odmítá.
+/// Čtení cesty a určení cílového názvu jsou dvě různé práce. Sleduj volajícího čtečky cesty: který text
+/// se ověřuje mezi cíli a potom ukládá do found?
 ///
-/// | i v CAT | row | column | nasbíraný text |
-/// | --- | --- | --- | --- |
-/// | 0 | 0 | 0 | C |
-/// | 1 | 0 | 1 | CA |
-/// | 2 | 0 | 2 | CAT |
-///
-/// Tři pozice potřebují dvě mezery. V kroku i čti `grid[r + i * dr].charAt(c + i * dc)` a znak připoj k
-/// word. Sestav for tak, aby navštívil i poslední pozici. Předpověz souřadnice opačné cesty. command z
-/// vráceného slova vytvoří skutečný nález.
+/// Samostatné obrácení MAP čte pozice 2, 1, 0 a sestaví P, PA, PAM. Poslední platný index (pořadové
+/// číslo) je délka minus jedna; záporný index se nesmí číst. Předpověz navštívené pozice u
+/// jednoznakového String (řetězce). Text mimo cíle musí dál odmítnout připravené ověření, i když jeho
+/// obrácení vypadá jinak.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Napiš hodnoty i potřebné pro třípísmenný výběr.
+/// Najdi poslední místo, kde lze vybraný text pojmenovat jinak před uložením nálezu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Začni nulou; každý průchod připojí jeden znak před posunem i.
+/// command volá targetName po read. Nynější targetName vrací vstup beze změny; found má dostat společný
+/// cílový název.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Navštiv i od nuly po n včetně a k word připojuj připravené čtení grid.
+/// Sestav obrácený řetězec sestupným indexem; použij jej jen jako název cíle, jinak ponech původní
+/// text.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
-/// Skryj nové slovo v grid (mřížce) pozpátku nebo diagonálně. Spolužákovi dej jen délku a souřadnice
-/// konců v opačném pořadí. Před výběrem předpověz oba řetězce: které pořadí dává zamýšlené slovo?
+/// Skryj nový cíl diagonálně a vyměň si se spolužákem jen souřadnice konců. Musí jej vybrat z obou
+/// směrů bez učení druhého zápisu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+String read(int r, int c, int nr, int nc) {
+    require(r >= 0 && r < 5 && c >= 0 && c < 5 && nr >= 0 && nr < 5 && nc >= 0 && nc < 5);
+    int dr = Integer.signum(nr - r);
+    int dc = Integer.signum(nc - c);
+    int n = Math.max(Math.abs(nr - r), Math.abs(nc - c));
+    require(n > 0 && (r == nr || c == nc || Math.abs(nr - r) == Math.abs(nc - c)));
+    String word = "";
+    for (int i = 0; i <= n; i++) {
+        word += grid[r + i * dr].charAt(c + i * dc);
+    }
+    return word;
+}
+
 String[] grid = {"CATER", "ADOGX", "TIGER", "XXXXX", "XXXXX"};
 Set<String> found;
 String outcome;
@@ -90,7 +95,7 @@ void command(String input) {
     require(outcome.isEmpty());
     String[] p = input.split("\\s+");
     require(p.length == 4);
-    String word = read(Integer.parseInt(p[0]) - 1, Integer.parseInt(p[1]) - 1, Integer.parseInt(p[2]) - 1, Integer.parseInt(p[3]) - 1);
+    String word = targetName(read(Integer.parseInt(p[0]) - 1, Integer.parseInt(p[1]) - 1, Integer.parseInt(p[2]) - 1, Integer.parseInt(p[3]) - 1));
     require(Set.of("CAT", "DOG", "TIGER").contains(word) && !found.contains(word));
     found.add(word);
     if (found.size() == 3) {
