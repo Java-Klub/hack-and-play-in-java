@@ -84,3 +84,12 @@ details > :last-child { margin-bottom: 18px; }
 .transcript .typed { color: #006f64; font-weight: 800; }
 .sidebar nav { max-height: calc(100vh - 48px); overflow-y: auto; }
 @media (max-width: 920px) { .sidebar nav { max-height: none; overflow: visible; } }
+
+/* Chapter navigation */
+.sidebar details { margin: 5px 0; padding: 0 8px; border: 0; background: transparent; }
+.sidebar summary { padding: 7px 0; font-size: 14px; }
+.sidebar details[open] summary { margin: 0; border: 0; }
+.sidebar details ol { margin: 0 0 8px; }
+.sidebar details li { margin: 1px 0; }
+.sidebar details > :last-child { margin-bottom: 8px; }
+@media (max-width: 920px) { .sidebar details ol { display: block; } }
