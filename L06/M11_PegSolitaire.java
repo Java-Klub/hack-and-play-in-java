@@ -1,16 +1,17 @@
 /// # L06.11 · PegSolitaire
 ///
-/// Jump pegs over one another to empty a short solitaire board. Now inspect the referee: does it reject
-/// jumps that should be impossible?
+/// **Investigate the peg-game referee.** The game already works. This time you create examples
+/// that expose fake jumping rules rather than repair the game.
 ///
-/// **Your mission:** A single successful jump does not expose cheating rules. Add examples in
-/// learnerChecks() that test both permission and refusal on the fixed starting board.
+/// **Your task:** Extend `learnerChecks` below. For each proposed jump, write its start,
+/// destination and expected answer: `true` for legal or `false` for illegal. Each example is
+/// judged independently on the same initial board. Count rows and columns from zero in these
+/// data; ordinary play numbers them from one.
 ///
-/// **Today you learn:** Writing functional checks: a useful suite includes counterexamples, not just
-/// happy paths. Each expected boolean states whether that exact move should be legal.
-///
-/// Enter 1 2 3 2 to make the first jump in the short peg puzzle, then run
-/// the checks to challenge your examples.
+/// **Result:** Your examples accept the real rule but expose jumping over an empty middle,
+/// jumping diagonally, and accepting every proposal. Merely finishing the puzzle does not
+/// complete this mission.
+
 record JumpExample(int row, int column, int toRow, int toColumn, boolean expected) {
 }
 

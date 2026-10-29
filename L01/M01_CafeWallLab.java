@@ -6,64 +6,31 @@ import javax.swing.*;
 
 /// # L01.01 · CafeWallLab
 ///
-/// Build a wall of black and white tiles that can make perfectly straight mortar lines look tilted.
-/// Change the offset and compare your impression with a red ruler.
+/// **Uncover the hidden picture.** Run the program. You will see a grey area: the tile drawing
+/// has been painted over.
 ///
-/// **Your mission · Rescue the picture:** The wall is covered by a grey layer. Repair the order of the
-/// two actions in
-/// paintWall so the tiles remain visible.
+/// **Your task:** In `paintWall` immediately below, swap the two lines inside `{ }`. Move each
+/// whole line, including `(g);`. Keep both lines; you do not need to edit the rest of the program
+/// yet.
 ///
-/// **Today you learn:** Sequence: inside paintWall, statements run from top to bottom when the action is
-/// called. A later paint action can cover an earlier one. Defining an action near the top of the file
-/// does not start it.
-///
-/// Left/Right change the tile offset; Up/Down change the mortar width. Space toggles a straight red
-/// guide.
-///
-/// **First run:** the grey wall is the deliberate fault. Your two-line task is below; Start here ·
-/// run and check covers the first launch and check.
-// <editor-fold defaultstate="collapsed" desc="Start here · run and check">
-/// - From a terminal in the course folder containing README.md, enter
-///   `java L01/M01_CafeWallLab.java`.
-/// - Close the window, edit paintWall below, save, then enter
-///   `java L01/Check.java M01_CafeWallLab.java`.
-/// - RED before repair is intentional: its message describes the mismatch. PASS means those cases
-///   passed. Launch again with the first command to see saved changes.
-/// - `java L01/Check.java` checks the whole level, including unrepaired games. Keep Check.java
-///   unchanged.
-/// - For a compiler error, read the first diagnostic and line; check punctuation or use Undo, save
-///   and retry.
-/// - Click a section's triangle or plus to unfold it if available; otherwise read the comments
-///   normally. Java skips the `///` lines.
-// </editor-fold>
+/// **Result:** After saving and running again, you will see eight rows of black and white tiles.
+/// The grey paint should stay behind them.
 
 void paintWall(Graphics2D g) {
     paintBackground(g);
     paintTiles(g);
 }
 
-// <editor-fold defaultstate="expanded" desc="Learn · F01">
-/// A method is a named action. Defining it makes the action available; a call asks it to run. Java
-/// starts this program at `main`, even though another method could be written first.
+// <editor-fold defaultstate="expanded" desc="Execution order · F01">
+/// Each of the two lines is a statement: one drawing step. `paintTiles(g);` draws the tiles.
+/// `paintBackground(g);` paints the whole canvas grey.
 ///
-/// ```java
-/// void announce() {
-///     IO.println("Before");
-/// }
+/// Inside the braces, Java performs these steps from top to bottom. It works like painting on
+/// paper: later paint covers earlier drawing. Today you change the order of the steps, not their
+/// contents.
 ///
-/// void main() {
-///     announce();
-///     IO.println("After");
-/// }
-/// ```
-///
-/// Predict the two output lines before reading on. The call `announce();` enters that method, prints
-/// `Before`, then returns to the next statement in `main`, which prints `After`. Inside a called
-/// method, these statements run in order. `void` means no result value is returned; `()` supplies no
-/// arguments here. Braces surround a body and a semicolon ends each call. Comments explain the
-/// program but do not run.
-///
-/// Now predict what happens if main calls announce twice before its final print.
+/// Imagine another picture: first a blue sheet, then a yellow star. What would you see if you
+/// reversed those two steps?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
@@ -86,17 +53,9 @@ void paintWall(Graphics2D g) {
 /// paintBackground and paintTiles contain the ready-made painting; key handles the controls.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
-/// A call is an instruction to perform an action now. If `announce();` prints one line, two
-/// consecutive calls print two lines. Java does not combine them into one action. In this picture the
-/// shared pen g reaches both actions, but each call finishes before the next starts. Predict the
-/// visible top layer when you reverse the calls; then check the window.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
-/// Make the illusion strongest for a friend using only the existing offset and mortar controls. Ask
-/// whether the lines are tilted before revealing the red ruler. Then change the background colour in
-/// paintBackground and compare the same setting.
+// <editor-fold defaultstate="collapsed" desc="Once the picture appears">
+/// Left/Right shifts the tiles, Up/Down changes the gaps, and Space shows a red ruler. Try to
+/// convince a friend that the horizontal lines are tilted, then reveal the ruler.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">

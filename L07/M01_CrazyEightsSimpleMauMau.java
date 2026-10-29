@@ -1,17 +1,16 @@
 /// # L07.01 · CrazyEightsSimpleMauMau
 ///
-/// Keep an eight for the moment no ordinary card can save you. Play against another person and choose the
-/// suit after your wild escape.
+/// **Lose your cards before the bot does.** The starter’s referee refuses every card. During
+/// play, `p 1` chooses the first card in the displayed hand; this position is not the card’s
+/// numeric code.
 ///
-/// **Your mission:** Build legal(int card): accept only deck indices 0–51; an eight is always legal,
-/// otherwise require the same rank as top or the currently chosen suit. The unfinished selector
-/// currently refuses every card.
+/// **Your task:** Complete `legal` below. An eight is always allowed; other cards must match the
+/// top card’s rank or the active suit. Reject invalid card codes. This method receives the
+/// internal code 0–51, not a position in the hand.
 ///
-/// **Today you learn:** Build a value selector from stated cases; trace its selector and returned value
-/// separately from the supplied game state changes.
-///
-/// Run the program, read your numbered hand, and enter p followed by a card index to play it,
-/// adding a suit number when playing an eight.
+/// **Result:** You can play a legal card and the bot responds. For an eight, add a suit 0–3, for
+/// example `p 1 2`; `d` draws only when you have no legal move.
+
 boolean legal(int card) {
     if (card < 0 || card >= 52) return false;
     int value = rank(card);

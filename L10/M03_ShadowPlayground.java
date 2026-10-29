@@ -8,18 +8,17 @@ import java.awt.geom.Area;
 
 /// # L10.03 · ShadowPlayground
 ///
-/// Move a lamp around a scene of obstacles and watch their shadows stretch. Try making a huge silhouette
-/// from a small object by moving the light closer.
+/// **Move the lamp on a grid.** The lamp does not respond to clicks or dragging yet. The
+/// obstacles and their shadows already draw.
 ///
-/// **Your mission:** Make a stage lamp that snaps to a 20-pixel grid. In the delayed callback,
-/// calculate both snapped coordinates and pass them to moveLight. Creating the action must not move
-/// the lamp; moveLight still clamps the canvas edges.
+/// **Your task:** Fill the delayed action in `lightAction` below. Snap each click or drag
+/// coordinate down to a multiple of 20 and pass both to the supplied `moveLight`. For example,
+/// `(43, 91)` becomes `(40, 80)`. Move the lamp when the event arrives, not when the action is
+/// created.
 ///
-/// **Today you learn:** Build a callback body that runs only when the input event invokes it; local
-/// calculations can adapt event data before changing the model.
-///
-/// Run the program, then click or drag around the obstacles to move the lamp and press R to
-/// restore its starting position.
+/// **Result:** The lamp jumps in twenty-pixel steps and the shadows change. `moveLight` still
+/// keeps it inside the canvas bounds; R restores the starting position.
+
 java.util.function.BiConsumer<Integer, Integer> lightAction() {
     return (x, y) -> {
         int snappedX = x / 20 * 20;

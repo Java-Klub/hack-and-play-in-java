@@ -3,18 +3,17 @@
 
 /// # L12.07 · RetroSoundForge
 ///
-/// Forge a short retro sound: a falling laser, a rising jump or a wobbling tone. Their tiny formulas turn
-/// typed parameter cards into very different sound effects.
+/// **Make the retro tone wobble.** Play wobble currently holds one pitch. It should smoothly vary
+/// around the supplied centre frequency.
 ///
-/// **Your mission:** Wobble has become a flat tone because its depth component is unused. Restore
-/// modulation for the requested time while keeping the other formulas and time limits.
+/// **Your task:** Edit the Wobble branch of `frequency` below. Complete eight full oscillations
+/// above and below the centre over the whole sound. `depth` is the maximum deviation in either
+/// direction; time `t` runs from 0 to 1. The For this game section explains the exact sine rule
+/// and examples.
 ///
-/// **Today you learn:** A record-pattern switch can choose a formula and unpack its parameters together.
-/// Different Wobble values must use their own centre and excursion, and time must still affect the
-/// result.
-///
-/// Run the program, then compare the Java Play wobble, Play laser and Play jump buttons; Stop
-/// interrupts sound, and replay makes the wobble repair audible.
+/// **Result:** Play wobble plays a varying tone. Zero depth keeps it steady. Preserve Play laser,
+/// Play jump and the rejection of invalid times.
+
 double frequency(Sound sound, double t) {
     if (!Double.isFinite(t) || t < 0 || t > 1) throw new IllegalArgumentException("Time: 0..1.");
     return switch (sound) {

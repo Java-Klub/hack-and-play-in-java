@@ -1,16 +1,14 @@
 /// # L06.02 · MancalaKalah
 ///
-/// Sow stones around the pits, catch an extra turn, and try to collect more than your opponent. Then
-/// trade tactics in a fresh round.
+/// **Repair the opening turn of a new round.** Play pit `1`, then enter `r`. The pits reset, but
+/// the starter wrongly leaves player two on turn.
 ///
-/// **Your mission:** Restart can leave the previous player on turn. Repair reset() so the newly dealt
-/// pits and active player belong to the same fresh round.
+/// **Your task:** Fix `reset` below so player one always starts. Keep restoring the stones and
+/// clearing the old outcome. Change the player value used by the actual game.
 ///
-/// **Today you learn:** Scope and state lifetime: a local player disappears when reset() returns, while
-/// the game’s player field remains. Reset the state actually read by commands.
-///
-/// Enter one of your pit numbers from 1 to 6 to sow its stones around the
-/// board.
+/// **Result:** Restart shows Player 1 after this experiment or any partially played round. The
+/// fresh board again has four stones in each small pit and empty stores.
+
 void reset() {
     pits = new int[14];
     Arrays.fill(pits, 4);

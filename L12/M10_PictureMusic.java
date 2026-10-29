@@ -3,23 +3,30 @@
 
 /// # L12.10 · PictureMusic
 ///
-/// Listen to a little picture as if its rows were notes and its columns were time. Transposing it should
-/// move the tune up or down while preserving its rhythm and outline.
+/// **Play the same picture one octave higher.** Play shift 12 and Play original currently sound
+/// the same: the accepted shift is ignored.
 ///
-/// **Your mission:** The transpose input is accepted but has no effect on pitch. Extend the extracted
-/// frequency rule while keeping shift zero identical to the original sound.
+/// **Your task:** Extend `pitchFrequency` below with a semitone shift. `+12` doubles every
+/// frequency, `-12` halves it, and zero preserves the original sound. The section below the
+/// method explains other shifts. Keep the existing input bounds and the method connected to
+/// playback.
 ///
-/// **Today you learn:** A small extracted operation can add one new capability without changing the
-/// caller’s job. pitchFrequency combines a familiar row-to-note rule with a semitone shift; zero remains
-/// the compatibility case.
-///
-/// Run the program, then inspect the Java picture and compare Play shift 12 with Play original;
-/// Stop interrupts playback, and the repaired shift should change pitch while preserving
-/// rhythm.
+/// **Result:** Play shift 12 sounds one octave higher than Play original. Rhythm, duration and
+/// loudness stay unchanged; Stop still ends playback.
+
 double pitchFrequency(int row, int shift) {
     if (row < 0 || row >= 12 || shift < -12 || shift > 12) throw new IllegalArgumentException("Row 0..11; transpose -12..12.");
     return 220 * Math.pow(2, (11 - row + shift) / 12.0);
 }
+
+// <editor-fold defaultstate="expanded" desc="How to calculate semitones">
+/// An octave doubles the frequency and consists of twelve equal semitone steps. For a shift of n
+/// steps, multiply the original frequency by the ratio 2^(n/12).
+///
+/// For example, Java’s `Math.pow(2, 3 / 12.0)` calculates the ratio for three semitones. Starting
+/// from 100 Hz gives about 118.92 Hz. The decimal divisor 12.0 keeps fractional octaves; integer
+/// division would lose them. Predict the ratio for six semitones.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Your next version · optional">
 /// ### Make it yours

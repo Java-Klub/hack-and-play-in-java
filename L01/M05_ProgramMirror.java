@@ -1,41 +1,34 @@
 /// # L01.05 · ProgramMirror
 ///
-/// A small program mirror shows a Java instruction as text, then shows the message that instruction would
-/// print. Compare the instruction with its result and see how a program can describe another program.
+/// **Print code as text.** This is a harder detour about quotation marks. The program prints an
+/// example of Java code followed by a greeting.
 ///
-/// **Your mission · Repair the program mirror:** The reflected instruction has lost the quotation marks
-/// around HELLO. Repair
-/// templateLine so its printed instruction contains them, while the next output stays HELLO.
+/// **Your task:** Edit the text returned by `templateLine` below so the first printed line
+/// includes quotation marks around HELLO. The output must look exactly like this:
 ///
-/// **Today you learn:** Quoted text and escaping: code-looking text inside a String is still only data. A
-/// quote that belongs inside that text needs special notation so Java does not mistake it for the end of
-/// the String.
+/// ```text
+/// IO.println("HELLO");
+/// HELLO
+/// ```
 ///
-/// Run the program and compare the two lines in terminal output: the first should describe an
-/// instruction and the second should be its message.
+/// The second line already works; keep it. The first line is only printed text: this program does
+/// not execute its contents. The section below your code explains how to put a quotation mark
+/// inside text.
+
 String templateLine() {
     return "IO.println(\"HELLO\");";
 }
 
-// <editor-fold defaultstate="collapsed" desc="Recall · F02">
-/// A String literal is text written between double quotes. Those outside quotes tell Java where the
-/// text begins and ends; they are not printed. Digits inside quotes are text too. An expression, by
-/// contrast, can calculate a value before printing it.
-///
-/// These example statements belong inside a called method.
+// <editor-fold defaultstate="expanded" desc="A quotation mark inside text · F02">
+/// An ordinary `"` ends the text, so a quotation mark belonging inside needs to be written as
+/// `\"`. Java turns those two written characters into one quotation mark in the text.
 ///
 /// ```java
-/// IO.println("Shelf 4");
-/// IO.println(4 + 2);
-/// IO.println("Shelf \"B\"");
+/// return "The \"Owl\" club";
 /// ```
 ///
-/// Predict the three lines. They are `Shelf 4`, `6`, and `Shelf "B"`. In the last literal, each `\"`
-/// represents one quote belonging to the text. Its backslash is notation, not another printed
-/// character. `IO.println` prints its argument and ends the line. A space inside a literal remains a
-/// real space; changing comments does not change the printed message.
-///
-/// Now predict `IO.println(4 + 5);` and `IO.println("4 + 5");`.
+/// This example returns `The "Owl" club`. The outer quotation marks and backslashes are not part
+/// of the result. Use the same technique to put two quotation marks around HELLO in your text.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
@@ -56,23 +49,6 @@ String templateLine() {
 /// main prints the returned template and then the separate HELLO message. This task mirrors one
 /// instruction; it does not print its own complete source. The two actual printing actions are already
 /// supplied.
-// </editor-fold>
-
-// <editor-fold defaultstate="expanded" desc="For this game">
-/// Separate three layers: the Java source you edit, the text returned by templateLine, and the two
-/// lines printed in terminal output. The first printed line must include the quote characters
-/// around HELLO; the second is the separate message. Those first-line characters are data, not
-/// another instruction being executed. For a neutral example, source text `"A \"B\" C"` represents
-/// the value `A "B" C`: each `\"` contributes one quote without ending the outer literal. Try
-/// predicting that value before changing your own literal. Keep the real return statement's final
-/// semicolon distinct from a semicolon printed inside its text.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
-/// There are two levels here: source notation and the characters stored in a String. Source `"A\"B"`
-/// stores A, one quotation mark and B. Printing that String does not execute its contents. A line
-/// that merely looks like a Java call is still a message until some program explicitly treats it as
-/// code; this program does not do that.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Your own version · optional">

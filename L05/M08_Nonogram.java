@@ -8,18 +8,16 @@ import java.util.Arrays;
 
 /// # L05.08 · Nonogram
 ///
-/// Reveal a pixel picture using only the numbered runs beside its rows and columns. Every clue must
-/// describe the picture honestly.
+/// **Count the last black group.** The numbers beside a picture row give the lengths of its
+/// uninterrupted black groups. Black, black, white, black needs the clue `[2, 1]`. The starter
+/// loses the final 1.
 ///
-/// **Your mission:** A black group ending at the array boundary has no white cell to close it. Add the
-/// missing decision after the scan: preserve any unfinished positive run, without creating a zero clue
-/// for a white or empty line. Keep earlier completed groups.
+/// **Your task:** Complete `runs` below so it also counts a black group reaching the end of its
+/// input. Preserve earlier groups. An empty or all-white row must produce no clue numbers.
 ///
-/// **Today you learn:** Traversal and search: carry a running count while scanning a line, and notice
-/// when a group ends because input ends rather than a white cell appearing.
-///
-/// Left-click cells you believe are black and right-click cells you believe
-/// are white, using the row and column clues.
+/// **Result:** `[1, 1, 0, 1]` returns lengths `[2, 1]`; `[0, 0]` returns an empty array. Then use
+/// the correct clues to reveal the picture: left click paints black and right click white.
+
 int[] runs(int[] values) {
     var result = new ArrayList<Integer>();
     int count = 0;

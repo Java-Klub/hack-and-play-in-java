@@ -7,18 +7,18 @@ import javax.swing.Timer;
 
 /// # L12.08 · FireflySynchrony
 ///
-/// Watch a field of blinking fireflies gradually find a shared rhythm. Change the coupling and compare
-/// independent flashes with a crowd that starts to pulse together.
+/// **Connect the firefly controls.** The fireflies already flash, but the control panel has no
+/// effect yet.
 ///
-/// **Your mission:** Create apply for all control cards: accept finite Coupling values in 0..2,
-/// ignore other Coupling values, invert running for Toggle, and call reset with Restart’s seed. Keep
-/// input listeners forwarding cards into this single dispatcher.
+/// **Your task:** Complete `apply` below for three control types. Coupling sets the strength to
+/// its supplied finite value from 0 to 2 inclusive; ignore invalid values and keep the previous
+/// setting. Toggle switches running on or off. Restart recreates initial phases using the
+/// supplied `reset` and the seed carried by its command.
 ///
-/// **Today you learn:** Build a complete record-pattern dispatcher. Match the alternative, unpack its
-/// own components and preserve the boundary between routing and each supplied algorithm.
-///
-/// Run the program, then move Coupling toward 2 and watch the synchrony number, using Pause/Run
-/// or New phases to compare the flashes.
+/// **Result:** The Coupling slider changes the shared rhythm, Pause / Run stops and resumes time,
+/// and New phases restores the phases. Keep the supplied panel handlers sending their commands to
+/// the single `apply` method.
+
 void apply(Control control) {
     switch (control) {
         case Coupling(var value) when Double.isFinite(value) && value >= 0 && value <= 2 -> coupling = value;

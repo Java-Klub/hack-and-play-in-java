@@ -7,18 +7,16 @@ import javax.swing.Timer;
 
 /// # L01.07 · SteppingFeet
 ///
-/// Two rectangles move together over a striped background, yet may appear to step at different speeds.
-/// Remove the stripes or show the shared marker to challenge that impression.
+/// **Bring both feet into view.** Two rectangles share one horizontal position, `x`. They
+/// currently start beyond the left edge of the window.
 ///
-/// **Your mission · Predict a moving value:** Both feet start outside the visible room. Repair the later
-/// assignment in
-/// startingPosition so the shared x starts at 80, after its first value of 20.
+/// **Your task:** In `startingPosition` below, change the second line so that `x` is `80` after
+/// both lines have run. Keep the first line, `x = 20;`. The number to the right of `=` is the
+/// value that line stores in `x`.
 ///
-/// **Today you learn:** Assignment over time: a later assignment replaces the old stored value. The two
-/// statements can give x two successive values; the supplied drawing reads the last one for both feet.
-///
-/// Run the program, press M to show the shared position, then Space to move; C switches between
-/// striped and plain backgrounds.
+/// **Result:** A fresh run will show both feet and x = 80 in the top label. Space starts their
+/// motion; then use C to hide the stripes and compare their apparent speeds.
+
 void startingPosition() {
     x = 20;
     x = x + 60;

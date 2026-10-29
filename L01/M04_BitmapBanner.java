@@ -1,40 +1,25 @@
 /// # L01.04 · BitmapBanner
 ///
-/// Make a large arcade sign out of small printed # characters. The handmade alphabet lets you turn a
-/// short message into five rows of pixel lettering.
+/// **Light up the club sign.** Running the program leaves five empty rows between the separator
+/// lines. It already knows how to draw letters, but its message contains only spaces.
 ///
-/// **Your mission · Restore an arcade sign:** The sign currently prints only blank space. Repair the
-/// message from bannerMessage so
-/// the default sign reads JAVA CLUB!.
+/// **Your task:** In `bannerMessage` below, replace the spaces inside the quotation marks with
+/// `JAVA CLUB!`, including the space between the words and the exclamation mark. Keep the other
+/// characters on that line.
 ///
-/// **Today you learn:** Literals and output: the chosen text determines what another action prints.
-/// Spaces inside quotes are real characters too, even though their output can look empty.
-///
-/// Run the program and look in terminal output for the five-line sign; after repairing it, try
-/// reading it from farther away.
+/// **Result:** The text output will show a large JAVA CLUB! sign made from `#` characters. This
+/// program does not open a separate window.
+
 String bannerMessage() {
     return "JAVA CLUB!";
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F02">
-/// A String literal is text written between double quotes. Those outside quotes tell Java where the
-/// text begins and ends; they are not printed. Digits inside quotes are text too. An expression, by
-/// contrast, can calculate a value before printing it.
+/// Spaces inside quotation marks are real text characters. `"   "` is a message containing three
+/// spaces, while `""` contains no characters.
 ///
-/// These example statements belong inside a called method.
-///
-/// ```java
-/// IO.println("Shelf 4");
-/// IO.println(4 + 2);
-/// IO.println("Shelf \"B\"");
-/// ```
-///
-/// Predict the three lines. They are `Shelf 4`, `6`, and `Shelf "B"`. In the last literal, each `\"`
-/// represents one quote belonging to the text. Its backslash is notation, not another printed
-/// character. `IO.println` prints its argument and ends the line. A space inside a literal remains a
-/// real space; changing comments does not change the printed message.
-///
-/// Now predict `IO.println(4 + 5);` and `IO.println("4 + 5");`.
+/// Keep the outer quotation marks. Change only the message between them, which `return` supplies
+/// to the ready-made letter drawing.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
@@ -60,13 +45,6 @@ String bannerMessage() {
 /// Keep the output's fixed-width lettering visible by widening the panel. The supplied font
 /// supports only the listed letters, `!` and spaces, so arbitrary text may be rejected. A comment
 /// describing a new sign cannot change the message returned by bannerMessage.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
-/// Text can be present even when you cannot see a letter. `"   "` stores three spaces; `""` stores no
-/// characters. The banner looks up a five-row shape for each supported letter. The question for this
-/// task is which data to send, not how to draw all five rows. Predict whether adding a space changes
-/// the printed width.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Your own version · optional">

@@ -6,49 +6,33 @@ import javax.swing.*;
 
 /// # L01.02 · MissingTriangle
 ///
-/// Three cut-out black discs can make you see a white triangle that was never drawn. Rotate one disc and
-/// watch the suggested triangle disappear.
+/// **Bring back three cut-out circles.** The picture starts empty because `paintDisc` does not
+/// draw anything yet.
 ///
-/// **Your mission · Reconstruct two actions:** The three discs are missing. Rebuild paintDisc using the
-/// supplied darkDisc(g, i)
-/// and whiteBite(g, i) actions, once each. The result must be a black disc with its white bite still
-/// visible.
+/// **Your task:** In `paintDisc` below, replace the line starting with `//` with two separate
+/// lines. Use both supplied calls, each once, and choose their order yourself:
 ///
-/// **Today you learn:** Sequence and layers: when paintDisc is called, its two calls run in their written
-/// order. Predict which colour is left on top. The definition itself waits until the supplied drawing
-/// code calls it.
+/// - `whiteBite(g, i);` draws a white bite.
+/// - `darkDisc(g, i);` draws a solid black circle.
 ///
-/// Run the program, click a disc to rotate it and press O to reveal the outlines the program
-/// actually draws.
+/// Copy each call completely, including `(g, i);`. Do not write it after `//`: that makes the
+/// whole line a comment, which Java skips.
 ///
-/// Lines starting with `///` are your guide; they do not run as Java instructions.
+/// **Result:** Three black circles with white bites will appear. Their bites suggest a white
+/// triangle between the circles. If the circles stay solid black, change the order of your two
+/// lines.
+
 void paintDisc(Graphics2D g, int i) {
     darkDisc(g, i);
     whiteBite(g, i);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F01">
-/// A method is a named action. Defining it makes the action available; a call asks it to run. Java
-/// starts this program at `main`, even though another method could be written first.
+/// Each call is a separate line ending with a semicolon. The supplied `darkDisc` draws a solid
+/// black circle; `whiteBite` draws a white bite.
 ///
-/// ```java
-/// void announce() {
-///     IO.println("Before");
-/// }
-///
-/// void main() {
-///     announce();
-///     IO.println("After");
-/// }
-/// ```
-///
-/// Predict the two output lines before reading on. The call `announce();` enters that method, prints
-/// `Before`, then returns to the next statement in `main`, which prints `After`. Inside a called
-/// method, these statements run in order. `void` means no result value is returned; `()` supplies no
-/// arguments here. Braces surround a body and a semicolon ends each call. Comments explain the
-/// program but do not run.
-///
-/// Now predict what happens if main calls announce twice before its final print.
+/// `g` names the supplied drawing pen and `i` identifies the circle being drawn. Both actions
+/// need the same pair, `(g, i)`. Their drawing already works; you call them in your chosen order.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
@@ -68,13 +52,6 @@ void paintDisc(Graphics2D g, int i) {
 /// The /// lines explain the task and do not run. main below starts the program and opens the window; the
 /// window asks draw to paint, and draw calls your action for all three discs. darkDisc and whiteBite
 /// contain the shapes, while rotate and the remaining code handle turning and clicks.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
-/// A method can call other methods. The drawing code chooses disc i and supplies pen g; paintDisc
-/// must pass those same two inputs onward. Imagine stamping a black circle and then covering a wedge
-/// with white paper. The reverse order covers the white paper. Neither call needs a new pen or a new
-/// disc number.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Your own version · optional">
