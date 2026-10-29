@@ -4,11 +4,11 @@ Step by step, you will learn to understand Java programs and write your own. Sta
 
 **Starting from scratch? Open [Set up your workshop](00-start.md).**
 
-You need a computer with JDK 26 or later and an editor. Once downloaded, the textbook, examples and games work offline. You do not need any previous programming experience.
+You need a computer with JDK 26 or later and NetBeans. Add the main course folder to Favorites and run its files with Run File. Once downloaded, the textbook, examples and games work offline. You do not need any previous programming experience.
 
-## Your first route
+## Your first steps
 
-Read one lesson, run its example and try its short task. There is no need to read a whole chapter first. Answers stay inside expandable sections so you can make your own prediction before opening them.
+Skills determine the route. Read one lesson, run its example and work through its practice tasks in NetBeans. There is no need to read a whole chapter first. Answers stay inside expandable sections so you can make your own prediction before opening them.
 
 | Chapter | Lessons you can work through now |
 | --- | --- |
@@ -22,14 +22,14 @@ If you already know something, try the lesson's task first. Return to the explan
 
 - `learn/examples` contains the complete examples used in the explanations. You can run and change them; the lesson page keeps the original version.
 - `learn/practice` contains short tasks. Edit the file named in each task. The lesson gives you the expected output.
-- Folders `L01` to `L12` contain games. A lesson will send you to a particular game once you know the basics it needs. Comments explain the parts of the supplied program that you are not writing yet.
+- Folders `L01` through `L12` contain source files for larger practice tasks. All are being incorporated into the textbook chapters; a lesson sends you to a specific program once you know the necessary basics. Comments explain the parts of the supplied program that you are not writing yet.
 - The [glossary of your first Java notation](glossary.md) can help when you meet an unfamiliar symbol or word.
 
-A textbook lesson number may differ from the number on a game folder. Follow the practice links in the lesson you are reading.
+All practice belongs to the shared learning route. A folder number is currently a file address; chapters and the links in your current lesson determine the learning order.
 
 ## Where the textbook goes next
 
-The following chapters are a content plan. Their lessons are still being prepared.
+The following chapters are a content plan. Their lessons are still being prepared. We will incorporate all 145 original games, puzzles and creative programs into them. Each task, its comments and its checks will be adapted to what the reader has already learned. Some programs may return with a new task; practice counts and difficulty need not be the same in every chapter.
 
 | Chapter | What you will learn |
 | --- | --- |

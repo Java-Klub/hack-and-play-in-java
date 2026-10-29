@@ -89,11 +89,7 @@ A value written outside `main` like this can also be available to other actions 
 - [HigherOrLower](../L01/M06_HigherOrLower.java): find the shared target setting and shorten the card challenge. You search the program; hints in its file will gradually guide you.
 - [SteppingFeet](../L01/M07_SteppingFeet.java): change the second assignment to bring both rectangles back into the picture. Here, the place to edit is already marked.
 
-Each task gives its own target value. After playing, you can run that game's check, for example:
-
-```text
-java L01/Check.java M06_HigherOrLower.java
-```
+Each task gives its own target value. To check HigherOrLower, open `L01/Check.java`, set Program Arguments to `M06_HigherOrLower.java` and use Run File. For SteppingFeet, use `M07_SteppingFeet.java`. See the [setup lesson](00-start.md#checks) for the property steps.
 
 **You have understood this lesson when you can explain how an assignment reads the old value before storing the new one, and correctly predict several assignments in a row.**
 

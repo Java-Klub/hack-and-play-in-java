@@ -71,11 +71,7 @@ Now open [CafeWallLab](../L01/M01_CafeWallLab.java) in folder `L01`. Running it 
 
 Here, you call supplied drawing actions instead of printing text. `paintTiles(g);` asks for tiles, and `paintBackground(g);` asks for grey paint. `g` is the supplied drawing tool. These actions work; you decide their order. `Graphics2D g` in the declaration simply describes the tool that the supplied code provides. You do not need to change it today.
 
-Close the old window, save your change and run the file again. The result should show tiles on a grey background. Check your change from the course's main folder:
-
-```text
-java L01/Check.java M01_CafeWallLab.java
-```
+Close the old window, save your change and run the file again with Run File. The result should show tiles on a grey background. To check it, select `L01/Check.java`, set Program Arguments to `M01_CafeWallLab.java` under Properties → Run Single File, and use Run File. The [setup lesson](00-start.md#checks) gives the full steps.
 
 GREEN confirms the checked cases. If you get RED, read the message and return to the two drawing steps.
 
