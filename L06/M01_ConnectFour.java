@@ -3,14 +3,15 @@
 /// Pouštěj kameny do sloupců a spoj čtyři dřív než kamarád. Odveta má začít s čistou deskou i novým
 /// kolem.
 ///
-/// **Tvoje mise:** Restart smaže kameny, ale ponechá starý počet tahů, který může pokazit pozdější
-/// remízu. Oprav nulování počítadla uvnitř reset().
+/// **Tvoje mise:** Deska se vyčistí, ale kolo si pamatuje starý tah, vítěze i počet tahů. Sestav
+/// přiřazení do field (uložených hodnot) v reset: první hráč X, žádný vítěz '.' a nula tahů. Nevytvářej
+/// náhradní local variable (místní proměnné); čištění desky zachovej.
 ///
 /// **Dnes trénuješ:** Scope and state lifetime (platnost jména a životnost stavu): nová lokální proměnná
 /// může zastínit stejnojmenný field (proměnnou programu). Rozliš, které moves patří celému kolu.
 ///
-/// Spusť program, napiš 4 a potvrď Enter pro kámen do prostředního sloupce, potom se s
-/// kamarádem střídejte ve volbě sloupců.
+/// Zadej 4 a potom r. Deska je opět prázdná, ale Moves a další hráč odhalí nehotový reset. Nové kolo
+/// musí ukázat nulu a začít hráčem X.
 void reset() {
     for (char[] row : board) {
         Arrays.fill(row, '.');
@@ -42,31 +43,37 @@ void reset() {
 /// Která hodnota má přežít několik volání a která patří pouze dočasnému výpočtu?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// Field (uložená hodnota objektu) přežije volání; nový local uvnitř reset jej nenahradí. Čištění desky
+/// je připravené. Doplň tři údaje kola, které čtou další metody.
 ///
-/// - `void reset()` — Method (metoda), která mění existující stav hry a nevrací hodnotu.
-/// - `Arrays.fill(row, '.')` — Připravené volání vyprázdní všechna políčka tohoto řádku.
-/// - `int moves = 0` — Deklaruje local variable (lokální proměnnou); deklarace určuje, které jméno moves
-///   se nuluje.
-/// - `player = 'X'` — Assignment (přiřazení) do existující proměnné player bez vytvoření další proměnné.
+/// | okamžik | moves field | player field | winner field |
+/// | --- | --- | --- | --- |
+/// | staré nedokončené kolo | 41 | O | . |
+/// | po reset | 0 | X | . |
+/// | první nový kámen | 1 | O | . |
 ///
-/// ### Co už obstarává připravená část
-///
-/// drop() položí kámen na nejnižší volné políčko a zvyšuje sdílený počet tahů. Vstupní loop (opakování)
-/// při r volá reset(); mazání desky i hledání výhry je připravené.
+/// Zůstane-li starých 41, nový kámen dosáhne 42 a může mylně vyhlásit remízu. Local `int moves = 0`
+/// field pouze zakryje. player a winner také patří kolu. Předpověz restart po vítězství X. display nyní
+/// ukazuje Moves, takže stejný kontrakt lze sledovat při hraní.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Najdi field deklarovaný mimo reset().
+/// Vypiš údaje, které mají být po každém reset stejné bez ohledu na staré kolo.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// int moves uvnitř method vytváří jinou lokální variable.
+/// Porovnej declaration (založení jména) s typem a assignment (přiřazení) do existujícího fieldu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Přiřaď moves = 0 bez nové deklarace typu.
+/// Po vyčištění řádků přiřaď existujícím field hodnoty player X, winner tečka a moves nula.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Přidej skóre zápasu na tři kola, které přežije reset kola. Rozhodni, které field (uložené hodnoty)
+/// patří kolu a které zápasu, a vytvoř samostatný reset zápasu. Ukaž dohrané kolo a nové kolo bez
+/// ztráty celkového skóre.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
@@ -134,6 +141,7 @@ boolean drop(int column) {
 /// display(): Vypíše současnou desku a výsledek dokončeného kola.
 void display() {
     IO.println("1 2 3 4 5 6 7");
+    IO.println("Moves: " + moves);
     for (char[] row : board) {
         String line = "";
         for (char mark : row) {

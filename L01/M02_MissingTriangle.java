@@ -9,8 +9,8 @@ import javax.swing.*;
 /// Tři vykrojené černé kruhy mohou vyvolat dojem bílého trojúhelníku, který nikdo nenakreslil. Otoč jeden
 /// kruh a sleduj, jak zdánlivý trojúhelník zmizí.
 ///
-/// **Tvoje mise:** Kruhy nyní vypadají plné, protože jedna kreslicí akce zakrývá jinou. Oprav paintDisc
-/// tak, aby každému kruhu zůstal bílý výkroj.
+/// **Tvoje mise · Sestav dvě akce:** Tři kotouče zmizely. Sestav paintDisc z připravených akcí darkDisc(g, i) a
+/// whiteBite(g, i), každou použij jednou. Výsledkem má být černý kotouč s viditelným bílým výřezem.
 ///
 /// **Dnes trénuješ:** Sequence (pořadí) a vrstvy: když se zavolá paintDisc, obě vnitřní call (volání)
 /// běží v zapsaném pořadí. Předpověz, která barva zůstane nahoře. Samotná definice čeká, až ji připravená
@@ -68,16 +68,29 @@ void paintDisc(Graphics2D g, int i) {
 /// zbývající část řeší otáčení a klikání.
 // </editor-fold>
 
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Method (metoda) může volat jiné method. Připravená kresba vybere kotouč i a dodá pero g; paintDisc
+/// má oba input (vstupy) předat dál. Představ si černé kruhové razítko a potom bílý výřez položený
+/// přes něj. Opačné pořadí bílý výřez zakryje. Ani jedno volání nepotřebuje nové pero nebo jiné číslo
+/// kotouče.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Klikáním otoč kotouče tak, aby trojúhelník zmizel. Připrav kamarádovi jednu přesvědčivou a jednu
+/// rozbitou iluzi. Který kotouč má největší účinek? Existující barvy změň až po porovnání obou
+/// sestav.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Najdi dvě připravené kreslicí akce.
+/// Obě připravené akce potřebují stejné g a i.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Bílý tvar musí být poslední vrstva.
+/// Poslední akce rozhodne, která barva zůstane nahoře.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Zavolej darkDisc(g, i) před whiteBite(g, i).
+/// Nejdřív zavolej darkDisc(g, i); a potom whiteBite(g, i);.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

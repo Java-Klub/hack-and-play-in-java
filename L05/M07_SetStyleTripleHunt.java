@@ -9,7 +9,7 @@
 /// **Dnes trénuješ:** Traversal and search (průchod a hledání): uspořádané indexy (pozice) vybírají
 /// kombinace bez opakování karty. Meze průchodů jsou stejně důležité jako pravidlo shody.
 ///
-/// Spusť program, prohlédni si zobrazené vlastnosti karet a zadej čísla tří karet, které podle
+/// Prohlédni si zobrazené vlastnosti karet a zadej čísla tří karet, které podle
 /// tebe tvoří platnou trojici.
 boolean hasSet() {
     for (int a = 0; a < table.size(); a++) {
@@ -82,6 +82,12 @@ boolean hasSet() {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Podmínka c loop porovnává c s table.size(), nikoli table.size()-1.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Navrhni přísnější set: přijatá trojice musí mít alespoň dvě vlastnosti odlišné na všech třech
+/// kartách. Takové vlastnosti počítej. Najdi jednu původní trojici, kterou nové pravidlo odmítne, a
+/// jednu zachovanou; vysvětli nový vizuální znak.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

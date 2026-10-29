@@ -6,18 +6,35 @@
 /// Polož přes sebe dva krátké rytmy s trochu odlišnými rozestupy. Jejich měnící se souběh tvoří nové
 /// důrazy, přestože se jednotlivé vzory nemění.
 ///
-/// **Tvoje mise:** Do směsi dorazí jen první hlas. Obnov výsledek obou hlasů ve stejném požadovaném čase
-/// a nepřepisuj zvuk jednotlivých hlasů.
+/// **Tvoje mise:** Vytvoř makeVoice(beat, gain): vrácená Voice má počítat gain × tap(time, beat).
+/// Zapoj dvě role s hodnotami (0.12, 1) a (0.13, 0.7). Připravené mix dál skládá obě role; přehrávání
+/// neměň.
 ///
-/// **Dnes trénuješ:** Composition (skládání) spojuje malé role přes společné interface (rozhraní). Obě
-/// Voice odpovídají na převod času na sample (vzorek); mix spojuje odpovědi a nemusí znát vznik
-/// jednotlivých rytmů.
+/// **Dnes trénuješ:** Napíšeš implementation (implementaci) malého interface (rozhraní) a zapojíš ji
+/// do běžícího programu. Výpočet odděl od vstupu, aktualizace a kreslení.
 ///
 /// Po spuštění programu v Java okně porovnej Play two voices s Play one voice; poslouchej
 /// proměnlivé překrývání, použij Stop a po opravě mix si zvuk přehraj znovu.
-double mix(double time) {
-    return 0.17 * (first.sample(time) + second.sample(time));
+Voice makeVoice(double beat, double gain) {
+    if (!Double.isFinite(beat) || beat <= 0 || !Double.isFinite(gain) || gain < 0 || gain > 1) {
+        throw new IllegalArgumentException("Positive beat; gain 0..1.");
+    }
+    return time -> {
+        double sample = tap(time, beat);
+        return gain * sample;
+    };
 }
+
+Voice first = makeVoice(0.12, 1);
+Voice second = makeVoice(0.13, 0.7);
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Slož miniaturní duet: zvol dva beat intervals (intervaly úderů) a gains (zesílení), potom uprav
+/// boolean rhythm (vzor) na rozpoznatelnou frázi. Porovnej téměř shodné intervaly s přesně shodnými.
+/// Před změnou zvuk zastav a pro srovnání přehraj od začátku.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F34">
 /// ### Interface (rozhraní): požádej vybranou roli o práci
@@ -45,33 +62,51 @@ double mix(double time) {
 /// vstupu?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// ### Sestav hlasy; mixer (směšovač) jejich recept znát nemusí
 ///
-/// - `mix(double time)` — Caller (volající část) žádá jeden společný sample (vzorek) právě v tomto
-///   okamžiku.
-/// - `first.sample(time)` — Zavolá připravený první hlas s časem od caller (volající části).
-/// - `0.17 *` — Použije zesílení výstupu; zvaž, na které přispívající hlasy má působit.
+/// Voice slibuje sample(time). makeVoice si zapamatuje beat a gain; time přichází později pro každý
+/// audio sample (zvukový vzorek). Připravené tap počítá jednotlivý rytmus. Tvoje implementace násobí
+/// výsledek pomocí gain; neposouvá sdílené hodiny ani nespouští přehrávání.
 ///
-/// ### Co už obstarává připravená část
+/// Neutrální příklad:
 ///
-/// signal žádá mix o každý sample (vzorek); first a second dodají dva rytmické intervaly. Přehrání
-/// porovná současný mix obou rolí s jediným hlasem, aby bylo možné slyšet chybějící roli.
+/// ```java
+/// DoubleUnaryOperator scale(double factor) {
+///     return x -> {
+///         double result = x * factor;
+///         return result;
+///     };
+/// }
+/// ```
+///
+/// JDK role DoubleUnaryOperator převádí double na double. Tato factory vytvoří scale(0.5), které
+/// změní 0.8 na 0.4. Předpověz výsledek pro -0.6. Captured factor (zapamatovaný násobek) popisuje
+/// konkrétní pravidlo, není měnícím se společným vstupem.
+///
+/// Zde gain 0 znamená ticho a gain 1 zachová tap. mix se obou uložených Voice ptá na stejný čas a
+/// skládá je při tiché úrovni. Samotná factory nestačí: ponechání first/second jako tichých lambda
+/// zachová ticho. Zapoj oba hlasy a porovnej stejné intervaly s předepsaným malým rozdílem.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Voice popisuje roli převodu času na sample (vzorek).
+/// Tvorbu rytmu předej tap(time, beat), potom vynásob výsledek.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Nevolej jen první field (položku objektu) a nepoužívej dva různé časy.
+/// Lambda vrať z makeVoice; při vytvoření factory ji ještě nevolej.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Zesílení nech vně součtu, aby se použilo stejně pro oba vyměnitelné hlasy.
+/// Oba tiché field initialisers (výchozí hodnoty) nahraď voláním factory se zadanými dvojicemi
+/// beat/gain.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+double mix(double time) {
+    return 0.17 * (first.sample(time) + second.sample(time));
+}
+
 final int RATE = 22050;
 
 
@@ -100,8 +135,7 @@ double[] signal(double seconds) {
 }
 
 interface Voice { double sample(double time); }
-Voice first = time -> tap(time, 0.12);
-Voice second = time -> tap(time, 0.13);
+
 
 volatile javax.sound.sampled.SourceDataLine playingLine;
 volatile int playbackVersion;

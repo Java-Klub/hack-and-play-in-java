@@ -3,14 +3,15 @@
 /// Hledej CAT, DOG a TIGER v mřížce písmen výběrem obou konců slova. Výběr může vést vodorovně, svisle
 /// nebo úhlopříčně, takže směr je součástí hádanky.
 ///
-/// **Tvoje mise:** Každé vybrané slovo ztrácí poslední písmeno. Oprav počítanou smyčku v read tak, aby
-/// přispěly oba vybrané konce; připravený výpočet směru zachovej.
+/// **Tvoje mise:** Vybraná cesta nyní nevrací žádná písmena. Sestav smyčku for, která do word připojí
+/// každou vybranou buňku včetně obou konců. Použij připravené dr, dc a počet mezer n; zachovej ověření
+/// vstupu.
 ///
 /// **Dnes trénuješ:** For loop (počítaná smyčka) a krajní body: řada tří políček má jen dvě mezery. Zde n
 /// počítá mezery; sleduj postupné hodnoty i a rozhodni, kolik písmen je potřeba přečíst.
 ///
-/// Spusť program a napiš 1 1 1 3 pro výběr CAT v prvním řádku; starter (výchozí program) přečte
-/// jen CA a nález odmítne.
+/// Vyber první řádek pomocí 1 1 1 3. Nehotové čtení vrátí prázdný text; celá cesta musí přečíst CAT.
+/// Opačné konce musí dát TAC.
 String read(int r, int c, int nr, int nc) {
     require(r >= 0 && r < 5 && c >= 0 && c < 5 && nr >= 0 && nr < 5 && nc >= 0 && nc < 5);
     int dr = Integer.signum(nr - r);
@@ -46,35 +47,36 @@ String read(int r, int c, int nr, int nc) {
 /// Nyní předpověz output (výstup), pokud floor začíná na pětce.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// Připravený výpočet dává počátek (r,c), směr jednoho kroku (dr,dc) a n mezer. Lomené cesty a pozice
+/// mimo desku už odmítá.
 ///
-/// - `for (int i = 0; i < n; i++)` — Tři části jednou nastaví i, před každým průchodem ověří podmínku a
-///   po průchodu i zvětší; středníky je oddělují.
-/// - `String word = "";` — Začni bez nasbíraných písmen; smyčka sestaví vybrané slovo.
-/// - `word += grid[r + i * dr].charAt(c + i * dc);` — Připoj písmeno v kroku i podél připraveného směru.
-///   Připravený výpočet souřadnic zvládá všechny přímé směry.
-/// - `i < n` — Toto porovnání rozhoduje, zda se přečte další písmeno; ověř je u posledního vybraného
-///   políčka.
-/// - `return word;` — Předej celý výběr zpět herní kontrole slov.
+/// | i v CAT | row | column | nasbíraný text |
+/// | --- | --- | --- | --- |
+/// | 0 | 0 | 0 | C |
+/// | 1 | 0 | 1 | CA |
+/// | 2 | 0 | 2 | CAT |
 ///
-/// ### Co už obstarává připravená část
-///
-/// require odmítá výběry mimo desku nebo zalomené výběry. dr a dc jsou připravené směry jediného kroku; n
-/// je počet mezer. command porovná výsledek read s hledanými slovy a zaznamená nálezy; display vypisuje
-/// mřížku a main čte čtyři hráčské souřadnice číslované od jedné.
+/// Tři pozice potřebují dvě mezery. V kroku i čti `grid[r + i * dr].charAt(c + i * dc)` a znak připoj k
+/// word. Sestav for tak, aby navštívil i poslední pozici. Předpověz souřadnice opačné cesty. command z
+/// vráceného slova vytvoří skutečný nález.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Vzdálenost n počítá mezery mezi políčky, nikoli vybraná políčka.
+/// Napiš hodnoty i potřebné pro třípísmenný výběr.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Index (indexy) 0, 1 a 2 obsahují tři písmena.
+/// Začni nulou; každý průchod připojí jeden znak před posunem i.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Nech i běžet od 0 při i <= n.
+/// Navštiv i od nuly po n včetně a k word připojuj připravené čtení grid.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Skryj nové slovo v grid (mřížce) pozpátku nebo diagonálně. Spolužákovi dej jen délku a souřadnice
+/// konců v opačném pořadí. Před výběrem předpověz oba řetězce: které pořadí dává zamýšlené slovo?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -43,6 +43,14 @@ BufferedImage[] shares(BufferedImage secret, long seed) {
     return images;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Vytvoř pozvánku na dvě části: do tajné masky vlož krátký znak a nech kamaráda zvolit seed
+/// (počáteční stav). Porovnej dvojice z různých seedů: zamýšlený overlay (překryv) vzniká ze správné
+/// dvojice. Vysvětli, proč se samotná zpráva se seedem měnit nemusí.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F27">
 /// ### Seeded randomness (náhoda se seedem): opakuj pokus
 ///

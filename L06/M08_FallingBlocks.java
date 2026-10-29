@@ -16,7 +16,7 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Pure contracts (smlouvy čistých dotazů): kontrola čte desku a kandidátní polohu a
 /// vrací boolean (ano/ne). O zápisu kandidáta rozhoduje až volající kód.
 ///
-/// Spusť program, šipkami vlevo a vpravo posouvej padající dílek a šipkou nahoru vyzkoušej
+/// Šipkami vlevo a vpravo posouvej padající dílek a šipkou nahoru vyzkoušej
 /// otočení u skládačky nebo stěny.
 boolean fits(int[][] cells, int x, int y) {
     for (var c : cells) {
@@ -73,6 +73,12 @@ boolean fits(int[][] cells, int x, int y) {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Uvnitř fits odeber přiřazení px/py; ponech hranice i obsazenost.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Připrav výzvu vložením několika pevných buněk do board při restart. Zvol aktuální dílek a před jeho
+/// pádem předpověz dvě odpovědi fits. Spolužák má dokončit jeden řádek; zkoumání kandidátů nesmí
+/// přesouvat skutečný dílek.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

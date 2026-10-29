@@ -1,9 +1,10 @@
-/// # L03.01 · Nim
+/// # L03.02 · Nim
 ///
 /// Ber ze společné hromádky jeden, dva nebo tři kameny a snaž se vzít poslední dřív než bot. Sleduj, jak
 /// ponechaná velikost hromádky změní další volbu bota.
 ///
-/// **Tvoje mise:** Bot bere jeden kámen i tehdy, když je užitečná jiná platná volba. Oprav dvě cesty v
+/// **Tvoje mise · Nauč bota strategii:** Bot bere jeden kámen i tehdy, když je užitečná jiná platná
+/// volba. Oprav dvě cesty v
 /// botMove a zachovej bezpečné chování prázdné hromádky.
 ///
 /// **Dnes trénuješ:** If/else branching (větvení): jediná condition (podmínka) vybere vrácený výsledek.
@@ -24,7 +25,7 @@ int botMove() {
     }
 }
 
-// <editor-fold defaultstate="expanded" desc="Nová dovednost · F07">
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F07">
 /// `if` položí boolean question (logickou otázku). Jeho tělo běží jen při pravdivé odpovědi. `else
 /// if` položí další otázku teprve po neúspěchu předchozích; poslední `else` pokrývá všechny zbývající
 /// možnosti.
@@ -80,6 +81,19 @@ int botMove() {
 /// nezaručí výhru proti dokonalým odpovědím; tento bot používá platnou náhradní volbu jednoho kamene.
 /// Prázdná hromádka nemá tah. Přelož pravidlo do dvou připravených branch (větví), aniž by botMove
 /// samo kameny odstraňovalo.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Strategie je volba, nikoli tah provedený uvnitř botMove. Ze sedmi kamenů odebrání tří ponechá
+/// čtyři. Z osmi tento bot volí povolenou zálohu jedna. If vybere výsledek; připravené take jej
+/// provede později. Nulu sleduj zvlášť, protože nemá platný tah. Pokud je strategie další příliš
+/// velká hádanka, začni hrou Pig.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Po zprovoznění strategie se zbytkem ji nahraď záměrně slabší strategií, například vždy odeber
+/// jeden dostupný kámen. Oba boty porovnej stejným zahájením. Které velikosti hromádky slabší
+/// strategii prozradí? Potom vyzvi kamaráda proti původnímu botovi.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">

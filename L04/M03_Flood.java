@@ -18,7 +18,7 @@ import java.util.Random;
 /// každém průchodu index (pozice) postoupí a mohou přibýt noví sousedé; porovnávej s aktuální velikostí
 /// místo předpokládaného pevného počtu průchodů.
 ///
-/// Spusť program a zvol barvu kliknutím na její políčko v paletě nebo stiskem 1–4; sleduj změny
+/// Zvol barvu kliknutím na její políčko v paletě nebo stiskem 1–4; sleduj změny
 /// propojených políček a pomocí R obnov desku.
 void spread(ArrayList<Point> queue, int old, int colour) {
     int index = 0;
@@ -93,6 +93,12 @@ void spread(ArrayList<Point> queue, int old, int colour) {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Použij while (index < queue.size()); za návštěvou zachovej index++.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Vymysli variantu s omezeným inkoustem: spread zpracuje nejvýše tři čekající buňky. Nakresli pořadí
+/// prvních návštěv a porovnej výsledek s úplným zaplavením. Zvol vlastní zásobu inkoustu a vysvětli,
+/// proč nyní záleží na pořadí queue (fronty).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

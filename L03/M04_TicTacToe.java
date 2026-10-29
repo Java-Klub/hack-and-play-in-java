@@ -3,16 +3,29 @@
 /// Zahraj si s kamarádem piškvorky výběrem očíslovaných prázdných políček. Snaž se vytvořit řadu tří a
 /// současně blokovat soupeřovu řadu.
 ///
-/// **Tvoje mise:** Prázdné pravé dolní políčko je chybně odmítnuto. Oprav úvodní guard (ochranu) v play
-/// tak, aby přijímalo všechna platná políčka a neplatný tah nezměnil desku ani hráče.
+/// **Tvoje mise · Sestav strážce tahů:** Všechna pole jsou zamčená. Doplň rozhodčího mayPlay: odmítni
+/// ukončenou hru, čísla
+/// mimo 1..9 a obsazená pole. Platné prázdné pole vrátí true. Připravené účinky play zachovej;
+/// odmítnutý tah nesmí změnit desku ani hráče.
 ///
 /// **Dnes trénuješ:** Guard clause (ochranná podmínka): pokud je akce zakázaná, vrať se včas před změnou
 /// stavu. Ověř poslední platné políčko, opakované políčko a číslo těsně mimo rozsah.
 ///
 /// Spusť program, vyber políčko 9 a potom jej zkus znovu; porovnej přijaté prázdné políčko s
 /// odmítnutým obsazeným.
+boolean mayPlay(int cell) {
+    if (winner != '.' || cell < 1 || cell > 9) {
+        return false;
+    }
+    if (board[cell - 1] != '.') {
+        return false;
+    }
+    return true;
+}
+
+// <editor-fold defaultstate="collapsed" desc="Provedení přijatého tahu · připravené">
 boolean play(int cell) {
-    if (winner != '.' || cell < 1 || cell > 9 || board[cell - 1] != '.') {
+    if (!mayPlay(cell)) {
         return false;
     }
     board[cell - 1] = player;
@@ -26,6 +39,7 @@ boolean play(int cell) {
     }
     return true;
 }
+// </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F08">
 /// Guard (ochranná podmínka) odmítne požadavek před chráněnou prací. Nejdřív přečti odmítané případy
@@ -52,34 +66,37 @@ boolean play(int cell) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Povolení před účinky
 ///
-/// - `||` — Odmítni, pokud platí kterákoli spojená špatná situace; vyhodnocení skončí při nalezení
-///   platného důvodu odmítnutí.
-/// - `cell >= 9` — Současná horní kontrola odmítá samotnou devítku i větší čísla.
-/// - `board[cell - 1]` — Přečti jedno místo připravené desky: lidská čísla políček začínají jedničkou,
-///   zatímco místa se počítají od nuly.
-/// - `'.'` — Jednoduché uvozovky obsahují jediný znak; tečka je připravená značka prázdného políčka.
-/// - `return false;` — Dokonči call (volání) jako odmítnuté před chráněným zápisem do desky.
-/// - `board[cell - 1] = player;` — Chráněná akce zapíše značku současného hráče do přijatého políčka.
-/// - `moves++;` — Zvětši počet přijatých tahů o jednu; odmítnutý pokus k tomuto řádku nesmí dojít.
-///
-/// ### Co už obstarává připravená část
-///
-/// Pozdější tělo rozpoznává řady, remízu a dalšího hráče. hasLine kontroluje připravenou desku; main
-/// vypisuje očíslovaná políčka a čte tahy. Opravuješ vstupní bránu před těmito připravenými účinky.
+/// mayPlay vrací boolean a neumísťuje značku. winner je '.' během hry; board používá '.' pro prázdné
+/// pole. Hráčova pole 1..9 se přes cell - 1 mění na array index (index pole) 0..8. play už používá
+/// tvé rozhodnutí, potom vloží značku, započítá tah, ověří řadu a přepne hráče. Dnes píšeš povolovací
+/// pravidlo, nikoli pozdější účinky.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Guard (ochranu) rozděl do kroků. Nejprve odmítni ukončenou hru nebo číslo mimo 1..9; teprve potom
+/// smí cell - 1 indexovat array (pole). Dál odmítni obsazené pole. True je povolení, nikoli provedený
+/// tah: play vykoná připravené účinky až po true z mayPlay. Dostane se cell 10 ve správné verzi k
+/// čtení desky?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Nahraď X a O vlastními dvěma jednoznakovými značkami hráčů. Ponech '.' pro prázdné pole a 'D' pro
+/// remízu. Slaď počátečního hráče, reset a přepínání hráčů a odehraj celé kolo s kamarádem. Znovu
+/// zkus obsazené pole a vítěznou řadu: vlastní značky nesmějí obejít tvého rozhodčího.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Poslední platný input (vstup) je devět, nikoli osm.
+/// Odděl existenci pole od jeho obsazenosti.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Range guard (ochrana rozsahu) musí proběhnout před board[cell - 1].
+/// Pro cell mimo 1..9 vrať false ještě před indexováním.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Odmítej cell > 9 místo cell >= 9.
+/// Nejdřív odmítni winner != '.' nebo neplatný rozsah; potom board[cell - 1] != '.'; jinak vrať true.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

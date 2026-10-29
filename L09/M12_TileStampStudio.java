@@ -9,11 +9,13 @@ import java.awt.image.BufferedImage;
 /// Otiskni vlastní dlaždici po ploše a sleduj, jak z malého motivu vznikne vzor. Ovládání opakování má
 /// dovolit řídký i hustý obrazec.
 ///
-/// **Tvoje mise:** Každé přijaté číslo se změní na šest opakování. Nech platnou volbu dojít do živého
-/// vzoru a při odmítnutém textu zachovej předchozí nastavení.
+/// **Tvoje mise:** Vytvoř applyRepeats(text): přijmi po odstranění okolních mezer whole number (celé
+/// číslo) 1–12 včetně, ulož přijatý candidate (návrh) do repeats a vrať true. Pro překlep i číslo mimo
+/// bounds (hranice) vrať false a zachovej staré repeats. Náhled 288×288 musí viditelně měnit hustotu
+/// vzoru.
 ///
-/// **Dnes trénuješ:** Nejprve proveď parsing (rozbor) a ověření candidate (kandidáta), teprve potom změň
-/// sdílený state (stav). Úspěch má znamenat skutečné použití požadované volby, ne pouhý zdařený převod.
+/// **Dnes trénuješ:** Vytvoř přesné input boundary (rozhraní vstupu): odliš parsing (převod),
+/// validation (ověření platnosti) a uložení živého nastavení.
 ///
 /// Po spuštění programu klikáním zapínej či vypínej barvu políček; napiš 3 a klikni na Repeats
 /// pro změnu hustoty vzoru. Clear obnoví dlaždici.
@@ -29,70 +31,59 @@ boolean applyRepeats(String text) {
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F31">
-/// ### Parse (převod), validation (ověření), potom uložení
+/// ### Parsing (převod textu) a platná hodnota jsou dvě otázky
 ///
-/// Parsing převádí text; validation ověřuje, zda je výsledné číslo povolené. Každý krok může selhat
-/// jinak.
+/// Číselný vstup začíná jako text. Parsing může selhat, protože text není číslo; validation (ověření
+/// platnosti) může odmítnout správně zapsané číslo. Obě pravidla rozhoduj zvlášť.
 ///
 /// ```java
-/// int readCopies(String text) {
+/// int readZoom(String text) {
 ///     try {
-///         int n = Integer.parseInt(text.strip());
-///         if (n < 1 || n > 5) {
-///             throw new IllegalArgumentException("Copies: 1..5");
-///         }
-///         return n;
-///     } catch (NumberFormatException invalid) {
-///         return 3;
+///         int zoom = Integer.parseInt(text.strip());
+///         if (zoom < 1 || zoom > 4) throw new IllegalArgumentException("Zoom: 1..4");
+///         return zoom;
+///     } catch (NumberFormatException typo) {
+///         return 2;
 ///     }
 /// }
 /// ```
 ///
-/// `readCopies(" 2 ")` vrátí `2`: převod i ověření uspějí. `"oops"` selže při převodu a přes `catch`
-/// vrátí `3`. Číselný text `"8"` se převede, ale následně vyvolá jinou exception (výjimku); tento
-/// konkrétní catch ji nezachytí. `return` ukončí metodu; `throw` opustí běžnou cestu. Uložený stav
-/// hry měň až po úspěšném ověření.
+/// Trace (průchod) pro `" 3 "`: `strip` odstraní okolní mezery, `parseInt` vrátí 3, bounds (hranice) je
+/// přijmou. `"oops"` nejde převést, takže `catch` vrátí 2. `"7"` se převede, ale neprojde validation;
+/// vyvolaná IllegalArgumentException tuto method (metodu) opustí. Úzký `catch` pro
+/// NumberFormatException tyto cesty odliší.
 ///
-/// Předpověz cestu pro `"five"`, `"5"` a `"0"`.
+/// Desetinný vstup používá `Double.parseDouble`; NaN a infinity (nekonečno) jsou čitelné, ale nejsou
+/// finite (konečná čísla). U živého nastavení nejdřív vytvoř local candidate (místní návrh), teprve po
+/// validation změň field (sdílenou proměnnou). Předpověz cestu pro `"0"`, `"two"` a `"4"`. Které vstupy
+/// mají zachovat předchozí nastavení?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Jak číst tuto část
 ///
-/// - `int candidate` — Odděluje navrženou hodnotu od aktuálního repeats field (položky objektu).
-/// - `candidate < 1 || candidate > 12` — Odmítne integer (celé číslo) mimo povolené opakování před změnou
-///   model (modelu pravidel).
-/// - `repeats = 6` — Potvrdí konstantu místo převedeného návrhu.
-/// - `return false;` — Oznámí odmítnutí, aby caller (volající část) mohl zachovat předchozí nastavení
-///   vzoru.
-///
-/// ### Co už obstarává připravená část
-///
-/// Každé kliknutí přepne zdrojové políčko mezi barvou a prázdným místem. render dlaždici opakuje a
-/// tlačítko Repeats volá applyRepeats pro skutečný náhled; Clear obnoví dlaždici.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
-/// ### Před změnou razítka ověř vstup
-///
-/// Parsing (převod) a změna modelu jsou dva kroky. Jestliže repeats bylo 4, chybný text `"oops"` musí
-/// vrátit false a ponechat uloženou 4. Číselné `"13"` také ponechá 4, protože neprojde kontrolou
-/// rozsahu; toto odmítnutí používá return false místo vyvolání výjimky. Pro přijaté `"3"` musí
-/// uložený počet opakování odpovídat přijatému požadavku. Trasuj současný kód: který řádek ukládá
-/// konstantu až poté, co candidate prošel ověřením? Předpověz uloženou hodnotu po platném vstupu a
-/// následném překlepu; neúspěšný druhý pokus nesmí smazat první úspěch.
+/// Live field (živá sdílená proměnná) repeats začíná na 6. Parsing (převod) proveď do local candidate
+/// (místního návrhu), aby odmítnutí nepoškodilo nastavení. Zde format failure (chybný zápis) i range
+/// failure (chybný rozsah) vracejí false; na rozdíl od stromu špatný rozsah nevyvolává exception
+/// (výjimku). Připravené render(repeats) vměstná daný počet opakování do stejného náhledu, takže 3 a 9
+/// skutečně vypadají jinak.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Parsing (rozbor) míří do dočasného candidate, nikoli přímo do field (položky objektu).
+/// Odděl navržené číslo od aktuálně zobrazeného nastavení.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Obě hranice ověř před assignment (přiřazením).
+/// Do field (sdílené proměnné) repeats smí jen plně přijatý candidate (návrh).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Při úspěchu přiřaď candidate místo původní výchozí hodnoty.
+/// Zkus parsing (převod); pro chybný rozsah či zápis vrať false, jinak ulož candidate a vrať true.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Nakresli nesouměrný tile (dílek) 8×8 a porovnej tři a devět opakování. Potom zkus v render()
+/// posunout každý druhý row (řádek) otisků do vzoru podobného cihlám.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
@@ -113,11 +104,11 @@ BufferedImage render(int repeats) {
     if (repeats < 1 || repeats > 12) {
         throw new IllegalArgumentException("Repeats: 1..12.");
     }
-    int size = repeats * 8 * 6;
+    int size = 288;
     var image = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
     for (int y = 0; y < size; y++) {
         for (int x = 0; x < size; x++) {
-            image.setRGB(x, y, palette[tile[y / 6 % 8][x / 6 % 8]]);
+            image.setRGB(x, y, palette[tile[(y * repeats * 8 / size) % 8][(x * repeats * 8 / size) % 8]]);
         }
     }
     return image;

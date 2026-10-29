@@ -10,18 +10,31 @@ import javax.swing.Timer;
 /// Nech kyvadlo kreslit vlastní světelnou stopu. Měň délku a gravitaci a objevuj, jak stejný počáteční
 /// výkyv vytváří různý pohyb.
 ///
-/// **Tvoje mise:** Kyvadlo dostává nulové zrychlení a stojí. Obnov připravené pravidlo zrychlení s
-/// aktuálním úhlem a délkou, nikoli pevnými počátečními hodnotami.
+/// **Tvoje mise:** Implementuj makeAcceleration a výsledek zapoj do acceleration. Role přijímá angle
+/// a length a vrací -gravity × sin(angle) / length s aktuálním field gravity. Připravené propojení
+/// accelerationNow i integraci v step zachovej.
 ///
-/// **Dnes trénuješ:** Interface (rozhraní) může oddělit jedno fyzikální pravidlo od okolní simulace.
-/// AccelerationNow propojí aktuální state (stav) s pravidlem, takže jej lze vyměnit bez přepisování
-/// časového kroku či kreslení.
+/// **Dnes trénuješ:** Napíšeš implementation (implementaci) malého interface (rozhraní) a zapojíš ji
+/// do běžícího programu. Výpočet odděl od vstupu, aktualizace a kreslení.
 ///
 /// Po spuštění programu měň Length a Gravity pro zkoumání stopy kyvadla; Pause/Run ovládá pohyb
 /// a Reset stopu vymaže a obnoví pokus.
-double accelerationNow() {
-    return acceleration.at(angle, length);
+Acceleration makeAcceleration() {
+    return (angle, length) -> {
+        double restoring = -gravity * Math.sin(angle);
+        return restoring / length;
+    };
 }
+
+Acceleration acceleration = makeAcceleration();
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Vytvoř mimozemské kyvadlo: sinusové vracení nahraď mírným lineárním pravidlem poblíž středu.
+/// Porovnej stejný počáteční úhel, délku a gravitaci. Označ výsledek jako nové simulation rule
+/// (simulační pravidlo), ne jako přesnější fyzikální model.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F34">
 /// ### Interface (rozhraní): požádej vybranou roli o práci
@@ -49,33 +62,40 @@ double accelerationNow() {
 /// vstupu?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// ### Předávej měnící se stav; čti zvolené nastavení
 ///
-/// - `double` — Úhlové zrychlení se vrací jako desetinná hodnota.
-/// - `accelerationNow()` — Nemá parameter (parametry), proto musí získat aktuální state (stav) z field
-///   (položek) tohoto modelu.
-/// - `return 0;` — Nyní hlásí nulové zrychlení i při změně gravitace, úhlu či délky.
+/// Acceleration pojmenovává at(angle, length). Interface (rozhraní) odděluje fyzikální pravidlo od
+/// integrace: tvoje implementace vrací číslo, zatímco step mění rychlost, úhel a stopu. Matematický
+/// contract (dohoda) je zadaný; odvozování fyziky kyvadla není tímto úkolem. Math.sin přijímá radians
+/// (radiány).
 ///
-/// ### Co už obstarává připravená část
+/// Příklad s gravity 200: pro úhel π/2 je sinus 1, proto length 100 dává -2. Při úhlu 0 je výsledek
+/// nula. Předpověz výsledek pro -π/2 a délku 100. Větší délka velikost zrychlení zmenšuje.
 ///
-/// step získá současné zrychlení přes accelerationNow a kreslí stopu závaží. Length a Gravity jsou
-/// vstupy pokusu; Pause/Run ovládá pohyb a Reset pokus vyčistí a obnoví.
+/// Angle a length uvnitř lambda přicházejí s každým voláním. Gravity je field (uložená hodnota)
+/// tohoto objektu a čte se při běhu pravidla, aby posuvník měnil už existující implementaci. Výpočet
+/// jediného zrychlení při přípravě by zmrazil počáteční stav. Vrácenou roli zapoj místo tiché náhrady
+/// v acceleration.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Role potřebuje aktuální hodnoty, nikoli počáteční konstanty.
+/// Pro angle a length použij parametry role; současnou gravity čti z field objektu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Výchozí implementace používá field (položku objektu) posuvníku gravitace.
+/// Vracej výpočet, ne volání step. Sinus dodá Math.sin(angle).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Interface field (položku rozhraní) zavolej jednou; 0.03 a tlumení nech v připraveném step.
+/// Sestav vracející člen, vyděl jej požadovanou délkou a acceleration inicializuj pomocí factory.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+double accelerationNow() {
+    return acceleration.at(angle, length);
+}
+
 double angle = 0.9;
 double velocity;
 double length = 180;
@@ -174,7 +194,7 @@ void showWindow() {
 }
 
 interface Acceleration { double at(double angle, double length); }
-Acceleration acceleration = (a, len) -> -gravity / len * Math.sin(a);
+
 
 void main() {
 /// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.

@@ -28,6 +28,14 @@ boolean touching(boolean[][] grid, int x, int y, boolean diagonals) {
     return false;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Vytvoř třetí contact rule (pravidlo dotyku), které přijímá jen diagonály. Původní čtyřsousední a
+/// osmisousední variantu zachovej pojmenovanou a oddělenou. Všechny spusť se stejným seed i počtem
+/// částic a popiš větvení, které opravdu vzniklo.
+// </editor-fold>
+
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F36">
 /// ### Transfer (přenos): zachovej slib a přidej volbu
 ///

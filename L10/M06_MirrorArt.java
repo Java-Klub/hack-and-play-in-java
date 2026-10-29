@@ -12,19 +12,31 @@ import java.awt.image.BufferedImage;
 /// Nakresli jeden tah a nech kruh zrcadlených kopií proměnit jej v růžici. Změna počtu os může ze
 /// stejného gesta udělat úplně jiný obrazec.
 ///
-/// **Tvoje mise:** Kopie ujíždějí doleva, protože otočená x coordinate (souřadnice) se nevrátí ke středu
-/// plátna. Oprav převod a zachovej otáčení i zrcadlení.
+/// **Tvoje mise:** Implementuj celý coordinate adapter (převod souřadnic) v transform. Odečti střed
+/// plátna, případně odraz místní y, otoč o 2π × copy / axes a střed zase přičti. Vrať nový bod;
+/// původní tah neměň.
 ///
-/// **Dnes trénuješ:** Coordinate transform (převod souřadnic) nejprve pracuje vůči zvolenému středu a
-/// potom se vrátí k obrazovce. Připravená trigonometrie řeší otočení; ověř, které posuny ke středu ještě
-/// chybějí.
+/// **Dnes trénuješ:** Rendering (kreslení) nebo coordinate conversion (převod souřadnic) vytvoříš
+/// jako řadu kroků: čti model, převeď hodnoty a kresli nebo vrať nový bod bez posunu času.
 ///
 /// Po spuštění programu táhni čáru a prohlédni její odrazy, pomocí Up/Down měň osy zrcadlení a
 /// R kresbu vymaž a obnov.
 Point2D.Double transform(int x, int y, int copy, boolean reflect) {
-    double dx = x - WIDTH / 2, dy = (y - HEIGHT / 2) * (reflect ? -1 : 1), a = 2 * Math.PI * copy / axes;
-    return new Point2D.Double(WIDTH / 2 + dx * Math.cos(a) - dy * Math.sin(a), HEIGHT / 2 + dx * Math.sin(a) + dy * Math.cos(a));
+    double dx = x - WIDTH / 2;
+    double dy = y - HEIGHT / 2;
+    if (reflect) dy = -dy;
+    double angle = 2 * Math.PI * copy / axes;
+    double rotatedX = dx * Math.cos(angle) - dy * Math.sin(angle);
+    double rotatedY = dx * Math.sin(angle) + dy * Math.cos(angle);
+    return new Point2D.Double(WIDTH / 2 + rotatedX, HEIGHT / 2 + rotatedY);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Navrhni dvoubarevný znak: v připraveném kreslicím cyklu dej odraženým tahům jinou barvu než
+/// otočeným. Nakresli jediný promyšlený tah a vyber počet os, který jej promění ve tvůj znak.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F29">
 /// ### Rendering (vykreslení): ze stavu na pixely
@@ -46,30 +58,30 @@ Point2D.Double transform(int x, int y, int copy, boolean reflect) {
 /// Předpověz: pokud se pouze tileY změní na 4, která obrazovková souřadnice se změní a o kolik?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// ### Tři souřadnicové pohledy, jeden bod
 ///
-/// - `x - WIDTH / 2` — Přesune počátek od levého okraje do středu plátna.
-/// - `reflect ? -1 : 1` — Vybere, zda se vzdálenost od středu ve svislém směru zrcadlí.
-/// - `new Point2D.Double` — Vrátí nový bod obrazovky; neposouvá původní tah.
-/// - `HEIGHT / 2 +` — Svislý výsledek už přičítá zpět posun ke středu obrazovky.
+/// Použij připravené matematické pravidlo: otočení místního (dx, dy) o úhel a dává x' = dx cos(a) -
+/// dy sin(a) a y' = dx sin(a) + dy cos(a). Math.sin a Math.cos přijímají radians (radiány); celá
+/// otočka je 2π. Pravidlo implementuješ, nemusíš objevit trigonometrii.
 ///
-/// ### Co už obstarává připravená část
-///
-/// stroke volá upravované transform pro každou zrcadlenou kopii a uchová čáry na jednom canvas
-/// (kreslicí ploše). Up/Down mění osy; R kresbu vymaže a obnoví pokus.
+/// Příklad s jiným středem plátna (50, 40): screen point (60, 40) se změní na místní (10, 0).
+/// Čtvrtotočka dá (0, 10), takže nový bod plátna je (50, 50). Předpověz nulové otočení a potom
+/// čtvrtotočku pro (50, 30). Místní reflection (odraz) před otočením neguje dy. Kreslicí cyklus volí
+/// copy i reflect a kreslí vrácené body; transform samo nekreslí.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Coordinate (souřadnice) se nejdřív vztáhnou ke středu.
+/// Před otočením pracuj vzhledem ke středu plátna.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Otáčení pracuje v tomto místním prostoru.
+/// Reflection (odraz) mění místní dy, ne absolutní y obrazovky. Oba otočené výrazy počítej odděleně.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Vrácený bod musí přičíst WIDTH/2 k x a HEIGHT/2 k y.
+/// Spočti dx/dy, případně neguj dy, spočti úhel a obě otočené souřadnice, potom vytvoř bod posunutý
+/// zpět.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

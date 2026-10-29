@@ -30,6 +30,14 @@ void turn(int x, int y) {
     turnQueued = true;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Navrhni mírnějšího hada: hlava se přes okraj přenese na protější stranu. Nejdřív rozhodni o nárazu
+/// do těla v cíli, potom změň jen pravidlo stěny. Rychlé protichůdné klávesy stále musí dodržet
+/// jedinou zatáčku za tick (krok).
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F30">
 /// ### Input (vstup) požádá; tick (krok) posune čas
 ///

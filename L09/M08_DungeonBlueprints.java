@@ -5,66 +5,77 @@ import java.awt.image.BufferedImage;
 
 /// # L09.08 · DungeonBlueprints
 ///
-/// Vytvoř plán podzemí a objev, které místnosti se vejdou před propojením chodbami. Legenda má říct,
-/// kolik malých a velkých místností se skutečně podařilo umístit.
+/// Navrhni skladbu místností v podzemí. Přijmi omezený počet malých úkrytů a velkých síní a nech chodby
+/// propojit místnosti, které tvoje pravidlo povolilo.
 ///
-/// **Tvoje mise:** Každá přijatá místnost přepíše předchozí počet své kategorie na jedna. Oprav součty
-/// legendy a nezapočítej odmítnuté pokusy o umístění.
+/// **Tvoje mise:** Vytvoř admitRoom(room): area (plocha) nejvýše 42 včetně je SMALL s quota (limitem)
+/// tři; větší room (místnosti) jsou LARGE s limitem dvě. Přijmi a započti room jen při volné kapacitě
+/// její kategorie. Odmítnutí vrací false beze změny počtů. Generator (vytvářecí postup) tě volá až po
+/// geometrické kontrole, takže Map quota (limity mapy) rozhodují o skutečném obrázku.
 ///
-/// **Dnes trénuješ:** Map (mapa) seskupuje jednotlivé místnosti pod společné category key (klíče
-/// kategorií). Klasifikace vybere key; další počítání mění jeho součet bez vymazání dřívějších místností.
+/// **Dnes trénuješ:** Použij uložené vztahy key/value (klíč/hodnota) k rozhodnutí o skutečném obrázku
+/// nebo jeho vzniku, ne jen popisku.
 ///
-/// Spusť program a porovnej obrázek před opravou a po ní.
-void countRoom(Room room) {
+/// Spusť program: nedokončené přijímání nechává plán prázdný. Po dokončení admitRoom prohlédni přijaté
+/// místnosti, spojovací chodby a limity kategorií.
+boolean admitRoom(Room room) {
     String kind = room.width() * room.height() <= 42 ? "SMALL" : "LARGE";
-    roomCounts.put(kind, roomCounts.getOrDefault(kind, 0) + 1);
+    int limit = kind.equals("SMALL") ? 3 : 2;
+    int used = roomCounts.getOrDefault(kind, 0);
+    if (used >= limit) return false;
+    roomCounts.put(kind, used + 1);
+    return true;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F24">
-/// ### Map (mapa): hodnota podle klíče
+/// ### Map (mapa) pamatuje hodnotu pro každý key (klíč)
 ///
-/// `Map<String, Integer>` přiřazuje textovým keys (klíčům) celočíselné values (hodnoty). Jeden klíč
-/// má nejvýše jednu uloženou hodnotu.
+/// List (seznam) drží pozice. Map drží vztah: každý key vede k jedné aktuální value (hodnotě). Zde
+/// jméno barvy vede k počtu.
 ///
 /// ```java
-/// Map<String, Integer> badges = new HashMap<>();
-/// badges.put("moon", 4);
-/// IO.println(badges.getOrDefault("moon", 0));
-/// IO.println(badges.getOrDefault("sun", 0));
+/// Map<String, Integer> marbles = new HashMap<>();
+/// marbles.put("blue", 2);
+/// int before = marbles.getOrDefault("blue", 0);
+/// marbles.put("blue", before + 1);
+/// IO.println(marbles.getOrDefault("gold", 0));
 /// ```
 ///
-/// Výstup je `4`, potom `0`. `getOrDefault(key, fallback)` přečte existující hodnotu; při chybějícím
-/// klíči vrátí fallback (náhradní hodnotu). Toto čtení nic nevkládá. `put(key, value)` hodnotu uloží
-/// a případnou předchozí hodnotu téhož klíče přepíše; čísla automaticky nesčítá. `containsKey(key)`
-/// použij, když potřebuješ výslovně rozlišit chybějící klíč. V těchto příkladech neukládáme `null`.
+/// Blue má nyní počet 3; pro gold se vypíše 0. `getOrDefault(key, fallback)` vrátí fallback (náhradní
+/// hodnotu), když key chybí, ale nic nevloží. `put` nahradí dosavadní value daného key: samo nepřičítá.
+/// Ostatní key zůstanou beze změny.
 ///
-/// Předpověz: po `badges.put("moon", 9)` co vrátí stejná dvě čtení?
+/// `containsKey` zjišťuje samotnou přítomnost. `entrySet()` umožní projít dvojice key/value: každý
+/// entry (položka) poskytuje `getKey()` a `getValue()`. Map neslibuje, že první entry má nejvyšší
+/// value; vítěze musíš vybrat porovnáváním. Předpověz blue po dalším stejném kroku. Potom předpověz
+/// výsledek `getOrDefault("gold", 9)` a rozhodni, zda se tím gold uložilo.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Jak číst tuto část
 ///
-/// - `room.width() * room.height()` — Čte record component (složky record) a násobením získá plochu
-///   místnosti.
-/// - `<= 42 ? "SMALL" : "LARGE"` — Vybere jeden název kategorie; plocha 42 patří do SMALL.
-/// - `roomCounts.put(kind, 1)` — Uloží jedna pod zvolený key (klíč), i když jej sdílí několik místností.
-///
-/// ### Co už obstarává připravená část
-///
-/// generate navrhuje omezené místnosti, pomocí countRoom pamatuje přijaté velikosti a spojuje
-/// místnosti chodbami. render zobrazí mapu i součty SMALL/LARGE přímo v Javě.
+/// Room je record (datový záznam): width() a height() čtou components (složky). Jejich součin dává area
+/// (plochu). Map key (klíče mapy) jsou společná jména kategorií, nikoli jednotlivé room (místnosti).
+/// getOrDefault dá před prvním přijetím nulu. Odmítnutí nesmí spotřebovat quota (limit). Připravené
+/// generate() řeší překryvy a omezený počet pokusů a přijaté room spojí chodbami.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Hranice plochy zahrnuje přesně 42.
+/// Nejdřív podle area (plochy) vyber kategorii a pak přečti její count (počet).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Různé Room object (objekty) mohou sdílet stejný druh jako key (klíč).
+/// Porovnej used s odpovídajícím limit (limitem) před změnou Map (mapy).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Použij starý počet nebo nulu a přičti jednu.
+/// Při plném limit vrať false; jinak ulož used+1 pod kategorii a vrať true.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Navrhni dungeon (podzemí) s jedinou velkou boss chamber (místností pro hlavního nepřítele) a
+/// několika malými úkryty. Změň práh area (plochy) i quota (limity) a sleduj jiný příběh stejných
+/// pokusů o rozmístění.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
@@ -87,9 +98,8 @@ boolean[][] generate(long seed, int requested) {
         for (var other : rooms) {
             fits &= !room.overlaps(other);
         }
-        if (fits) {
+        if (fits && admitRoom(room)) {
             rooms.add(room);
-            countRoom(room);
         }
     }
     boolean[][] floor = new boolean[34][50];
@@ -136,7 +146,7 @@ BufferedImage render(long seed, double option) {
             }
         }
         g.setColor(Color.WHITE);
-        g.drawString("SMALL " + roomCounts.getOrDefault("SMALL", 0) + " / LARGE " + roomCounts.getOrDefault("LARGE", 0), 8, 14);
+        g.drawString("SMALL " + roomCounts.getOrDefault("SMALL", 0) + "/3 | LARGE " + roomCounts.getOrDefault("LARGE", 0) + "/2", 8, 14);
     } finally {
         g.dispose();
     }

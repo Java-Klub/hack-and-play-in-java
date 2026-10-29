@@ -24,25 +24,32 @@ int[] snapshot() {
 }
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F20">
-/// ### References: jiné jméno, nebo jiný objekt?
+/// ### Druhé jméno není uložená minulost
 ///
-/// Array variable (proměnná pole) uchovává reference (odkaz). Assignment (přiřazení) může dát dvěma
-/// jménům přístup k jedinému array (poli); zápis přes kterékoli změní sdílený objekt. `clone()` na
-/// jednorozměrném int array vytvoří další array se zkopírovanými hodnotami. Původní array i kopie se
-/// potom mohou měnit nezávisle.
+/// Array variable (proměnná s polem) drží reference (odkaz) na array (pole). Assignment (přiřazení)
+/// kopíruje reference, takže dvě jména mohou dosáhnout na stejné měnitelné cell (prvky).
 ///
 /// ```java
-/// int[] wave = {4, 1};
-/// int[] shared = wave;
-/// int[] saved = wave.clone();
-/// wave[1] = 7;
-/// IO.println(shared[1]);
-/// IO.println(saved[1]);
+/// int[] live = {1, 2};
+/// int[] shared = live;
+/// int[] saved = live.clone();
+/// live[0] = 7;
+/// IO.println(shared[0] + " / " + saved[0]);
 /// ```
 ///
-/// Výstup je sedm a potom jedna: shared vidí zápis, saved uchová kopii. Po `saved[0] = 8` předpověz
-/// `wave[0]` a `saved[0]`. `clone()` kopíruje jednu vrstvu: element (prvky) mřížky jsou reference na
-/// řádky, takže kopie vnějšího array řádky dál sdílí. Ptej se, které objekty zůstaly společné.
+/// Vypíše se `7 / 1`: shared sleduje změnu, saved má samostatné array. `clone()` kopíruje cell jediného
+/// array. U `int[][]` tyto cell obsahují reference na row (řádky). Kopie vnějšího array tedy stále
+/// sdílí row; potřebuješ také kopie row, mají-li jejich hodnoty přežít změny.
+///
+/// ```text
+/// shared ──→ [7,2] ←── live
+/// saved  ──→ [1,2]
+/// ```
+///
+/// Undo (návrat změny) potřebuje minulý state (stav), proto snapshot (snímek) vzniká před úpravou.
+/// Kopie po úpravě správně uloží nesprávný okamžik. Předpověz, co uvidí tři jména, když poslední
+/// assignment nahradíš `saved[0] = 9`. U List (seznamu) neměnných record (datových záznamů) stačí
+/// kopírovat členství: jednotlivým record nejdou přepsat components (složky).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
@@ -61,13 +68,11 @@ int[] snapshot() {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Pro tuto hru">
-/// ### Uložené array (pole) musí vlastnit buňky
+/// ### Použij model právě zde
 ///
-/// Neutrální příklad wave rozlišuje alias (sdílený odkaz) a kopii. `clone()` vytvoří úložiště
-/// okamžitě; další variable (proměnná) či vrácení reference (odkazu) nikoli. Buňky tohoto int[] jsou
-/// prosté hodnoty, proto stačí jedna zkopírovaná vrstva. Předpověz uložené i pracovní počty po změně
-/// spojení. Zkontroluj také čas: caller (volající část) pořizuje snapshot (snímek) před změnou, takže
-/// kopie až po ní nezachová dřívější state (stav).
+/// `snapshot()` se volá před změnou mostu. `int[] alias = bridges` sdílí živé array (pole); `clone()`
+/// vytvoří samostatné int cell (prvky). U neutrálního `{2,0}` po kopii a přepsání živého prvku na 1
+/// zůstane v kopii 2. Předpověz návrat po dvou změnách stejného mostu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -80,6 +85,11 @@ int[] snapshot() {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Vrať bridges.clone(); dodaná undo() potom obnoví nezávislý stav.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Vytvoř malou sestavu ostrovů se dvěma lákavými spoji; pomocí undo (návratu změny) vyzkoušej oba a
+/// vysvětli, který uvězní zbývající počty mostů.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

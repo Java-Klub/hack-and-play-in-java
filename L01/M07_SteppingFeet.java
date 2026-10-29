@@ -10,7 +10,8 @@ import javax.swing.Timer;
 /// Dva obdélníky se pohybují společně po pruhovaném pozadí, přesto mohou vypadat jako nohy s různou
 /// rychlostí. Skryj pruhy nebo ukaž společnou značku a porovnej tento dojem.
 ///
-/// **Tvoje mise:** Obě nohy začínají mimo viditelnou místnost. Oprav pozdější assignment (přiřazení) v
+/// **Tvoje mise · Předpověz měnící se hodnotu:** Obě nohy začínají mimo viditelnou místnost. Oprav
+/// pozdější assignment (přiřazení) v
 /// startingPosition, aby sdílené x začínalo na 80 po své první hodnotě 20.
 ///
 /// **Dnes trénuješ:** Assignment (přiřazení) v čase: pozdější přiřazení nahradí starou uloženou hodnotu.
@@ -65,11 +66,22 @@ void startingPosition() {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Pro tuto hru">
-/// Druhé assignment (přiřazení) má vyjádřit relativní změnu: vezmi současné x a zvětši je o 60. První
-/// assignment zachovej. S nynější počáteční hodnotou 20 je výsledkem 80; pokud by se počáteční
-/// hodnota změnila, druhý výpočet na ni má navázat místo nesouvisející pevné odpovědi. Pravý
-/// expression (výraz) nejdřív přečti se starým x a potom výsledek ulož. Proto může assignment uvádět
-/// stejné jméno na obou stranách. Připravené x sdílejí obě nohy, takže opravuješ jedinou pozici.
+/// Dvě řešení mohou dát stejné x = 80: pevné assignment (přiřazení) i výpočet ze starého x. Pro tuto
+/// misi jsou obě v pořádku. Později je rozlišíš pokusem s jinou počáteční hodnotou. Pravá strana
+/// assignment se vyhodnotí před uložením nové hodnoty; obě nohy pak čtou stejné x.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Sleduj v pořadí `int score = 2; score = score + 5; score = 1;`. Uložené hodnoty jsou 2, potom 7 a
+/// nakonec 1. Poslední assignment (přiřazení) si dřívější součet nepamatuje. Kreslení čte hodnotu v
+/// okamžiku svého spuštění, nikoli historii všech přiřazení. Jaká hodnota by zůstala bez třetího
+/// statement (příkazu)?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Porovnej dvě verze: nastav x přímo na 80, nebo k předchozímu x přičti 60. Nejprve obě spusť s
+/// počátečním x = 20; potom první assignment (přiřazení) změň na 40. Před spuštěním předpověz obě
+/// konečné pozice. Která verze zachovává cíl a která posun?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">

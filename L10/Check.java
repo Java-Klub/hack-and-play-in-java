@@ -62,7 +62,7 @@ class M01_AsteroidDriftTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I051: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L10.01: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -107,7 +107,7 @@ class M01_AsteroidDriftTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I051: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L10.01: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -118,12 +118,12 @@ class M02_FireworkPainterTest {
     static int checks;
     static final String[] CASES = {
         "Vytvoření callback (předané akce) nevytvoří částice.",
-        "Spuštění vytvoří šedesát částic v zadaných nestejných coordinate (souřadnicích).",
-        "Skutečný press přidá další výbuch a restart vše smaže."
+        "Spuštění vytvoří 120 částic v dvojici výbuchů: v místě kliknutí a jeho zrcadlovém obrazu.",
+        "Skutečný press přidá další zrcadlovou dvojici výbuchů; restart všechny částice odstraní."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I072: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L10.02: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -161,14 +161,14 @@ class M02_FireworkPainterTest {
         try {
             var p = Reflect.create("M02_FireworkPainter");
             Reflect.call(p, "restart");var action=((java.util.function.BiConsumer<java.lang.Integer, java.lang.Integer>) Reflect.call(p, "burstAction"));check(((java.util.ArrayList<Object>) Reflect.get(p, "particles")).isEmpty(),0,((java.util.ArrayList<Object>) Reflect.get(p, "particles")).size());
-            action.accept(43,91);check(((java.util.ArrayList<Object>) Reflect.get(p, "particles")).size()==60&&!((boolean) Reflect.get(p, "paused")),1,((java.util.ArrayList<Object>) Reflect.get(p, "particles")).size());
+            action.accept(43,91);check(((java.util.ArrayList<Object>) Reflect.get(p, "particles")).size()==120&&!((boolean) Reflect.get(p, "paused")),1,((java.util.ArrayList<Object>) Reflect.get(p, "particles")).size());
             check(((double) Reflect.call(((java.util.ArrayList<Object>) Reflect.get(p, "particles")).getFirst(), "x"))==43&&((double) Reflect.call(((java.util.ArrayList<Object>) Reflect.get(p, "particles")).getFirst(), "y"))==91,1,((java.util.ArrayList<Object>) Reflect.get(p, "particles")).getFirst());
-            Reflect.call(p, "press", 120, 80, 1);check(((java.util.ArrayList<Object>) Reflect.get(p, "particles")).size()==120&&((double) Reflect.call(((java.util.ArrayList<Object>) Reflect.get(p, "particles")).getLast(), "x"))==120,2,((java.util.ArrayList<Object>) Reflect.get(p, "particles")).size());
+            Reflect.call(p, "press", 120, 80, 1);check(((java.util.ArrayList<Object>) Reflect.get(p, "particles")).size()==240&&((double) Reflect.call(((java.util.ArrayList<Object>) Reflect.get(p, "particles")).getLast(), "x"))==((int) Reflect.get(p,"WIDTH"))-120,2,((java.util.ArrayList<Object>) Reflect.get(p, "particles")).size());
             Reflect.call(p, "restart");check(((java.util.ArrayList<Object>) Reflect.get(p, "particles")).isEmpty(),2,((java.util.ArrayList<Object>) Reflect.get(p, "particles")).size());
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I072: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L10.02: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -179,12 +179,12 @@ class M03_ShadowPlaygroundTest {
     static int checks;
     static final String[] CASES = {
         "Vytvoření callback (předané akce) zachová počáteční pozici světla.",
-        "Spuštění i skutečné press/drag použijí zadané x/y.",
+        "Spuštění i skutečné press/drag zarovnají předané x/y na grid (mřížku) po 20 pixelech.",
         "Coordinate (souřadnice) mimo plátno omezí moveLight."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I078: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L10.03: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -222,13 +222,13 @@ class M03_ShadowPlaygroundTest {
         try {
             var p = Reflect.create("M03_ShadowPlayground");
             Reflect.call(p, "restart");var action=((java.util.function.BiConsumer<java.lang.Integer, java.lang.Integer>) Reflect.call(p, "lightAction"));check(((double) Reflect.get(p, "lightX"))==100&&((double) Reflect.get(p, "lightY"))==80,0,((double) Reflect.get(p, "lightX")));
-            action.accept(43,91);check(((double) Reflect.get(p, "lightX"))==43&&((double) Reflect.get(p, "lightY"))==91,1,((double) Reflect.get(p, "lightX"))+","+((double) Reflect.get(p, "lightY")));
+            action.accept(43,91);check(((double) Reflect.get(p, "lightX"))==40&&((double) Reflect.get(p, "lightY"))==80,1,((double) Reflect.get(p, "lightX"))+","+((double) Reflect.get(p, "lightY")));
             action.accept(-20,999);check(((double) Reflect.get(p, "lightX"))==0&&((double) Reflect.get(p, "lightY"))==((int) Reflect.get(p, "HEIGHT")),2,((double) Reflect.get(p, "lightX"))+","+((double) Reflect.get(p, "lightY")));
-            Reflect.call(p, "press", 140, 70, 1);Reflect.call(p, "drag", 160, 90);check(((double) Reflect.get(p, "lightX"))==160&&((double) Reflect.get(p, "lightY"))==90,1,((double) Reflect.get(p, "lightX"))+","+((double) Reflect.get(p, "lightY")));
+            Reflect.call(p, "press", 140, 70, 1);Reflect.call(p, "drag", 160, 90);check(((double) Reflect.get(p, "lightX"))==160&&((double) Reflect.get(p, "lightY"))==80,1,((double) Reflect.get(p, "lightX"))+","+((double) Reflect.get(p, "lightY")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I078: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L10.03: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -238,13 +238,13 @@ class M03_ShadowPlaygroundTest {
 class M04_UntangleTest {
     static int checks;
     static final String[] CASES = {
-        "Nestejný bod vykreslí správně vystředěný uzel.",
+        "Bod s rozdílnými souřadnicemi vykreslí uzel se správným středem.",
         "Kreslení nezmění Point ani model (model pravidel).",
         "Skutečná celá scéna používá opravený helper (pomocnou funkci)."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I056: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L10.04: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -290,7 +290,7 @@ class M04_UntangleTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I056: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L10.04: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -306,7 +306,7 @@ class M05_SpringToyTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I070: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L10.05: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -352,7 +352,7 @@ class M05_SpringToyTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I070: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L10.05: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -362,13 +362,13 @@ class M05_SpringToyTest {
 class M06_MirrorArtTest {
     static int checks;
     static final String[] CASES = {
-        "Běžný nestejný bod má popsanou pozici na obrazovce.",
+        "Běžný bod s rozdílnými souřadnicemi má popsanou pozici na obrazovce.",
         "Střed/otočení či hranice hloubky zůstanou správné.",
         "Skutečné kreslení používá transformaci a zachová state (stav) modelu."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I074: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L10.06: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -409,7 +409,7 @@ class M06_MirrorArtTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I074: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L10.06: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -419,13 +419,13 @@ class M06_MirrorArtTest {
 class M07_MoireTest {
     static int checks;
     static final String[] CASES = {
-        "Běžný nestejný bod má popsanou pozici na obrazovce.",
+        "Běžný bod s rozdílnými souřadnicemi má popsanou pozici na obrazovce.",
         "Střed/otočení či hranice hloubky zůstanou správné.",
         "Skutečné kreslení používá transformaci a zachová state (stav) modelu."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I076: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L10.07: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -466,7 +466,7 @@ class M07_MoireTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I076: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L10.07: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -476,13 +476,13 @@ class M07_MoireTest {
 class M08_StarTunnelTest {
     static int checks;
     static final String[] CASES = {
-        "Běžný nestejný bod má popsanou pozici na obrazovce.",
+        "Běžný bod s rozdílnými souřadnicemi má popsanou pozici na obrazovce.",
         "Střed/otočení či hranice hloubky zůstanou správné.",
         "Skutečné kreslení používá transformaci a zachová state (stav) modelu."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I077: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L10.08: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -523,7 +523,7 @@ class M08_StarTunnelTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I077: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L10.08: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -539,7 +539,7 @@ class M09_PongTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I047: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L10.09: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -580,7 +580,7 @@ class M09_PongTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I047: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L10.09: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -596,7 +596,7 @@ class M10_BreakoutTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I048: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L10.10: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -637,7 +637,7 @@ class M10_BreakoutTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I048: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L10.10: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -653,7 +653,7 @@ class M11_OrbitPainterTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I068: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L10.11: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -694,7 +694,7 @@ class M11_OrbitPainterTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I068: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L10.11: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -710,7 +710,7 @@ class M12_PendulumWavesTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I071: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L10.12: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -751,7 +751,7 @@ class M12_PendulumWavesTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I071: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L10.12: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -767,7 +767,7 @@ class M13_RippleTankTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I073: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L10.13: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -808,7 +808,7 @@ class M13_RippleTankTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I073: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L10.13: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -824,7 +824,7 @@ class M14_SnakeTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I046: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L10.14: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -865,7 +865,7 @@ class M14_SnakeTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I046: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L10.14: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

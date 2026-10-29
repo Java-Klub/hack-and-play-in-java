@@ -9,7 +9,7 @@
 /// **Dnes trénuješ:** Records (datové záznamy): stejné hodnoty složek vytvoří shodné hodnoty záznamu. Než
 /// Domino použiješ jako klíč jedinečnosti, zvol jednotné uspořádání.
 ///
-/// Spusť program a zadáním 1 1 1 2 spoj první dvě sousední políčka, potom pokračuj dalšími
+/// Zadáním 1 1 1 2 spoj první dvě sousední políčka, potom pokračuj dalšími
 /// sousedy.
 record Domino(int low, int high) {
 }
@@ -74,6 +74,12 @@ Domino pairKey(int a, int b) {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Vytvoř Domino(min(x,y), max(x,y)); dodaný Set pak odmítá opakování.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Vymysli směrové domino, v němž 1→2 a 2→1 představují různé dílky. Před změnou pairKey vyslov nové
+/// pravidlo identity. Sestav část desky s jiným výsledkem kontroly duplicity a vysvětli, proč už
+/// původní sjednocení dvojice nevyhovuje.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

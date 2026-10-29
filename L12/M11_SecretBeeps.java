@@ -39,6 +39,14 @@ List<Integer> units(String text, int wordGap) {
     return result;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Vytvoř slyšitelnou hádanku iniciál: zvol krátkou zprávu, kterou partner může poznat, a dolaď word
+/// gap (mezeru mezi slovy) pro poslech. Potom zpomal délku tečky a zachovej všechny poměry délek.
+/// Nové časování se může záměrně lišit od původních kontrol.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F36">
 /// ### Transfer (přenos): zachovej slib a přidej volbu
 ///

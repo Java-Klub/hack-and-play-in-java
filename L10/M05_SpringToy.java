@@ -46,6 +46,14 @@ void draw(Graphics2D g) {
     g.drawString(String.format("Stiffness %.3f   Damping %.3f   %s", stiffness, damping, paused ? "Paused" : "Moving"), 15, 25);
 }
 
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Navrhni ospalou a nervózní pružinu pomocí dvou dvojic stiffness/damping (tuhost/tlumení). Přidej
+/// značku závislou na současné rychlosti, třeba větší svatozář při rychlém pohybu. Rendering
+/// (kreslení) stále nesmí měnit model.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F29">
 /// ### Rendering (vykreslení): ze stavu na pixely
 ///
@@ -75,7 +83,7 @@ void draw(Graphics2D g) {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// Připravený timer (časovač) volá step a zvlášť požádá o překreslení. Step počítá zrychlení pružiny a
+/// Připravený timer (časovač) volá step a zvlášť požádá o překreslení. step počítá zrychlení pružiny a
 /// ukládá pozice; draw sestaví klikatou pružinu, závaží i popisek z existujících hodnot.
 // </editor-fold>
 

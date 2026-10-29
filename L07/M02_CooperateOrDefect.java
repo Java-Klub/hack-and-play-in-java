@@ -8,11 +8,12 @@ import java.awt.BorderLayout;
 /// Tajně slib spolupráci, nebo zvol zradu, a potom oba rozhodnutí odhalte. Pět krátkých kol je dobrá
 /// záminka k debatě o důvěře.
 ///
-/// **Tvoje mise:** Dva spolupracující hráči dostanou špatnou odměnu. Oprav reward() a zachovej výsledky
-/// ostatních dvojic rozhodnutí.
+/// **Tvoje mise:** Vytvoř reward() pro čtyři dvojice voleb: oboustranná spolupráce dává 3, spolupráce
+/// proti zradě 0, zrada proti spolupráci 5 a oboustranná zrada 1. Zakóduj dvojici a vyber payoff
+/// (odměnu) pomocí switch; prázdné pravidlo nyní všem dává nulu.
 ///
-/// **Dnes trénuješ:** Switch expressions (výrazy s výběrem větve): spoj dvě rozhodnutí ano/ne do malého
-/// čísla případu a vrať jeho odměnu. Každou větev čti z pohledu jednoho hráče.
+/// **Dnes trénuješ:** Vytvoř výběr výsledku ze zadaných case (větví); sleduj selector (vybíranou
+/// hodnotu) a return value (výsledek) odděleně od připravených herních změn.
 ///
 /// Spusť program, klikni na Private choices for next round a před odhalením obou voleb si mezi
 /// soukromými dialogy předejte počítač.
@@ -27,65 +28,56 @@ int reward(boolean cooperate, boolean otherCooperates) {
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F09">
-/// ### Switch: vyber jednu hodnotu
+/// ### Switch expression (výraz s výběrem) vybírá hodnotu
 ///
-/// Switch expression (výraz s výběrem) vybírá výsledek podle selector (výběrové hodnoty). Každá arrow
-/// case (větev se šipkou) obslouží odpovídající hodnotu; nepokračuje do další větve. `default`
-/// pokrývá zbývající hodnoty. Koncový středník patří okolnímu assignment (přiřazení) či return
-/// statement (příkazu návratu).
+/// Expression (výraz) má hodnotu. Switch expression přečte selector (vybíranou hodnotu) a zvolí
+/// výsledek za odpovídající šipkou. `return` jej předá volajícímu. Nejdřív přečti tento malý výběr
+/// zvuku:
 ///
 /// ```java
-/// String weather = "mist";
-/// String colour = switch (weather) {
-///     case "mist" -> "silver";
-///     case "sun" -> "gold";
-///     default -> "indigo";
-/// };
-/// IO.println(colour);
+/// String sound(int taps) {
+///     return switch (taps) {
+///         case 0 -> "silence";
+///         case 1, 2 -> "tap";
+///         default -> "drum";
+///     };
+/// }
 /// ```
 ///
-/// Mist case (větev pro mlhu) vybere `silver`. Předpověz výstup pro `"sun"` a potom `"snow"`.
-/// Selector se porovnává s case label (označením větve); text za šipkou je výsledek. Změna jednoho
-/// zvláštního případu má zachovat význam náhradní větve.
+/// Trace (průchod) pro `sound(2)`: selector je 2, společný case (větev) zahrnuje 2, výsledkem tedy je
+/// `"tap"`. Další case se neprovádí. Pro 7 neodpovídá žádný uvedený case, takže `default` dá `"drum"`.
+/// Semicolon (středník) uzavírá celý switch expression. Výsledky musí odpovídat return type (typu
+/// výsledku) uvedenému u method (metody).
+///
+/// Switch může stejně vybrat boolean, číslo nebo record (datový záznam). Sám automaticky nemění field
+/// (sdílenou proměnnou): vrátit navržený směr a uložit směr jsou dvě různé akce. Předpověz `sound(0)` a
+/// `sound(-1)` a najdi příslušný case.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Jak číst tuto část
 ///
-/// - `cooperate ? 2 : 0` — Conditional expression (podmíněný výraz) zakóduje rozhodnutí tohoto hráče do
-///   části čísla případu.
-/// - `otherCooperates ? 1 : 0` — Použije jinou váhu pro druhého hráče, aby se čtyři dvojice rozhodnutí
-///   rozlišily.
-/// - `case 3 -> 0` — Větev přiřazuje jedné zakódované dvojici odměnu tohoto hráče; tento výsledek je
-///   potřeba prověřit.
-/// - `default -> 1` — Zbývající zakódovaná dvojice má vlastní odměnu v náhradní větvi.
-///
-/// ### Co už obstarává připravená část
-///
-/// Soukromé dialogy sbírají rozhodnutí odděleně. play() volá reward() z obou pohledů, obnoví součty a
-/// odhalí výsledek kola; opravuješ pouze společnou bodovací tabulku.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
-/// ### Selector (výběrové číslo) není odměna
-///
-/// Dvě boolean choice (logické volby) přispívají samostatně k číslu větve. Než přiřadíš odměnu, napiš
-/// čtyři dvojice vstupů a vypočítej selector. Zobrazený contract (smlouva hry) dává tři body oběma
-/// při spolupráci, jeden oběma při zradě a pět proti nule při jediné zradě. `reward` vrací pohled
-/// prvního argument (argumentu); caller (volající část) se ptá také z opačného pohledu. Předpověz obě
-/// volání při jednom smíšeném kole.
+/// První boolean (hodnota ano/ne) popisuje hráče, jehož reward (odměnu) počítáš. Druhý popisuje
+/// soupeře. Dva boolean mají čtyři kombinace. Ternary expression (podmíněný výraz) může první volbě
+/// přidělit 2 a druhé 1; vzniknou čtyři selector (vybírané hodnoty) 0–3. Připravené odhalení volá
+/// reward z pohledu každého hráče.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// choice používá dva bity: tvoje spolupráce přidá 2, soupeřova 1.
+/// Nejdřív nakresli čtyři dvojice a pak jim přiřaď čísla.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Před úpravou vypiš možné součty 0,1,2,3.
+/// Dej volbám různé váhy, aby dvě dvojice neměly stejný kód.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Větev pro 3 znamená vzájemnou spolupráci a má vracet 3.
+/// Zakóduj true/false s vahami 2 a 1; jednotlivým case (větvím) přiřaď uvedené reward (odměny).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Navrhni druhou payoff table (tabulku odměn), ve které má společná spolupráce vyšší cenu než osamělá
+/// zrada. Nejdřív se na ní shodněte a porovnejte pět kol.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

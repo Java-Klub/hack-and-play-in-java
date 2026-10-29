@@ -51,7 +51,7 @@ class M01_CafeWallLabTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I097 F01: " + reason);
+            throw new AssertionError("L01.01 F01: " + reason);
         }
     }
 
@@ -75,7 +75,7 @@ class M02_MissingTriangleTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I099 F01: " + reason);
+            throw new AssertionError("L01.02 F01: " + reason);
         }
     }
 
@@ -99,7 +99,7 @@ class M03_TypeMelodyTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I101 F02: " + reason);
+            throw new AssertionError("L01.03 F02: " + reason);
         }
     }
 
@@ -124,7 +124,7 @@ class M04_BitmapBannerTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I121 F02: " + reason);
+            throw new AssertionError("L01.04 F02: " + reason);
         }
     }
 
@@ -144,7 +144,7 @@ class M05_ProgramMirrorTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I136 F02: " + reason);
+            throw new AssertionError("L01.05 F02: " + reason);
         }
     }
 
@@ -163,7 +163,7 @@ class M06_HigherOrLowerTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I032 F03: " + reason);
+            throw new AssertionError("L01.06 F03: " + reason);
         }
     }
 
@@ -189,7 +189,7 @@ class M07_SteppingFeetTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I098 F03: " + reason);
+            throw new AssertionError("L01.07 F03: " + reason);
         }
     }
 
@@ -212,7 +212,7 @@ class M08_SunflowerSpiralTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I110 F03: " + reason);
+            throw new AssertionError("L01.08 F03: " + reason);
         }
     }
 
@@ -233,7 +233,7 @@ class M09_PixelMonstersTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I113 F03: " + reason);
+            throw new AssertionError("L01.09 F03: " + reason);
         }
     }
 

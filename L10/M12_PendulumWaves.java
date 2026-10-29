@@ -24,6 +24,13 @@ void step() {
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Staň se choreografem: změň řadu period tak, aby sousední kyvadla tvořila dvě rodiny místo jedné
+/// plynulé řady. Odhadni, kdy by se mohl vzor zopakovat, a porovnej pohyb s předpovědí.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F30">
 /// ### Input (vstup) požádá; tick (krok) posune čas
 ///

@@ -8,7 +8,8 @@ import java.awt.image.BufferedImage;
 /// Vypěstuj slunečnicové uspořádání z tisíce barevných bodů. Malá změna úhlu mezi body může proměnit
 /// spirálu v několik ramen.
 ///
-/// **Tvoje mise:** Výchozí obrázek se smrskne do dvou ramen. Oprav defaultAngle tak, aby běžné spuštění
+/// **Tvoje mise · Nalaď obrazový nástroj:** Výchozí obrázek se smrskne do dvou ramen. Oprav defaultAngle
+/// tak, aby běžné spuštění
 /// používalo 137.5 stupně a rozložilo semínka do spirály.
 ///
 /// **Dnes trénuješ:** Named numeric value (pojmenovaná číselná hodnota): srozumitelné jméno spojuje
@@ -58,6 +59,18 @@ double defaultAngle = 137.5;
 /// Program vytvoří obrázek v paměti a zobrazí jej přímo v Javě. Zvolený úhel je ve stupních; Java
 /// zapisuje desetinná čísla tečkou. Po změně defaultAngle znovu spusť soubor, aby se nová hodnota
 /// načetla. Kontrola hry kontroluje chování, nikoli zastaralý obrázek v dřívějším okně.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Double literal (desetinný literál) používá tečku: 12.5. Čárka v Java source (zdrojovém kódu) není
+/// jiný desetinný oddělovač. Jméno defaultAngle uchovává jednu hodnotu, kterou čtou pozice mnoha
+/// bodů. Malá číselná změna může mít velký vizuální účinek, protože se promítne do mnoha bodů.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Po obnovení 137.5 zkus úhly 120, 137 a 137.6. Před každým spuštěním tipni paprsky nebo rozptýlený
+/// vzor. Jeden obrázek vyber jako mimozemskou květinu a kamarádovi předej jeho úhel jako recept;
+/// obrázek předem neukazuj.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">

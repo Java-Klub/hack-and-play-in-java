@@ -33,11 +33,10 @@ void hop(int dx, int dy) {
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F25">
-/// ### Invariant: slib po každé akci
+/// ### Invariant (trvale platné pravidlo) přežije akci
 ///
-/// Invariant (trvale platné pravidlo) je vztah, který má přežít přijaté akce. Některá akce množství
-/// pouze přesune mezi místy, nevytváří další. Před změnami ověř celý požadavek a potom jej proveď
-/// jednou. Odmítnutí má zachovat původní state (stav).
+/// Invariant je slib o platném state (stavu). Platí před tahem i po něm, ne až na konci hry. Představ
+/// si přesun svítících kamínků mezi nádobami:
 ///
 /// ```java
 /// int violet = 6;
@@ -50,9 +49,14 @@ void hop(int dx, int dy) {
 /// IO.println(violet + gold);
 /// ```
 ///
-/// Nádoby mají tři a pět; součet zůstane osm, protože přesun obě strany vyrovná. Potom zvaž devět
-/// jednotek: co musí zůstat beze změny? Vysvětli, proč změna jediné strany poruší součet, přestože
-/// jednotlivé hodnoty mohou působit platně.
+/// Trace (průchod): z `(6, 2)` vznikne `(3, 5)`, součet ve výpisu zůstane 8. Oba assignment
+/// (přiřazovací příkazy) patří k jedné přijaté akci. Změna jediné nádoby by kamínky tiše vytvářela nebo
+/// mazala. Požadavek 9 neprojde guard (vstupní podmínkou) a nezmění ani jednu nádobu.
+///
+/// Nejdřív napiš slib: součet zůstává stejný, zásoba neklesá pod nulu nebo tvar nezůstane ve zdi. Potom
+/// vyjmenuj všechny field (sdílené proměnné), které musí akce změnit společně. Předpověz obě nádoby pro
+/// amount 0 a 7. Ve vlastní variantě smíš vymyslet jiná pravidla; musíš ale říct, jaký invariant pro ně
+/// platí.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
@@ -79,6 +83,11 @@ void hop(int dx, int dy) {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Omez x+dx mezi tyto hranice; ponech kolize i kontrolu konce kola.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Změň pruhy aut a počáteční mezery tak, aby cesta vyžadovala zastávku uprostřed. Obě strany hráče
+/// stále udrž uvnitř hrací plochy.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

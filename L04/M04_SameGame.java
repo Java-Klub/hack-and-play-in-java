@@ -10,7 +10,7 @@
 /// **Dnes trénuješ:** While do vyčerpání práce: čekající queue a nasbíraný result odpovídají na různé
 /// otázky. Nalezení jednoho políčka neznamená, že už žádná políčka nečekají na prozkoumání.
 ///
-/// Spusť program a navzdory předčasné zprávě „No groups remain“ najdi dvě políčka stejné barvy,
+/// Navzdory předčasné zprávě „No groups remain“ najdi dvě políčka stejné barvy,
 /// která sdílejí hranu; po opravě zadej řádek a sloupec některého políčka z této skupiny.
 List<int[]> group(int row, int col) {
     var result = new ArrayList<int[]>();
@@ -102,6 +102,12 @@ List<int[]> group(int row, int col) {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// While condition (podmínka) má být pouze !queue.isEmpty().
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Navrhni počáteční board (desku) 5×5 se dvěma lákavými prvními skupinami. Než ji předáš spolužákovi,
+/// najdi vlastní cestu k vyčištění. Řešení zatajíš. Porovnej skóre po největší první skupině s
+/// promyšleným postupem.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

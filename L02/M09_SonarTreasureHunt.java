@@ -11,8 +11,10 @@ import javax.swing.*;
 /// Prohledej moře 8×8 a najdi tři ukryté poklady pouze osmi sondami. Každé minutí oznámí vzdálenost tehdy
 /// nejbližšího zbývajícího pokladu, proto před dalším pokusem porovnávej stopy.
 ///
-/// **Tvoje mise:** Program přijme sondu o řádek nebo sloupec za mapou. Oprav insideSea tak, aby do
-/// vnitřní mapy patřily pouze index (indexy) 0 až 7.
+/// **Tvoje mise · Hlídej všechny čtyři okraje moře:** Sestav pravidlo hranic moře: validRow přijímá
+/// vnitřní řádky 0..7, validColumn
+/// sloupce 0..7 a insideSea přijme pole jen při platnosti obou. Ani jedno tlačítko mimo mapu nesmí
+/// spotřebovat sondu.
 ///
 /// **Dnes trénuješ:** Boolean range (logický rozsah): několik comparison (porovnání) může popsat jedinou
 /// obdélníkovou oblast. Řádek i sloupec musejí být mezi svými dolními a horními hranicemi; osm pozic
@@ -21,7 +23,9 @@ import javax.swing.*;
 /// Program otevře moře. Kliknutím prozkoumej políčko. Zkus obě tlačítka Try outside: ani jedno nemá
 /// spotřebovat sondu. Po opravě obou mezí začne New sea nový lov pokladů.
 boolean insideSea(int row, int column) {
-    return row >= 0 && row < 8 && column >= 0 && column < 8;
+    boolean validRow = row >= 0 && row < 8;
+    boolean validColumn = column >= 0 && column < 8;
+    return validRow && validColumn;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F06">
@@ -48,22 +52,12 @@ boolean insideSea(int row, int column) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Řádek, sloupec, pole
 ///
-/// - `insideSea(int row, int column)` — Přijmi vnitřní row a column index (indexy řádku a sloupce), už
-///   převedené z hráčových souřadnic 1–8.
-/// - `row >= 0` — Řádek je alespoň nula; >= zahrnuje rovnost.
-/// - `row <= 8` — Současné horní porovnání zahrnuje samotnou osmičku, která je mimo osm pozic počítaných
-///   od nuly.
-/// - `column <= 8` — Sloupec má vlastní horní hranici; oprava jen řádku by ponechala další cestu ven.
-/// - `&&` — Logical AND (logické a): každé spojené porovnání musí být true, aby byl true celý expression
-///   (výraz).
-/// - `return` — Vrať spojené rozhodnutí; toto pravidlo samo neodebírá sondu.
-///
-/// ### Co už obstarává připravená část
-///
-/// command přečte hráčovy souřadnice, odečte od nich jednu a volá insideSea před záznamem sondy. distance
-/// vypočítá stopu a připravená historie uchovává každou starou stopu spojenou s původním okamžikem.
+/// row a column jsou vnitřní index (indexy), už převedené z hráčových souřadnic. validRow a
+/// validColumn pojmenovávají výsledky true/false. insideSea musí vrátit jediné rozhodnutí o celém
+/// poli. probe už při false ponechá počet sond a při povoleném novém poli jednu spotřebuje.
+/// Existující tlačítka dodávají záměrně neplatné souřadnice.
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Pro tuto hru">
@@ -79,16 +73,29 @@ boolean insideSea(int row, int column) {
 /// tvého pravidla odečte jedničku. Platný index (pořadové číslo) tak sahá od nuly do sedmi.
 // </editor-fold>
 
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Vnitřní coordinates (souřadnice) začínají nulou. Osm řádků znamená 0 až 7. Řádek může být platný,
+/// zatímco sloupec je mimo: (3,8) stále není mořské pole. Obdélník proto potřebuje odpověď pro řádek
+/// AND odpověď pro sloupec. Sleduj (0,0), (7,7), (-1,3) a (3,8); před kontrolou předpověz všechny
+/// čtyři výsledky.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Po opravě hranic připrav kamarádovi plán tří sond na předem vybraných polích a porovnej vodítka se
+/// třemi sousedními sondami. Potom změň jen připravený počet sond a sleduj změnu strategie. Velikost
+/// mapy 8×8 zachovej.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Vypsané souřadnice 1–8 se před tímto pravidlem převedou na 0–7.
+/// Každá souřadnice potřebuje vlastní dolní a horní porovnání.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Všechny čtyři hranice musejí platit současně.
+/// Jedna platná souřadnice nemůže vyvážit druhou mimo mapu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Použij row < 8 a column < 8; zachovej obě kontroly >= 0.
+/// Použij row >= 0 && row < 8 a column >= 0 && column < 8, potom obě boolean hodnoty spoj pomocí &&.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

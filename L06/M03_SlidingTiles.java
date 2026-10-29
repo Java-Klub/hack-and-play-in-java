@@ -16,7 +16,7 @@ import java.awt.GridLayout;
 /// používá běžný tah. Jeho účinky patří field (proměnné programu), kterou je třeba po přípravě obnovit,
 /// nikoli zastínit.
 ///
-/// Spusť program a klikni na očíslovaný dílek hned vedle mezery, aby se přesunul na prázdné
+/// Klikni na očíslovaný dílek hned vedle mezery, aby se přesunul na prázdné
 /// místo.
 void reset(long seed) {
     for (int i = 0; i < 9; i++) {
@@ -84,6 +84,12 @@ void reset(long seed) {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// U resetovacího přiřazení odeber lokální deklaraci int.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Nahraď náhodné míchání pěti zvolenými platnými posuny přes existující slide. Spolužákovi dej
+/// výslednou desku a opačné řešení si nech. Příprava smí měnit dílky, ale zobrazené počítadlo hráčových
+/// tahů musí začít nulou.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -10,7 +10,7 @@
 /// návratu z reset() zanikne, ale field (proměnná programu) player zůstává. Obnov stav, který skutečně
 /// čtou příkazy.
 ///
-/// Spusť program a zadej číslo jedné své jamky od 1 do 6, aby se její kameny rozesely po desce.
+/// Zadej číslo jedné své jamky od 1 do 6, aby se její kameny rozesely po desce.
 void reset() {
     pits = new int[14];
     Arrays.fill(pits, 4);
@@ -66,6 +66,12 @@ void reset() {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Přiřaď existujícímu player; inicializaci jamek ponech.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Navrhni jiné počáteční rozdělení šesti běžných jamek na každé straně. Oba sklady nech prázdné a
+/// zachovej stejnou výhodu hráčů. Před hrou předpověz první tah, který přidá další tah. Nastavení patří
+/// do reset, nikoli do pozdějšího zobrazení.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

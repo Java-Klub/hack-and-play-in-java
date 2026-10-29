@@ -9,8 +9,10 @@ import java.awt.GridLayout;
 /// Doplň malé Sudoku 4×4 s čísly 1–4 právě jednou v každém řádku, sloupci a bloku 2×2. Pevná čísla dávají
 /// výchozí bod a prázdná políčka můžeš doplňovat.
 ///
-/// **Tvoje mise:** Zámek chrání prázdná políčka místo předtištěných čísel. Oprav place tak, aby platné
-/// upravitelné políčko přijalo hodnotu a pevná čísla i neplatné volby zůstaly nedotčené.
+/// **Tvoje mise · Obnov zámky nápověd:** Deska přijímá zápisy bez ochrany. Před připravené assignment
+/// (přiřazení) doplň
+/// guard (ochranné podmínky): hra nesmí být hotová, valid(row, col, value) musí volbu povolit a
+/// clues[row][col] musí být nula. Zeptej se valid před čtením clues. Odmítnutá volba nic nemění.
 ///
 /// **Dnes trénuješ:** Chraň zápis časným return (návratem): spoj důvody odmítnutí a jediný zápis proveď
 /// až tehdy, když žádný neplatí. Souřadnice musí být ověřené před čtením tabulky pevných čísel.
@@ -18,7 +20,9 @@ import java.awt.GridLayout;
 /// Spusť program, ve výběru čísla zvol 2 a klikni na prázdné políčko bezprostředně vpravo od
 /// levé horní 1.
 boolean place(int row, int col, int value) {
-    if (complete() || !valid(row, col, value) || clues[row][col] != 0) return false;
+    if (complete()) return false;
+    if (!valid(row, col, value)) return false;
+    if (clues[row][col] != 0) return false;
     board[row][col] = value;
     return true;
 }
@@ -48,34 +52,38 @@ boolean place(int row, int col, int value) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Povolení před zápisem
 ///
-/// - `complete()` — Připravená kontrola ano/ne pro už dokončenou hádanku.
-/// - `!valid(row, col, value)` — ! obrací připravené rozhodnutí o platnosti: tato část je true, když je
-///   navržené položení neplatné.
-/// - `clues[row][col] == 0` — Přečti tabulku pevných čísel; nula znamená, že toto políčko původně nemělo
-///   předtištěné číslo.
-/// - `return false;` — Dokonči call (volání) beze změny desky.
-/// - `board[row][col] = value;` — Chráněný zápis uloží zvolenou hodnotu do přijatého řádku a sloupce.
-/// - `return true;` — Oznam volající části, že položení bylo přijato.
-///
-/// ### Co už obstarává připravená část
-///
-/// valid už ověřuje hranice, řádky, sloupce a bloky. complete kontroluje dokončenou desku a připravená
-/// tlačítka volají place a obnovují své popisky. Upravované pravidlo určuje, které požadavky se smějí
-/// dostat k zápisu.
+/// row a col jsou coordinates (souřadnice) od nuly; value je vybrané číslo a nula slouží k mazání.
+/// complete a valid jsou připravené otázky. clues uchovává původní pevná pole. board je upravovaná
+/// deska. clues čti až poté, co valid vyloučí neplatné souřadnice. Assignment (přiřazení) a return
+/// true se provedou jen bez odmítnutí.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// valid už ověřuje coordinates (souřadnice), rozsah hodnoty a konflikty čísel. Je bezpečné zeptat se
+/// valid na pole mimo desku; není bezpečné nejprve indexovat clues. Tištěná nápověda má nenulový
+/// záznam v clues, i když se později board změní. Všechny odmítací cesty ponech před jediným
+/// assignment (přiřazením) do board.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Vyřeš opravenou hádanku, potom vymaž vybraná čísla v existující desce reset a připrav malou
+/// hádanku kamarádovi. Zachovej shodu řádků, sloupců a bloků. Má hádanka zřejmý první tah?
+/// Nepředpokládej, že každá upravená deska má jediné řešení.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Nula v clues znamená, že zde nebyla pevná nápověda.
+/// Jedinému zápisu mohou zabránit tři nezávislé důvody.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// valid zachovej před přístupem do clues: ověřuje i souřadnice.
+/// Připravené valid musí proběhnout před tvým čtením clues.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Odmítající condition (podmínka) pro nápovědu je clues[row][col] != 0.
+/// Zachovej complete(); odmítni !valid(row, col, value); potom clues[row][col] != 0; konečné
+/// přiřazení nech za všemi guard.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

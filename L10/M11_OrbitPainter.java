@@ -40,6 +40,13 @@ void step() {
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Vytvoř dvoubarevný podpis oběžné dráhy: pohyb ven a dovnitř rozliš barvou podle staré a nové
+/// vzdálenosti od středu. Hledej start, jehož stopa se mnohokrát kříží a přitom neopustí plátno.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F30">
 /// ### Input (vstup) požádá; tick (krok) posune čas
 ///

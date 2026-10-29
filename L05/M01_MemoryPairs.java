@@ -9,16 +9,20 @@ import java.awt.GridLayout;
 /// Otoč dvě karty a zapamatuj si, kde se skrývají jejich dvojice. Hra není fér, když různé karty ukazují
 /// stejný obrázek.
 ///
-/// **Tvoje mise:** Odkryté karty přebírají hodnotu první karty. Oprav visible(int index), ale nechej
-/// nespárované skryté karty zakryté.
+/// **Tvoje mise:** Žádná vybraná karta neodhalí líc. Sestav visible(index): vrať kartu na dané pozici,
+/// pokud je matched, first nebo second; jinak vrať skrytou značku nula. Různé pozice musí číst své
+/// vlastní hodnoty.
 ///
 /// **Dnes trénuješ:** Arrays (pole): související pole popisují stejné očíslované pozice. Přečti
 /// požadovanou pozici a zachovej pravidlo, které rozhoduje o jejím odkrytí.
 ///
-/// Spusť program a klikni na dvě zakryté karty; po neshodě začne kliknutí na další zakrytou
-/// kartu nový pokus.
+/// Klikni na zakrytou kartu. Nehotové zobrazení ji stále skrývá, přestože už jde o první vybranou
+/// pozici. Nejdřív sestav pravidlo odhalení a potom zkoušej paměť.
 int visible(int index) {
-    return matched[index] || index == first || index == second ? cards[index] : 0;
+    if (matched[index] || index == first || index == second) {
+        return cards[index];
+    }
+    return 0;
 }
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F16">
@@ -39,32 +43,37 @@ int visible(int index) {
 /// Co se změní při `chosen` rovném dvěma? Který index už bude první neplatný?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// Parallel arrays (související pole) používají stejné číslo pozice: cards[index] je líc,
+/// matched[index] říká, zda už byla nalezena dvojice. first a second ukládají právě vybrané pozice.
 ///
-/// - `matched[index]` — Čte, zda právě tato pozice karty už patří k nalezené dvojici.
-/// - `||` — Logical OR (logické nebo): stačí kterýkoli z uvedených důvodů odkrytí.
-/// - `index == first` — Porovnává požadovanou pozici s první vybranou pozicí.
-/// - `? cards[0] : 0` — Conditional expression (podmíněný výraz): při odkrytí použije levý výsledek,
-///   jinak nulu. Zvolený prvek pole souvisí s chybou.
+/// | cards | first | žádaný index | matched zde | odpověď |
+/// | --- | --- | --- | --- | --- |
+/// | 2, 5, 2, 5 | 1 | 0 | false | 0 |
+/// | 2, 5, 2, 5 | 1 | 1 | false | 5 |
+/// | 2, 5, 2, 5 | 1 | 2 | true | 2 |
 ///
-/// ### Co už obstarává připravená část
-///
-/// play() pamatuje dvě vybrané karty a označuje skutečné dvojice. refresh() se přes visible() ptá na
-/// popisek každého tlačítka; připravené Swing callbacks (reakce na události) propojují kliknutí s těmito
-/// metodami.
+/// Jedním rozhodnutím odliš veřejné líce od skrytých. Při odhalení musí žádaný index vybrat oba
+/// související údaje. Předpověz poslední pozici při second 3. Dvojice a tahy obstarává připravený kód;
+/// visible pouze odpovídá, co lze ukázat.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// cards a matched popisují stejné očíslované pozice.
+/// Vypiš tři nezávislé důvody pro viditelnou kartu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// index je pozice, kterou požaduje refresh().
+/// Platí-li některý důvod, čti cards na žádaném indexu; jinak ponech nulu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// cards[index] použij jen ve viditelné větvi podmínky.
+/// Spoj matched[index], first a second pomocí OR a vrať vybranou kartu nebo skrytou značku.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Vytvoř beacon card (orientační kartu): jedna zvolená pozice zůstane viditelná i před výběrem. Přidej
+/// tuto podmínku k odhalování a zvol místo, které pomůže začátečníkovi bez odkrytí všech dvojic.
+/// Vysvětli, které karty zůstávají soukromé.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

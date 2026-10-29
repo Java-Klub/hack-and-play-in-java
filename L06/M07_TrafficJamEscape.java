@@ -9,7 +9,7 @@
 /// **Dnes trénuješ:** Pure contracts (smlouvy čistých dotazů): odděl otázku, zda se tah vejde, od
 /// provedení tahu. Opakované i neúspěšné zkoušky musí ponechat desku beze změny.
 ///
-/// Spusť program a zkus posun auta zadáním B 2, potom pomocí písmene auta a počtu kroků se
+/// Zkus posun auta zadáním B 2, potom pomocí písmene auta a počtu kroků se
 /// znaménkem uvolni výjezd auta A.
 boolean fits(int car, int x, int y) {
     for (int i = 0; i < lengths[car]; i++) {
@@ -76,6 +76,12 @@ boolean fits(int car, int x, int y) {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Z fits() odeber přiřazení do xs[car] a ys[car]; kontroly kolizí ponech.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Přidej příkaz hint, který oznámí, zda zvolené auto smí na dvě kandidátní pozice. Pro oba dotazy
+/// použij fits bez provedení tahu. Připrav blokovanou a volnou pozici a ukaž, že samotná nápověda
+/// ponechá všechna auta na místě.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

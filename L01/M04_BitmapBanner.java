@@ -3,7 +3,8 @@
 /// Vytvoř velkou ceduli do arcade z malých vypsaných znaků #. Ručně připravená abeceda promění krátkou
 /// zprávu v pět řádků obrazového písma.
 ///
-/// **Tvoje mise:** Cedule nyní vypisuje jen prázdné místo. Oprav zprávu z bannerMessage tak, aby výchozí
+/// **Tvoje mise · Obnov herní ceduli:** Cedule nyní vypisuje jen prázdné místo. Oprav zprávu z
+/// bannerMessage tak, aby výchozí
 /// cedule říkala JAVA CLUB!.
 ///
 /// **Dnes trénuješ:** Literal (doslovný zápis) a output (výstup): zvolený text určuje, co další akce
@@ -60,6 +61,17 @@ String bannerMessage() {
 /// Rozšiř panel, aby bylo písmo s pevnou šířkou dobře vidět. Připravené písmo podporuje pouze
 /// uvedená písmena, `!` a mezery, takže libovolný text může být odmítnut. Comment (komentář)
 /// popisující novou ceduli nezmění zprávu vrácenou bannerMessage.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Text může existovat, i když nevidíš písmeno. `"   "` uchovává tři mezery; `""` neobsahuje žádný
+/// znak. Banner vyhledá pětiřádkový tvar každého podporovaného písmene. Teď vybíráš předaná data,
+/// nemusíš psát vykreslení pěti řádků. Předpověz, zda přidaná mezera změní šířku výpisu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Z dostupných písmen A B C J L U V, mezer a ! vytvoř absurdní klubovou ceduli. Zkus CLUB JAVA! nebo
+/// opakovaný poplach. Existující kreslicí znak # změň na jiný jediný znak a vyber čitelnější ceduli.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">

@@ -16,7 +16,7 @@ import java.util.Arrays;
 /// **Dnes trénuješ:** Records (datové záznamy): pravidlo může nést svá data i dotaz nad nimi. Components
 /// (složky) x a y vybírají sousední čísla k porovnání.
 ///
-/// Spusť program a opakovaným klikáním na volné políčko měň jeho číslo při sledování okolních
+/// Opakovaným klikáním na volné políčko měň jeho číslo při sledování okolních
 /// znamének nerovnosti.
 record Rule(int x, int y) {
     boolean satisfiedBy(int[][] values) {
@@ -69,6 +69,12 @@ record Rule(int x, int y) {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Vrať values[y][x] < values[y][x+1]; rovnost musí dát false.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Rozšiř Rule o boolean (logickou volbu) mezi vodorovnými a svislými sousedy. Ve vlastním rébusu
+/// použij jednu svislou nápovědu. Nakresli porovnávané buňky a příklad, který splní vodorovný výklad,
+/// ale nesplní svislý.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

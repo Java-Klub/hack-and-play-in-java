@@ -10,12 +10,12 @@ import javax.swing.Timer;
 /// Sleduj pole blikajících světlušek, které postupně hledají společný rytmus. Měň coupling (sílu
 /// propojení) a porovnej nezávislé záblesky s davem pulzujícím společně.
 ///
-/// **Tvoje mise:** Každý platný příkaz Coupling nastaví nulu, takže posuvník nemůže zesílit sladění.
-/// Obnov přenášenou hodnotu a při neplatných příkazech zachovej předchozí nastavení.
+/// **Tvoje mise:** Vytvoř apply pro všechny control cards (ovládací karty): přijmi konečné Coupling v
+/// 0..2, ostatní ignoruj, pro Toggle obrať running a pro Restart zavolej reset s jeho seed. Input
+/// listeners (obsluhy vstupu) mají dál předávat karty do jediného dispatcher.
 ///
-/// **Dnes trénuješ:** Record-pattern case (větev se vzorem record) s guard (podmínkou) přijme jen
-/// použitelné hodnoty jedné alternativy. Zbývající Coupling case záměrně nic nedělá; Toggle a Restart
-/// mají samostatné účinky.
+/// **Dnes trénuješ:** Sestavíš celý record-pattern dispatcher (směrování podle typu a složek). Rozliš
+/// alternativu, vyjmi její data a zachovej hranici mezi směrováním a připraveným algoritmem.
 ///
 /// Po spuštění programu posuň Coupling směrem k 2 a sleduj číslo sladění; pomocí Pause/Run či
 /// New phases porovnej záblesky.
@@ -27,6 +27,14 @@ void apply(Control control) {
         case Restart(var seed) -> reset(seed);
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Přidej control card (ovládací kartu), která nastaví všem světluškám stejnou fázi. Nové tlačítko
+/// zapoj přes apply, místo změny fází přímo v listener (obsluze události). Porovnej okamžité srovnání
+/// s postupným coupling (vazbou): podobný obraz může vzniknout jinou cestou.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F35">
 /// ### Record patterns (vzory záznamů): vyber typ a rozbal data
@@ -52,20 +60,21 @@ void apply(Control control) {
 /// Předpověz: která větev zpracuje `new Stars(0)` a jaký text vznikne pro `new Name("Nova")`?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// ### Jedna vstupní cesta, čtyři pozorovatelné výsledky
 ///
-/// - `case Coupling(var value)` — Vybere požadovanou sílu z tohoto příkazu.
-/// - `Double.isFinite(value) && value >= 0 && value <= 2` — Všechny tři podmínky musí platit před
-///   spuštěním přijaté akce Coupling.
-/// - `coupling = 0` — Nyní zahodí přijatou hodnotu a pokaždé vypne propojení.
-/// - `case Coupling(var value) -> { }` — Zpracuje odmítnuté síly beze změny předchozího state (stavu).
+/// Stejná control family (rodina ovládání) může přijít z posuvníků, tlačítek nebo kontroly. Switch
+/// statement (výběr akcí) provádí účinky bez návratu hodnoty. Coupling potřebuje dvě větve: guarded
+/// usable value (platnou hodnotu s podmínkou) a zbývající ignorovanou. Double.isFinite před mezemi
+/// vyloučí NaN i nekonečno. Toggle nemá složky; Restart nese jeden seed.
 ///
-/// ### Co už obstarává připravená část
+/// Neutrální příklad: povolená hlasitost 0..10 změní předchozí 4 na 7 po Volume(7), ale po Volume(20)
+/// nechá 4. Předpověz stav po Volume(7), Volume(-1) při počátku 4. Ignorovat chybnou hodnotu znamená
+/// nechat starou, nikoli ji nahradit nulou.
 ///
-/// Posuvník a tlačítka vytvářejí Control record a posílají je přes apply. Připravený step počítá další
-/// phase snapshot (snímek fází), order měří sladění a reset vytvoří opakovatelné počáteční fáze podle
-/// seed (počáteční hodnoty).
+/// Zde coupling řídí postupné ovlivňování fází, Toggle pozastaví čas a reset znovu zvolí fáze.
+/// Zapojení všech účinků do apply dovoluje kontrolu bez okna. New phases neslibuje okamžitou
+/// synchronizaci: sleduj změnu čísla order v čase.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
@@ -80,15 +89,15 @@ void apply(Control control) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Guard (podmínka) už odděluje platné a neplatné hodnoty Coupling.
+/// Před kódem napiš jednu odpovědnost pro každou record alternative (možnost).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Rozpoznané var value je nová síla, nikoli pevná nula.
+/// Použij Coupling case s guard (podmínkou) a potom zbývající Coupling s prázdným tělem.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Zachovej náhradní case (větev) Coupling i úplné zpracování ostatních uzavřených alternativ.
+/// Nastav coupling z nalezené hodnoty, obrať running a nalezený seed předej reset.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

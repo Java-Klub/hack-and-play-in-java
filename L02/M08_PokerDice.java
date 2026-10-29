@@ -3,8 +3,10 @@
 /// Hoď pěti kostkami, ponech slibné hodnoty a před uložením bodů přehoď vybrané pozice. Pět kol umožní
 /// porovnat malé jisté odměny se snahou získat silnější kombinace.
 ///
-/// **Tvoje mise:** Cvičná kombinace 2,2,2,3,4 je chybně odměněna jako full house. Oprav fullHouse tak,
-/// aby byla vyžadována současně trojice i dvojice.
+/// **Tvoje mise · Sestav férového rozhodčího:** Rozhodčí full house nemá funkční pravidlo. Doplň
+/// rozhodnutí triple a pair a spoj
+/// je tak, aby tuto kategorii vyhrála jen trojice společně s dvojicí. Samotná trojice si ponechá
+/// menší běžnou odměnu.
 ///
 /// **Dnes trénuješ:** Skládání boolean condition (logických podmínek): OR přijme kteroukoli část, zatímco
 /// AND vyžaduje obě. U trojice bez dvojice nejdřív urči obě pravdivostní hodnoty zvlášť a teprve potom je
@@ -14,7 +16,9 @@
 /// ponech tři dvojky, vyber kostky 4 a 5 a stiskni Reroll selected. Bank points uloží body a
 /// připraví další kolo; Scoring help vysvětlí kombinace.
 boolean fullHouse(int largestGroup, int pairs) {
-    return largestGroup == 3 && pairs == 1;
+    boolean triple = largestGroup == 3;
+    boolean pair = pairs == 1;
+    return triple && pair;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F06">
@@ -41,33 +45,36 @@ boolean fullHouse(int largestGroup, int pairs) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Dvě skutečnosti a jeden rozsudek
 ///
-/// - `boolean fullHouse(int largestGroup, int pairs)` — Pravidlo přijme dva spočítané údaje a vrátí
-///   jediné rozhodnutí o zařazení.
-/// - `largestGroup == 3` — Ověř, zda největší skupina stejných kostek obsahuje tři kostky; == porovnává
-///   tato čísla.
-/// - `pairs == 1` — Ověř, zda byla nalezena právě jedna dvojice.
-/// - `||` — Logical OR (logické nebo): true, když platí alespoň jedna strana, včetně případů, kdy druhá
-///   neplatí.
-/// - `return` — Vrať spojený výsledek true/false do výpočtu bodů.
-///
-/// ### Co už obstarává připravená část
-///
-/// points už počítá skupiny kostek a ptá se fullHouse na tuto kategorii. reset dodává známou cvičnou
-/// kombinaci; pozdější volání deal losují náhodné kombinace a command řeší přehazování i ukládání bodů.
+/// largestGroup a pairs jsou dodané počty, nikoli kostky k hodu. Doplň dva boolean expression
+/// (logické výrazy), každý pro jednu skutečnost. Jméno boolean může být součástí dalšího boolean
+/// expression. return jejich odpovědi spojí; points už přiděluje 35 za tuto kategorii a 20 za běžnou
+/// trojici. Rozhodčí tedy mění skutečné skórování.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Odděl dvě skutečnosti před jejich spojením. Ruka 4,4,4,2,6 má trojici bez dvojice: true a false.
+/// Ruka 4,4,4,2,2 má obojí: true a true. Boolean local variable (místní logická proměnná) uchovává
+/// jednu takovou odpověď. Před výběrem spojení předpověz obě odpovědi pro 4,4,2,2,6.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Po zprovoznění standardního full house navrhni záměrně jiné domácí pravidlo a před hrou je
+/// vysvětli kamarádovi. Například změň odměnu v points, místo abys omylem každou trojici nazýval full
+/// house. Porovnej dopad na přehazování kostek.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Napiš, zda je každá polovina true u trojice bez dvojice.
+/// Obě skutečnosti odvoď nezávisle z largestGroup a pairs.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// OR přijme kteroukoli polovinu; toto pravidlo potřebuje obě.
+/// Před volbou spojovacího operátoru ověř true/false, false/true a true/true.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Spoj obě comparison (porovnání) pomocí &&.
+/// triple je largestGroup == 3; pair je pairs == 1; vrať triple && pair.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

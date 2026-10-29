@@ -10,7 +10,8 @@ import javax.swing.Timer;
 /// Zamiř dělem na oranžový cíl a sleduj zakřivený let střely v gravitaci. Každý pokus ti umožní viditelně
 /// porovnat směr a sílu výstřelu.
 ///
-/// **Tvoje mise:** Výchozí verze nechá střelu spadnout u hlavně, protože vypočtená rychlost je nula.
+/// **Tvoje mise · Probuď dělo:** Výchozí verze nechá střelu spadnout u hlavně, protože vypočtená rychlost
+/// je nula.
 /// Oprav launchSpeed tak, aby natažení 100 dalo rychlost 9 a natažení vzhůru zachovalo záporné znaménko.
 ///
 /// **Dnes trénuješ:** Arithmetic (aritmetika) a numeric type (číselné typy): záleží i na mezivýpočtech.
@@ -22,6 +23,22 @@ import javax.swing.Timer;
 double launchSpeed(double drag) {
     return drag * 0.09;
 }
+
+// <editor-fold defaultstate="expanded" desc="Průchod hodnotami · zkus předpovědět">
+/// Celé call (volání) má svou cestu:
+///
+/// ```java
+/// double half(double amount) {
+///     return amount / 2;
+/// }
+/// double piece = half(9);
+/// ```
+///
+/// Volající dodá argument (skutečný vstup) 9. Při tomto volání parameter (parametr) amount uchovává
+/// 9.0. Expression (výraz) vytvoří 4.5; return jej vrátí a piece uloží. Declaration (deklarace)
+/// popisuje vstup; call dodává hodnotu. Return nic nevypisuje. Předpověz half(-6), potom stejnými
+/// čtyřmi kroky sleduj launchSpeed(100).
+// </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F04">
 /// Arithmetic (aritmetika) používá operand type (typy operandů) v okamžiku provedení operace. Jsou-li
@@ -63,6 +80,11 @@ double launchSpeed(double drag) {
 ///
 /// aim omezuje směr a délku natažení. launch volá tvůj výpočet pro obě rychlosti, step přidává gravitaci
 /// a rozpoznává zásahy a zbývající část okna dodává myš a timer (časovač).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Po opravě převodu zkus dva směry zamíření se stejnou délkou tahu. Předpověz, který výstřel
+/// vystoupá výš. Potom záměrně změň jen měřítko a ověř, zda původní předpověď o směru stále platí.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">

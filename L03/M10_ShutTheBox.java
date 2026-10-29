@@ -3,8 +3,10 @@
 /// Hoď dvěma kostkami a zavři otevřená číslovaná políčka se součtem odpovídajícím hodu. Snaž se ponechat
 /// užitečný výběr pro další hody a zavřít všechna políčka, než nezbude platná možnost.
 ///
-/// **Tvoje mise:** Cíl zahrnuje pouze první kostku, ačkoli se vypisují obě strany. Oprav diceTotal tak,
-/// aby přispívaly obě přijaté hodnoty kostek.
+/// **Tvoje mise · Napiš a zapoj pravidlo kostek:** Napiš diceTotal tak, aby vrátila součet obou kostek.
+/// Potom oprav její zapojení v
+/// roll: výsledek diceTotal(firstDie, secondDie) přiřaď do target. Musí fungovat samotný výpočet i
+/// skutečný cíl hodu.
 ///
 /// **Dnes trénuješ:** Opakovaně použitelný výpočet: dva parameter (parametry) dovolí jediné method
 /// (metodě) pracovat s libovolnou dvojicí kostek. Volání s 1 a 1 nebo se 6 a 6 má například sledovat
@@ -14,6 +16,15 @@
 /// čísla, která mají tento součet vytvořit.
 int diceTotal(int first, int second) {
     return first + second;
+}
+
+void roll() {
+    firstDie = random.nextInt(1, 7);
+    secondDie = random.nextInt(1, 7);
+    target = diceTotal(firstDie, secondDie);
+    if (!possible()) {
+        outcome = "No legal closure. Final open sum: " + sum();
+    }
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F13">
@@ -42,31 +53,37 @@ int diceTotal(int first, int second) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Od kostek k cíli
 ///
-/// - `int diceTotal(int first, int second)` — Method (metoda) vrací celé číslo a přijímá dvě samostatně
-///   pojmenovaná celá čísla.
-/// - `first` — Hodnota první kostky dodaná při tomto call (volání).
-/// - `second` — Hodnota druhé kostky, dostupná i přesto, že ji nehotové tělo ignoruje.
-/// - `,` — Odděl dvě declaration (zavedení) parametrů; jejich hodnoty nespojuje.
-/// - `return first;` — Toto nyní vrací pouze jediný input (vstup) místo výsledku používajícího oba.
-///
-/// ### Co už obstarává připravená část
-///
-/// roll vylosuje a vypíše dvě skutečné kostky a potom volá diceTotal. possible kontroluje, zda otevřená
-/// políčka umožní splnit cíl, command zavře vybraná políčka a display ukáže zbývající volby.
+/// diceTotal dostane first a second, místní parameter (parametry) jednoho výpočtu. roll uloží dvě
+/// vygenerované hodnoty do firstDie a secondDie. To jsou argument (skutečné vstupy) tvé method.
+/// Přiřazení samotného firstDie nové pravidlo obejde. possible je připravená otázka, zda otevřená
+/// políčka mohou splnit vypočítaný cíl; její hledání neměň.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Správně definovaná method (metoda) nestačí, pokud ji hra nevolá. diceTotal(2, 5) musí počítat z
+/// obou argument (skutečných vstupů) a roll musí vrácenou hodnotu přiřadit do target. Dvě volání
+/// random.nextInt jsou připravené generátory kostek. Zachovej je a změň jen to, jak se jejich dva
+/// výsledky změní na cíl. Předpověz stejné i rozdílné kostky.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Vytvoř domácí variantu s bonusem za dvě stejné kostky. Pravidlo dej do diceTotal a ponech jeho
+/// volání v roll. Předpověz nejmenší a největší cíl varianty; ověř, zda lze každý cíl ještě splnit
+/// zbývajícími políčky.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Použij různé hodnoty, například 2 a 5, aby byl ignorovaný parametr vidět.
+/// Jsou tu dvě práce: definovat výpočet a použít jej.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Oba parameter (parametry) patří tomuto konkrétnímu volání.
+/// Call (volání) předává skutečné argument v závorkách; vrácený výsledek lze přiřadit.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Vrať first + second.
+/// Vrať first + second; potom v roll nastav target = diceTotal(firstDie, secondDie).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
@@ -110,14 +127,7 @@ boolean possible() {
     return false;
 }
 
-void roll() {
-    firstDie = random.nextInt(1, 7);
-    secondDie = random.nextInt(1, 7);
-    target = diceTotal(firstDie, secondDie);
-    if (!possible()) {
-        outcome = "No legal closure. Final open sum: " + sum();
-    }
-}
+
 
 void command(String input) {
     require(outcome.isEmpty());

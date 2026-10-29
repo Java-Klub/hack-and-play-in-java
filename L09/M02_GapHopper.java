@@ -28,25 +28,28 @@ void recyclePipes() {
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F22">
-/// ### List (seznam): pořadí, které můžeš měnit
+/// ### List (seznam) drží pořadí měnících se věcí
 ///
-/// `List<String>` uchovává texty v pořadí. `new ArrayList<>()` vytvoří mutable list (měnitelný
-/// seznam): obsah lze měnit bez nahrazení samotného seznamu.
+/// Array (pole) má pevný počet míst. Mutable List (měnitelný seznam) může růst i ubývat a zachovává
+/// pořadí. `List<T>` popisuje přístup k prvkům typu T; `ArrayList<T>` je měnitelná JDK implementation
+/// (implementace).
 ///
 /// ```java
-/// List<String> snacks = new ArrayList<>();
-/// snacks.add("apple");
-/// snacks.add("nuts");
-/// IO.println(snacks.get(0));
-/// IO.println(snacks.size());
+/// List<String> trail = new ArrayList<>();
+/// trail.add("north");
+/// trail.add("east");
+/// String latest = trail.removeLast();
+/// IO.println(trail + " / " + latest);
 /// ```
 ///
-/// Výstup je `apple`, potom `2`. `add(value)` připojí jeden prvek na konec; `get(index)` přečte prvek
-/// bez odebrání. Indexes (indexy) začínají nulou. `isEmpty()` zjišťuje, zda seznam nemá prvky.
-/// `removeLast()` odebere a vrátí poslední prvek; volej jej jen u neprázdného seznamu. Seznam přímo z
-/// `List.of(...)` měnit nelze, ale `new ArrayList<>(List.of(...))` měnit lze.
+/// Výsledek je `[north] / east`. `add` připojí na konec; `removeLast` poslední prvek odstraní a zároveň
+/// vrátí. Před odebráním z prázdného List ověř `isEmpty`. Queue (fronta) odebírá vpředu a přidává
+/// vzadu, zatímco undo stack (zásobník změn) odebírá nejnovější prvek. Správný konec určuje význam
+/// pořadí.
 ///
-/// Předpověz: po `snacks.removeLast()` jaká bude velikost a první prvek?
+/// `List.of("north", "east")` vytvoří unmodifiable List (neměnitelný seznam): čtení funguje, přidávání
+/// ne. `new ArrayList<>(existing)` vytvoří mutable List s dosavadními prvky. Předpověz obsah trail po
+/// přidání `"south"`. Když vracíš dvě změny, která má zmizet jako první?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
@@ -74,6 +77,11 @@ void recyclePipes() {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Remove a add zachovají pořadí dvou překážek; List neměň během dřívějšího for-each.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Nech newGap() střídat vysoké a nízké mezery a zkus létat v záměrném rytmu. Recyklované překážky
+/// stále drž v pořadí zleva doprava.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

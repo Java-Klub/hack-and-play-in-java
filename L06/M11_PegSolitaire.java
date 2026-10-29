@@ -9,7 +9,7 @@
 /// **Dnes trénuješ:** Writing functional checks (psaní funkčních kontrol): užitečná sada obsahuje i
 /// protipříklady, nejen úspěšné tahy. Očekávaný boolean (ano/ne) říká, zda je právě tento skok legální.
 ///
-/// Spusť program a zadáním 1 2 3 2 proveď první skok krátkého hlavolamu s kolíky, potom pomocí
+/// Zadáním 1 2 3 2 proveď první skok krátkého hlavolamu s kolíky, potom pomocí
 /// kontroly hry prověř své příklady.
 record JumpExample(int row, int column, int toRow, int toColumn, boolean expected) {
 }
@@ -78,6 +78,12 @@ JumpExample[] learnerChecks() {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Přidej tyto false případy a souřadnici mimo plochu; ponech platný (0,1)->(2,1).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Připrav skokovou hádanku s jedním platným a dvěma téměř platnými tahy: změň jen prostřední kámen,
+/// cíl či směr. Skryj očekávané boolean (logické výsledky) a druhá dvojice je před spuštěním předpoví.
+/// Každou těsnou neshodu zdůvodni zvlášť.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
@@ -213,7 +219,9 @@ void require(boolean valid) {
 void verifyExamples() {
     for (var e : learnerChecks()) {
         if (legal(e.row(), e.column(), e.toRow(), e.toColumn()) != e.expected()) {
-            throw new IllegalStateException("Jump example has wrong expected result");
+            throw new IllegalStateException("Jump (" + e.row() + "," + e.column() + ")->("
+                    + e.toRow() + "," + e.toColumn() + "): expected legal=" + e.expected()
+                    + ", actual=" + legal(e.row(), e.column(), e.toRow(), e.toColumn()));
         }
     }
 }

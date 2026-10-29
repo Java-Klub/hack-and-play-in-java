@@ -3,84 +3,75 @@
 /// Proměň COLD ve WARM změnou jediného písmene při každém tahu. Součástí hádanky je celá cesta: dosáhneš
 /// cíle, aniž bys zapomněl, kudy jsi šel?
 ///
-/// **Tvoje mise:** Po platném tahu cesta ztratí starší slova. Oprav změnu history tak, aby odmítnuté tahy
-/// i restart zůstaly spolehlivé.
+/// **Tvoje mise:** Vytvoř command(input): odstraň okolní mezery, převeď na uppercase (velká písmena) s
+/// Locale.ROOT a přijmi jen slovo ze slovníku lišící se právě jedním písmenem. Změň current a připoj
+/// slovo do history. WARM nastaví outcome s history.size()-1 tahy. Neplatný tah nebo dokončené kolo
+/// odmítni před změnou current i history.
 ///
-/// **Dnes trénuješ:** Mutable List (měnitelný seznam) pamatuje položky v pořadí. Jedno přijaté slovo má
-/// prodloužit existující cestu; nahrazení celého List změní, co si hráč pamatuje.
+/// **Dnes trénuješ:** Vytvoř práci s ordered mutable collection (uspořádanou měnitelnou kolekcí) a
+/// určuj přijetí i prázdný případ.
 ///
 /// Po spuštění programu napiš CORD a potom CARD a posouvej se od COLD; /r obnoví začátek a /q
 /// ukončí hru. Po výhře Enter zahájí novou cestu.
 void command(String input) {
     require(outcome.isEmpty());
-    String word = input.toUpperCase(Locale.ROOT);
+    String word = input.strip().toUpperCase(Locale.ROOT);
     require(List.of(words).contains(word) && adjacent(current, word));
     current = word;
     history.add(word);
-    if (word.equals("WARM")) {
-        outcome = "Reached WARM in " + (history.size() - 1) + " moves!";
-    }
+    if (word.equals("WARM")) outcome = "Reached WARM in " + (history.size() - 1) + " moves!";
 }
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F22">
-/// ### List (seznam): pořadí, které můžeš měnit
+/// ### List (seznam) drží pořadí měnících se věcí
 ///
-/// `List<String>` uchovává texty v pořadí. `new ArrayList<>()` vytvoří mutable list (měnitelný
-/// seznam): obsah lze měnit bez nahrazení samotného seznamu.
+/// Array (pole) má pevný počet míst. Mutable List (měnitelný seznam) může růst i ubývat a zachovává
+/// pořadí. `List<T>` popisuje přístup k prvkům typu T; `ArrayList<T>` je měnitelná JDK implementation
+/// (implementace).
 ///
 /// ```java
-/// List<String> snacks = new ArrayList<>();
-/// snacks.add("apple");
-/// snacks.add("nuts");
-/// IO.println(snacks.get(0));
-/// IO.println(snacks.size());
+/// List<String> trail = new ArrayList<>();
+/// trail.add("north");
+/// trail.add("east");
+/// String latest = trail.removeLast();
+/// IO.println(trail + " / " + latest);
 /// ```
 ///
-/// Výstup je `apple`, potom `2`. `add(value)` připojí jeden prvek na konec; `get(index)` přečte prvek
-/// bez odebrání. Indexes (indexy) začínají nulou. `isEmpty()` zjišťuje, zda seznam nemá prvky.
-/// `removeLast()` odebere a vrátí poslední prvek; volej jej jen u neprázdného seznamu. Seznam přímo z
-/// `List.of(...)` měnit nelze, ale `new ArrayList<>(List.of(...))` měnit lze.
+/// Výsledek je `[north] / east`. `add` připojí na konec; `removeLast` poslední prvek odstraní a zároveň
+/// vrátí. Před odebráním z prázdného List ověř `isEmpty`. Queue (fronta) odebírá vpředu a přidává
+/// vzadu, zatímco undo stack (zásobník změn) odebírá nejnovější prvek. Správný konec určuje význam
+/// pořadí.
 ///
-/// Předpověz: po `snacks.removeLast()` jaká bude velikost a první prvek?
+/// `List.of("north", "east")` vytvoří unmodifiable List (neměnitelný seznam): čtení funguje, přidávání
+/// ne. `new ArrayList<>(existing)` vytvoří mutable List s dosavadními prvky. Předpověz obsah trail po
+/// přidání `"south"`. Když vracíš dvě změny, která má zmizet jako první?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Jak číst tuto část
 ///
-/// - `history =` — Assignment (přiřazení) nahradí List, na který history odkazuje; neprodlouží jej.
-/// - `List.of(word)` — Vytvoří List (seznam) jen s tímto slovem, bez dřívější cesty.
-/// - `&&` — Před změnou current musí platit členství ve slovníku i pravidlo jednoho písmene.
-/// - `history.size() - 1` — Slova zahrnují počáteční pozici, proto je tahů o jeden méně.
-///
-/// ### Co už obstarává připravená část
-///
-/// Main přečte slovo a command je ověří před změnou current. Adjacent počítá změněná písmena, display
-/// vypíše stejnou historii a reset vytvoří počáteční cestu od COLD.
-// </editor-fold>
-
-// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
-/// ### Operaci pro historii máš k dispozici tady
-///
-/// Kvůli tomuto API nemusíš absolvovat jinou volitelnou slovní hru. U mutable list (měnitelného
-/// seznamu) `list.add(item)` připojí prvek a zachová předchozí prvky. Změní tentýž seznam. Naproti
-/// tomu `list = new ArrayList<>(...)` změní, který seznam proměnná označuje. Samotné `List.of(...)`
-/// je neměnitelné; připravená historie je `ArrayList`.
-///
-/// Trasuj zvlášť přijatý a odmítnutý command (příkaz): začni na COLD, přijmi CORD, potom zkus WARM,
-/// který se liší více písmeny. Odmítnutý příkaz musí zachovat současné slovo i všechny položky
-/// historie. Než určíš místo operace s historií, najdi konec validation (ověření).
+/// `words` je konečný slovník, při hraní jej vypíše /words. Připravené `adjacent(a,b)` ověřuje rozdíl
+/// jednoho písmene. `require(false)` odmítá akci pomocí IllegalArgumentException. Počáteční slovo už je
+/// v history, proto se počet navštívených slov a tahů liší o jednu. Console loop (textové opakování)
+/// obstará restart i konec.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Prozkoumej, co assignment (přiřazení) nového ArrayList udělá se staršími slovy.
+/// Celý navržený word (slovo) ověř před změnou cesty.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Použij operaci, která přidá jedno slovo do existující sequence (posloupnosti).
+/// Použij připravený slovník a adjacent; přijatá slova history prodlužují, nenahrazují.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Projdi COLD → CORD → CARD a potom odmítni WARM bez přidání.
+/// Po obou guard (vstupních podmínkách) ulož normalizované slovo, připoj je do history a pro WARM
+/// použij počet tahů, nikoli navštívených slov.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Vytvoř nový čtyřpísmenný slovník, začátek i cíl s alespoň jednou známou cestou. Povolená slova
+/// vypiš, aby šla hádanka objevovat offline.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -9,7 +9,7 @@
 /// **Dnes trénuješ:** Writing functional checks (psaní funkčních kontrol): výsledek může mít více
 /// pozorovatelných částí. Uveď změněný řádek i skóre a zvol případy rozlišující uvěřitelné chyby.
 ///
-/// Spusť program a napiš A potvrzené Enter pro posun vlevo, potom vyzkoušej další směry a
+/// Napiš A potvrzené Enter pro posun vlevo, potom vyzkoušej další směry a
 /// pomocí kontroly hry prověř řádkové příklady.
 record MergeExample(int[] input, int[] expected, int score) {
 }
@@ -80,6 +80,12 @@ MergeExample[] learnerChecks() {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Otestuj také [4,4,4,4] -> [8,8,0,0] s 16 body; každé očekávání zdůvodni.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Vymysli řádek rozlišující slučování vlevo a vpravo a napiš oba očekávané řádky i skóre. Spolužák
+/// dostane jediný pozorovaný výsledek a má odvodit směr. Potom najdi druhý řádek, na kterém se oba
+/// směry náhodou shodnou.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
@@ -243,8 +249,11 @@ void verifyExamples() {
     try {
         for (var e : learnerChecks()) {
             score = 0;
-            if (!Arrays.equals(merge(e.input().clone()), e.expected()) || score != e.score()) {
-                throw new IllegalStateException("Merge example has wrong expected result");
+            int[] actual = merge(e.input().clone());
+            if (!Arrays.equals(actual, e.expected()) || score != e.score()) {
+                throw new IllegalStateException("Row " + Arrays.toString(e.input())
+                    + ": expected " + Arrays.toString(e.expected()) + " with score " + e.score()
+                    + ", actual " + Arrays.toString(actual) + " with score " + score);
             }
         }
     } finally {

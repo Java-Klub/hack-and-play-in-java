@@ -13,14 +13,14 @@ import javax.swing.Timer;
 /// Nech neposedné pero rozvíjet kresbu po plátně a potom řiď jeho tah a roztěkanost. Zastav
 /// zajímavý vzor a prohlédni si ho před vyčištěním plátna pro další pokus.
 ///
-/// **Tvoje mise:** Každá požadovaná dávka vykreslí o krok méně. Oprav burst tak, aby count vyžádalo právě
-/// tolik call (volání) step, včetně nuly a jedné; zachovej hranice i pravidla pozastavení.
+/// **Tvoje mise:** Akce burst nyní neposune pero ani jednou. Sestav for, který pro platné count 0–60
+/// zavolá step přesně countkrát. Zachovej připravené odmítnutí a pravidlo pauzy uvnitř step.
 ///
 /// **Dnes trénuješ:** Počítané opakování: vyber rozsah for podle počtu průchodů. Pro count rovné jedné
 /// musí tělo běžet jednou; pro nulu se nesmí provést vůbec.
 ///
-/// Spusť program, klávesou Space spusť pero a šipkami měň kresbu; sleduj Steps a potom pomocí
-/// kontroly hry ověř přesné dávky nuly, jednoho a čtyř kroků.
+/// Klikni na 1 step a potom 12 steps. Tlačítka jednorázové dávky pozastaví automatické kreslení, takže
+/// lze porovnat viditelné Steps. Nehotový burst je ponechá na nule.
 void burst(int count) {
     if (count < 0 || count > 60) {
         return;
@@ -52,47 +52,42 @@ void burst(int count) {
 /// Nyní předpověz output (výstup), pokud floor začíná na pětce.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// Guard (vstupní ochrana) už odmítá count mimo 0–60. Tvůj loop (smyčka) patří za něj; jeden průchod
+/// znamená jedno volání step.
 ///
-/// - `void burst(int count)` — Definuj akci přijímající požadovaný počet kroků; kreslí místo vracení
-///   hodnoty.
-/// - `if (count < 0 || count > 60)` — Připravená kontrola odmítá hodnoty pod nulou nebo nad šedesáti; ||
-///   znamená, že stačí kterákoli podmínka.
-/// - `return;` — V akci void toto okamžitě odejde bez vrácené hodnoty.
-/// - `for (int i = 1; i < count; i++)` — Nastav counter (počítadlo), ověř hranici a po každém průchodu
-///   jej zvětši; sleduj skutečné hodnoty místo odhadování počtu průchodů.
-/// - `step();` — Jediné call (volání) požádá připravené pero o jeden pohyb. Prázdné závorky znamenají, že
-///   akce nepotřebuje input (vstup).
+/// | count | potřebná volání | příklad hodnot počítadla |
+/// | --- | --- | --- |
+/// | 0 | 0 | žádná |
+/// | 1 | 1 | 0 |
+/// | 4 | 4 | 0, 1, 2, 3 |
 ///
-/// ### Co už obstarává připravená část
-///
-/// step zajišťuje neklidný pohyb pera, odrazy od okrajů, kreslení i kontrolu pozastavení. Timer
-/// (časovač) pravidelně žádá burst o čtyři kroky; draw ukazuje plátno a skutečný counter
-/// (počítadlo) Steps bez pohybu pera. Připravené ovládání řeší tah, roztěkanost, pozastavení a
-/// obnovení.
+/// Vol začátek, pokračování a posun společně. Poslední hodnota počítadla není počet průchodů. Před
+/// tlačítkem předpověz count 12. step obstarává plátno, náhodu a pauzu. oneShot dočasně povolí
+/// kreslení, zavolá tvůj burst a nechá automatické kreslení pozastavené; timer (časovač) používá tentýž
+/// burst pro plynulou hru.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
-/// Před úpravou udělej trace (stopu průběhu) nynější smyčky. Pro count 1 začíná i na 1 a comparison
-/// (porovnání) je hned nepravdivé: nula volání. Pro count 4 běží tělo s i rovným 1, 2 a 3: tři
-/// volání. Nyní předpověz count 0 a potom zvol rozsah splňující požadavek pro všechny tři případy.
-/// Počítej call (volání) step odděleně od skutečných pohybů pera: připravené step se při pauze
-/// nepohybuje. Před hodnocením viditelného counter (počítadla) Steps stiskni Space. Timer (časovač)
-/// žádá čtyři volání v dávce; repaint (překreslení) výsledek jen zobrazí. Zachovej odmítání count
-/// mimo 0–60.
+/// Před porovnáním počtů kreslení pozastav. Každé jednorázové tlačítko skončí s pauzou, i když běželo
+/// plynulé kreslení. Viditelné Steps jsou důkaz; fyziku pera měnit nemusíš.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Vyzkoušej count = 1 se současnou počáteční hodnotou i.
+/// Před for napiš potřebné počty volání pro nulu, jedničku a čtyřku.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Počítání od nuly při i < count dá count průchodů.
+/// Každý průchod má provést jen step(); posun patří do záhlaví smyčky.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Začni int i = 0; zachovej i < count a i++.
+/// Počítadlo od nuly pod count dá count průchodů. Původní guard nech před smyčkou.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Navrhni pulzní rytmus: střídavé průchody zavolají step jednou a dvakrát. Před kreslením napiš stopu
+/// dávky se čtyřmi průchody. Rytmus pojmenuj a porovnej s původním jedním voláním na průchod.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
@@ -177,6 +172,12 @@ void key(int code, boolean pressed) {
     }
 }
 
+void oneShot(int count) {
+    paused = false;
+    burst(count);
+    paused = true;
+}
+
 void showWindow() {
     var frame = new JFrame("Virtual Scribbler");
     var panel = new JPanel() {
@@ -210,7 +211,21 @@ void showWindow() {
     frame.add(panel);
     var help = new JLabel("<html><div style=\"text-align:center\">Space: play / pause   Arrows: drift / jitter   C: clear   R: reset</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-    frame.add(help, BorderLayout.SOUTH);
+    var controls = new JPanel(new BorderLayout());
+    controls.add(help, BorderLayout.NORTH);
+    var buttons = new JPanel();
+    for (int count : new int[]{1, 12}) {
+        var button = new JButton(count == 1 ? "1 step" : "12 steps");
+        button.setFocusable(false);
+        button.addActionListener(e -> {
+            oneShot(count);
+            panel.repaint();
+            panel.requestFocusInWindow();
+        });
+        buttons.add(button);
+    }
+    controls.add(buttons, BorderLayout.SOUTH);
+    frame.add(controls, BorderLayout.SOUTH);
     frame.pack();
     frame.setResizable(false);
     frame.setLocationByPlatform(true);

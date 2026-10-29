@@ -7,81 +7,87 @@ import java.awt.image.BufferedImage;
 
 /// # L09.05 · PhotoRemixLab
 ///
-/// Promíchej připravený obrázek pomocí obrazových efektů a prozkoumej jeho barvy. Počítadlo má zahrnout
-/// každý bod, i velkou plochu stejné barvy.
+/// Proměň připravený obrázek v barevné zvýraznění. Najdi jeho nejčastější původní barvu a nech všechny
+/// její pixely svítit azurově na dvoubarevném plakátu.
 ///
-/// **Tvoje mise:** Opakované barvy si drží počet jedna, takže zobrazený součet bodů je příliš malý. Oprav
-/// počítání beze změny obrazových efektů.
+/// **Tvoje mise:** Vytvoř dominantColour(): vyber colour key (klíč barvy) s největším uloženým počtem;
+/// při shodě zvol menší signed RGB integer (celé RGB číslo se znaménkem). Pro prázdnou Map (mapu) vrať
+/// 0 a počty neměň. Připravený remix tvým výsledkem zvýrazní pixely této barvy azurově; nedokončený
+/// výběr v ukázce nezvýrazní nic.
 ///
-/// **Dnes trénuješ:** Map (mapa) spojuje každý colour key (klíč barvy) s aktuálním počtem. Opakovaný key
-/// potřebuje nový součet; put starou hodnotu nahrazuje, samo k ní nepřičítá.
+/// **Dnes trénuješ:** Použij uložené vztahy key/value (klíč/hodnota) k rozhodnutí o skutečném obrázku
+/// nebo jeho vzniku, ne jen popisku.
 ///
-/// Po spuštění programu porovnej Pixels counted s celkovým počtem bodů; Up/Down mění práh
-/// plakátu a R obnoví ukázku.
+/// Spusť program a hledej azurový měsíc; Up/Down mění práh plakátu a R obnoví ukázku. Nedokončený výběr
+/// zatím nechává měsíc žlutý.
+int dominantColour() {
+    int bestColour = 0, bestCount = -1;
+    for (var entry : colourCounts.entrySet()) {
+        int colour = entry.getKey(), count = entry.getValue();
+        if (count > bestCount || count == bestCount && colour < bestColour) {
+            bestColour = colour;
+            bestCount = count;
+        }
+    }
+    return bestColour;
+}
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F24">
+/// ### Map (mapa) pamatuje hodnotu pro každý key (klíč)
+///
+/// List (seznam) drží pozice. Map drží vztah: každý key vede k jedné aktuální value (hodnotě). Zde
+/// jméno barvy vede k počtu.
+///
+/// ```java
+/// Map<String, Integer> marbles = new HashMap<>();
+/// marbles.put("blue", 2);
+/// int before = marbles.getOrDefault("blue", 0);
+/// marbles.put("blue", before + 1);
+/// IO.println(marbles.getOrDefault("gold", 0));
+/// ```
+///
+/// Blue má nyní počet 3; pro gold se vypíše 0. `getOrDefault(key, fallback)` vrátí fallback (náhradní
+/// hodnotu), když key chybí, ale nic nevloží. `put` nahradí dosavadní value daného key: samo nepřičítá.
+/// Ostatní key zůstanou beze změny.
+///
+/// `containsKey` zjišťuje samotnou přítomnost. `entrySet()` umožní projít dvojice key/value: každý
+/// entry (položka) poskytuje `getKey()` a `getValue()`. Map neslibuje, že první entry má nejvyšší
+/// value; vítěze musíš vybrat porovnáváním. Předpověz blue po dalším stejném kroku. Potom předpověz
+/// výsledek `getOrDefault("gold", 9)` a rozhodni, zda se tím gold uložilo.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst tuto část
+///
+/// `colourCounts.entrySet()` zpřístupní dvojice key/count (klíč/počet). `entry.getKey()` čte RGB číslo,
+/// getValue() jeho frequency (četnost). Sleduj nejlepší key i nejlepší count zvlášť: pořadí Map (mapy)
+/// není žebříček. Připravené countColour naplní počty před voláním dominantColour. Remix pak vybranou
+/// původní barvu vykreslí azurově, takže tvoje volba mění obrázek, nejen popisek.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Prázdná Map (mapa) má samostatný výsledek; jinak porovnávej kandidáty.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Kandidát vyhraje vyšším count (počtem), nebo stejným count a menším key (klíčem).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Projdi entrySet, pamatuj nejlepší key/count, aktualizuj při jedné ze dvou vítězných možností a vrať
+/// key bez změn Map.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Navrhni jiné spotlight rule (pravidlo zvýraznění): nejvzácnější barvu nebo zbarvení podle frequency
+/// (četnosti). Porovnej vlastní volbu na stejné ukázce, než změníš zdrojový obrázek.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 void countColour(int rgb) {
     colourCounts.put(rgb, colourCounts.getOrDefault(rgb, 0) + 1);
 }
 
-// <editor-fold defaultstate="expanded" desc="Nová dovednost · F24">
-/// ### Map (mapa): hodnota podle klíče
-///
-/// `Map<String, Integer>` přiřazuje textovým keys (klíčům) celočíselné values (hodnoty). Jeden klíč
-/// má nejvýše jednu uloženou hodnotu.
-///
-/// ```java
-/// Map<String, Integer> badges = new HashMap<>();
-/// badges.put("moon", 4);
-/// IO.println(badges.getOrDefault("moon", 0));
-/// IO.println(badges.getOrDefault("sun", 0));
-/// ```
-///
-/// Výstup je `4`, potom `0`. `getOrDefault(key, fallback)` přečte existující hodnotu; při chybějícím
-/// klíči vrátí fallback (náhradní hodnotu). Toto čtení nic nevkládá. `put(key, value)` hodnotu uloží
-/// a případnou předchozí hodnotu téhož klíče přepíše; čísla automaticky nesčítá. `containsKey(key)`
-/// použij, když potřebuješ výslovně rozlišit chybějící klíč. V těchto příkladech neukládáme `null`.
-///
-/// Předpověz: po `badges.put("moon", 9)` co vrátí stejná dvě čtení?
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
-///
-/// - `int rgb` — Jeden integer (celé číslo) nese zabalenou barvu použitou jako Map key (klíč mapy).
-/// - `colourCounts.put` — Uloží hodnotu pod rgb a nahradí případnou dřívější hodnotu.
-/// - `rgb, 1` — Tato dvojice nyní přiřadí jedna, i když se rgb už vyskytlo.
-///
-/// ### Co už obstarává připravená část
-///
-/// remix volá countColour pro každý bod ukázky a vytvoří jediný dvoubarevný plakát. draw čte
-/// skutečný součet ze stejné Map (mapy); Up/Down mění práh a R obnoví ukázku.
-// </editor-fold>
-
-// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
-/// ### Před přepsáním nejdřív přečti
-///
-/// Potřebné čtení je `map.getOrDefault(key, fallback)`. U tohoto `Map<Integer, Integer>` je key
-/// (klíč) celé číslo představující barvu a výsledek je její počet. Jestliže klíč 17 uchovává 6,
-/// `map.getOrDefault(17, 0)` vrátí 6; pro chybějící klíč 23 vrátí 0 a klíč nevloží. `map.put(key,
-/// value)` potom uloží přesně zadanou hodnotu a případný předchozí počet přepíše.
-///
-/// Předpověz potřebné počty po třech pixelech stejné barvy a jednom odlišném. Vysvětli, proč pomůže
-/// vyčistit mapu jednou před novým remixem, zatímco čištění uvnitř countColour by zapomnělo dřívější
-/// pixely.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Put nahrazuje původní hodnotu.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Přečti existující počet; pro chybějící key (klíč) použij nulu.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Ke starému počtu přičti jednu a ulož jej pod stejným key (klíčem).
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int WIDTH = 640, HEIGHT = 440;
 
 BufferedImage source, result;
@@ -105,13 +111,17 @@ void restart() {
 void remix() {
     int width = source.getWidth(), height = source.getHeight();
     colourCounts.clear();
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) countColour(source.getRGB(x, y));
+    }
+    int selected = dominantColour();
     result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
-            countColour(source.getRGB(x, y));
             var colour = new Color(source.getRGB(x, y));
             int brightness = (colour.getRed() * 2126 + colour.getGreen() * 7152 + colour.getBlue() * 722) / 10000;
-            result.setRGB(x, y, (brightness < threshold ? new Color(25, 45, 80) : new Color(255, 205, 120)).getRGB());
+            int poster = (brightness < threshold ? new Color(25, 45, 80) : new Color(255, 205, 120)).getRGB();
+            result.setRGB(x, y, source.getRGB(x, y) == selected ? Color.CYAN.getRGB() : poster);
         }
     }
 }
@@ -126,7 +136,7 @@ void adjust(int amount) {
 void draw(Graphics2D g) {
     g.drawImage(result, (WIDTH - result.getWidth()) / 2, 45, null);
     g.setColor(Color.BLACK);
-    g.drawString("Two-colour poster | Threshold " + threshold, 12, 22);
+    g.drawString("Spotlight most common colour | Threshold " + threshold, 12, 22);
     g.drawString("Pixels counted: " + countedPixels() + " / " + source.getWidth() * source.getHeight(), 12, 420);
 }
 

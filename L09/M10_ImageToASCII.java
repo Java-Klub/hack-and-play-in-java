@@ -28,31 +28,32 @@ int readWidth(String text) {
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F31">
-/// ### Parse (převod), validation (ověření), potom uložení
+/// ### Parsing (převod textu) a platná hodnota jsou dvě otázky
 ///
-/// Parsing převádí text; validation ověřuje, zda je výsledné číslo povolené. Každý krok může selhat
-/// jinak.
+/// Číselný vstup začíná jako text. Parsing může selhat, protože text není číslo; validation (ověření
+/// platnosti) může odmítnout správně zapsané číslo. Obě pravidla rozhoduj zvlášť.
 ///
 /// ```java
-/// int readCopies(String text) {
+/// int readZoom(String text) {
 ///     try {
-///         int n = Integer.parseInt(text.strip());
-///         if (n < 1 || n > 5) {
-///             throw new IllegalArgumentException("Copies: 1..5");
-///         }
-///         return n;
-///     } catch (NumberFormatException invalid) {
-///         return 3;
+///         int zoom = Integer.parseInt(text.strip());
+///         if (zoom < 1 || zoom > 4) throw new IllegalArgumentException("Zoom: 1..4");
+///         return zoom;
+///     } catch (NumberFormatException typo) {
+///         return 2;
 ///     }
 /// }
 /// ```
 ///
-/// `readCopies(" 2 ")` vrátí `2`: převod i ověření uspějí. `"oops"` selže při převodu a přes `catch`
-/// vrátí `3`. Číselný text `"8"` se převede, ale následně vyvolá jinou exception (výjimku); tento
-/// konkrétní catch ji nezachytí. `return` ukončí metodu; `throw` opustí běžnou cestu. Uložený stav
-/// hry měň až po úspěšném ověření.
+/// Trace (průchod) pro `" 3 "`: `strip` odstraní okolní mezery, `parseInt` vrátí 3, bounds (hranice) je
+/// přijmou. `"oops"` nejde převést, takže `catch` vrátí 2. `"7"` se převede, ale neprojde validation;
+/// vyvolaná IllegalArgumentException tuto method (metodu) opustí. Úzký `catch` pro
+/// NumberFormatException tyto cesty odliší.
 ///
-/// Předpověz cestu pro `"five"`, `"5"` a `"0"`.
+/// Desetinný vstup používá `Double.parseDouble`; NaN a infinity (nekonečno) jsou čitelné, ale nejsou
+/// finite (konečná čísla). U živého nastavení nejdřív vytvoř local candidate (místní návrh), teprve po
+/// validation změň field (sdílenou proměnnou). Předpověz cestu pro `"0"`, `"two"` a `"4"`. Které vstupy
+/// mají zachovat předchozí nastavení?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
@@ -92,6 +93,11 @@ int readWidth(String text) {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Výchozí hodnota je 80; guard (podmínky) rozsahu zůstanou oddělené.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Vymysli vlastní character ramp (řadu znaků) od tmavé po světlou včetně mezery. Při stejné šířce
+/// porovnej tvář z interpunkce a z písmen.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

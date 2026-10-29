@@ -62,6 +62,13 @@ void step() {
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Navrhni mozaiku cihel volbou položek bricks, které začnou jako true. Vytvoř vzor alespoň s jednou
+/// záměrnou mezerou a změň cíl výhry na skutečný počet cihel. Dokáže kamarád tvůj návrh vyčistit?
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F30">
 /// ### Input (vstup) požádá; tick (krok) posune čas
 ///

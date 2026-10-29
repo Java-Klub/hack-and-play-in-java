@@ -10,8 +10,10 @@ import javax.swing.Timer;
 /// Odpal míček přes malé hřiště, využij odrazy od stěn a zkus pomalu zajet do jamky. Delší natažení má
 /// dát silnější úder, zatímco tření míček postupně zastaví.
 ///
-/// **Tvoje mise:** Dlouhé natažení je desetkrát slabší, než má být. Oprav dragVelocity tak, aby 100 pixel
-/// (obrazových bodů) natažení se znaménkem dalo rychlost 8 a -25 dalo -2.
+/// **Tvoje mise · Sestav a zapoj úder:** Míček nemá sílu úderu. Doplň dragVelocity (100 → 8, -25 → -2, 0
+/// → 0), potom oba
+/// input (vstupy) applyPull zapoj do tohoto výpočtu: horizontal má dodat vx a vertical má dodat vy.
+/// Připravené omezení síly zachovej.
 ///
 /// **Dnes trénuješ:** Číselné měřítko a jednotky: vzdálenost se musí převést na rychlost ve správném
 /// poměru. Než posoudíš celou pohyblivou scénu, ověř malý kladný příklad, záporný příklad a nulu.
@@ -20,6 +22,11 @@ import javax.swing.Timer;
 /// počkej na zastavení nebo stiskni R pro nový začátek.
 double dragVelocity(double distance) {
     return distance / 12.5;
+}
+
+void applyPull(double horizontal, double vertical) {
+    vx = dragVelocity(horizontal);
+    vy = dragVelocity(vertical);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F04">
@@ -46,41 +53,46 @@ double dragVelocity(double distance) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Dva výpočty, jedno pravidlo
 ///
-/// - `double dragVelocity(double distance)` — Tento výpočet přijme jedinou vzdálenost a vrátí jedinou
-///   rychlost; obě mohou mít desetinnou část.
-/// - `distance` — Natažení se znaménkem dodané ze shoot. Záporná hodnota se nesmí omylem změnit na
-///   kladnou.
-/// - `/` — Vyděl vzdálenost měřítkem vpravo.
-/// - `125` — Tento současný dělitel vytváří z dané vzdálenosti příliš malou rychlost.
-/// - `return distance / 125;` — Jednou vyhodnoť expression (výraz) a předej jeho výsledek zpět výpočtu
-///   úderu.
-///
-/// ### Co už obstarává připravená část
-///
-/// begin rozpozná natažení začínající na stojícím míčku. shoot volá tvůj převod a omezuje velmi silné
-/// údery; step dodává tření, odrazy a pomalé zachycení jamkou. Tato pravidla už fungují.
+/// `double distance` přijme jednu vzdálenost se znaménkem; `return` vrátí převedenou rychlost.
+/// `applyPull(horizontal, vertical)` přijme dvě různé hodnoty. Jeho dvě assignment (přiřazení) musí
+/// zachovat role: horizontal → vx a vertical → vy. shoot už volá applyPull při puštění myši, potom
+/// omezí přílišnou rychlost a započítá úder. Sestavuješ převod a jeho zapojení, nikoli timer
+/// (časovač) nebo ovládání myši.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
-/// Zde už distance má type (typ) double. Dělení celočíselným literal (doslovným číslem) 125 proto
-/// desetinné výsledky zachovává: chybné je měřítko, nikoli integer division (celočíselné dělení). Než
-/// začneš upravovat, odděl tato vysvětlení. Z uvedených příkladů vzdálenosti a rychlosti odvoď
-/// jednotný převod a zachovej znaménko směru. Připravené shoot už omezuje příliš silné rány; tvůj
-/// výpočet nemá přidávat další omezení ani vybírat směr míčku.
+/// distance už má type (typ) double. Porovnej distance / 125 a distance / 125.0: oba výpočty
+/// zachovávají desetinnou část a oba mají stejné měřítko. Požadovaných osm jednotek rychlosti ze sta
+/// pixelů vyžaduje jiné měřítko. Potom musí applyPull výsledek skutečně uložit do vx a vy. Připravený
+/// shoot už omezuje extrémní sílu; zde další omezení nepřidávej.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Požadovaný převod je vzdálenost 100 → rychlost 8, vzdálenost -25 → rychlost -2 a nula → nula.
+/// Protože distance má type double, změna 125 na 125.0 by dřívější měřítko nezměnila. applyPull
+/// dostává zvlášť vodorovnou a svislou vzdálenost. Call (volání) může vrátit hodnotu přímo do
+/// assignment (přiřazení), například `vx = dragVelocity(horizontal);`. Nic se nevypisuje.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Změnou samotného měřítka převodu vytvoř jemné a přehnané hřiště. V obou zkus stejný tah. Najdi
+/// nastavení, ve kterém kamarád dosáhne jamky bez odrazu od stěny; pro původní kontrolu vrať původní
+/// měřítko.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Předpověz výsledek 100 / 125.
+/// Odvoď rychlost pro jeden pixel a stejné měřítko použij pro oba směry.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Převod potřebuje 8 jednotek rychlosti na 100 pixel (obrazových bodů), nikoli 0.8.
+/// applyPull potřebuje dvě samostatná volání, každé se svým odpovídajícím parameter (parametrem).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Použij return distance / 12.5;
+/// Z dragVelocity vrať distance / 12.5. V applyPull přiřaď dragVelocity(horizontal) do vx a
+/// dragVelocity(vertical) do vy.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
@@ -114,8 +126,7 @@ void shoot(int xx, int yy) {
         return;
     }
     aiming = false;
-    vx = dragVelocity(x - xx);
-    vy = dragVelocity(y - yy);
+    applyPull(x - xx, y - yy);
     double speed = Math.hypot(vx, vy);
     if (speed > 10) {
         vx *= 10 / speed;

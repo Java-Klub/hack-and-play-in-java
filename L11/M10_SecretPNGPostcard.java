@@ -9,22 +9,33 @@ import javax.imageio.ImageIO;
 /// Pošli tajnou pohlednici, jejíž viditelný obrázek mnoho neprozradí. Program skryje tvůj text v datech
 /// PNG bodů a pokusí se jej přečíst z uložené kartičky.
 ///
-/// **Tvoje mise:** Opětovné čtení pohlednice v adresáři selže, protože načítání adresář zahodí. Oprav
-/// otevření zvoleného souboru a zachovej výslovné chyby nečitelného obrázku.
+/// **Tvoje mise:** Implementuj save jako zápis pohlednice: vytvoř nadřazené složky, otevři požadovaný
+/// output stream (výstupní proud) a zapiš render(seed, option) jako PNG do něj. Použij
+/// try-with-resources a ohlas chybějící PNG writer (zapisovač). Potom napiš vlastní zprávu a otevři
+/// ji při dalším spuštění.
 ///
-/// **Dnes trénuješ:** Path (cesta) určuje skutečný resource (prostředek) k otevření, ne pouhý název.
-/// Try-with-resources (automatická správa prostředků) vlastní input stream (vstupní proud); dekódování
-/// obrázku a skryté zprávy jsou další kroky.
+/// **Dnes trénuješ:** Implementuješ skutečnou file boundary (souborovou hranici): otevři vybraný
+/// prostředek, předej skutečný obsah a spolehlivě jej zavři. Výsledek má přetrvat jedno volání
+/// metody.
 ///
-/// Program přečte data/postcard.png přes readMessage a zobrazí získanou zprávu s pohlednicí.
-/// Ukázková pohlednice vznikne pouze při neexistenci souboru.
-String readMessage(Path path) throws IOException {
-    try (var input = Files.newInputStream(path)) {
-        var image = ImageIO.read(input);
-        if (image == null) throw new IOException("Input is not a readable image.");
-        return decode(image);
+/// Napiš novou tajnou zprávu, nebo stiskni Enter pro otevření data/postcard.png beze změny. Při
+/// prvním spuštění Enter vytvoří Pixel moon. Další spuštění čte uchovanou kartu; /q skončí.
+void save(Path path, long seed, double option) throws Exception {
+    Files.createDirectories(path.toAbsolutePath().getParent());
+    try (var output = Files.newOutputStream(path)) {
+        if (!ImageIO.write(render(seed, option), "png", output)) {
+            throw new IOException("PNG writer missing.");
+        }
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Pošli skutečnou místní pohlednici: napiš krátkou hádanku, program zavři a nech kamaráda otevřít
+/// uloženou kartu bez nové zprávy. Potom změň jen viditelné pozadí v render a ověř, že starší uložená
+/// karta stále odhalí původní text.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F32">
 /// ### Files (soubory): cíl a životnost prostředku
@@ -49,34 +60,43 @@ String readMessage(Path path) throws IOException {
 /// Předpověz: pokud file změníš na `Path.of("cards", "one.txt")`, kam se poznámka zapíše?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// ### Tvoje zpráva přežije další spuštění
 ///
-/// - `path.getFileName()` — Zahodí všechny adresáře ze zvolené cesty k pohlednici.
-/// - `Files.newInputStream` — Otevře bajty z předané cesty; zahozený adresář nedokáže odhadnout.
-/// - `image == null` — ImageIO takto může oznámit nerozpoznaný obrázek místo vrácení bodů.
-/// - `decode(image)` — Vybere skrytý text až po načtení správného obrázku.
+/// ImageIO.write(image, "png", output) vrací true, najde-li PNG encoder (zapisovač); zakódované bajty
+/// posílá do předaného proudu. Neutrálním příkladem je malá malovaná ikona na obálce sešitu: vytvoř
+/// složku, otevři cover.png v try-with-resources a proud předej ImageIO.write. Po bloku může soubor
+/// číst jiný program. Předpověz, co zůstane, pokud proud otevřeš, ale volání write vynecháš.
 ///
-/// ### Co už obstarává připravená část
-///
-/// Ukázkový data/postcard.png vznikne pouze při neexistenci. main zavolá readMessage s úplným Path
-/// (cestou) a zobrazí skutečnou pohlednici s přečtenou zprávou; existující obsah zachová.
+/// render pomocí encode už schovává současnou message do pixelů. Řešíš persistence (uchování), ne
+/// bitový algoritmus. readMessage otevře skutečné PNG a vyjme uložený text. main zapisuje jen při
+/// nové zprávě nebo chybějící kartě. Enter při dalším spuštění otevře existující pohlednici beze
+/// změny, i v novém herním objektu. Soubor tak nese zprávu mezi spuštěními, ne pouze mezi sousedními
+/// voláními metod.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Celý Path obsahuje umístění zvolené volající částí.
+/// Připravené render vrací zakódovanou pohlednici. Save zajišťuje jen její trvalý cíl.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Samotné getFileName vnořenou pohlednici nenajde.
+/// Vytvoř složku a potom použij newOutputStream(path) v try-with-resources.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// ImageIO čte vlastní stream (proud); zachovej kontrolu null obrazu i existující bit decoder (čtečku
-/// bitů).
+/// Zavolej ImageIO.write(render(seed, option), "png", output), zkontroluj boolean result (výsledek) a
+/// jako cíl zachovej skutečný proud.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+String readMessage(Path path) throws IOException {
+    try (var input = Files.newInputStream(path)) {
+        var image = ImageIO.read(input);
+        if (image == null) throw new IOException("Input is not a readable image.");
+        return decode(image);
+    }
+}
+
 String message = "The moon has excellent Wi-Fi.";
 
 BufferedImage encode(BufferedImage original, String text) {
@@ -145,13 +165,7 @@ BufferedImage render(long seed, double option) {
     return encode(image, message);
 }
 
-/// Připravená export boundary (hranice ukládání): používá místní cestu; encoding (kódování) zajišťuje JDK.
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
-        throw new IllegalStateException("PNG writer missing.");
-    }
-}
+
 
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
@@ -178,16 +192,24 @@ void showImages(String title, String[] captions, java.awt.image.BufferedImage[] 
 
 
 void main() {
-    Path input = Path.of("data", "postcard.png");
+    Path card = Path.of("data", "postcard.png");
     try {
-        if (!Files.exists(input)) save(input, 42, 1);
-        String recovered = readMessage(input);
-        var image = ImageIO.read(input.toFile());
+        String text = IO.readln("New secret message, Enter opens the saved postcard, /q to quit: ");
+        if (text == null || text.strip().equalsIgnoreCase("/q")) return;
+        if (!text.isEmpty() || !Files.exists(card)) {
+            message = text.isEmpty() ? "Pixel moon" : text;
+            save(card, 42, 1);
+        }
+        String recovered = readMessage(card);
+        if (!text.isEmpty() && !recovered.equals(text)) {
+            throw new IOException("The saved postcard does not contain the new message.");
+        }
+        var image = ImageIO.read(card.toFile());
         if (image == null) throw new IOException("The postcard is not a readable PNG.");
-        IO.println("Recovered from " + input + ": " + recovered);
-        showImages("Secret PNG Postcard", new String[]{recovered}, new java.awt.image.BufferedImage[]{image});
+        IO.println("Recovered from " + card.toAbsolutePath() + ": " + recovered);
+        showImages("Secret PNG Postcard", new String[]{recovered}, new BufferedImage[]{image});
     } catch (Exception failure) {
-        IO.println("Cannot read requested postcard " + input + ": " + failure.getMessage() + ". Repair readMessage; Save the source, run its check command, then play again.");
+        IO.println("Cannot open the saved postcard: " + failure.getMessage());
     }
 }
 // </editor-fold>

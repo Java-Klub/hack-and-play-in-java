@@ -8,7 +8,7 @@
 /// **Dnes trénuješ:** Arrays (pole): int[] může popsat skupinu míst na desce. Převeď číslo čtverečku na
 /// indexy (pozice) hran, které potřebuje volající kód.
 ///
-/// Spusť program a střídejte se v zadávání dosud volného čísla hrany od 1 do 12, vždy
+/// Střídejte se v zadávání dosud volného čísla hrany od 1 do 12, vždy
 /// potvrzeného Enter.
 int[] box(int n) {
     int r = n / 2;
@@ -68,6 +68,12 @@ int[] box(int n) {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Vrať horní, dolní, levou a pravou hranu v novém int[].
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Z jednoho čtverce udělej tříbodový poklad, ostatní ponech za bod. Vytvoř výpočet boxPoints(int box)
+/// a použij jej při přidělení bodů za uzavření. Navrhni tah, který zavře dva čtverce, a předpověz
+/// společnou odměnu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

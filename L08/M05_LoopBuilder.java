@@ -3,79 +3,84 @@
 /// Přepínej čáry a vytvoř jedinou uzavřenou smyčku kolem očíslovaných políček. Čísla ji omezují, ale její
 /// rohy se také musí skutečně spojovat.
 ///
-/// **Tvoje mise:** Svislé čáry hlásí špatný koncový bod, takže se viditelná smyčka považuje za
-/// rozpojenou. Oprav svislé mapování uvnitř vertices(int edge).
+/// **Tvoje mise:** Vytvoř vertices(edge) pro každou zobrazenou hranu. Horizontal index (vodorovné
+/// pozice) 0–11 jdou po třech ve čtyřech row (řádcích); vertical index (svislé pozice) 12–23 po čtyřech
+/// ve třech mezerách. Vrať dva vertex index (indexy vrcholů) v grid (mřížce) 4×4. Vstup mimo 0–23
+/// odmítni.
 ///
-/// **Dnes trénuješ:** Grid neighbours (sousedé v mřížce): zobrazené hrany spojují vrcholy v samostatné
-/// síti. Převeď sousedství řádků a sloupců na ploché indexy podle šířky sítě vrcholů.
+/// **Dnes trénuješ:** Převeď malý nákres na coordinates (souřadnice), bounds (hranice) a vztahy
+/// neighbour (sousedů).
 ///
 /// Spusť program a zadáním 1 přepni první očíslovanou hranu, potom dalšími hranami sestav
 /// jedinou uzavřenou smyčku.
 int[] vertices(int edge) {
+    if (edge < 0 || edge >= 24) throw new IllegalArgumentException("Edge: 0..23.");
     if (edge < 12) {
-        int r = edge / 3;
-        int c = edge % 3;
-        return new int[]{r * 4 + c, r * 4 + c + 1};
+        int row = edge / 3;
+        int col = edge % 3;
+        return new int[]{row * 4 + col, row * 4 + col + 1};
     }
-    int n = edge - 12;
-    int r = n / 4;
-    int c = n % 4;
-    return new int[]{r * 4 + c, (r + 1) * 4 + c};
+    int vertical = edge - 12;
+    int row = vertical / 4;
+    int col = vertical % 4;
+    return new int[]{row * 4 + col, (row + 1) * 4 + col};
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F18">
-/// ### Grids: nejdřív řádek, potom sloupec
+/// ### Coordinates (souřadnice) popisují sousedy
 ///
-/// V array of rows (poli řádků) první index (pozice) vybírá řádek a druhý pozici v něm. Řádky mohou
-/// mít různé délky. Neighbour (soused) je posun od buňky, nikoli další absolutní pozice. Před
-/// kontrolou existence kandidáta urči povolené směry.
+/// Grid (mřížka) ukládá nejdřív row (řádek): `board[y][x]`. Rostoucí x vede doprava, rostoucí y na
+/// obrazovce dolů. Neighbour (soused) vznikne přičtením malého offset (posunu).
 ///
-/// ```java
-/// int[][] mosaic = {{3, 6, 9}, {2, 4, 8}};
-/// int row = 0;
-/// int column = 1;
-/// IO.println(mosaic[row][column + 1]);
+/// ```text
+///           (0,-1)
+/// (-1,0)    HERE    (1,0)
+///           (0,1)
 /// ```
 ///
-/// Výstup je devět: řádek nula a sloupec dva vyberou tento element (prvek). Pohyb dolů mění row;
-/// doprava mění column. Který z těchto pohybů z pravé horní cell (buňky) zůstane uvnitř? U úhlopříčky
-/// se mění obě souřadnice; bounds (meze) musíš ověřit před přístupem ke kandidátovi.
+/// ```java
+/// int[][] board = {{2, 5, 8}, {1, 4, 7}};
+/// int x = 1, y = 0;
+/// int nx = x + 0, ny = y + 1;
+/// if (ny >= 0 && ny < board.length && nx >= 0 && nx < board[ny].length) {
+///     IO.println(board[ny][nx]);
+/// }
+/// ```
+///
+/// Přesun vede z 5 na 4, vypíše se tedy 4. Bounds (hranice) kontrolujeme před indexováním: array (pole)
+/// za okrajem žádné cell (políčko) nemá. Diagonal (úhlopříčný posun) mění obě coordinates. Corridor
+/// (chodba) opakuje stejný offset; neighbourhood (okolí) zkouší několik offset. Jde o různé postupy se
+/// stejným modelem.
+///
+/// Předpověz výsledek offset `(-1,0)` ze stejného začátku. Který offset opustí tento board (hrací
+/// plochu)? Než spojíš směry do loop (opakování), zakresli začátek a cíl na papír.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Jak číst tuto část
 ///
-/// - `if (edge < 12)` — Odděluje čísla vodorovných hran od svislých.
-/// - `edge - 12` — Převede číslo svislé hrany na místní číslování od nuly.
-/// - `r * 4 + c` — Převede řádek a sloupec vrcholu na jeden index (pozici) v síti široké čtyři vrcholy.
-/// - `new int[]` — Vrací oba indexy koncových bodů společně jako malé array (pole).
-///
-/// ### Co už obstarává připravená část
-///
-/// display() čísluje vodorovné a svislé hrany. oneLoop() z dvojic vrcholů vrácených vertices() kontroluje
-/// počet spojení i souvislost; čísla uvnitř políček se kontrolují zvlášť.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
-/// ### Buňky a jejich rohy mají různé grid (mřížky)
-///
-/// Řada dvou sousedních buněk má napříč tři corner vertex (rohové vrcholy). Cell grid (mřížka buněk)
-/// proto potřebuje o jeden řádek a sloupec vrcholů více. V jiném vertex grid (mřížce vrcholů) šířky
-/// tři leží index (pozice) jedna nad čtyřkou: pohyb dolů zachová sloupec a přeskočí tři pozice.
-/// Vodorovná hrana mění sloupec, svislá řádek. Před předpovědí konců očísluj vrcholy odděleně od
-/// čísel uvnitř buněk.
+/// Ve flat grid (zploštělé mřížce) má vertex (vrchol) na (row,col) index row*4+col. `/` najde row
+/// (řádek), `%` remainder (zbytek), tedy column (sloupec). Horizontal edge (vodorovná hrana) 0 spojuje
+/// 0→1; vertical edge (svislá hrana) 12 spojuje 0→4. Připravená kontrola okruhu se ptá tvé method
+/// (metody) na spojení; endpoints (koncové body) z obrázku neodhadne.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Řádky polí mají šířku 3, ale řádky vrcholů šířku 4.
+/// Nejdřív na papíře očísluj šestnáct vertex (vrcholů).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Pohyb o řádek vrcholů dolů přidá k lineárnímu indexu 4.
+/// Odděl prvních dvanáct edge (hran) od dalších dvanácti; jejich row width (šířka řádku) je jiná.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Pro svislou hranu vrať r*4+c a (r+1)*4+c.
+/// Převeď edge na row/column (řádek/sloupec), začátek zplošti šířkou 4 a druhý konec posuň o 1
+/// vodorovně nebo o 4 svisle.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Nakresli vlastní uzavřený okruh, odvoď čísla v okolních cell (políčkách) a vyzvi spoluhráče.
+/// Potřebuješ hratelnou hádanku, nikoli solver (řešič) ani záruku jediného řešení.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

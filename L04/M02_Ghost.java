@@ -3,14 +3,15 @@
 /// Společně stavte začátek slova a v každém tahu přidejte jedno písmeno. Hráč prohraje, pokud dokončí
 /// slovníkové slovo alespoň o čtyřech písmenech nebo nezanechá žádné možné pokračování.
 ///
-/// **Tvoje mise:** R je platný začátek pro ROBOT, ROBIN a ROCK, ale hra jej odmítá. Oprav possiblePrefix
-/// tak, aby hledání mohlo dojít ke každému slovu ve slovníku a přitom skončilo, jakmile zná odpověď.
+/// **Tvoje mise:** R má být začátkem ROBOT, ROBIN či ROCK, ale nehotové hledání odmítá každý prefix
+/// (začátek). Sestav hledání while přes words: při první shodě startsWith vrať true, jinak pokračuj a
+/// false vrať až po konci slovníku.
 ///
 /// **Dnes trénuješ:** Hledání pomocí while: prohlédni vždy jednu možnost a po neshodě posuň index
 /// (pozici). Existují dva běžné konce: return true při nalezení vhodného slova, nebo dosažení konce
 /// slovníku a return false.
 ///
-/// Spusť program, přečti vypsaný slovník a napiš R; starter (výchozí program) chybně oznámí
+/// Přečti vypsaný slovník a napiš R; starter (výchozí program) chybně oznámí
 /// slepý začátek navzdory uvedeným slovům na R.
 boolean possiblePrefix(String candidate) {
     int index = 0;
@@ -48,37 +49,37 @@ boolean possiblePrefix(String candidate) {
 /// Nyní předpověz trace (stopu průběhu), pokud energy začíná na čtyřech.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// Hledání má dva konce: úspěšný časný return a neúspěšný konec. index začíná nulou; words.length
+/// počítá kandidáty.
 ///
-/// - `int index = 0;` — Začni u první položky slovníku. Toto nastavení proběhne za celé hledání jen
-///   jednou.
-/// - `while (index < words.length && index < 1)` — Obě porovnání musí být true (pravda). První hlídá
-///   hranici slovníku; přidané porovnání nyní hledání dál omezuje.
-/// - `words[index].startsWith(candidate)` — Ověř, zda slovo na této pozici začíná celým přijatým
-///   fragmentem.
-/// - `return true;` — Nalezené vhodné slovo stačí k okamžitému ukončení method (metody); další slova už
-///   nejsou potřeba.
-/// - `index++;` — Po slově, které nesplnilo kontrolu začátku, přejdi k další položce slovníku.
-/// - `return false;` — K této odpovědi se dojde, když smyčka skončí bez nalezení pokračování.
+/// | dictionary (slovník) | candidate | návštěvy | výsledek |
+/// | --- | --- | --- | --- |
+/// | CAT, ROBOT | RO | CAT, potom ROBOT | true |
+/// | CAT, ROBOT | XY | obě slova | false |
+/// | prázdný | RO | žádná | false |
 ///
-/// ### Co už obstarává připravená část
-///
-/// words je připravený veřejný slovník, který se před hrou vypíše. command přidá písmeno, zavolá
-/// possiblePrefix, ověří dokončení slova a vystřídá hráče. display a main zajišťují textové prostředí,
-/// restart i ukončení.
+/// `words[index].startsWith(candidate)` se ptá jednoho slova. Neúspěšný průchod musí zvětšit index.
+/// Úspěšný return skončí hned a další slova nepotřebuje. Předpověz návštěvy pro candidate C. Připravený
+/// command ověřuje písmeno a používá vrácenou odpověď.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// index < 1 skončí po jediné položce slovníku.
+/// Vystopuj RO proti dvěma slovům, kde druhé odpovídá.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Hranice má odpovídat words.length a po každém neúspěchu musí přijít index++.
+/// Kontrolu jednoho slova vlož do while chráněného aktuálním indexem.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Odstraň nadbytečné omezení index < 1; kontrolu délky zachovej.
+/// Při shodě vrať true; po neshodě posuň index; závěrečné false nech mimo smyčku.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Nahraď dictionary (slovník) pěti slovy dlouhými alespoň čtyři písmena. Dvěma dej dlouhý společný
+/// prefix (začátek) a jeden lákavý začátek nech bez pokračování. Vyměňte si slovníky: dokáže druhý hráč
+/// před hrou vysvětlit bezpečný tah a tvou past?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

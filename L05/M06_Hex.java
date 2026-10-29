@@ -9,7 +9,7 @@
 /// **Dnes trénuješ:** Traversal and search (průchod a hledání): hledání cesty závisí na povolených
 /// sousedních pozicích. Kandidátní graph (síť spojení) je zde šestiúhelníková deska.
 ///
-/// Spusť program a zaber levý horní šestiúhelník zadáním 1 1, potom se s kamarádem střídejte ve
+/// Zaber levý horní šestiúhelník zadáním 1 1, potom se s kamarádem střídejte ve
 /// volbě řádku a sloupce.
 boolean connected(int who) {
     boolean[][] seen = new boolean[5][5];
@@ -99,6 +99,12 @@ boolean connected(int who) {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Přidej oba směry; seen[][] a logiku queue ponech.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Přidej do directions jeden vlastní portal offset (posun portálu), třeba skok o dva řádky. Vytvoř
+/// desku spojenou jen s tímto pravidlem a druhou stále nespojenou. Vyměň je se spolužákem bez
+/// prozrazení, která dokazuje změnu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

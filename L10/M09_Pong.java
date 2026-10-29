@@ -51,6 +51,14 @@ void step() {
     if (rightScore >= 5) winner = 2;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Vymysli pravidlo návratu do hry: po gólu dostane prohrávající delší pálku, při remíze budou obě
+/// normální. Nejdřív urči, kde končí skórování a začíná další podání. Potom někoho vyzvi na zápas do
+/// pěti bodů.
+// </editor-fold>
+
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F30">
 /// ### Input (vstup) požádá; tick (krok) posune čas
 ///

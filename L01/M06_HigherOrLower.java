@@ -3,7 +3,8 @@
 /// Hádej, zda bude příští karta vyšší nebo nižší, a snaž se udržet sérii, než ji ukončí chybný odhad.
 /// Stejné karty ti dají další šanci bez trestu.
 ///
-/// **Tvoje mise:** Automat slaví už po jediném správném odhadu. Oprav sdílený target tak, aby displej
+/// **Tvoje mise · Nastav společnou výzvu:** Automat slaví už po jediném správném odhadu. Oprav sdílený
+/// target tak, aby displej
 /// skóre i pravidlo výhry popisovaly kolo s deseti správnými odhady.
 ///
 /// **Dnes trénuješ:** Named value (pojmenovaná hodnota): target uchovává jediný údaj, který může číst
@@ -55,6 +56,19 @@ int target = 10;
 /// je 11, Queen 12, King 13 a Ace 14. Shodná karta nepočítá správný tip ani neprohrává. Cíl i
 /// počet správných tipů čtou stejný target. Po změně target ulož soubor, zavři staré okno a
 /// znovu spusť program; New round samo upravenou Javu nenačte.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// V `int lives = 3;` označuje int celočíselný type (typ), lives je vybrané jméno, = uloží hodnotu a
+/// ; ukončí statement (příkaz). Čtení lives jinde poskytne uloženou hodnotu; nekopíruje declaration
+/// (deklaraci). Zde je target jediný sdílený údaj. Co by se stalo, kdyby displej používal deset a
+/// ukončovací pravidlo tři?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Po zprovoznění desetibodové hry zvol krátký sprint pro kamaráda a delší vytrvalostní hru pro sebe.
+/// Měň jen target a ověř soulad zobrazeného cíle a ukončení. Je delší kolo napínavější, nebo jen
+/// přísnější?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">

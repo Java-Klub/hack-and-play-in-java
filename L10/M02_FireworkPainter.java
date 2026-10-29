@@ -14,18 +14,29 @@ import javax.swing.Timer;
 /// Maluj noční oblohu ohňostroji, které rozkvetou tam, kam klikneš. Každý výbuch má respektovat vybrané
 /// místo, ne pevný bod plátna.
 ///
-/// **Tvoje mise:** Kliknutí nevytvoří výbuch, protože vrácená akce ignoruje obě souřadnice. Ať odložená
-/// akce změní skutečný model (model pravidel) ohňostroje.
+/// **Tvoje mise:** Vytvoř callback (odloženou akci) pro dvojitý ohňostroj: kliknutí má vypustit
+/// výbuch v (x, y) i v (WIDTH - x, y). Napiš tělo callback. Samotné vytvoření nesmí střílet; částice
+/// dál vytváří burst.
 ///
-/// **Dnes trénuješ:** Callback (předaná akce) se dvěma argument (argumenty) přenese souřadnice kliknutí
-/// do pozdější akce. Vytvoření callback nesmí změnit částice; spuštění má použít právě dané kliknutí
-/// jednou.
+/// **Dnes trénuješ:** Callback (předaná akce) spustí tělo až při události; local calculations (místní
+/// výpočty) mohou upravit data před změnou model.
 ///
 /// Po spuštění programu klikáním do plochy vypouštěj ohňostroj; Space pozastaví pohyb a R
 /// vyčistí oblohu a obnoví začátek.
 java.util.function.BiConsumer<Integer, Integer> burstAction() {
-    return this::burst;
+    return (x, y) -> {
+        burst(x, y);
+        burst(WIDTH - x, y);
+    };
 }
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Proměň dvojici ohňostrojů v podpis: kolem každého kliknutí vytvoř tři výbuchy do trojúhelníku.
+/// Nejdřív si jejich středy nakresli na papír. Metodě burst nech částice; tvůj callback (odložená
+/// akce) má uspořádat tři volání.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F28">
 /// ### Callback (zpětné volání): akce na později
@@ -47,30 +58,31 @@ java.util.function.BiConsumer<Integer, Integer> burstAction() {
 /// Předpověz: co se vypíše, když poslední řádek nahradí dvě po sobě jdoucí volání `cheer.run()`?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// ### Jedna událost, krátká řada akcí
 ///
-/// - `BiConsumer<Integer, Integer>` — JDK role akce, která přijímá dva integer (celá čísla) a nevrací
-///   hodnotu.
-/// - `(x, y)` — Tyto lambda parameter (parametry anonymní funkce) dostanou souřadnice při spuštění akce.
-/// - `-> {}` — Šipka uvádí tělo akce, které je nyní prázdné.
+/// Event (událost) dodá x a y až při volání accept. Na plátně širokém 600 má x = 100 zrcadlového
+/// partnera v 500; y zůstává stejné. Pro x = 300 se oba středy shodnou: contract (dohoda) stále
+/// požaduje dva výbuchy. Lambda body (tělo akce) v braces (složených závorkách) může mít několik
+/// příkazů v pořadí. Za jeho koncovou závorkou je středník ukončující return.
 ///
-/// ### Co už obstarává připravená část
-///
-/// press volá skutečný burstAction callback (předanou akci) s pozicí kliknutí. step posune konečné
-/// particles (částice) a draw ukáže stopy; Space pozastaví a R vyčistí a obnoví začátek.
+/// Neutrální příklad: `Runnable knock = () -> { IO.println("Knock"); IO.println("Who?"); };` vytvoří
+/// tichou akci. `knock.run()` vypíše Knock a potom Who?. Předpověz výpis při dvou spuštěních. Zde
+/// press předá kliknutí do burstCallback; burst vytváří 60 částic a obnoví pohyb. Dvě volání tedy
+/// vytvoří 120 částic bez kopírování jejich fyziky.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// BiConsumer přijme dvě hodnoty později.
+/// Vytvoření a spuštění jsou různé okamžiky; změny model nech uvnitř lambda.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Předej je v pořadí x/y; při tvorbě callback (předané akce) burst nevolej.
+/// V obou voláních zachovej y kliknutí. Odraz přes střed mění jen x.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Připravená burst už přidá šedesát částic a spustí pohyb.
+/// Vrať lambda se dvěma argumenty a dvěma voláními burst: nejdřív místo kliknutí, potom jeho odražený
+/// střed.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -11,13 +11,14 @@ import java.util.Arrays;
 /// Odhal obrázek z políček jen podle číselných skupin vedle řádků a sloupců. Každá nápověda musí obrázek
 /// popisovat poctivě.
 ///
-/// **Tvoje mise:** Černá skupina na konci řádku se z číselné nápovědy ztratí. Dokonči runs(int[] values),
-/// aby se započítala i poslední skupina.
+/// **Tvoje mise:** Černá skupina na konci pole nemá bílou buňku, která ji uzavře. Doplň rozhodnutí za
+/// průchodem: ulož zbývající kladnou sérii, ale nevytvářej nulovou nápovědu pro bílý či prázdný řádek.
+/// Dřívější skupiny zachovej.
 ///
 /// **Dnes trénuješ:** Traversal and search (průchod a hledání): při čtení řádku udržuj průběžný počet a
 /// všimni si i skupiny ukončené koncem vstupu místo bílého políčka.
 ///
-/// Spusť program a podle čísel u řádků a sloupců označuj levým kliknutím černá a pravým bílá
+/// Podle čísel u řádků a sloupců označuj levým kliknutím černá a pravým bílá
 /// políčka.
 int[] runs(int[] values) {
     var result = new ArrayList<Integer>();
@@ -63,20 +64,19 @@ int[] runs(int[] values) {
 /// (pole)?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// Připravený průchod uzavírá sérii při nule. Konec vstupu ale nemá další buňku, která by tuto větev
+/// spustila.
 ///
-/// - `for (int value : values)` — Enhanced for (průchod po prvcích) čte hodnoty políček postupně bez
-///   výslovného indexu.
-/// - `count++` — Přidá jedno černé políčko do právě počítané skupiny.
-/// - `result.add(count)` — Připojí délku jedné dokončené skupiny do list (seznamu) nápověd.
-/// - `Integer::intValue` — Připravený method reference (odkaz na metodu) při vracení převádí zabalená
-///   čísla na hodnoty int.
+/// | přečtený vstup | count | dokončený result |
+/// | --- | --- | --- |
+/// | 1,1 | 2 | prázdný |
+/// | 1,1,0 | 0 | 2 |
+/// | 1,1,0,1 | 1 | 2 |
 ///
-/// ### Co už obstarává připravená část
-///
-/// Stejné runs() tvoří řádkové i sloupcové nápovědy a pomáhá won() porovnat řešení. Kreslení, přepínání
-/// políček i převod seznamu na int[] jsou připravené.
+/// Závěrečný stav ještě obsahuje užitečný count; result potřebuje 2 i 1. `result.add(count)` uloží
+/// nalezenou délku. Rozhodni, kdy tento krok patří za smyčku. Předpověz závěr pro samé bílé buňky a
+/// jednu černou. Převod stream je připravený; pouze vrací získané délky jako int array (pole).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
@@ -90,15 +90,21 @@ int[] runs(int[] values) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Bílé pole uvnitř loop zapíše předchozí count.
+/// Porovnej závěrečný count pro černý a bílý konec řádku.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Za posledním černým polem už bílé být nemusí.
+/// Poslední skupina potřebuje připojení za průchodem, chráněné proti nule.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Za loop jednou přidej count, pokud je kladný.
+/// Za smyčkou přidej count jen při kladné hodnotě; připravený převod result zachovej.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Nakresli v připravených datech vlastní malou černobílou ikonu. Clues (číselné nápovědy) nech
+/// vytvořit pomocí runs místo ručního zadání. Spolužákovi dej jen nápovědy a porovnej jeho rekonstrukci
+/// s originálem.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

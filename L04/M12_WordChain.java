@@ -10,7 +10,7 @@
 /// místo čísla. Prázdný seznam vytvoř jednou a při objevování dalších platných možností uchovej dřívější
 /// položky.
 ///
-/// Spusť program a porovnej celý Dictionary s jedinou další nabídkou; po opravě napiš APPLE a
+/// Porovnej celý Dictionary s jedinou další nabídkou; po opravě napiš APPLE a
 /// prohlédni nabídnutá pokračování na E.
 List<String> choices() {
     var list = new ArrayList<String>();
@@ -75,6 +75,12 @@ List<String> choices() {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Odstraň list.clear(); zachovej list.add(w).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Vytvoř kolo se zakázaným písmenem: zvol ho a z choices vyřaď slova, která jej obsahují. Najdi
+/// počáteční slovo s právě dvěma povolenými pokračováními a vyzvi spolužáka, aby se vyhnul připravené
+/// slepé uličce.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

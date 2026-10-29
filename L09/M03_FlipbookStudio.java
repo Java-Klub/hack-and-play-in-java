@@ -11,12 +11,12 @@ import javax.swing.Timer;
 /// Nakresli několik malých snímků a sleduj, jak z nich vzniká pohyb. Undo (vrácení změny) má dovolit
 /// odvážné pokusy a vracet nejnovější tah jako první.
 ///
-/// **Tvoje mise:** Undo nyní obnovuje nejstarší změnu místo nejnovější. Oprav výběr odebrané změny a
-/// zachovej chování pro prázdnou historii.
+/// **Tvoje mise:** Vytvoř undo(): pro prázdnou history vrať false; jinak odeber nejnovější Edit, obnov
+/// jeho oldColour v jeho vlastním frame/y/x a vrať true. Kreslení funguje, nedokončené undo (vrácení
+/// změny) ale neobnoví žádný tah.
 ///
-/// **Dnes trénuješ:** Mutable List (měnitelný seznam) může fungovat jako stack (zásobník): změny
-/// přicházejí v časovém pořadí a vracejí se opačně. Každý Edit uchovává původní data pro obnovení jednoho
-/// pixel (obrazového bodu).
+/// **Dnes trénuješ:** Vytvoř práci s ordered mutable collection (uspořádanou měnitelnou kolekcí) a
+/// určuj přijetí i prázdný případ.
 ///
 /// Po spuštění programu namaluj dvě různá políčka a stiskni Z pro vrácení posledního; pravé
 /// kliknutí maže, 1–4 mění snímek, Space přehrává animaci a R obnoví začátek.
@@ -28,53 +28,55 @@ boolean undo() {
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F22">
-/// ### List (seznam): pořadí, které můžeš měnit
+/// ### List (seznam) drží pořadí měnících se věcí
 ///
-/// `List<String>` uchovává texty v pořadí. `new ArrayList<>()` vytvoří mutable list (měnitelný
-/// seznam): obsah lze měnit bez nahrazení samotného seznamu.
+/// Array (pole) má pevný počet míst. Mutable List (měnitelný seznam) může růst i ubývat a zachovává
+/// pořadí. `List<T>` popisuje přístup k prvkům typu T; `ArrayList<T>` je měnitelná JDK implementation
+/// (implementace).
 ///
 /// ```java
-/// List<String> snacks = new ArrayList<>();
-/// snacks.add("apple");
-/// snacks.add("nuts");
-/// IO.println(snacks.get(0));
-/// IO.println(snacks.size());
+/// List<String> trail = new ArrayList<>();
+/// trail.add("north");
+/// trail.add("east");
+/// String latest = trail.removeLast();
+/// IO.println(trail + " / " + latest);
 /// ```
 ///
-/// Výstup je `apple`, potom `2`. `add(value)` připojí jeden prvek na konec; `get(index)` přečte prvek
-/// bez odebrání. Indexes (indexy) začínají nulou. `isEmpty()` zjišťuje, zda seznam nemá prvky.
-/// `removeLast()` odebere a vrátí poslední prvek; volej jej jen u neprázdného seznamu. Seznam přímo z
-/// `List.of(...)` měnit nelze, ale `new ArrayList<>(List.of(...))` měnit lze.
+/// Výsledek je `[north] / east`. `add` připojí na konec; `removeLast` poslední prvek odstraní a zároveň
+/// vrátí. Před odebráním z prázdného List ověř `isEmpty`. Queue (fronta) odebírá vpředu a přidává
+/// vzadu, zatímco undo stack (zásobník změn) odebírá nejnovější prvek. Správný konec určuje význam
+/// pořadí.
 ///
-/// Předpověz: po `snacks.removeLast()` jaká bude velikost a první prvek?
+/// `List.of("north", "east")` vytvoří unmodifiable List (neměnitelný seznam): čtení funguje, přidávání
+/// ne. `new ArrayList<>(existing)` vytvoří mutable List s dosavadními prvky. Předpověz obsah trail po
+/// přidání `"south"`. Když vracíš dvě změny, která má zmizet jako první?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Jak číst tuto část
 ///
-/// - `history.isEmpty()` — Před odebráním ověří, zda existuje změna k vrácení.
-/// - `history.removeFirst()` — Vrátí a odebere nejdříve uložený Edit; zvaž, zda Undo potřebuje právě
-///   tento konec.
-/// - `edit.frame()` — Čte record component (složku record), která určuje obnovovaný snímek.
-/// - `frames[edit.frame()][edit.y()][edit.x()]` — Vybere snímek, potom řádek a v něm konkrétní pixel
-///   (obrazový bod).
-///
-/// ### Co už obstarává připravená část
-///
-/// paintCell zaznamená každou změnu pro undo (vrácení); draw ukáže zvolený snímek a animovaný
-/// náhled. Levá/pravá myš kreslí/maže, 1–4 volí snímek, Space přehrává a R obnoví začátek.
+/// Každý Edit je immutable record (neměnný datový záznam) s frame, x, y a oldColour. Accessor (čtecí
+/// metoda) má závorky: `edit.frame()` čte component (složku). Aktuální frame (snímek) může být jiný než
+/// upravený. History už dostává Edit v časovém pořadí; undo odebírá opačný konec, aniž smaže starší
+/// změny.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Další Edit se přidává na konec history.
+/// Na kterém konci je poslední akce? Co znamená prázdný stack (zásobník)?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Undo potřebuje poslední element (prvek) a musí jej také odstranit.
+/// Obnovované coordinates (souřadnice) musí pocházet z odebraného Edit, ne z aktuálně vybraného frame
+/// (snímku).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Obnov uložené frame/x/y/colour, nikoli právě zvolený snímek.
+/// Ověř prázdnost, použij removeLast, obnov oldColour ve frames[frame][y][x] a oznam úspěch.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Nakresli čtyřsnímkovou chůzi příšerky pomocí existujících frame key (kláves snímků). Mezi dvěma
+/// frame (snímky) nech jednu nohu na místě a pomocí undo porovnej iluzi s klouzající nohou.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

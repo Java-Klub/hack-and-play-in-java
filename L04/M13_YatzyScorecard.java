@@ -3,16 +3,16 @@
 /// Sestavuj skóre z kostek rozhodováním, které přehodit a kterou kategorii využít. Každou kategorii lze
 /// vyplnit jen jednou, takže body přijaté nyní mohou znamenat vzdání se lepší budoucí příležitosti.
 ///
-/// **Tvoje mise:** Po zapsání několika kategorií zobrazený součet zapomíná dřívější body. Oprav hlavní
-/// sum v total tak, aby přispěly všechny vyplněné kategorie, nevyplněné položky se přeskočily a
-/// připravený bonus horní části zůstal zachovaný.
+/// **Tvoje mise:** Kontrola skóre je nehotová a stále hlásí nulu. Sestav tělo smyčky: každé nezáporné
+/// obsazené skóre přičti k sum, k upper navíc patří obsazené kategorie 0–5. Neobsazené -1 vynech;
+/// připravený return přidá horní bonus.
 ///
 /// **Dnes trénuješ:** Průběžný součet: zachovej předchozí celkovou hodnotu a zahrň každý přijatý bodový
 /// zisk. Zde jsou dva samostatné accumulator (průběžné součty), protože sum počítá všechny kategorie,
 /// zatímco upper jen prvních šest pro pozdější rozhodnutí o bonusu.
 ///
-/// Spusť program, napiš bank 13, potom zapiš jinou volnou kategorii ukazující nenulové body a
-/// porovnej vypsaný součet s oběma vyplněnými výsledky.
+/// Ulož skóre do kategorie 13 a porovnej je s Total. Chybějící kontrola stále hlásí nulu; tvé dva
+/// průběžné součty musí započítat uloženou tabulku.
 int total() {
     int sum = 0;
     int upper = 0;
@@ -50,39 +50,37 @@ int total() {
 /// Nyní předpověz receipt, pokud připravený seznam obsahuje jen `"rice"`.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// Připravený for navštíví 13 položek. Hodnota -1 znamená neobsazeno, nikoli záporné získané skóre. sum
+/// počítá všechny obsazené kategorie; upper jen prvních šest.
 ///
-/// - `int sum = 0;` — Před procházením tabulky jednou založ celkový součet s nulou.
-/// - `int upper = 0;` — Uchovávej samostatný průběžný součet pro šest horních kategorií; nezaměňuj jej s
-///   celkovým součtem.
-/// - `for (int i = 0; i < 13; i++)` — Navštiv všech třináct pozic kategorií jednou, od nuly do dvanácti.
-/// - `scores[i] >= 0` — Nezáporná hodnota je vyplněná kategorie, včetně záměrné nuly; -1 znamená dosud
-///   volnou kategorii.
-/// - `sum = scores[i];` — Současné assignment (přiřazení) přepisuje průběžný součet body jediné
-///   kategorie.
-/// - `upper += scores[i];` — Tato připravená accumulation (postupné sčítání) uchovává dřívější body
-///   horních kategorií před zahrnutím aktuálního zisku.
-/// - `upper >= 63 ? 35 : 0` — Připravená krátká volba dává bonus 35, když upper dosáhne 63, jinak nulu;
-///   bonus se přičítá jednou po smyčce.
+/// | index kategorie | skóre | nové sum | nové upper |
+/// | --- | --- | --- | --- |
+/// | 0 | 3 | 3 | 3 |
+/// | 1 | -1 | 3 | 3 |
+/// | 12 | 8 | 11 | 3 |
 ///
-/// ### Co už obstarává připravená část
-///
-/// value už počítá body třinácti kategorií z pěti kostek. command řeší přehazování a vyplní zvolenou
-/// kategorii pouze jednou; display ukazuje dostupné body a volá total. Připravená pravidla obsahují horní
-/// bonus, ale žádný Joker ani bonus opakovaného Yatzy.
+/// Tatáž platná položka může přispět do obou součtů. Poslední výraz přidá 35 jen při upper alespoň 63.
+/// Předpověz sum a upper po přidání skóre 6 do kategorie 2. Počítadla nech local (místní): dvojí čtení
+/// total nesmí dvakrát přidělit body.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// sum = scores[i] v každé vyplněné kategorii nahradí součet.
+/// Odděl rozhodnutí o neobsazené položce od rozhodnutí o horní části.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// sum musí uchovat dřívější body; upper už sčítá správně.
+/// Každé platné skóre přispívá do sum; jen některá navíc do upper.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Použij sum += scores[i].
+/// Uvnitř smyčky ověř skóre >= 0, přičti k sum a při i < 6 také k upper.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Navrhni vlastní bonus za obsazení zvoleného počtu kategorií, nezávislý na horním bonusu. Přidej
+/// accumulator (počítadlo) obsazených kategorií, zvol mez a odměnu. Porovnej dvě scorecard (tabulky)
+/// těsně pod mezí a přesně na ní.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

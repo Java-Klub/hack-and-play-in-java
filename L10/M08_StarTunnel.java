@@ -27,6 +27,14 @@ Point2D.Double project(Star star, double depth) {
     return new Point2D.Double(centreX + star.x * 260 / z, centreY + star.y * 260 / z);
 }
 
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Proměň let v déšť nebo sněžení změnou kreslení promítnutých hvězd. Contract (dohodu vstupů a
+/// výsledku) metody project zachovej. Porovnej bod a krátkou stopu při stejné rychlosti: co působí
+/// rychleji?
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F29">
 /// ### Rendering (vykreslení): ze stavu na pixely
 ///

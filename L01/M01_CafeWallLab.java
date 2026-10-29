@@ -9,7 +9,8 @@ import javax.swing.*;
 /// Sestav stěnu z černých a bílých dlaždic, na které mohou dokonale rovné spáry vypadat nakloněně. Měň
 /// posunutí a porovnej svůj dojem s červeným pravítkem.
 ///
-/// **Tvoje mise:** Stěnu zakrývá šedá vrstva. Oprav pořadí dvou akcí v paintWall, aby dlaždice zůstaly
+/// **Tvoje mise · Zachraň obraz:** Stěnu zakrývá šedá vrstva. Oprav pořadí dvou akcí v paintWall, aby
+/// dlaždice zůstaly
 /// viditelné.
 ///
 /// **Dnes trénuješ:** Sequence (pořadí provádění): uvnitř paintWall běží statement (příkazy) shora dolů,
@@ -82,6 +83,19 @@ void paintWall(Graphics2D g) {
 /// Řádky začínající /// jsou slova pro tebe; Java je neprovádí. Připravená main níže spustí program a
 /// otevře okno. Když okno potřebuje obrázek, draw zavolá tvoji akci paintWall. paintBackground a
 /// paintTiles obsahují připravené kreslení; key zpracuje ovládání.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Call (volání) žádá provést akci právě teď. Jestliže `announce();` vypíše jeden řádek, dvě volání
+/// za sebou vypíší dva řádky. Java je nesloučí. V tomto obrázku obě akce dostanou stejné pero g, ale
+/// první volání skončí před začátkem druhého. Předpověz viditelnou vrchní vrstvu po obrácení pořadí a
+/// potom se podívej do okna.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Pomocí existujícího posunu a šířky spár připrav pro kamaráda co nejsilnější iluzi. Než ukážeš
+/// červené pravítko, zeptej se, zda jsou čáry nakloněné. Potom změň barvu v paintBackground a
+/// porovnej stejné nastavení.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
