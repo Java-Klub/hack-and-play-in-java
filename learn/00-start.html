@@ -1,9 +1,22 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A textbook for self-study · Hack & Play in Java"><title>Prepare your workshop · Hack & Play in Java</title><link rel="stylesheet" href="assets/book.css"></head><body><a class="skip" href="#content">Skip to the lesson</a><header class="masthead"><a href="index.html">Hack & Play in Java</a><small>A textbook for self-study</small></header><div class="layout"><aside class="sidebar"><nav aria-label="Textbook lessons"><p>Read, try, create</p><ol><li><a href="index.html">Contents</a></li><li><a href="00-start.html" aria-current="page">Prepare your workshop</a></li><li><a href="01-first-program.html">1.1 Your first program</a></li><li><a href="01-order.html">1.2 Statement order</a></li><li><a href="02-values.html">2.1 Give a value a name</a></li><li><a href="02-change.html">2.2 Change a stored value</a></li><li><a href="02-calculations.html">2.3 Let the program calculate</a></li><li><a href="glossary.html">Glossary</a></li></ol></nav></aside><main><article id="content"><h1>Set up your workshop</h1>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Set up your workshop · Hack &amp; Play in Java</title>
+<link rel="stylesheet" href="assets/book.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to the lesson</a>
+<header class="masthead"><a href="index.html">Hack &amp; Play in Java</a></header>
+<div class="layout">
+<aside class="sidebar"><nav aria-label="Lessons"><ol><li><a href="index.html">Contents</a></li><li><a href="00-start.html" aria-current="page">Set up your workshop</a></li><li><a href="01-first-program.html">1.1 Your first program</a></li><li><a href="01-order.html">1.2 Statement order</a></li><li><a href="02-values.html">2.1 Give a value a name</a></li><li><a href="02-change.html">2.2 Change a stored value</a></li><li><a href="02-calculations.html">2.3 Let the program calculate</a></li><li><a href="03-input.html">3.1 Ask the player</a></li><li><a href="03-text.html">3.2 Clean up a signal</a></li><li><a href="03-stories.html">3.3 Let the player change the story</a></li><li><a href="03-numbers.html">3.4 Turn a reply into a number</a></li><li><a href="glossary.html">Glossary</a></li></ol></nav></aside>
+<main><article id="content">
+<h1>Set up your workshop</h1>
 <p>In this lesson, you will open the course in NetBeans, run the first file and change its message. We will take the program apart in the next lesson.</p>
 <h2>What you need</h2>
 <ul>
-<li><strong>JDK 26 or later</strong> and NetBeans with Java source file launcher support. The JDK compiles and runs code. NetBeans must use this JDK to run these files. If your tools are not installed yet, prepare them before working offline; the official <a href="https://dev.java/learn/getting-started/">Getting Started with Java</a> page covers JDK setup.</li>
+<li><strong>NetBeans 31 and JDK 26 or later.</strong> If you do not have them yet, download the <a href="https://installers.friendsofapachenetbeans.org/">NetBeans 31 installer with JDK 26 from Friends of Apache NetBeans</a> for your system. The JDK provides Java for compiling and running programs. The <a href="https://netbeans.apache.org/front/main/download/nb31/">NetBeans 31 page</a> lists other download options.</li>
 <li><strong>The whole course folder, downloaded and extracted.</strong> Its main folder contains <code>README.md</code>, <code>learn</code> and the source folders. Previewing an individual file on GitHub is not enough to run it.</li>
 </ul>
 <h2>Add the whole folder to Favorites</h2>
@@ -12,7 +25,7 @@
 <li>Right-click an empty area in the Favorites window and choose <strong>Add to Favorites…</strong>.</li>
 <li>Select the main extracted course folder, the one containing <code>README.md</code>. Add it and expand its tree.</li>
 </ol>
-<p>Favorites shows real files on disk. Editing a file in NetBeans changes this downloaded copy. The whole textbook and all its programs are now in one tree. You do not need to create a project: the Java source file launcher runs <code>.java</code> files directly.</p>
+<p>Favorites shows real files on disk. Editing a file in NetBeans changes this downloaded copy. The whole textbook and all its programs are now in one tree. You do not need to create a project.</p>
 <p><a id="run"></a></p>
 <h2>Run your first program</h2>
 <ol>
@@ -33,7 +46,7 @@ Power on
 <p>In the open WakeUp file, change the text inside the quotes from <code>ARCADE</code> to <code>HELLO</code>. Choose <strong>File → Save</strong>, then <strong>Run → Run File</strong> again. The first message in Output should now say HELLO. Afterwards, you can put the original text back.</p>
 <p>Save stores your edited text in the file. The next run reads that saved version. An already open game window does not update itself: close it before running the program again.</p>
 <p>Open later examples and tasks in the same way from Favorites. Each lesson names the path, for example <code>learn/practice/01/SecretSignal.java</code>: expand <code>learn</code>, <code>practice</code> and <code>01</code>, open the file and use Run File.</p>
-<p>When a lesson asks you to create your own file, keep the <code>.java</code> ending, not <code>.java.txt</code>. Select that file in the editor just as you would a supplied file.</p>
+<p>Edit files in your extracted course folder. A source preview on a website does not replace opening the file in Favorites.</p>
 <p><a id="checks"></a></p>
 <h2>Check a task with Run File</h2>
 <p>Short textbook tasks give their expected output directly. Run them and compare the result. Larger programs have a prepared <strong>Check.java</strong> file in their folder.</p>
@@ -81,16 +94,11 @@ Power on
 </tr>
 </tbody></table></div>
 <p>Fix the first error in the output, then run the program again. <strong>Edit → Undo</strong> can reverse the last change.</p>
-<details>
-<summary>Running from a terminal, if you want to use one</summary>
-
-<p>The JDK can also run the same files directly outside NetBeans. From a terminal in the main course folder:</p>
-<pre><code class="language-text">java learn/examples/01/WakeUp.java
-java L01/Check.java M01_CafeWallLab.java
-</code></pre>
-<p>After <code>java</code>, write the path to the chosen file, including <code>.java</code>. After the path to Check.java, you may add the filename of one program to check. You do not need this option to work through the textbook.</p>
-</details>
-
 <p><strong>You are ready to move on when you can find WakeUp in Favorites, run it, and see a changed message after saving.</strong></p>
 <p>Continue to <a href="01-first-program.html">Your first program</a>.</p>
-</article><nav class="page-nav" aria-label="Previous and next lesson"><a href="index.html">← Contents</a><a class="next" href="01-first-program.html">1.1 Your first program →</a></nav><p class="page-footer">This page works offline. Open programs from Favorites in NetBeans and use Run File.</p></main></div></body></html>
+</article>
+<nav class="page-nav" aria-label="Previous and next lesson"><a href="index.html">← Contents</a><a class="next" href="01-first-program.html">1.1 Your first program →</a></nav>
+</main>
+</div>
+</body>
+</html>
