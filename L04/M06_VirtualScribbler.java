@@ -15,7 +15,7 @@ import javax.swing.Timer;
 ///
 ///
 /// **Tvoje mise:** Změň Signature na opakovatelný čtvercový podpis: začni uprostřed, projeď čtyři rovné
-/// stejně dlouhé strany po šesti krocích pera a skonči pozastavený v počátku. Počítadlo ukáže 24.
+/// stejně dlouhé strany po třiceti krocích pera a skonči pozastavený v počátku. Počítadlo ukáže 120.
 /// Dřívější drift (zatáčení), jitter (náhodné odchylky), poloha ani kresba podpis neovlivní. Kreslení i
 /// krokovací tlačítka už fungují.
 ///
@@ -30,7 +30,7 @@ void signature() {
     jitter = 0;
     paused = false;
     for (int side = 0; side < 4; side++) {
-        burst(6);
+        burst(30);
         angle += Math.PI / 2;
     }
     paused = true;
@@ -84,7 +84,7 @@ void signature() {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Jednou resetuj, odstraň drift a jitter, čtyřikrát opakuj šest kroků a čtvrtotáčku, nakonec pozastav.
+/// Jednou resetuj, odstraň drift a jitter, čtyřikrát opakuj třicet kroků a čtvrtotáčku, nakonec pozastav.
 /// Kreslení strany musí být povoleno.
 // </editor-fold>
 
