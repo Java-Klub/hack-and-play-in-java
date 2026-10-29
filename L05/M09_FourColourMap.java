@@ -1,18 +1,17 @@
 /// # L05.09 · FourColourMap
 ///
-/// Vybarvi malou mapu tak, aby sousední oblasti neměly stejnou barvu. Vzdálené oblasti se shodovat mohou.
+/// **Překresli mapu a nachytej rozhodčího.** Vyhledej data `map` a nahraď jejich řádky jediným
+/// řádkem `"AABCCDEE"`. Spusť hru a zadej postupně `B 2`, `C 1`, `D 1`, `E 2`. Stejnou barvu teď
+/// sdílejí jen sousedé C–D, ale původní rozhodčí hlásí tři konflikty.
 ///
+/// **Úkol:** Uprav zjišťování sousedství, aby vycházelo ze skutečných řádků mapy A–E. Po změně
+/// kresby už nemá být nutné opravovat další seznam hranic. Za sousedství považuj společnou
+/// stranu, nikoli pouhý dotyk rohem.
 ///
-/// **Tvoje mise:** Nech rozhodčího barev vycházet přímo z nakreslené mapy. Změna obdélníkových řádků
-/// A–E musí změnit sousedství bez ruční opravy druhého seznamu hranic. Pouhý dotyk rohem se nepočítá.
-/// Konfliktní dvojici regionů započti jen jednou bez ohledu na délku hranice a při zkoumání neměň
-/// hráčovy barvy.
-///
-/// **Dnes se učíš:** Traversal (průchod) může odhalit vztahy ze sousedních datových pozic místo důvěry
-/// ve zdvojený ruční seznam.
-///
-/// Zkus obarvit původní mapu. Potom nahraď jen data řádků za {"AABCCDEE"} a porovnej nakreslené sousedy
-/// s hlášenými konflikty.
+/// **Výsledek:** Zkušební mapa s těmito barvami má jediný konflikt. I dlouhá společná hranice se
+/// počítá jako jedna konfliktní dvojice. Zkoumání sousedů zachová hráčovy barvy a musí fungovat
+/// také pro jiné obdélníkové mapy.
+
 boolean touches(int first, int second) {
     int[][] borders = {{0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 4}, {2, 3}, {2, 4}, {3, 4}};
     for (int[] border : borders) {

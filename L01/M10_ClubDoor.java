@@ -1,9 +1,13 @@
 /// # L01.10 · ClubDoor
 ///
-/// **Tvoje mise · Najdi schovanou propustku:** Otevři dveře dílny. Fungující program kontroluje
-/// kartu, ale tvoji návštěvní kartu odmítá. Přečti malý source (zdroják), najdi přijímanou propustku
-/// a dej ji na svou kartu. Běžné ověřování dveří zachovej: jiné karty musí dál odmítat. Spuštění
-/// vypíše Badge a Door opened/locked.
+/// **Najdi propustku do dílny.** Spuštění vypíše Badge: VISITOR a Door locked. Dveře
+/// návštěvnickou kartu odmítají.
+///
+/// **Úkol:** V malém programu najdi text, který dveře přijímají. Tímto textem nahraď VISITOR na
+/// své kartě. Samotné pravidlo přijímání karet zachovej: jiné karty mají dál zůstat zamčené.
+///
+/// **Výsledek:** Spuštění vypíše tvou změněnou kartu a Door opened. Propustka je přímo ve
+/// zdrojovém kódu; nemusíš ji hádat ani zadávat za běhu.
 
 // <editor-fold defaultstate="expanded" desc="Výklad · F03">
 /// Sleduj jméno zpět k uložené hodnotě a potom dopředu k jeho použitím. main zahájí příběh; method

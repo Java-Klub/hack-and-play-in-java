@@ -5,14 +5,14 @@ import java.awt.image.BufferedImage;
 
 /// # L01.08 · SunflowerSpiral
 ///
-/// **Tvoje mise · Vystopuj recept obrázku:** Fungující obrázek používá mezi semínky půlotáčku. Najdi,
-/// kde jeho spouštěcí recept vybírá úhel, a nastav běžné spuštění na 137.5 stupně. Souřadnicový
-/// vzorec zachovej. Potom sleduj předání vybrané hodnoty do kreslení a do souřadnic jednoho semínka.
+/// **Vypěstuj spirálu ze dvou paprsků.** Program sází barevná semínka jedno po druhém. Teď mezi
+/// nimi otočí směr vždy o půl otáčky, takže leží ve dvou protilehlých řadách.
 ///
-/// Výchozí program funguje podle původních pravidel. Kontrola už očekává tvůj nový cíl.
+/// **Úkol:** Najdi nastavení úhlu mezi sousedními semínky a změň hodnotu použitou při běžném
+/// spuštění na `137.5` stupně. Použij desetinnou tečku. Připravený výpočet souřadnic zachovej.
 ///
-/// Spusť obrázek; po úpravě zavři okno a spusť znovu. Porovnej výchozí dva paprsky s novou
-/// rozptýlenou květinou.
+/// **Výsledek:** Nově spuštěný obrázek rozprostře semínka do spirálovitého květu. Když nastavení
+/// najdeš, sleduj také, jak se jeho hodnota dostane ke kreslení jednoho semínka.
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F03">
 /// Variable (proměnná) pojmenuje uloženou hodnotu. Type (typ) popisuje přípustné hodnoty: `int`

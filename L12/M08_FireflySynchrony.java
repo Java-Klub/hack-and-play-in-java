@@ -7,18 +7,17 @@ import javax.swing.Timer;
 
 /// # L12.08 · FireflySynchrony
 ///
-/// Sleduj pole blikajících světlušek, které postupně hledají společný rytmus. Měň coupling (sílu
-/// propojení) a porovnej nezávislé záblesky s davem pulzujícím společně.
+/// **Zprovozni ovládání světlušek.** Světlušky už blikají, ale ovládací panel je zatím
+/// neovlivňuje.
 ///
-/// **Tvoje mise:** Vytvoř apply pro všechny control cards (ovládací karty): přijmi konečné Coupling v
-/// 0..2, ostatní ignoruj, pro Toggle obrať running a pro Restart zavolej reset s jeho seed. Input
-/// listeners (obsluhy vstupu) mají dál předávat karty do jediného dispatcher.
+/// **Úkol:** Doplň `apply` níže pro tři druhy ovládání. Coupling nastaví sílu vazby na předanou
+/// konečnou hodnotu 0 až 2 včetně; neplatnou hodnotu ignoruje a ponechá staré nastavení. Toggle
+/// přepne běh mezi zapnuto/vypnuto. Restart vytvoří počáteční fáze pomocí připravené `reset` a
+/// seedu ze svého příkazu.
 ///
-/// **Dnes trénuješ:** Sestavíš celý record-pattern dispatcher (směrování podle typu a složek). Rozliš
-/// alternativu, vyjmi její data a zachovej hranici mezi směrováním a připraveným algoritmem.
-///
-/// Po spuštění programu posuň Coupling směrem k 2 a sleduj číslo sladění; pomocí Pause/Run či
-/// New phases porovnej záblesky.
+/// **Výsledek:** Posuvník Coupling změní společný rytmus, Pause / Run čas zastaví a znovu pustí a
+/// New phases obnoví fáze. Připravené obsluhy panelu dál posílají své příkazy do jediné `apply`.
+
 void apply(Control control) {
     // Rozliš všechny možnosti ovládání a každé dej vlastní účinek.
 }

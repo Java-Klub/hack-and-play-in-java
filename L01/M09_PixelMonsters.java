@@ -5,17 +5,15 @@ import java.awt.image.BufferedImage;
 
 /// # L01.09 · PixelMonsters
 ///
-/// Vytvoř souměrnou pixelovou příšerku a prozkoumej, jak jediná barva mění její výraz. Průhledné
-/// pozadí zvýrazní její hranatý tvar.
+/// **Rozsviť příšeře oči.** Program už vytváří barevnou příšerku, ale obě její oči jsou černé.
 ///
-/// **Tvoje mise · Vrať příšeře výraz:** Příšerka přišla o světlé oči. Oprav jedinou sdílenou eyeColour
-/// tak, aby oba oční bloky
-/// zbělely bez samostatné úpravy každého oka.
+/// **Úkol:** Na řádku s `eyeColour` níže vyber bílou barvu místo černé. Zachovej zbytek řádku
+/// včetně `.getRGB();`; nekresli každé oko zvlášť. Dostupná jména barev jsou `Color.BLACK`,
+/// `Color.WHITE`, `Color.RED` a `Color.YELLOW`.
 ///
-/// **Dnes trénuješ:** Jedna named value (pojmenovaná hodnota), několik čtenářů: obě oči dostávají stejnou
-/// uloženou barvu. Jediná vědomá změna proto má ovlivnit dvě místa obrázku.
-///
-/// Spusť program: obrázek se ihned objeví v Java okně.
+/// **Výsledek:** V novém okně budou obě oči bílé a tělo zůstane stejné. Jedna změněná hodnota se
+/// totiž používá pro obě oči.
+
 int eyeColour = Color.BLACK.getRGB();
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F03">

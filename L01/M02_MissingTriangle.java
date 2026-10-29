@@ -6,46 +6,31 @@ import javax.swing.*;
 
 /// # L01.02 · MissingTriangle
 ///
-/// Tři vykrojené černé kruhy mohou vyvolat dojem bílého trojúhelníku, který nikdo nenakreslil. Otoč jeden
-/// kruh a sleduj, jak zdánlivý trojúhelník zmizí.
+/// **Vrať tři vykrojené kruhy.** Po spuštění je obrázek prázdný, protože `paintDisc` zatím nic
+/// nekreslí.
 ///
-/// **Tvoje mise · Sestav dvě akce:** Tři kotouče zmizely. Sestav paintDisc z připravených akcí darkDisc(g, i) a
-/// whiteBite(g, i), každou použij jednou. Výsledkem má být černý kotouč s viditelným bílým výřezem.
+/// **Úkol:** V `paintDisc` níže nahraď řádek začínající `//` dvěma samostatnými řádky. Použij obě
+/// připravená volání, každé jednou; jejich pořadí vyber sám:
 ///
-/// **Dnes trénuješ:** Sequence (pořadí) a vrstvy: když se zavolá paintDisc, obě vnitřní call (volání)
-/// běží v zapsaném pořadí. Předpověz, která barva zůstane nahoře. Samotná definice čeká, až ji připravená
-/// kreslicí část zavolá.
+/// - `whiteBite(g, i);` nakreslí bílý výřez.
+/// - `darkDisc(g, i);` nakreslí plný černý kruh.
 ///
-/// Spusť program, kliknutím otoč kruh a klávesou O zobraz obrysy, které program skutečně
-/// kreslí.
+/// Zápisy včetně `(g, i);` opiš celé. Nepiš je za `//`: takový řádek je jen komentář a Java ho
+/// neprovede.
 ///
-/// Řádky s `///` jsou průvodce pro tebe; při spuštění se neprovádějí.
+/// **Výsledek:** Objeví se tři černé kruhy s bílými výřezy. Výřezy vytvoří dojem bílého
+/// trojúhelníku mezi kruhy; kdyby zůstaly kruhy celé černé, změň pořadí svých dvou řádků.
+
 void paintDisc(Graphics2D g, int i) {
     // Sestav kotouč pomocí dvou připravených kreslicích akcí.
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F01">
-/// Method (metoda) je pojmenovaná akce. Její definice akci zpřístupní; call (volání) ji požádá o
-/// provedení. Java spustí tento program v `main`, i kdyby jiná method byla zapsaná první.
+/// Každé call (volání) je samostatný řádek zakončený středníkem. Připravená `darkDisc` kreslí
+/// plný černý kruh a `whiteBite` bílý výřez.
 ///
-/// ```java
-/// void announce() {
-///     IO.println("Before");
-/// }
-///
-/// void main() {
-///     announce();
-///     IO.println("After");
-/// }
-/// ```
-///
-/// Před dalším čtením předpověz dva řádky output (výstupu). Call `announce();` vstoupí do této
-/// method, vypíše `Before` a potom se vrátí k dalšímu statement (příkazu) v `main`, který vypíše
-/// `After`. Uvnitř zavolané method běží tyto statement v pořadí. `void` znamená, že se nevrací
-/// výsledná hodnota; `()` zde nepředává žádné argument (argumenty). Složené závorky ohraničují tělo a
-/// středník ukončuje každé call. Comment (komentáře) program vysvětlují, ale neprovádějí se.
-///
-/// Nyní předpověz, co nastane, pokud main před posledním výpisem zavolá announce dvakrát.
+/// `g` označuje dodané kreslicí pero a `i` právě kreslený kruh. Obě akce potřebují stejnou
+/// dvojici `(g, i)`. Jejich vnitřní kreslení už funguje; ty je zavoláš ve zvoleném pořadí.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
@@ -65,13 +50,6 @@ void paintDisc(Graphics2D g, int i) {
 /// Řádky /// vysvětlují úlohu a neprovádějí se. main níže spustí program a otevře okno; okno požádá draw
 /// o kresbu a draw zavolá tvoji akci pro všechny tři kruhy. darkDisc a whiteBite obsahují tvary, rotate a
 /// zbývající část řeší otáčení a klikání.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
-/// Method (metoda) může volat jiné method. Připravená kresba vybere kotouč i a dodá pero g; paintDisc
-/// má oba input (vstupy) předat dál. Představ si černé kruhové razítko a potom bílý výřez položený
-/// přes něj. Opačné pořadí bílý výřez zakryje. Ani jedno volání nepotřebuje nové pero nebo jiné číslo
-/// kotouče.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">

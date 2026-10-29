@@ -1,18 +1,16 @@
 /// # L04.13 · YatzyScorecard
 ///
-/// Sestavuj skóre z kostek rozhodováním, které přehodit a kterou kategorii využít. Každou kategorii lze
-/// vyplnit jen jednou, takže body přijaté nyní mohou znamenat vzdání se lepší budoucí příležitosti.
+/// **Vrať kostkám celkové skóre.** Ulož první hod příkazem `bank 13`. Kategorie Chance získá
+/// body, ale celkové `total` ve výchozí verzi zůstane nula.
 ///
-/// **Tvoje mise:** Kontrola skóre je nehotová a stále hlásí nulu. Sestav tělo smyčky: každé nezáporné
-/// obsazené skóre přičti k sum, k upper navíc patří obsazené kategorie 0–5. Neobsazené -1 vynech;
-/// připravený return přidá horní bonus.
+/// **Úkol:** Doplň tělo cyklu v `total` níže. Sečti body ze všech obsazených kategorií;
+/// neobsazené mají hodnotu `-1` a do součtu nepatří. Vedle celkového součtu spočítej body z
+/// prvních šesti kategorií (pozice 0–5). Připravený konec metody za jejich součet alespoň 63
+/// přidá bonus 35.
 ///
-/// **Dnes trénuješ:** Průběžný součet: zachovej předchozí celkovou hodnotu a zahrň každý přijatý bodový
-/// zisk. Zde jsou dva samostatné accumulator (průběžné součty), protože sum počítá všechny kategorie,
-/// zatímco upper jen prvních šest pro pozdější rozhodnutí o bonusu.
-///
-/// Ulož skóre do kategorie 13 a porovnej je s Total. Chybějící kontrola stále hlásí nulu; tvé dva
-/// průběžné součty musí započítat uloženou tabulku.
+/// **Výsledek:** Po `bank 13` se body objeví také v `total`. Další vyplněné kategorie celkové
+/// skóre zvýší; opakovaný dotaz na součet nesmí znovu přidělovat body.
+
 int total() {
     int sum = 0;
     int upper = 0;

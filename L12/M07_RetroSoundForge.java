@@ -3,18 +3,16 @@
 
 /// # L12.07 · RetroSoundForge
 ///
-/// Vyrob krátký retro zvuk: klesající laser, stoupající skok či kolísavý tón. Drobné vzorce promění
-/// typované karty hodnot v úplně jiné WAV efekty.
+/// **Rozkolísej retro tón.** Play wobble ve výchozí verzi drží jedinou výšku. Má plynule kolísat
+/// kolem zadané střední frekvence.
 ///
-/// **Tvoje mise:** Wobble se změnil v rovný tón, protože jeho depth component (složka hloubky) se
-/// nepoužije. Obnov modulaci pro požadovaný čas a zachovej ostatní vzorce i časové meze.
+/// **Úkol:** Uprav větev Wobble v `frequency` níže. Během celého zvuku má proběhnout osm úplných
+/// kolísání nad a pod středem. `depth` určuje největší odchylku oběma směry; čas `t` postupuje od
+/// 0 do 1. Přesné sinusové pravidlo a příklady vysvětluje sekce Pro tuto hru.
 ///
-/// **Dnes trénuješ:** Switch s record pattern (vzory record) může společně vybrat vzorec a rozbalit jeho
-/// parameter (parametry). Různé Wobble musí používat vlastní střed i odchylku a čas musí dál ovlivňovat
-/// výsledek.
-///
-/// Po spuštění programu porovnej Java tlačítka Play wobble, Play laser a Play jump; Stop zvuk
-/// přeruší a opakované přehrání umožní slyšet opravu wobble.
+/// **Výsledek:** Play wobble přehraje kolísavý tón. Při nulové hloubce zůstane rovný. Play laser,
+/// Play jump a odmítání neplatného času zachovají původní chování.
+
 double frequency(Sound sound, double t) {
     if (!Double.isFinite(t) || t < 0 || t > 1) throw new IllegalArgumentException("Time: 0..1.");
     return switch (sound) {

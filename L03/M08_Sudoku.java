@@ -6,19 +6,17 @@ import java.awt.GridLayout;
 
 /// # L03.08 · Sudoku
 ///
-/// Doplň malé Sudoku 4×4 s čísly 1–4 právě jednou v každém řádku, sloupci a bloku 2×2. Pevná čísla dávají
-/// výchozí bod a prázdná políčka můžeš doplňovat.
+/// **Zastav zakázané číslo.** Vyber 1 a klikni na prázdné políčko bezprostředně vpravo od levé
+/// horní jedničky. Výchozí program ji chybně přijme. V Sudoku 4×4 má být každé číslo 1–4 v řádku,
+/// sloupci i bloku 2×2 jen jednou.
 ///
-/// **Tvoje mise · Obnov zámky nápověd:** Deska přijímá zápisy bez ochrany. Před připravené assignment
-/// (přiřazení) doplň
-/// guard (ochranné podmínky): hra nesmí být hotová, valid(row, col, value) musí volbu povolit a
-/// clues[row][col] musí být nula. Zeptej se valid před čtením clues. Odmítnutá volba nic nemění.
+/// **Úkol:** Doplň ochranu zápisu v `place` níže. Zápis musí odmítnout porušení pravidel,
+/// neplatné souřadnice či hodnoty, změnu pevného čísla i změnu po dokončení hry. K ověření volby
+/// už máš připravenou `valid`; před čtením desky musí být souřadnice platné.
 ///
-/// **Dnes trénuješ:** Chraň zápis časným return (návratem): spoj důvody odmítnutí a jediný zápis proveď
-/// až tehdy, když žádný neplatí. Souřadnice musí být ověřené před čtením tabulky pevných čísel.
-///
-/// Spusť program, ve výběru čísla zvol 2 a klikni na prázdné políčko bezprostředně vpravo od
-/// levé horní 1.
+/// **Výsledek:** Další jednička se odmítne beze změny desky, správná dvojka do stejného políčka
+/// projde. Pevná čísla zůstanou chráněná i při přímém volání `place`.
+
 boolean place(int row, int col, int value) {
     if (complete()) return false;
     board[row][col] = value;

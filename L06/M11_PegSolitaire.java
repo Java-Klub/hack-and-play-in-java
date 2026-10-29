@@ -1,16 +1,16 @@
 /// # L06.11 · PegSolitaire
 ///
-/// Přeskakuj kolíky přes sebe a vyprázdni krátký hlavolam. Teď prověř rozhodčího: odmítá skoky, které
-/// nemají být možné?
+/// **Prověř rozhodčího kolíkové hry.** Hra už funguje. Tentokrát vytváříš příklady, které usvědčí
+/// falešné pravidlo skákání, nikoli opravu hry.
 ///
-/// **Tvoje mise:** Jediný úspěšný skok neodhalí podvádějící pravidla. Přidej do learnerChecks() příklady
-/// povolení i odmítnutí na pevné úvodní desce.
+/// **Úkol:** Rozšiř `learnerChecks` níže. Ke každému zvolenému skoku zapiš začátek, cíl a
+/// očekávání `true` pro povolený nebo `false` pro zakázaný skok. Všechny příklady se posuzují na
+/// stejné úvodní desce, každý samostatně. V těchto datech počítej řádky i sloupce od nuly; při
+/// hraní se zadávají od jedničky.
 ///
-/// **Dnes trénuješ:** Writing functional checks (psaní funkčních kontrol): užitečná sada obsahuje i
-/// protipříklady, nejen úspěšné tahy. Očekávaný boolean (ano/ne) říká, zda je právě tento skok legální.
-///
-/// Zadáním 1 2 3 2 proveď první skok krátkého hlavolamu s kolíky, potom pomocí
-/// kontroly hry prověř své příklady.
+/// **Výsledek:** Příklady přijmou skutečné pravidlo, ale odhalí skok přes prázdný prostředek,
+/// diagonální skok i pravidlo povolující všechno. Samotné dohrání hlavolamu tuto misi nesplní.
+
 record JumpExample(int row, int column, int toRow, int toColumn, boolean expected) {
 }
 

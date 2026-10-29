@@ -1,16 +1,14 @@
 /// # L06.02 · MancalaKalah
 ///
-/// Rozsévej kameny po jamkách, získej další tah a nasbírej víc než soupeř. Potom si v novém kole vyměňte
-/// taktiku.
+/// **Oprav první tah nového kola.** Zahraj jamku příkazem `1` a potom zadej `r`. Jamky se obnoví,
+/// ale výchozí program chybně ponechá na tahu druhého hráče.
 ///
-/// **Tvoje mise:** Restart může ponechat na tahu předchozího hráče. Oprav reset(), aby nové jamky i
-/// aktivní hráč patřili stejnému čerstvému kolu.
+/// **Úkol:** Oprav `reset` níže tak, aby vždy začínal první hráč. Zachovej obnovení kamenů i
+/// vymazání starého výsledku. Měnit se má údaj o hráči, který používá skutečná hra.
 ///
-/// **Dnes trénuješ:** Scope and state lifetime (platnost jména a životnost stavu): lokální player po
-/// návratu z reset() zanikne, ale field (proměnná programu) player zůstává. Obnov stav, který skutečně
-/// čtou příkazy.
-///
-/// Zadej číslo jedné své jamky od 1 do 6, aby se její kameny rozesely po desce.
+/// **Výsledek:** Po tomto pokusu i po libovolně rozehraném kole ukáže restart Player 1. Nová
+/// deska má opět čtyři kameny v každé malé jamce a prázdné zásobní jamky.
+
 void reset() {
     pits = new int[14];
     Arrays.fill(pits, 4);

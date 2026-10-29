@@ -3,22 +3,29 @@
 
 /// # L12.10 · PictureMusic
 ///
-/// Poslechni si malý obrázek, jako by jeho řádky byly tóny a sloupce čas. Transpose (transpozice) má
-/// posunout melodii výš či níž a zachovat rytmus i obrys.
+/// **Zahraj stejný obrázek o oktávu výš.** Play shift 12 a Play original zatím znějí stejně:
+/// přijatý posun se nepoužívá.
 ///
-/// **Tvoje mise:** Transpose input (vstup transpozice) se přijme, ale neovlivní výšku tónu. Rozšiř
-/// oddělené pravidlo frekvence a zachovej původní zvuk pro shift nula.
+/// **Úkol:** Rozšiř `pitchFrequency` níže o posun v půltónech. `+12` zdvojnásobí všechny
+/// frekvence, `-12` je půlí, nula zachová původní zvuk. Pravidlo pro ostatní posuny vysvětluje
+/// sekce pod metodou. Zachovej původní hranice vstupů i zapojení metody do přehrávání.
 ///
-/// **Dnes trénuješ:** Malá oddělená operace může přidat schopnost beze změny práce caller (volající
-/// části). PitchFrequency spojí známé pravidlo řádku a tónu s půltónovým posunem; nula zůstane případem
-/// zachování původního chování.
-///
-/// Po spuštění programu prohlédni Java obrázek a porovnej Play shift 12 s Play original; Stop
-/// přehrávání přeruší a opravený posun má změnit výšku tónů při stejném rytmu.
+/// **Výsledek:** Play shift 12 zní o oktávu výš než Play original. Rytmus, délka i hlasitost
+/// zůstanou stejné; Stop dál přehrávání přeruší.
+
 double pitchFrequency(int row, int shift) {
     if (row < 0 || row >= 12 || shift < -12 || shift > 12) throw new IllegalArgumentException("Row 0..11; transpose -12..12.");
     return 220 * Math.pow(2, (11 - row) / 12.0);
 }
+
+// <editor-fold defaultstate="expanded" desc="Jak počítat půltóny">
+/// Oktáva znamená dvojnásobek frekvence a skládá se z dvanácti stejně velkých půltónových kroků.
+/// Pro posun n kroků tedy původní frekvenci násobíš poměrem 2^(n/12).
+///
+/// V Javě například `Math.pow(2, 3 / 12.0)` vypočte poměr pro tři půltóny. Pro původních 100 Hz
+/// dostaneš přibližně 118.92 Hz. Desetinný dělitel 12.0 zachová i necelé části oktávy;
+/// celočíselné dělení by je ztratilo. Předpověz poměr pro šest půltónů.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
 /// ### Udělej z toho vlastní věc
