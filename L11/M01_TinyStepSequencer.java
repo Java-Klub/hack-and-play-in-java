@@ -9,20 +9,33 @@ import javax.swing.*;
 /// Build a tiny drum pattern by switching cells on and off. Four rows and eight beats are enough to make
 /// a loop worth replaying and comparing with a friend’s.
 ///
-/// **Your mission:** A note can be switched on but not off; the second click leaves it selected. Repair
-/// toggling while preserving invalid-coordinate handling.
+/// **Your mission:** Write toggle as a complete two-way operation after the supplied bounds check.
+/// Create a Note for this cell; remove it if present, otherwise add it. Return true for a valid cell,
+/// and leave every other cell unchanged.
 ///
-/// **Today you learn:** A Set answers whether a distinct value is present. A toggle has two paths: a
-/// previously absent Note becomes present, while an already present Note must stop belonging to the set.
+/// **Today you learn:** Use Set membership, equality and insertion deliberately while implementing
+/// the whole operation, not just its final condition.
 ///
 /// Run the program, then click note cells, choose BPM and click Play to hear four loops
 /// directly in Java; Stop interrupts, Restart brings the starting pattern back.
 boolean toggle(int row, int step) {
     if (row < 0 || row >= 4 || step < 0 || step >= 8) return false;
     Note note = new Note(row, step);
-    if (!notes.remove(note)) notes.add(note);
+    if (notes.contains(note)) {
+        notes.remove(note);
+    } else {
+        notes.add(note);
+    }
     return true;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Write a call-and-response drum loop with a friend: you own the first four columns and they own the
+/// last four. Add a second starting pattern in reset, then explain which Note values repeat and which
+/// remain distinct in the Set.
+// </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Learn · F23">
 /// ### Set: membership without duplicates
@@ -47,30 +60,30 @@ boolean toggle(int row, int step) {
 /// `contains("moon")`?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// ### Presence is a question; insertion is an action
 ///
-/// - `new Note(row, step)` — A record value identifies one cell by both its row and beat.
-/// - `notes.add(note)` — Adds a distinct note, but adding the same value twice does not remove it.
-/// - `row < 0 || row >= 4` — Rejects rows outside the four-row grid before touching the set.
+/// For a Set<String> called guests, guests.contains("Mira") asks a yes/no question without changing
+/// guests. guests.add("Mira") inserts Mira, while guests.remove("Mira") removes that value if
+/// present. Starting empty, add Mira twice leaves one value. Predict the set after removing Mira once
+/// and then adding Nox.
 ///
-/// ### What the prepared part already does
-///
-/// toggle changes the same Note set read by refresh and sequence. Play synthesises the current
-/// notes at the chosen BPM; Stop and window closing release Java Sound, and Restart restores the
-/// starting notes.
+/// Here a Note is a record of row and step. Two independently created Note(1, 3) values are equal
+/// because their components agree. The four drum rows use indices 0..3 and eight time steps use 0..7.
+/// The window calls toggle on a clicked cell, redraws notes, and signal reads that same set for
+/// playback. Test two clicks on one cell, then one click on another.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Equal Note records name the same grid position.
+/// Use a Note value as the membership key; row and step must both be included.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Set.remove returns whether the note was present.
+/// Ask contains before choosing remove or add. A valid toggle returns true in either branch.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Only add when removal found nothing; two toggles must restore the old Set.
+/// Keep the guard, build Note, branch on membership, remove/add, then return true.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

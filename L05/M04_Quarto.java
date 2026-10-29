@@ -9,7 +9,7 @@
 /// **Today you learn:** Arrays: a flat array can represent a square board. Follow how row and column
 /// positions become indices before asking the same line rule about them.
 ///
-/// Run the program, choose an unused piece number from 0 to 15, then let the other player enter
+/// Choose an unused piece number from 0 to 15, then let the other player enter
 /// its destination cell from 1 to 16.
 boolean won() {
     for (int i = 0; i < 4; i++) {
@@ -72,6 +72,12 @@ boolean won() {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// The two diagonals are 0,5,10,15 and 3,6,9,12.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Add four corners as a new winning pattern using the existing line query. Construct a board on which
+/// the corner rule wins but rows, columns and diagonals do not. Show that counterexample to a partner
+/// before enabling your new rule.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

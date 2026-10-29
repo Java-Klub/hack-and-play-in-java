@@ -3,8 +3,10 @@
 /// Tap an opponent’s hand with one of your living hands and add your fingers to it. Five or more fingers
 /// knock a hand out; eliminate both opposing hands to win.
 ///
-/// **Your mission:** A knocked-out hand can still participate in a strike. Repair handsAlive so invalid
-/// hand numbers and either zero-finger hand are rejected before the game changes.
+/// **Your mission · Close a cheating loophole:** The referee currently permits every strike. Rebuild
+/// handsAlive: both indices
+/// must be 0 or 1, and both selected hands must have more than zero fingers. Reject before any
+/// invalid lookup. The method only grants permission; it must not change fingers or player.
 ///
 /// **Today you learn:** Several guards in order: first establish that a place exists, then inspect
 /// whether it is usable. A rejected strike must not move fingers or pass the turn.
@@ -46,34 +48,38 @@ boolean handsAlive(int own, int opposing) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Existence, then life
 ///
-/// - `own` — The selected attacking-hand index, already converted to zero or one.
-/// - `opposing` — The selected defending-hand index for the other player.
-/// - `own < 0 || own >= 2` — These alternatives reject a number outside the two available hand slots.
-/// - `hands[player][own]` — Read fingers from the supplied two-level table: first choose the player, then
-///   their hand.
-/// - `< 0` — This asks whether a value is negative; a knocked-out hand actually has zero fingers.
-/// - `return false;` — End the check as rejected as soon as one guard finds a problem.
-/// - `return true;` — Only a call passing both guards reaches the final accepted result.
-///
-/// ### What the prepared part already does
-///
-/// command converts the typed hand numbers and asks handsAlive before applying a strike. The supplied
-/// body adds fingers, eliminates hands, changes turns and detects repeated positions; main displays both
-/// players’ hands.
+/// The supplied hands table belongs to the current and opposing player. player is 0 or 1; 1 - player
+/// selects the other one. The first pair of indices selects players, the second selects their hands.
+/// You only need the two selected counts. A guard returns early so later reads or the actual strike
+/// never run for a rejected choice.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// A usable hand must exist and have fingers. own and opposing are already internal indices 0 or 1.
+/// Invalid indices must be rejected before reading either hand. After that, a count of zero means
+/// knocked out. The validation method must not switch players; command applies a successful strike
+/// later.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// Write a short challenge for a friend: a sequence that knocks out a hand, followed by one attempted
+/// illegal strike. Swap roles as player and referee. Later, as a separate house-rule experiment,
+/// change what a total of five means and explain how that changes the game.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Zero, not a negative number, represents a dead hand.
+/// An invalid hand number and a knocked-out hand are two different reasons to refuse.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Keep the index guard before reading either hand.
+/// Check both indices before reading hands[player][own] and hands[1 - player][opposing].
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Reject when either stored hand value == 0.
+/// Return false for indices outside 0..1; then return false if either selected count is <= 0;
+/// otherwise return true.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

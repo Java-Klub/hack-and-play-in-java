@@ -25,6 +25,14 @@ Runnable firingAction() {
     return this::fire;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Make a rescue flight: allow shots only while the ship is not thrusting. Change the firing
+/// callback, then try surviving by coasting and choosing when to shoot. Explain which action still
+/// owns cooldown; this new rule need not pass the original shooting checks.
+// </editor-fold>
+
 // <editor-fold defaultstate="expanded" desc="Learn · F28">
 /// ### Callback: give an action for later
 ///

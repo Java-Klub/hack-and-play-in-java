@@ -9,7 +9,7 @@
 /// **Today you learn:** Accumulating a collection: the running result can be a list rather than a number.
 /// Create the empty list once, then keep earlier entries while later legal choices are discovered.
 ///
-/// Run the program and compare the full Dictionary with the single next choice; after repair,
+/// Compare the full Dictionary with the single next choice; after repair,
 /// enter APPLE and inspect the offered E continuations.
 List<String> choices() {
     var list = new ArrayList<String>();
@@ -72,6 +72,12 @@ List<String> choices() {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Remove list.clear(); keep list.add(w).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Create a forbidden-letter round: choose a letter and filter words containing it out of choices. Find
+/// a starting word with exactly two remaining continuations, then challenge a friend to avoid your
+/// prepared dead end.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

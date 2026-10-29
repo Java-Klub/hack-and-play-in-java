@@ -15,7 +15,7 @@ import java.awt.GridLayout;
 /// **Today you learn:** Scope and state lifetime: the shuffle deliberately uses the normal move method.
 /// Its effects belong to a field that must be reset after setup, not hidden by a temporary variable.
 ///
-/// Run the program and click a numbered tile immediately beside the gap to slide it into the
+/// Click a numbered tile immediately beside the gap to slide it into the
 /// empty space.
 void reset(long seed) {
     for (int i = 0; i < 9; i++) {
@@ -82,6 +82,12 @@ void reset(long seed) {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Remove the local int declaration from the reset assignment.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Replace random shuffling with five legal slides you deliberately choose through the existing slide
+/// method. Give a partner the resulting board and keep your reverse solution. The setup may move tiles,
+/// but the displayed player count must still begin at zero.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

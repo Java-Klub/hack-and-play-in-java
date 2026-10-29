@@ -7,82 +7,87 @@ import java.awt.image.BufferedImage;
 
 /// # L09.05 · PhotoRemixLab
 ///
-/// Remix a generated picture with image effects and inspect its colours. The pixel counter should account
-/// for every point, even a large patch of the same colour.
+/// Remix a generated picture into a colour spotlight. Find its most common original colour and make
+/// every pixel of that colour glow cyan against a two-tone poster.
 ///
-/// **Your mission:** Repeated colours keep a count of one, so the displayed pixel total is too small.
-/// Repair the tally without changing the picture effects.
+/// **Your mission:** Build dominantColour(): choose the colour key with the largest stored count; break
+/// ties by the smaller signed RGB integer. Return 0 for an empty Map and leave all counts unchanged.
+/// The prepared remix uses your result to highlight every pixel of that colour in cyan; the unfinished
+/// selector highlights nothing in the demo.
 ///
-/// **Today you learn:** A Map associates each colour key with its current count. A repeated key needs an
-/// updated total; put replaces the old value rather than adding to it automatically.
+/// **Today you learn:** Use stored key/value relationships to make a real picture or generation
+/// decision, not just a caption.
 ///
-/// Run the program, then compare Pixels counted with the image total; Up/Down changes the
-/// poster threshold and R restores the demo.
+/// Run the program and look for a cyan moon; Up/Down changes the poster threshold and R restores the
+/// demo. The unfinished selector leaves the moon yellow instead.
+int dominantColour() {
+    int bestColour = 0, bestCount = -1;
+    for (var entry : colourCounts.entrySet()) {
+        int colour = entry.getKey(), count = entry.getValue();
+        if (count > bestCount || count == bestCount && colour < bestColour) {
+            bestColour = colour;
+            bestCount = count;
+        }
+    }
+    return bestColour;
+}
+
+// <editor-fold defaultstate="expanded" desc="Learn · F24">
+/// ### A Map remembers a value for each key
+///
+/// A List remembers positions. A Map remembers an association: each key leads to one current value.
+/// Here a colour name leads to a count.
+///
+/// ```java
+/// Map<String, Integer> marbles = new HashMap<>();
+/// marbles.put("blue", 2);
+/// int before = marbles.getOrDefault("blue", 0);
+/// marbles.put("blue", before + 1);
+/// IO.println(marbles.getOrDefault("gold", 0));
+/// ```
+///
+/// Blue now has count 3; the printed gold count is 0. `getOrDefault(key, fallback)` reads the fallback
+/// for an absent key without inserting it. `put` replaces that key's old value: it does not add
+/// automatically. Other keys remain unchanged.
+///
+/// Use `containsKey` when absence itself matters. Use `entrySet()` to visit key/value pairs: each entry
+/// provides `getKey()` and `getValue()`. A Map does not promise that the first entry is the largest;
+/// compare values explicitly when choosing a winner. Predict blue after another identical update. Then
+/// predict what `getOrDefault("gold", 9)` returns and whether gold is now stored.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Read this code">
+/// ## Read this part
+///
+/// `colourCounts.entrySet()` exposes each key/count pair. `entry.getKey()` reads the RGB integer;
+/// getValue() reads its frequency. Track the best key and best count separately: Map order is not a
+/// ranking. The supplied countColour builds counts before dominantColour is called. Then remix paints
+/// the selected original colour cyan, so your decision changes the actual picture, not only a caption.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Treat the empty Map as a separate result, then compare candidates.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// A candidate wins with a higher count, or with an equal count and a smaller key.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Traverse entrySet, remember the best key/count, update on either winning comparison, and return the
+/// key without editing the Map.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Create a different spotlight rule: highlight the rarest colour, or colour each region by its
+/// frequency. Compare your visual choice on the same demo before changing the source picture.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
 void countColour(int rgb) {
     colourCounts.put(rgb, colourCounts.getOrDefault(rgb, 0) + 1);
 }
 
-// <editor-fold defaultstate="expanded" desc="Learn · F24">
-/// ### Map: look up a value by its key
-///
-/// A `Map<String, Integer>` associates text keys with integer values. Each key has at most one stored
-/// value.
-///
-/// ```java
-/// Map<String, Integer> badges = new HashMap<>();
-/// badges.put("moon", 4);
-/// IO.println(badges.getOrDefault("moon", 0));
-/// IO.println(badges.getOrDefault("sun", 0));
-/// ```
-///
-/// The output is `4`, then `0`. `getOrDefault(key, fallback)` reads an existing value, or returns the
-/// fallback when the key is absent. This lookup does not insert anything. `put(key, value)` stores a
-/// value and replaces any previous value for that key; it does not add numbers automatically. Use
-/// `containsKey(key)` when you need to distinguish absence explicitly. These examples do not store
-/// null values.
-///
-/// Predict: after `badges.put("moon", 9)`, what will the same two lookups return?
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
-///
-/// - `int rgb` — One integer carries the packed colour used as a map key.
-/// - `colourCounts.put` — Stores a value under rgb, replacing any value already stored there.
-/// - `rgb, 1` — This pair currently assigns one even when rgb has appeared before.
-///
-/// ### What the prepared part already does
-///
-/// remix calls countColour for each demo pixel and creates one two-colour poster. draw reads the
-/// real total from the same map; Up/Down changes the threshold and R restarts the fixed demo.
-// </editor-fold>
-
-// <editor-fold defaultstate="expanded" desc="For this game">
-/// ### Read before you replace
-///
-/// The needed lookup is `map.getOrDefault(key, fallback)`. With this `Map<Integer, Integer>`, the key
-/// is a packed colour integer and the returned value is its count. For example, if key 17 stores 6,
-/// `map.getOrDefault(17, 0)` returns 6; for absent key 23 it returns 0 without inserting 23.
-/// `map.put(key, value)` then stores exactly the value supplied, replacing any previous count.
-///
-/// Predict the required totals after three pixels with the same colour and one different pixel.
-/// Explain why clearing the map once before a new remix is useful, while clearing it inside
-/// countColour would forget earlier pixels.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// put replaces the previous value.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Read the existing count, using zero when the key is missing.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Add one to that old count before storing it under the same key.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
 final int WIDTH = 640, HEIGHT = 440;
 
 BufferedImage source, result;
@@ -106,13 +111,17 @@ void restart() {
 void remix() {
     int width = source.getWidth(), height = source.getHeight();
     colourCounts.clear();
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) countColour(source.getRGB(x, y));
+    }
+    int selected = dominantColour();
     result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
-            countColour(source.getRGB(x, y));
             var colour = new Color(source.getRGB(x, y));
             int brightness = (colour.getRed() * 2126 + colour.getGreen() * 7152 + colour.getBlue() * 722) / 10000;
-            result.setRGB(x, y, (brightness < threshold ? new Color(25, 45, 80) : new Color(255, 205, 120)).getRGB());
+            int poster = (brightness < threshold ? new Color(25, 45, 80) : new Color(255, 205, 120)).getRGB();
+            result.setRGB(x, y, source.getRGB(x, y) == selected ? Color.CYAN.getRGB() : poster);
         }
     }
 }
@@ -127,7 +136,7 @@ void adjust(int amount) {
 void draw(Graphics2D g) {
     g.drawImage(result, (WIDTH - result.getWidth()) / 2, 45, null);
     g.setColor(Color.BLACK);
-    g.drawString("Two-colour poster | Threshold " + threshold, 12, 22);
+    g.drawString("Spotlight most common colour | Threshold " + threshold, 12, 22);
     g.drawString("Pixels counted: " + countedPixels() + " / " + source.getWidth() * source.getHeight(), 12, 420);
 }
 

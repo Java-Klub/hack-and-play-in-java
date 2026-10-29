@@ -16,7 +16,7 @@ import javax.swing.Timer;
 /// **Today you learn:** Pure contracts: validation reads the board and a candidate position, then returns
 /// a boolean. Only its caller decides whether to commit the candidate.
 ///
-/// Run the program, steer the falling piece with Left and Right, and press Up to try a rotation
+/// Steer the falling piece with Left and Right, and press Up to try a rotation
 /// near the stack or wall.
 boolean fits(int[][] cells, int x, int y) {
     for (var c : cells) {
@@ -71,6 +71,12 @@ boolean fits(int[][] cells, int x, int y) {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Remove the px/py assignments inside fits; preserve its bounds and occupied-cell checks.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Create a challenge board by placing a few fixed cells in the supplied board at restart. Choose a
+/// current piece and predict two fits answers before dropping it. Ask a partner to complete one row;
+/// probing candidate positions must never teleport the real piece.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

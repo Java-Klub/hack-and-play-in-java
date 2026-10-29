@@ -27,31 +27,32 @@ int readWidth(String text) {
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F31">
-/// ### Parse, validate, then commit
+/// ### Text conversion and valid values are different questions
 ///
-/// Parsing converts text; validation checks whether the resulting number is allowed. These can fail
-/// differently.
+/// A number field starts as text. Conversion can fail because no number was written; validation can
+/// reject a perfectly readable number. Decide the two policies separately.
 ///
 /// ```java
-/// int readCopies(String text) {
+/// int readZoom(String text) {
 ///     try {
-///         int n = Integer.parseInt(text.strip());
-///         if (n < 1 || n > 5) {
-///             throw new IllegalArgumentException("Copies: 1..5");
-///         }
-///         return n;
-///     } catch (NumberFormatException invalid) {
-///         return 3;
+///         int zoom = Integer.parseInt(text.strip());
+///         if (zoom < 1 || zoom > 4) throw new IllegalArgumentException("Zoom: 1..4");
+///         return zoom;
+///     } catch (NumberFormatException typo) {
+///         return 2;
 ///     }
 /// }
 /// ```
 ///
-/// `readCopies(" 2 ")` returns `2`: conversion and validation succeed. `"oops"` fails during
-/// conversion and reaches `catch`, returning `3`. A numeric `"8"` converts successfully, then throws
-/// a different exception; this narrow catch does not handle it. `return` ends the method; `throw`
-/// leaves the normal path. Change stored game state only after validation succeeds.
+/// Trace `" 3 "`: strip removes surrounding whitespace, parseInt produces 3, bounds accept it. `"oops"`
+/// cannot convert, so catch returns 2. `"7"` converts successfully but fails validation; the explicitly
+/// thrown IllegalArgumentException leaves this method. Catching only NumberFormatException keeps those
+/// paths distinct.
 ///
-/// Predict the path for `"five"`, `"5"` and `"0"`.
+/// For a decimal, use Double.parseDouble; also consider NaN and infinity, which are readable but not
+/// finite numbers. For an interactive setting, parse into a local candidate before changing the stored
+/// field. Predict the path for `"0"`, `"two"` and `"4"`. Which inputs should preserve the previous live
+/// setting?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
@@ -90,6 +91,11 @@ int readWidth(String text) {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// The fallback is 80; range guards remain separate from that fallback.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Invent your own character ramp from dark to light, including a space. Compare a face made of
+/// punctuation with one made of letters at the same text width.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

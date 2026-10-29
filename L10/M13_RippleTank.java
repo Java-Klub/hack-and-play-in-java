@@ -25,6 +25,14 @@ void tap(int x, int y) {
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Make a double-drop tool: one click adds a positive disturbance and an equally distant negative
+/// disturbance. Compare the meeting waves with two positive taps. Keep the border protected; do not
+/// write outside the interior cells.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Recall · F30">
 /// ### Input requests; a tick advances time
 ///

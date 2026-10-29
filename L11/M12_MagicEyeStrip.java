@@ -21,6 +21,14 @@ long readSeed(Path path) throws IOException {
     return Long.parseLong(Files.readString(path).strip());
 }
 
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Make a reproducibility challenge: give a friend only your seed file and ask them to recreate your
+/// dot field. Then alter the hidden depth shape while keeping that file unchanged. Explain which part
+/// the saved number reproduces and which part belongs to the program.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Recall · F32">
 /// ### Files: a destination and a resource lifetime
 ///

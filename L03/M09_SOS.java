@@ -3,7 +3,8 @@
 /// Two players place S or O on a shared board and score every new SOS they create. A scoring move keeps
 /// the turn, so look for a placement that completes more than one line.
 ///
-/// **Your mission:** The score includes SOS lines that already existed before the move. Repair
+/// **Your mission · Reward only new discoveries:** The score includes SOS lines that already existed
+/// before the move. Repair
 /// gainedPoints so it rewards only newly created lines.
 ///
 /// **Today you learn:** Parameter meaning and return values: before and after describe two moments of the
@@ -65,6 +66,19 @@ int gainedPoints(int before, int after) {
 /// before/after pairs that should give the same reward, then one pair that must give a different
 /// reward. Explain why your rule should handle all three without knowing the board or printing
 /// anything.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// For gainedPoints(2, 3), before receives 2 and after receives 3 for that call only. The result goes
+/// back to the score update; the method does not know whose turn it is. A fixed returned 1 would fit
+/// that example but fail an unchanged count or two simultaneous lines. Predict gainedPoints(4, 4) and
+/// gainedPoints(1, 3).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// Design a bonus rule for making two SOS lines in one move, then implement the bonus in gainedPoints
+/// without changing triples. Keep the normal one-line reward. Give a friend two before/after examples
+/// and ask them to infer your bonus rule.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">

@@ -3,19 +3,23 @@
 /// Hunt two hidden ships by calling grid coordinates. A hit becomes more useful when you can trust the
 /// announced ship lengths.
 ///
-/// **Your mission:** One ship loses its final square during setup. Repair layout(int n) so the selected
-/// coordinate list is copied completely.
+/// **Your mission:** The fleet loader creates an empty sea but places no ships. Build the loop that
+/// reads each coordinate pair from selected and writes it to board: the first two entries belong to
+/// ship 1, the remaining three to ship 2. Use the selected data’s length.
 ///
 /// **Today you learn:** Arrays: nested arrays can hold several layouts and their coordinate pairs. Use
 /// the selected data’s size to control a traversal.
 ///
-/// Run the program and fire your first shot by typing 1 1 and pressing Enter, then try other
+/// Fire your first shot by typing 1 1 and pressing Enter, then try other
 /// row-and-column pairs.
 void layout(int n) {
     board = new int[6][6];
     int[][][] maps = {{{0, 0}, {0, 1}, {3, 2}, {3, 3}, {3, 4}}, {{1, 4}, {2, 4}, {5, 0}, {5, 1}, {5, 2}}, {{4, 0}, {4, 1}, {0, 5}, {1, 5}, {2, 5}}};
-    for (int i = 0; i < 5; i++) {
-        board[maps[n][i][0]][maps[n][i][1]] = i < 2 ? 1 : 2;
+    int[][] selected = maps[n];
+    for (int i = 0; i < selected.length; i++) {
+        int row = selected[i][0];
+        int column = selected[i][1];
+        board[row][column] = i < 2 ? 1 : 2;
     }
 }
 
@@ -37,18 +41,20 @@ void layout(int n) {
 /// changes if `chosen` becomes two? Which index would be the first invalid one?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// maps contains alternative layouts; selected is one layout. selected[i] is a pair, whose index zero
+/// is row and index one is column. A board cell stores zero for sea or a positive ship number.
 ///
-/// - `int[][][] maps` — Three levels select a layout, then a coordinate pair, then one coordinate.
-/// - `maps[n][i][0]` — Reads the row coordinate of position i in layout n.
-/// - `i++` — Advances to the next coordinate pair after each iteration.
-/// - `i < 2 ? 1 : 2` — Labels early coordinate pairs as ship 1 and the others as ship 2.
+/// | i in layout zero | pair | board value |
+/// | --- | --- | --- |
+/// | 0 | 0,0 | 1 |
+/// | 1 | 0,1 | 1 |
+/// | 2 | 3,2 | 2 |
+/// | 4 | 3,4 | 2 |
 ///
-/// ### What the prepared part already does
-///
-/// reset() chooses an authored layout and clears shots. command() records a shot, while sunk() searches
-/// the resulting board for any surviving part of that ship.
+/// The middle list contains five pairs, not six rows of ocean. Traverse that list, unpack a row and
+/// column, and write one cell per pass. Predict the total cells of each ship. Prepared shots and the
+/// ship-length messages read the board you build.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="For this game">
@@ -62,15 +68,21 @@ void layout(int n) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// maps[n] is the selected list of positions.
+/// Draw the three layers: alternative maps, one selected list, one coordinate pair.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Each maps[n][i] holds row and column; i is not a board coordinate.
+/// Let i traverse selected, then use selected[i][0] and selected[i][1] as the board indices.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Iterate while i < maps[n].length; keep the supplied ship-number assignment.
+/// Loop below selected.length; entries i < 2 write ship one and the rest ship two.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Author a new five-cell fleet in maps: one straight two-cell ship and one straight three-cell ship,
+/// without overlap. Give a partner only the ship lengths. Before the hunt, list the board positions
+/// your copying loop must fill and verify there are exactly five.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

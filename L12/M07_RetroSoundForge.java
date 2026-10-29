@@ -24,6 +24,14 @@ double frequency(Sound sound, double t) {
     };
 }
 
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Author a robot greeting from two different Sound records: synthesise a short jump followed by a
+/// gentle wobble and join the sample arrays. Give the greeting a name. Keep playback quiet and
+/// compare the timing rather than increasing amplitude.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Recall · F35">
 /// ### Record patterns: choose a shape and unpack its data
 ///

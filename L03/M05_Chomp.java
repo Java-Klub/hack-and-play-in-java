@@ -3,7 +3,8 @@
 /// Two players take bites from one chocolate bar. Each bite removes a rectangle towards the lower right,
 /// but eating the poisoned top-left piece loses the game.
 ///
-/// **Your mission:** The visible fourth row cannot be bitten. Repair the range guard in bite while
+/// **Your mission · Protect the last chocolate row:** The visible fourth row cannot be bitten. Repair the
+/// range guard in bite while
 /// continuing to reject chocolate that is outside the bar or already eaten.
 ///
 /// **Today you learn:** Bounds before access: a guard must accept the boundary that belongs to the game
@@ -67,6 +68,19 @@ boolean bite(int row, int column) {
 /// The prepared loop shrinks all affected rows after the guard passes. The remaining branch handles
 /// poison and turn changes, while main draws the uneven bar and reads row/column pairs. You only repair
 /// the entry boundary.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// The visible fourth row corresponds to widths[3]. Checking row before reading widths[row - 1]
+/// prevents an invalid row from reaching an invalid lookup. A bite can shrink several rows; that
+/// prepared loop belongs after validation. Predict whether an already eaten square should consume a
+/// turn or leave everything unchanged.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// Change the initial row widths to another small chocolate shape using the same four-row layout.
+/// Give a friend a position where biting a tempting corner leaves poison for the other player. Keep
+/// the poisoned top-left rule and test a bite just beyond each row’s remaining width.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">

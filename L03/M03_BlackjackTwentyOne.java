@@ -3,7 +3,8 @@
 /// Try to finish closer to 21 than the dealer without going over. You can take another card or stand, and
 /// aces may count as one or eleven.
 ///
-/// **Your mission:** The known 20-versus-19 opening incorrectly awards the dealer a win. Complete
+/// **Your mission · Write the final verdict:** The known 20-versus-19 opening incorrectly awards the
+/// dealer a win. Complete
 /// compareTotals so bust, player win, draw and dealer win are separated in the right priority.
 ///
 /// **Today you learn:** Ordered branches: a first matching branch can settle the result before later
@@ -82,6 +83,19 @@ String compareTotals(int human, int house) {
 /// 20 versus 22, 18 versus 18, and 18 versus 20 before writing branches. Keep the original
 /// capitalization and spaces: a returned message is part of this method's contract. Do not move card
 /// drawing or printing into compareTotals.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// Evaluate an ordered decision from top to bottom. For totals human 22 and house 23, human already
+/// busts: a later comparison must not award the higher total. For 20 and 19 the bust questions are
+/// false, so a later winner branch decides. Every successful return finishes the method. Predict
+/// 21/21 and 18/22 before running.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// Design a short alternative tie rule and tell a friend before playing. Change only the equal-total
+/// result, keeping bust priority intact. Write down two totals on which the new rule differs and one
+/// on which both versions must agree.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">

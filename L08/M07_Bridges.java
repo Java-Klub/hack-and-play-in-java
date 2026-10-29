@@ -24,25 +24,32 @@ int[] snapshot() {
 }
 
 // <editor-fold defaultstate="expanded" desc="Learn · F20">
-/// ### References: another name or another object?
+/// ### A second name is not a saved past
 ///
-/// An array variable stores a reference. Assignment can give two names access to one array; writing
-/// through either name affects that shared object. Calling `clone()` on a one-dimensional int array
-/// creates another array with copied values. The original and copy can then change independently.
+/// An array variable holds a reference to an array. Assignment copies that reference, so two names can
+/// still reach the same mutable cells.
 ///
 /// ```java
-/// int[] wave = {4, 1};
-/// int[] shared = wave;
-/// int[] saved = wave.clone();
-/// wave[1] = 7;
-/// IO.println(shared[1]);
-/// IO.println(saved[1]);
+/// int[] live = {1, 2};
+/// int[] shared = live;
+/// int[] saved = live.clone();
+/// live[0] = 7;
+/// IO.println(shared[0] + " / " + saved[0]);
 /// ```
 ///
-/// The output is seven, then one: shared sees the write, saved retains its copied value. After
-/// `saved[0] = 8`, predict `wave[0]` and `saved[0]`. `clone()` copies one layer: for a grid, its
-/// elements are row references, so copying the outside still shares rows. Ask which objects remain
-/// shared, not merely whether a new outer object exists.
+/// This prints `7 / 1`: shared follows the change; saved owns a separate array. `clone()` copies one
+/// array's cells. For `int[][]`, those cells contain references to rows. Cloning only the outside
+/// therefore still shares rows; copy the rows as well when their contents must survive later edits.
+///
+/// ```text
+/// shared ──→ [7,2] ←── live
+/// saved  ──→ [1,2]
+/// ```
+///
+/// Undo needs the old state, so take its snapshot before the live edit. Copying after the edit
+/// faithfully saves the wrong moment. Predict what happens if the last assignment is instead `saved[0]
+/// = 9`. Which of the three names sees 9? For a list of immutable records, copying membership is
+/// enough: the records themselves cannot have their components reassigned.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
@@ -59,13 +66,12 @@ int[] snapshot() {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="For this game">
-/// ### A saved array must own its cells
+/// ### Apply the model here
 ///
-/// The neutral wave example distinguishes an alias from a clone. `clone()` creates storage
-/// immediately; making another variable or returning the array reference does not. For this int[] the
-/// cells themselves are plain values, so one copied layer is sufficient. Predict the saved and
-/// working counts after one connection changes. Also check timing: the caller captures the snapshot
-/// before the edit, so copying only after the edit could not preserve the earlier state.
+/// `snapshot()` is called before a bridge changes. `int[] alias = bridges` shares the live array;
+/// `clone()` creates independent int cells. Try a neutral array `{2,0}`: after saving a copy and
+/// setting the live first cell to 1, the copy still reads 2. Predict what undo should restore after
+/// changing one bridge twice.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -78,6 +84,11 @@ int[] snapshot() {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Return bridges.clone(); the supplied undo() then restores an independent state.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Create a tiny island layout with two tempting links; try both branches using undo and explain which
+/// one traps the remaining bridge counts.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

@@ -3,85 +3,76 @@
 /// Turn COLD into WARM by changing one letter at a time. Your trail is part of the puzzle: can you reach
 /// the target without forgetting the route?
 ///
-/// **Your mission:** After a valid move, the trail loses its earlier words. Repair the history update
-/// while leaving rejected moves and restart trustworthy.
+/// **Your mission:** Build command(input): strip whitespace, uppercase with Locale.ROOT, accept only a
+/// dictionary word differing in exactly one letter, update current and append the accepted word to
+/// history. Reaching WARM sets the outcome with history.size()-1 moves. Reject invalid moves or a
+/// finished round before changing either current or history.
 ///
-/// **Today you learn:** A mutable List remembers items in order. Here one accepted word should extend an
-/// existing journey; replacing the whole list changes what the player remembers.
+/// **Today you learn:** Build an ordered, mutable collection operation and make its accepted and empty
+/// cases precise.
 ///
 /// Run the program, then type CORD and then CARD to climb from COLD; use /r to restart and /q
 /// to quit. After winning, Enter starts a new trail.
 void command(String input) {
     require(outcome.isEmpty());
-    String word = input.toUpperCase(Locale.ROOT);
+    String word = input.strip().toUpperCase(Locale.ROOT);
     require(List.of(words).contains(word) && adjacent(current, word));
     current = word;
     history.add(word);
-    if (word.equals("WARM")) {
-        outcome = "Reached WARM in " + (history.size() - 1) + " moves!";
-    }
+    if (word.equals("WARM")) outcome = "Reached WARM in " + (history.size() - 1) + " moves!";
 }
 
 // <editor-fold defaultstate="expanded" desc="Learn · F22">
-/// ### List: a sequence you can change
+/// ### A List gives changing things an order
 ///
-/// A `List<String>` holds text in order. `new ArrayList<>()` makes a mutable list: its contents can
-/// change without replacing the list itself.
+/// An array has a fixed number of slots. A mutable List can grow or shrink while keeping an order.
+/// `List<T>` describes access to elements of type T; `ArrayList<T>` is a JDK implementation you can
+/// change.
 ///
 /// ```java
-/// List<String> snacks = new ArrayList<>();
-/// snacks.add("apple");
-/// snacks.add("nuts");
-/// IO.println(snacks.get(0));
-/// IO.println(snacks.size());
+/// List<String> trail = new ArrayList<>();
+/// trail.add("north");
+/// trail.add("east");
+/// String latest = trail.removeLast();
+/// IO.println(trail + " / " + latest);
 /// ```
 ///
-/// The output is `apple`, then `2`. `add(value)` appends one item; `get(index)` reads without
-/// removing it. Indexes start at zero. `isEmpty()` checks for no items. `removeLast()` removes and
-/// returns the final item; call it only on a nonempty list. A list made directly by `List.of(...)`
-/// cannot be changed, but `new ArrayList<>(List.of(...))` can.
+/// The result is `[north] / east`. Add appends at the end; removeLast both removes and returns the last
+/// element. Check isEmpty before removing from an empty list. A queue removes at the front and appends
+/// at the back; an undo stack removes the latest item instead. The intended order determines which end
+/// to use.
 ///
-/// Predict: after `snacks.removeLast()`, what are its size and first item?
+/// `List.of("north", "east")` supplies an unmodifiable list: reading works, adding does not. `new
+/// ArrayList<>(existing)` creates a mutable list with the existing membership. Predict the list after
+/// adding `"south"` to trail. If two changes are undone, which should disappear first?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Read this part
 ///
-/// - `history =` — Assignment replaces the list referenced by history; it does not extend that list.
-/// - `List.of(word)` — Creates a list containing just this word, with no earlier route.
-/// - `&&` — Both dictionary membership and the one-letter rule must pass before current changes.
-/// - `history.size() - 1` — Words include the starting position, so moves are one fewer.
-///
-/// ### What the prepared part already does
-///
-/// main reads a word and command validates it before changing current. adjacent counts changed letters,
-/// display prints the same history, and reset creates the initial COLD route.
-// </editor-fold>
-
-// <editor-fold defaultstate="expanded" desc="For this game">
-/// ### The history operation is available here
-///
-/// You do not need another optional word game to discover this API. For a mutable list,
-/// `list.add(item)` appends one item while preserving earlier items. It changes that same list. `list
-/// = new ArrayList<>(...)` instead changes which list the variable names. `List.of(...)` itself is
-/// unmodifiable; the supplied history is an `ArrayList`.
-///
-/// Trace accepted and rejected commands separately: start at COLD, accept CORD, then attempt WARM,
-/// which differs by more than one letter. The rejected command must leave both the current word and
-/// every history item unchanged. Inspect where validation ends before deciding where the history
-/// operation belongs.
+/// `words` is the visible finite dictionary; /words lists it in play. `adjacent(a,b)` already checks a
+/// one-letter difference. `require(false)` rejects an action by throwing IllegalArgumentException. The
+/// initial word is already in history, so words visited and moves taken differ by one. This command
+/// builds one accepted transition; the console loop supplies restart and quit.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Inspect what assigning a new ArrayList does to the earlier words.
+/// Validate a proposed word completely before changing the journey.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Use the mutating operation that appends one word to the existing sequence.
+/// Use the supplied dictionary and adjacent check; accepted words extend history rather than replacing
+/// it.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Trace COLD → CORD → CARD, then reject WARM without appending it.
+/// After both guards, store the normalized word, append it, and set the WARM outcome using moves, not
+/// the number of visited words.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Create a new four-letter dictionary, start and target, with at least one known route. Print its
+/// allowed words so the challenge stays discoverable offline.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

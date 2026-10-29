@@ -3,7 +3,8 @@
 /// A small program mirror shows a Java instruction as text, then shows the message that instruction would
 /// print. Compare the instruction with its result and see how a program can describe another program.
 ///
-/// **Your mission:** The reflected instruction has lost the quotation marks around HELLO. Repair
+/// **Your mission · Repair the program mirror:** The reflected instruction has lost the quotation marks
+/// around HELLO. Repair
 /// templateLine so its printed instruction contains them, while the next output stays HELLO.
 ///
 /// **Today you learn:** Quoted text and escaping: code-looking text inside a String is still only data. A
@@ -65,6 +66,19 @@ String templateLine() {
 /// the value `A "B" C`: each `\"` contributes one quote without ending the outer literal. Try
 /// predicting that value before changing your own literal. Keep the real return statement's final
 /// semicolon distinct from a semicolon printed inside its text.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// There are two levels here: source notation and the characters stored in a String. Source `"A\"B"`
+/// stores A, one quotation mark and B. Printing that String does not execute its contents. A line
+/// that merely looks like a Java call is still a message until some program explicitly treats it as
+/// code; this program does not do that.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// Invent a new short greeting. Change both the reflected instruction and its separately printed
+/// message so they still agree. Try a greeting containing a quote and explain which backslashes
+/// belong only to the Java source.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">

@@ -19,7 +19,7 @@ import java.util.Random;
 /// pass, the index advances and new neighbours may be added; compare with the current size rather than an
 /// assumed fixed number of passes.
 ///
-/// Run the program and choose a colour by clicking its palette square or pressing 1–4; watch
+/// Choose a colour by clicking its palette square or pressing 1–4; watch
 /// which connected cells change and use R to restore the board.
 void spread(ArrayList<Point> queue, int old, int colour) {
     int index = 0;
@@ -94,6 +94,12 @@ void spread(ArrayList<Point> queue, int old, int colour) {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Use while (index < queue.size()); keep index++ after the visit.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Invent a limited-ink variant: process at most three waiting cells in spread. Sketch which cells will
+/// be visited first, then compare the result with a complete flood. Choose your own ink budget and
+/// explain how queue order now becomes a game rule.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

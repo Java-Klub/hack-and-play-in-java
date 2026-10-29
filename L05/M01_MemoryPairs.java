@@ -9,16 +9,20 @@ import java.awt.GridLayout;
 /// Flip two cards and remember where their partners hide. The game is unfair when different cards all
 /// show the same face.
 ///
-/// **Your mission:** Revealed cards borrow the first card’s value. Repair visible(int index) while
-/// keeping unmatched hidden cards concealed.
+/// **Your mission:** No chosen card reveals its face. Build visible(index): return that slot’s card
+/// when it is matched, first or second; otherwise return the hidden marker zero. Different slots must
+/// read their own stored values.
 ///
 /// **Today you learn:** Arrays: related arrays describe the same numbered positions. Read the requested
 /// position without changing the rule that decides whether it is visible.
 ///
-/// Run the program and click two covered cards; after a mismatch, clicking another covered card
-/// begins your next attempt.
+/// Click a covered card. The unfinished viewer still shows it as covered even though it has become the
+/// first selected position. Build the visibility decision before trying to remember pairs.
 int visible(int index) {
-    return matched[index] || index == first || index == second ? cards[index] : 0;
+    if (matched[index] || index == first || index == second) {
+        return cards[index];
+    }
+    return 0;
 }
 
 // <editor-fold defaultstate="expanded" desc="Learn · F16">
@@ -39,31 +43,38 @@ int visible(int index) {
 /// changes if `chosen` becomes two? Which index would be the first invalid one?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// Parallel arrays use the same position number: cards[index] is its face, matched[index] says whether
+/// its pair was found. first and second store the currently selected positions.
 ///
-/// - `matched[index]` — Reads whether this exact card position is already part of a found pair.
-/// - `||` — Logical OR: any one of these visibility reasons is enough.
-/// - `index == first` — Compares the requested position with the first selected position.
-/// - `? cards[0] : 0` — Conditional expression: the left result is used when visible, otherwise zero. The
-///   selected array entry is part of the fault.
+/// | cards | first | requested index | matched there | answer |
+/// | --- | --- | --- | --- | --- |
+/// | 2, 5, 2, 5 | 1 | 0 | false | 0 |
+/// | 2, 5, 2, 5 | 1 | 1 | false | 5 |
+/// | 2, 5, 2, 5 | 1 | 2 | true | 2 |
 ///
-/// ### What the prepared part already does
-///
-/// play() remembers the two selections and marks real pairs. refresh() asks visible() for each button
-/// label; the supplied Swing callbacks connect clicks to those two methods.
+/// Use one decision to distinguish public faces from hidden ones. In the revealing branch, the
+/// requested index must select both related facts. Predict the last slot when second is 3. Matching and
+/// turn handling are supplied; visible only answers what may be shown.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// cards and matched describe the same numbered positions.
+/// List the three independent reasons a card may be visible.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// index is the position requested by refresh().
+/// When any reason holds, read cards at the requested index; otherwise keep zero.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Use cards[index] only on the visible branch of the conditional.
+/// Combine matched[index], first and second with OR, then return the selected card or the hidden
+/// marker.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Create a beacon card: one chosen position stays visible even before it is selected. Add that one
+/// condition to the visibility rule, then choose a position that helps a beginner without exposing
+/// every pair. Explain which cards remain private.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

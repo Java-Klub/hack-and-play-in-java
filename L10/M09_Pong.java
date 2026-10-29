@@ -51,6 +51,14 @@ void step() {
     if (rightScore >= 5) winner = 2;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Invent a comeback rule: after a goal the trailing player receives a longer paddle, but both sides
+/// return to normal at a tie. Decide where scoring ends and the next serve begins before adding your
+/// rule. Challenge someone to a five-point match.
+// </editor-fold>
+
 // <editor-fold defaultstate="expanded" desc="Learn · F30">
 /// ### Input requests; a tick advances time
 ///

@@ -12,8 +12,10 @@ import javax.swing.Timer;
 /// Throw several coloured balls into a room and watch gravity and wall rebounds shape their motion.
 /// You can compare gentle and fast throws.
 ///
-/// **Your mission:** Balls lose their horizontal speed at a side wall instead of bouncing back. Repair
-/// bounceSpeed so a wall retains three quarters of the incoming speed magnitude.
+/// **Your mission · Rebuild a rebound:** Rebuild bounceSpeed in two stages: find three times the supplied
+/// magnitude, then
+/// return one quarter of that intermediate result. Both 8 and -8 must return magnitude 6; zero stays
+/// zero. Do not choose a direction here.
 ///
 /// **Today you learn:** Fractional arithmetic: grouping can make an integer division happen before a
 /// multiplication. Compare an exact whole-number ratio with a fractional ratio, then predict the retained
@@ -22,7 +24,9 @@ import javax.swing.Timer;
 /// Run the program, drag sideways to throw a ball at a wall and watch its rebound; Space pauses
 /// the room and R empties it.
 double bounceSpeed(double speed) {
-    return Math.abs(speed) * 3.0 / 4;
+    double magnitude = Math.abs(speed);
+    double retained = magnitude * 3;
+    return retained / 4;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F04">
@@ -48,32 +52,36 @@ double bounceSpeed(double speed) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Follow three named values
 ///
-/// - `double bounceSpeed(double speed)` — A calculation that receives a signed speed and returns the
-///   nonnegative magnitude after a bounce.
-/// - `Math.abs(speed)` — A supplied calculation of absolute value: for example, -4 becomes 4. The dot
-///   selects abs and parentheses pass speed to it.
-/// - `*` — Multiply the magnitude by the fraction retained by the wall.
-/// - `(3 / 4)` — The parentheses evaluate integer 3 / 4 first, which discards its fractional part.
-/// - `return` — Return the magnitude; the caller already chooses the new positive or negative direction.
-///
-/// ### What the prepared part already does
-///
-/// add creates and limits a throw. step calls your rule at side and top walls, then supplies gravity and
-/// a separate floor response. draw paints the stored balls; the mouse code creates throws.
+/// `speed` is the incoming signed value. `magnitude` removes its sign. `retained` names the
+/// intermediate result you are building. Return the final retained magnitude, rather than changing
+/// speed or the ball. The supplied wall handlers use the result with the correct sign.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// Separate magnitude from sign. Math.abs(-8) is 8; retaining one half gives magnitude 4. The
+/// prepared left and right walls choose the outgoing sign themselves. A local variable can name an
+/// intermediate calculation so you can predict it before returning the final value. What magnitude
+/// should one quarter of 12 retain?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// Create a nearly bouncy room and a very soft room by changing the retained fraction. Compare the
+/// same sideways throw. Keep the direction handling in the supplied wall code: your experiment
+/// changes lost energy, not which side of a wall the ball moves towards.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// 3 / 4 with integer operands is zero.
+/// magnitude already stores a nonnegative speed.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Math.abs is already supplied to remove the old direction sign.
+/// Multiplication followed by division must keep the fractional part.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Multiply by 3.0 / 4, or by 0.75.
+/// Set retained to magnitude * 3 and return retained / 4.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

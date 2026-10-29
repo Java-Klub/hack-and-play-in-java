@@ -16,7 +16,7 @@ import java.util.Arrays;
 /// **Today you learn:** Records: a rule can carry both its data and a query about that data. Its x and y
 /// components choose which neighbouring numbers to compare.
 ///
-/// Run the program and repeatedly click a free cell to cycle its number while checking the
+/// Repeatedly click a free cell to cycle its number while checking the
 /// inequality signs beside it.
 record Rule(int x, int y) {
     boolean satisfiedBy(int[][] values) {
@@ -69,6 +69,12 @@ record Rule(int x, int y) {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Return values[y][x] < values[y][x+1], including a false result for equality.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Extend Rule with a boolean choice for horizontal versus vertical neighbours. Use one vertical clue
+/// in a puzzle of your own. Draw the compared cells and provide an example satisfying the horizontal
+/// interpretation but failing your vertical one.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

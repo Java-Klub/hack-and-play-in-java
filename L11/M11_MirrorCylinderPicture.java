@@ -1,32 +1,42 @@
 // <editor-fold defaultstate="collapsed" desc="Prepared tools">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L11.11 · MirrorCylinderPicture
 ///
-/// Warp a picture into a strange fan of curved bands, as if preparing it for a cylindrical mirror. Even
-/// before viewing a reflection, the exported distortion is a picture you can inspect.
+/// Turn a word from your text file into a fan of curved bands, as if preparing it for a cylindrical
+/// mirror. Inspect its distortion directly in the Java picture and try a different word on the next
+/// run.
 ///
-/// **Your mission:** The target file is created but stays empty because PNG bytes go into an unused
-/// memory buffer. Reconnect image encoding to the opened destination.
+/// **Your mission:** Create readCaption: open the chosen UTF-8 text file with newBufferedReader, read
+/// its first line, strip surrounding whitespace, and accept 1..8 characters. Report an empty, blank
+/// or too-long first line with IOException. The rendered word must come from this file.
 ///
-/// **Today you learn:** Opening an output stream and writing to it are separate actions. Resource
-/// ownership closes the stream safely, but useful bytes arrive only if the encoder actually receives that
-/// stream.
+/// **Today you learn:** Implement a real file boundary: open the chosen resource, route actual
+/// contents through it and close it reliably. The artifact must survive beyond a method call.
 ///
-/// The program writes exports/mirror.png through save and opens those actual bytes in Java. An
-/// empty or invalid file produces a clear terminal output failure instead of a substitute
-/// picture.
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    try (var output = Files.newOutputStream(path)) {
-        if (!ImageIO.write(render(seed, option), "png", output)) {
-            throw new IOException("PNG writer missing.");
+/// The first run creates data/mirror-word.txt containing JAVA. Edit its first line to MOON, then run
+/// again: the Java picture must change. Keep at most eight characters so the word fits the picture.
+String readCaption(Path path) throws IOException {
+    try (var reader = Files.newBufferedReader(path)) {
+        String line = reader.readLine();
+        if (line == null) throw new IOException("The first line is empty.");
+        String text = line.strip();
+        if (text.isEmpty() || text.length() > 8) {
+            throw new IOException("Use 1..8 characters on the first line.");
         }
+        return text;
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Author a word-art collection by editing the first line of data/mirror-word.txt between runs. Try
+/// MOON, a short name and a punctuation mark. Keep one saved text file per design; compare how a
+/// narrow and a wide word distort around the same circle.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F32">
 /// ### Files: a destination and a resource lifetime
@@ -51,34 +61,36 @@ void save(Path path, long seed, double option) throws Exception {
 /// Predict: if file becomes `Path.of("cards", "one.txt")`, where is the note written?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// ### A text file becomes the artwork's input
 ///
-/// - `Files.newOutputStream(path)` — Opens the requested destination and returns the stream that owns its
-///   bytes.
-/// - `new ByteArrayOutputStream()` — Creates a separate in-memory destination, unrelated to the opened
-///   file.
-/// - `ImageIO.write` — Sends encoded PNG bytes to whichever output object it is given.
+/// Files.newBufferedReader(path) opens a UTF-8 character reader. reader.readLine() returns the next
+/// line without its line ending, or null when no line exists. A blank line is the String "", which
+/// differs from null. Check null before calling String methods. A neutral file containing "  NOVA  "
+/// on its first line yields "NOVA" after strip; a second line is outside this task's contract.
+/// Predict the result for a file with a blank first line and NOVA on the second.
 ///
-/// ### What the prepared part already does
-///
-/// render creates the cylinder distortion, while the editable save owns its real output stream.
-/// main decodes the fixed requested PNG before displaying it; an empty file is reported as failure.
+/// try-with-resources closes the reader if reading, validation or return exits the block. IOException
+/// preserves missing-file and bad-content failures for main to report. main creates
+/// data/mirror-word.txt with JAVA only if absent, reads it into caption, and renders that caption
+/// directly. Edit this small text file between runs to author a different picture.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// An opened file is not enough if the encoder writes somewhere else.
+/// Handle the possibility of null before stripping the first line.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The try-with-resources variable is the actual file output.
+/// Use try-with-resources around newBufferedReader(path); do not parse the filename as content.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Pass output to ImageIO.write instead of constructing a new memory stream.
+/// Read one line, reject null, strip it, reject length outside 1..8, and return the accepted text.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+String caption = "JAVA";
+
 double[] ground(double angle, double height) {
     double x = 60 * Math.cos(angle);
     double y = 60 * Math.sin(angle);
@@ -102,8 +114,8 @@ BufferedImage render(long seed, double option) {
     ink.setColor(Color.WHITE);
     ink.fillRect(0, 0, 500, 160);
     ink.setColor(Color.getHSBColor(new Random(seed).nextFloat(), 0.9F, 0.7F));
-    ink.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 100));
-    ink.drawString("JAVA", 65, 120);
+    ink.setFont(new Font(Font.SANS_SERIF, Font.BOLD, Math.min(100, 440 / Math.max(1, caption.length()))));
+    ink.drawString(caption, 30, 120);
     ink.dispose();
     var image = new BufferedImage(900, 800, BufferedImage.TYPE_INT_RGB);
     var g = image.createGraphics();
@@ -152,16 +164,18 @@ void showImages(String title, String[] captions, java.awt.image.BufferedImage[] 
 
 
 void main() {
-    Path output = Path.of("exports", "mirror.png");
+    Path input = Path.of("data", "mirror-word.txt");
     try {
-        Files.deleteIfExists(output);
-        save(output, 42, 125);
-        var image = ImageIO.read(output.toFile());
-        if (image == null) throw new IOException("The requested PNG is empty or invalid.");
-        IO.println("Loaded requested file: " + output.toAbsolutePath());
-        showImages("Mirror Cylinder Picture", new String[]{output.toString()}, new java.awt.image.BufferedImage[]{image});
+        if (!Files.exists(input)) {
+            Files.createDirectories(input.toAbsolutePath().getParent());
+            Files.writeString(input, "JAVA\n");
+        }
+        caption = readCaption(input);
+        IO.println("Read " + caption + " from " + input.toAbsolutePath());
+        IO.println("Edit the first line of that text file and run again to author another picture.");
+        showImages("Mirror Cylinder Picture", new String[]{caption}, new BufferedImage[]{render(42, 125)});
     } catch (Exception failure) {
-        IO.println("Cannot load requested file " + output + ": " + failure.getMessage() + ". Repair save; Save the source, run its check command, then play again.");
+        IO.println("Cannot read the word artwork: " + failure.getMessage());
     }
 }
 // </editor-fold>

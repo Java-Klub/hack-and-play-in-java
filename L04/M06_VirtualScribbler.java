@@ -13,14 +13,15 @@ import javax.swing.Timer;
 /// Let a restless pen grow a drawing across the canvas, then steer its drift and jitter. Pause at
 /// an interesting pattern to examine it before clearing the canvas for another experiment.
 ///
-/// **Your mission:** Each requested burst draws one step too few. Repair burst so count requests exactly
-/// that many calls to step, including zero and one, while retaining the bounds and pause rules.
+/// **Your mission:** The burst action currently moves the pen zero times. Build a for loop that calls
+/// step exactly count times for accepted counts 0–60. Preserve the supplied rejection and the pause
+/// behaviour inside step.
 ///
 /// **Today you learn:** Counted repetition: choose a for range by its number of passes. For count equal
 /// to one, the body must run once; for zero it must not run at all.
 ///
-/// Run the program, press Space to start the pen and use the arrow keys to change the drawing;
-/// watch Steps, then run the checks to examine exact bursts of zero, one and four.
+/// Click 1 step and then 12 steps. These one-shot buttons pause automatic drawing so you can compare
+/// the visible Steps count. The unfinished burst leaves it at zero.
 void burst(int count) {
     if (count < 0 || count > 60) {
         return;
@@ -52,45 +53,43 @@ void burst(int count) {
 /// Now predict the output if floor starts at five.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// The guard already rejects counts outside 0–60. Your loop belongs after that guard; one iteration
+/// makes one call to step.
 ///
-/// - `void burst(int count)` — Define an action receiving the requested number of steps; it draws rather
-///   than returning a value.
-/// - `if (count < 0 || count > 60)` — The supplied guard rejects values below zero or above sixty; ||
-///   means either condition is enough.
-/// - `return;` — In a void action this leaves immediately without sending back a value.
-/// - `for (int i = 1; i < count; i++)` — Initialize a counter, test the boundary, then increase the
-///   counter after each pass; trace the actual values rather than guessing the number of passes.
-/// - `step();` — One call asks the supplied pen to make one move. Empty parentheses mean this action
-///   needs no input.
+/// | count | calls required | example visited counter values |
+/// | --- | --- | --- |
+/// | 0 | 0 | none |
+/// | 1 | 1 | 0 |
+/// | 4 | 4 | 0, 1, 2, 3 |
 ///
-/// ### What the prepared part already does
-///
-/// step supplies noisy pen movement, boundary reflections, ink and the pause check. A timer
-/// regularly asks burst for four steps; draw shows the canvas and actual Steps counter without
-/// moving the pen. The supplied controls handle drift, jitter, pausing and reset.
+/// Choose initialization, continuation and progress together. A counter's last value is not the number
+/// of passes. Predict the calls for count 12 before using its button. step keeps the canvas, randomness
+/// and paused check. oneShot temporarily enables drawing, calls your burst, then leaves automatic
+/// drawing paused; the timer uses the same burst for continuous play.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="For this game">
-/// Trace the current loop before editing. For count 1, i starts at 1 and the comparison is already
-/// false: zero calls. For count 4, the body runs with i equal to 1, 2 and 3: three calls. Now predict
-/// count 0, then choose a range that meets the stated request for all three cases. Count calls to
-/// step separately from actual pen moves: the supplied step does no movement while paused. Press
-/// Space before judging the visible Steps counter. A timer asks for four calls per burst; repainting
-/// only shows the result. Preserve rejection of counts outside 0–60.
+/// Pause before comparing counts. Each one-shot button ends paused, even if continuous drawing was
+/// running. The visible Steps value is the witness; no change to the pen physics is required.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Try count = 1 with the current starting i.
+/// Write the required call counts for zero, one and four before writing the for header.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Counting from zero with i < count gives count passes.
+/// Each pass should do just step(); progress belongs in the loop header.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Start int i = 0; keep i < count and i++.
+/// A zero-based counter below count gives count passes. Keep the existing guard before the loop.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Design a pulse rhythm: alternating iterations make one and two calls to step. Keep a separate
+/// written trace for a four-iteration burst before changing the drawing. Give the rhythm a name and
+/// compare it with the ordinary one-call-per-iteration version.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
@@ -175,6 +174,12 @@ void key(int code, boolean pressed) {
     }
 }
 
+void oneShot(int count) {
+    paused = false;
+    burst(count);
+    paused = true;
+}
+
 void showWindow() {
     var frame = new JFrame("Virtual Scribbler");
     var panel = new JPanel() {
@@ -208,7 +213,21 @@ void showWindow() {
     frame.add(panel);
     var help = new JLabel("<html><div style=\"text-align:center\">Space: play / pause   Arrows: drift / jitter   C: clear   R: reset</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-    frame.add(help, BorderLayout.SOUTH);
+    var controls = new JPanel(new BorderLayout());
+    controls.add(help, BorderLayout.NORTH);
+    var buttons = new JPanel();
+    for (int count : new int[]{1, 12}) {
+        var button = new JButton(count == 1 ? "1 step" : "12 steps");
+        button.setFocusable(false);
+        button.addActionListener(e -> {
+            oneShot(count);
+            panel.repaint();
+            panel.requestFocusInWindow();
+        });
+        buttons.add(button);
+    }
+    controls.add(buttons, BorderLayout.SOUTH);
+    frame.add(controls, BorderLayout.SOUTH);
     frame.pack();
     frame.setResizable(false);
     frame.setLocationByPlatform(true);

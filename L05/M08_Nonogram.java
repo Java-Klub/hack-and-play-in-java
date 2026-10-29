@@ -11,13 +11,14 @@ import java.util.Arrays;
 /// Reveal a pixel picture using only the numbered runs beside its rows and columns. Every clue must
 /// describe the picture honestly.
 ///
-/// **Your mission:** A black run reaching the end of a line vanishes from its clue. Finish runs(int[]
-/// values) so the final group is counted too.
+/// **Your mission:** A black group ending at the array boundary has no white cell to close it. Add the
+/// missing decision after the scan: preserve any unfinished positive run, without creating a zero clue
+/// for a white or empty line. Keep earlier completed groups.
 ///
 /// **Today you learn:** Traversal and search: carry a running count while scanning a line, and notice
 /// when a group ends because input ends rather than a white cell appearing.
 ///
-/// Run the program, left-click cells you believe are black and right-click cells you believe
+/// Left-click cells you believe are black and right-click cells you believe
 /// are white, using the row and column clues.
 int[] runs(int[] values) {
     var result = new ArrayList<Integer>();
@@ -62,19 +63,20 @@ int[] runs(int[] values) {
 /// empty array?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// The supplied scan closes a run when it meets zero. At end of input there is no next cell to trigger
+/// that branch.
 ///
-/// - `for (int value : values)` — Visits each cell value in order without using an explicit index.
-/// - `count++` — Adds one black cell to the group currently being counted.
-/// - `result.add(count)` — Appends one completed run length to the clue list.
-/// - `Integer::intValue` — A supplied method reference converts boxed numbers to int values at the return
-///   boundary.
+/// | input consumed | count | completed result |
+/// | --- | --- | --- |
+/// | 1,1 | 2 | empty |
+/// | 1,1,0 | 0 | 2 |
+/// | 1,1,0,1 | 1 | 2 |
 ///
-/// ### What the prepared part already does
-///
-/// The same runs() builds row and column clues and helps won() compare your answer with them. Drawing,
-/// cell cycling, and conversion of the result list to int[] are supplied.
+/// The final state still holds one useful count; the result needs both 2 and 1. `result.add(count)`
+/// preserves that discovered length. Decide when this action belongs after the loop. Predict the final
+/// states for all-white input and one black cell. The stream conversion is supplied; it just returns
+/// the collected lengths as an int array.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="For this game">
@@ -88,15 +90,21 @@ int[] runs(int[] values) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// A white cell flushes the previous count inside the loop.
+/// Compare the final count for a line ending black and one ending white.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// There may be no white cell after the final black cell.
+/// The last group needs an append after the scan, guarded against zero.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// After the loop, append count once when it is positive.
+/// After the loop, add count only when it is positive; retain the supplied result conversion.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Draw your own small black-and-white icon in the supplied picture data. Let runs generate its clues
+/// rather than entering clue numbers by hand. Give only the clues to a partner, then compare their
+/// reconstructed picture with your original.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

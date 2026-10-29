@@ -29,6 +29,14 @@ boolean touching(boolean[][] grid, int x, int y, boolean diagonals) {
     return false;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Create a third contact rule that accepts only diagonals. Keep the original four-neighbour and
+/// eight-neighbour options named and separate. Grow all three from the same seed and particle budget,
+/// then describe the branches you actually obtain.
+// </editor-fold>
+
 // <editor-fold defaultstate="expanded" desc="Learn · F36">
 /// ### Transfer: keep the old promise while adding a choice
 ///

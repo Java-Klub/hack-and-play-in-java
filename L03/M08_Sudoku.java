@@ -9,8 +9,10 @@ import java.awt.GridLayout;
 /// Complete a small 4×4 Sudoku using 1–4 once in every row, column and 2×2 block. The fixed clues give
 /// you a starting point, and empty squares are yours to fill.
 ///
-/// **Your mission:** The lock protects the empty squares instead of the printed clues. Repair place so a
-/// valid editable square accepts its value while fixed clues and invalid choices remain untouched.
+/// **Your mission · Restore the clue locks:** The board accepts writes without its protections. Add
+/// guards before the supplied
+/// assignment: the game must be unfinished, valid(row, col, value) must permit the choice, and
+/// clues[row][col] must be zero. Ask valid before reading clues. A rejected choice changes nothing.
 ///
 /// **Today you learn:** Protect a write with an early return: combine the reasons to reject, then perform
 /// one write only after none applies. Coordinate validation must happen before reading the clue table.
@@ -18,7 +20,9 @@ import java.awt.GridLayout;
 /// Run the program, choose 2 in the number selector and click the empty square immediately
 /// right of the top-left 1.
 boolean place(int row, int col, int value) {
-    if (complete() || !valid(row, col, value) || clues[row][col] != 0) return false;
+    if (complete()) return false;
+    if (!valid(row, col, value)) return false;
+    if (clues[row][col] != 0) return false;
     board[row][col] = value;
     return true;
 }
@@ -48,35 +52,38 @@ boolean place(int row, int col, int value) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Permission before the write
 ///
-/// - `complete()` — A supplied yes/no check for an already finished puzzle.
-/// - `!valid(row, col, value)` — The ! reverses the supplied validity decision: this part is true when
-///   the proposed placement is invalid.
-/// - `clues[row][col] == 0` — Read the fixed-clue table; zero means this square originally had no printed
-///   clue.
-/// - `return false;` — Finish the call without editing the board.
-/// - `board[row][col] = value;` — The protected write stores the chosen value at the accepted row and
-///   column.
-/// - `return true;` — Tell the caller the placement was accepted.
-///
-/// ### What the prepared part already does
-///
-/// valid already checks bounds, rows, columns and blocks. complete checks the finished board, and the
-/// supplied buttons call place and refresh their labels. The editable rule decides which requests are
-/// allowed to reach the write.
+/// row and col are zero-based coordinates; value is the selected number, with zero used for erasing.
+/// complete and valid are supplied questions. clues keeps the original fixed cells. board is the
+/// editable board. Read clues only after valid has ruled out bad coordinates. The assignment and
+/// return true happen only if no guard rejects the choice.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// valid already checks coordinates, value range and number conflicts. It is safe to ask valid about
+/// an outside square; it is not safe to index clues first. A printed clue has a nonzero clues entry,
+/// even if the current board changes later. Keep all rejection paths before the single assignment to
+/// board.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// Solve the repaired puzzle, then erase selected numbers in the existing reset board to make a small
+/// puzzle for a friend. Keep row, column and block consistency. Ask whether the puzzle has an obvious
+/// first move; do not assume every edited board has a unique solution.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// A zero in clues means there was no printed clue.
+/// Three independent reasons can prevent the one write.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Keep valid before accessing clues: it also checks coordinates.
+/// The supplied valid function must run before your clues lookup.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// The rejecting clue condition is clues[row][col] != 0.
+/// Keep complete(); reject !valid(row, col, value); then reject clues[row][col] != 0; leave the final
+/// assignment after all guards.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

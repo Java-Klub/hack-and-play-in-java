@@ -10,31 +10,85 @@ import javax.swing.Timer;
 /// Pilot a lander toward the pad and brake before touchdown. A limited tank makes a gentle landing a
 /// planning challenge.
 ///
-/// **Your mission:** An empty tank still powers the engines and fuel falls below zero. Repair the thrust
-/// condition in step() while keeping ordinary gravity and landing checks.
+/// **Your mission:** Build applyThrust(). With fuel and at least one held direction, Left changes
+/// velocityX by -0.06, Right by +0.06, and Up changes velocityY by -0.09. Spend one fuel per powered
+/// tick, even with several keys. Without fuel or keys, change neither velocity nor fuel. The lander
+/// currently has no powered control.
 ///
-/// **Today you learn:** Invariants: fuel never becomes negative, and an empty tank gives no powered
-/// acceleration. Several held direction keys still belong to one simulation step.
+/// **Today you learn:** Build one complete action that preserves an invariant across all related
+/// fields.
 ///
 /// Run the program, press Up to begin braking the fall, and use Left and Right thrust to line
 /// up with the landing pad.
+void applyThrust() {
+    if (fuel <= 0 || !(left || right || up)) return;
+    if (left) velocityX -= 0.06;
+    if (right) velocityX += 0.06;
+    if (up) velocityY -= 0.09;
+    fuel--;
+}
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F25">
+/// ### An invariant survives each action
+///
+/// An invariant is a promise about valid state. It is useful before and after a move, not merely when
+/// the game ends. Think of moving glow stones between two jars:
+///
+/// ```java
+/// int violet = 6;
+/// int gold = 2;
+/// int amount = 3;
+/// if (amount >= 0 && amount <= violet) {
+///     violet -= amount;
+///     gold += amount;
+/// }
+/// IO.println(violet + gold);
+/// ```
+///
+/// Trace: `(6, 2)` becomes `(3, 5)`, and the printed total is still 8. The two assignments belong to
+/// one accepted action. Changing only one jar would silently create or destroy stones. A request for 9
+/// fails the guard and changes neither jar.
+///
+/// Write the promise before writing the repair: a total stays constant, a resource stays non-negative,
+/// or a shape stays outside a wall. Then list every field that one action must change together. Predict
+/// the two jar values for amount 0 and amount 7. An invariant describes the intended world; it does not
+/// forbid inventing a different, clearly stated rule in your own variant.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Read this code">
+/// ## Read this part
+///
+/// `left`, `right` and `up` may all be true in one tick. They are independent switches, not exclusive
+/// alternatives. Opposing horizontal thrust cancels but still uses one fuel. Prepared step() adds
+/// gravity before applyThrust(), then moves and checks touchdown. This method must not remove that
+/// independent gravity.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Separate whether a powered tick is allowed from which engines contribute.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Several true keys can contribute, but fuel is charged once outside those individual changes.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Return if fuel is empty or no direction is held; apply each held engine independently, then spend
+/// one fuel.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Make a Moon mode by changing gravity and the initial tank. Try landing with only three planned
+/// braking bursts and describe the new fuel promise.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
 void step() {
     if (!state.equals("FLYING")) {
         return;
     }
     velocityY += 0.04;
-    if (fuel > 0 && (left || right || up)) {
-        if (left) {
-            velocityX -= 0.06;
-        }
-        if (right) {
-            velocityX += 0.06;
-        }
-        if (up) {
-            velocityY -= 0.09;
-        }
-        fuel--;
-    }
+    applyThrust();
     x += velocityX;
     y += velocityY;
     if (x < HALF || x > WIDTH - HALF || y < HALF) {
@@ -49,57 +103,6 @@ void step() {
     }
 }
 
-// <editor-fold defaultstate="collapsed" desc="Recall · F25">
-/// ### Invariant: a promise after every action
-///
-/// An invariant is a relationship that must remain true across accepted actions. Some actions move a
-/// quantity between places rather than creating more. Validate the complete request before making
-/// changes, then apply it once. Rejection should preserve the earlier state.
-///
-/// ```java
-/// int violet = 6;
-/// int gold = 2;
-/// int amount = 3;
-/// if (amount >= 0 && amount <= violet) {
-///     violet -= amount;
-///     gold += amount;
-/// }
-/// IO.println(violet + gold);
-/// ```
-///
-/// The containers become three and five; the printed total remains eight because the transfer
-/// balances. Now consider nine units: what must remain unchanged? Explain why moving only one side
-/// would violate the total even if both individual values looked legal.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
-///
-/// - `left || right || up` — Any requested thruster enters this shared engine branch.
-/// - `velocityY += 0.04` — Gravity continues to affect the lander even without fuel.
-/// - `fuel--` — Spends one unit for the whole powered update, not one per key.
-/// - `Math.abs(velocityX)` — The landing check cares about horizontal speed magnitude in either
-///   direction.
-///
-/// ### What the prepared part already does
-///
-/// The rest of step() integrates position and checks whether the entire craft lands gently inside the
-/// pad. clearKeys() releases held inputs on restart or focus loss; the timer and painter are supplied.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Gravity always acts, even with no fuel.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The existing single decrement already handles combined keys correctly.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Put fuel>0 back around the entire thrust block; do not merely clamp the number afterward.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
 final int WIDTH = 600, HEIGHT = 420, GROUND = 385, PAD_X = 380, PAD_WIDTH = 140, HALF = 12;
 double x, y, velocityX, velocityY;
 int fuel;

@@ -11,8 +11,10 @@ import javax.swing.*;
 /// Search an 8×8 sea for three hidden treasures with only eight probes. Each miss reports how far the
 /// nearest remaining treasure was, so compare clues before spending another probe.
 ///
-/// **Your mission:** The program accepts a probe one row or column beyond the map. Repair insideSea so
-/// only indices 0 through 7 belong to the internal sea.
+/// **Your mission · Guard all four sea edges:** Rebuild the sea boundary rule: validRow accepts internal
+/// rows 0..7, validColumn
+/// accepts columns 0..7, and insideSea accepts a square only when both are valid. Neither outside-map
+/// button may consume a probe.
 ///
 /// **Today you learn:** Boolean ranges: several comparisons can describe one rectangular area. Both the
 /// row and the column must stay within their own lower and upper bounds; eight positions starting at zero
@@ -21,7 +23,9 @@ import javax.swing.*;
 /// The program opens the sea. Click a square to probe it. Try the two outside-map buttons:
 /// neither should spend a probe. After fixing both bounds, New sea starts a treasure hunt.
 boolean insideSea(int row, int column) {
-    return row >= 0 && row < 8 && column >= 0 && column < 8;
+    boolean validRow = row >= 0 && row < 8;
+    boolean validColumn = column >= 0 && column < 8;
+    return validRow && validColumn;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F06">
@@ -48,22 +52,12 @@ boolean insideSea(int row, int column) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Row, column, square
 ///
-/// - `insideSea(int row, int column)` — Receive internal row and column indices, already converted from
-///   the player’s 1–8 coordinates.
-/// - `row >= 0` — The row is at least zero; >= includes equality.
-/// - `row <= 8` — The current upper comparison includes eight itself, which is outside an eight-position
-///   zero-based range.
-/// - `column <= 8` — The column has its own upper bound; fixing only the row would leave another escape.
-/// - `&&` — Logical AND: every connected comparison must be true for the complete expression to be true.
-/// - `return` — Return the combined decision; this rule does not spend a probe by itself.
-///
-/// ### What the prepared part already does
-///
-/// command reads player coordinates, subtracts one from them and calls insideSea before recording a
-/// probe. distance computes a clue, and the supplied history keeps each old clue tied to its original
-/// moment.
+/// row and column are internal indices already translated from player coordinates. validRow and
+/// validColumn each name a true/false result. insideSea must return one decision about the whole
+/// square. probe already leaves its budget unchanged on false and spends one probe on a permitted new
+/// square. The existing buttons supply deliberately invalid coordinates.
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="For this game">
@@ -79,16 +73,29 @@ boolean insideSea(int row, int column) {
 /// at one; command subtracts one before calling your rule, whose valid indices run from zero to seven.
 // </editor-fold>
 
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// Internal coordinates start at zero. Eight rows are 0 through 7. A row can be valid while the
+/// column is outside: (3,8) is still not a sea square. A rectangle therefore needs the row answer AND
+/// the column answer. Trace (0,0), (7,7), (-1,3) and (3,8); predict all four results before running
+/// the check.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// After the map guard works, give a friend a fixed starting plan of three probe squares and compare
+/// its clues with three adjacent probes. Then change only the prepared probe budget and see whether
+/// your preferred strategy changes. Keep the 8×8 map size unchanged.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// The printed 1–8 coordinates are converted to 0–7 before this rule.
+/// Each coordinate needs its own lower and upper comparison.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// All four bounds must hold at the same time.
+/// One valid coordinate cannot compensate for the other being outside.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Use row < 8 and column < 8; keep both >= 0 tests.
+/// Use row >= 0 && row < 8 and column >= 0 && column < 8, then join the two boolean values with &&.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

@@ -29,6 +29,14 @@ void turn(int x, int y) {
     turnQueued = true;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Design a gentler snake by allowing its head to wrap across the board edge. Decide what happens to
+/// body collision at the destination, then change only the wall rule. Fast opposite key presses must
+/// still obey the one-turn-per-tick promise.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Recall · F30">
 /// ### Input requests; a tick advances time
 ///

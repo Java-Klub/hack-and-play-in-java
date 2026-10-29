@@ -9,7 +9,7 @@
 /// **Today you learn:** Traversal and search: ordered indices enumerate combinations without repeating a
 /// card. Check the loop boundaries as carefully as the matching rule.
 ///
-/// Run the program, inspect the displayed card attributes, and submit the numbers of three
+/// Inspect the displayed card attributes, and submit the numbers of three
 /// cards you think form a set.
 boolean hasSet() {
     for (int a = 0; a < table.size(); a++) {
@@ -81,6 +81,12 @@ boolean hasSet() {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// The c loop condition should compare c with table.size(), not table.size()-1.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Design a stricter set variant: an accepted triple must have at least two attributes that differ
+/// across all three cards. Use a counter for those attributes. Find one original set your rule rejects
+/// and one it retains, then explain the new visual clue.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

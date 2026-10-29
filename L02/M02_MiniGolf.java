@@ -10,8 +10,10 @@ import javax.swing.Timer;
 /// Putt a ball across a small course, use the walls for rebounds and try to enter the hole slowly. Longer
 /// pulls should give stronger shots, while friction gradually stops the ball.
 ///
-/// **Your mission:** A long pull is ten times weaker than intended. Repair dragVelocity so 100 pixels of
-/// signed drag gives speed 8 and -25 gives -2.
+/// **Your mission · Build and connect a shot:** The ball has no launch power. Implement dragVelocity (100
+/// → 8, -25 → -2, 0 → 0),
+/// then connect both inputs of applyPull to that calculation: horizontal must supply vx and vertical
+/// must supply vy. The prepared shot limiter stays unchanged.
 ///
 /// **Today you learn:** Numeric scale and units: a distance must be converted into a speed with the
 /// intended ratio. Check a small positive example, a negative one and zero before judging the whole
@@ -21,6 +23,11 @@ import javax.swing.Timer;
 /// before the next shot, or press R to restart.
 double dragVelocity(double distance) {
     return distance / 12.5;
+}
+
+void applyPull(double horizontal, double vertical) {
+    vx = dragVelocity(horizontal);
+    vy = dragVelocity(vertical);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F04">
@@ -46,42 +53,46 @@ double dragVelocity(double distance) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Two calculations, one rule
 ///
-/// - `double dragVelocity(double distance)` — This calculation takes one distance and returns one speed;
-///   both may contain a fractional part.
-/// - `distance` — The signed pull supplied by shoot. A negative value must not accidentally become
-///   positive.
-/// - `/` — Divide the distance by the scale on the right.
-/// - `125` — This current divisor makes a given distance produce too little speed.
-/// - `return distance / 125;` — Evaluate the expression once and give its result back to the shot
-///   calculation.
-///
-/// ### What the prepared part already does
-///
-/// begin detects a pull starting on the stationary ball. shoot calls your conversion and caps very strong
-/// shots; step supplies friction, wall rebounds and slow capture by the hole. Those rules are already
-/// working.
+/// `double distance` receives one signed distance; `return` hands its converted speed back.
+/// `applyPull(horizontal, vertical)` receives two different values. Its two assignments must keep
+/// their roles: horizontal → vx and vertical → vy. shoot already calls applyPull when you release the
+/// mouse, then limits excessive speed and counts the stroke. You are building the conversion and its
+/// connection, not the timer or the mouse handler.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="For this game">
-/// Here distance is already a double. Dividing it by the integer literal 125 therefore does keep
-/// fractional results: this fault is the wrong scale, not integer division. Separate those
-/// explanations before changing anything. Use the stated distance-to-speed examples to work out a
-/// consistent conversion, and preserve the direction sign. The prepared shoot code already limits
-/// extreme shots; your calculation should not add a second cap or choose the ball's direction.
+/// distance is already a double. Compare distance / 125 and distance / 125.0: both preserve fractions
+/// and both use the same scale. Getting eight speed units from a hundred pixels requires a different
+/// scale. applyPull must then actually store the results in vx and vy. The prepared shoot already
+/// limits excessive power; do not add a second limit here.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// The required conversion is distance 100 → speed 8, distance -25 → speed -2, and zero → zero. Since
+/// distance is a double, changing 125 to 125.0 would not change the old scale. applyPull receives
+/// horizontal and vertical distances separately. A call can return a value directly into an
+/// assignment, such as `vx = dragVelocity(horizontal);`. No printing is involved.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// Make a gentle and an exaggerated course by changing only the conversion scale. Try the same pull
+/// in both. Find a setting that lets a friend reach the hole without bouncing off a wall, then
+/// restore the original scale if you want the original check to pass.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Predict the result of 100 / 125.
+/// Work out the speed for one pixel, then use the same scale for both directions.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The conversion needs 8 units of speed per 100 pixels, not 0.8.
+/// applyPull needs two separate calls, each with its matching parameter.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Use return distance / 12.5;
+/// Return distance / 12.5 from dragVelocity. In applyPull assign dragVelocity(horizontal) to vx and
+/// dragVelocity(vertical) to vy.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
@@ -115,8 +126,7 @@ void shoot(int xx, int yy) {
         return;
     }
     aiming = false;
-    vx = dragVelocity(x - xx);
-    vy = dragVelocity(y - yy);
+    applyPull(x - xx, y - yy);
     double speed = Math.hypot(vx, vy);
     if (speed > 10) {
         vx *= 10 / speed;

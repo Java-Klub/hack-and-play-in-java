@@ -11,7 +11,7 @@
 /// when the supplied match condition is true. The result is a count of discoveries, not simply whether
 /// any discovery happened.
 ///
-/// Run the program and enter STONE against the training word PLANT; T and N are shared, but the
+/// Enter STONE against the training word PLANT; T and N are shared, but the
 /// starter reports only one.
 int matches(String word) {
     int n = 0;
@@ -74,6 +74,12 @@ int matches(String word) {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Replace n = 1 with n++ or n += 1.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Give one chosen letter group double weight when matched. Write two guess/secret examples with
+/// different weighted scores before changing the accumulator. Let a partner infer which group earns the
+/// bonus from your feedback alone.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

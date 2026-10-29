@@ -12,19 +12,32 @@ import java.awt.image.BufferedImage;
 /// Draw one stroke and let a ring of reflected copies turn it into a rosette. Changing the number of
 /// mirror axes can make the same gesture look completely different.
 ///
-/// **Your mission:** The copies slide toward the left because a rotated x coordinate is never returned to
-/// the canvas centre. Repair that conversion while preserving the rotation and reflection.
+/// **Your mission:** Implement the whole coordinate adapter in transform. Subtract the canvas centre,
+/// optionally reflect the local y, rotate by 2π × copy / axes, then add the centre back. Return a new
+/// point; never mutate the original stroke.
 ///
-/// **Today you learn:** A coordinate transform first works relative to a chosen centre and then returns
-/// to screen coordinates. The supplied trigonometry handles rotation; check which centre offsets are
-/// still missing.
+/// **Today you learn:** Implement rendering or coordinate conversion as an explicit sequence. Read
+/// the model, translate its values and draw or return a new point without advancing time.
 ///
 /// Run the program, then drag a stroke to inspect its reflections, use Up/Down to change mirror
 /// axes and R to clear and restart.
 Point2D.Double transform(int x, int y, int copy, boolean reflect) {
-    double dx = x - WIDTH / 2, dy = (y - HEIGHT / 2) * (reflect ? -1 : 1), a = 2 * Math.PI * copy / axes;
-    return new Point2D.Double(WIDTH / 2 + dx * Math.cos(a) - dy * Math.sin(a), HEIGHT / 2 + dx * Math.sin(a) + dy * Math.cos(a));
+    double dx = x - WIDTH / 2;
+    double dy = y - HEIGHT / 2;
+    if (reflect) dy = -dy;
+    double angle = 2 * Math.PI * copy / axes;
+    double rotatedX = dx * Math.cos(angle) - dy * Math.sin(angle);
+    double rotatedY = dx * Math.sin(angle) + dy * Math.cos(angle);
+    return new Point2D.Double(WIDTH / 2 + rotatedX, HEIGHT / 2 + rotatedY);
 }
+
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Design a two-colour emblem: give reflected strokes a different colour from rotated strokes in the
+/// prepared drawing loop. Draw just one deliberate gesture and choose the axis count that turns it
+/// into your emblem.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F29">
 /// ### Rendering: translate state into pixels
@@ -47,30 +60,32 @@ Point2D.Double transform(int x, int y, int copy, boolean reflect) {
 /// Predict: if only tileY becomes 4, which screen coordinate changes, and by how much?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// ### Three coordinate spaces, one point
 ///
-/// - `x - WIDTH / 2` — Moves the origin from the left edge to the canvas centre.
-/// - `reflect ? -1 : 1` — Chooses whether the centred vertical distance is mirrored.
-/// - `new Point2D.Double` — Returns a new screen point; it does not move the original stroke.
-/// - `HEIGHT / 2 +` — The vertical result already restores its screen-centre offset.
+/// Use this supplied mathematical rule: rotating local (dx, dy) by angle a gives x' = dx cos(a) - dy
+/// sin(a) and y' = dx sin(a) + dy cos(a). Math.sin and Math.cos take radians; a full turn is 2π. You
+/// are implementing the rule, not expected to discover trigonometry.
 ///
-/// ### What the prepared part already does
-///
-/// stroke calls the editable transform for each reflected copy and stores the strokes on one
-/// canvas. Up/Down changes axes; R clears the picture and restores the starting experiment.
+/// Worked example with another canvas centre (50, 40): screen (60, 40) becomes local (10, 0). A
+/// quarter turn produces (0, 10), so the new screen point is (50, 50). Predict the zero-turn result
+/// and then the quarter-turn result for (50, 30). A local reflection negates dy before rotation. The
+/// drawing loop chooses copy and reflect and draws all returned points; transform has no drawing side
+/// effect.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Coordinates are first made relative to the centre.
+/// Work relative to the canvas centre before applying rotation.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Rotation works in that relative space.
+/// Reflection changes local dy, not the absolute screen y. Keep the two rotation expressions
+/// separate.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// The returned point must add WIDTH/2 to x and HEIGHT/2 to y.
+/// Compute dx/dy, optionally negate dy, compute the angle and two rotated coordinates, then create
+/// the translated point.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

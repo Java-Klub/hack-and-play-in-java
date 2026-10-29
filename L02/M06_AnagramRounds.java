@@ -1,9 +1,10 @@
-/// # L02.05 · AnagramRounds
+/// # L02.06 · AnagramRounds
 ///
 /// Unscramble five words and see how many you can solve within three guesses each. Several genuine
 /// anagrams may solve the same round, so a surprising word can still be right.
 ///
-/// **Your mission:** A valid answer such as silent is rejected because its letter case differs from the
+/// **Your mission · Make the judge fair:** A valid answer such as silent is rejected because its letter
+/// case differs from the
 /// word list. Repair normalize without losing the existing removal of outside spaces.
 ///
 /// **Today you learn:** String operations: a text operation produces a result that you must use. A line
@@ -16,7 +17,7 @@ String normalize(String input) {
     return input.strip().toUpperCase(Locale.ROOT);
 }
 
-// <editor-fold defaultstate="expanded" desc="Learn · F05">
+// <editor-fold defaultstate="collapsed" desc="Recall · F05">
 /// `IO.readln` receives a whole line, including internal spaces. String operations return text rather
 /// than changing the original String. Keep the returned result when you need it.
 ///
@@ -61,6 +62,20 @@ String normalize(String input) {
 /// case-conversion operation is `toUpperCase(Locale.ROOT)`; `Locale.ROOT` is a supplied constant
 /// passed as an argument, not another method call. It keeps this word-list comparison consistent
 /// across regional settings. Preserve the existing edge cleanup when adding the case conversion.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// Trace raw text `"  Moon  "`: strip returns `"Moon"`; converting that returned text to uppercase
+/// gives `"MOON"`. Calling strip without keeping its return would leave your original reference
+/// unchanged. Predict the normalized text for a mixed-case answer with one inner space. The game
+/// decides accepted words separately from this cleanup.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// Replace one existing curated word group with a new group of genuine anagrams a friend can solve.
+/// Keep the same array structure and uppercase spelling. Avoid groups depending on obscure
+/// vocabulary; test that the displayed scramble and accepted alternatives really share the same
+/// letters.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">

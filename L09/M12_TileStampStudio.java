@@ -9,11 +9,12 @@ import java.awt.image.BufferedImage;
 /// Stamp your own tile across a surface and watch a small motif become a pattern. The repeat control
 /// should let you choose a sparse design or a dense one.
 ///
-/// **Your mission:** Every accepted number becomes six repeats. Make a valid choice reach the live
-/// pattern, and make rejected text preserve the previous setting.
+/// **Your mission:** Build applyRepeats(text): accept stripped whole numbers 1–12 inclusive, store the
+/// accepted candidate in repeats and return true. On a typo or out-of-range integer, return false and
+/// preserve the old repeats. The 288×288 preview must visibly change pattern density.
 ///
-/// **Today you learn:** Parse and validate a candidate before committing it to shared state. Returning
-/// success should mean the requested setting was actually applied, not merely that parsing worked.
+/// **Today you learn:** Build a deliberate input boundary: distinguish conversion, validation and
+/// committing a live setting.
 ///
 /// Run the program, then click tile cells to switch ink on or off; enter 3 and click Repeats to
 /// change the pattern density. Clear resets the tile.
@@ -29,69 +30,58 @@ boolean applyRepeats(String text) {
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F31">
-/// ### Parse, validate, then commit
+/// ### Text conversion and valid values are different questions
 ///
-/// Parsing converts text; validation checks whether the resulting number is allowed. These can fail
-/// differently.
+/// A number field starts as text. Conversion can fail because no number was written; validation can
+/// reject a perfectly readable number. Decide the two policies separately.
 ///
 /// ```java
-/// int readCopies(String text) {
+/// int readZoom(String text) {
 ///     try {
-///         int n = Integer.parseInt(text.strip());
-///         if (n < 1 || n > 5) {
-///             throw new IllegalArgumentException("Copies: 1..5");
-///         }
-///         return n;
-///     } catch (NumberFormatException invalid) {
-///         return 3;
+///         int zoom = Integer.parseInt(text.strip());
+///         if (zoom < 1 || zoom > 4) throw new IllegalArgumentException("Zoom: 1..4");
+///         return zoom;
+///     } catch (NumberFormatException typo) {
+///         return 2;
 ///     }
 /// }
 /// ```
 ///
-/// `readCopies(" 2 ")` returns `2`: conversion and validation succeed. `"oops"` fails during
-/// conversion and reaches `catch`, returning `3`. A numeric `"8"` converts successfully, then throws
-/// a different exception; this narrow catch does not handle it. `return` ends the method; `throw`
-/// leaves the normal path. Change stored game state only after validation succeeds.
+/// Trace `" 3 "`: strip removes surrounding whitespace, parseInt produces 3, bounds accept it. `"oops"`
+/// cannot convert, so catch returns 2. `"7"` converts successfully but fails validation; the explicitly
+/// thrown IllegalArgumentException leaves this method. Catching only NumberFormatException keeps those
+/// paths distinct.
 ///
-/// Predict the path for `"five"`, `"5"` and `"0"`.
+/// For a decimal, use Double.parseDouble; also consider NaN and infinity, which are readable but not
+/// finite numbers. For an interactive setting, parse into a local candidate before changing the stored
+/// field. Predict the path for `"0"`, `"two"` and `"4"`. Which inputs should preserve the previous live
+/// setting?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Read this part
 ///
-/// - `int candidate` — Keeps a proposed value separate from the currently active repeats field.
-/// - `candidate < 1 || candidate > 12` — Rejects an integer outside the supported repeat range before
-///   changing the model.
-/// - `repeats = 6` — Commits a constant instead of the parsed proposal.
-/// - `return false;` — Signals rejection so the caller can keep the previous pattern setting.
-///
-/// ### What the prepared part already does
-///
-/// Each click switches one source tile cell between ink and blank. render repeats that tile, and
-/// the Repeats button calls applyRepeats for the actual preview; Clear resets the tile.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="For this game">
-/// ### Validate before changing the stamp
-///
-/// Parsing and changing the model are different steps. If repeats was 4, malformed `"oops"` must
-/// return false and leave 4 stored. Numeric `"13"` also leaves 4, because it fails the range check;
-/// this rejection uses return false rather than throwing. For accepted `"3"`, the stored repeat count
-/// must reflect that accepted request. Trace the current code: which line stores a constant after the
-/// candidate has already passed validation? Predict the stored value after valid input followed by a
-/// typo; a failed second attempt must not erase the first success.
+/// The live field repeats starts at 6. Parse into a local candidate so refusal cannot damage the
+/// current setting. Here both format and range failures return false; unlike the tree task, a bad range
+/// does not throw. The supplied render(repeats) fits that many tile repeats across the same preview, so
+/// 3 and 9 genuinely look different.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Parse into a temporary candidate, not directly into the field.
+/// Keep the proposed number separate from the currently visible setting.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Both range checks must happen before assignment.
+/// Only a fully accepted candidate may reach the repeats field.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// On success assign the candidate rather than the original default.
+/// Try parsing; return false for a bad range or format; otherwise assign the candidate and return true.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Draw an asymmetric 8×8 tile and compare three versus nine repeats. Then try offsetting every other
+/// row of stamps in render() to create a brick-like fabric pattern.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
@@ -112,11 +102,11 @@ BufferedImage render(int repeats) {
     if (repeats < 1 || repeats > 12) {
         throw new IllegalArgumentException("Repeats: 1..12.");
     }
-    int size = repeats * 8 * 6;
+    int size = 288;
     var image = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
     for (int y = 0; y < size; y++) {
         for (int x = 0; x < size; x++) {
-            image.setRGB(x, y, palette[tile[y / 6 % 8][x / 6 % 8]]);
+            image.setRGB(x, y, palette[tile[(y * repeats * 8 / size) % 8][(x * repeats * 8 / size) % 8]]);
         }
     }
     return image;

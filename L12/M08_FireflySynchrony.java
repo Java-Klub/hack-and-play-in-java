@@ -10,12 +10,12 @@ import javax.swing.Timer;
 /// Watch a field of blinking fireflies gradually find a shared rhythm. Change the coupling and compare
 /// independent flashes with a crowd that starts to pulse together.
 ///
-/// **Your mission:** Every valid coupling command sets zero, so the slider cannot strengthen synchrony.
-/// Restore its carried value and keep invalid commands from changing the previous setting.
+/// **Your mission:** Create apply for all control cards: accept finite Coupling values in 0..2,
+/// ignore other Coupling values, invert running for Toggle, and call reset with Restart’s seed. Keep
+/// input listeners forwarding cards into this single dispatcher.
 ///
-/// **Today you learn:** A guarded record-pattern case accepts only the usable values of one command
-/// alternative. The remaining Coupling case deliberately does nothing; Toggle and Restart have
-/// independent effects.
+/// **Today you learn:** Build a complete record-pattern dispatcher. Match the alternative, unpack its
+/// own components and preserve the boundary between routing and each supplied algorithm.
 ///
 /// Run the program, then move Coupling toward 2 and watch the synchrony number, using Pause/Run
 /// or New phases to compare the flashes.
@@ -27,6 +27,14 @@ void apply(Control control) {
         case Restart(var seed) -> reset(seed);
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Add a new control card that sets every firefly phase to the same value. Wire one button through
+/// apply instead of changing phases in its listener. Compare this instant reset with gradual
+/// coupling: the two routes can look similar initially but have different responsibilities.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F35">
 /// ### Record patterns: choose a shape and unpack its data
@@ -52,20 +60,22 @@ void apply(Control control) {
 /// Predict: which case handles `new Stars(0)`, and what text does `new Name("Nova")` produce?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// ### One input route, four observable outcomes
 ///
-/// - `case Coupling(var value)` — Extracts this command’s requested strength.
-/// - `Double.isFinite(value) && value >= 0 && value <= 2` — All three conditions must hold before the
-///   accepted Coupling action runs.
-/// - `coupling = 0` — Currently discards the accepted value and always disables coupling.
-/// - `case Coupling(var value) -> { }` — Handles rejected strengths without altering the previous state.
+/// The same control family can arrive from sliders, buttons or a check. A switch statement performs
+/// effects without returning a value. Coupling needs two cases: a guarded usable value and a
+/// remaining ignored value. Double.isFinite excludes NaN and infinities before the numeric bounds.
+/// Toggle has no components; Restart carries one seed.
 ///
-/// ### What the prepared part already does
+/// Neutral example: for a volume command, accepting values 0..10 means a prior volume 4 becomes 7
+/// after Volume(7), but remains 4 after Volume(20). Predict the state after the sequence Volume(7),
+/// Volume(-1) starting at 4. Ignoring an invalid value means keeping the old state, not replacing it
+/// with zero.
 ///
-/// The slider and buttons construct Control records and send them through apply. The supplied step
-/// computes a new phase snapshot, order measures synchrony, and reset produces repeatable starting phases
-/// from a seed.
+/// Here coupling controls gradual phase interaction, Toggle pauses time, and reset reseeds phases.
+/// Wiring all three effects in apply makes them testable without a window. New phases does not
+/// guarantee immediate synchrony: compare the changing order value over time.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="For this game">
@@ -80,15 +90,15 @@ void apply(Control control) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// The guard already separates valid and invalid Coupling values.
+/// Write one responsibility for each record alternative before coding.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The matched var value is the new strength, not a constant zero.
+/// Use a guarded Coupling case, then a remaining Coupling case with an empty body.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Keep the fallback Coupling case and the other closed alternatives exhaustive.
+/// Set coupling from the matched value, toggle running, and forward the matched seed to reset.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

@@ -3,14 +3,15 @@
 /// Colour a tiny map without giving neighbouring regions the same colour. Two distant regions may happily
 /// match.
 ///
-/// **Your mission:** Only one shared border is checked, so clashes elsewhere escape the counter. Repair
-/// conflicts() to count every actual clash.
+/// **Your mission:** The empty border audit reports zero even when neighbours share a colour. Build the
+/// traversal over adjacent: count a border only when both endpoints have the same nonzero colour. Count
+/// borders, not regions, and leave the colouring unchanged.
 ///
 /// **Today you learn:** Traversal and search: scan a list of relationships, not just a list of regions.
 /// Each border names the two colour entries to compare.
 ///
-/// Run the program, type B 2 to give region B colour 2, and continue colouring the other
-/// labelled regions.
+/// A starts in colour 1. Enter B 1 and then C 1: three shared borders now clash, but the unfinished
+/// audit still reports zero.
 int conflicts() {
     int n = 0;
     for (int[] edge : adjacent) {
@@ -44,30 +45,39 @@ int conflicts() {
 /// empty array?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// Each adjacent entry is a pair of region indices. colours[edge[0]] and colours[edge[1]] read the two
+/// ends of that border. Zero means uncoloured.
 ///
-/// - `int[] edge` — A pair of region indices that share a border.
-/// - `adjacent[0]` — Selects only the first stored border pair; examine what the traversal receives.
-/// - `colours[edge[0]] != 0` — An uncoloured region is excluded from the conflict count.
-/// - `n++` — Counts one conflicting shared border, not one coloured region.
+/// | colours of A,B,C | AB | AC | BC | total |
+/// | --- | --- | --- | --- | --- |
+/// | 1,0,0 | 0 | 0 | 0 | 0 |
+/// | 1,1,0 | 1 | 0 | 0 | 1 |
+/// | 1,1,1 | 1 | 1 | 1 | 3 |
 ///
-/// ### What the prepared part already does
-///
-/// adjacent contains the authored shared-border pairs. The click handler changes one region’s colour;
-/// solved() requires all regions coloured and calls conflicts() to judge their relationships.
+/// Other borders touching an uncoloured region do not contribute. Start n once, visit every stored
+/// pair, and increment for each conflicting edge. Predict one case with distant equal colours but no
+/// shared border. The supplied solved query combines this audit with the requirement that every region
+/// be coloured.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// adjacent stores precisely the shared-border pairs.
+/// Read one edge as two region indices, not as a colour.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The current traversal visits only its first pair.
+/// Compare both colours and exclude the uncoloured marker before counting.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Iterate over adjacent; count equal nonzero colours at both endpoints.
+/// Traverse adjacent with one edge at a time, increment n for equal nonzero endpoint colours, then
+/// return n.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Add one currently absent border to adjacent and find a colouring that used to work but now fails.
+/// Solve your altered map, then challenge a partner to use fewer colours. Use the counterexample to
+/// identify which new border made the difference.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

@@ -28,6 +28,14 @@ BufferedImage hide(BufferedImage mask, long seed) {
     return image;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Hide your own tiny symbol by editing the mask drawing. Then move the signal to the green channel
+/// and change the reveal operation to match. Show only the noisy image to a friend before revealing
+/// the matching filter.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Recall · F27">
 /// ### Seeded randomness: repeat an experiment
 ///

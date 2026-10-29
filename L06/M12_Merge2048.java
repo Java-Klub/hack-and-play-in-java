@@ -9,7 +9,7 @@
 /// **Today you learn:** Writing functional checks: a result can have more than one observable part. State
 /// both the transformed row and its score, then choose cases that separate plausible mistakes.
 ///
-/// Run the program and type A followed by Enter to slide left, then try other directions and
+/// Type A followed by Enter to slide left, then try other directions and
 /// run the checks to challenge your row examples.
 record MergeExample(int[] input, int[] expected, int score) {
 }
@@ -82,6 +82,12 @@ MergeExample[] learnerChecks() {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Also test [4,4,4,4] -> [8,8,0,0] with score 16; justify each expectation.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Invent a row that distinguishes merge-left from merge-right, then write both expected rows and
+/// scores. Give a partner only one observed result and ask them to infer the direction. Try a second
+/// row on which the two directions accidentally agree.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
@@ -245,8 +251,11 @@ void verifyExamples() {
     try {
         for (var e : learnerChecks()) {
             score = 0;
-            if (!Arrays.equals(merge(e.input().clone()), e.expected()) || score != e.score()) {
-                throw new IllegalStateException("Merge example has wrong expected result");
+            int[] actual = merge(e.input().clone());
+            if (!Arrays.equals(actual, e.expected()) || score != e.score()) {
+                throw new IllegalStateException("Row " + Arrays.toString(e.input())
+                    + ": expected " + Arrays.toString(e.expected()) + " with score " + e.score()
+                    + ", actual " + Arrays.toString(actual) + " with score " + score);
             }
         }
     } finally {

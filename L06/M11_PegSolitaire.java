@@ -9,7 +9,7 @@
 /// **Today you learn:** Writing functional checks: a useful suite includes counterexamples, not just
 /// happy paths. Each expected boolean states whether that exact move should be legal.
 ///
-/// Run the program and enter 1 2 3 2 to make the first jump in the short peg puzzle, then run
+/// Enter 1 2 3 2 to make the first jump in the short peg puzzle, then run
 /// the checks to challenge your examples.
 record JumpExample(int row, int column, int toRow, int toColumn, boolean expected) {
 }
@@ -81,6 +81,12 @@ JumpExample[] learnerChecks() {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Add those false cases and an outside coordinate; keep the valid (0,1)->(2,1) case.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Prepare a jump riddle with one legal and two almost-legal moves: change only the middle peg, landing
+/// cell or direction. Hide the expected booleans and ask another pair to predict them before running.
+/// Explain why each near miss needs its own reason.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
@@ -217,7 +223,9 @@ void require(boolean valid) {
 void verifyExamples() {
     for (var e : learnerChecks()) {
         if (legal(e.row(), e.column(), e.toRow(), e.toColumn()) != e.expected()) {
-            throw new IllegalStateException("Jump example has wrong expected result");
+            throw new IllegalStateException("Jump (" + e.row() + "," + e.column() + ")->("
+                    + e.toRow() + "," + e.toColumn() + "): expected legal=" + e.expected()
+                    + ", actual=" + legal(e.row(), e.column(), e.toRow(), e.toColumn()));
         }
     }
 }

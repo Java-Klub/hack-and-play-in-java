@@ -3,67 +3,74 @@
 /// Keep an eight for the moment no ordinary card can save you. Play against another person and choose the
 /// suit after your wild escape.
 ///
-/// **Your mission:** The wrong rank acts as the wild card. Repair legal(int card) so special and ordinary
-/// cards follow the advertised rules.
+/// **Your mission:** Build legal(int card): accept only deck indices 0–51; an eight is always legal,
+/// otherwise require the same rank as top or the currently chosen suit. The unfinished selector
+/// currently refuses every card.
 ///
-/// **Today you learn:** Switch expressions: select one returned value from named cases and a fallback.
-/// The special case must not replace the ordinary rank-or-suit condition.
+/// **Today you learn:** Build a value selector from stated cases; trace its selector and returned value
+/// separately from the supplied game state changes.
 ///
 /// Run the program, read your numbered hand, and enter p followed by a card index to play it,
 /// adding a suit number when playing an eight.
 boolean legal(int card) {
-    return switch (rank(card)) {
+    if (card < 0 || card >= 52) return false;
+    int value = rank(card);
+    return switch (value) {
         case 8 -> true;
-        default -> rank(card) == rank(top) || card / 13 == suit;
+        default -> value == rank(top) || card / 13 == suit;
     };
 }
 
 // <editor-fold defaultstate="expanded" desc="Learn · F09">
-/// ### Switch: choose one value
+/// ### A switch chooses a value
 ///
-/// A switch expression selects a result from its selector. Each arrow case handles a matching value;
-/// it does not continue into the next case. `default` handles remaining values. The closing semicolon
-/// belongs to the surrounding assignment or return statement.
+/// An expression has a value. A switch expression reads one selector and chooses the value after the
+/// matching arrow. `return` then hands that value to the caller. Read this small sound selector before
+/// touching the game:
 ///
 /// ```java
-/// String weather = "mist";
-/// String colour = switch (weather) {
-///     case "mist" -> "silver";
-///     case "sun" -> "gold";
-///     default -> "indigo";
-/// };
-/// IO.println(colour);
+/// String sound(int taps) {
+///     return switch (taps) {
+///         case 0 -> "silence";
+///         case 1, 2 -> "tap";
+///         default -> "drum";
+///     };
+/// }
 /// ```
 ///
-/// The mist case selects `silver`. Predict the output for `"sun"`, then for `"snow"`. The selector is
-/// compared with case labels; the text after the arrow is the result. Changing one special case
-/// should leave the fallback's meaning intact.
+/// Trace `sound(2)`: the selector is 2, the grouped case includes 2, so the result is `"tap"`. No other
+/// case runs. For 7, no listed case matches, so `default` provides `"drum"`. The semicolon closes the
+/// whole switch expression. The returned values must fit the method's declared return type.
+///
+/// A switch can select a boolean, number, or record just as it selects a String here. It does not
+/// automatically change a field: returning a proposed direction and storing that direction are separate
+/// actions. Predict `sound(0)` and `sound(-1)`, and point to the case each uses.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Read this part
 ///
-/// - `return switch (rank(card))` — The whole switch produces the boolean returned by legal().
-/// - `case 1 -> true` — An arrow case supplies one result for one rank; check which rank deserves it.
-/// - `default ->` — Handles all ranks without their own case.
-/// - `||` — Either matching rank or matching suit is enough on the ordinary branch.
-///
-/// ### What the prepared part already does
-///
-/// rank() decodes a card’s rank. play() asks legal(), removes an accepted card, updates the chosen suit,
-/// and checks for an empty hand; dealing and console input are already supplied.
+/// `rank(card)` is supplied and returns 2–14; `card / 13` supplies suit 0–3. `top` and `suit` are the
+/// current table state. Decide legality only: do not remove a card or change the suit here. The console
+/// command already performs those actions after acceptance.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// rank(card) converts the encoded card to a value 1-13.
+/// Separate an invalid deck index from an ordinary legal move.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// A switch expression returns one boolean value.
+/// Use rank as the switch selector; the ordinary fallback still needs two alternative reasons to
+/// accept.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Use case 8 -> true; let default evaluate the supplied rank/suit condition.
+/// Reject outside 0–51 first; return true for rank 8 and use rank-match OR suit-match for the fallback.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Invent a different wild rank and tell your opponent before dealing. Play two rounds: does saving
+/// that rank create a different bluff?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

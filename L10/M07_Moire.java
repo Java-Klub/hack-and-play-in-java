@@ -23,6 +23,14 @@ Point2D.Double gridPoint(int column, int row, double a) {
     return new Point2D.Double(WIDTH / 2 + x * Math.cos(a) - y * Math.sin(a), HEIGHT / 2 + x * Math.sin(a) + y * Math.cos(a));
 }
 
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Make a motion detector that has no moving parts: choose two contrasting grid colours and search
+/// for an angle where tiny key taps produce huge apparent waves. Keep a note of angle and spacing so
+/// another pupil can recreate it.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Recall · F29">
 /// ### Rendering: translate state into pixels
 ///

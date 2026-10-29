@@ -8,87 +8,23 @@ import java.awt.image.BufferedImage;
 /// Generate a mountain silhouette and compare it with its reflected twin. Mirroring should change which
 /// peaks stand on the left without inventing a different mountain.
 ///
-/// **Your mission:** The mirror option makes an unchanged copy of the ridge. Build a reversed result
-/// while preserving the original height array and the old unmirrored mode.
+/// **Your mission:** Refactor a working picture. render currently reverses a ridge inline; extract
+/// that responsibility into reverseRidge, then replace the inline block with a call to your helper.
+/// Keep the original unmirrored option, do not mutate the input, and preserve the picture’s
+/// behaviour.
 ///
-/// **Today you learn:** A pure transformation can produce a new arrangement without mutating its input.
-/// Extracting ridge reversal gives the new option one responsibility and keeps generation independent
-/// from presentation.
+/// **Today you learn:** Extract an operation from existing working code, give it a contract, and
+/// connect the original caller to it. Preserve behaviour while changing responsibility.
 ///
-/// Run the program, then compare New rule with Original rule from the same seed; after the
-/// repair they should show the intended difference. Close the window before replaying.
+/// Inspect New rule and Original rule before changing the code. After extracting the helper, rerun
+/// the same seed: both views must preserve their earlier appearance. The helper check starts RED even
+/// though the inline picture already works.
 double[] reverseRidge(double[] heights) {
     double[] reversed = new double[heights.length];
     for (int i = 0; i < heights.length; i++) reversed[i] = heights[heights.length - 1 - i];
     return reversed;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Recall · F36">
-/// ### Transfer: keep the old promise while adding a choice
-///
-/// Extracting a helper gives one responsibility a name. Its inputs and result form a contract you can
-/// reuse elsewhere.
-///
-/// ```java
-/// String surround(String text, boolean stars) {
-///     String edge = stars ? "*" : "#";
-///     return edge + text + edge;
-/// }
-/// ```
-///
-/// `surround("hi", false)` returns `"#hi#"`; the old hash style still works. The caller can request a
-/// new style without reimplementing the operation. Test both choices, an empty input and a different
-/// word. Tests establish results, while explaining who chooses a style and who builds the label
-/// establishes the responsibility split. A successful new mode should not silently change the old
-/// one.
-///
-/// Predict: what will `surround("", true)` produce, and which part should change if the surrounding
-/// symbol changes?
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
-///
-/// - `double[] heights` — An ordered array of ridge heights, from one side of the picture to the other.
-/// - `heights.clone()` — Creates an independent array but keeps every value at its original index.
-/// - `return` — Supplies the result array to the renderer; it need not be the input object.
-///
-/// ### What the prepared part already does
-///
-/// ridge generates five layers; render optionally applies the required reverseRidge transformation.
-/// main compares new and original rules from the same seed, without additional generation or export
-/// controls.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// The last source value belongs at result index zero.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Map destination i to source length-1-i.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Explain why reversing data belongs in a separate value transform rather than inside random ridge
-/// generation.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
-double[] ridge(Random random, double roughness) {
-    double[] heights = new double[257];
-    heights[0] = random.nextDouble() * 40;
-    heights[256] = random.nextDouble() * 40;
-    double amplitude = 90;
-    for (int gap = 256; gap > 1; gap /= 2) {
-        for (int left = 0; left < 256; left += gap) {
-            heights[left + gap / 2] = (heights[left] + heights[left + gap]) / 2 + (random.nextDouble() * 2 - 1) * amplitude;
-        }
-        amplitude *= roughness;
-    }
-    return heights;
-}
-
-/// Supplied image creation: generation and drawing remain visible in this file.
 BufferedImage render(long seed, double roughness) {
     if (!Double.isFinite(roughness) || roughness < 0.2 || roughness > 0.9) {
         throw new IllegalArgumentException("Roughness: 0.2..0.9.");
@@ -118,6 +54,85 @@ BufferedImage render(long seed, double roughness) {
     }
     return image;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Design a mountain logo by combining the original ridge and its reversed copy in one image, with
+/// different colours. Choose whether they should meet at the centre or overlap. Generation must still
+/// receive the original untouched ridge values.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F36">
+/// ### Transfer: keep the old promise while adding a choice
+///
+/// Extracting a helper gives one responsibility a name. Its inputs and result form a contract you can
+/// reuse elsewhere.
+///
+/// ```java
+/// String surround(String text, boolean stars) {
+///     String edge = stars ? "*" : "#";
+///     return edge + text + edge;
+/// }
+/// ```
+///
+/// `surround("hi", false)` returns `"#hi#"`; the old hash style still works. The caller can request a
+/// new style without reimplementing the operation. Test both choices, an empty input and a different
+/// word. Tests establish results, while explaining who chooses a style and who builds the label
+/// establishes the responsibility split. A successful new mode should not silently change the old
+/// one.
+///
+/// Predict: what will `surround("", true)` produce, and which part should change if the surrounding
+/// symbol changes?
+// </editor-fold>
+
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// ### Refactoring changes responsibilities while keeping results
+///
+/// The starting picture already mirrors correctly. Its inline reversal is useful behaviour, not a bug
+/// to erase. Give that operation a reusable contract: return a fresh reversed array and leave the
+/// input alone. Then let render request the operation by name instead of repeating its
+/// implementation. The picture should not suddenly look different after this refactoring.
+///
+/// Neutral example: [5, 9, 1, 7] becomes [7, 1, 9, 5]. Index i in the result reads index length - 1 -
+/// i in the original. Predict the result for [8] and for an empty array. An empty loop has no
+/// accesses. clone alone makes an independent copy but preserves order.
+///
+/// The checks exercise the helper's results and independence, and the real renderer's two options.
+/// They do not inspect your source to enforce a particular call. In your self-review, find the sole
+/// reversal implementation and show the call from render: keeping two correct copies would pass some
+/// behaviour checks but miss the refactoring goal.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Keep the working inline reversal as your reference while building the helper.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// A returned array must be new. Move the reversal loop into reverseRidge and return its result.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Replace the whole mirrored inline block with a call to reverseRidge. Compare both pictures before
+/// and after.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+double[] ridge(Random random, double roughness) {
+    double[] heights = new double[257];
+    heights[0] = random.nextDouble() * 40;
+    heights[256] = random.nextDouble() * 40;
+    double amplitude = 90;
+    for (int gap = 256; gap > 1; gap /= 2) {
+        for (int left = 0; left < 256; left += gap) {
+            heights[left + gap / 2] = (heights[left] + heights[left + gap]) / 2 + (random.nextDouble() * 2 - 1) * amplitude;
+        }
+        amplitude *= roughness;
+    }
+    return heights;
+}
+
+
 
 
 boolean mirrored = true;

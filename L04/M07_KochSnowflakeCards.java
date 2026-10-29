@@ -81,6 +81,13 @@ int snowflake(Graphics2D g, int level) {
 /// Start side = 0 and keep side < 3.
 // </editor-fold>
 
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Turn the three prepared corner coordinates into an asymmetric mountain badge. Sketch the vertices
+/// and the order in which the loop visits the sides. Change the second argument of render in
+/// showPicture, currently 4, to compare shallow and detailed versions; choose the one that preserves
+/// your design.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
 int edge(Graphics2D g, double x, double y, double nx, double ny, int level) {
     if (level == 0) {

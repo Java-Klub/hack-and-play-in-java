@@ -34,11 +34,10 @@ void hop(int dx, int dy) {
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F25">
-/// ### Invariant: a promise after every action
+/// ### An invariant survives each action
 ///
-/// An invariant is a relationship that must remain true across accepted actions. Some actions move a
-/// quantity between places rather than creating more. Validate the complete request before making
-/// changes, then apply it once. Rejection should preserve the earlier state.
+/// An invariant is a promise about valid state. It is useful before and after a move, not merely when
+/// the game ends. Think of moving glow stones between two jars:
 ///
 /// ```java
 /// int violet = 6;
@@ -51,9 +50,14 @@ void hop(int dx, int dy) {
 /// IO.println(violet + gold);
 /// ```
 ///
-/// The containers become three and five; the printed total remains eight because the transfer
-/// balances. Now consider nine units: what must remain unchanged? Explain why moving only one side
-/// would violate the total even if both individual values looked legal.
+/// Trace: `(6, 2)` becomes `(3, 5)`, and the printed total is still 8. The two assignments belong to
+/// one accepted action. Changing only one jar would silently create or destroy stones. A request for 9
+/// fails the guard and changes neither jar.
+///
+/// Write the promise before writing the repair: a total stays constant, a resource stays non-negative,
+/// or a shape stays outside a wall. Then list every field that one action must change together. Predict
+/// the two jar values for amount 0 and amount 7. An invariant describes the intended world; it does not
+/// forbid inventing a different, clearly stated rule in your own variant.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
@@ -80,6 +84,11 @@ void hop(int dx, int dy) {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Clamp x+dx between those limits; do not remove collision or terminal-round checks.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Change the car lanes and starting gaps to make a crossing that needs a pause in the middle. Keep
+/// both sides of the player inside the field.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

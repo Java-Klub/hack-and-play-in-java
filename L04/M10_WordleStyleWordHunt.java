@@ -12,7 +12,7 @@
 /// unmatched L discoveries must both contribute to the same counter; exact-position matches have already
 /// been set aside.
 ///
-/// Run the program and enter ALLEY against the training word LEVEL; compare the printed clue
+/// Enter ALLEY against the training word LEVEL; compare the printed clue
 /// with the two L letters that can both match elsewhere.
 int[] leftoverLetters(String guess, char[] result) {
     int[] counts = new int[26];
@@ -80,6 +80,12 @@ int[] leftoverLetters(String guess, char[] result) {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Use counts[letter] += 1 instead of = 1.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Make a stricter feedback mode that shows only exact-position greens, hiding yellows. Keep the full
+/// grading rule available for comparison. Choose one secret and two guesses that demonstrate why the
+/// same solver needs different strategies in the two modes.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

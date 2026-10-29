@@ -3,14 +3,15 @@
 /// Hunt for CAT, DOG and TIGER in a letter grid by selecting the two ends of a word. A selection can run
 /// horizontally, vertically or diagonally, so its direction is part of the puzzle.
 ///
-/// **Your mission:** Every selected word loses its last letter. Repair the counted loop in read so both
-/// selected endpoints contribute, while leaving the supplied direction calculation intact.
+/// **Your mission:** The selected path currently returns no letters. Reconstruct the for loop that
+/// appends every selected cell to word, including both endpoints. Use the supplied dr, dc and gap count
+/// n; preserve validation.
 ///
 /// **Today you learn:** For loops and endpoints: a row of three cells has only two gaps. Here n counts
 /// the gaps; trace the successive i values to decide how many letters must be read.
 ///
-/// Run the program and enter 1 1 1 3 to select CAT in the first row; the starter reads only CA
-/// and rejects the find.
+/// Select the first row with 1 1 1 3. The unfinished reader returns empty text; the full path must read
+/// CAT. Reversing the endpoints must read TAC.
 String read(int r, int c, int nr, int nc) {
     require(r >= 0 && r < 5 && c >= 0 && c < 5 && nr >= 0 && nr < 5 && nc >= 0 && nc < 5);
     int dr = Integer.signum(nr - r);
@@ -46,35 +47,38 @@ String read(int r, int c, int nr, int nc) {
 /// Now predict the output if floor starts at five.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// The supplied calculations give a start (r,c), one-step direction (dr,dc) and n gaps. They already
+/// reject bent and off-board paths.
 ///
-/// - `for (int i = 0; i < n; i++)` — The three sections initialize i once, test before each pass and
-///   increase i after each pass; the semicolons separate them.
-/// - `String word = "";` — Start with no collected letters; the loop will build the selected word.
-/// - `word += grid[r + i * dr].charAt(c + i * dc);` — Append the letter at step i along the supplied
-///   direction. The prepared coordinate expression handles all straight directions.
-/// - `i < n` — This comparison decides whether another letter is read; test it at the final selected
-///   cell.
-/// - `return word;` — Pass the complete selection back to the game’s word check.
+/// | i along CAT | row | column | collected text |
+/// | --- | --- | --- | --- |
+/// | 0 | 0 | 0 | C |
+/// | 1 | 0 | 1 | CA |
+/// | 2 | 0 | 2 | CAT |
 ///
-/// ### What the prepared part already does
-///
-/// require rejects off-board or bent selections. dr and dc are supplied single-step directions; n is the
-/// number of gaps. command compares read’s result with the target words and records finds; display prints
-/// the grid and main reads four player coordinates numbered from one.
+/// Three positions need two gaps. At step i, read `grid[r + i * dr].charAt(c + i * dc)` and append the
+/// returned character to word. Build a for header whose visited values include the last position.
+/// Predict coordinates for the same selection backwards. command uses the returned word to record a
+/// real find.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// The distance n counts gaps, not selected cells.
+/// List the i values needed for a three-letter selection.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Indices 0, 1 and 2 contain three letters.
+/// Start from zero; each pass appends one character before i advances.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Run i from 0 while i <= n.
+/// Visit i from zero through n inclusive and append the supplied grid lookup to word.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Hide a new word in your grid in a reverse or diagonal direction. Give a partner only its length and
+/// endpoint coordinates in the opposite order. Predict both strings before trying the selection; which
+/// order spells the intended word?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

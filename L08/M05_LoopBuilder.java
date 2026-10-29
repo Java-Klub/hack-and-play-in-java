@@ -3,79 +3,82 @@
 /// Toggle lines to form one closed loop around numbered cells. The numbers constrain the loop, but its
 /// corners must also really connect.
 ///
-/// **Your mission:** Vertical lines report the wrong endpoint, so a visible loop is judged as broken.
-/// Repair the vertical mapping inside vertices(int edge).
+/// **Your mission:** Build vertices(edge) for every displayed edge. Horizontal indices 0–11 run three
+/// across each of four rows; vertical indices 12–23 run four across each of three gaps. Return the two
+/// vertex indices in a 4×4 vertex grid. Reject indices outside 0–23.
 ///
-/// **Today you learn:** Grid neighbours: displayed edges connect vertices on a separate grid. Translate
-/// row/column neighbours into flat vertex indices using the vertex grid’s width.
+/// **Today you learn:** Translate a small drawing into coordinates, bounds and neighbour relationships.
 ///
 /// Run the program and enter 1 to toggle the first numbered edge, then add other edges to build
 /// a single loop.
 int[] vertices(int edge) {
+    if (edge < 0 || edge >= 24) throw new IllegalArgumentException("Edge: 0..23.");
     if (edge < 12) {
-        int r = edge / 3;
-        int c = edge % 3;
-        return new int[]{r * 4 + c, r * 4 + c + 1};
+        int row = edge / 3;
+        int col = edge % 3;
+        return new int[]{row * 4 + col, row * 4 + col + 1};
     }
-    int n = edge - 12;
-    int r = n / 4;
-    int c = n % 4;
-    return new int[]{r * 4 + c, (r + 1) * 4 + c};
+    int vertical = edge - 12;
+    int row = vertical / 4;
+    int col = vertical % 4;
+    return new int[]{row * 4 + col, (row + 1) * 4 + col};
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F18">
-/// ### Grids: choose the row before the column
+/// ### Coordinates describe neighbours
 ///
-/// In an array of rows, the first index selects a row and the second selects a position within it.
-/// Rows can have different lengths. A neighbour is a displacement from a cell, not another absolute
-/// position. Define the permitted directions before checking whether a candidate exists.
+/// A grid stores rows first: `board[y][x]`. Increasing x goes right; increasing y goes down on our
+/// screens. A neighbour is the current coordinate plus a small offset.
 ///
-/// ```java
-/// int[][] mosaic = {{3, 6, 9}, {2, 4, 8}};
-/// int row = 0;
-/// int column = 1;
-/// IO.println(mosaic[row][column + 1]);
+/// ```text
+///           (0,-1)
+/// (-1,0)    HERE    (1,0)
+///           (0,1)
 /// ```
 ///
-/// The output is nine: row zero and column two select that element. Moving down changes row; moving
-/// right changes column. From the top-right cell, which of those two moves stays inside? For a
-/// diagonal both coordinates change; bounds must be checked before accessing the candidate.
+/// ```java
+/// int[][] board = {{2, 5, 8}, {1, 4, 7}};
+/// int x = 1, y = 0;
+/// int nx = x + 0, ny = y + 1;
+/// if (ny >= 0 && ny < board.length && nx >= 0 && nx < board[ny].length) {
+///     IO.println(board[ny][nx]);
+/// }
+/// ```
+///
+/// The move goes from 5 to 4; the printed value is 4. Bounds are checked before indexing, because an
+/// array has no cell outside its edges. A diagonal changes both coordinates. A corridor repeats the
+/// same offset; a neighbourhood tries several offsets. These are different algorithms using the same
+/// coordinate model.
+///
+/// Predict the result of offset `(-1,0)` from the same start. Which offset leaves this board? Mark the
+/// start and destination on paper before combining directions in a loop.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Read this part
 ///
-/// - `if (edge < 12)` — Separates the horizontal edge numbers from the vertical ones.
-/// - `edge - 12` — Converts a vertical edge number into a local zero-based number.
-/// - `r * 4 + c` — Maps a vertex row and column to one index in the four-wide vertex grid.
-/// - `new int[]` — Returns the two endpoint indices together as one small array.
-///
-/// ### What the prepared part already does
-///
-/// display() numbers horizontal and vertical edges. oneLoop() uses the endpoint pairs from vertices() to
-/// check degrees and connectivity; the numbered-cell counts are checked separately.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="For this game">
-/// ### Cells and their corners use different grids
-///
-/// A row of two adjacent cells has three corner vertices across it. Similarly, a cell grid needs one
-/// extra vertex row and column. In an unrelated vertex grid of width three, index one lies above
-/// index four: moving down preserves the column and skips three positions. A horizontal edge changes
-/// column; a vertical edge changes row. Draw the vertex indices separately from the cell clues before
-/// predicting each endpoint pair.
+/// In a flat grid, a vertex at (row,col) has index row*4+col. `/` finds a row; `%` finds the remainder,
+/// hence a column. Horizontal edge 0 joins 0→1; vertical edge 12 joins 0→4. Those examples use the same
+/// vertices but different edge numbering. The prepared loop checker asks your method for connectivity;
+/// it does not infer endpoints from the drawing.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Cell rows are width 3, but vertex rows are width 4.
+/// Number the sixteen vertices on paper before numbering edges.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Moving down one vertex row adds 4 to its linear index.
+/// Separate the first twelve edges from the last twelve; their row widths differ.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Return r*4+c and (r+1)*4+c for a vertical edge.
+/// Translate the edge to row/column, flatten its starting vertex with width 4, then add 1 horizontally
+/// or 4 vertically.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Draw your own closed loop, derive the surrounding cell clues, and challenge a partner. You need a
+/// playable puzzle, not a solver or a promise of uniqueness.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

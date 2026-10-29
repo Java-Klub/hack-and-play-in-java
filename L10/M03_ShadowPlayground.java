@@ -11,18 +11,30 @@ import java.awt.geom.Area;
 /// Move a lamp around a scene of obstacles and watch their shadows stretch. Try making a huge silhouette
 /// from a small object by moving the light closer.
 ///
-/// **Your mission:** The lamp ignores clicks and drags because its delayed action is empty. Restore the
-/// link from each input position to the real light.
+/// **Your mission:** Make a stage lamp that snaps to a 20-pixel grid. In the delayed callback,
+/// calculate both snapped coordinates and pass them to moveLight. Creating the action must not move
+/// the lamp; moveLight still clamps the canvas edges.
 ///
-/// **Today you learn:** A callback separates receiving an event from choosing its effect. This
-/// two-coordinate action should forward the event’s values, rather than store one fixed position or act
-/// during setup.
+/// **Today you learn:** Build a callback body that runs only when the input event invokes it; local
+/// calculations can adapt event data before changing the model.
 ///
 /// Run the program, then click or drag around the obstacles to move the lamp and press R to
 /// restore its starting position.
 java.util.function.BiConsumer<Integer, Integer> lightAction() {
-    return this::moveLight;
+    return (x, y) -> {
+        int snappedX = x / 20 * 20;
+        int snappedY = y / 20 * 20;
+        moveLight(snappedX, snappedY);
+    };
 }
+
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Invent a haunted lamp: clicks control its mirror image across the vertical centre instead of its
+/// direct position. Predict where a left-edge click will place it, then make a shadow puppet scene
+/// for a friend to identify.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F28">
 /// ### Callback: give an action for later
@@ -44,31 +56,30 @@ java.util.function.BiConsumer<Integer, Integer> lightAction() {
 /// Predict: what prints if the last line becomes two consecutive calls to `cheer.run()`?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// ### Transform an event before forwarding it
 ///
-/// - `BiConsumer<Integer, Integer>` — Describes an action receiving x and y but producing no returned
-///   value.
-/// - `lightAction()` — Supplies the reusable action that input handlers will call later.
-/// - `(x, y) -> {}` — Names the future inputs, but the empty body currently discards them.
+/// For nonnegative pixel coordinates, integer division drops the remainder: 47 / 10 is 4, and
+/// multiplying by 10 gives 40. Thus a 10-pixel grid turns (47, 23) into (40, 20). Predict where (9,
+/// 31) lands on that grid before adapting the idea to this stage's 20-pixel grid.
 ///
-/// ### What the prepared part already does
-///
-/// press and drag call the same light callback. The supplied moveLight checks the allowed position;
-/// shadow geometry and drawing read the resulting lamp coordinates, and restart restores the starting
-/// scene.
+/// BiConsumer<Integer, Integer> accepts two integer values and returns no result. `accept(43, 91)`
+/// supplies the lambda's local x and y; calculating local values does not itself move the lamp. Only
+/// the final moveLight call changes the shared model. press and drag both use this same action, so
+/// snapping belongs here rather than in only one listener. The supplied clamping still handles
+/// coordinates outside the canvas.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// moveLight already clamps x and y to the canvas.
+/// Calculate inside the lambda; click coordinates do not exist at action creation.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The callback should delegate to that method, not copy or bypass it.
+/// For each nonnegative coordinate, divide by 20 as an int, then multiply by 20.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// A method reference keeps creation separate from invocation.
+/// Store two snapped local values and call moveLight once with them.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

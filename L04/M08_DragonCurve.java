@@ -85,6 +85,12 @@ List<Integer> foldTurns(int folds) {
 /// Initialize fold to 0; keep fold < folds.
 // </editor-fold>
 
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Invent a second fold recipe by changing the rule that appends the reversed earlier turns. Predict
+/// the lists for zero, one and two folds before rendering. Compare your curve with the dragon and
+/// explain the smallest input at which they differ.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
 List<Point> path(int folds) {
     if (folds < 0 || folds > 15) {

@@ -10,17 +10,34 @@ import javax.swing.Timer;
 /// Guide a flock by moving an obstacle through its path. Watch how local steering choices turn many
 /// separate birds into a flowing group.
 ///
-/// **Your mission:** Birds receive no push from the obstacle because the adapter always returns zero.
-/// Make the installed avoidance rule receive the real distance.
+/// **Your mission:** Build makeAvoidance(radius) and install makeAvoidance(75) in avoidance. The
+/// returned role gives zero for distance <= 0 or >= radius; inside, its strength is 0.2 × (1 -
+/// distance / radius). Keep obstaclePush as the supplied adapter.
 ///
-/// **Today you learn:** Composition lets the flock use an Avoidance role without owning its formula.
-/// Passing the actual distance matters: a replacement rule may react differently nearby and farther away.
+/// **Today you learn:** Author an implementation of a small interface and install it in the running
+/// program. Keep its calculation separate from input, updates and drawing.
 ///
 /// Run the program, then move the orange mouse obstacle into the birds’ path and use Pause/Run
 /// or New flock to compare their response.
-double obstaclePush(double distance) {
-    return avoidance.strength(distance);
+Avoidance makeAvoidance(double radius) {
+    if (!Double.isFinite(radius) || radius <= 0) {
+        throw new IllegalArgumentException("Positive finite radius required.");
+    }
+    return distance -> {
+        if (distance <= 0 || distance >= radius) return 0;
+        return 0.2 * (1 - distance / radius);
+    };
 }
+
+Avoidance avoidance = makeAvoidance(75);
+
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Invent a shy flock and a curious flock by providing two Avoidance implementations with opposite
+/// responses near the obstacle. Keep distances safe and strength modest. Ask a friend to identify the
+/// personality from motion without reading the formula.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F34">
 /// ### Interface: ask a role to do its job
@@ -48,33 +65,45 @@ double obstaclePush(double distance) {
 /// award three times the input?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// ### A rule remembers the factory's parameter
 ///
-/// - `double distance` — The actual distance supplied by the current bird’s obstacle calculation.
-/// - `obstaclePush` — This adapter supplies only strength; the caller already knows the push direction.
-/// - `return 0;` — Reports no obstacle contribution regardless of distance or installed behaviour.
+/// The returned lambda can use radius after makeAvoidance has returned. This captured parameter is
+/// not the bird's current distance: distance arrives on each strength call. A neutral factory:
 ///
-/// ### What the prepared part already does
+/// ```java
+/// IntUnaryOperator offset(int amount) {
+///     return value -> value + amount;
+/// }
+/// ```
 ///
-/// step combines separation, alignment and cohesion with obstaclePush before applying a speed limit. The
-/// supplied Avoidance interface and field hold the replaceable rule; the window moves the obstacle and
-/// owns pause and reset.
+/// The JDK IntUnaryOperator role maps one int to another; the factory creates offset(3). That rule
+/// maps 8 to 11 even after the factory call ends. Predict the result of offset(5) applied to 8.
+///
+/// For a separate radius 100, distance 25 gives strength 0.15 and distance 100 gives zero. Predict
+/// distance 50. The supplied guard validates radius; your body validates the distance interval.
+/// obstaclePush passes the current distance to the selected avoidance field. step owns direction,
+/// speed limits and movement. Your role only calculates a strength; it must not move birds or close
+/// the window. Install the factory result so the real flock uses your rule.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// The interface receives distance and supplies only a strength.
+/// Keep the supplied radius guard. The returned lambda receives distance later.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The field already holds the default implementation.
+/// Inside the radius, the linear factor goes from nearly one to zero. At the boundary return zero.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Delegate to the field; do not return a constant or copy the default formula.
+/// Build the two-branch rule, return it, and set avoidance = makeAvoidance(75).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+double obstaclePush(double distance) {
+    return avoidance.strength(distance);
+}
+
 final int COUNT = 36;
 double[] x = new double[COUNT];
 double[] y = new double[COUNT];
@@ -128,7 +157,7 @@ void step() {
         double dx = x[i] - obstacleX;
         double dy = y[i] - obstacleY;
         double distance = Math.hypot(dx, dy);
-        if (distance > 0 && distance < 75) {
+        if (distance > 0) {
             ax += dx / distance * obstaclePush(distance);
             ay += dy / distance * obstaclePush(distance);
         }
@@ -213,7 +242,7 @@ void showWindow() {
 }
 
 interface Avoidance { double strength(double distance); }
-Avoidance avoidance = distance -> distance > 0 && distance < 75 ? 0.2 : 0;
+
 
 void main() {
 /// Restore the starting game state.

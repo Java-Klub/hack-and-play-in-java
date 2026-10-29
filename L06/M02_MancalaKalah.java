@@ -9,7 +9,7 @@
 /// **Today you learn:** Scope and state lifetime: a local player disappears when reset() returns, while
 /// the game’s player field remains. Reset the state actually read by commands.
 ///
-/// Run the program and enter one of your pit numbers from 1 to 6 to sow its stones around the
+/// Enter one of your pit numbers from 1 to 6 to sow its stones around the
 /// board.
 void reset() {
     pits = new int[14];
@@ -65,6 +65,12 @@ void reset() {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Assign to the existing player; leave pit initialization unchanged.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Design a different initial distribution for the six ordinary pits on each side, keeping both stores
+/// empty and both players treated equally. Predict one opening that earns another turn before playing.
+/// Keep setup changes in reset rather than in a later display.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

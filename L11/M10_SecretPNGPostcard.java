@@ -9,21 +9,31 @@ import javax.imageio.ImageIO;
 /// Send a secret postcard whose visible picture gives little away. The program hides your text in PNG
 /// pixel data and tries to read the message back from the saved card.
 ///
-/// **Your mission:** Reading back a postcard in a directory fails because the loader drops that
-/// directory. Repair how the chosen file is opened and keep unreadable-image failures explicit.
+/// **Your mission:** Implement save as the postcard writer: create parent directories, open the
+/// requested output stream, and encode render(seed, option) as PNG into it. Use try-with-resources
+/// and report a missing PNG writer. Then write your own message and reopen it on a later run.
 ///
-/// **Today you learn:** A Path identifies the actual resource to open, not just a decorative name.
-/// try-with-resources owns the input stream; image decoding and hidden-message decoding are later steps.
+/// **Today you learn:** Implement a real file boundary: open the chosen resource, route actual
+/// contents through it and close it reliably. The artifact must survive beyond a method call.
 ///
-/// The program reads data/postcard.png through readMessage and displays the recovered message
-/// with the postcard. A sample postcard is created only when this file is absent.
-String readMessage(Path path) throws IOException {
-    try (var input = Files.newInputStream(path)) {
-        var image = ImageIO.read(input);
-        if (image == null) throw new IOException("Input is not a readable image.");
-        return decode(image);
+/// Enter a new secret message, or press Enter to open data/postcard.png unchanged. On the first run,
+/// Enter creates Pixel moon. A later run reads the persisted card; /q quits.
+void save(Path path, long seed, double option) throws Exception {
+    Files.createDirectories(path.toAbsolutePath().getParent());
+    try (var output = Files.newOutputStream(path)) {
+        if (!ImageIO.write(render(seed, option), "png", output)) {
+            throw new IOException("PNG writer missing.");
+        }
     }
 }
+
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Send a real local postcard: write a short riddle, close the program, and let a friend open the
+/// existing card without typing a new message. Then change only the visible background in render and
+/// check whether an older saved card still reveals its original text.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F32">
 /// ### Files: a destination and a resource lifetime
@@ -48,35 +58,44 @@ String readMessage(Path path) throws IOException {
 /// Predict: if file becomes `Path.of("cards", "one.txt")`, where is the note written?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// ### Your message survives the next run
 ///
-/// - `path.getFileName()` — Drops all directory information from the selected postcard path.
-/// - `Files.newInputStream` — Opens bytes from the path it receives; it cannot guess a discarded
-///   directory.
-/// - `image == null` — ImageIO can report an unrecognised image this way rather than by returning pixels.
-/// - `decode(image)` — Extracts the hidden text only after the correct image has been loaded.
+/// ImageIO.write(image, "png", output) returns true when it finds a PNG encoder; it sends the encoded
+/// bytes to the supplied stream. A neutral example is a tiny painted icon saved to a notebook cover:
+/// create its directory, open the cover.png stream in try-with-resources, then pass that stream to
+/// ImageIO.write. After the block, another program can read the file. Predict what remains if the
+/// stream is opened but the write call is omitted.
 ///
-/// ### What the prepared part already does
-///
-/// A sample data/postcard.png is created only when absent. main calls readMessage on that full path
-/// and displays the actual postcard with its recovered message; existing postcard contents are
-/// preserved.
+/// render already hides the current message in image pixels using encode. You own persistence, not
+/// the bit algorithm. readMessage opens the actual PNG and extracts its stored text. main only writes
+/// when you enter a new message or no postcard exists. Enter on a later run opens the existing
+/// postcard unchanged, even in a fresh game object. Thus the file carries a message between runs, not
+/// merely between two adjacent method calls.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// The full Path includes the location selected by the caller.
+/// The prepared render already returns the encoded postcard. save only owns its durable destination.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// getFileName alone cannot find a nested postcard.
+/// Create the directory, then use newOutputStream(path) in try-with-resources.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Read ImageIO from the owned stream; keep null-image validation and the existing bit decoder.
+/// Call ImageIO.write(render(seed, option), "png", output), check its boolean result, and keep the
+/// actual stream as its destination.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+String readMessage(Path path) throws IOException {
+    try (var input = Files.newInputStream(path)) {
+        var image = ImageIO.read(input);
+        if (image == null) throw new IOException("Input is not a readable image.");
+        return decode(image);
+    }
+}
+
 String message = "The moon has excellent Wi-Fi.";
 
 BufferedImage encode(BufferedImage original, String text) {
@@ -145,13 +164,7 @@ BufferedImage render(long seed, double option) {
     return encode(image, message);
 }
 
-/// Supplied export boundary: a local path is used; encoding is handled by the JDK.
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    if (!ImageIO.write(render(seed, option), "png", path.toFile())) {
-        throw new IllegalStateException("PNG writer missing.");
-    }
-}
+
 
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
@@ -178,16 +191,24 @@ void showImages(String title, String[] captions, java.awt.image.BufferedImage[] 
 
 
 void main() {
-    Path input = Path.of("data", "postcard.png");
+    Path card = Path.of("data", "postcard.png");
     try {
-        if (!Files.exists(input)) save(input, 42, 1);
-        String recovered = readMessage(input);
-        var image = ImageIO.read(input.toFile());
+        String text = IO.readln("New secret message, Enter opens the saved postcard, /q to quit: ");
+        if (text == null || text.strip().equalsIgnoreCase("/q")) return;
+        if (!text.isEmpty() || !Files.exists(card)) {
+            message = text.isEmpty() ? "Pixel moon" : text;
+            save(card, 42, 1);
+        }
+        String recovered = readMessage(card);
+        if (!text.isEmpty() && !recovered.equals(text)) {
+            throw new IOException("The saved postcard does not contain the new message.");
+        }
+        var image = ImageIO.read(card.toFile());
         if (image == null) throw new IOException("The postcard is not a readable PNG.");
-        IO.println("Recovered from " + input + ": " + recovered);
-        showImages("Secret PNG Postcard", new String[]{recovered}, new java.awt.image.BufferedImage[]{image});
+        IO.println("Recovered from " + card.toAbsolutePath() + ": " + recovered);
+        showImages("Secret PNG Postcard", new String[]{recovered}, new BufferedImage[]{image});
     } catch (Exception failure) {
-        IO.println("Cannot read requested postcard " + input + ": " + failure.getMessage() + ". Repair readMessage; Save the source, run its check command, then play again.");
+        IO.println("Cannot open the saved postcard: " + failure.getMessage());
     }
 }
 // </editor-fold>

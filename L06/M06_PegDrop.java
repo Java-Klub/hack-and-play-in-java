@@ -17,7 +17,7 @@ import javax.swing.Timer;
 /// **Today you learn:** Pure contracts: reading a score and awarding a score are different
 /// responsibilities. scoreAt() must return the requested value without altering totals or physics.
 ///
-/// Run the program and click above a bin to release a disc, then compare the landing bin’s
+/// Click above a bin to release a disc, then compare the landing bin’s
 /// label with the awarded points.
 int scoreAt(int index) {
     // This supplied guard reports a bad index; exception handling comes in L09.
@@ -72,6 +72,12 @@ int scoreAt(int index) {
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// The supplied guard already rejects invalid indices. Return values[index]; awarding score remains
 /// in step().
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Design a payout curve with expensive outer bins and a cheap centre. Choose a target score for a
+/// five-drop challenge and predict which bins can meet it. Change the values data, while scoreAt
+/// remains a query that never awards points by itself.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

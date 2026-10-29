@@ -9,11 +9,11 @@ import java.awt.GridLayout;
 /// Reveal safe squares and use their numbers to avoid hidden mines. A clue is useful only if it counts
 /// every nearby danger.
 ///
-/// **Your mission:** Diagonal mines are missing from the displayed counts. Repair adjacent() so it counts
-/// all valid neighbouring cells but never the queried cell itself.
+/// **Your mission:** Build adjacent(row, col) from scratch: count mines in all valid surrounding cells,
+/// including diagonals, but never the queried cell itself. Edge and corner clues must use only existing
+/// cells. The empty rule currently displays zero everywhere.
 ///
-/// **Today you learn:** Grid neighbours: a square cell can have up to eight neighbours. Separate bounds,
-/// the centre-cell exclusion, and the condition you want to count.
+/// **Today you learn:** Translate a small drawing into coordinates, bounds and neighbour relationships.
 ///
 /// Run the program and click a square to reveal it, then use its number to choose nearby safe
 /// squares or place a flag in Flag mode.
@@ -21,57 +21,65 @@ int adjacent(int row, int col) {
     int count = 0;
     for (int r = row - 1; r <= row + 1; r++) {
         for (int c = col - 1; c <= col + 1; c++) {
-            if (inside(r, c) && (r != row || c != col) && mines[r][c]) {
-                count++;
-            }
+            if (inside(r, c) && (r != row || c != col) && mines[r][c]) count++;
         }
     }
     return count;
 }
 
 // <editor-fold defaultstate="expanded" desc="Learn · F18">
-/// ### Grids: choose the row before the column
+/// ### Coordinates describe neighbours
 ///
-/// In an array of rows, the first index selects a row and the second selects a position within it.
-/// Rows can have different lengths. A neighbour is a displacement from a cell, not another absolute
-/// position. Define the permitted directions before checking whether a candidate exists.
+/// A grid stores rows first: `board[y][x]`. Increasing x goes right; increasing y goes down on our
+/// screens. A neighbour is the current coordinate plus a small offset.
 ///
-/// ```java
-/// int[][] mosaic = {{3, 6, 9}, {2, 4, 8}};
-/// int row = 0;
-/// int column = 1;
-/// IO.println(mosaic[row][column + 1]);
+/// ```text
+///           (0,-1)
+/// (-1,0)    HERE    (1,0)
+///           (0,1)
 /// ```
 ///
-/// The output is nine: row zero and column two select that element. Moving down changes row; moving
-/// right changes column. From the top-right cell, which of those two moves stays inside? For a
-/// diagonal both coordinates change; bounds must be checked before accessing the candidate.
+/// ```java
+/// int[][] board = {{2, 5, 8}, {1, 4, 7}};
+/// int x = 1, y = 0;
+/// int nx = x + 0, ny = y + 1;
+/// if (ny >= 0 && ny < board.length && nx >= 0 && nx < board[ny].length) {
+///     IO.println(board[ny][nx]);
+/// }
+/// ```
+///
+/// The move goes from 5 to 4; the printed value is 4. Bounds are checked before indexing, because an
+/// array has no cell outside its edges. A diagonal changes both coordinates. A corridor repeats the
+/// same offset; a neighbourhood tries several offsets. These are different algorithms using the same
+/// coordinate model.
+///
+/// Predict the result of offset `(-1,0)` from the same start. Which offset leaves this board? Mark the
+/// start and destination on paper before combining directions in a loop.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Read this part
 ///
-/// - `row - 1` — Begins one row above the queried cell.
-/// - `r <= row + 1` — Includes the row immediately below as well as the centre row.
-/// - `r != row || c != col` — Excludes only the queried centre: at least one coordinate must differ.
-/// - `mines[r][c]` — Reads whether that candidate neighbour contains a mine.
-///
-/// ### What the prepared part already does
-///
-/// inside() supplies the boundary query. reveal() already opens safe regions using recursive flood fill;
-/// its clue values come from adjacent(). Flag mode, mine placement, and the window are supplied.
+/// The 3×3 neighbourhood consists of row-1..row+1 and col-1..col+1. `inside(r,c)` is the supplied
+/// bounds check. `mines[r][c]` is true for a mine. Exclude the centre separately, even if it contains a
+/// mine. reveal() uses your count for the actual button caption.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// A 3×3 neighbourhood contains the centre plus eight possible neighbours.
+/// Sketch a 3×3 box around one square and mark its centre.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// inside() supplies safe bounds for corners and edges.
+/// Visit the two coordinate ranges; count only inside, non-centre mine cells.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Remove the same-row/same-column restriction; keep inside() and centre exclusion.
+/// Use nested loops with a local count, then return the count after all candidates have been examined.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Design a small fixed mine layout for a partner, with a safe opening square and truthful clues. Can
+/// the first few clues force an interesting choice?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

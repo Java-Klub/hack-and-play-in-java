@@ -3,7 +3,8 @@
 /// Move three discs from peg A to peg C, one top disc at a time. Work out a sequence that never places a
 /// larger disc on a smaller one, and see how close you get to seven moves.
 ///
-/// **Your mission:** The tower accepts a larger disc on a smaller one and refuses some harmless
+/// **Your mission · Enforce a physical rule:** The tower accepts a larger disc on a smaller one and
+/// refuses some harmless
 /// placements. Repair the rejecting comparison in move before either stack changes.
 ///
 /// **Today you learn:** Guarding a forbidden state: describe the bad situation in the condition, then
@@ -71,6 +72,19 @@ boolean move(int from, int to) {
 /// The later part of move already transfers one top disc and updates both stack sizes. reset rebuilds the
 /// three-disc puzzle; main prints the top disc on the right and translates peg letters into supplied
 /// storage indices.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// A smaller disc number means a smaller disc. An empty destination has no top disc to compare. The
+/// && operator can skip the top lookup when sizes[to] is zero. A rejected move returns before either
+/// tower changes. Predict disc 3 onto disc 1, then disc 1 onto disc 3, and identify which case is
+/// forbidden.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// After seven-move play works, deliberately reverse the size rule as a separate game variant. Which
+/// moves become impossible and does the original goal still make sense? Restore the rule, then write
+/// your own seven-move solution for a friend to execute without improvising.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
