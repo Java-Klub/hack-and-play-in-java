@@ -1,18 +1,16 @@
 /// # L08.05 · LoopBuilder
 ///
-/// Přepínej čáry a vytvoř jedinou uzavřenou smyčku kolem očíslovaných políček. Čísla ji omezují, ale její
-/// rohy se také musí skutečně spojovat.
+/// **Spoj čáry se správnými rohy.** Rozhodčí zatím neví, které rohy každá čára spojuje. Kresbu
+/// čar lze měnit, ale uzavřený okruh nedokáže správně posoudit.
 ///
-/// **Tvoje mise:** Vytvoř vertices(edge) pro každou zobrazenou hranu. Horizontal index (vodorovné
-/// pozice) 0–11 jdou po třech ve čtyřech row (řádcích); vertical index (svislé pozice) 12–23 po čtyřech
-/// ve třech mezerách. Vrať dva vertex index (indexy vrcholů) v grid (mřížce) 4×4. Vstup mimo 0–23
-/// odmítni.
+/// **Úkol:** Doplň `vertices` níže: pro číslo hrany vrať čísla jejích dvou koncových rohů.
+/// Šestnáct rohů tvoří mřížku 4×4 a číslují se po řádcích zleva doprava od 0 do 15. Hrany 0–11
+/// jsou vodorovné, po třech v každém řádku. Hrany 12–23 jsou svislé, po čtyřech mezi sousedními
+/// řádky. Číslo mimo 0–23 odmítni.
 ///
-/// **Dnes trénuješ:** Převeď malý nákres na coordinates (souřadnice), bounds (hranice) a vztahy
-/// neighbour (sousedů).
-///
-/// Spusť program a zadáním 1 přepni první očíslovanou hranu, potom dalšími hranami sestav
-/// jedinou uzavřenou smyčku.
+/// **Výsledek:** Hrana 0 má konce `[0, 1]`, hrana 12 má `[0, 4]`; Check ověří všech 24 hran. Při
+/// hraní se čísla hran zadávají od 1 do 24, tedy o jednu větší než jejich čísla v kódu.
+
 int[] vertices(int edge) {
     if (edge < 0 || edge >= 24) throw new IllegalArgumentException("Edge: 0..23.");
     if (edge < 12) {

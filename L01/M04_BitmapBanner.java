@@ -1,41 +1,24 @@
 /// # L01.04 · BitmapBanner
 ///
-/// Vytvoř velkou ceduli do arcade z malých vypsaných znaků #. Ručně připravená abeceda promění krátkou
-/// zprávu v pět řádků obrazového písma.
+/// **Rozsviť klubovou ceduli.** Po spuštění je mezi oddělovacími řádky pět prázdných řádků.
+/// Program písmena kreslit umí, ale dostává zprávu složenou z mezer.
 ///
-/// **Tvoje mise · Obnov herní ceduli:** Cedule nyní vypisuje jen prázdné místo. Oprav zprávu z
-/// bannerMessage tak, aby výchozí
-/// cedule říkala JAVA CLUB!.
+/// **Úkol:** V `bannerMessage` níže nahraď mezery uvnitř uvozovek textem `JAVA CLUB!`, včetně
+/// mezery mezi slovy a vykřičníku. Ostatní znaky řádku ponech.
 ///
-/// **Dnes trénuješ:** Literal (doslovný zápis) a output (výstup): zvolený text určuje, co další akce
-/// vytiskne. Mezery v uvozovkách jsou také skutečné znaky, i když jejich výstup může vypadat prázdně.
-///
-/// Spusť program a v terminálu si prohlédni pětiřádkovou ceduli; po opravě ji zkus přečíst z větší
-/// vzdálenosti.
+/// **Výsledek:** Po spuštění se v textovém výstupu objeví velká cedule JAVA CLUB! složená ze
+/// znaků `#`. Samostatné okno se neotevírá.
+
 String bannerMessage() {
     return "JAVA CLUB!";
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F02">
-/// String literal (doslovně zapsaný řetězec) je text mezi dvojitými uvozovkami. Vnější uvozovky
-/// říkají Javě, kde text začíná a končí; nevypisují se. I číslice v uvozovkách jsou text. Expression
-/// (výraz) naopak může před vypsáním vypočítat hodnotu.
+/// Mezery uvnitř uvozovek jsou skutečné textové znaky. `"   "` je zpráva se třemi mezerami,
+/// zatímco `""` neobsahuje žádný znak.
 ///
-/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
-///
-/// ```java
-/// IO.println("Shelf 4");
-/// IO.println(4 + 2);
-/// IO.println("Shelf \"B\"");
-/// ```
-///
-/// Předpověz tři řádky. Jsou to `Shelf 4`, `6` a `Shelf "B"`. V posledním literal představuje každé
-/// `\"` jednu uvozovku patřící do textu. Zpětné lomítko je zápis, nikoli další vypsaný znak.
-/// `IO.println` vypíše svůj argument (předanou hodnotu) a ukončí řádek. Mezery uvnitř literal
-/// zůstávají skutečnými mezerami; změna comment (komentářů) vypsanou zprávu nezmění. Rozlišuj tedy
-/// znaky zapsané ve source (zdrojovém textu) a znaky, které se opravdu objeví v output (výstupu).
-///
-/// Nyní předpověz `IO.println(4 + 5);` a `IO.println("4 + 5");`.
+/// Vnější uvozovky zůstávají na místě. Měníš jen zprávu mezi nimi, kterou `return` předá
+/// připravenému kreslení písmen.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
@@ -61,12 +44,6 @@ String bannerMessage() {
 /// Rozšiř panel, aby bylo písmo s pevnou šířkou dobře vidět. Připravené písmo podporuje pouze
 /// uvedená písmena, `!` a mezery, takže libovolný text může být odmítnut. Comment (komentář)
 /// popisující novou ceduli nezmění zprávu vrácenou bannerMessage.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
-/// Text může existovat, i když nevidíš písmeno. `"   "` uchovává tři mezery; `""` neobsahuje žádný
-/// znak. Banner vyhledá pětiřádkový tvar každého podporovaného písmene. Teď vybíráš předaná data,
-/// nemusíš psát vykreslení pěti řádků. Předpověz, zda přidaná mezera změní šířku výpisu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">

@@ -8,18 +8,16 @@ import java.util.Arrays;
 
 /// # L05.08 · Nonogram
 ///
-/// Odhal obrázek z políček jen podle číselných skupin vedle řádků a sloupců. Každá nápověda musí obrázek
-/// popisovat poctivě.
+/// **Dopočítej poslední černou skupinu.** Čísla u řádku obrázku říkají délky souvislých skupin
+/// černých políček. Například černá, černá, bílá, černá potřebuje nápovědu `[2, 1]`. Výchozí
+/// výpočet poslední jedničku ztratí.
 ///
-/// **Tvoje mise:** Černá skupina na konci pole nemá bílou buňku, která ji uzavře. Doplň rozhodnutí za
-/// průchodem: ulož zbývající kladnou sérii, ale nevytvářej nulovou nápovědu pro bílý či prázdný řádek.
-/// Dřívější skupiny zachovej.
+/// **Úkol:** Doplň `runs` níže, aby započítala také černou skupinu sahající až na konec vstupu.
+/// Dřívější skupiny zachovej. Prázdný nebo celý bílý řádek nesmí vytvořit žádné číslo.
 ///
-/// **Dnes trénuješ:** Traversal and search (průchod a hledání): při čtení řádku udržuj průběžný počet a
-/// všimni si i skupiny ukončené koncem vstupu místo bílého políčka.
-///
-/// Podle čísel u řádků a sloupců označuj levým kliknutím černá a pravým bílá
-/// políčka.
+/// **Výsledek:** `[1, 1, 0, 1]` vrátí délky `[2, 1]`; `[0, 0]` vrátí prázdné pole. Potom můžeš
+/// podle správných čísel odhalovat obrázek: levý klik barví černě, pravý bíle.
+
 int[] runs(int[] values) {
     var result = new ArrayList<Integer>();
     int count = 0;

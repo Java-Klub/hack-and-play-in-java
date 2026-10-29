@@ -11,18 +11,16 @@ import javax.swing.Timer;
 
 /// # L10.02 · FireworkPainter
 ///
-/// Maluj noční oblohu ohňostroji, které rozkvetou tam, kam klikneš. Každý výbuch má respektovat vybrané
-/// místo, ne pevný bod plátna.
+/// **Rozsviť oblohu dvojitým ohňostrojem.** Kliknutí zatím žádný výbuch nevytvoří: připravená
+/// obsluha čeká na tvůj kód.
 ///
-/// **Tvoje mise:** Vytvoř callback (odloženou akci) pro dvojitý ohňostroj: kliknutí má vypustit
-/// výbuch v (x, y) i v (WIDTH - x, y). Napiš tělo callback. Samotné vytvoření nesmí střílet; částice
-/// dál vytváří burst.
+/// **Úkol:** Doplň tělo odložené akce v `burstAction` níže. Každý klik vytvoří dva výbuchy: v
+/// místě `(x, y)` a v jeho zrcadlovém obrazu `(WIDTH - x, y)`. Použij připravené `burst`, které
+/// vytváří částice. Pouhé sestavení akce bez kliknutí nesmí vypustit nic.
 ///
-/// **Dnes trénuješ:** Callback (předaná akce) spustí tělo až při události; local calculations (místní
-/// výpočty) mohou upravit data před změnou model.
-///
-/// Po spuštění programu klikáním do plochy vypouštěj ohňostroj; Space pozastaví pohyb a R
-/// vyčistí oblohu a obnoví začátek.
+/// **Výsledek:** Po spuštění je obloha prázdná. Kliknutí vlevo rozsvítí i odpovídající místo
+/// vpravo; vznikne 120 částic. Space pozastaví pohyb a R vyčistí oblohu.
+
 java.util.function.BiConsumer<Integer, Integer> burstAction() {
     return (x, y) -> {
         burst(x, y);

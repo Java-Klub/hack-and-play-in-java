@@ -1,16 +1,16 @@
 /// # L06.12 · Merge2048
 ///
-/// Posouvej číselné dílky do větších dvojic. Navrhni krátké řádky, které odhalí falešný stroj pro 2048
-/// dřív, než chybu skryje celá hra.
+/// **Nachytej falešný slučovací stroj.** Hra už dílky slučuje správně. Tvým výsledkem bude sada
+/// příkladů, nikoli změněné herní pravidlo.
 ///
-/// **Tvoje mise:** Kontrola prázdného řádku propouští chybná slučovací pravidla. Rozšiř learnerChecks() a
-/// prověř stlačení, slučování, nezávislé dvojice i získané body.
+/// **Úkol:** Rozšiř `learnerChecks` níže. Každý příklad obsahuje řádek čtyř čísel, očekávaný
+/// řádek po posunu vlevo a získané body. Nula označuje mezeru. Nově sloučený dílek se v témže
+/// tahu znovu neslučuje; body jsou součtem nově vytvořených dílků.
 ///
-/// **Dnes trénuješ:** Writing functional checks (psaní funkčních kontrol): výsledek může mít více
-/// pozorovatelných částí. Uveď změněný řádek i skóre a zvol případy rozlišující uvěřitelné chyby.
-///
-/// Napiš A potvrzené Enter pro posun vlevo, potom vyzkoušej další směry a
-/// pomocí kontroly hry prověř řádkové příklady.
+/// **Výsledek:** Příklady musí odhalit ignorované slučování, mezery bránící spojení, opětovné
+/// sloučení nového dílku, ztracené body i sloučení pouze první ze dvou nezávislých dvojic. Pořád
+/// musí souhlasit se skutečnou hrou.
+
 record MergeExample(int[] input, int[] expected, int score) {
 }
 

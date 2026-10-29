@@ -8,18 +8,16 @@ import java.awt.geom.Area;
 
 /// # L10.03 · ShadowPlayground
 ///
-/// Pohybuj lampou kolem překážek a sleduj prodlužující se stíny. Zkus přiblížením světla udělat z malé
-/// překážky obrovskou siluetu.
+/// **Rozpohybuj lampu po mřížce.** Lampa zatím nereaguje na kliknutí ani tažení. Překážky i
+/// jejich stíny se už kreslí.
 ///
-/// **Tvoje mise:** Vytvoř divadelní lampu přichytávanou na grid (mřížku) po 20 pixelech. V odloženém
-/// callback vypočti obě zarovnané souřadnice a předej je moveLight. Vytvoření akce lampou nehýbe;
-/// okraje stále hlídá moveLight.
+/// **Úkol:** Doplň odloženou akci v `lightAction` níže. Souřadnice každého kliknutí či tažení
+/// zarovnej k předchozím násobkům 20 a předej je připravené `moveLight`. Například `(43, 91)` se
+/// změní na `(40, 80)`. Akce má lampou pohnout až při události, nikoli při svém vytvoření.
 ///
-/// **Dnes trénuješ:** Callback (předaná akce) spustí tělo až při události; local calculations (místní
-/// výpočty) mohou upravit data před změnou model.
-///
-/// Po spuštění programu klikáním či tažením kolem překážek posouvej lampu a pomocí R obnov její
-/// počáteční pozici.
+/// **Výsledek:** Lampa bude přeskakovat po dvacetipixelových krocích a stíny se budou měnit.
+/// `moveLight` ji dál udrží uvnitř hranic plátna; R obnoví počáteční pozici.
+
 java.util.function.BiConsumer<Integer, Integer> lightAction() {
     return (x, y) -> {
         int snappedX = x / 20 * 20;

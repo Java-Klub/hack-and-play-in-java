@@ -5,42 +5,28 @@ import javax.sound.sampled.AudioSystem;
 
 /// # L01.03 · TypeMelody
 ///
-/// Proměň krátkou napsanou zprávu v malou melodii. Každé písmeno dostane tón, zatímco jiné znaky nechají
-/// tichý úsek, takže různé zprávy vytvářejí různé rytmy.
+/// **Změň zprávu na melodii.** Spusť program a stiskni Play / Replay. Ve zprávě `J4V4` hrají
+/// písmena, číslice nechávají ticho.
 ///
-/// **Tvoje mise · Rozlušti hudební zprávu:** Dvě číslice přerušují úvodní zprávu. Změň zprávu
-/// poskytovanou defaultMessage
-/// tak, aby úvodní melodie vyjadřovala JAVA.
+/// **Úkol:** V `defaultMessage` níže změň pouze znaky mezi dvojitými uvozovkami. Nová zpráva má
+/// být přesně `JAVA`. Slovo `return`, vnější uvozovky a středník zachovej.
 ///
-/// **Dnes trénuješ:** Text literal (doslovný text): dvojité uvozovky označí svůj obsah jako textová data.
-/// Číslice v uvozovkách například zůstane znakem zprávy; nestane se výpočtem.
-///
-/// Spusť program: otevře se Java přehrávač se zprávou. Stiskni Play / Replay; číslice tvoří
-/// tiché pauzy: J4V4 střídá zvuk a ticho. Stop přehrávání ukončí.
+/// **Výsledek:** V nově spuštěném okně bude Message: JAVA. Play / Replay přehraje čtyři tóny
+/// místo dvou tónů proložených tichem.
+
 String defaultMessage() {
     return "JAVA";
 }
 
-// <editor-fold defaultstate="expanded" desc="Nová dovednost · F02">
-/// String literal (doslovně zapsaný řetězec) je text mezi dvojitými uvozovkami. Vnější uvozovky
-/// říkají Javě, kde text začíná a končí; nevypisují se. I číslice v uvozovkách jsou text. Expression
-/// (výraz) naopak může před vypsáním vypočítat hodnotu.
+// <editor-fold defaultstate="expanded" desc="String literal (text v uvozovkách) · F02">
+/// Text mezi dvojitými uvozovkami se nazývá String literal (textový literál). Například `"BEEP"`
+/// obsahuje čtyři znaky B, E, E, P. Vnější uvozovky jsou hranice textu a nejsou jeho součástí.
 ///
-/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+/// `return` předá tento text připravené části programu. Ta z něj vytvoří melodii a otevře
+/// přehrávač. Dnes stačí změnit vracenou zprávu; zvukový program už je hotový.
 ///
-/// ```java
-/// IO.println("Shelf 4");
-/// IO.println(4 + 2);
-/// IO.println("Shelf \"B\"");
-/// ```
-///
-/// Předpověz tři řádky. Jsou to `Shelf 4`, `6` a `Shelf "B"`. V posledním literal představuje každé
-/// `\"` jednu uvozovku patřící do textu. Zpětné lomítko je zápis, nikoli další vypsaný znak.
-/// `IO.println` vypíše svůj argument (předanou hodnotu) a ukončí řádek. Mezery uvnitř literal
-/// zůstávají skutečnými mezerami; změna comment (komentářů) vypsanou zprávu nezmění. Rozlišuj tedy
-/// znaky zapsané ve source (zdrojovém textu) a znaky, které se opravdu objeví v output (výstupu).
-///
-/// Nyní předpověz `IO.println(4 + 5);` a `IO.println("4 + 5");`.
+/// Zpráva `"A2B"` má tři místa: tón, ticho, tón. Kolik tónů a kolik tichých míst bude mít
+/// `"AB2C"`?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
@@ -59,19 +45,6 @@ String defaultMessage() {
 /// main zavolá defaultMessage, aby získala text, a otevře připravený Java přehrávač. synthesize
 /// převede písmena na zvukové vzorky a připravený přehrávač je přehraje. Tato zvuková část je
 /// připravená; připravený Java přehrávač vlastní a uzavírá zvukový prostředek.
-// </editor-fold>
-
-// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
-/// Zvuk přehrává přímo Java. Není třeba hledat soubor ani jiný přehrávač. Panel ukáže skutečnou
-/// zprávu; J4V4 obsahuje dva tóny a dvě pauzy. Po úpravě defaultMessage ulož
-/// source (zdrojový text), zavři okno a znovu spusť program. Nové okno načte upravenou zprávu;
-/// Play / Replay opakuje zprávu současného okna.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
-/// String literal (textový literál) je text mezi dvojitými uvozovkami. V `"A7"` vytvoří A tón a 7
-/// pomlku; jsou zde dvě časové pozice. V `"A 7"` jsou tři. Uvozovky označují hranici ve zdrojáku a
-/// samy se nepřehrávají. Před poslechem spočítej tóny a pomlky ve své zprávě.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">

@@ -1,16 +1,16 @@
 /// # L05.07 · SetStyleTripleHunt
 ///
-/// Předběhni kamaráda při hledání trojice, jejíž vlastnosti jsou vždy všechny stejné nebo všechny různé.
-/// Vítězná trojice může využívat poslední kartu na stole.
+/// **Najdi přehlédnutou trojici.** Odevzdání správné trojice už funguje. Chybný je jiný úsudek:
+/// zda na stole ještě nějaká platná trojice zbývá. Tento výsledek používá příkaz `more` a
+/// rozhodování o konci hry.
 ///
-/// **Tvoje mise:** Platná trojice s poslední kartou se přehlíží. Oprav hasSet(), aby se posoudila každá
-/// kombinace tří různých karet.
+/// **Úkol:** Oprav prohledávání v `hasSet` níže. Musí posoudit všechny kombinace tří různých
+/// karet, včetně kombinací s poslední kartou. Připravená `triple` už umí vybranou trojici ověřit.
 ///
-/// **Dnes trénuješ:** Traversal and search (průchod a hledání): uspořádané indexy (pozice) vybírají
-/// kombinace bez opakování karty. Meze průchodů jsou stejně důležité jako pravidlo shody.
-///
-/// Prohlédni si zobrazené vlastnosti karet a zadej čísla tří karet, které podle
-/// tebe tvoří platnou trojici.
+/// **Výsledek:** `more` přidá karty jen tehdy, když na stole žádná trojice není. Check ověří také
+/// stůl, kde jediná platná trojice potřebuje poslední kartu; samotné odevzdání běžné trojice tuto
+/// opravu neprokáže.
+
 boolean hasSet() {
     for (int a = 0; a < table.size(); a++) {
         for (int b = a + 1; b < table.size(); b++) {

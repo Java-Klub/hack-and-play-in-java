@@ -1,13 +1,14 @@
 /// # L01.06 · HigherOrLower
 ///
-/// **Tvoje mise · Najdi společné nastavení:** Z desetibodové vytrvalostní hry udělej sprint na tři
-/// správné odhady. Najdi nastavení, které řídí zobrazený cíl i výhru. Restart musí nový cíl zachovat;
-/// aktuální skóre nenahrazuj pevnou hodnotou.
+/// **Zkrať karetní výzvu.** Higher znamená tip na vyšší příští kartu, Lower na nižší. Hra teď
+/// požaduje deset správných odhadů; chybný odhad kolo ukončí.
 ///
-/// Výchozí program funguje podle původních pravidel. Kontrola už očekává tvůj nový cíl.
+/// **Úkol:** V připraveném programu najdi jediné společné nastavení počtu odhadů potřebných k
+/// výhře. Změň ho na `3`. Má změnit skutečnou výhru i cíl zobrazený v okně; aktuální skóre nech
+/// začínat na nule.
 ///
-/// Přečti cíl v Java okně. Higher/Lower volí odhad a New round začíná znovu. Po úpravě ulož, zavři a
-/// znovu spusť program, aby obě místa používala nový source (zdrojový kód).
+/// **Výsledek:** Okno ukáže cíl 3 a třetí správný odhad vyhraje. New round vynuluje skóre a
+/// ponechá cíl 3. Pokud nastavení nenajdeš, nápovědy pod výkladem tě k němu postupně navedou.
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F03">
 /// Variable (proměnná) pojmenuje uloženou hodnotu. Type (typ) popisuje přípustné hodnoty: `int`

@@ -1,17 +1,15 @@
 /// # L07.01 · CrazyEightsSimpleMauMau
 ///
-/// Schovej si osmičku na chvíli, kdy tě nezachrání běžná karta. Hraj proti druhému člověku a po únikovém
-/// tahu si vyber barvu.
+/// **Zbav se karet dřív než bot.** Rozhodčí ve výchozí verzi odmítá každou kartu. Při hraní `p 1`
+/// vybírá první kartu ve vypsané ruce; toto pořadí není číselný kód karty.
 ///
-/// **Tvoje mise:** Vytvoř legal(int card): přijmi jen index (pozici) 0–51; osmička je vždy platná,
-/// ostatní karty potřebují stejný rank (hodnotu) jako top nebo aktuálně zvolený suit (barvu).
-/// Nedokončený výběr nyní odmítá každou kartu.
+/// **Úkol:** Doplň `legal` níže. Osmička je povolená vždy; ostatní karty potřebují stejnou
+/// hodnotu jako vrchní karta nebo stejnou aktivní barvu. Neplatný číselný kód odmítni. Tato
+/// metoda dostává interní kód karty 0–51, nikoli její pořadí v ruce.
 ///
-/// **Dnes trénuješ:** Vytvoř výběr výsledku ze zadaných case (větví); sleduj selector (vybíranou
-/// hodnotu) a return value (výsledek) odděleně od připravených herních změn.
-///
-/// Spusť program, prohlédni si očíslované karty a zahraj zadáním p a indexu karty; při osmičce
-/// přidej také číslo barvy.
+/// **Výsledek:** Platnou kartu půjde odehrát a bot odpoví. Při osmičce přidej barvu 0–3,
+/// například `p 1 2`; příkaz `d` lízne kartu jen tehdy, když nemáš platný tah.
+
 boolean legal(int card) {
     if (card < 0 || card >= 52) return false;
     int value = rank(card);

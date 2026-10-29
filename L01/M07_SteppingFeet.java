@@ -7,19 +7,16 @@ import javax.swing.Timer;
 
 /// # L01.07 · SteppingFeet
 ///
-/// Dva obdélníky se pohybují společně po pruhovaném pozadí, přesto mohou vypadat jako nohy s různou
-/// rychlostí. Skryj pruhy nebo ukaž společnou značku a porovnej tento dojem.
+/// **Vrať obě nohy do obrázku.** Dva obdélníky mají společnou vodorovnou pozici `x`. Teď začínají
+/// mimo levý okraj okna.
 ///
-/// **Tvoje mise · Předpověz měnící se hodnotu:** Obě nohy začínají mimo viditelnou místnost. Oprav
-/// pozdější assignment (přiřazení) v
-/// startingPosition, aby sdílené x začínalo na 80 po své první hodnotě 20.
+/// **Úkol:** V `startingPosition` níže změň druhý řádek tak, aby po provedení obou řádků bylo `x`
+/// rovno `80`. První řádek `x = 20;` ponech. Číslo vpravo od `=` je hodnota, kterou řádek uloží
+/// do `x`.
 ///
-/// **Dnes trénuješ:** Assignment (přiřazení) v čase: pozdější přiřazení nahradí starou uloženou hodnotu.
-/// Dva statement (příkazy) mohou dát x dvě postupné hodnoty; připravená kresba čte poslední z nich pro
-/// obě nohy.
-///
-/// Spusť program, klávesou M ukaž společnou pozici a potom pomocí Space spusť pohyb; C přepíná
-/// pruhované a hladké pozadí.
+/// **Výsledek:** Při novém spuštění budou obě nohy vidět a horní popisek ukáže x = 80. Space
+/// spustí jejich pohyb; potom zkus klávesou C skrýt pruhy a porovnej zdánlivé rychlosti.
+
 void startingPosition() {
     x = 20;
     x = x + 60;

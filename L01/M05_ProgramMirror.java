@@ -1,42 +1,34 @@
 /// # L01.05 · ProgramMirror
 ///
-/// Malé programové zrcadlo ukáže Java instrukci jako text a potom zprávu, kterou by tato instrukce
-/// vypsala. Porovnej instrukci s výsledkem a sleduj, jak může program popisovat jiný program.
+/// **Vypiš kód jako text.** Tohle je obtížnější odbočka s uvozovkami. Program vypíše ukázku Java
+/// kódu a pod ní pozdrav.
 ///
-/// **Tvoje mise · Oprav zrcadlo programu:** Odražená instrukce ztratila uvozovky kolem HELLO. Oprav
-/// templateLine tak, aby je
-/// vypsaná instrukce obsahovala a další output (výstup) zůstal HELLO.
+/// **Úkol:** Uprav text vracený z `templateLine` níže tak, aby první vypsaný řádek obsahoval
+/// uvozovky kolem HELLO. Výstup má vypadat přesně takto:
 ///
-/// **Dnes trénuješ:** Uvozovaný text a escaping (zápis speciálních znaků): text připomínající code
-/// (program) uvnitř String (řetězce) je stále jen data. Uvozovka patřící dovnitř potřebuje zvláštní
-/// zápis, aby ji Java nepovažovala za konec řetězce.
+/// ```text
+/// IO.println("HELLO");
+/// HELLO
+/// ```
 ///
-/// Spusť program a porovnej dva řádky v terminálu: první má popisovat instrukci a druhý má být její
-/// zprávou.
+/// Druhý řádek už funguje; zachovej ho. První řádek se pouze vypisuje jako text, jeho obsah tento
+/// program nespouští. Nový zápis pro uvozovku uvnitř textu vysvětluje sekce pod tvým kódem.
+
 String templateLine() {
     return "IO.println(\"HELLO\");";
 }
 
-// <editor-fold defaultstate="collapsed" desc="Připomenutí · F02">
-/// String literal (doslovně zapsaný řetězec) je text mezi dvojitými uvozovkami. Vnější uvozovky
-/// říkají Javě, kde text začíná a končí; nevypisují se. I číslice v uvozovkách jsou text. Expression
-/// (výraz) naopak může před vypsáním vypočítat hodnotu.
-///
-/// Tyto ukázkové statement (příkazy) patří dovnitř zavolané method (metody).
+// <editor-fold defaultstate="expanded" desc="Uvozovka uvnitř textu · F02">
+/// Vnější `"` označuje konec textu, proto uvozovka patřící dovnitř potřebuje zápis `\"`. Java z
+/// těchto dvou zapsaných znaků vytvoří jednu textovou uvozovku.
 ///
 /// ```java
-/// IO.println("Shelf 4");
-/// IO.println(4 + 2);
-/// IO.println("Shelf \"B\"");
+/// return "The \"Owl\" club";
 /// ```
 ///
-/// Předpověz tři řádky. Jsou to `Shelf 4`, `6` a `Shelf "B"`. V posledním literal představuje každé
-/// `\"` jednu uvozovku patřící do textu. Zpětné lomítko je zápis, nikoli další vypsaný znak.
-/// `IO.println` vypíše svůj argument (předanou hodnotu) a ukončí řádek. Mezery uvnitř literal
-/// zůstávají skutečnými mezerami; změna comment (komentářů) vypsanou zprávu nezmění. Rozlišuj tedy
-/// znaky zapsané ve source (zdrojovém textu) a znaky, které se opravdu objeví v output (výstupu).
-///
-/// Nyní předpověz `IO.println(4 + 5);` a `IO.println("4 + 5");`.
+/// Tento příklad vrací text `The "Owl" club`. Vnější uvozovky ani zpětná lomítka do výsledku
+/// nepatří. V této úloze potřebuješ stejným způsobem dostat do textu dvě uvozovky kolem slova
+/// HELLO.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
@@ -56,22 +48,6 @@ String templateLine() {
 ///
 /// main vypíše vrácenou šablonu a potom samostatnou zprávu HELLO. Úloha zrcadlí jednu instrukci;
 /// nevypisuje svůj celý source (zdrojový text). Obě skutečné tiskové akce jsou připravené.
-// </editor-fold>
-
-// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
-/// Odděl tři vrstvy: Java source (zdrojový text), který upravuješ, text vrácený templateLine a dva
-/// řádky vypsané v terminálu. První vypsaný řádek musí obsahovat uvozovky kolem HELLO; druhý je
-/// samostatná zpráva. Znaky prvního řádku jsou data, nikoli další prováděný příkaz. Neutrální
-/// příklad: source text `"A \"B\" C"` představuje hodnotu `A "B" C`: každé `\"` přidá jednu
-/// uvozovku bez ukončení vnějšího literal (doslovného řetězce). Než změníš vlastní literal,
-/// předpověz tuto hodnotu. Rozlišuj poslední středník skutečného return statement (příkazu vrácení)
-/// a středník vypsaný uvnitř textu.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
-/// Rozliš dvě úrovně: zápis ve zdrojáku a znaky uložené ve String. Source `"A\"B"` uchovává A, jednu
-/// uvozovku a B. Vypsání String neprovede jeho obsah. Řádek vypadající jako Java call (volání) je
-/// stále zpráva, dokud s ním nějaký program výslovně nezachází jako s kódem; tento program to nedělá.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">

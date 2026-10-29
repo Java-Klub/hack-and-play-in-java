@@ -6,63 +6,28 @@ import javax.swing.*;
 
 /// # L01.01 · CafeWallLab
 ///
-/// Sestav stěnu z černých a bílých dlaždic, na které mohou dokonale rovné spáry vypadat nakloněně. Měň
-/// posunutí a porovnej svůj dojem s červeným pravítkem.
+/// **Odhal schovaný obrázek.** Spusť program. Uvidíš šedou plochu: kresba dlaždic je přemalovaná.
 ///
-/// **Tvoje mise · Zachraň obraz:** Stěnu zakrývá šedá vrstva. Oprav pořadí dvou akcí v paintWall, aby
-/// dlaždice zůstaly
-/// viditelné.
+/// **Úkol:** V `paintWall` hned pod tímto textem prohoď dva řádky uvnitř `{ }`. Přesouvej celé
+/// řádky včetně `(g);`. Oba zachovej; zbytek programu teď upravovat nemusíš.
 ///
-/// **Dnes trénuješ:** Sequence (pořadí provádění): uvnitř paintWall běží statement (příkazy) shora dolů,
-/// když je akce zavolána. Pozdější kreslicí akce může zakrýt dřívější. Samotná definice akce nahoře v
-/// souboru ji nespustí.
-///
-/// Left/Right mění posunutí dlaždic, Up/Down šířku spár. Space zapíná a vypíná červené pravítko.
-///
-/// **První spuštění:** šedá stěna je záměrná chyba. Dva řádky k úpravě jsou níže; první kroky
-/// najdeš v Začni tady · spuštění a kontrola.
-// <editor-fold defaultstate="collapsed" desc="Začni tady · spuštění a kontrola">
-/// - V terminálu přejdi do složky kurzu obsahující README.md a zadej
-///   `java L01/M01_CafeWallLab.java`.
-/// - Zavři okno, uprav paintWall níže, ulož soubor a zadej
-///   `java L01/Check.java M01_CafeWallLab.java`.
-/// - RED před opravou je záměrné; zpráva popisuje odlišné chování. PASS znamená shodu ověřených
-///   případů. Změny uvidíš po novém spuštění prvním příkazem.
-/// - `java L01/Check.java` zkontroluje celý level včetně neopravených her. Check.java při řešení
-///   neměň.
-/// - Compiler error (chyba překladu): čti první hlášení a řádek; ověř znaménka nebo použij Undo
-///   (Zpět), ulož a zkus znovu.
-/// - Výklad otevřeš kliknutím na šipku či plus u názvu sekce; bez sbalování čti comment (komentáře)
-///   běžně. Java řádky s `///` přeskočí.
-// </editor-fold>
+/// **Výsledek:** Po uložení a novém spuštění uvidíš osm řad černých a bílých dlaždic. Šedý nátěr
+/// má zůstat za nimi.
 
 void paintWall(Graphics2D g) {
     paintBackground(g);
     paintTiles(g);
 }
 
-// <editor-fold defaultstate="expanded" desc="Nová dovednost · F01">
-/// Method (metoda) je pojmenovaná akce. Její definice akci zpřístupní; call (volání) ji požádá o
-/// provedení. Java spustí tento program v `main`, i kdyby jiná method byla zapsaná první.
+// <editor-fold defaultstate="expanded" desc="Execution order (pořadí provádění) · F01">
+/// Každý ze dvou řádků je statement (příkaz): jeden krok kreslení. `paintTiles(g);` nakreslí
+/// dlaždice. `paintBackground(g);` přetře celé plátno šedě.
 ///
-/// ```java
-/// void announce() {
-///     IO.println("Before");
-/// }
+/// Uvnitř složených závorek Java provádí tyto kroky shora dolů. Je to jako malování na papír:
+/// pozdější barva překryje dřívější kresbu. Dnes měníš pořadí kroků, nikoli jejich obsah.
 ///
-/// void main() {
-///     announce();
-///     IO.println("After");
-/// }
-/// ```
-///
-/// Před dalším čtením předpověz dva řádky output (výstupu). Call `announce();` vstoupí do této
-/// method, vypíše `Before` a potom se vrátí k dalšímu statement (příkazu) v `main`, který vypíše
-/// `After`. Uvnitř zavolané method běží tyto statement v pořadí. `void` znamená, že se nevrací
-/// výsledná hodnota; `()` zde nepředává žádné argument (argumenty). Složené závorky ohraničují tělo a
-/// středník ukončuje každé call. Comment (komentáře) program vysvětlují, ale neprovádějí se.
-///
-/// Nyní předpověz, co nastane, pokud main před posledním výpisem zavolá announce dvakrát.
+/// Představ si jiný obrázek: nejdřív modrý papír, potom žlutá hvězda. Co bys viděl, kdybys tyto
+/// dva kroky obrátil?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
@@ -85,17 +50,9 @@ void paintWall(Graphics2D g) {
 /// paintTiles obsahují připravené kreslení; key zpracuje ovládání.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
-/// Call (volání) žádá provést akci právě teď. Jestliže `announce();` vypíše jeden řádek, dvě volání
-/// za sebou vypíší dva řádky. Java je nesloučí. V tomto obrázku obě akce dostanou stejné pero g, ale
-/// první volání skončí před začátkem druhého. Předpověz viditelnou vrchní vrstvu po obrácení pořadí a
-/// potom se podívej do okna.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
-/// Pomocí existujícího posunu a šířky spár připrav pro kamaráda co nejsilnější iluzi. Než ukážeš
-/// červené pravítko, zeptej se, zda jsou čáry nakloněné. Potom změň barvu v paintBackground a
-/// porovnej stejné nastavení.
+// <editor-fold defaultstate="collapsed" desc="Až se obrázek objeví">
+/// Left/Right posouvá dlaždice, Up/Down mění šířku spár a Space ukáže červené pravítko. Zkus
+/// kamaráda přesvědčit, že jsou vodorovné spáry šikmé; potom odhal pravítko.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
