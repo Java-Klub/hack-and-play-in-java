@@ -89,11 +89,7 @@ Hodnota zapsaná takto mimo `main` může být dostupná také dalším akcím t
 - [HigherOrLower](../L01/M06_HigherOrLower.java): najdi společné nastavení cíle a zkrať karetní výzvu. Hledáš v programu; nápovědy v jeho souboru tě postupně navedou.
 - [SteppingFeet](../L01/M07_SteppingFeet.java): uprav druhé přiřazení a vrať oba obdélníky do obrázku. Tady už máš označené místo k úpravě.
 
-Každé zadání obsahuje vlastní cílovou hodnotu. Po hraní můžeš spustit právě jeho kontrolu, například:
-
-```text
-java L01/Check.java M06_HigherOrLower.java
-```
+Každé zadání obsahuje vlastní cílovou hodnotu. Pro kontrolu HigherOrLower otevři `L01/Check.java`, nastav Program Arguments na `M06_HigherOrLower.java` a spusť Run File. Pro SteppingFeet použij `M07_SteppingFeet.java`. Postup nastavení je v [přípravě](00-start.md#checks).
 
 **Tuto lekci zvládáš, když vysvětlíš čtení staré hodnoty před uložením nové a správně předpovíš několik přiřazení za sebou.**
 

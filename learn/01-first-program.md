@@ -85,11 +85,7 @@ Porovnej zápis nových řádků s prvním: `IO.println`, kulaté závorky, dvoj
 
 Vytvoř soubor `MySignal.java` ve stejné složce jako SecretSignal. Napiš začátek `void main() {`, tři vlastní zprávy a ukončení `}`. Zprávy mohou tvořit přístupový signál, krátký vtip nebo odpočet napsaný slovy. Texty v programech píšeme anglicky.
 
-Spusť tento nový soubor stejně jako předchozí. Z terminálu hlavní složky kurzu například:
-
-```text
-java learn/practice/01/MySignal.java
-```
+Ve Favorites otevři svůj nový MySignal.java a použij Run File stejně jako u předchozího programu.
 
 **Tuto lekci zvládáš, když umíš přidat vlastní zprávu, vysvětlit uvozovky a středník a napsat malý spustitelný soubor.**
 

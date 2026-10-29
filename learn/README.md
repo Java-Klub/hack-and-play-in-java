@@ -4,11 +4,11 @@ Tady postupně zjistíš, jak Java programům rozumět a jak psát vlastní. Za�
 
 **Začínáš úplně od začátku? Otevři [Připrav si dílnu](00-start.md).**
 
-Potřebuješ počítač s JDK 26 nebo novějším a editor. Učebnice, příklady i hry po stažení fungují offline. Předchozí znalost programování nepotřebuješ.
+Potřebuješ počítač s JDK 26 nebo novějším a NetBeans. Hlavní složku kurzu přidáš do Favorites a soubory spustíš pomocí Run File. Učebnice, příklady i hry po stažení fungují offline. Předchozí znalost programování nepotřebuješ.
 
-## Tvoje první cesta
+## První kroky učebnicí
 
-Čti jednu lekci, spusť její příklad a vyřeš krátký úkol. Není potřeba nejdřív přečíst celou kapitolu. Odpovědi na otázky se rozbalují zvlášť, aby sis mohl nejprve udělat vlastní předpověď.
+Postup určuje učivo. Čti jednu lekci, spusť její příklad a vyřeš navazující úkoly přímo v NetBeans. Není potřeba nejdřív přečíst celou kapitolu. Odpovědi na otázky se rozbalují zvlášť, aby sis mohl nejprve udělat vlastní předpověď.
 
 | Kapitola | Lekce, které už můžeš projít |
 | --- | --- |
@@ -22,14 +22,14 @@ Pokud už něco umíš, vyzkoušej nejprve úkol dané lekce. K vysvětlení se 
 
 - V `learn/examples` jsou úplné příklady z výkladu. Můžeš je spustit i změnit; původní znění najdeš na stránce lekce.
 - V `learn/practice` jsou krátké úkoly. Upravuješ vždy soubor uvedený v zadání. Očekávaný výstup najdeš přímo v lekci.
-- Ve složkách `L01` až `L12` jsou hry. Lekce tě pošle ke konkrétní hře, až znáš potřebný základ. Části připraveného programu, které zatím nepíšeš, popisují jeho komentáře.
+- Ve složkách `L01` až `L12` jsou zdrojové soubory větších procvičení. Všechny postupně začleňujeme do kapitol učebnice; lekce tě pošle ke konkrétnímu programu, až znáš potřebný základ. Části připraveného programu, které zatím nepíšeš, popisují jeho komentáře.
 - [Slovníček prvních zápisů](glossary.md) pomůže, když narazíš na neznámý znak nebo slovo.
 
-Číslo lekce učebnice a číslo složky hry se mohou lišit. K procvičení používej odkazy z právě čtené lekce.
+Všechna procvičení patří do společné výukové cesty. Číslo složky je nyní adresa souboru; pořadí učení určují kapitoly a odkazy z právě čtené lekce.
 
 ## Kam bude učebnice pokračovat
 
-Následující kapitoly jsou plán obsahu; jejich lekce teprve připravujeme.
+Následující kapitoly jsou plán obsahu; jejich lekce teprve připravujeme. Postupně do nich zapracujeme všech 145 původních her, hádanek a tvořivých programů. U každého přizpůsobíme zadání, komentáře a kontrolu tomu, co už čtenář zná. Některé programy se mohou vracet s novým úkolem; obtížnost ani počet procvičení nemusí být v každé kapitole stejné.
 
 | Kapitola | Co se naučíš |
 | --- | --- |
