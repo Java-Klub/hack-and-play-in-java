@@ -1,10 +1,12 @@
-/// # L02.06 · MadLibsStoryMachine
+/// # L02.05 · MadLibsStoryMachine
 ///
 /// Dej stroji jméno, tvora, místo a předmět a přečti si absurdní příběh, který z nich sestaví. Víceslovné
 /// odpovědi mohou vytvořit mnohem zvláštnější výsledek než jednotlivá slova.
 ///
-/// **Tvoje mise:** Mezery omylem napsané kolem odpovědi pronikají do příběhu. Oprav cleanWord tak, aby
-/// okrajové mezery zmizely, ale fráze jako Red Fox zůstala celá.
+/// **Tvoje mise · Napiš titulek příběhu:** V cleanWord odstraň okrajové mezery a zachovej víceslovné
+/// fráze. Potom doplň
+/// headline: pro jméno "  Red Fox  " musí vrátit přesně "Report from Red Fox:". Program tvůj titulek
+/// vypíše před příběhem; jiné jméno musí dát jiný titulek.
 ///
 /// **Dnes trénuješ:** Text celého řádku: přečíst frázi se liší od převzetí jen jejího prvního slova.
 /// Pracuj s vráceným String (řetězcem) a zachovej mezery, které patří dovnitř fráze.
@@ -15,7 +17,11 @@ String cleanWord(String word) {
     return word;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Připomenutí · F05">
+String headline(String name) {
+    return "Report:";
+}
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F05">
 /// `IO.readln` přijímá celý řádek včetně vnitřních mezer. String operation (operace nad řetězcem)
 /// vrací text, nemění původní String (řetězec). Potřebuješ-li výsledek, musíš jej uchovat.
 ///
@@ -38,32 +44,36 @@ String cleanWord(String word) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Úklid a vlastní text
 ///
-/// - `String cleanWord(String word)` — Jediný String (řetězec) vstoupí jako word a očištěný String má
-///   odejít jako výsledek.
-/// - `word` — Místní jméno této odpovědi; může obsahovat několik slov i mezery.
-/// - `return word;` — Současné tělo vrací přijatý text beze změny, včetně okrajových mezer.
-/// - `{` — Odpovídající složené závorky uzavírají malé pravidlo pro čištění textu; otázky zůstávají
-///   jinde.
-///
-/// ### Co už obstarává připravená část
-///
-/// main se zeptá na čtyři celé řádky. story volá cleanWord pro každou odpověď, ověří použitelnou délku a
-/// vloží očištěné fráze do připraveného příběhu. Upravuješ očištění frází, nikoli zpracování jejich
-/// vstupu.
+/// cleanWord přijme celou frázi a vrátí vyčištěný text. headline přijme jméno, zavolá úklid a vrátí
+/// spojený titulek. Úvodní část, jméno a dvojtečka jsou tři textové části. main už vypisuje vrácený
+/// headline; potom story vyčistí čtyři fráze a sestaví příběh. Tvůj titulek musí použít svůj
+/// parameter (parametr), aby se druhý uživatel stále nejmenoval Red Fox.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// String + spojuje text. `"Pilot " + "Ada" + "!"` vytvoří `"Pilot Ada!"`; mezery mimo uvozovky do
+/// zprávy mezery nepřidají. V headline zavolej cleanWord s přijatým jménem, potom vyčištěný výsledek
+/// spoj s pevnou úvodní částí a dvojtečkou. Vrácený titulek bude vidět, protože jej main vypíše.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Přepiš tři připravené věty příběhu tak, aby všechny čtyři zadané fráze měly význam. Vytvoř zprávu,
+/// detektivní závěr nebo absurdní reklamu. Kamaráda požádej o čtyři vstupy, aniž mu předem prozradíš
+/// novou šablonu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Nerozděluj text podle mezer: jméno může mít několik slov.
+/// Titulek potřebuje vyčištěné jméno, nikoli pevně opsané jméno z příkladu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// String.strip vrací očištěnou kopii.
+/// Použij výsledek cleanWord a spoj text pomocí +.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Použij return word.strip();
+/// cleanWord vrací word.strip(). V headline vrať "Report from " + cleanWord(name) + ":".
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
@@ -97,6 +107,7 @@ void main() {
             }
             words[i++] = input;
         }
+        IO.println(headline(words[0]));
         IO.print(story(words[0], words[1], words[2], words[3]));
         while (true) {
             String input = IO.readln("Enter or /r: new story; /q: quit: ");

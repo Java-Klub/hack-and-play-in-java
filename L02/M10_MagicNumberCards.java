@@ -3,7 +3,8 @@
 /// Mysli si číslo od 0 do 63 a řekni programu, na kterých ze šesti číselných karet se vyskytuje. Stroj
 /// spojí tvoje odpovědi ano/ne a odhalí zvolené číslo.
 ///
-/// **Tvoje mise:** Kouzlo považuje napsané odpovědi ano za ne. Oprav yesAnswer tak, aby y i Y poznalo
+/// **Tvoje mise · Oprav čtení myšlenek:** Kouzlo považuje napsané odpovědi ano za ne. Oprav yesAnswer
+/// tak, aby y i Y poznalo
 /// podle textu a n zůstalo false.
 ///
 /// **Dnes trénuješ:** Boolean text comparison (logické porovnání textu): rozhodnutí může vzniknout z
@@ -56,6 +57,17 @@ boolean yesAnswer(String input) {
 /// card sestaví šest vypsaných karet a reveal spojí jejich připravené číselné hodnoty. main ověří y/n a
 /// zeptá se yesAnswer, kterou odpověď uložit. Pro tuto opravu nemusíš rozebírat matematiku binárních
 /// karet.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Zde rozhoduje obsah písmen a jejich velikost. y a Y znamenají stejnou odpověď, n musí zůstat
+/// odlišné. equalsIgnoreCase porovná obsah bez změny vstupního String. Předpověz odpověď pro nově
+/// napsané velké Y; musí fungovat bez ohledu na místo uložení textu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Předveď trik kamarádovi, který si číslo zvolí tajně. Po úspěchu záměrně zalži právě u jedné karty
+/// a porovnej chybu s jejím prvním číslem. Dokáže kamarád změnu vysvětlit pomocí karty místo kouzel?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">

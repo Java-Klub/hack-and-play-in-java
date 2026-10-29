@@ -9,22 +9,27 @@ import javax.swing.*;
 /// Projeď malou desku šachovým jezdcem a na každé políčko vstup nejvýše jednou. Platný tah má dojít na
 /// místo kliknutí, ne na jeho odraz přes úhlopříčku.
 ///
-/// **Tvoje mise:** Příkazy Move prohazují přenášené souřadnice. Oprav směrování příkazu a zachovej
-/// odmítnuté pozice, pravidlo jezdce i Restart.
+/// **Tvoje mise:** Sestav apply jako celý command dispatcher (rozesílání příkazů). Move uvnitř desky
+/// 5 na 5 volá move se svým sloupcem a řádkem; Move mimo desku vrací false. Restart obnoví desku a
+/// yield vrátí true. Pravidlo jezdce i navštívená pole nech metodě move.
 ///
-/// **Dnes trénuješ:** Sealed family (uzavřená rodina) popisuje povolené alternativy příkazu. Record
-/// pattern (vzor record) rozbalí component (složky) Move; exhaustive switch (úplný switch) vybere
-/// pravidlo a guard (podmínka) oddělí použitelné souřadnice od odmítnutých.
+/// **Dnes trénuješ:** Sestavíš celý record-pattern dispatcher (směrování podle typu a složek). Rozliš
+/// alternativu, vyjmi její data a zachovej hranici mezi směrováním a připraveným algoritmem.
 ///
 /// Po spuštění programu klikni na zelený tah jezdce, například na sloupec 1 a řádek 2 při
 /// číslování od nuly, a klávesou R začni cestu znovu.
 boolean apply(Command command) {
-    return switch (command) {
-        case Move(var xx, var yy) when xx >= 0 && yy >= 0 && xx < 5 && yy < 5 -> move(yy, xx);
-        case Move(var xx, var yy) -> false;
-        case Restart() -> { restart(); yield true; }
-    };
+    // Zde sestav úplný výběr příkazů pomocí switch.
+    return false;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Navrhni jiného jezdce: legal-move predicate (podmínku tahu) změň na velblouda, který jde tři pole
+/// po jedné ose a jedno po druhé. Dispatch (rozesílání) Move/Restart zachovej. Dokážeš na stejné
+/// desce navštívit podobný počet různých polí?
+// </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F35">
 /// ### Record patterns (vzory záznamů): vyber typ a rozbal data
@@ -50,19 +55,20 @@ boolean apply(Command command) {
 /// Předpověz: která větev zpracuje `new Stars(0)` a jaký text vznikne pro `new Name("Nova")`?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// ### Pattern matching (výběr podle tvaru) je směrování, ne druhý herní engine
 ///
-/// - `case Move(var xx, var yy)` — Rozbalí record v pořadí component (složek) a pojmenuje jeho dvě
-///   přenášené souřadnice.
-/// - `when xx >= 0` — Začíná guard (podmínku), která zpřesní Move case (větev) před spuštěním akce.
-/// - `move(yy, xx)` — Předá rozpoznané hodnoty obráceně; obě pořadí mohou náhodou být platné tahy jezdce.
-/// - `yield true` — Vrátí hodnotu z bloku patřícího do tohoto switch expression (výrazu switch).
+/// Record Move ukládá (x, y) v pořadí deklarace. Jména v pattern (vzoru) obdrží složky ve stejném
+/// pořadí; zápis xx a yy pořadí nemění. Guard (podmínka) po when filtruje nalezenou alternativu.
+/// Exhaustive switch (úplný výběr) stále potřebuje case pro Move, kterému guard nevyhověl.
 ///
-/// ### Co už obstarává připravená část
+/// Neutrální příklad: `case Label(var text) when !text.isBlank() -> text.length(); case Label(var
+/// text) -> 0;` vrací 3 pro Label("cat") a 0 pro Label(""). Předpověz Label("  "). Block case
+/// (bloková větev) může provést akci a pomocí yield dodat výsledek switch.
 ///
-/// Obsluha myši vytvoří Move a klávesa R vytvoří Restart. Apply je přesměruje; připravený move ověří
-/// vzdálenost jezdce a navštívená políčka, kreslení zvýrazní platné možnosti.
+/// Zde apply řeší dispatch (směrování) a meze desky; move řeší skoky i opakovanou návštěvu. Z (0,0)
+/// přistane Move(1,2) ve sloupci 1, řádku 2; Move(2,1) je jiný legální cíl. Restart nemá složky, ale
+/// má vlastní pattern.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
@@ -77,16 +83,17 @@ boolean apply(Command command) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Přečti deklaraci record (datového záznamu) Move: první component (složka) je x a druhá y. Jména v
-/// pattern (vzoru) dostanou hodnoty v tomto pořadí.
+/// Před psaním účinků vypiš všechny Command alternatives (možnosti příkazu).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Move(1,2) musí dojít na x=1,y=2, i když je obrácený tah jezdce také platný.
+/// Move potřebuje platný guarded case (větev s podmínkou) i zbývající odmítnutí. Předávej nejdřív x,
+/// potom y.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Zachovej úplné zpracování alternativ; chybná coordinate (souřadnice) vrátí false před pohybem.
+/// Použij switch expression (výběr s výsledkem), dvě větve Move a blok Restart volající restart a
+/// yield true.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

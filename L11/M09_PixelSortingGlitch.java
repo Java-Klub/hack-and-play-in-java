@@ -24,6 +24,14 @@ void saveSorted(Path path, BufferedImage input, int threshold) throws IOExceptio
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Vytvoř glitch triptych (trojici poruchových obrazů): pro stejný vstup zvol tři threshold (prahové
+/// hodnoty) a ulož tři záměrně pojmenované PNG. Předpověz, který práh zachová nejvíce původních
+/// pixelů, a porovnej obrázky bez změny vstupu.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F32">
 /// ### Files (soubory): cíl a životnost prostředku
 ///

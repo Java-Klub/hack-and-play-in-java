@@ -24,6 +24,14 @@ double frequency(Sound sound, double t) {
     };
 }
 
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Slož robotí pozdrav ze dvou různých Sound records (zvukových karet): vytvoř krátký jump a jemný
+/// wobble a spoj pole vzorků. Dej pozdravu jméno. Zachovej tiché přehrávání; srovnávej časování místo
+/// zvyšování amplitudy.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F35">
 /// ### Record patterns (vzory záznamů): vyber typ a rozbal data
 ///

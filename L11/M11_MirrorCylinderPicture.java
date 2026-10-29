@@ -1,31 +1,35 @@
 // <editor-fold defaultstate="collapsed" desc="Připravené nástroje">
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 // </editor-fold>
 
 /// # L11.11 · MirrorCylinderPicture
 ///
-/// Zkresli obrázek do zvláštního vějíře zahnutých pásů, jako přípravu pro válcové zrcadlo. I bez odrazu
-/// je uložené zkreslení obrázkem, který můžeš prozkoumat.
+/// Proměň slovo ze svého textového souboru ve vějíř zahnutých pásů jako přípravu pro válcové zrcadlo.
+/// Zkreslení prozkoumej přímo v obrázku v Javě a při dalším spuštění zkus jiné slovo.
 ///
-/// **Tvoje mise:** Cílový soubor vznikne, ale zůstane prázdný, protože PNG bajty míří do nepoužité
-/// paměti. Znovu propoj encoding (kódování) obrázku s otevřeným cílem.
+/// **Tvoje mise:** Vytvoř readCaption: otevři vybraný UTF-8 text pomocí newBufferedReader, přečti
+/// první řádek, odstraň okolní whitespace (bílé znaky) a přijmi 1..8 znaků. Prázdný, bílý nebo příliš
+/// dlouhý první řádek ohlas jako IOException. Kreslené slovo musí pocházet ze souboru.
 ///
-/// **Dnes trénuješ:** Otevření output stream (výstupního proudu) a zápis do něj jsou různé akce. Správa
-/// resource (prostředku) stream bezpečně zavře, ale bajty dorazí jen tehdy, když encoding (kódování)
-/// opravdu dostane tento stream.
+/// **Dnes trénuješ:** Implementuješ skutečnou file boundary (souborovou hranici): otevři vybraný
+/// prostředek, předej skutečný obsah a spolehlivě jej zavři. Výsledek má přetrvat jedno volání
+/// metody.
 ///
-/// Program zapíše exports/mirror.png přes save a otevře skutečně uložená data v Javě. Prázdný nebo
-/// neplatný soubor vyvolá jasnou zprávu v terminálu místo náhradního obrázku.
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    try (var output = Files.newOutputStream(path)) {
-        if (!ImageIO.write(render(seed, option), "png", new ByteArrayOutputStream())) {
-            throw new IOException("PNG writer missing.");
-        }
-    }
+/// První spuštění vytvoří data/mirror-word.txt s JAVA. Změň první řádek na MOON a spusť znovu:
+/// obrázek v Javě se musí změnit. Použij nejvýše osm znaků, aby se slovo vešlo do obrázku.
+String readCaption(Path path) throws IOException {
+    // Přečti, ověř a vrať první řádek vybraného souboru.
+    return "JAVA";
 }
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Vytvoř sbírku slovních obrazů úpravou prvního řádku data/mirror-word.txt mezi spuštěními. Zkus
+/// MOON, krátké jméno a interpunkční znak. Pro každý návrh si nech textový soubor; porovnej deformaci
+/// úzkého a širokého slova kolem stejného kruhu.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F32">
 /// ### Files (soubory): cíl a životnost prostředku
@@ -50,34 +54,36 @@ void save(Path path, long seed, double option) throws Exception {
 /// Předpověz: pokud file změníš na `Path.of("cards", "one.txt")`, kam se poznámka zapíše?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// ### Textový soubor se stává vstupem obrázku
 ///
-/// - `Files.newOutputStream(path)` — Otevře požadovaný cíl a vrátí stream (proud), který spravuje jeho
-///   bajty.
-/// - `new ByteArrayOutputStream()` — Vytvoří samostatný cíl v paměti, který nesouvisí s otevřeným
-///   souborem.
-/// - `ImageIO.write` — Pošle zakódované PNG bajty tomu output object (výstupnímu objektu), který dostane.
+/// Files.newBufferedReader(path) otevře UTF-8 character reader (čtečku znaků). reader.readLine()
+/// vrátí další řádek bez konce řádku, nebo null, když žádný řádek není. Prázdný řádek je String "",
+/// což není null. Null zkontroluj před voláním metod String. Neutrální soubor s "  NOVA  " na prvním
+/// řádku dá po strip hodnotu "NOVA"; druhý řádek je mimo tento contract (dohodu). Předpověz výsledek
+/// prázdného prvního řádku a NOVA na druhém.
 ///
-/// ### Co už obstarává připravená část
-///
-/// render vytvoří válcové zkreslení a upravované save vlastní skutečný output stream (výstupní
-/// proud). main před zobrazením načte pevně požadovaný PNG; prázdný soubor oznámí jako chybu.
+/// Try-with-resources zavře reader při chybě, validaci i return. IOException zachová chybějící soubor
+/// a špatný obsah pro zprávu v main. main vytvoří data/mirror-word.txt s JAVA jen při neexistenci,
+/// načte jej do caption a přímo jej kreslí. Mezi spuštěními uprav tento malý text, a vytvoř jiný
+/// obraz.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Otevřený file (soubor) nestačí, když encoder (zapisovač obrazu) píše jinam.
+/// Před strip prvního řádku vyřeš možnost null.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Proměnná z try-with-resources je skutečný file output (souborový výstup).
+/// Obal newBufferedReader(path) pomocí try-with-resources; název souboru není obsah.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Do ImageIO.write předej output místo nového paměťového stream (proudu).
+/// Přečti řádek, odmítni null, použij strip, odmítni délku mimo 1..8 a vrať přijatý text.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+String caption = "JAVA";
+
 double[] ground(double angle, double height) {
     double x = 60 * Math.cos(angle);
     double y = 60 * Math.sin(angle);
@@ -101,8 +107,8 @@ BufferedImage render(long seed, double option) {
     ink.setColor(Color.WHITE);
     ink.fillRect(0, 0, 500, 160);
     ink.setColor(Color.getHSBColor(new Random(seed).nextFloat(), 0.9F, 0.7F));
-    ink.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 100));
-    ink.drawString("JAVA", 65, 120);
+    ink.setFont(new Font(Font.SANS_SERIF, Font.BOLD, Math.min(100, 440 / Math.max(1, caption.length()))));
+    ink.drawString(caption, 30, 120);
     ink.dispose();
     var image = new BufferedImage(900, 800, BufferedImage.TYPE_INT_RGB);
     var g = image.createGraphics();
@@ -151,16 +157,18 @@ void showImages(String title, String[] captions, java.awt.image.BufferedImage[] 
 
 
 void main() {
-    Path output = Path.of("exports", "mirror.png");
+    Path input = Path.of("data", "mirror-word.txt");
     try {
-        Files.deleteIfExists(output);
-        save(output, 42, 125);
-        var image = ImageIO.read(output.toFile());
-        if (image == null) throw new IOException("The requested PNG is empty or invalid.");
-        IO.println("Loaded requested file: " + output.toAbsolutePath());
-        showImages("Mirror Cylinder Picture", new String[]{output.toString()}, new java.awt.image.BufferedImage[]{image});
+        if (!Files.exists(input)) {
+            Files.createDirectories(input.toAbsolutePath().getParent());
+            Files.writeString(input, "JAVA\n");
+        }
+        caption = readCaption(input);
+        IO.println("Read " + caption + " from " + input.toAbsolutePath());
+        IO.println("Edit the first line of that text file and run again to author another picture.");
+        showImages("Mirror Cylinder Picture", new String[]{caption}, new BufferedImage[]{render(42, 125)});
     } catch (Exception failure) {
-        IO.println("Cannot load requested file " + output + ": " + failure.getMessage() + ". Repair save; Save the source, run its check command, then play again.");
+        IO.println("Cannot read the word artwork: " + failure.getMessage());
     }
 }
 // </editor-fold>

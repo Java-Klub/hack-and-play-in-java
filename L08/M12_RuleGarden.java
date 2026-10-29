@@ -27,26 +27,31 @@ boolean[] nextRow(boolean[] current, int rule) {
 }
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F26">
-/// ### Simultaneous updates: čti okamžik, sestav další
+/// ### Generation (generace) sdílí stejnou minulost
 ///
-/// Simultaneous step (současný krok) dává všem výpočtům stejná původní data. Výsledky zapisuj do
-/// odděleného úložiště a zveřejni je po celém průchodu. Jinak se dřívější zápis skrytě stane
-/// pozdějším input (vstupem) a pořadí průchodu změní pravidlo.
+/// Simultaneous update (současná aktualizace) znamená, že každá nová cell (buňka) čte stejný minulý
+/// svět. Při přepisování starých cell za pochodu by další column (sloupec) viděl budoucnost, kterou
+/// soused neviděl.
+///
+/// Zkus malé pravidlo: cell se rozsvítí, jestliže předtím svítila ona nebo její levý neighbour
+/// (soused). Za levým okrajem je zhasnuto. Ze starého `[true,false,false]` musí vzniknout
+/// `[true,true,false]`.
 ///
 /// ```java
-/// int[] tones = {2, 5, 9};
-/// int[] shifted = new int[tones.length];
-/// for (int i = 0; i < tones.length; i++) {
-///     shifted[i] = tones[(i + 1) % tones.length];
+/// boolean[] old = {true, false, false};
+/// boolean[] next = new boolean[old.length];
+/// for (int x = 0; x < old.length; x++) {
+///     next[x] = old[x] || (x > 0 && old[x - 1]);
 /// }
 /// ```
 ///
-/// Výsledek je `[5,9,2]`; tones zůstane `[2,5,9]`, protože se čte nezměněné. Změnil by obrácený
-/// průchod výsledek? Nové array začíná nulovými hodnotami, takže každý potřebný výstup musíš záměrně
-/// vypočítat. Zkopírovaný snapshot (snímek) a nový output buffer (výstupní prostor) plní různé role.
+/// Proč ne tři true? Třetí cell čte old[1], tedy false, nikoli právě zapsané next[1]. Old zůstává
+/// nedotčené, takže obrácené pořadí průchodu dá stejný výsledek. Hotové next zveřejni až po výpočtu
+/// celé generation.
 ///
-/// Zde `% tones.length` používá remainder (zbytek po dělení), aby se index za posledním element
-/// (prvkem) vrátil na nulu.
+/// Nakresli OLD nad NEXT a šipky od čtených cell k zapisované cell. Předpověz druhou generation.
+/// Two-dimensional grid (dvourozměrná mřížka) potřebuje stejný princip včetně samostatných
+/// zapisovatelných row (řádků).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
@@ -65,6 +70,13 @@ boolean[] nextRow(boolean[] current, int rule) {
 /// vypíše dokončenou generaci a pak použije nextRow() pro další; vnější políčka zůstávají zhasnutá.
 // </editor-fold>
 
+// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+/// Připravený kód zapisuje left/centre/right (levou/střední/pravou cell) vahami 4/2/1: svítící kraje a
+/// zhasnutý střed dávají pattern (vzor) 5. `(rule >> pattern) & 1` čte příslušný rule bit (bit
+/// pravidla). Výpočet pravidla zůstává připravený; ty odděluješ old a next. Projdi tři sousední column
+/// (sloupce) se stejným nezměněným current.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
 /// next=current vytváří dvě jména jedné array; dřívější zápis změní vstup pozdější buňky.
 // </editor-fold>
@@ -76,6 +88,11 @@ boolean[] nextRow(boolean[] current, int rule) {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Vytvoř new boolean[current.length]; všechny pattern vstupy čti z current a next vrať až za loop.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Začni dvěma svítícími cell (buňkami) místo jedné a porovnej rules (pravidla) 30 a 90. Před výpisem
+/// předpověz, kde se oba rostoucí vzory poprvé setkají.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

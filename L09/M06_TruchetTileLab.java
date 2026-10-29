@@ -5,64 +5,72 @@ import java.awt.image.BufferedImage;
 
 /// # L09.06 · TruchetTileLab
 ///
-/// Poskládej zahnuté dlaždice do vzoru, v němž drobná místní rozhodnutí vytvářejí dlouhé smyčky. Při
-/// tvorbě obrázku veď pravdivý počet obou natočení.
+/// Řiď růst klikatého vzoru z dílků. Nenech jednu orientaci příliš utéct druhé: Map (mapa) se stane
+/// pravidlem kreslení, nejen počítadlem v popisku.
 ///
-/// **Tvoje mise:** Popisek natočení hlásí jedna pro druh dlaždice bez ohledu na počet výskytů. Oprav
-/// průběžné počty a zachovej vytvořený vzor.
+/// **Tvoje mise:** Vytvoř chooseOrientation(preferred). Přijmi jen LEFT nebo RIGHT. Obvykle vrať
+/// preference (preferovanou orientaci), ale pokud její aktuální count (počet) vede alespoň o dvě, vyber
+/// druhou. Zvyš jen count vybrané orientace a tu vrať. Jiný text musí vyvolat exception (výjimku) beze
+/// změn Map (mapy). Tvoje volba řídí skutečné oblouky při růstu vzoru.
 ///
-/// **Dnes trénuješ:** Map (mapa) může vést samostatný počet pro každou pojmenovanou kategorii. Změna
-/// jednoho natočení musí zachovat jeho předchozí počet a nezasáhnout druhou kategorii.
+/// **Dnes trénuješ:** Použij uložené vztahy key/value (klíč/hodnota) k rozhodnutí o skutečném obrázku
+/// nebo jeho vzniku, ne jen popisku.
 ///
-/// Spusť program a porovnej obrázek před opravou a po ní.
-void countOrientation(String orientation) {
-    orientationCounts.put(orientation, 1);
+/// Spusť program a prohlédni obloukový vzor i počty LEFT/RIGHT. Po opravě oba počty odpovídají dílkům a
+/// pravidlo výběru mění skutečné oblouky.
+String chooseOrientation(String preferred) {
+    return preferred;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F24">
-/// ### Map (mapa): hodnota podle klíče
+/// ### Map (mapa) pamatuje hodnotu pro každý key (klíč)
 ///
-/// `Map<String, Integer>` přiřazuje textovým keys (klíčům) celočíselné values (hodnoty). Jeden klíč
-/// má nejvýše jednu uloženou hodnotu.
+/// List (seznam) drží pozice. Map drží vztah: každý key vede k jedné aktuální value (hodnotě). Zde
+/// jméno barvy vede k počtu.
 ///
 /// ```java
-/// Map<String, Integer> badges = new HashMap<>();
-/// badges.put("moon", 4);
-/// IO.println(badges.getOrDefault("moon", 0));
-/// IO.println(badges.getOrDefault("sun", 0));
+/// Map<String, Integer> marbles = new HashMap<>();
+/// marbles.put("blue", 2);
+/// int before = marbles.getOrDefault("blue", 0);
+/// marbles.put("blue", before + 1);
+/// IO.println(marbles.getOrDefault("gold", 0));
 /// ```
 ///
-/// Výstup je `4`, potom `0`. `getOrDefault(key, fallback)` přečte existující hodnotu; při chybějícím
-/// klíči vrátí fallback (náhradní hodnotu). Toto čtení nic nevkládá. `put(key, value)` hodnotu uloží
-/// a případnou předchozí hodnotu téhož klíče přepíše; čísla automaticky nesčítá. `containsKey(key)`
-/// použij, když potřebuješ výslovně rozlišit chybějící klíč. V těchto příkladech neukládáme `null`.
+/// Blue má nyní počet 3; pro gold se vypíše 0. `getOrDefault(key, fallback)` vrátí fallback (náhradní
+/// hodnotu), když key chybí, ale nic nevloží. `put` nahradí dosavadní value daného key: samo nepřičítá.
+/// Ostatní key zůstanou beze změny.
 ///
-/// Předpověz: po `badges.put("moon", 9)` co vrátí stejná dvě čtení?
+/// `containsKey` zjišťuje samotnou přítomnost. `entrySet()` umožní projít dvojice key/value: každý
+/// entry (položka) poskytuje `getKey()` a `getValue()`. Map neslibuje, že první entry má nejvyšší
+/// value; vítěze musíš vybrat porovnáváním. Předpověz blue po dalším stejném kroku. Potom předpověz
+/// výsledek `getOrDefault("gold", 9)` a rozhodni, zda se tím gold uložilo.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Jak číst tuto část
 ///
-/// - `String orientation` — Název kategorie je key (klíč), nikoli souřadnice obrazovky.
-/// - `orientationCounts.put` — Zapíše hodnotu pro jedno natočení a nahradí jeho dřívější hodnotu.
-/// - `orientation, 1` — Pevná jednička ztratí všechny dřívější výskyty této kategorie.
-///
-/// ### Co už obstarává připravená část
-///
-/// render volí natočení a pro každou dlaždici zavolá countOrientation. Kresba oblouků i popisek
-/// LEFT/RIGHT používají tyto skutečné počty.
+/// Chybějící key (klíče) mají přes getOrDefault count (počet) 0. Náskok je preferredCount - otherCount
+/// před přidáním dílku. Dvě volby LEFT z prázdné Map (mapy) jsou povolené; třetí požadavek LEFT se musí
+/// změnit na RIGHT. Renderer (vykreslení) kreslí vrácenou volbu a pro nový obrázek Map vyprázdní.
+/// Nezvyšuj orientaci, kterou jsi nevybral.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// LEFT a RIGHT jsou různé key (klíče).
+/// Přečti oba count (počty), než jeden změníš.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Chybějící key (klíč) znamená nula starších dlaždic.
+/// Pojmenuj druhou orientaci a rozhodni, zda preference (preferovaná) už vede o dvě.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Ulož starý počet plus jedna, nikoli pevnou jedničku.
+/// Odmítni neznámé jméno, vyber podle starého rozdílu, zvyš zvolený key (klíč) pomocí getOrDefault a
+/// vrať jej.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Změň povolený náskok na čtyři, nebo záměrně zvýhodni LEFT. Porovnej vzniklé smyčky se stejným random
+/// seed (náhodným zárodkem), aby se měnilo jen tvoje pravidlo.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
@@ -85,12 +93,11 @@ BufferedImage render(long seed, double option) {
             for (int col = 0; col < count; col++) {
                 int x = col * size;
                 int y = row * size;
-                if (random.nextBoolean()) {
-                    countOrientation("LEFT");
+                String orientation = chooseOrientation(random.nextBoolean() ? "LEFT" : "RIGHT");
+                if (orientation.equals("LEFT")) {
                     g.drawArc(x - size / 2, y - size / 2, size, size, 270, 90);
                     g.drawArc(x + size / 2, y + size / 2, size, size, 90, 90);
                 } else {
-                    countOrientation("RIGHT");
                     g.drawArc(x + size / 2, y - size / 2, size, size, 180, 90);
                     g.drawArc(x - size / 2, y + size / 2, size, size, 0, 90);
                 }

@@ -1,9 +1,10 @@
-/// # L02.05 · AnagramRounds
+/// # L02.06 · AnagramRounds
 ///
 /// Rozlušti pět přesmyček a zjisti, kolik jich vyřešíš na nejvýše tři odhady každé. Jedno kolo může
 /// přijímat více skutečných přesmyček, takže správné může být i nečekané slovo.
 ///
-/// **Tvoje mise:** Platná odpověď jako silent je odmítnuta kvůli jiné velikosti písmen než ve slovníku.
+/// **Tvoje mise · Zpřesni rozhodčího:** Platná odpověď jako silent je odmítnuta kvůli jiné velikosti
+/// písmen než ve slovníku.
 /// Oprav normalize a zachovej současné odstranění okrajových mezer.
 ///
 /// **Dnes trénuješ:** String operation (operace s řetězcem): textová operace vytvoří výsledek, který
@@ -16,7 +17,7 @@ String normalize(String input) {
     return input.strip();
 }
 
-// <editor-fold defaultstate="expanded" desc="Nová dovednost · F05">
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F05">
 /// `IO.readln` přijímá celý řádek včetně vnitřních mezer. String operation (operace nad řetězcem)
 /// vrací text, nemění původní String (řetězec). Potřebuješ-li výsledek, musíš jej uchovat.
 ///
@@ -62,6 +63,19 @@ String normalize(String input) {
 /// připravená constant (konstanta) předávaná jako argument (argument), nikoli další call (volání
 /// metody). Udrží porovnání se slovníkem stejné při různých místních nastaveních. Při přidávání
 /// převodu velikosti písmen zachovej současné čištění okrajů.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Sleduj vstup `"  Moon  "`: strip vrátí `"Moon"`; převod tohoto výsledku na velká písmena vytvoří
+/// `"MOON"`. Samotné zavolání strip bez použití return value (vrácené hodnoty) by původní reference
+/// (odkaz) nezměnilo. Předpověz normalizovaný text odpovědi s různě velkými písmeny a jednou vnitřní
+/// mezerou. Přijímaná slova určuje jiná část hry.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Nahraď jednu existující skupinu slov novou skupinou skutečných přesmyček pro kamaráda. Zachovej
+/// strukturu array (pole) a velká písmena. Vyhni se neznámým slovům; ověř, že zamíchané zadání a
+/// přijímané odpovědi mají stejné znaky.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">

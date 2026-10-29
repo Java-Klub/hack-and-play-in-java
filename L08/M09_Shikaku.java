@@ -24,25 +24,32 @@ ArrayList<Box> snapshot() {
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F20">
-/// ### References: jiné jméno, nebo jiný objekt?
+/// ### Druhé jméno není uložená minulost
 ///
-/// Array variable (proměnná pole) uchovává reference (odkaz). Assignment (přiřazení) může dát dvěma
-/// jménům přístup k jedinému array (poli); zápis přes kterékoli změní sdílený objekt. `clone()` na
-/// jednorozměrném int array vytvoří další array se zkopírovanými hodnotami. Původní array i kopie se
-/// potom mohou měnit nezávisle.
+/// Array variable (proměnná s polem) drží reference (odkaz) na array (pole). Assignment (přiřazení)
+/// kopíruje reference, takže dvě jména mohou dosáhnout na stejné měnitelné cell (prvky).
 ///
 /// ```java
-/// int[] wave = {4, 1};
-/// int[] shared = wave;
-/// int[] saved = wave.clone();
-/// wave[1] = 7;
-/// IO.println(shared[1]);
-/// IO.println(saved[1]);
+/// int[] live = {1, 2};
+/// int[] shared = live;
+/// int[] saved = live.clone();
+/// live[0] = 7;
+/// IO.println(shared[0] + " / " + saved[0]);
 /// ```
 ///
-/// Výstup je sedm a potom jedna: shared vidí zápis, saved uchová kopii. Po `saved[0] = 8` předpověz
-/// `wave[0]` a `saved[0]`. `clone()` kopíruje jednu vrstvu: element (prvky) mřížky jsou reference na
-/// řádky, takže kopie vnějšího array řádky dál sdílí. Ptej se, které objekty zůstaly společné.
+/// Vypíše se `7 / 1`: shared sleduje změnu, saved má samostatné array. `clone()` kopíruje cell jediného
+/// array. U `int[][]` tyto cell obsahují reference na row (řádky). Kopie vnějšího array tedy stále
+/// sdílí row; potřebuješ také kopie row, mají-li jejich hodnoty přežít změny.
+///
+/// ```text
+/// shared ──→ [7,2] ←── live
+/// saved  ──→ [1,2]
+/// ```
+///
+/// Undo (návrat změny) potřebuje minulý state (stav), proto snapshot (snímek) vzniká před úpravou.
+/// Kopie po úpravě správně uloží nesprávný okamžik. Předpověz, co uvidí tři jména, když poslední
+/// assignment nahradíš `saved[0] = 9`. U List (seznamu) neměnných record (datových záznamů) stačí
+/// kopírovat členství: jednotlivým record nejdou přepsat components (složky).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
@@ -59,24 +66,12 @@ ArrayList<Box> snapshot() {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Pro tuto hru">
-/// ### Mutable List (měnitelný seznam) potřebuje novou nádobu
+/// ### Použij model právě zde
 ///
-/// ArrayList ukládá uspořádanou měnitelnou skupinu element (prvků). `<String>` určuje element type
-/// (typ prvku); `<>` nechá constructor (konstruktor) typ odvodit. Constructor přijímající jinou
-/// collection (kolekci) zkopíruje členství do nového měnitelného List.
-///
-/// ```java
-/// var draft = new ArrayList<String>();
-/// draft.add("swirl");
-/// var kept = new ArrayList<>(draft);
-/// draft.clear();
-/// IO.println(kept.size());
-/// ```
-///
-/// Výstup je jedna: `add` připojilo hodnotu, `clear` vyprázdnilo jen draft a `size` počítá prvky
-/// kept. Předpověz přidání dalšího prvku do draft. Box této hry obsahuje jen pevné int component
-/// (složky), proto lze bezpečně sdílet hodnoty Box, ale ne měnitelný List. Undo potřebuje mutable
-/// container (měnitelnou nádobu), protože další kreslení přidává či odebírá obdélníky.
+/// Pro tento připravený List (seznam) vytváří `new ArrayList<>(existing)` samostatný mutable container
+/// (měnitelný kontejner) se stejnými prvky. Box record (datový záznam) je immutable (neměnný), takže
+/// jej obě List mohou sdílet. Po kopii dvou Box a vyprázdnění živé List zůstanou dva Box v uložené
+/// List. Zachováváš členství obdélníků, nekreslíš novou geometrii.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -89,6 +84,11 @@ ArrayList<Box> snapshot() {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Vrať new ArrayList<>(boxes), aby změny členství byly nezávislé.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Nakresli vlastní rozdělení na obdélníky a do každého vlož jediné číslo jeho plochy. Najde spoluhráč
+/// jiné platné rozdělení?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

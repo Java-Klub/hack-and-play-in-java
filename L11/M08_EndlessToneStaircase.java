@@ -8,30 +8,30 @@ import java.io.ByteArrayInputStream;
 
 /// # L11.08 · EndlessToneStaircase
 ///
-/// Vytvoř zvukové schodiště, které díky vrstvám oktáv zdánlivě stále stoupá. Porovnej konečný zvuk s
-/// obyčejně stoupajícím tónem a poslouchej, kde začne působit iluze.
+/// Vytvoř konečné tónové schodiště z překrytých octave layers (oktávových vrstev). Poslouchej, zda
+/// opakované stoupání maskuje svůj návrat; dojem závisí na posluchači a přehrávání.
 ///
-/// **Tvoje mise:** WAV se zapíše do pracovního adresáře, i když požádáš o vnořený cíl. Zachovej úplný
-/// zvolený Path (cestu) až do konečného zápisu.
+/// **Tvoje mise:** Sestav v write zápis WAV. Připrav parent directory (nadřazenou složku), pomocí
+/// try-with-resources otevři cílový output stream (výstupní proud) i připravený audio(signal) a zapiš
+/// WAVE do cíle. Nezkracuj Path ani nezapisuj do náhradního buffer (zásobníku).
 ///
-/// **Dnes trénuješ:** Path (cesta) nese adresáře i název souboru. Ponechání jen posledního názvu změní
-/// cíl; příprava nadřazených adresářů neopraví pozdější zápis jinam.
+/// **Dnes trénuješ:** Implementuješ skutečnou file boundary (souborovou hranici): otevři vybraný
+/// prostředek, předej skutečný obsah a spolehlivě jej zavři. Výsledek má přetrvat jedno volání
+/// metody.
 ///
 /// Program zapíše exports/shepard.wav přes write a načte právě tento WAV pro Java Play/Stop. Chybný
 /// cíl vyvolá jasnou zprávu v terminálu; jiný soubor se nepřehraje.
 void write(Path path, double[] signal) throws Exception {
-    byte[] pcm = new byte[signal.length * 2];
-    for (int i = 0; i < signal.length; i++) {
-        int value = (int)(Math.max(-0.8, Math.min(0.8, signal[i])) * 32767);
-        pcm[i * 2] = (byte)value;
-        pcm[i * 2 + 1] = (byte)(value >> 8);
-    }
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    var format = new AudioFormat(RATE, 16, 1, true, false);
-    try (var stream = new AudioInputStream(new ByteArrayInputStream(pcm), format, signal.length)) {
-        AudioSystem.write(stream, AudioFileFormat.Type.WAVE, Path.of(path.getFileName().toString()).toFile());
-    }
+    // Zde připrav složku, otevři oba prostředky a zapiš WAV.
 }
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Vyrob dvě krátké zvukové pohlednice s různým počtem octave layers (oktávových vrstev). Dej jim
+/// různá jména a při dalším spuštění otevři uložené WAV. Který počet nejlépe maskuje zdánlivý návrat?
+/// Jde o poslechový soud, nikoli slib, že každý uslyší nekonečné stoupání.
+// </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F32">
 /// ### Files (soubory): cíl a životnost prostředku
@@ -56,34 +56,46 @@ void write(Path path, double[] signal) throws Exception {
 /// Předpověz: pokud file změníš na `Path.of("cards", "one.txt")`, kam se poznámka zapíše?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// ### Zvuková pohlednice, která zůstane uložená
 ///
-/// - `path.toAbsolutePath().getParent()` — Najde nadřazený adresář úplného cíle, aby mohl vzniknout.
-/// - `path.getFileName()` — Vybere jen poslední název a zahodí požadovaný adresář.
-/// - `try (var stream =` — Po skončení bloku zavře vlastní audio stream (zvukový proud), i když zápis
-///   selže.
-/// - `AudioSystem.write` — Zakóduje připravené sample (vzorky) do WAV v předaném cíli.
+/// Path pojmenuje cíl; OutputStream (výstupní proud) přijímá jeho bajty. Neutrální textový příklad
+/// `try (var out = Files.newOutputStream(Path.of("note.txt"))) { out.write(new byte[]{65, 66}); }`
+/// zapíše dva UTF-8 bajty pro AB a proud zavře i při chybě. Předpověz, jaké bajty by měl další zápis
+/// použít pro CD. Samotné otevření proudu WAV header (hlavičku) nevytvoří.
 ///
-/// ### Co už obstarává připravená část
-///
-/// signal vytvoří jeden konečný vrstvený tón. main jej pomocí write zapíše do exports/shepard.wav,
-/// ověří tentýž požadovaný WAV a nabídne Java Play/Stop pro skutečná data souboru.
+/// Zde audio(signal) připravuje formát a čitelné PCM bytes (zvukové bajty). AudioSystem.write(input,
+/// WAVE, output) přidá WAV container (souborovou obálku). Dvě resource declarations (deklarace
+/// prostředků) odděluje středník; oba prostředky se zavřou automaticky. createDirectories dovoluje
+/// existující složku. main znovu otevře přesně exports/shepard.wav a nabídne Play/Stop. Kontroluješ i
+/// posloucháš skutečně uložený soubor.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// GetFileName záměrně zahazuje nadřazenou cestu.
+/// Použij audio(signal); převod vzorků je připravený, vlastnictví cíle řešíš ty.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Původní Path už ukazuje na zvolený cíl.
+/// Po vytvoření absolutní nadřazené složky dej celý path do newOutputStream.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Použij jej v AudioSystem.write; zachovej createDirectories i try-with-resources.
+/// Output i input otevři v jednom try-with-resources a zavolej AudioSystem.write s input, WAVE a
+/// output.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+AudioInputStream audio(double[] signal) {
+    byte[] pcm = new byte[signal.length * 2];
+    for (int i = 0; i < signal.length; i++) {
+        int value = (int)(Math.max(-0.8, Math.min(0.8, signal[i])) * 32767);
+        pcm[i * 2] = (byte)value;
+        pcm[i * 2 + 1] = (byte)(value >> 8);
+    }
+    var format = new AudioFormat(RATE, 16, 1, true, false);
+    return new AudioInputStream(new ByteArrayInputStream(pcm), format, signal.length);
+}
+
 final int RATE = 22050;
 
 /// Připravená syntéza: omezené sample loop (cykly vzorků) tvoří zvuk; automatické přehrávání zde není.

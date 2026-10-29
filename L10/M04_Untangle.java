@@ -10,20 +10,26 @@ import java.awt.geom.Line2D;
 /// Rozmotej síť tažením očíslovaných bodů, až se její hrany přestanou křížit. Kolečka i spojnice se musí
 /// shodnout, kde každý bod skutečně leží.
 ///
-/// **Tvoje mise:** Kolečko bodu prohodí x a y, zatímco popisek i hrany používají správnou pozici. Oprav
-/// kreslicí souřadnice a neposouvej samotnou hádanku.
+/// **Tvoje mise:** Vytvoř chybějící node renderer (kreslení uzlu). Nakresli tmavý plný kruh o
+/// poloměru 13 se středem v point a potom bílé číslo v (point.x - 4, point.y + 4). Použij připravené
+/// Graphics2D; neměň point ani síť.
 ///
-/// **Dnes trénuješ:** Rendering (vykreslení) převádí coordinate (souřadnice) modelu na viditelné značky.
-/// Levý horní roh kolečka je posunutý od středu, ale x stále znamená vodorovně a y svisle.
+/// **Dnes trénuješ:** Rendering (kreslení) nebo coordinate conversion (převod souřadnic) vytvoříš
+/// jako řadu kroků: čti model, převeď hodnoty a kresli nebo vrať nový bod bez posunu času.
 ///
 /// Po spuštění programu tahej očíslované body a rozmotej křížení sítě; klávesou R ji můžeš
 /// znovu promíchat.
 void drawNode(Graphics2D g, Point point, int label) {
-    g.setColor(new Color(35, 55, 90));
-    g.fillOval(point.y - 13, point.x - 13, 26, 26);
-    g.setColor(Color.WHITE);
-    g.drawString("" + label, point.x - 4, point.y + 4);
+    // Zde nakresli uzel i číslo. Point čti, neměň jej.
 }
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Dej uzlům osobnost: kresli čtverec, prstenec nebo malý obličej, ale zachovej střed a čitelné
+/// číslo. S kamarádem zkuste stejnou zamotanou síť. Pomůže nový vzhled sledovat tažený uzel bez změny
+/// pravidel?
+// </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F29">
 /// ### Rendering (vykreslení): ze stavu na pixely
@@ -45,30 +51,29 @@ void drawNode(Graphics2D g, Point point, int label) {
 /// Předpověz: pokud se pouze tileY změní na 4, která obrazovková souřadnice se změní a o kolik?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// ### I kreslicí nástroj si něco pamatuje
 ///
-/// - `point.x` — Vodorovná coordinate (souřadnice) modelu; má souhlasit s konci hran.
-/// - `point.y` — Svislá coordinate (souřadnice), která na této obrazovce roste dolů.
-/// - `g.fillOval(point.y - 13, point.x - 13, 26, 26)` — FillOval očekává levou pozici, horní pozici,
-///   šířku a výšku; odečtení 13 vystředí kruh o průměru 26.
+/// Graphics2D uchovává current colour (současnou barvu). `g.setColor(Color.RED); g.fillRect(10, 20,
+/// 8, 6);` namaluje červený obdélník s levým horním rohem (10, 20). Pozdější změna barvy už hotový
+/// obdélník nepřebarví. Předpověz barvu dalšího obdélníku, pokud nepřijde nové setColor.
 ///
-/// ### Co už obstarává připravená část
-///
-/// Tažení mění skutečné hodnoty Point; připravená kontrola křížení vyhodnocuje hrany mezi nimi. DrawNode
-/// pouze maluje jeden bod, proto oprava nemá změnit rozmístění ani pravidla.
+/// Také fillOval přijímá levý a horní okraj, šířku a výšku, nikoli střed a poloměr. Kruh s poloměrem
+/// 5 a středem (30, 40) tedy začíná v (25, 35) a měří 10 na 10. drawString umístí začátek text
+/// baseline (účaří textu). `"" + label` převede číslo na text. Připravený draw loop (kreslicí cyklus)
+/// volá drawNode pro každý bod; tažení mění body jinde, kreslení je pouze čte.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// FillOval přijímá levý horní roh, nikoli střed.
+/// Barvu výplně nastav před kruhem a barvu textu před číslem.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Od x a y samostatně odečti poloměr.
+/// Převeď střed a poloměr na levý horní roh a průměr.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Použij nestejný bod jako (120,70), nikoli bod na diagonále, který prohození os skryje.
+/// Použij v pořadí setColor, fillOval, setColor, drawString; obě polohy čtou point.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -16,7 +16,7 @@ import java.awt.Color;
 /// **Dnes trénuješ:** Writing functional checks (psaní funkčních kontrol): vyber vstupy a očekávané
 /// výsledky, které vyvrátí chybná pravidla. Tvou prací jsou příklady, nikoli náhradní algoritmus flip().
 ///
-/// Spusť program a zkus klikáním zhasnout všechna světla, potom pomocí kontroly hry zjisti,
+/// Zkus klikáním zhasnout všechna světla, potom pomocí kontroly hry zjisti,
 /// které chybné pravidlo tvé příklady ještě přehlížejí.
 record CrossExample(int row, int column, int expected) {
 }
@@ -64,7 +64,7 @@ CrossExample[] learnerChecks() {
 /// Kontrola hry zkouší také pojmenovaná chybná pravidla a hlásí, které tvé příklady neodmítly.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
+// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
 /// ### Očekávání odvoď před sestavením check (kontroly)
 ///
 /// Nacvič jinou hračku: na panelu se třemi řádky a dvěma sloupci rozsvítí stisk vlastní cell (buňku)
@@ -96,6 +96,12 @@ CrossExample[] learnerChecks() {
 /// Zkus roh a započti stisknutou buňku i pouze existující sousedy ve čtyřech směrech. Sestav
 /// CrossExample z vlastních souřadnic a počtu, potom odvoď jiný hraniční případ, který samotný roh
 /// nenahradí.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Vymysli nový tvar kliknutí, například střed a diagonální sousedy. Popiš jej na papíře, předpověz
+/// středový, krajní a rohový zásah a potom společně uprav flip a své příklady. Spolužák má k psanému
+/// pravidlu doplnit další protipříklad.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
@@ -223,7 +229,8 @@ void verifyExamples() {
                 }
             }
             if (count != example.expected()) {
-                throw new IllegalStateException("Cross example has wrong expected result");
+                throw new IllegalStateException("Click row " + example.row() + ", column " + example.column()
+                    + ": expected " + example.expected() + " lit cells, actual " + count);
             }
         }
     } finally {

@@ -56,11 +56,11 @@ class M01_ReactionDiffusionSkinsTest {
     static final String[] CASES = {
         "Výchozí chemistry přijme skutečné aktuální hodnoty cell (buňky).",
         "Výměna implementace interface (rozhraní) změní výsledek.",
-        "Skutečný step používá náhradní reakci v obou dalších polích."
+        "Skutečný step používá náhradní reakci v obou polích příštího stavu."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I126: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L12.01: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -97,6 +97,8 @@ class M01_ReactionDiffusionSkinsTest {
     public static void main(String[] args) throws Exception {
         try {
             var p = Reflect.create("M01_ReactionDiffusionSkins");
+            Object authored = Reflect.call(p, "makeChemistry");
+            check(Math.abs((double) Reflect.call(authored, "reaction", .2, .5) - .05) < 1e-12, 0, "authored Chemistry");
             Reflect.call(p, "reset", 42);((double[][]) Reflect.get(p, "a"))[0][0]=.5;((double[][]) Reflect.get(p, "b"))[0][0]=.4;check(Math.abs(((double) Reflect.call(p, "reactionAt", 0, 0))-.08)<1e-12,0,((double) Reflect.call(p, "reactionAt", 0, 0)));
             ((double[][]) Reflect.get(p, "a"))[3][2]=.7;((double[][]) Reflect.get(p, "b"))[3][2]=.2;check(Math.abs(((double) Reflect.call(p, "reactionAt", 2, 3))-.028)<1e-12,0,((double) Reflect.call(p, "reactionAt", 2, 3)));
             Reflect.set(p, "chemistry", Reflect.function("M01_ReactionDiffusionSkins$Chemistry", values -> { double a = (double) values[0]; double b = (double) values[1]; return .1*a+.05*b; }));check(Math.abs(((double) Reflect.call(p, "reactionAt", 2, 3))-.08)<1e-12,1,((double) Reflect.call(p, "reactionAt", 2, 3)));
@@ -109,7 +111,7 @@ class M01_ReactionDiffusionSkinsTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I126: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L12.01: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -120,12 +122,12 @@ class M02_FlockPlaygroundTest {
     static int checks;
     static final String[] CASES = {
         "Výchozí síla respektuje hranici vzdálenosti.",
-        "ObstaclePush používá náhradní roli.",
+        "obstaclePush používá náhradní roli.",
         "Skutečný krok ptáka se při výměně role změní."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I128: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L12.02: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -162,7 +164,13 @@ class M02_FlockPlaygroundTest {
     public static void main(String[] args) throws Exception {
         try {
             var p = Reflect.create("M02_FlockPlayground");
-            Reflect.call(p, "reset", 42);check(((double) Reflect.call(p, "obstaclePush", 20))==.2&&((double) Reflect.call(p, "obstaclePush", 75))==0,0,((double) Reflect.call(p, "obstaclePush", 20)));
+            Object authored = Reflect.call(p, "makeAvoidance", 100.0);
+            check(Math.abs((double) Reflect.call(authored, "strength", 25.0) - .15) < 1e-12, 0, "authored near strength");
+            check(Math.abs((double) Reflect.call(authored, "strength", 50.0) - .1) < 1e-12, 0, "captured radius");
+            check((double) Reflect.call(authored, "strength", 0.0) == 0 && (double) Reflect.call(authored, "strength", 100.0) == 0, 0, "distance boundaries");
+            check(Math.abs((double) Reflect.call(p, "obstaclePush", 37.5) - .1) < 1e-12, 0, "installed factory rule");
+            reject(() -> Reflect.call(p, "makeAvoidance", 0.0), 0);
+            Reflect.call(p, "reset", 42);check(Math.abs(((double) Reflect.call(p, "obstaclePush", 20)) - .2 * (1 - 20.0 / 75)) < 1e-12&&((double) Reflect.call(p, "obstaclePush", 75))==0,0,((double) Reflect.call(p, "obstaclePush", 20)));
             Reflect.set(p, "avoidance", Reflect.function("M02_FlockPlayground$Avoidance", values -> { double d = (double) values[0]; return d/100; }));check(((double) Reflect.call(p, "obstaclePush", 35))==.35&&((double) Reflect.call(p, "obstaclePush", 90))==.9,1,((double) Reflect.call(p, "obstaclePush", 35)));
             Reflect.set(p, "avoidance", Reflect.function("M02_FlockPlayground$Avoidance", values -> { double d = (double) values[0]; return .7; }));check(((double) Reflect.call(p, "obstaclePush", 20))==.7,1,((double) Reflect.call(p, "obstaclePush", 20)));
             var other=Reflect.create("M02_FlockPlayground");Reflect.call(other, "reset", 42);Reflect.set(other, "avoidance", Reflect.function("M02_FlockPlayground$Avoidance", values -> { double d = (double) values[0]; return 0; }));
@@ -171,7 +179,7 @@ class M02_FlockPlaygroundTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I128: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L12.02: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -187,7 +195,7 @@ class M03_PhasingRhythmsTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I133: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L12.03: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -224,6 +232,13 @@ class M03_PhasingRhythmsTest {
     public static void main(String[] args) throws Exception {
         try {
             var p = Reflect.create("M03_PhasingRhythms");
+            Object authored = Reflect.call(p, "makeVoice", .2, .5);
+            double expectedTap = .5 * (double) Reflect.call(p, "tap", .001, .2);
+            check(Math.abs((double) Reflect.call(authored, "sample", .001) - expectedTap) < 1e-12, 0, "authored Voice gain");
+            check((double) Reflect.call(Reflect.call(p, "makeVoice", .2, 0.0), "sample", .001) == 0, 0, "zero gain");
+            double expectedMix = .17 * ((double) Reflect.call(p, "tap", .001, .12) + .7 * (double) Reflect.call(p, "tap", .001, .13));
+            check(Math.abs((double) Reflect.call(p, "mix", .001) - expectedMix) < 1e-12, 0, "both authored voices installed");
+            reject(() -> Reflect.call(p, "makeVoice", .1, 2.0), 0);
             Reflect.set(p, "first", Reflect.function("M03_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return .2; }));Reflect.set(p, "second", Reflect.function("M03_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return .5; }));check(Math.abs(((double) Reflect.call(p, "mix", .4))-.119)<1e-12,0,((double) Reflect.call(p, "mix", .4)));
             Reflect.set(p, "first", Reflect.function("M03_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return t+.2; }));Reflect.set(p, "second", Reflect.function("M03_PhasingRhythms$Voice", values -> { double t = (double) values[0]; return .5-2*t; }));
             check(Math.abs(((double) Reflect.call(p, "mix", .4))-.051)<1e-12&&Math.abs(((double) Reflect.call(p, "mix", .8))+.017)<1e-12,0,((double) Reflect.call(p, "mix", .8)));
@@ -235,7 +250,7 @@ class M03_PhasingRhythmsTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I133: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L12.03: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -247,11 +262,11 @@ class M04_PendulumPainterTest {
     static final String[] CASES = {
         "Výchozí role čte aktuální úhel, délku a gravitaci.",
         "Konstantní jiné zrychlení změní skutečnou rychlost.",
-        "Nulové jiné pravidlo udrží původně klidný úhel."
+        "Nulové náhradní pravidlo zachová počáteční úhel při nulové počáteční rychlosti."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I138: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L12.04: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -288,6 +303,14 @@ class M04_PendulumPainterTest {
     public static void main(String[] args) throws Exception {
         try {
             var p = Reflect.create("M04_PendulumPainter");
+            Object authored = Reflect.call(p, "makeAcceleration");
+            Reflect.set(p, "gravity", 200.0);
+            check(Math.abs((double) Reflect.call(authored, "at", Math.PI / 2, 100.0) + 2) < 1e-12, 0, "authored restoring rule");
+            Reflect.set(p, "gravity", 100.0);
+            check(Math.abs((double) Reflect.call(authored, "at", Math.PI / 2, 100.0) + 1) < 1e-12, 0, "current gravity read by existing rule");
+            Reflect.set(p, "angle", Math.PI / 2);
+            Reflect.set(p, "length", 100.0);
+            check(Math.abs((double) Reflect.call(p, "accelerationNow") + 1) < 1e-12, 0, "authored rule installed");
             Reflect.call(p, "reset", 42);double expected=-((double) Reflect.get(p, "gravity"))/((double) Reflect.get(p, "length"))*Math.sin(((double) Reflect.get(p, "angle")));check(Math.abs(((double) Reflect.call(p, "accelerationNow"))-expected)<1e-12,0,((double) Reflect.call(p, "accelerationNow")));
             Reflect.set(p, "angle", .4);Reflect.set(p, "length", 120);expected=-((double) Reflect.get(p, "gravity"))/((double) Reflect.get(p, "length"))*Math.sin(((double) Reflect.get(p, "angle")));check(Math.abs(((double) Reflect.call(p, "accelerationNow"))-expected)<1e-12,0,((double) Reflect.call(p, "accelerationNow")));
             Reflect.set(p, "acceleration", Reflect.function("M04_PendulumPainter$Acceleration", values -> { double angle = (double) values[0]; double length = (double) values[1]; return angle+length/100; }));
@@ -300,7 +323,7 @@ class M04_PendulumPainterTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I138: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L12.04: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -316,7 +339,7 @@ class M05_KnightTourTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I096: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L12.05: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -360,7 +383,7 @@ class M05_KnightTourTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I096: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L12.05: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -371,12 +394,12 @@ class M06_CipherPostcardsTest {
     static int checks;
     static final String[] CASES = {
         "LEMON převede ATTACK AT DAWN! na LXFOPV EF RNHR!.",
-        "Decode používá stejný předaný keyword a obnoví text.",
+        "Decoding (dešifrování) používá stejný předaný keyword (klíčové slovo) a obnoví text.",
         "Jiné alternativy, interpunkce a neplatné klíče zachovají své contract (smlouvy)."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I131: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L12.06: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -424,7 +447,7 @@ class M06_CipherPostcardsTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I131: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L12.06: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -440,7 +463,7 @@ class M07_RetroSoundForgeTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I132: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L12.07: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -487,7 +510,7 @@ class M07_RetroSoundForgeTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I132: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L12.07: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -503,7 +526,7 @@ class M08_FireflySynchronyTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I139: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L12.08: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -552,7 +575,7 @@ class M08_FireflySynchronyTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I139: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L12.08: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -568,7 +591,7 @@ class M09_CrystalGrowthTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I127: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L12.09: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -613,7 +636,7 @@ class M09_CrystalGrowthTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I127: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L12.09: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -629,7 +652,7 @@ class M10_PictureMusicTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I134: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L12.10: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -674,7 +697,7 @@ class M10_PictureMusicTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I134: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L12.10: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -690,7 +713,7 @@ class M11_SecretBeepsTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I143: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L12.11: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -734,7 +757,7 @@ class M11_SecretBeepsTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I143: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L12.11: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -744,13 +767,13 @@ class M11_SecretBeepsTest {
 class M12_MountainPostcardsTest {
     static int checks;
     static final String[] CASES = {
-        "Nová transformace obrátí pořadí a změní skutečný obraz.",
+        "Vrácený hřeben má opačné pořadí; zrcadlený a původní pohled se liší.",
         "Vrácený array (pole) je nezávislý na původním.",
         "Prázdný a jednoprvkový hřeben zachovají význam."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I140: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L12.12: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -794,7 +817,7 @@ class M12_MountainPostcardsTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I140: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L12.12: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

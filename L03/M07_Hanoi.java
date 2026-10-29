@@ -3,7 +3,8 @@
 /// Přesuň tři disky z tyčky A na tyčku C, vždy pouze horní disk. Vymysli pořadí bez většího disku na
 /// menším a zjisti, jak blízko se dostaneš sedmi tahům.
 ///
-/// **Tvoje mise:** Věž přijímá větší disk na menším a odmítá některá neškodná položení. Oprav odmítající
+/// **Tvoje mise · Vynucuj pravidlo věže:** Věž přijímá větší disk na menším a odmítá některá neškodná
+/// položení. Oprav odmítající
 /// comparison (porovnání) v move před změnou kterékoli hromádky.
 ///
 /// **Dnes trénuješ:** Ochrana před zakázaným stavem: popiš špatnou situaci v condition (podmínce) a vrať
@@ -70,6 +71,18 @@ boolean move(int from, int to) {
 /// Pozdější část move už přesouvá jediný horní disk a upravuje velikost obou hromádek. reset obnoví
 /// hádanku tří disků; main vypisuje horní disk napravo a převádí písmena tyček na index (indexy)
 /// připraveného úložiště.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Menší číslo kotouče znamená menší kotouč. Prázdný cíl nemá horní kotouč k porovnání. Operátor &&
+/// může přeskočit čtení vršku při sizes[to] rovném nule. Odmítnutý tah vrátí výsledek před změnou
+/// věží. Předpověz kotouč 3 na kotouč 1 a potom 1 na 3; který případ je zakázaný?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Po zprovoznění sedmitahového řešení záměrně obrať pravidlo velikostí jako samostatnou variantu.
+/// Které tahy přestanou fungovat a dává původní cíl stále smysl? Vrať pravidlo a napiš vlastní
+/// sedmitahový návod pro kamaráda bez improvizování.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">

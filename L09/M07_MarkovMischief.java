@@ -29,24 +29,27 @@ Map<String, List<String>> train(String text) {
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F24">
-/// ### Map (mapa): hodnota podle klíče
+/// ### Map (mapa) pamatuje hodnotu pro každý key (klíč)
 ///
-/// `Map<String, Integer>` přiřazuje textovým keys (klíčům) celočíselné values (hodnoty). Jeden klíč
-/// má nejvýše jednu uloženou hodnotu.
+/// List (seznam) drží pozice. Map drží vztah: každý key vede k jedné aktuální value (hodnotě). Zde
+/// jméno barvy vede k počtu.
 ///
 /// ```java
-/// Map<String, Integer> badges = new HashMap<>();
-/// badges.put("moon", 4);
-/// IO.println(badges.getOrDefault("moon", 0));
-/// IO.println(badges.getOrDefault("sun", 0));
+/// Map<String, Integer> marbles = new HashMap<>();
+/// marbles.put("blue", 2);
+/// int before = marbles.getOrDefault("blue", 0);
+/// marbles.put("blue", before + 1);
+/// IO.println(marbles.getOrDefault("gold", 0));
 /// ```
 ///
-/// Výstup je `4`, potom `0`. `getOrDefault(key, fallback)` přečte existující hodnotu; při chybějícím
-/// klíči vrátí fallback (náhradní hodnotu). Toto čtení nic nevkládá. `put(key, value)` hodnotu uloží
-/// a případnou předchozí hodnotu téhož klíče přepíše; čísla automaticky nesčítá. `containsKey(key)`
-/// použij, když potřebuješ výslovně rozlišit chybějící klíč. V těchto příkladech neukládáme `null`.
+/// Blue má nyní počet 3; pro gold se vypíše 0. `getOrDefault(key, fallback)` vrátí fallback (náhradní
+/// hodnotu), když key chybí, ale nic nevloží. `put` nahradí dosavadní value daného key: samo nepřičítá.
+/// Ostatní key zůstanou beze změny.
 ///
-/// Předpověz: po `badges.put("moon", 9)` co vrátí stejná dvě čtení?
+/// `containsKey` zjišťuje samotnou přítomnost. `entrySet()` umožní projít dvojice key/value: každý
+/// entry (položka) poskytuje `getKey()` a `getValue()`. Map neslibuje, že první entry má nejvyšší
+/// value; vítěze musíš vybrat porovnáváním. Předpověz blue po dalším stejném kroku. Potom předpověz
+/// výsledek `getOrDefault("gold", 9)` a rozhodni, zda se tím gold uložilo.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
@@ -67,17 +70,12 @@ Map<String, List<String>> train(String text) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
-/// ### Map (mapa) může odkazovat na mutable list (měnitelný seznam)
+/// ### Použij model právě zde
 ///
-/// `Map<String, List<String>>` přiřazuje každému slovu seznam možných následujících slov.
-/// `containsKey(key)` zjišťuje existenci klíče. `get(key)` přečte uložený seznam; při chybějícím
-/// klíči vrátí null a volání add na null selže. Čtení existujícího seznamu jej nekopíruje. V jiném
-/// příkladu: pokud klíč `gate` ukládá `[hall]`, připojení `yard` k seznamu získanému přes get změní i
-/// uložený seznam na `[hall, yard]`.
-///
-/// V train musí opakovaná slova zachovat dřívější následovníky. Předpověz záznamy po `moon cat moon
-/// dog`. Vysvětli, kdy je třeba vytvořit seznam a kdy zachovat existující. Opakovaní následovníci
-/// jsou dovolení: jejich opakované výskyty ovlivňují pozdější náhodný výběr.
+/// Každá Map value (hodnota mapy) je sama mutable List (měnitelný seznam) následníků. Pro `sun cat sun
+/// dog` musí sun uchovat cat i dog. Opakované cat má význam: připravený generator (vytvářecí postup)
+/// vybírá položku, proto duplicity mění pravděpodobnost. `containsKey(word)` zjišťuje, zda slovo už
+/// vlastní List; novou vytvoř jen při prvním setkání.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -90,6 +88,11 @@ Map<String, List<String>> train(String text) {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Počáteční put podmiň containsKey; další add zachovej, včetně stejných následníků.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Napiš malý corpus (vstupní text) s různými pokračováními stejného slova. Jedno pokračování záměrně
+/// opakuj a sleduj rytmus vzniklých nesmyslů.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

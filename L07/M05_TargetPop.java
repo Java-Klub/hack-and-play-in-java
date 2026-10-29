@@ -31,25 +31,27 @@ Phase afterTime(long now) {
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F21">
-/// ### Enum: jedna z pojmenovaných možností
+/// ### State (stav) dostává jméno
 ///
-/// Enum vymezí konečnou sadu hodnot jednoho type (typu). Jméno type a tečka určují konkrétní hodnotu.
-/// Překlep v enum value (hodnotě enum) způsobí compiler error (chybu překladu), na rozdíl od
-/// libovolného textu. Variable (proměnná) nese jednu volbu; `==` je pro tyto hodnoty vhodné.
+/// Enum (výčtový typ) vyjmenuje uzavřenou sadu jmen. Variable (proměnná) tohoto typu drží vždy jedno
+/// jméno: nemůže současně obsahovat OPEN i LOCKED.
 ///
 /// ```java
-/// enum Voice {
-///     WHISPER, SING, SHOUT
+/// enum Door { LOCKED, OPEN }
+/// Door afterKey(Door before, boolean hasKey) {
+///     if (before == Door.LOCKED && hasKey) return Door.OPEN;
+///     return before;
 /// }
-///
-/// Voice voice = Voice.SING;
-/// IO.println(voice == Voice.SHOUT);
 /// ```
 ///
-/// Declaration (deklarace) patří vedle method (metod); příkazy můžeš číst uvnitř metody. Porovnání
-/// vypíše false, protože SING a SHOUT jsou různé hodnoty. Předpověz je po přiřazení SHOUT. Může
-/// jediná variable tvrdit současně SING i SHOUT? Vysvětli, jaké rozporné kombinace by dovolily
-/// oddělené boolean (logické proměnné).
+/// Trace (průchod) pro `afterKey(Door.LOCKED, true)`: obě části `&&` jsou true, proto se vrátí OPEN.
+/// Bez klíče se vrátí původní LOCKED. Samotné volání ještě výsledek neukládá. Caller (volající) může
+/// při změně použít `door = afterKey(door, hasKey)`.
+///
+/// Nakresli dva kruhy LOCKED → OPEN a ke šipce napiš „key“. Rozhodni, co se má stát s již otevřenými
+/// dveřmi. Předpověz výsledek pro OPEN s klíčem a ukaž, ke kterému `return` se dojde. Herní priority
+/// musí určit pravidla hry; enum je sám nevymyslí. Named state (pojmenovaný stav) jen pomůže odlišit
+/// možnosti bez tajných čísel.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
@@ -77,6 +79,11 @@ Phase afterTime(long now) {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Při now >= deadline vrať FINISHED, nikoli READY.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// V restart() zkrať kolo a porovnej desetisekundový sprint s původními třiceti sekundami. Rozhodni,
+/// zda tvoje osobní výzva oceňuje skóre, nebo přesnost.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -3,8 +3,10 @@
 /// Veď tři pěšce na malé desce a snaž se dojít na protější stranu nebo soupeři znemožnit tah. Pěšci
 /// postupují dopředu a berou šikmo, takže i několik políček umožní pasti.
 ///
-/// **Tvoje mise:** Oba hráči dostali stejný cílový řádek. Oprav goalRow tak, aby výsledek závisel na tom,
-/// který hráč se ptá.
+/// **Tvoje mise · Dej oběma armádám rozkazy:** Ani jedna armáda nemá úplné rozkazy. Doplň goalRow a
+/// forwardStep pro oba hráče:
+/// hráč 1 jde o -1 k řádku 0, hráč 2 o +1 k řádku 2. Připravená pravidla se tvých method (metod)
+/// zeptají; vrať odpovědi bez změny desky.
 ///
 /// **Dnes trénuješ:** Method (metoda), parameter (parametr) a výsledek: jediný pojmenovaný výpočet může
 /// odpovídat na různá volání. goalRow(1) a goalRow(2) předají stejnému tělu různé hodnoty who; vrácený
@@ -13,6 +15,10 @@
 /// Spusť program a jako čtyři samostatné tahy zadej 3 1 2 1; 1 2 2 1; 3 3 2 3; 2 1 3 1, čímž
 /// hráč 2 dojde dolů.
 int goalRow(int who) {
+    return 0;
+}
+
+int forwardStep(int who) {
     return 0;
 }
 
@@ -42,31 +48,36 @@ int goalRow(int who) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Dvě opakovaně použitelné otázky
 ///
-/// - `int goalRow(int who)` — První int popisuje vrácené celé číslo; int who popisuje přijaté číslo
-///   hráče.
-/// - `who` — Parameter (parametr): místní jméno hodnoty dodané tímto call (voláním), nikoli pevný výběr
-///   hráče.
-/// - `return 0;` — Nehotové tělo vrací stejný řádek pro každý input (vstup).
-/// - `{` — Tělo uvnitř odpovídajících složených závorek se znovu použije při každém call (volání) metody.
-///
-/// ### Co už obstarává připravená část
-///
-/// legal a canMove už řeší pohyb pěšců. command volá goalRow se současným hráčem a ověřuje dosažení
-/// vráceného řádku; display a main dodávají desku a input (vstup) jednotlivých tahů.
+/// goalRow a forwardStep dostanou číslo hráče a vrátí int. legal používá forwardStep k ověření směru;
+/// canMove stejnou otázku při hledání dostupného tahu; command používá goalRow k rozpoznání cíle.
+/// Opakované použití pojmenovaného pravidla udržuje volající ve shodě. Připravená deska používá řádky
+/// a sloupce od nuly.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Dvě otázky popisují armádu: kudy je vpřed a který řádek vyhrává? Hráč 1 začíná na vnitřním řádku
+/// 2, postupuje o -1 a míří na 0. Hráč 2 začíná na 0, postupuje o +1 a míří na 2. Stejný argument who
+/// musí dát související odpovědi v obou method (metodách). Ani jedna neposunuje pěšce.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Změnou existující desky reset vytvoř malou taktickou pozici s oběma hráči. Kamarádovi připrav
+/// jeden vítězný a jeden lákavý prohrávající tah. Nejprve zachovej normální směry; potom zkus obrátit
+/// současně obě armády i jejich cílové řádky.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Porovnej dvě volání: goalRow(1) a goalRow(2).
+/// Před psaním zapiš směr a cíl pro každé who.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Return value (vrácená hodnota) musí záviset na parametru volání, ne na pevném globálním hráči.
+/// Obě method (metody) používají stejný parameter hráče, ale odpovídají na jiné otázky.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Při who == 1 vrať 0; jinak vrať 2.
+/// Pro who == 1 vrať cíl 0 a krok -1; pro hráče 2 vrať cíl 2 a krok 1.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
@@ -84,7 +95,7 @@ boolean legal(int r, int c, int nr, int nc, int who) {
     if (r < 0 || r > 2 || c < 0 || c > 2 || nr < 0 || nr > 2 || nc < 0 || nc > 2) {
         return false;
     }
-    int direction = who == 1 ? -1 : 1;
+    int direction = forwardStep(who);
     return board[r][c] == who && nr == r + direction && (nc == c && board[nr][nc] == 0 || Math.abs(nc - c) == 1 && board[nr][nc] == 3 - who);
 }
 
@@ -92,7 +103,7 @@ boolean canMove(int who) {
     for (int r = 0; r < 3; r++) {
         for (int c = 0; c < 3; c++) {
             for (int nc = 0; nc < 3; nc++) {
-                if (legal(r, c, r + (who == 1 ? -1 : 1), nc, who)) {
+                if (legal(r, c, r + forwardStep(who), nc, who)) {
                     return true;
                 }
             }

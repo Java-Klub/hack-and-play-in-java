@@ -9,7 +9,7 @@
 /// **Dnes trénuješ:** Arrays (pole): jednorozměrné pole může představovat čtvercovou desku. Sleduj převod
 /// řádku a sloupce na index (pozici) a použij stejný dotaz line().
 ///
-/// Spusť program, vyber číslo nepoužité figurky od 0 do 15 a nech druhého hráče zadat její
+/// Vyber číslo nepoužité figurky od 0 do 15 a nech druhého hráče zadat její
 /// cílové políčko od 1 do 16.
 boolean won() {
     for (int row = 0; row < 4; row++) {
@@ -72,6 +72,12 @@ boolean won() {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Diagonály jsou 0,5,10,15 a 3,6,9,12.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Přidej čtyři rohy jako nový vítězný vzor pomocí existujícího dotazu line. Sestav desku, kde vyhrají
+/// rohy, ale žádný řádek, sloupec ani diagonála. Protipříklad nejdřív ukaž spolužákovi a potom nové
+/// pravidlo zapoj.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

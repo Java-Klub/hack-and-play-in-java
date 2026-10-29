@@ -10,7 +10,7 @@
 /// průchodu potřebuje pro každý průchod nový začátek. Rozliš dočasný součet od vyřešených nápověd
 /// uložených mezi příkazy.
 ///
-/// Spusť program, jako první odpověď napiš 1 CAT a potvrď Enter, potom si přečti zbývající
+/// Jako první odpověď napiš 1 CAT a potvrď Enter, potom si přečti zbývající
 /// očíslované nápovědy.
 void command(String input) {
     require(outcome.isEmpty());
@@ -81,6 +81,12 @@ void command(String input) {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Uvnitř command() těsně před průchodem deklaruj int count = 0 a odstraň field.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Navrhni čtverec písmen 3×3. Společně uprav tři vodorovné a tři svislé odpovědi a napiš vlastní
+/// nápovědy. Spolužák dostane jen nápovědy; ověř, že opakovaná správná odpověď nezapočítá stejnou
+/// položku dvakrát.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

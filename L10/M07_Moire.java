@@ -23,6 +23,14 @@ Point2D.Double gridPoint(int column, int row, double a) {
     return new Point2D.Double(WIDTH / 2 + x * Math.cos(a) - y * Math.sin(a), x * Math.sin(a) + y * Math.cos(a));
 }
 
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Vytvoř detektor pohybu bez pohyblivých součástí: zvol dvě kontrastní barvy mřížek a najdi úhel,
+/// kde drobný stisk klávesy vyvolá zdánlivě obrovské vlny. Zapiš úhel a rozteč, aby je někdo jiný
+/// mohl zopakovat.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F29">
 /// ### Rendering (vykreslení): ze stavu na pixely
 ///

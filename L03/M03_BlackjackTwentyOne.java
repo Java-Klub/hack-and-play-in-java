@@ -3,7 +3,8 @@
 /// Zkus skončit blíž k 21 než krupiér bez překročení. Můžeš si vzít další kartu nebo zůstat a esa mohou
 /// mít hodnotu jedna či jedenáct.
 ///
-/// **Tvoje mise:** Známý začátek 20 proti 19 chybně přisoudí výhru krupiérovi. Doplň compareTotals tak,
+/// **Tvoje mise · Napiš konečný rozsudek:** Známý začátek 20 proti 19 chybně přisoudí výhru krupiérovi.
+/// Doplň compareTotals tak,
 /// aby ve správném pořadí oddělilo překročení, výhru hráče, remízu a výhru krupiéra.
 ///
 /// **Dnes trénuješ:** Uspořádané branch (větve): první vybraná větev může rozhodnout výsledek dřív, než
@@ -77,6 +78,19 @@ String compareTotals(int human, int house) {
 /// (větví) předpověz výsledky pro 20 proti 22, 18 proti 18 a 18 proti 20. Zachovej původní velikost
 /// písmen i mezery: vrácená zpráva je součástí contract (smlouvy) této method (metody). Dobírání
 /// karet ani vypisování do compareTotals nepřesouvej.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Ordered decision (uspořádané rozhodování) vyhodnocuj shora dolů. Pro human 22 a house 23 už hráč
+/// překročil limit: pozdější porovnání nesmí odměnit vyšší součet. Pro 20 a 19 otázky překročení
+/// neplatí a rozhodne pozdější vítězná branch (větev). Každý provedený return ukončí method (metodu).
+/// Předpověz 21/21 a 18/22.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Navrhni krátké jiné pravidlo remízy a vysvětli je kamarádovi před hrou. Změň jen výsledek shodných
+/// součtů a zachovej přednost překročení 21. Zapiš dva součty, na kterých se pravidla liší, a jeden
+/// případ, kde se shodnou.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">

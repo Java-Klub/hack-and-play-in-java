@@ -8,88 +8,73 @@ import java.awt.image.BufferedImage;
 /// Vypěstuj větvící se strom změnou jediného úhlu. Malé pootočení promění úzkou větvičku v rozložitou
 /// korunu, kterou stojí za to uložit jako pohlednici.
 ///
-/// **Tvoje mise:** Překlep v úhlu potichu vybere 10 místo slíbené výchozí hodnoty 28. Oprav náhradní
-/// hodnotu a dál odmítej čísla mimo povolené rozmezí.
+/// **Tvoje mise:** Vytvoř readAngle(text): odstraň okolní mezery, proveď parsing (převod) na double,
+/// přijmi finite (konečné) hodnoty 10–70 včetně, pro nečíselný text použij 28 a čitelná neplatná čísla
+/// odmítni. Nedokončený parser (převodní postup) nyní ignoruje každý požadovaný tvar stromu.
 ///
-/// **Dnes trénuješ:** Parsing (rozbor vstupu) mění text v číslo a může selhat ještě před kontrolou
-/// rozmezí. Zachyť konkrétní chybu převodu textu; číslo mimo rozmezí je jiný problém.
+/// **Dnes trénuješ:** Vytvoř přesné input boundary (rozhraní vstupu): odliš parsing (převod),
+/// validation (ověření platnosti) a uložení živého nastavení.
 ///
 /// Po spuštění programu napiš úhel 10–70 nebo zkus oops; přečti Chosen value a prohlédni Java
 /// obrázek. Pro další vstup zavři okno a znovu spusť program.
 double readAngle(String text) {
-    try {
-        double value = Double.parseDouble(text.strip());
-        if (!Double.isFinite(value) || value < 10 || value > 70) throw new IllegalArgumentException("angle: 10..70.");
-        return value;
-    } catch (NumberFormatException invalid) {
-        return 10;
-    }
+    return 28;
 }
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F31">
-/// ### Parse (převod), validation (ověření), potom uložení
+/// ### Parsing (převod textu) a platná hodnota jsou dvě otázky
 ///
-/// Parsing převádí text; validation ověřuje, zda je výsledné číslo povolené. Každý krok může selhat
-/// jinak.
+/// Číselný vstup začíná jako text. Parsing může selhat, protože text není číslo; validation (ověření
+/// platnosti) může odmítnout správně zapsané číslo. Obě pravidla rozhoduj zvlášť.
 ///
 /// ```java
-/// int readCopies(String text) {
+/// int readZoom(String text) {
 ///     try {
-///         int n = Integer.parseInt(text.strip());
-///         if (n < 1 || n > 5) {
-///             throw new IllegalArgumentException("Copies: 1..5");
-///         }
-///         return n;
-///     } catch (NumberFormatException invalid) {
-///         return 3;
+///         int zoom = Integer.parseInt(text.strip());
+///         if (zoom < 1 || zoom > 4) throw new IllegalArgumentException("Zoom: 1..4");
+///         return zoom;
+///     } catch (NumberFormatException typo) {
+///         return 2;
 ///     }
 /// }
 /// ```
 ///
-/// `readCopies(" 2 ")` vrátí `2`: převod i ověření uspějí. `"oops"` selže při převodu a přes `catch`
-/// vrátí `3`. Číselný text `"8"` se převede, ale následně vyvolá jinou exception (výjimku); tento
-/// konkrétní catch ji nezachytí. `return` ukončí metodu; `throw` opustí běžnou cestu. Uložený stav
-/// hry měň až po úspěšném ověření.
+/// Trace (průchod) pro `" 3 "`: `strip` odstraní okolní mezery, `parseInt` vrátí 3, bounds (hranice) je
+/// přijmou. `"oops"` nejde převést, takže `catch` vrátí 2. `"7"` se převede, ale neprojde validation;
+/// vyvolaná IllegalArgumentException tuto method (metodu) opustí. Úzký `catch` pro
+/// NumberFormatException tyto cesty odliší.
 ///
-/// Předpověz cestu pro `"five"`, `"5"` a `"0"`.
+/// Desetinný vstup používá `Double.parseDouble`; NaN a infinity (nekonečno) jsou čitelné, ale nejsou
+/// finite (konečná čísla). U živého nastavení nejdřív vytvoř local candidate (místní návrh), teprve po
+/// validation změň field (sdílenou proměnnou). Předpověz cestu pro `"0"`, `"two"` a `"4"`. Které vstupy
+/// mají zachovat předchozí nastavení?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Jak číst tuto část
 ///
-/// - `Double.parseDouble(text.strip())` — Odstraní okolní mezery a pokusí se o převod na desetinné číslo.
-/// - `!Double.isFinite(value)` — Odmítne NaN a nekonečna, která nejsou použitelnými úhly větvení.
-/// - `catch (NumberFormatException invalid)` — Zachytí chybný číselný text, nikoli každou možnou
-///   programátorskou chybu.
-/// - `return 10;` — Současná náhradní hodnota určuje viditelný strom po překlepu.
-///
-/// ### Co už obstarává připravená část
-///
-/// main předá jediný zadaný úhel do readAngle a render nakreslí omezené větvení. Platná hodnota
-/// vytvoří Java obrázek; překlep a číslo mimo range (povolený rozsah) jsou různé případy.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
-/// ### Trasuj tři různé cesty
-///
-/// V readAngle se `" 24 "` očistí, převede a vrátí jako 24. `"oops"` převést nejde a vstoupí do catch
-/// pro NumberFormatException; porovnej současný výsledek s ohlášenou výchozí hodnotou. `"90"` se
-/// převede úspěšně, ale neprojde range guard (kontrolou mezí). Jeho IllegalArgumentException není
-/// NumberFormatException zachytávaná touto větví, proto pokračuje k volajícímu. NaN a nekonečno jsou
-/// také zvláštní číselné hodnoty, které odmítá isFinite. Předpověz, které řádky proběhnou pro `"70"`
-/// a `"9"`; každé selhání není důvod nahradit vstup výchozí hodnotou.
+/// Double.parseDouble umí desetinné úhly i NaN a Infinity; Double.isFinite poslední dvě možnosti
+/// odmítne. NumberFormatException znamená selhání parsing (převodu), nikoli platnost úspěšně přečteného
+/// čísla. Main prompt (hlavní otázka) vypíše zvolenou value (hodnotu) před kreslením. EOF ukončuje,
+/// prázdný vstup vybírá uvedený default (výchozí hodnotu).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Před parsing (rozborem) odstraň okolní mezery.
+/// Odděl nečíselný text od čitelných, ale nepřijatelných čísel.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Zachyť NumberFormatException, nikoli každou chybu programu.
+/// Finite test (kontrola konečnosti) a obě včetně platné bounds (hranice) patří před vrácení čísla.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Výchozí hodnota je 28; guard (podmínky) rozsahu zůstanou oddělené.
+/// Jen NumberFormatException znamená fallback (náhradní hodnotu) 28; pro neplatná přečtená čísla
+/// vyvolej IllegalArgumentException.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Dej oběma větvím různé úhly a porovnej větrem ohnutý strom se souměrným. Zachovej stejný kmen a
+/// hloubku, aby byla asymetrie vidět.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

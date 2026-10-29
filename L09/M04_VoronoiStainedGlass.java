@@ -9,73 +9,75 @@ import java.util.List;
 /// Rozhoď barevná semínka a nech každé místo obrázku připojit k nejbližšímu. Různá semínka promění
 /// stejnou plochu v nové vitráže.
 ///
-/// **Tvoje mise:** Vytvoření prvního semínka selže, protože zvolená kolekce nemůže růst. Připrav List
-/// vhodný pro postupné sestavení požadovaných semínek.
+/// **Tvoje mise:** Vytvoř seedList(random,count): přijmi count 0–100, jiné počty odmítni a vrať mutable
+/// List (měnitelný seznam) přesně tolika postupných výsledků nextSeed(random). Zachovej pořadí vzniku.
+/// Prázdný builder (sestavovací postup) nyní nechává vitráž bez barevných seed (zárodků).
 ///
-/// **Dnes trénuješ:** List (seznam) popisuje přístup v pořadí, ale ne každý List dovoluje mutation
-/// (změnu). Tato method (metoda) sestavuje výsledek postupně, proto její implementace musí přijímat add.
+/// **Dnes trénuješ:** Vytvoř práci s ordered mutable collection (uspořádanou měnitelnou kolekcí) a
+/// určuj přijetí i prázdný případ.
 ///
-/// Program sestaví obrázek. Pokud seedList odmítne přidat první barevný bod, čti výstup v
-/// terminálu. Po opravě program otevře barevný obrázek.
+/// Spusť program: prázdný seed builder (postup sestavení zárodků) nevytvoří vitráž. Po dokončení
+/// seedList stejný program otevře barevný obrázek.
 List<Seed> seedList(Random random, int count) {
-    if (count < 0 || count > 100) throw new IllegalArgumentException("Seeds: 0..100.");
-    List<Seed> seeds = List.of();
-    for (int i = 0; i < count; i++) {
-        seeds.add(new Seed(random.nextInt(400), random.nextInt(300), Color.HSBtoRGB(random.nextFloat(), 0.65F, 1)));
-    }
-    return seeds;
+    return List.of();
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F22">
-/// ### List (seznam): pořadí, které můžeš měnit
+/// ### List (seznam) drží pořadí měnících se věcí
 ///
-/// `List<String>` uchovává texty v pořadí. `new ArrayList<>()` vytvoří mutable list (měnitelný
-/// seznam): obsah lze měnit bez nahrazení samotného seznamu.
+/// Array (pole) má pevný počet míst. Mutable List (měnitelný seznam) může růst i ubývat a zachovává
+/// pořadí. `List<T>` popisuje přístup k prvkům typu T; `ArrayList<T>` je měnitelná JDK implementation
+/// (implementace).
 ///
 /// ```java
-/// List<String> snacks = new ArrayList<>();
-/// snacks.add("apple");
-/// snacks.add("nuts");
-/// IO.println(snacks.get(0));
-/// IO.println(snacks.size());
+/// List<String> trail = new ArrayList<>();
+/// trail.add("north");
+/// trail.add("east");
+/// String latest = trail.removeLast();
+/// IO.println(trail + " / " + latest);
 /// ```
 ///
-/// Výstup je `apple`, potom `2`. `add(value)` připojí jeden prvek na konec; `get(index)` přečte prvek
-/// bez odebrání. Indexes (indexy) začínají nulou. `isEmpty()` zjišťuje, zda seznam nemá prvky.
-/// `removeLast()` odebere a vrátí poslední prvek; volej jej jen u neprázdného seznamu. Seznam přímo z
-/// `List.of(...)` měnit nelze, ale `new ArrayList<>(List.of(...))` měnit lze.
+/// Výsledek je `[north] / east`. `add` připojí na konec; `removeLast` poslední prvek odstraní a zároveň
+/// vrátí. Před odebráním z prázdného List ověř `isEmpty`. Queue (fronta) odebírá vpředu a přidává
+/// vzadu, zatímco undo stack (zásobník změn) odebírá nejnovější prvek. Správný konec určuje význam
+/// pořadí.
 ///
-/// Předpověz: po `snacks.removeLast()` jaká bude velikost a první prvek?
+/// `List.of("north", "east")` vytvoří unmodifiable List (neměnitelný seznam): čtení funguje, přidávání
+/// ne. `new ArrayList<>(existing)` vytvoří mutable List s dosavadními prvky. Předpověz obsah trail po
+/// přidání `"south"`. Když vracíš dvě změny, která má zmizet jako první?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Jak číst tuto část
 ///
-/// - `List<Seed>` — Element type (typ prvku) určuje, že každá uložená hodnota je Seed.
-/// - `List.of()` — Prázdný immutable List (neměnný seznam): prázdnost je velikost, neměnnost zákaz změny.
-/// - `seeds.add` — Přidá jednu vytvořenou hodnotu do sestavované kolekce.
-/// - `random.nextInt(400)` — Vybere platnou x coordinate (souřadnici) od nuly do 399.
-///
-/// ### Co už obstarává připravená část
-///
-/// render požádá seedList o středy a přiřadí každý bod nejbližšímu středu; showImages zobrazí
-/// obrázek z paměti přímo v Javě.
+/// `nextSeed(random)` je malá připravená method (metoda) níže: vybere x, y a barvu pomocí JDK Random.
+/// Volej ji jednou pro každý požadovaný seed (zárodek). List<Seed> pojmenuje element type (typ prvků),
+/// new ArrayList<Seed>() dodá rostoucí kontejner. Připravený renderer (vykreslení) přiřadí pixel
+/// nejbližšímu Seed; pro obrázek potřebuje neprázdný List (seznam).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// List.of vytvoří výsledek, který nelze měnit.
+/// Před generation loop (opakovaným vytvářením) rozhodni pravidlo count (počtu).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Zvol mutable implementation (měnitelnou implementaci) při zachování role List<Seed>.
+/// Začni prázdným rostoucím List (seznamem) a v každém kroku připoj připravený Seed.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Přidávej uvnitř counted loop (cyklu s počítadlem); nula dá prázdný mutable List (měnitelný
-/// seznam).
+/// Odmítni vstup mimo 0–100, countkrát zavolej nextSeed a add a vrať hotový List, pro nulu prázdný.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Nahraď náhodné umístění několika záměrnými Seed record (datovými záznamy) ve tvaru znaku. Pravidlo
+/// nejbližšího seed (zárodku) promění body v navrženou vitráž.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+Seed nextSeed(Random random) {
+    return new Seed(random.nextInt(400), random.nextInt(300), Color.HSBtoRGB(random.nextFloat(), 0.65F, 1));
+}
+
 record Seed(int x, int y, int colour) {}
 
 int nearest(List<Seed> seeds, int x, int y) {

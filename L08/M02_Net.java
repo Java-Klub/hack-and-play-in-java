@@ -10,14 +10,77 @@ import java.util.ArrayList;
 /// Otáčej dílky potrubí, dokud nedostane energii celá síť ze zdroje. Zelené políčko má mít skutečné
 /// oboustranné spojení.
 ///
-/// **Tvoje mise:** Trubka mířící na prázdnou stranu souseda ho přesto napájí. Oprav connected(), aby
-/// spojení vyžadovalo odpovídající vývody na obou dílcích.
+/// **Tvoje mise:** Vytvoř linked(x,y,direction): spojení existuje, jen když neighbour (soused) leží
+/// uvnitř bounds (hranic), aktuální tile (dílek) má výstup daným směrem a neighbour má opačný vstup.
+/// Dotyk prázdné hrany není vodič. Připravené hledání tímto pravidlem rozsvěcí síť.
 ///
-/// **Dnes trénuješ:** Grid neighbours (sousedé v mřížce): sousedství samo neznamená propojení. Pro
-/// přechod určitým směrem prověř vývod i příchozí stranu souseda.
+/// **Dnes trénuješ:** Převeď malý nákres na coordinates (souřadnice), bounds (hranice) a vztahy
+/// neighbour (sousedů).
 ///
 /// Spusť program a kliknutím otáčej potrubí dílku, přitom sleduj, které dílky při spojení se
 /// zdrojem zezelenají.
+boolean linked(int x, int y, int direction) {
+    return false;
+}
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F18">
+/// ### Coordinates (souřadnice) popisují sousedy
+///
+/// Grid (mřížka) ukládá nejdřív row (řádek): `board[y][x]`. Rostoucí x vede doprava, rostoucí y na
+/// obrazovce dolů. Neighbour (soused) vznikne přičtením malého offset (posunu).
+///
+/// ```text
+///           (0,-1)
+/// (-1,0)    HERE    (1,0)
+///           (0,1)
+/// ```
+///
+/// ```java
+/// int[][] board = {{2, 5, 8}, {1, 4, 7}};
+/// int x = 1, y = 0;
+/// int nx = x + 0, ny = y + 1;
+/// if (ny >= 0 && ny < board.length && nx >= 0 && nx < board[ny].length) {
+///     IO.println(board[ny][nx]);
+/// }
+/// ```
+///
+/// Přesun vede z 5 na 4, vypíše se tedy 4. Bounds (hranice) kontrolujeme před indexováním: array (pole)
+/// za okrajem žádné cell (políčko) nemá. Diagonal (úhlopříčný posun) mění obě coordinates. Corridor
+/// (chodba) opakuje stejný offset; neighbourhood (okolí) zkouší několik offset. Jde o různé postupy se
+/// stejným modelem.
+///
+/// Předpověz výsledek offset `(-1,0)` ze stejného začátku. Který offset opustí tento board (hrací
+/// plochu)? Než spojíš směry do loop (opakování), zakresli začátek a cíl na papír.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ## Jak číst tuto část
+///
+/// Směry 0,1,2,3 znamenají north,east,south,west. `dx` a `dy` dávají offset (posun). Bit (dvojková
+/// číslice) se čísluje od nuly: `1 << d` dává mask (masku) 1,2,4,8. Tile (dílek) 5 = 1+4 má north a
+/// south: `5 & 4` dává 4, ale `5 & 2` dává 0. Nenulový výsledek `&` znamená přítomný port (vývod).
+/// `(d+2)%4` najde opačný směr. Připravené connected() prochází celou síť; ty rozhoduješ jedno spojení.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Nakresli obě strany navrženého vodiče, ne jen výchozí tile (dílek).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Pomocí dx/dy najdi neighbour (souseda), nejdřív ověř bounds (hranice), pak oba opačné mask (masky).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Po ověření bounds vyžaduj nenulové výsledky obou bit test (zkoušek bitu); hledání sítě spojí
+/// jednotlivé link (spoje).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Postav obrazec 4×4 s jedním klamným dotykem: tile (dílky) se dotýkají, ale jejich port (vývody)
+/// nenavazují. Nech spoluhráče chybný spoj najít před otáčením.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 boolean[][] connected() {
     boolean[][] reached = new boolean[4][4];
     var queue = new ArrayList<Point>();
@@ -27,7 +90,7 @@ boolean[][] connected() {
         var p = queue.get(i);
         for (int d = 0; d < 4; d++) {
             int x = p.x + dx[d], y = p.y + dy[d];
-            if (x >= 0 && y >= 0 && x < 4 && y < 4 && !reached[y][x] && (tiles[p.y][p.x]&(1<<d)) != 0) {
+            if (linked(p.x, p.y, d) && !reached[y][x]) {
                 reached[y][x] = true;
                 queue.add(new Point(x, y));
             }
@@ -36,71 +99,6 @@ boolean[][] connected() {
     return reached;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Připomenutí · F18">
-/// ### Grids: nejdřív řádek, potom sloupec
-///
-/// V array of rows (poli řádků) první index (pozice) vybírá řádek a druhý pozici v něm. Řádky mohou
-/// mít různé délky. Neighbour (soused) je posun od buňky, nikoli další absolutní pozice. Před
-/// kontrolou existence kandidáta urči povolené směry.
-///
-/// ```java
-/// int[][] mosaic = {{3, 6, 9}, {2, 4, 8}};
-/// int row = 0;
-/// int column = 1;
-/// IO.println(mosaic[row][column + 1]);
-/// ```
-///
-/// Výstup je devět: řádek nula a sloupec dva vyberou tento element (prvek). Pohyb dolů mění row;
-/// doprava mění column. Který z těchto pohybů z pravé horní cell (buňky) zůstane uvnitř? U úhlopříčky
-/// se mění obě souřadnice; bounds (meze) musíš ověřit před přístupem ke kandidátovi.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
-///
-/// - `p.x + dx[d]` — Použije vodorovný posun vybraného směru k nalezení souseda.
-/// - `1<<d` — Připravený bit shift (bitový posun) vybere bit přiřazený směru d.
-/// - `tiles[p.y][p.x]&(1<<d)` — Bitwise AND (bitové a) zjišťuje, zda má aktuální dílek daný vývod.
-/// - `!reached[y][x]` — Brání opětovnému zařazení už objevených dílků do fronty.
-///
-/// ### Co už obstarává připravená část
-///
-/// Připravený průchod s queue (frontou) začíná ve zdroji a označuje dosažené dílky. Otáčení mění bity
-/// vývodů, kreslení barví dosažené dílky a won() přidává kontrolu úplné uzavřené sítě.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
-/// ### Čtení jediného port bit (bitu otvoru)
-///
-/// Každý směr má jeden bit. Bit position (pozice bitu) začíná nulou: `1 << d` dává mask (masku) 1, 2,
-/// 4, 8 pro směry 0, 1, 2, 3. Bitwise `&` (bitový součin) zachová jen pozice zapnuté na obou
-/// stranách. Liší se od boolean `&&` (logického a).
-///
-/// ```java
-/// int flags = 5;
-/// int selected = 1 << 2;
-/// IO.println((flags & selected) != 0);
-/// ```
-///
-/// Výstup je true: 5 = 1 + 4, takže `5 & 4` dává 4, zatímco `5 & 2` dává 0. Nenulový výsledek
-/// znamená, že vybraný bit je zapnutý. Nyní předpověz test bitu tři, pokud flags má hodnotu 10. Směry
-/// zde běží Up, Right, Down, Left, proto jsou protilehlé otvory o dva kroky dál ve čtyřsměrném kruhu.
-/// Před přijetím souseda ověř obě strany spojení, ne jen existenci souseda.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// d vybírá nahoru, doprava, dolů nebo doleva.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Protilehlý směr je (d+2)%4.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Před vložením do queue vyžaduj bit d aktuálního dílku i protilehlý bit souseda.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int WIDTH = 460, HEIGHT = 420;
 
 int[][] tiles = new int[4][4];

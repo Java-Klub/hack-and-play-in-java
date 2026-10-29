@@ -20,6 +20,14 @@ long readSeed(Path path) throws IOException {
     return Long.parseLong(path.toString());
 }
 
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Připrav výzvu opakovatelnosti: kamarádovi dej jen soubor se seed (počátečním stavem) a požádej ho
+/// o stejnou tečkovanou plochu. Potom změň skrytý hloubkový tvar a soubor nech stejný. Vysvětli, co
+/// reprodukuje uložené číslo a co patří programu.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F32">
 /// ### Files (soubory): cíl a životnost prostředku
 ///

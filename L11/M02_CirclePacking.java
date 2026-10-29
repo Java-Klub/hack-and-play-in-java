@@ -20,6 +20,14 @@ boolean claimCentre(Set<Centre> seen, int x, int y) {
     return seen.contains(new Centre(x, y));
 }
 
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Vytvoř tečkované souhvězdí: přijímej středy jen uvnitř jednoduché siluety, například dvou
+/// překrývajících se kruhů. Metodě claimCentre nech jedinečnost, nikoli siluetu. Porovnej prázdná a
+/// zaplněná místa svého plakátu.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F23">
 /// ### Set (množina): členství bez duplikátů
 ///

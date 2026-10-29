@@ -11,18 +11,28 @@ import java.awt.geom.Area;
 /// Pohybuj lampou kolem překážek a sleduj prodlužující se stíny. Zkus přiblížením světla udělat z malé
 /// překážky obrovskou siluetu.
 ///
-/// **Tvoje mise:** Lampa ignoruje kliknutí i tažení, protože její odložená akce je prázdná. Obnov spojení
-/// od každé vstupní pozice ke skutečnému světlu.
+/// **Tvoje mise:** Vytvoř divadelní lampu přichytávanou na grid (mřížku) po 20 pixelech. V odloženém
+/// callback vypočti obě zarovnané souřadnice a předej je moveLight. Vytvoření akce lampou nehýbe;
+/// okraje stále hlídá moveLight.
 ///
-/// **Dnes trénuješ:** Callback (předaná akce) odděluje přijetí event (události) od volby jejího účinku.
-/// Akce se dvěma souřadnicemi má předat hodnoty události, ne uložit pevnou pozici či jednat už při
-/// přípravě.
+/// **Dnes trénuješ:** Callback (předaná akce) spustí tělo až při události; local calculations (místní
+/// výpočty) mohou upravit data před změnou model.
 ///
 /// Po spuštění programu klikáním či tažením kolem překážek posouvej lampu a pomocí R obnov její
 /// počáteční pozici.
 java.util.function.BiConsumer<Integer, Integer> lightAction() {
-    return (x, y) -> {};
+    return (x, y) -> {
+        // Spočti obě souřadnice mřížky a potom posuň světlo.
+    };
 }
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Vymysli strašidelnou lampu: kliknutí ovládá její zrcadlový obraz přes svislý střed, místo přímé
+/// polohy. Předpověz výsledek kliknutí vlevo a sestav ze stínů loutkovou scénu, kterou má kamarád
+/// poznat.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F28">
 /// ### Callback (zpětné volání): akce na později
@@ -44,30 +54,29 @@ java.util.function.BiConsumer<Integer, Integer> lightAction() {
 /// Předpověz: co se vypíše, když poslední řádek nahradí dvě po sobě jdoucí volání `cheer.run()`?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// ### Uprav event (událost) před předáním
 ///
-/// - `BiConsumer<Integer, Integer>` — Popisuje akci, která přijme x a y, ale nevrací hodnotu.
-/// - `lightAction()` — Dodává opakovaně použitelnou akci, kterou input handler (obsluha vstupu) zavolá
-///   později.
-/// - `(x, y) -> {}` — Pojmenuje budoucí vstupy, ale prázdné tělo je nyní zahodí.
+/// Pro nezáporné souřadnice integer division (celočíselné dělení) zahodí zbytek: 47 / 10 je 4 a
+/// násobení deseti dá 40. Mřížka po 10 pixelech tedy změní (47, 23) na (40, 20). Předpověz polohu pro
+/// (9, 31), než princip přizpůsobíš zdejší mřížce po 20 pixelech.
 ///
-/// ### Co už obstarává připravená část
-///
-/// Press i drag volají stejný light callback (předanou akci světla). Připravený moveLight ověří povolenou
-/// pozici; geometrie stínů a kreslení čtou výsledné souřadnice lampy a restart obnoví scénu.
+/// BiConsumer<Integer, Integer> přijímá dvě celá čísla a nevrací výsledek. `accept(43, 91)` dodá
+/// místní x a y uvnitř lambda; výpočet local values (místních hodnot) lampou sám nehýbe. Shared model
+/// (sdílený stav) mění až moveLight. Stejnou akci používají press i drag, proto zarovnání patří sem,
+/// ne do jediné obsluhy události. Připravené clamping (omezení) dál řeší polohy mimo plátno.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// MoveLight už omezuje x a y na plátno.
+/// Počítej uvnitř lambda; při vytvoření akce souřadnice kliknutí ještě nejsou.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Callback (předaná akce) má volat tuto method (metodu), nikoli ji kopírovat či obejít.
+/// Každou nezápornou souřadnici vyděl jako int dvaceti a potom vynásob dvaceti.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Method reference (odkaz na metodu) oddělí vytvoření od spuštění.
+/// Ulož dvě zarovnané local values (místní hodnoty) a jednou s nimi zavolej moveLight.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

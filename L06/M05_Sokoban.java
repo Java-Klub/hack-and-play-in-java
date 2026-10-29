@@ -3,16 +3,17 @@
 /// Dotlač bednu na cíl ve stísněném skladišti. Plánuj dopředu, protože bednu můžeš tlačit, ale
 /// nepřitáhneš ji zpět.
 ///
-/// **Tvoje mise:** Hráč může vejít do zdi, protože floor() kontroluje jen okraj mapy. Oprav jeho odpověď
-/// ano/ne, aniž by dotaz cokoli posouval.
+/// **Tvoje mise:** Nehotový dotaz na podlahu odmítá každý pohyb. Sestav read-only query (neměnící
+/// dotaz): před čtením buňky odmítni souřadnice mimo terrain, pak přijmi každý vnitřní znak kromě zdi
+/// '#'. Cíl '.' je také podlaha; hráče ani bednu neposouvej.
 ///
 /// **Dnes trénuješ:** Pure contracts (smlouvy čistých dotazů): dotaz slibuje odpověď pro dané vstupy bez
 /// změny hry. Přesně určuj, které souřadnice představují průchozí podlahu.
 ///
-/// Spusť program a zadávej W, A, S nebo D potvrzené Enter pro pohyb hráče a tlačení bedny k
-/// cíli.
+/// Zadej A pro volnou buňku vlevo od počátečního hráče. Nehotový dotaz ji odmítne stejně jako zeď; tvá
+/// odpověď musí tyto situace rozlišit před provedením pohybu.
 boolean floor(int px, int py) {
-    return py >= 0 && py < 5 && px >= 0 && px < 7;
+    return false;
 }
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F15">
@@ -35,18 +36,20 @@ boolean floor(int px, int py) {
 /// nepřítomnost side effect (vedlejšího účinku)? Stejnou ochranu potřebuje odmítnutý kandidát.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// px je vodorovná souřadnice; py vybírá řádek mapy. Odmítnutí rozsahu musí přijít před vyhodnocením
+/// terrain[py] či charAt(px).
 ///
-/// - `boolean floor(int px, int py)` — Dotaz přijímající navrhovanou polohu x/y a vracející ano nebo ne.
-/// - `&&` — Logical AND (logické a současně): musí platit všechny požadované podmínky.
-/// - `py >= 0` — Dolní mez řádku zahrnuje i řádek nula.
-/// - `px < 7` — Horní mez sloupce nezahrnuje sedmičku, protože se sloupce číslují od nuly.
+/// | navržené px,py | údaj mapy | odpověď |
+/// | --- | --- | --- |
+/// | 0,2 | zeď # | false |
+/// | 1,2 | volné místo | true |
+/// | 5,2 | cíl . | true |
+/// | 7,2 | za řádkem | false |
 ///
-/// ### Co už obstarává připravená část
-///
-/// command() se ptá floor() na cíl hráče a při tlačení také na cíl bedny. Pohyb provede až po úspěšných
-/// dotazech; kreslení mapy i restart jsou připravené.
+/// Znak na platné pozici dodá druhé rozhodnutí. floor odpovídá na otázku; command zvlášť pohybuje
+/// hráčem a případně bednou. Dvě stejná volání floor musejí dát stejnou odpověď se zachováním všech
+/// pozic. Před čtením předpověz záporné py.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
@@ -60,15 +63,21 @@ boolean floor(int px, int py) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Hranice jsou bezpečně ověřené před indexováním terrain.
+/// Odliš neexistující buňku od existující buňky se zdí.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Podívej se na terrain[py].charAt(px).
+/// Při špatných souřadnicích vrať false před čtením terrain; potom zkontroluj jediný znak.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Spoj hranice s podmínkou, že znak není #; nepřiřazuj žádné fields.
+/// Ochraň rozsahy řádku a sloupce a vrať, zda se znak liší od #. Pozice nepřiřazuj.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Navrhni sklad s jedním lákavým posunutím, které bednu uvězní, a jednou cestou k cíli. Zachovej
+/// rozměry mapy a před výměnou vyřeš vlastní návrh. Pomocí floor vysvětli obě cesty, aniž by pouhé
+/// zkoumání posouvalo hráče.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

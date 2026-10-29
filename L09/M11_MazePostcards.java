@@ -8,90 +8,74 @@ import java.awt.image.BufferedImage;
 /// Vytvoř pohlednici s bludištěm, jehož rozložení mění seed (počáteční hodnota). Šířka určuje, kolik
 /// klikatých chodeb se na stránku vejde.
 ///
-/// **Tvoje mise:** Překlep vytvoří maličké bludiště se dvěma sloupci místo slíbených 20. Oprav zpracování
-/// chybného textu a zachovej číselný limit 2–50.
+/// **Tvoje mise:** Vytvoř readColumns(text): přijmi integer (celá čísla) 2–50 včetně a po odstranění
+/// okolních mezer aliases (zkratky) tiny=6 a wide=40 bez ohledu na velikost písmen. Nečíselný text
+/// dostane 20; čitelné číslo mimo bounds (hranice) odmítni. Nedokončený výběr nyní ignoruje požadovanou
+/// velikost i alias.
 ///
-/// **Dnes trénuješ:** Obnova po chybném input (vstupu) má přesný contract (smlouvu): nerozpoznaný text
-/// dostane záměrnou výchozí hodnotu, převedené číslo musí splnit meze. Konkrétní catch tyto případy
-/// odděluje.
+/// **Dnes trénuješ:** Vytvoř přesné input boundary (rozhraní vstupu): odliš parsing (převod),
+/// validation (ověření platnosti) a uložení živého nastavení.
 ///
-/// Po spuštění programu napiš počet sloupců 2–50 nebo zkus oops; přečti Chosen value a
-/// prohlédni Java obrázek. Pro další vstup zavři okno a znovu spusť program.
+/// Spusť program a napiš tiny, wide nebo číslo 2–50; oops vyzkouší náhradní hodnotu. Přečti Chosen
+/// value, prohlédni obrázek a po zavření porovnej další vstup.
 int readColumns(String text) {
-    try {
-        int columns = Integer.parseInt(text.strip());
-        if (columns < 2 || columns > 50) throw new IllegalArgumentException("Columns: 2..50.");
-        return columns;
-    } catch (NumberFormatException invalid) {
-        return 2;
-    }
+    return 20;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F31">
-/// ### Parse (převod), validation (ověření), potom uložení
+/// ### Parsing (převod textu) a platná hodnota jsou dvě otázky
 ///
-/// Parsing převádí text; validation ověřuje, zda je výsledné číslo povolené. Každý krok může selhat
-/// jinak.
+/// Číselný vstup začíná jako text. Parsing může selhat, protože text není číslo; validation (ověření
+/// platnosti) může odmítnout správně zapsané číslo. Obě pravidla rozhoduj zvlášť.
 ///
 /// ```java
-/// int readCopies(String text) {
+/// int readZoom(String text) {
 ///     try {
-///         int n = Integer.parseInt(text.strip());
-///         if (n < 1 || n > 5) {
-///             throw new IllegalArgumentException("Copies: 1..5");
-///         }
-///         return n;
-///     } catch (NumberFormatException invalid) {
-///         return 3;
+///         int zoom = Integer.parseInt(text.strip());
+///         if (zoom < 1 || zoom > 4) throw new IllegalArgumentException("Zoom: 1..4");
+///         return zoom;
+///     } catch (NumberFormatException typo) {
+///         return 2;
 ///     }
 /// }
 /// ```
 ///
-/// `readCopies(" 2 ")` vrátí `2`: převod i ověření uspějí. `"oops"` selže při převodu a přes `catch`
-/// vrátí `3`. Číselný text `"8"` se převede, ale následně vyvolá jinou exception (výjimku); tento
-/// konkrétní catch ji nezachytí. `return` ukončí metodu; `throw` opustí běžnou cestu. Uložený stav
-/// hry měň až po úspěšném ověření.
+/// Trace (průchod) pro `" 3 "`: `strip` odstraní okolní mezery, `parseInt` vrátí 3, bounds (hranice) je
+/// přijmou. `"oops"` nejde převést, takže `catch` vrátí 2. `"7"` se převede, ale neprojde validation;
+/// vyvolaná IllegalArgumentException tuto method (metodu) opustí. Úzký `catch` pro
+/// NumberFormatException tyto cesty odliší.
 ///
-/// Předpověz cestu pro `"five"`, `"5"` a `"0"`.
+/// Desetinný vstup používá `Double.parseDouble`; NaN a infinity (nekonečno) jsou čitelné, ale nejsou
+/// finite (konečná čísla). U živého nastavení nejdřív vytvoř local candidate (místní návrh), teprve po
+/// validation změň field (sdílenou proměnnou). Předpověz cestu pro `"0"`, `"two"` a `"4"`. Které vstupy
+/// mají zachovat předchozí nastavení?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Jak číst tuto část
 ///
-/// - `int columns` — Ukládá celý počet sloupců bludiště; desetinný text se tímto převodem nestane integer
-///   (celým číslem).
-/// - `columns < 2 || columns > 50` — Kterékoli porovnání může odmítnout převedenou, ale nepoužitelnou
-///   velikost bludiště.
-/// - `catch (NumberFormatException invalid)` — Vybere náhradní cestu pro chybně zapsané číslo.
-/// - `return 2;` — Tato hodnota nyní určí šířku bludiště po překlepu.
-///
-/// ### Co už obstarává připravená část
-///
-/// main předá zadaný počet sloupců do readColumns. Připravený generator (generátor) se stack
-/// (zásobníkem) vytvoří omezené průchody a render přímo zobrazí jejich stěny v Javě.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
-/// ### Číslo se může převést a přesto být odmítnuto
-///
-/// V readColumns se `" 8 "` převede na 8 a běžně vrátí. `"eight"` selže při převodu a přejde do catch
-/// pro NumberFormatException. `"1"` se převede na 1, potom výslovná kontrola mezí vyvolá
-/// IllegalArgumentException, kterou tento konkrétní catch neřeší. Trasuj `"2"` a `"50"` a ověř, že
-/// oba krajní body patří do rozsahu. Potom předpověz, zda `"51"` a `"fifty"` projdou stejnou cestou.
-/// Generátor bludiště má dostat buď přijatelné číslo, nebo dokumentovanou náhradu chybného textu,
-/// nikoli libovolnou malou šířku.
+/// Named aliases (pojmenované zkratky) vyhodnoť před parsing (převodem) čísla, jinak vypadají jako
+/// překlepy. equalsIgnoreCase porovnává text bez ohledu na velikost písmen. Potom použij oddělení
+/// parsing a validation (ověření platnosti). Skutečně číselné -1 se nesmí změnit ve výchozí bludiště.
+/// Obrázek vzniká z vráceného column count (počtu sloupců).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Výchozí hodnota řeší chybu převodu, nikoli každou neplatnou hodnotu.
+/// Nejdřív poznej záměrná slova a teprve pak nečíselný text považuj za překlep.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Guard (podmínku) zahrnutého rozsahu nech mimo případ NumberFormatException.
+/// Oba alias (zkratky) mají ignorovat okolní mezery i velikost písmen.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Main předá výsledek přes render do skutečného generate.
+/// Nejdřív vrať obě named size (pojmenované velikosti); pak proveď parsing, ověř 2–50 a jen format
+/// failure (chybný zápis) změň na 20.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Vymysli třetí named size (pojmenovanou velikost), třeba snake pro dlouhé úzké bludiště. Urči její
+/// číselný význam a porovnej skutečnou cestu v novém tvaru.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

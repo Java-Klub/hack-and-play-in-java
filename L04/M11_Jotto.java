@@ -10,7 +10,7 @@
 /// příspěvek přidej pouze při splnění připravené podmínky shody. Výsledkem je počet nálezů, nikoli jen
 /// informace, zda nějaký nález nastal.
 ///
-/// Spusť program a napiš STONE proti cvičnému slovu PLANT; T a N jsou společná, ale starter
+/// Napiš STONE proti cvičnému slovu PLANT; T a N jsou společná, ale starter
 /// (výchozí program) hlásí jen jedno.
 int matches(String word) {
     int n = 0;
@@ -74,6 +74,12 @@ int matches(String word) {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Nahraď n = 1 zápisem n++ nebo n += 1.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Přiznej jedné zvolené skupině písmen dvojnásobnou váhu při shodě. Před úpravou accumulator
+/// (průběžného součtu) napiš dva příklady tip/tajné slovo s rozdílnými výsledky. Spolužák má bonusovou
+/// skupinu odhalit jen ze zpětné vazby.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

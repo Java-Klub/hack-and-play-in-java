@@ -3,8 +3,10 @@
 /// Ťukni jednou ze svých živých rukou do soupeřovy ruky a přičti jí své prsty. Pět a více prstů ruku
 /// vyřadí; vyřazením obou soupeřových rukou vyhraješ.
 ///
-/// **Tvoje mise:** Vyřazená ruka se stále může účastnit zásahu. Oprav handsAlive tak, aby neplatná čísla
-/// rukou a kteroukoli ruku s nulou prstů odmítlo před změnou hry.
+/// **Tvoje mise · Zavři podvodnou mezeru:** Rozhodčí nyní povolí každý úder. Sestav handsAlive: oba index
+/// (indexy) musí být 0
+/// nebo 1 a obě vybrané ruce musí mít více než nula prstů. Odmítni tah před neplatným lookup
+/// (čtením). Method (metoda) pouze povoluje; nesmí měnit prsty ani hráče.
 ///
 /// **Dnes trénuješ:** Několik guard (ochran) v pořadí: nejdřív ověř, že místo existuje, a potom zkoumej,
 /// zda je použitelné. Odmítnutý zásah nesmí změnit prsty ani předat tah.
@@ -12,12 +14,6 @@
 /// Spusť program a třikrát zadej 1 1 pro vyřazení ruky, potom zkus čtvrté 1 1 a sleduj, zda
 /// neplatný zásah změní hráče.
 boolean handsAlive(int own, int opposing) {
-    if (own < 0 || own >= 2 || opposing < 0 || opposing >= 2) {
-        return false;
-    }
-    if (hands[player][own] < 0 || hands[1 - player][opposing] < 0) {
-        return false;
-    }
     return true;
 }
 
@@ -46,33 +42,37 @@ boolean handsAlive(int own, int opposing) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Existence a potom život
 ///
-/// - `own` — Vybraný index (pořadí) útočící ruky, už převedený na nulu nebo jedničku.
-/// - `opposing` — Vybraný index (pořadí) bránící ruky druhého hráče.
-/// - `own < 0 || own >= 2` — Tyto alternativy odmítají číslo mimo dvě dostupná místa rukou.
-/// - `hands[player][own]` — Přečti prsty z připravené dvouúrovňové tabulky: nejdřív vyber hráče a potom
-///   jeho ruku.
-/// - `< 0` — Toto se ptá, zda je hodnota záporná; vyřazená ruka má ve skutečnosti nula prstů.
-/// - `return false;` — Ukonči kontrolu jako odmítnutou, jakmile guard (ochrana) najde problém.
-/// - `return true;` — Konečného přijetí dosáhne pouze call (volání), které projde oběma ochranami.
-///
-/// ### Co už obstarává připravená část
-///
-/// command převede napsaná čísla rukou a ptá se handsAlive před zásahem. Připravené tělo přičítá prsty,
-/// vyřazuje ruce, střídá hráče a odhaluje opakované pozice; main zobrazuje ruce obou hráčů.
+/// Připravená tabulka hands patří současnému a soupeřícímu hráči. player je 0 nebo 1; 1 - player
+/// vybere druhého. První index vybírá hráče, druhý jeho ruku. Potřebuješ jen dva vybrané počty. Guard
+/// (ochranná podmínka) vrátí výsledek včas, aby se pozdější čtení a skutečný úder pro odmítnutou
+/// volbu neprovedly.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Použitelná ruka musí existovat a mít prsty. own a opposing jsou vnitřní index (indexy) 0 nebo 1.
+/// Neplatné indexy odmítni před čtením rukou. Potom počet nula znamená vyřazení. Ověřovací method
+/// (metoda) nesmí přepnout hráče; command provede úspěšný úder později.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Připrav kamarádovi krátkou výzvu: posloupnost vyřazující ruku a potom pokus o neplatný úder.
+/// Vystřídejte se jako hráč a rozhodčí. Později jako samostatný domácí experiment změň význam součtu
+/// pěti a vysvětli změnu hry.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Mrtvou ruku představuje nula, nikoli záporné číslo.
+/// Neplatné číslo ruky a vyřazená ruka jsou dva různé důvody odmítnutí.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Ochranu index (indexů) zachovej před přečtením obou rukou.
+/// Oba indexy ověř před čtením hands[player][own] a hands[1 - player][opposing].
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Odmítni tah, když je kterákoli uložená hodnota ruky == 0.
+/// Pro indexy mimo 0..1 vrať false; potom vrať false, je-li některý vybraný počet <= 0; jinak vrať
+/// true.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

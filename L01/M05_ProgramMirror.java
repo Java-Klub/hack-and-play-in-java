@@ -3,7 +3,8 @@
 /// Malé programové zrcadlo ukáže Java instrukci jako text a potom zprávu, kterou by tato instrukce
 /// vypsala. Porovnej instrukci s výsledkem a sleduj, jak může program popisovat jiný program.
 ///
-/// **Tvoje mise:** Odražená instrukce ztratila uvozovky kolem HELLO. Oprav templateLine tak, aby je
+/// **Tvoje mise · Oprav zrcadlo programu:** Odražená instrukce ztratila uvozovky kolem HELLO. Oprav
+/// templateLine tak, aby je
 /// vypsaná instrukce obsahovala a další output (výstup) zůstal HELLO.
 ///
 /// **Dnes trénuješ:** Uvozovaný text a escaping (zápis speciálních znaků): text připomínající code
@@ -65,6 +66,18 @@ String templateLine() {
 /// uvozovku bez ukončení vnějšího literal (doslovného řetězce). Než změníš vlastní literal,
 /// předpověz tuto hodnotu. Rozlišuj poslední středník skutečného return statement (příkazu vrácení)
 /// a středník vypsaný uvnitř textu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Rozliš dvě úrovně: zápis ve zdrojáku a znaky uložené ve String. Source `"A\"B"` uchovává A, jednu
+/// uvozovku a B. Vypsání String neprovede jeho obsah. Řádek vypadající jako Java call (volání) je
+/// stále zpráva, dokud s ním nějaký program výslovně nezachází jako s kódem; tento program to nedělá.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Vymysli krátký nový pozdrav. Změň zobrazený příkaz i samostatně vypsanou zprávu tak, aby si
+/// odpovídaly. Zkus pozdrav obsahující uvozovku a vysvětli, která zpětná lomítka patří pouze do Java
+/// source (zdrojového kódu).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">

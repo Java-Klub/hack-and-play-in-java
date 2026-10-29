@@ -3,21 +3,18 @@
 /// Hraj hangman proti počítači, který si ještě nezvolil jediné tajné slovo. Po každém tipu si nechává
 /// největší skupinu slov slučitelných s další nápovědou, takže jej každé odkryté písmeno stojí možnosti.
 ///
-/// **Tvoje mise:** Počítač počítá každou neprázdnou skupinu jako jediné slovo a zbytečně zahazuje
-/// užitečné možnosti. Oprav familySize tak, aby total pamatovalo každé slovo započítané v předchozích
-/// průchodech.
+/// **Tvoje mise:** Nehotové počítadlo vrací nulu pro každou family (skupinu), takže soupeř neumí
+/// porovnat možnosti. Sestav smyčku s jedním příspěvkem za slovo a vrať součet. Prázdná skupina musí
+/// zůstat nulová.
 ///
 /// **Dnes trénuješ:** Accumulation (postupné sčítání): průběžný součet jednou nastav před smyčkou a potom
 /// jej aktualizuj s využitím předchozí hodnoty. Skupina se třemi slovy potřebuje tři příspěvky, nikoli
 /// trojí nahrazení stejným číslem.
 ///
-/// Spusť program a tipni E, abys viděl vybranou nápovědu; potom pomocí kontroly hry porovnej
+/// Tipni E, abys viděl vybranou nápovědu; potom pomocí kontroly hry porovnej
 /// skupinu tří slov se skupinou jediného slova.
 int familySize(List<String> family) {
     int total = 0;
-    for (int i = 0; i < family.size(); i++) {
-        total = 1;
-    }
     return total;
 }
 
@@ -44,34 +41,38 @@ int familySize(List<String> family) {
 /// Nyní předpověz receipt, pokud připravený seznam obsahuje jen `"rice"`.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// family je připravený list (seznam) slučitelných slov. total vznikne jednou před průchodem a pamatuje
+/// předchozí příspěvky.
 ///
-/// - `int total = 0;` — Před prvním průchodem začni s nulovým počtem slov.
-/// - `for (int i = 0; i < family.size(); i++)` — Navštiv každé slovo skupiny jednou; size() je počet slov
-///   v připravené skupině.
-/// - `total = 1;` — Assignment (přiřazení) nahradí staré total jedničkou, takže předchozí průchody nyní
-///   nezanechají trvalý příspěvek.
-/// - `return total;` — Po všech průchodech vrať nasčítanou velikost skupiny pro porovnání s ostatními
-///   skupinami.
+/// | dosud navštívená family | total |
+/// | --- | --- |
+/// | žádná | 0 |
+/// | ALLY | 1 |
+/// | ALLY, COOL | 2 |
+/// | ALLY, COOL, GOOD | 3 |
 ///
-/// ### Co už obstarává připravená část
-///
-/// command rozdělí slučitelná slova podle nápovědy, kterou by odhalila, a volá familySize k porovnání
-/// skupin. Připravené pravidlo rozhoduje remízy podle abecedního pořadí nápověd, uchovává dřívější
-/// nápovědy a počítá chyby. display a main řeší tipy, restart i ukončení.
+/// Při průchodu for přes indexy udává family.size() počet pozic. Každý průchod musí upravit starý
+/// total, nikoli jej nahradit jedničkou. Předpověz jednoslovnou i prázdnou skupinu. command seskupí
+/// slova podle odhalené masky a počítadlem vybere největší family.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// total = 1 nahrazuje předchozí počet.
+/// Vystopuj total před prvním slovem a po každém ze tří slov.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Accumulator (průběžný výsledek) musí pamatovat dřívější členy.
+/// Inicializuj jednou mimo smyčku; uložený total měň uvnitř.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Použij total += 1 a total = 0 nech před cyklem.
+/// Navštiv každou pozici family a jednou zvětši total; return patří za smyčku.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Vytvoř pool (zásobu) čtyř slov po čtyřech písmenech: jeden tip nesmí téměř pomoci, jiný má slova
+/// rozdělit rovnoměrně. Předpověz zvolenou masku pro oba tipy. Vyměňte si zásoby a jedním promyšleným
+/// písmenem odhalte strategii druhé dvojice.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

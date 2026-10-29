@@ -3,20 +3,19 @@
 /// Lov dvě skryté lodě zadáváním souřadnic. Zásah ti pomůže víc, když se můžeš spolehnout na oznámené
 /// délky lodí.
 ///
-/// **Tvoje mise:** Jedna loď při přípravě přijde o poslední políčko. Oprav layout(int n), aby se celý
-/// vybraný seznam souřadnic přenesl na desku.
+/// **Tvoje mise:** Načtení flotily vytvoří prázdné moře bez lodí. Sestav smyčku, která přečte každý
+/// souřadnicový pár ze selected a zapíše jej do board: první dvě položky patří lodi 1, zbývající tři
+/// lodi 2. Použij délku vybraných dat.
 ///
 /// **Dnes trénuješ:** Arrays (pole): vnořená pole uchovávají několik rozestavení i jejich dvojice
 /// souřadnic. Rozsah průchodu odvoď od velikosti vybraných dat.
 ///
-/// Spusť program, první střelu zadej jako 1 1 a potvrď Enter, potom zkoušej další dvojice řádku
+/// První střelu zadej jako 1 1 a potvrď Enter, potom zkoušej další dvojice řádku
 /// a sloupce.
 void layout(int n) {
     board = new int[6][6];
     int[][][] maps = {{{0, 0}, {0, 1}, {3, 2}, {3, 3}, {3, 4}}, {{1, 4}, {2, 4}, {5, 0}, {5, 1}, {5, 2}}, {{4, 0}, {4, 1}, {0, 5}, {1, 5}, {2, 5}}};
-    for (int i = 0; i < 4; i++) {
-        board[maps[n][i][0]][maps[n][i][1]] = i < 2 ? 1 : 2;
-    }
+    int[][] selected = maps[n];
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F16">
@@ -37,20 +36,20 @@ void layout(int n) {
 /// Co se změní při `chosen` rovném dvěma? Který index už bude první neplatný?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// maps obsahuje různé plány; selected je jeden plán. selected[i] představuje pár: index nula znamená
+/// row (řádek), index jedna column (sloupec). Buňka board obsahuje nulu pro moře nebo číslo lodi.
 ///
-/// - `int[][][] maps` — Tři úrovně array (pole) vybírají rozestavení, dvojici souřadnic a jednu
-///   souřadnici.
-/// - `maps[n][i][0]` — Čte řádkovou souřadnici pozice i v rozestavení n.
-/// - `i++` — Po každém kroku loop (opakování) přejde k další dvojici souřadnic.
-/// - `i < 2 ? 1 : 2` — Conditional expression (podmíněný výraz) označí počáteční dvojice jako loď 1 a
-///   ostatní jako loď 2.
+/// | i v plánu nula | pár | hodnota board |
+/// | --- | --- | --- |
+/// | 0 | 0,0 | 1 |
+/// | 1 | 0,1 | 1 |
+/// | 2 | 3,2 | 2 |
+/// | 4 | 3,4 | 2 |
 ///
-/// ### Co už obstarává připravená část
-///
-/// reset() vybere připravené rozestavení a smaže zásahy. command() zapíše střelu a sunk() hledá na
-/// vzniklé desce dosud nezasažené části dané lodě.
+/// Procházený seznam má pět párů, nikoli šest řádků moře. Rozbal row a column a při každém průchodu
+/// zapiš jednu buňku. Předpověz počet buněk obou lodí. Připravené výstřely a údaje o délkách čtou tebou
+/// sestavenou desku.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
@@ -63,15 +62,21 @@ void layout(int n) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// maps[n] je vybraný seznam pozic.
+/// Nakresli tři vrstvy: alternativní maps, jeden selected a jeden souřadnicový pár.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Každé maps[n][i] obsahuje řádek a sloupec; i není souřadnice desky.
+/// Nech i procházet selected; selected[i][0] a selected[i][1] pak tvoří indexy board.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Opakuj při i < maps[n].length; ponech dodané přiřazení čísla lodi.
+/// Opakuj pod selected.length; položky s i < 2 zapisují loď jedna, ostatní loď dvě.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Navrhni v maps novou pětibuněčnou flotilu: přímou loď ze dvou a ze tří buněk bez překrytí.
+/// Spolužákovi prozraď jen délky. Před lovem vypiš pozice, které má tvůj průchod vyplnit, a ověř přesně
+/// pět buněk.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

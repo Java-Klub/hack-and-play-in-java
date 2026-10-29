@@ -12,8 +12,9 @@ import javax.swing.Timer;
 /// Vhoď do místnosti několik barevných míčků a sleduj, jak jejich pohyb mění gravitace a odrazy od
 /// stěn. Porovnávej jemné a prudké hody.
 ///
-/// **Tvoje mise:** Míčky u boční stěny ztratí vodorovnou rychlost místo odrazu. Oprav bounceSpeed tak,
-/// aby stěna zachovala tři čtvrtiny velikosti příchozí rychlosti.
+/// **Tvoje mise · Sestav odraz:** Sestav bounceSpeed ve dvou krocích: najdi trojnásobek dodané velikosti a potom
+/// vrať čtvrtinu mezivýsledku. Pro 8 i -8 musí vyjít velikost 6; nula zůstává nulou. Zde nevybírej
+/// směr.
 ///
 /// **Dnes trénuješ:** Desetinná arithmetic (aritmetika): seskupení může provést celočíselné dělení před
 /// násobením. Porovnej celočíselný a desetinný poměr a potom předpověz zachovanou rychlost míčku
@@ -22,7 +23,9 @@ import javax.swing.Timer;
 /// Spusť program, tažením do strany hoď míček na stěnu a sleduj odraz; Space místnost pozastaví
 /// a R ji vyprázdní.
 double bounceSpeed(double speed) {
-    return Math.abs(speed) * (3 / 4);
+    double magnitude = Math.abs(speed);
+    double retained = 0;
+    return retained;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F04">
@@ -49,32 +52,36 @@ double bounceSpeed(double speed) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Sleduj tři pojmenované hodnoty
 ///
-/// - `double bounceSpeed(double speed)` — Výpočet přijímající rychlost se znaménkem a vracející
-///   nezápornou velikost po odrazu.
-/// - `Math.abs(speed)` — Připravený výpočet absolutní hodnoty: například -4 změní na 4. Tečka vybírá abs
-///   a závorky jí předávají speed.
-/// - `*` — Vynásob velikost zlomkem zachovaným stěnou.
-/// - `(3 / 4)` — Závorky nejdřív vyhodnotí celočíselné 3 / 4, které zahodí desetinnou část.
-/// - `return` — Vrať velikost; nový kladný či záporný směr už vybírá volající část.
-///
-/// ### Co už obstarává připravená část
-///
-/// add vytvoří a omezí hod. step volá tvoje pravidlo u bočních a horní stěny a dodává gravitaci i
-/// samostatné chování podlahy. draw kreslí uložené míčky a myš vytváří hody.
+/// `speed` je příchozí hodnota se znaménkem. `magnitude` znaménko odstraní. `retained` pojmenuje
+/// mezivýsledek, který sestavíš. Vrať konečnou ponechanou velikost; neměň speed ani míč. Připravená
+/// obsluha stěn použije výsledek se správným znaménkem.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Odděl velikost a znaménko. Math.abs(-8) je 8; ponechaná polovina má velikost 4. Připravená levá a
+/// pravá stěna samy zvolí znaménko odchozí rychlosti. Local variable (místní proměnná) může
+/// pojmenovat mezivýpočet, abys jej mohl předpovědět před vrácením výsledku. Jakou velikost zachová
+/// čtvrtina z 12?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Změnou ponechaného podílu vytvoř téměř pružnou a velmi měkkou místnost. Porovnej stejný boční hod.
+/// Směr nech na připraveném kódu stěn: experiment mění ztrátu rychlosti, nikoli stranu, kam se míč
+/// odrazí.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// 3 / 4 s celočíselnými operand (operandy) je nula.
+/// magnitude už uchovává nezápornou velikost rychlosti.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Math.abs už odstraňuje znaménko původního směru.
+/// Násobení a následné dělení musí zachovat desetinnou část.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Násob hodnotou 3.0 / 4 nebo 0.75.
+/// Do retained ulož magnitude * 3 a vrať retained / 4.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

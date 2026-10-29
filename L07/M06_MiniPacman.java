@@ -12,11 +12,12 @@ import javax.swing.Timer;
 /// Posbírej všechny tečky, zatímco tě v bludišti honí duch. Poslední tečku i střet s duchem můžeš
 /// stihnout ve stejném kroku.
 ///
-/// **Tvoje mise:** Hra oznámí výhru, i když tě při poslední tečce duch chytí. Oprav afterContact(), aby
-/// respektovalo přednost chycení a vrátilo jeden konzistentní stav kola.
+/// **Tvoje mise:** Vytvoř afterContact(): dopadení vrací CAUGHT i při poslední tečce; jinak nula teček
+/// vrací WON a všechny ostatní situace PLAY. Nedokončený transition (přechod) nyní nechává každé kolo
+/// běžet.
 ///
-/// **Dnes trénuješ:** Enum states (pojmenované stavy): PLAY, CAUGHT a WON jsou vzájemně výlučné výsledky.
-/// Když platí více podmínek současně, pravidlo přechodu musí určit přednost.
+/// **Dnes trénuješ:** Popiš jeden state transition (přechod stavu) s výslovnou prioritou souběžných
+/// condition (podmínek).
 ///
 /// Spusť program a šipkou se rozjeď bludištěm, potom miř k tečkám a vyhýbej se duchovi.
 enum RoundState {
@@ -24,71 +25,56 @@ enum RoundState {
 }
 
 RoundState afterContact(boolean caught, int dotsLeft) {
-    if (dotsLeft == 0) {
-        return RoundState.WON;
-    }
-    if (caught) {
-        return RoundState.CAUGHT;
-    }
     return RoundState.PLAY;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F21">
-/// ### Enum: jedna z pojmenovaných možností
+/// ### State (stav) dostává jméno
 ///
-/// Enum vymezí konečnou sadu hodnot jednoho type (typu). Jméno type a tečka určují konkrétní hodnotu.
-/// Překlep v enum value (hodnotě enum) způsobí compiler error (chybu překladu), na rozdíl od
-/// libovolného textu. Variable (proměnná) nese jednu volbu; `==` je pro tyto hodnoty vhodné.
+/// Enum (výčtový typ) vyjmenuje uzavřenou sadu jmen. Variable (proměnná) tohoto typu drží vždy jedno
+/// jméno: nemůže současně obsahovat OPEN i LOCKED.
 ///
 /// ```java
-/// enum Voice {
-///     WHISPER, SING, SHOUT
+/// enum Door { LOCKED, OPEN }
+/// Door afterKey(Door before, boolean hasKey) {
+///     if (before == Door.LOCKED && hasKey) return Door.OPEN;
+///     return before;
 /// }
-///
-/// Voice voice = Voice.SING;
-/// IO.println(voice == Voice.SHOUT);
 /// ```
 ///
-/// Declaration (deklarace) patří vedle method (metod); příkazy můžeš číst uvnitř metody. Porovnání
-/// vypíše false, protože SING a SHOUT jsou různé hodnoty. Předpověz je po přiřazení SHOUT. Může
-/// jediná variable tvrdit současně SING i SHOUT? Vysvětli, jaké rozporné kombinace by dovolily
-/// oddělené boolean (logické proměnné).
+/// Trace (průchod) pro `afterKey(Door.LOCKED, true)`: obě části `&&` jsou true, proto se vrátí OPEN.
+/// Bez klíče se vrátí původní LOCKED. Samotné volání ještě výsledek neukládá. Caller (volající) může
+/// při změně použít `door = afterKey(door, hasKey)`.
+///
+/// Nakresli dva kruhy LOCKED → OPEN a ke šipce napiš „key“. Rozhodni, co se má stát s již otevřenými
+/// dveřmi. Předpověz výsledek pro OPEN s klíčem a ukaž, ke kterému `return` se dojde. Herní priority
+/// musí určit pravidla hry; enum je sám nevymyslí. Named state (pojmenovaný stav) jen pomůže odlišit
+/// možnosti bez tajných čísel.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Jak číst tuto část
 ///
-/// - `enum RoundState` — Pojmenovává tři možné stavy jednoho kola.
-/// - `dotsLeft == 0` — Porovnání zjišťuje, zda zmizela poslední tečka; nepopisuje kontakt s duchem.
-/// - `return RoundState.WON` — Okamžitě vrátí jeden pojmenovaný stav, takže další větve se už neprovedou.
-/// - `if (caught)` — Kontroluje samostatný údaj o chycení předaný ze step().
-///
-/// ### Co už obstarává připravená část
-///
-/// step() posune hráče, sebere tečku a zkontroluje kontakt s duchem, potom volá afterContact().
-/// moveGhost() už vybírá legální sousedy a kreslení používá vrácený RoundState.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
-/// ### Jedna událost může splnit dvě condition (podmínky)
-///
-/// Enum value (hodnoty enum) činí konečný výsledek výlučným, podmínky se však mohou překrývat.
-/// Uvedený contract (smlouva) dává chycení přednost před poslední tečkou. Předpověz výsledek při
-/// chycení s nulou teček, bez chycení s nulou teček a bez chycení se zbývajícími tečkami. Jsou to
-/// různé vstupní situace, ne tři postupně přiřazované state (stavy). Vysvětli, který dřívější return
-/// zabrání pozdější podmínce nahradit zamýšlený výsledek.
+/// RoundState uvádí tři vzájemně výlučné výsledky. `caught` a `dotsLeft` jsou fakta o stejném kroku,
+/// nikoli o různých kolech. Nejdřív vyhodnoť prioritu. Caller (volající) uloží vrácený state (stav) a
+/// připravený timer (časovač) dokončené kolo dál neposouvá.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Pojmenované koncové stavy nelze zkombinovat do rozporných flags.
+/// Sepiš výsledky pro caught/not caught v kombinaci s nulou a nenulovým počtem teček.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Srážka a poslední tečka mohou nastat v jednom kroku.
+/// Případ dopadení současně s poslední tečkou určuje pořadí condition (podmínek).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Nejprve ověř caught, potom dotsLeft==0; ve zbývajícím případě vrať PLAY.
+/// Nejdřív vracej CAUGHT pro dopadení, pak WON bez teček, jinak PLAY.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Vytvoř jasně označenou variantu, ve které poslední tečka vyhrává remízu. Porovnej oba konce na
+/// stejném dopadení a řekni, který ti připadá spravedlivější.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

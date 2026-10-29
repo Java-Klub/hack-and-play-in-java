@@ -16,7 +16,7 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Pure contracts (smlouvy čistých dotazů): přečtení ceny a přidělení bodů jsou různé
 /// odpovědnosti. scoreAt() vrací požadovanou hodnotu bez změny součtu nebo pohybu.
 ///
-/// Spusť program a kliknutím nad přihrádkou pusť kotouček, potom porovnej číslo přihrádky
+/// Kliknutím nad přihrádkou pusť kotouček, potom porovnej číslo přihrádky
 /// dopadu se získanými body.
 int scoreAt(int index) {
     // Dodaná ochrana hlásí neplatný index; exception handling přijde v L09.
@@ -71,6 +71,12 @@ int scoreAt(int index) {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Dodaná ochrana už odmítá neplatné indexy. Vrať values[index]; udělení bodů zůstává v step().
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Navrhni bodovou křivku s drahými krajními přihrádkami a levným středem. Zvol cílové skóre pro pět
+/// hodů a předpověz, které přihrádky je mohou splnit. Měň data values; scoreAt má zůstat dotazem bez
+/// samostatného přidělení bodů.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

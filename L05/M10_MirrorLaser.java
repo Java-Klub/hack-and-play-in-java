@@ -16,7 +16,7 @@ import java.util.HashSet;
 /// **Dnes trénuješ:** Records (datové záznamy): spoj související hodnoty do přehledného stavu. Pohyb
 /// vytvoří novou hodnotu paprsku a původní poloha i směr zůstanou k dispozici.
 ///
-/// Spusť program, kliknutím otoč zrcadlo a mezerníkem nech paprsek projít tvým uspořádáním.
+/// Kliknutím otoč zrcadlo a mezerníkem nech paprsek projít tvým uspořádáním.
 record RayState(int x, int y, int dx, int dy) {
     RayState advance() {
         return new RayState(x + dy, y + dx, dx, dy);
@@ -79,6 +79,11 @@ record RayState(int x, int y, int dx, int dy) {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Do konstruktoru RayState předej v pořadí x+dx, y+dy, dx, dy.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Navrhni v připravených datech trasu laseru se dvěma odrazy. Před výstřelem napiš první tři RayState
+/// včetně souřadnic a směru. Spolužákovi předej záznamy s jednou vynechanou složkou a nech ji odvodit.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

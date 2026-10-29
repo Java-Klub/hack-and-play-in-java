@@ -17,7 +17,7 @@ import java.util.Arrays;
 /// **Dnes trénuješ:** Writing functional checks (psaní funkčních kontrol): vybírej příklady, na kterých
 /// se odliší řešení shodná v prvním snadném případě. Nesouměrné souřadnice zviditelní prohození os.
 ///
-/// Spusť program a klikni na prázdné políčko vedle stromu pro postavení stanu, potom pomocí
+/// Klikni na prázdné políčko vedle stromu pro postavení stanu, potom pomocí
 /// kontroly hry prověř své příklady čtení mapy.
 record TreeExample(int x, int y, boolean expected) {
 }
@@ -85,6 +85,12 @@ TreeExample[] learnerChecks() {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Přidej pozdější strom a souřadnici mimo plochu; každé očekávání musí souhlasit se skutečnou mapou.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Vytvoř falešné treeAt, které souhlasí s tvými příklady, ale lže o jedné další buňce. Spolužák má
+/// novým příkladem podvod odhalit. Potom vrať skutečné pravidlo a vysvětli, kterou slepou skvrnu nový
+/// příklad odstranil.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
@@ -267,7 +273,8 @@ void main() {
 void verifyExamples() {
     for (var e : learnerChecks()) {
         if (treeAt(e.x(), e.y()) != e.expected()) {
-            throw new IllegalStateException("Tree example has wrong expected result");
+            throw new IllegalStateException("Cell x=" + e.x() + ", y=" + e.y()
+                    + ": expected tree=" + e.expected() + ", actual=" + treeAt(e.x(), e.y()));
         }
     }
 }

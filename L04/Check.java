@@ -55,7 +55,7 @@ class M01_HangmanTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I021 F10: " + reason);
+            throw new AssertionError("L04.01 F10: " + reason);
         }
     }
 
@@ -80,7 +80,7 @@ class M02_GhostTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I025 F10: " + reason);
+            throw new AssertionError("L04.02 F10: " + reason);
         }
     }
 
@@ -105,7 +105,7 @@ class M03_FloodTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I055 F10: " + reason);
+            throw new AssertionError("L04.03 F10: " + reason);
         }
     }
 
@@ -132,7 +132,7 @@ class M04_SameGameTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I082 F10: " + reason);
+            throw new AssertionError("L04.04 F10: " + reason);
         }
     }
 
@@ -156,7 +156,7 @@ class M05_WordSearchTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I028 F11: " + reason);
+            throw new AssertionError("L04.05 F11: " + reason);
         }
     }
 
@@ -179,7 +179,7 @@ class M06_VirtualScribblerTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I100 F11: " + reason);
+            throw new AssertionError("L04.06 F11: " + reason);
         }
     }
 
@@ -196,6 +196,15 @@ class M06_VirtualScribblerTest {
         Reflect.set(game, "paused", true);
         Reflect.call(game, "burst", 4);
         check(((int) Reflect.get(game, "steps")) == 5, "the supplied pause rule remains active");
+        Reflect.call(game, "restart");
+        Reflect.call(game, "oneShot", 1);
+        check(((int) Reflect.get(game, "steps")) == 1 && ((boolean) Reflect.get(game, "paused")), "one-shot 1 makes exactly one visible step and stays paused");
+        Reflect.call(game, "oneShot", 12);
+        check(((int) Reflect.get(game, "steps")) == 13 && ((boolean) Reflect.get(game, "paused")), "one-shot 12 adds twelve steps without starting continuous motion");
+        Reflect.set(game, "paused", false);
+        Reflect.call(game, "burst", -1);
+        Reflect.call(game, "burst", 61);
+        check(((int) Reflect.get(game, "steps")) == 13, "rejected burst counts leave the canvas unchanged");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -207,7 +216,7 @@ class M07_KochSnowflakeCardsTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I107 F11: " + reason);
+            throw new AssertionError("L04.07 F11: " + reason);
         }
     }
 
@@ -234,7 +243,7 @@ class M08_DragonCurveTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I108 F11: " + reason);
+            throw new AssertionError("L04.08 F11: " + reason);
         }
     }
 
@@ -255,7 +264,7 @@ class M09_EvilHangmanTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I022 F12: " + reason);
+            throw new AssertionError("L04.09 F12: " + reason);
         }
     }
 
@@ -278,7 +287,7 @@ class M10_WordleStyleWordHuntTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I023 F12: " + reason);
+            throw new AssertionError("L04.10 F12: " + reason);
         }
     }
 
@@ -302,7 +311,7 @@ class M11_JottoTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I024 F12: " + reason);
+            throw new AssertionError("L04.11 F12: " + reason);
         }
     }
 
@@ -327,7 +336,7 @@ class M12_WordChainTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I027 F12: " + reason);
+            throw new AssertionError("L04.12 F12: " + reason);
         }
     }
 
@@ -353,7 +362,7 @@ class M13_YatzyScorecardTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I040 F12: " + reason);
+            throw new AssertionError("L04.13 F12: " + reason);
         }
     }
 

@@ -26,6 +26,14 @@ void tap(int x, int y) {
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Vytvoř nástroj dvojité kapky: kliknutí přidá kladné vychýlení a stejně vzdálené záporné vychýlení.
+/// Porovnej setkání vln se dvěma kladnými kapkami. Zachovej chráněný okraj; nezapisuj mimo vnitřní
+/// buňky.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F30">
 /// ### Input (vstup) požádá; tick (krok) posune čas
 ///

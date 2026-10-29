@@ -8,16 +8,17 @@ import javax.sound.sampled.AudioSystem;
 /// Proměň krátkou napsanou zprávu v malou melodii. Každé písmeno dostane tón, zatímco jiné znaky nechají
 /// tichý úsek, takže různé zprávy vytvářejí různé rytmy.
 ///
-/// **Tvoje mise:** První zpráva obsahuje čtyři tiché úseky. Změň zprávu poskytovanou defaultMessage
+/// **Tvoje mise · Rozlušti hudební zprávu:** Dvě číslice přerušují úvodní zprávu. Změň zprávu
+/// poskytovanou defaultMessage
 /// tak, aby úvodní melodie vyjadřovala JAVA.
 ///
 /// **Dnes trénuješ:** Text literal (doslovný text): dvojité uvozovky označí svůj obsah jako textová data.
 /// Číslice v uvozovkách například zůstane znakem zprávy; nestane se výpočtem.
 ///
 /// Spusť program: otevře se Java přehrávač se zprávou. Stiskni Play / Replay; číslice tvoří
-/// tiché pauzy, takže výchozí 1234 má být tiché. Stop přehrávání ukončí.
+/// tiché pauzy: J4V4 střídá zvuk a ticho. Stop přehrávání ukončí.
 String defaultMessage() {
-    return "1234";
+    return "J4V4";
 }
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F02">
@@ -50,7 +51,7 @@ String defaultMessage() {
 ///   zpráva se má použít?
 /// - `{` — Složené závorky uzavírají statement (příkazy), které na otázku odpovídají.
 /// - `return` — Předej následující hodnotu zpět části, která požádala o zprávu.
-/// - `"1234"` — Uvozovky patří k zápisu Javy; čtyři znaky uvnitř se stanou skutečnou zprávou.
+/// - `"J4V4"` — Uvozovky patří k zápisu Javy; čtyři znaky uvnitř se stanou skutečnou zprávou.
 /// - `;` — Zde ukonči tento return statement (příkaz vrácení hodnoty).
 ///
 /// ### Co už obstarává připravená část
@@ -62,9 +63,21 @@ String defaultMessage() {
 
 // <editor-fold defaultstate="expanded" desc="Pro tuto hru">
 /// Zvuk přehrává přímo Java. Není třeba hledat soubor ani jiný přehrávač. Panel ukáže skutečnou
-/// zprávu; výchozí číslice jsou pauzy, nikoli porucha zvuku. Po úpravě defaultMessage ulož
+/// zprávu; J4V4 obsahuje dva tóny a dvě pauzy. Po úpravě defaultMessage ulož
 /// source (zdrojový text), zavři okno a znovu spusť program. Nové okno načte upravenou zprávu;
 /// Play / Replay opakuje zprávu současného okna.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// String literal (textový literál) je text mezi dvojitými uvozovkami. V `"A7"` vytvoří A tón a 7
+/// pomlku; jsou zde dvě časové pozice. V `"A 7"` jsou tři. Uvozovky označují hranici ve zdrojáku a
+/// samy se nepřehrávají. Před poslechem spočítej tóny a pomlky ve své zprávě.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Po kontrole JAVA napiš kamarádovi krátký hudební podpis. Některé číslice nebo mezery nech jako
+/// pomlky. Porovnej JAVA, J A V A a vlastní zprávu: kterou poznáš podle rytmu? Původní kontrola stále
+/// požaduje JAVA; podpis je samostatný experiment.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -177,7 +190,7 @@ void showPlayer() {
         var frame = new javax.swing.JFrame("Type Melody");
         var description = new javax.swing.JLabel("<html>Message: <b>" + message.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
             + "</b><br>Letters A-Z make notes. Digits and other characters are silent rests.<br>"
-            + (allRests ? "This message is all rests: 1234 has four silent slots.<br>" : "This message contains notes. Press Play to listen.<br>")
+            + (allRests ? "This message contains only rests. Use letters A-Z for notes.<br>" : "This message contains notes. Press Play to listen.<br>")
             + "Edit defaultMessage, save, close this window and run the play command again.</html>");
         var status = new javax.swing.JLabel("Click Play to hear this message. Stop ends playback.");
         var buttons = new javax.swing.JPanel();

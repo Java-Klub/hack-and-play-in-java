@@ -10,17 +10,31 @@ import javax.swing.Timer;
 /// Veď hejno pohybem překážky do jeho dráhy. Sleduj, jak místní volby směru promění mnoho samostatných
 /// ptáků v plynoucí skupinu.
 ///
-/// **Tvoje mise:** Ptáci nedostanou od překážky žádný příspěvek, protože spojovací část stále vrací nulu.
-/// Ať připravené pravidlo vyhýbání dostane skutečnou vzdálenost.
+/// **Tvoje mise:** Vytvoř makeAvoidance(radius) a do avoidance zapoj makeAvoidance(75). Vrácená role
+/// dává nulu pro distance <= 0 nebo >= radius; uvnitř má strength (sílu) 0.2 × (1 - distance /
+/// radius). obstaclePush nech jako připravený adapter (propojení).
 ///
-/// **Dnes trénuješ:** Composition (skládání) dovolí hejnu používat roli Avoidance bez vlastnictví jejího
-/// vzorce. Předání skutečné vzdálenosti je podstatné: jiné pravidlo může reagovat jinak zblízka a zdálky.
+/// **Dnes trénuješ:** Napíšeš implementation (implementaci) malého interface (rozhraní) a zapojíš ji
+/// do běžícího programu. Výpočet odděl od vstupu, aktualizace a kreslení.
 ///
 /// Po spuštění programu posouvej oranžovou překážku myší do dráhy ptáků a pomocí Pause/Run či
 /// New flock porovnej jejich reakci.
-double obstaclePush(double distance) {
-    return 0;
+Avoidance makeAvoidance(double radius) {
+    if (!Double.isFinite(radius) || radius <= 0) {
+        throw new IllegalArgumentException("Positive finite radius required.");
+    }
+    return distance -> 0;
 }
+
+Avoidance avoidance = distance -> 0;
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Navrhni plaché a zvědavé hejno pomocí dvou Avoidance implementations (implementací reakce), které
+/// poblíž překážky reagují opačně. Zachovej bezpečné vzdálenosti a malou sílu. Kamarád má osobnost
+/// poznat z pohybu bez čtení vzorce.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F34">
 /// ### Interface (rozhraní): požádej vybranou roli o práci
@@ -48,33 +62,45 @@ double obstaclePush(double distance) {
 /// vstupu?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// ### Rule (pravidlo) si pamatuje parametr factory
 ///
-/// - `double distance` — Skutečná vzdálenost předaná z výpočtu překážky pro aktuálního ptáka.
-/// - `obstaclePush` — Tato spojovací část dodává jen sílu; caller (volající část) už zná směr.
-/// - `return 0;` — Hlásí nulový příspěvek překážky bez ohledu na vzdálenost či připravené chování.
+/// Vrácená lambda může používat radius i po návratu z makeAvoidance. Tento captured parameter
+/// (zapamatovaný parametr) není současná vzdálenost ptáka: distance přichází při každém volání
+/// strength. Neutrální factory:
 ///
-/// ### Co už obstarává připravená část
+/// ```java
+/// IntUnaryOperator offset(int amount) {
+///     return value -> value + amount;
+/// }
+/// ```
 ///
-/// Step spojí separation (oddělování), alignment (sjednocení směru) a cohesion (soudržnost) s
-/// obstaclePush před omezením rychlosti. Připravené Avoidance interface (rozhraní) a field (položka
-/// objektu) nesou vyměnitelné pravidlo; okno posouvá překážku a spravuje pause i reset.
+/// JDK role IntUnaryOperator převádí int na int; factory vytvoří offset(3). Pravidlo změní 8 na 11 i
+/// po ukončení volání factory. Předpověz výsledek offset(5) pro 8.
+///
+/// Pro samostatný radius 100 dává distance 25 sílu 0.15 a distance 100 nulu. Předpověz distance 50.
+/// Připravený guard ověřuje radius; tvé tělo řeší interval distance. obstaclePush předává aktuální
+/// vzdálenost do vybraného avoidance. step hlídá směr, rychlost a pohyb. Tvoje role jen počítá sílu;
+/// ptáky neposouvá a okno nezavírá. Výsledek factory zapoj, aby jej skutečné hejno použilo.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Interface (rozhraní) dostane vzdálenost a dodá jen sílu.
+/// Zachovej připravený guard pro radius. Vrácená lambda dostane distance později.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Field (položka objektu) už obsahuje výchozí implementaci.
+/// Uvnitř poloměru klesá lineární faktor téměř od jedné k nule. Na hranici vrať nulu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Volej tento field; nevracej konstantu a nekopíruj výchozí vzorec.
+/// Sestav pravidlo se dvěma větvemi, vrať jej a nastav avoidance = makeAvoidance(75).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+double obstaclePush(double distance) {
+    return avoidance.strength(distance);
+}
+
 final int COUNT = 36;
 double[] x = new double[COUNT];
 double[] y = new double[COUNT];
@@ -128,7 +154,7 @@ void step() {
         double dx = x[i] - obstacleX;
         double dy = y[i] - obstacleY;
         double distance = Math.hypot(dx, dy);
-        if (distance > 0 && distance < 75) {
+        if (distance > 0) {
             ax += dx / distance * obstaclePush(distance);
             ay += dy / distance * obstaclePush(distance);
         }
@@ -213,7 +239,7 @@ void showWindow() {
 }
 
 interface Avoidance { double strength(double distance); }
-Avoidance avoidance = distance -> distance > 0 && distance < 75 ? 0.2 : 0;
+
 
 void main() {
 /// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.

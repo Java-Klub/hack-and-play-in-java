@@ -8,17 +8,27 @@ import java.awt.image.BufferedImage;
 /// Nech dvě virtuální látky šířit se a reagovat, až vzniknou skvrny či pruhy. Drobné místní pravidlo
 /// změní celou kůži tvora, kterého si pod ní představíš.
 ///
-/// **Tvoje mise:** Reakce je stále nula, takže vybraná chemie vzor neovlivní. Znovu propoj vyměnitelné
-/// pravidlo se skutečnými hodnotami aktuální cell (buňky).
+/// **Tvoje mise:** Napiš makeChemistry a jeho výsledek zapoj do chemistry. Vrať Chemistry lambda
+/// (implementaci pravidla) počítající a × b² z argumentů, ne z pevné buňky. reactionAt je nyní
+/// připravený adapter (propojovací metoda): dál předává každou buňku zapojené roli.
 ///
-/// **Dnes trénuješ:** Malý interface (rozhraní) může pojmenovat jeden vyměnitelný výpočet. ReactionAt se
-/// má zeptat připravené role Chemistry na tuto cell (buňku), aby jiná implementace změnila chemii bez
-/// přepisování difuze.
+/// **Dnes trénuješ:** Napíšeš implementation (implementaci) malého interface (rozhraní) a zapojíš ji
+/// do běžícího programu. Výpočet odděl od vstupu, aktualizace a kreslení.
 ///
 /// Spusť program a porovnej obrázek před opravou a po ní.
-double reactionAt(int x, int y) {
-    return 0;
+Chemistry makeChemistry() {
+    return (a, b) -> 0;
 }
+
+Chemistry chemistry = (a, b) -> 0;
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Vymysli kůži tvora změnou jen své Chemistry implementation (implementace pravidla). Zkus poloviční
+/// sílu reakce a porovnej stejný seed i počet kroků. Neslibuj konkrétní zvířecí vzor: pojmenuj
+/// výsledek, který skutečně vidíš, a uchovej jeho recept.
+// </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F34">
 /// ### Interface (rozhraní): požádej vybranou roli o práci
@@ -46,33 +56,51 @@ double reactionAt(int x, int y) {
 /// vstupu?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// ### Implementuj role (roli), potom ji zapoj
 ///
-/// - `double` — Vrácená reakce je desetinná veličina, ne rozhodnutí ano/ne.
-/// - `reactionAt(int x, int y)` — Caller (volající část) určí, ze které cell (buňky) potřebuje aktuální
-///   hodnoty látek.
-/// - `return 0;` — Ignoruje cell (buňku) i připravené pravidlo a všude hlásí nulovou reakci.
+/// Interface Chemistry slibuje reaction(double a, double b). Lambda se dvěma argumenty a výsledkem
+/// double může tento slib splnit. Factory (vytvářecí metoda) makeChemistry vrátí implementaci; field
+/// (uložená hodnota) chemistry ji vybere pro simulaci. Potřebuješ obě práce. Správné, ale nepoužité
+/// pravidlo obrázek nezmění.
 ///
-/// ### Co už obstarává připravená část
+/// Neutrální příklad:
 ///
-/// reset vytvoří grids (mřížky koncentrací); step žádá reactionAt o místní reakci před zápisem
-/// dalších grids. render provede jeden omezený běh a zobrazí vzniklý vzor v Javě.
+/// ```java
+/// interface Price { double forCount(int n); }
+/// Price makePrice() {
+///     return n -> {
+///         double subtotal = n * 3.0;
+///         return subtotal + 2;
+///     };
+/// }
+/// ```
+///
+/// Uložené pravidlo `Price price = makePrice()` vrací pro price.forCount(3) číslo 11. Předpověz
+/// výsledek pro 5 a vysvětli, kdy tělo lambda běží.
+///
+/// Zadaná reakce této kůže pro a = 0.5 a b = 0.4 dává 0.08. reactionAt čte a[y][x] a b[y][x]; step
+/// použije výsledek do nových mřížek příštího stavu. Chemistry samo žádnou mřížku měnit nesmí.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Chemistry pojmenovává roli výpočtu ze dvou hodnot.
+/// Argumenty lambda jsou koncentrace současné buňky, ne souřadnice.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Přečti a[y][x] a b[y][x] a předej obě do reaction v připraveném field (položce objektu).
+/// Factory má vrátit pravidlo násobící a dvakrát hodnotou b. Pravidlo jen počítá.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Nepřepisuj jeden vzorec napevno; caller (volající část) musí fungovat i po výměně chemistry.
+/// Chemistry inicializuj pomocí makeChemistry(), ne druhou nesouvisející lambda. reactionAt dál
+/// předává do tohoto field.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+double reactionAt(int x, int y) {
+    return chemistry.reaction(a[y][x], b[y][x]);
+}
+
 final int SIZE = 64;
 double[][] a;
 double[][] b;
@@ -146,7 +174,7 @@ BufferedImage render(long seed, double option) {
 
 
 interface Chemistry { double reaction(double a, double b); }
-Chemistry chemistry = (a, b) -> a * b * b;
+
 
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;

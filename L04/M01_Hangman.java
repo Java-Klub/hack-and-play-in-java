@@ -3,27 +3,19 @@
 /// Odhaluj skryté slovo po písmenech, než šest chybných tipů ukončí kolo. Opakované písmeno může odkrýt
 /// několik míst zároveň, takže každá nápověda může změnit tvůj další tip.
 ///
-/// **Tvoje mise:** Zobrazení ztrácí poslední znak každého slova. Oprav hranici while v mask tak, aby
-/// každý znak vytvořil právě jedno písmeno nebo podtržítko; postup index dál zachovej.
+/// **Tvoje mise:** Zobrazení slova je prázdné. Sestav mask průchodem while: každý znak bude odhalené
+/// písmeno, pokud je v tried, jinak podtržítko. Každou pozici navštiv právě jednou; prázdné slovo
+/// nevyžaduje žádné čtení.
 ///
 /// **Dnes trénuješ:** While loop (smyčka s podmínkou): před každým průchodem ověř podmínku, udělej část
 /// práce a posuň se ke konci. U šestipísmenného slova jsou platné index (pozice) 0 až 5; následující
 /// index už musí smyčku zastavit.
 ///
-/// Spusť program a napiš A pro cvičné slovo BANANA; porovnej zobrazené _A_A_ se šesti místy,
-/// která slovo potřebuje.
+/// Cvičné slovo je BANANA. Zadej A: nehotová maska zůstane prázdná místo šesti pozic. Tvůj průchod má
+/// vrátit _A_A_A.
 String mask() {
     String result = "";
     int index = 0;
-    while (index < word.length() - 1) {
-        String letter = word.substring(index, index + 1);
-        if (tried.contains(letter)) {
-            result += letter;
-        } else {
-            result += "_";
-        }
-        index++;
-    }
     return result;
 }
 
@@ -52,37 +44,37 @@ String mask() {
 /// Nyní předpověz trace (stopu průběhu), pokud energy začíná na čtyřech.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// result začíná prázdný; index označuje další znak. Opakovanou část sestav před return.
 ///
-/// - `String result = "";` — Před sbíráním znaků slova jednou založ prázdný String (řetězec) result.
-/// - `int index = 0;` — První znak má index (pozici) nula; index pojmenovává právě zpracovávanou pozici.
-/// - `while (index < word.length() - 1)` — Opakuj, dokud je toto porovnání true (pravda). length() dává
-///   počet znaků; rozliš počet znaků a poslední platný index (pozici).
-/// - `word.substring(index, index + 1)` — Přečti jeden znak jako text: první pozici zahrň a před druhou
-///   skonči.
-/// - `result += "_";` — Připoj jedno podtržítko k již nasbíranému textu místo nahrazení celého výsledku.
-/// - `index++;` — Po každém průchodu zvětši pozici o jedna. Bez postupu by se mohl stále dokola
-///   zpracovávat tentýž znak.
-/// - `return result;` — Po skončení smyčky vrať volající části dokončený text k zobrazení.
+/// | word | tried | požadovaná maska |
+/// | --- | --- | --- |
+/// | STAR | AS | S_A_ |
+/// | A | prázdný | _ |
+/// | prázdný | libovolný | prázdná |
 ///
-/// ### Co už obstarává připravená část
-///
-/// Připravená větev na jedné pozici vybere odkryté písmeno nebo podtržítko. guess kontroluje tipy a
-/// počítá chyby; main vypisuje mask, řeší konec po šesti chybách a přijímá /r nebo /q. Samotná mask se
-/// hráče na input (vstup) neptá.
+/// Pro STAR přečte index nula S a připojí S; index jedna přečte T a připojí _. Posun index změní další
+/// čtený znak. `word.substring(index, index + 1)` dodá jeden znak jako text; `tried.contains(letter)`
+/// zjišťuje předchozí tip. Předpověz masku pro BEE s tried E. Připravené zpracování tipů a konce hry
+/// používá tvůj výsledek.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Slovo délky šest má index (indexy) 0 až 5.
+/// Před smyčkou nakresli jednu výstupní pozici pro každý vstupní znak.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Vyhodnoť současnou condition (podmínku), když index je pět.
+/// Každý průchod čte, vybere odhalené písmeno či podtržítko, připojí je a posune index.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Pokračuj při index < word.length(); index++ zajišťuje postup.
+/// Opakuj, dokud je index menší než word.length(); připojuj k result a posuň index jednou za průchod.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Vytvoř coach mode (nápovědní režim), který před hádáním odhalí tebou zvolenou skupinu znaků,
+/// například samohlásky. Použij stejný průchod slovem. Ukaž spolužákovi dvě masky a nech ho odhalit tvé
+/// pravidlo.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

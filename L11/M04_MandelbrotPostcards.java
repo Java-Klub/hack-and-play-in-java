@@ -8,29 +8,29 @@ import java.awt.image.BufferedImage;
 /// Pošli pohlednici z okraje Mandelbrotovy množiny, kde změna měřítka odhaluje nové detaily. Seed
 /// (počáteční hodnoty) mají dát stejné krajině různé, opakovatelné barevné nálady.
 ///
-/// **Tvoje mise:** Každý seed (počáteční hodnota) vytvoří stejnou paletu, protože náhoda barev vždy
-/// začíná nulou. Obnov požadovaný seed beze změny výpočtu fraktálu.
+/// **Tvoje mise:** Vytvoř palette: sestav 16 jasných barev pomocí jediného Random vytvořeného ze
+/// seed. Pro každou barvu vezmi další náhodný integer hue (odstín) 0 až 359, vyděl jej 360.0 a použij
+/// saturation (sytost) 0.8 a brightness (jas) 1. Pole vrať připravenému kreslení fraktálu.
 ///
-/// **Dnes trénuješ:** Random se seed (počáteční hodnotou) dává opakovatelnou sequence (posloupnost), ne
-/// pokaždé novou. Jeden vybraný hue (barevný tón) zde řídí paletu: stejné seed mají souhlasit a různé se
-/// mají umět lišit.
+/// **Dnes trénuješ:** Vytvoříš jediný seeded random generator (generátor s počátečním stavem) a jeho
+/// opakovatelnou posloupností sestavíš celou paletu.
 ///
-/// Po spuštění programu napiš seed (počáteční číslo) nebo stiskni Enter pro 42; prohlédni Java
-/// obrázek, potom jej zavři a zopakuj stejný seed nebo porovnej 43.
-BufferedImage render(long seed, double span) {
-    if (!Double.isFinite(span) || span <= 1.0E-5 || span > 6 || !Double.isFinite(centerX + centerY)) {
-        throw new IllegalArgumentException("Span must be 0.00001..6.");
-    }
-    var image = new BufferedImage(480, 360, BufferedImage.TYPE_INT_RGB);
-    float hue = new Random(0).nextFloat();
-    for (int y = 0; y < 360; y++) {
-        for (int x = 0; x < 480; x++) {
-            int n = escape(centerX + (x / 479.0 - 0.5) * span, centerY + (y / 359.0 - 0.5) * span * 0.75);
-            image.setRGB(x, y, n == 160 ? 0 : Color.HSBtoRGB(hue + n / 55.0F, 0.8F, 1));
-        }
-    }
-    return image;
+/// Po spuštění zvol palette seed (počáteční stav palety) a horizontal span (šířku záběru), nebo
+/// potvrď Enter pro 42 a 3.2. Před dalším spuštěním obrázek zavři. Stejný seed zopakuje paletu; span
+/// mění záběr.
+int[] palette(long seed) {
+    int[] colours = new int[16];
+    // Vytvoř jediný generátor se seed a naplň každou položku barev.
+    return colours;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Uspořádej výstavu dvou pohlednic: zvol palette seed (počáteční stav barev) a span (šířku záběru)
+/// pro celou množinu, potom jiný záběr a střed u okraje. Zapiš všechna čtyři čísla, ne jen seed.
+/// Paleta mění barvu; span a střed mění viditelnou krajinu.
+// </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F27">
 /// ### Seeded randomness (náhoda se seedem): opakuj pokus
@@ -54,34 +54,49 @@ BufferedImage render(long seed, double span) {
 /// Předpověz: která čísla smí vrátit `nextInt(3)` a může vrátit 3?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// ### Opakovatelnost znamená posloupnost, ne jediný skoro stejný tah
 ///
-/// - `long seed` — Požadovaný počátek od caller (volající části) pro opakovatelné barevné volby.
-/// - `new Random(0)` — Pokaždé vytvoří stejnou náhodnou sequence (posloupnost) a ignoruje seed parameter
-///   (parametr).
-/// - `nextFloat()` — Vybere jeden posun barevného tónu ze zvoleného generátoru.
-/// - `n == 160 ? 0 :` — Nechá vnitřní body černé a obarví body, které uniknou.
+/// Generator (generátor) vytvoř jednou před plněním pole. Každé nextInt(360) jej posune a vrátí
+/// 0..359. Nové Random(seed) uvnitř cyklu by opakovalo první odstín ve všech položkách. Neutrální
+/// příklad: `var r = new Random(7); int a = r.nextInt(6); int b = r.nextInt(6);` udělá dva tahy; jiný
+/// generátor se seed 7 dvojici zopakuje. Nemusí být a jiné než b. Předpověz důsledek změny seed jen
+/// druhého generátoru na 8.
 ///
-/// ### Co už obstarává připravená část
-///
-/// main načte jediný seed (počáteční číslo) a zavolá render. Připravený výpočet určí tvar obrázku;
-/// upravované pravidlo náhodných barev podle seed určí palette (paletu).
+/// HSBtoRGB převádí hue, saturation a brightness na zabalenou barvu pro setRGB. Připravený renderer
+/// (kreslení) volí položku palety podle počtu kroků úniku bodu; vnitřní body nechá černé. Seed barví
+/// krajinu, neposouvá ji. Span je viditelná vodorovná šířka a centreX/centreY určují její střed.
+/// Těmito údaji lze prohlížet menší oblast.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Method (metoda) už dostává seed (počáteční hodnotu).
+/// Random vytvoř jednou, potom projdi všech 16 položek.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Pevný seed udělá všechny palety stejné.
+/// Použij nextInt(360); před převodem HSB na RGB děl desetinnou hodnotou 360.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Random palety vytvoř z parameter (parametru), jednou na render.
+/// Do každé položky ulož výsledek HSBtoRGB a vrať hotové pole. Renderer už palette volá.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+BufferedImage render(long seed, double span) {
+    if (!Double.isFinite(span) || span <= 1.0E-5 || span > 6 || !Double.isFinite(centerX + centerY)) {
+        throw new IllegalArgumentException("Span must be 0.00001..6.");
+    }
+    var image = new BufferedImage(480, 360, BufferedImage.TYPE_INT_RGB);
+    int[] colours = palette(seed);
+    for (int y = 0; y < 360; y++) {
+        for (int x = 0; x < 480; x++) {
+            int n = escape(centerX + (x / 479.0 - 0.5) * span, centerY + (y / 359.0 - 0.5) * span * 0.75);
+            image.setRGB(x, y, n == 160 ? 0 : colours[n % colours.length]);
+        }
+    }
+    return image;
+}
+
 int escape(double x, double y) {
     double a = 0;
     double b = 0;
@@ -123,13 +138,18 @@ void showImages(String title, String[] captions, java.awt.image.BufferedImage[] 
 
 
 void main() {
-    String input = IO.readln("Seed (blank 42, q quits): ");
-    if (input == null || input.strip().equalsIgnoreCase("q")) return;
     try {
-        long seed = input.isBlank() ? 42 : Long.parseLong(input.strip());
-        showImages("Mandelbrot Postcards", new String[]{"Seed " + seed}, new java.awt.image.BufferedImage[]{render(seed, 3.2)});
-    } catch (IllegalArgumentException failure) {
-        IO.println("Use a whole-number seed: " + failure.getMessage());
+        String seedText = IO.readln("Palette seed [42], /q to quit: ");
+        if (seedText == null || seedText.strip().equalsIgnoreCase("/q")) return;
+        String spanText = IO.readln("Horizontal span [3.2], smaller means a closer view, /q to quit: ");
+        if (spanText == null || spanText.strip().equalsIgnoreCase("/q")) return;
+        long seed = seedText.isBlank() ? 42 : Long.parseLong(seedText.strip());
+        double span = spanText.isBlank() ? 3.2 : Double.parseDouble(spanText.strip());
+        var image = render(seed, span);
+        IO.println("Centre: " + centerX + ", " + centerY + "; span: " + span + "; palette seed: " + seed);
+        showImages("Mandelbrot Postcards", new String[]{"Seed " + seed + ", span " + span}, new BufferedImage[]{image});
+    } catch (Exception failure) {
+        IO.println("Cannot draw this view: " + failure.getMessage());
     }
 }
 // </editor-fold>

@@ -3,23 +3,28 @@
 /// Pošli hádankovou pohlednici v jedné ze tří hračkových šifer a zase ji rozlušti. Výměna šifrovací karty
 /// má změnit převod a nechat rozpoznatelné mezery i interpunkci.
 ///
-/// **Tvoje mise:** Alternativa Vigenere míří do Caesar s nezměněným výsledkem. Ať použije vlastní
-/// přenášený klíč a volbu decode při zachování ostatních šifer.
+/// **Tvoje mise:** Sestav v transform celý typed dispatcher (směrování podle typu). Caesar předá
+/// shift jako text do applyText s mode caesar; Substitution předá alphabet s mode substitution;
+/// Vigenere předá keyword s mode vigenere. Všechny zachovají decode od volajícího.
 ///
-/// **Dnes trénuješ:** Record pattern (vzor record) dává každé uzavřené alternativě vlastní pojmenovaná
-/// data. Switch má předat rozpoznaná data správnému připravenému postupu, ne považovat každou kartu za
-/// stejnou operaci.
+/// **Dnes trénuješ:** Sestavíš celý record-pattern dispatcher (směrování podle typu a složek). Rozliš
+/// alternativu, vyjmi její data a zachovej hranici mezi směrováním a připraveným algoritmem.
 ///
 /// Po spuštění programu stiskni Enter pro vigenere a ORANGE, potom napiš ATTACK AT DAWN!;
 /// přečti zvolený cipher (šifru) a porovnej Result s původní zprávou: Vigenere branch (větev)
 /// má změnit její písmena.
 String transform(String text, Cipher cipher, boolean decode) {
-    return switch (cipher) {
-        case Caesar(var shift) -> applyText(text, "caesar", Integer.toString(shift), decode);
-        case Substitution(var alphabet) -> applyText(text, "substitution", alphabet, decode);
-        case Vigenere(var keyword) -> applyText(text, "caesar", "0", decode);
-    };
+    // Rozliš typ karty a její vlastní data předej applyText.
+    return text;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Přidej čtvrtou toy cipher card (kartu hračkové šifry), která obrátí text. Vytvoř record, doplň
+/// permits, směruj switch case a zpřístupni ji v chooseCipher. Před spuštěním předpověz, který
+/// exhaustive switch (úplný výběr) ohlásí chybějící alternativu.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F35">
 /// ### Record patterns (vzory záznamů): vyber typ a rozbal data
@@ -45,20 +50,21 @@ String transform(String text, Cipher cipher, boolean decode) {
 /// Předpověz: která větev zpracuje `new Stars(0)` a jaký text vznikne pro `new Name("Nova")`?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// ### Typ karty volí cestu; components (složky) dodají data
 ///
-/// - `return switch (cipher)` — Vypočítá výsledek method (metody) podle právě jedné rozpoznané
-///   alternativy šifry.
-/// - `case Vigenere(var keyword)` — Vybere keyword uložený právě v tomto Vigenere record.
-/// - `"caesar", "0"` — Nyní vybírá jiný postup s pevným nulovým posunem.
-/// - `decode` — Přenáší volbu caller (volající části) mezi dopředným a zpětným převodem.
+/// Sealed Cipher family (uzavřená rodina) obsahuje tři record. Nenese vždy stejný druh hodnoty:
+/// Caesar má int, ostatní String. Integer.toString převádí posun pro existující textový algoritmus.
+/// Switch musí použít nalezenou složku, ne field z jiné karty.
 ///
-/// ### Co už obstarává připravená část
+/// Neutrální příklad: Shipping family může mít Pickup(String desk) a Delivery(String address). `case
+/// Pickup(var desk) -> "Collect at " + desk;` dává pro Pickup("Blue") text "Collect at Blue".
+/// Delivery potřebuje vlastní větev. Předpověz změnu pro Pickup("Red"); pravidlo nesmí mít Blue
+/// zapsané napevno.
 ///
-/// chooseCipher vytvoří zvolenou typovanou alternativu; transform předá record components (složky
-/// záznamu) do applyText. Jediný console flow (průběh v konzoli) vypíše zvolený cipher (šifru) a
-/// zakódovanou zprávu.
+/// Zde applyText řeší počítání písmen a validaci klíče. Transform řeší jen adapter (převod) od typu k
+/// algoritmu. Decode false šifruje; stejná karta s decode true má obnovit text. Zkus jiný než výchozí
+/// klíč i interpunkci; samotný nezměněný výsledek nulového posunu mnoho neprokazuje.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
@@ -73,15 +79,17 @@ String transform(String text, Cipher cipher, boolean decode) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Keyword z match (rozpoznání) patří této hodnotě Vigenere.
+/// Rozliš všechny tři record types (typy balíčků) a místně pojmenuj jejich složky.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Použij tuto component (složku), nikoli pevný klíč či jiný režim.
+/// Mode strings (názvy režimů) jsou caesar, substitution a vigenere; jen int z Caesar potřebuje
+/// převod na String.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// ApplyText už řeší velikost písmen, interpunkci, ověření klíče a opačný převod.
+/// Vrať exhaustive switch expression (úplný výběr s výsledkem); každá větev předá text, správný mode
+/// a klíč i nezměněné decode.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

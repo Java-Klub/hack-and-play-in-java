@@ -3,70 +3,70 @@
 /// Schovej si osmičku na chvíli, kdy tě nezachrání běžná karta. Hraj proti druhému člověku a po únikovém
 /// tahu si vyber barvu.
 ///
-/// **Tvoje mise:** Jako univerzální karta se chová špatná hodnota. Oprav legal(int card), aby speciální i
-/// běžné karty dodržovaly oznámená pravidla.
+/// **Tvoje mise:** Vytvoř legal(int card): přijmi jen index (pozici) 0–51; osmička je vždy platná,
+/// ostatní karty potřebují stejný rank (hodnotu) jako top nebo aktuálně zvolený suit (barvu).
+/// Nedokončený výběr nyní odmítá každou kartu.
 ///
-/// **Dnes trénuješ:** Switch expressions (výrazy s výběrem větve): vyber jednu vracenou hodnotu podle
-/// případů a náhradní větve. Speciální případ nemá nahradit běžnou podmínku stejné hodnoty či barvy.
+/// **Dnes trénuješ:** Vytvoř výběr výsledku ze zadaných case (větví); sleduj selector (vybíranou
+/// hodnotu) a return value (výsledek) odděleně od připravených herních změn.
 ///
 /// Spusť program, prohlédni si očíslované karty a zahraj zadáním p a indexu karty; při osmičce
 /// přidej také číslo barvy.
 boolean legal(int card) {
-    return switch (rank(card)) {
-        case 1 -> true;
-        default -> rank(card) == rank(top) || card / 13 == suit;
-    };
+    return false;
 }
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F09">
-/// ### Switch: vyber jednu hodnotu
+/// ### Switch expression (výraz s výběrem) vybírá hodnotu
 ///
-/// Switch expression (výraz s výběrem) vybírá výsledek podle selector (výběrové hodnoty). Každá arrow
-/// case (větev se šipkou) obslouží odpovídající hodnotu; nepokračuje do další větve. `default`
-/// pokrývá zbývající hodnoty. Koncový středník patří okolnímu assignment (přiřazení) či return
-/// statement (příkazu návratu).
+/// Expression (výraz) má hodnotu. Switch expression přečte selector (vybíranou hodnotu) a zvolí
+/// výsledek za odpovídající šipkou. `return` jej předá volajícímu. Nejdřív přečti tento malý výběr
+/// zvuku:
 ///
 /// ```java
-/// String weather = "mist";
-/// String colour = switch (weather) {
-///     case "mist" -> "silver";
-///     case "sun" -> "gold";
-///     default -> "indigo";
-/// };
-/// IO.println(colour);
+/// String sound(int taps) {
+///     return switch (taps) {
+///         case 0 -> "silence";
+///         case 1, 2 -> "tap";
+///         default -> "drum";
+///     };
+/// }
 /// ```
 ///
-/// Mist case (větev pro mlhu) vybere `silver`. Předpověz výstup pro `"sun"` a potom `"snow"`.
-/// Selector se porovnává s case label (označením větve); text za šipkou je výsledek. Změna jednoho
-/// zvláštního případu má zachovat význam náhradní větve.
+/// Trace (průchod) pro `sound(2)`: selector je 2, společný case (větev) zahrnuje 2, výsledkem tedy je
+/// `"tap"`. Další case se neprovádí. Pro 7 neodpovídá žádný uvedený case, takže `default` dá `"drum"`.
+/// Semicolon (středník) uzavírá celý switch expression. Výsledky musí odpovídat return type (typu
+/// výsledku) uvedenému u method (metody).
+///
+/// Switch může stejně vybrat boolean, číslo nebo record (datový záznam). Sám automaticky nemění field
+/// (sdílenou proměnnou): vrátit navržený směr a uložit směr jsou dvě různé akce. Předpověz `sound(0)` a
+/// `sound(-1)` a najdi příslušný case.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Jak číst tuto část
 ///
-/// - `return switch (rank(card))` — Celý switch expression (výraz s výběrem) vytvoří boolean (ano/ne)
-///   vrácený z legal().
-/// - `case 1 -> true` — Šipková větev dává jeden výsledek pro jednu hodnotu karty; prověř, která hodnota
-///   jej má mít.
-/// - `default ->` — Obslouží všechny hodnoty karet bez vlastní větve case.
-/// - `||` — Logical OR (logické nebo): v běžné větvi stačí stejná hodnota nebo stejná barva.
-///
-/// ### Co už obstarává připravená část
-///
-/// rank() přečte hodnotu karty. play() se ptá legal(), odebere přijatou kartu, obnoví zvolenou barvu a
-/// hledá prázdnou ruku; rozdávání i konzolový vstup jsou připravené.
+/// Připravená method (metoda) `rank(card)` vrací 2–14; `card / 13` dává suit (barvu) 0–3. `top` a
+/// `suit` jsou aktuální state (stav) stolu. Zde jen rozhoduj platnost: kartu neodebírej ani neměň suit.
+/// Console command (textový příkaz) to po přijetí udělá sám.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// rank(card) převádí zakódovanou kartu na hodnotu 1–13.
+/// Odliš neplatný index (pozici) od běžného platného tahu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Switch expression vrací jednu boolean hodnotu.
+/// Jako switch selector (vybíranou hodnotu) použij rank; default (záložní větev) má stále dvě možné
+/// příčiny přijetí.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Použij case 8 -> true; default ponech dodanou podmínku hodnoty/barvy.
+/// Nejdřív odmítni vstup mimo 0–51; rank 8 vrací true, default porovnává rank NEBO suit.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Vymysli jiný wild rank (hodnotu divoké karty) a před rozdáním jej řekni soupeři. Zahraj dvě kola:
+/// vyplatí se tuto kartu schovávat?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

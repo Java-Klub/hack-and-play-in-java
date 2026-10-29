@@ -3,7 +3,8 @@
 /// Dva hráči okusují jednu tabulku čokolády. Každé sousto odebere obdélník směrem vpravo dolů, ale
 /// snědení jedovatého levého horního dílku prohrává hru.
 ///
-/// **Tvoje mise:** Viditelný čtvrtý řádek nelze ukousnout. Oprav range guard (ochranu rozsahu) v bite a
+/// **Tvoje mise · Ochraň poslední řadu čokolády:** Viditelný čtvrtý řádek nelze ukousnout. Oprav range
+/// guard (ochranu rozsahu) v bite a
 /// dál odmítej čokoládu mimo tabulku i už snědené dílky.
 ///
 /// **Dnes trénuješ:** Hranice před čtením: guard (ochrana) musí přijmout hranici patřící do hry a
@@ -67,6 +68,18 @@ boolean bite(int row, int column) {
 /// Připravený loop (cyklus) zkrátí všechny dotčené řádky po průchodu ochranou. Zbývající branch (větev)
 /// řeší jed a střídání, zatímco main kreslí nerovnou tabulku a čte dvojice řádek/sloupec. Opravuješ pouze
 /// vstupní hranici.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Viditelný čtvrtý řádek odpovídá widths[3]. Ověření row před čtením widths[row - 1] zabrání
+/// neplatnému lookup (vyhledání). Sousto může zkrátit několik řádků; připravený loop (cyklus) patří
+/// až za ověření. Má již snědené pole spotřebovat tah, nebo vše ponechat?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Změň počáteční šířky na jiný malý tvar čokolády se stejnými čtyřmi řádky. Připrav kamarádovi
+/// pozici, kde lákavé sousto ponechá jed druhému hráči. Zachovej otrávený levý horní roh a zkus
+/// sousto těsně za zbývající šířkou řádku.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">

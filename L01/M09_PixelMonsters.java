@@ -8,7 +8,8 @@ import java.awt.image.BufferedImage;
 /// Vytvoř souměrnou pixelovou příšerku a prozkoumej, jak jediná barva mění její výraz. Průhledné
 /// pozadí zvýrazní její hranatý tvar.
 ///
-/// **Tvoje mise:** Příšerka přišla o světlé oči. Oprav jedinou sdílenou eyeColour tak, aby oba oční bloky
+/// **Tvoje mise · Vrať příšeře výraz:** Příšerka přišla o světlé oči. Oprav jedinou sdílenou eyeColour
+/// tak, aby oba oční bloky
 /// zbělely bez samostatné úpravy každého oka.
 ///
 /// **Dnes trénuješ:** Jedna named value (pojmenovaná hodnota), několik čtenářů: obě oči dostávají stejnou
@@ -61,6 +62,17 @@ int eyeColour = Color.BLACK.getRGB();
 /// Obrázek používá stále stejný seed (počáteční hodnotu) 42, aby šly oči před úpravou a po ní přímo
 /// porovnat. Color poskytuje pojmenované barvy jako BLACK, WHITE, RED a YELLOW; getRGB() vrací
 /// jejich číselný zápis. Upravuješ jedinou sdílenou barvu, nikoli dvě pozice očí.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Jméno lze číst opakovaně. Představ si `int badge = 7;` použité na dvou dveřích: jediná změna badge
+/// změní číslo, které přečtou oboje dveře. Zde obě oční pozice čtou eyeColour; změna jediného oka
+/// jinde by společné pravidlo obešla. getRGB dodává číselný zápis barvy, nemusíš si jej pamatovat.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Změnou eyeColour na dvě dostupná jména Color dej stejné příšeře přátelský a výhružný výraz. Ponech
+/// seed 42, aby tělo zůstalo srovnatelné. Než odhalíš změněnou barvu, nech kamaráda vybrat výraz.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">

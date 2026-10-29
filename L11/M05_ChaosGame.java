@@ -21,6 +21,14 @@ int chooseVertex(Random random, int count) {
     return random.nextInt(Math.max(1, count - 1));
 }
 
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Vymysli nový zakázaný tah: po vrcholu nesmí následovat jeho soused po směru hodin. Před voláním
+/// chooseVertex sestav seznam legálních kandidátů. Se stejným seed (počátečním stavem) porovnej nové
+/// mezery s původním obrázkem.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F27">
 /// ### Seeded randomness (náhoda se seedem): opakuj pokus
 ///

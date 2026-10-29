@@ -87,6 +87,12 @@ List<Integer> foldTurns(int folds) {
 /// Dej fold výchozí hodnotu 0; zachovej fold < folds.
 // </editor-fold>
 
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Vymysli druhý recept překládání změnou pravidla, které připojuje obrácené dřívější zatáčky. Před
+/// kreslením předpověz seznamy pro nula, jeden a dva přehyby. Najdi nejmenší vstup, na kterém se tvá
+/// křivka liší od draka.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 List<Point> path(int folds) {
     if (folds < 0 || folds > 15) {

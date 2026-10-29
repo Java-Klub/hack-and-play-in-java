@@ -28,22 +28,33 @@ int visible(int r, int c) {
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F18">
-/// ### Grids: nejdřív řádek, potom sloupec
+/// ### Coordinates (souřadnice) popisují sousedy
 ///
-/// V array of rows (poli řádků) první index (pozice) vybírá řádek a druhý pozici v něm. Řádky mohou
-/// mít různé délky. Neighbour (soused) je posun od buňky, nikoli další absolutní pozice. Před
-/// kontrolou existence kandidáta urči povolené směry.
+/// Grid (mřížka) ukládá nejdřív row (řádek): `board[y][x]`. Rostoucí x vede doprava, rostoucí y na
+/// obrazovce dolů. Neighbour (soused) vznikne přičtením malého offset (posunu).
 ///
-/// ```java
-/// int[][] mosaic = {{3, 6, 9}, {2, 4, 8}};
-/// int row = 0;
-/// int column = 1;
-/// IO.println(mosaic[row][column + 1]);
+/// ```text
+///           (0,-1)
+/// (-1,0)    HERE    (1,0)
+///           (0,1)
 /// ```
 ///
-/// Výstup je devět: řádek nula a sloupec dva vyberou tento element (prvek). Pohyb dolů mění row;
-/// doprava mění column. Který z těchto pohybů z pravé horní cell (buňky) zůstane uvnitř? U úhlopříčky
-/// se mění obě souřadnice; bounds (meze) musíš ověřit před přístupem ke kandidátovi.
+/// ```java
+/// int[][] board = {{2, 5, 8}, {1, 4, 7}};
+/// int x = 1, y = 0;
+/// int nx = x + 0, ny = y + 1;
+/// if (ny >= 0 && ny < board.length && nx >= 0 && nx < board[ny].length) {
+///     IO.println(board[ny][nx]);
+/// }
+/// ```
+///
+/// Přesun vede z 5 na 4, vypíše se tedy 4. Bounds (hranice) kontrolujeme před indexováním: array (pole)
+/// za okrajem žádné cell (políčko) nemá. Diagonal (úhlopříčný posun) mění obě coordinates. Corridor
+/// (chodba) opakuje stejný offset; neighbourhood (okolí) zkouší několik offset. Jde o různé postupy se
+/// stejným modelem.
+///
+/// Předpověz výsledek offset `(-1,0)` ze stejného začátku. Který offset opustí tento board (hrací
+/// plochu)? Než spojíš směry do loop (opakování), zakresli začátek a cíl na papír.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
@@ -70,6 +81,11 @@ int visible(int r, int c) {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Místo jediného if použij while; posuny souřadnic ponech uvnitř.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Navrhni chodbu se zatáčkou a odvoď, která políčka uvidí jediná žárovka. Dej ji spoluhráči jako malou
+/// světelnou hádanku.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

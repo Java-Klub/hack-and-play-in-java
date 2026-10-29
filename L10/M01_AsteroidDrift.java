@@ -25,6 +25,14 @@ Runnable firingAction() {
     return () -> {};
 }
 
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Vytvoř záchranný let: dovol střelbu jen tehdy, když loď nezrychluje. Uprav firing callback
+/// (odloženou střeleckou akci), potom zkus přežít střídáním klouzání a střelby. Vysvětli, která
+/// metoda stále hlídá cooldown (prodlevu); nové pravidlo nemusí splnit původní kontroly.
+// </editor-fold>
+
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F28">
 /// ### Callback (zpětné volání): akce na později
 ///

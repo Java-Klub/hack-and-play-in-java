@@ -12,7 +12,8 @@ import java.awt.image.BufferedImage;
 /// Kresli uzavřené spletité křivky inspirované perem pohybujícím se uvnitř větší kružnice. Změnou
 /// vnitřního poloměru a vzdálenosti pera získáš výrazně odlišné vzory.
 ///
-/// **Tvoje mise:** Výpočet křivky zahazuje část poměru poloměrů. Oprav radiusRatio tak, aby celé poloměry
+/// **Tvoje mise · Zachraň ztracenou přesnost:** Výpočet křivky zahazuje část poměru poloměrů. Oprav
+/// radiusRatio tak, aby celé poloměry
 /// mohly dát desetinný poměr, včetně výsledku menšího než jedna.
 ///
 /// **Dnes trénuješ:** Typ expression (výrazu): Java vyhodnotí dělení před vrácením výsledku. Samotný
@@ -72,6 +73,18 @@ double radiusRatio(int outer, int innerRadius) {
 /// seats a čtyřmi rows dá `(double) seats / rows` hodnotu 1.75, zatímco `(double) (seats / rows)`
 /// pouze 1.0, protože desetinná část už zmizela. Cast nemění declaration (deklaraci) parametru. Nyní
 /// předpověz oba výrazy pro pět seats a dvě rows a potom rozhodni, kam převod patří ve tvém výpočtu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Pro radiusRatio(120, 80) je čitatel 40. Dělení celého 40 celým 80 nejdřív vytvoří nulu. Pozdější
+/// převod této nuly ponechá nulu. Převod hodnoty před dělením dovolí 0.5. Stejnými kroky sleduj
+/// radiusRatio(180, 80); která hodnota musí zachovat desetinnou část?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Existujícími šipkami najdi křivku připomínající květinu a jinou připomínající uzel. Kamarádovi
+/// zapiš jen dvě zobrazená nastavení jako recepty. Vysvětli, proč celočíselný poměr dělal některá
+/// nastavení nečekaně podobná.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">

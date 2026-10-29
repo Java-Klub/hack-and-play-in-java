@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 /// Kontrola celého levelu: `java Check.java`
-/// Jedna hra: `java Check.java M01_Nim.java`
+/// Jedna hra: `java Check.java M02_Nim.java`
 /// Kontroly volají testovací metody přímo v této JVM.
 /// Hry zůstávají compact sources; následující kontroly k nim přistupují pomocí reflection.
 class Check {
@@ -17,8 +17,8 @@ class Check {
         System.setProperty("java.awt.headless", "true");
         if (args.length > 1) throw new IllegalArgumentException("Use: java Check.java [game filename]");
         selected = args.length == 0 ? "" : Path.of(args[0]).getFileName().toString().replaceFirst("\\.java$", "");
-        run("M01_Nim", "L03.01 Nim · F07", () -> M01_NimTest.main(new String[0]));
-        run("M02_Pig", "L03.02 Pig · F07", () -> M02_PigTest.main(new String[0]));
+        run("M01_Pig", "L03.01 Pig · F07", () -> M01_PigTest.main(new String[0]));
+        run("M02_Nim", "L03.02 Nim · F07", () -> M02_NimTest.main(new String[0]));
         run("M03_BlackjackTwentyOne", "L03.03 BlackjackTwentyOne · F07", () -> M03_BlackjackTwentyOneTest.main(new String[0]));
         run("M04_TicTacToe", "L03.04 TicTacToe · F08", () -> M04_TicTacToeTest.main(new String[0]));
         run("M05_Chomp", "L03.05 Chomp · F08", () -> M05_ChompTest.main(new String[0]));
@@ -48,18 +48,18 @@ class Check {
 }
 
 @SuppressWarnings("unchecked")
-class M01_NimTest {
+class M02_NimTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I001 F07: " + reason);
+            throw new AssertionError("L03.02 F07: " + reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("M01_Nim");
+        var game = Reflect.create("M02_Nim");
         Reflect.set(game, "stones", 7);
         check(((int) Reflect.call(game, "botMove")) == 3, "seven stones need the nonzero remainder branch");
         Reflect.set(game, "stones", 8);
@@ -73,18 +73,18 @@ class M01_NimTest {
 }
 
 @SuppressWarnings("unchecked")
-class M02_PigTest {
+class M01_PigTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I037 F07: " + reason);
+            throw new AssertionError("L03.01 F07: " + reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("M02_Pig");
+        var game = Reflect.create("M01_Pig");
         Reflect.call(game, "reset");
         Reflect.set(game, "turnTotal", 9);
         Reflect.call(game, "roll", 1);
@@ -104,7 +104,7 @@ class M03_BlackjackTwentyOneTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I031 F07: " + reason);
+            throw new AssertionError("L03.03 F07: " + reason);
         }
     }
 
@@ -130,7 +130,7 @@ class M04_TicTacToeTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I002 F08: " + reason);
+            throw new AssertionError("L03.04 F08: " + reason);
         }
     }
 
@@ -141,6 +141,9 @@ class M04_TicTacToeTest {
         check(!((boolean) Reflect.call(game, "play", 9)) && ((int) Reflect.get(game, "moves")) == 1, "an occupied cell must be rejected without consuming a move");
         check(!((boolean) Reflect.call(game, "play", 0)) && !((boolean) Reflect.call(game, "play", 10)), "out-of-range cells must be rejected before indexing the board");
         check(((char) Reflect.get(game, "player")) == 'O', "rejected commands must not pass play again");
+        Reflect.set(game, "winner", 'X');
+        check(!((boolean) Reflect.call(game, "play", 1)) && ((char[]) Reflect.get(game, "board"))[0] == '.', "a finished round rejects even an empty legal square");
+        check(((int) Reflect.get(game, "moves")) == 1 && ((char) Reflect.get(game, "player")) == 'O', "rejecting a finished round preserves count and turn");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -152,7 +155,7 @@ class M05_ChompTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I009 F08: " + reason);
+            throw new AssertionError("L03.05 F08: " + reason);
         }
     }
 
@@ -176,7 +179,7 @@ class M06_ChopsticksTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I010 F08: " + reason);
+            throw new AssertionError("L03.06 F08: " + reason);
         }
     }
 
@@ -193,6 +196,7 @@ class M06_ChopsticksTest {
         int player = ((int) Reflect.get(game, "player"));
         try { Reflect.call(game, "command", "1 2"); } catch (IllegalArgumentException expected) { }
         check(((int) Reflect.get(game, "player")) == player && ((int[][]) Reflect.get(game, "hands"))[1][1] == 0, "rejected input leaves actual game state untouched");
+        check(!((boolean) Reflect.call(game, "handsAlive", 2, 0)) && !((boolean) Reflect.call(game, "handsAlive", 0, -1)), "both hand ranges must be guarded at both ends");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -204,7 +208,7 @@ class M07_HanoiTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I013 F08: " + reason);
+            throw new AssertionError("L03.07 F08: " + reason);
         }
     }
 
@@ -228,7 +232,7 @@ class M08_SudokuTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I053 F08: " + reason);
+            throw new AssertionError("L03.08 F08: " + reason);
         }
     }
 
@@ -250,7 +254,7 @@ class M09_SOSTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I008 F13: " + reason);
+            throw new AssertionError("L03.09 F13: " + reason);
         }
     }
 
@@ -275,7 +279,7 @@ class M10_ShutTheBoxTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I038 F13: " + reason);
+            throw new AssertionError("L03.10 F13: " + reason);
         }
     }
 
@@ -299,7 +303,7 @@ class M11_HexapawnTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I005 F13: " + reason);
+            throw new AssertionError("L03.11 F13: " + reason);
         }
     }
 
@@ -312,6 +316,7 @@ class M11_HexapawnTest {
         Reflect.set(game, "board", new int[][]{{0,0,0},{2,0,0},{0,0,1}});
         Reflect.call(game, "command", "2 1 3 1");
         check(((java.lang.String) Reflect.get(game, "outcome")).contains("2 wins"), "the real promotion uses goalRow for the current player");
+        check(((int) Reflect.call(game, "forwardStep", 1)) == -1 && ((int) Reflect.call(game, "forwardStep", 2)) == 1, "the two armies need opposite forward directions");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -323,7 +328,7 @@ class M12_ToadsAndFrogsTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I095 F13: " + reason);
+            throw new AssertionError("L03.12 F13: " + reason);
         }
     }
 
@@ -335,6 +340,9 @@ class M12_ToadsAndFrogsTest {
         check(((boolean) Reflect.call(game, "move", 4)) && ((int[]) Reflect.get(game, "cells"))[3] == 2 && ((int[]) Reflect.get(game, "cells"))[4] == 0, "the actual right-hand frog can step left into the gap");
         Reflect.call(game, "restart");
         check(((boolean) Reflect.call(game, "move", 2)) && ((int[]) Reflect.get(game, "cells"))[3] == 1, "the actual left-hand toad can step right into the gap");
+        check(((int) Reflect.call(game, "destination", 5, 2, 2)) == 3, "a frog jump uses origin, distance and leftward direction");
+        check(((int) Reflect.call(game, "destination", 1, 2, 1)) == 3, "a toad jump uses the same calculation with its own direction");
+        check(((int) Reflect.call(game, "destination", 4, 0, 2)) == 4, "zero distance preserves the origin");
         System.out.println("PASS " + checks + " checks");
     }
 }

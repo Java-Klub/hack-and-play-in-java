@@ -7,22 +7,30 @@ import javax.swing.*;
 /// # L11.01 · TinyStepSequencer
 ///
 /// Sestav malý rytmus zapínáním a vypínáním políček. Čtyři řádky a osm dob stačí na smyčku, kterou můžeš
-/// uložit a porovnat s kamarádovou.
+/// přehrát a porovnat s kamarádovou.
 ///
-/// **Tvoje mise:** Notu lze zapnout, ale ne vypnout; druhé kliknutí ji nechá vybranou. Oprav přepínání a
-/// zachovej zpracování chybných souřadnic.
+/// **Tvoje mise:** Napiš toggle jako celou obousměrnou operaci za připravenou kontrolou mezí. Vytvoř
+/// Note pro buňku; je-li v Set (množině), odeber ji, jinak ji přidej. Pro platnou buňku vrať true a
+/// všechny ostatní nech beze změny.
 ///
-/// **Dnes trénuješ:** Set (množina) říká, zda obsahuje danou odlišnou hodnotu. Toggle (přepnutí) má dvě
-/// cesty: dosud nepřítomný Note přibude, přítomný Note má naopak přestat patřit do Set.
+/// **Dnes trénuješ:** Set (množinu), equality (rovnost) a insertion (vložení) použiješ při tvorbě
+/// celé operace, ne jen poslední podmínky.
 ///
 /// Po spuštění programu klikáním přepínej tóny, zvol BPM a tlačítkem Play si čtyři opakování
 /// přehraj přímo v Javě; Stop přeruší zvuk, Restart obnoví začátek.
 boolean toggle(int row, int step) {
     if (row < 0 || row >= 4 || step < 0 || step >= 8) return false;
-    Note note = new Note(row, step);
-    notes.add(note);
-    return true;
+    // Rozhodni, zda Note této buňky odebrat, nebo přidat.
+    return false;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Slož s kamarádem bubenickou otázku a odpověď: tvoje jsou první čtyři sloupce, jeho poslední čtyři.
+/// V reset vytvoř druhý výchozí pattern (vzor) a vysvětli, které hodnoty Note se v Set (množině)
+/// opakují a které jsou různé.
+// </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F23">
 /// ### Set (množina): členství bez duplikátů
@@ -45,30 +53,31 @@ boolean toggle(int row, int step) {
 /// Předpověz: po odebrání moon a přidání sun jaká bude velikost a výsledek `contains("moon")`?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// ### Přítomnost je otázka; vložení je akce
 ///
-/// - `new Note(row, step)` — Record value (hodnota record) určuje jedno políčko řádkem i dobou.
-/// - `notes.add(note)` — Přidá odlišnou notu, ale druhé přidání stejné hodnoty ji neodebere.
-/// - `row < 0 || row >= 4` — Odmítne řádky mimo čtyřřádkovou mřížku před změnou Set (množiny).
+/// Pro Set<String> guests se guests.contains("Mira") ptá ano/ne a nic nemění. guests.add("Mira") Miru
+/// vloží, zatímco guests.remove("Mira") ji odebere, pokud tam je. Dvě vložení Mira do prázdného Set
+/// (množiny) nechají jedinou hodnotu. Předpověz obsah po jednom odebrání Mira a následném přidání
+/// Nox.
 ///
-/// ### Co už obstarává připravená část
-///
-/// toggle mění stejný Note Set (množinu tónů), který čtou refresh i sequence. Play přehraje
-/// současné tóny při zvoleném BPM; Stop a zavření uvolní Java Sound a Restart obnoví počáteční
-/// tóny.
+/// Zde je Note record (balíček hodnot) s row a step. Dvě nezávisle vytvořené hodnoty Note(1, 3) jsou
+/// stejné, protože mají stejné components (složky). Čtyři bubenické řádky mají indexy 0..3 a osm
+/// kroků 0..7. Okno při kliknutí volá toggle, překreslí notes a signal čte stejný Set pro přehrávání.
+/// Vyzkoušej dvě kliknutí do jedné buňky a potom jedno do jiné.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Rovné Note record pojmenovávají stejnou pozici mřížky.
+/// Jako membership key (klíč členství) použij Note s row i step.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Set.remove vrací, zda nota existovala.
+/// Před remove nebo add se zeptej contains. Platné přepnutí vrací true v obou větvích.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Přidávej jen tehdy, když remove nic nenašlo; dvě přepnutí musí obnovit starý Set (množinu).
+/// Zachovej guard (ochrannou podmínku), vytvoř Note, rozhodni podle členství, odeber/přidej a vrať
+/// true.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -10,8 +10,10 @@ import java.util.Arrays;
 /// Vyměň dvě skupiny tvorů přes jedinou mezeru. Ropuchy jdou doprava, žáby doleva a skok smí překonat
 /// jednoho soupeře, takže jediný nepromyšlený krok může celou hádanku zablokovat.
 ///
-/// **Tvoje mise:** Žáby převzaly směr ropuch. Oprav direction tak, aby výsledek závisel na přijatém piece
-/// místo stálého ukazování doprava.
+/// **Tvoje mise · Slož pravidlo pohybu:** Napiš dvě propojená pravidla. direction vrátí +1 pro ropuchu 1
+/// a -1 pro žábu 2.
+/// destination má toto pravidlo zavolat a spočítat výchozí pozici plus vzdálenost se znaménkem.
+/// Připravené move se ptá na krok o jedno i skok o dvě pole; uvnitř výpočtů tvory neposunuj.
 ///
 /// **Dnes trénuješ:** Vrať užitečnou hodnotu: pravidlo směru popisuje krok, aniž samo cokoli přesouvá.
 /// Volající část může vrácený směr použít pro jediný krok i delší skok.
@@ -20,6 +22,10 @@ import java.util.Arrays;
 /// výchozí uspořádání.
 int direction(int piece) {
     return 1;
+}
+
+int destination(int origin, int distance, int piece) {
+    return -1;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F13">
@@ -48,32 +54,38 @@ int direction(int piece) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Malý řetězec, který je tvůj
 ///
-/// - `int direction(int piece)` — Přijmi druh figurky jako celé číslo a vrať celočíselný směr se
-///   znaménkem.
-/// - `piece` — Parameter (parametr) pojmenovávající druh tvora tohoto call (volání): 1 pro ropuchu a 2
-///   pro žábu.
-/// - `return 1;` — Současný pevný výsledek znamená jednu pozici doprava bez ohledu na přijatý druh.
-/// - `{` — Společné tělo může pro každou hodnotu parametru vybrat jiný výsledek; připravený pohyb zůstává
-///   jinde.
-///
-/// ### Co už obstarává připravená část
-///
-/// move požádá direction o krok se znaménkem a potom ověří mezeru, hranice i přeskočeného soupeře. won
-/// kontroluje výměnu skupin; draw a připravená vstupní část umožňují vybrat tvora.
+/// move → destination → direction → posun se znaménkem → kandidátní pole. Čárka odděluje tři role
+/// parameter (parametrů); pořadí argument (skutečných vstupů) jim musí odpovídat. destination nezná
+/// desku a lze zkusit s libovolným origin. Připravené move řeší prázdná pole, skákání přes soupeře,
+/// hranice a skutečné zápisy. Kandidát mimo desku se odmítne až tam.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Helper (pomocná metoda) může volat další helper. destination dostane výchozí pozici, nezápornou
+/// vzdálenost a druh tvora. direction odpoví jen znaménkem; násobení vzdáleností vytvoří posun se
+/// znaménkem, který se přičte k výchozí pozici. Jiný chodec z 5 doleva o 2 skončí na 3. Vrácené číslo
+/// je jen kandidát; move ověří povolené přistání.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Po vyřešení standardní výměny změň jen počáteční rozmístění v restart a vytvoř kratší hádanku na
+/// stejných sedmi polích. Dej ji kamarádovi s navrženým limitem tahů. Než výzvu zadáš, ověř vlastní
+/// řešení.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Výsledkem je směr, nikoli nová pozice na desce.
+/// Odděl druh tvora, vzdálenost a současnou pozici jako tři různé údaje.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Volající tento výsledek přičítá k vybrané pozici.
+/// Vrácený směr použij jako násobitel a posun se znaménkem přičti k origin.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Při piece == 1 vrať 1; jinak vrať -1.
+/// direction vrací 1 nebo -1. V destination použij int step = direction(piece); potom return origin +
+/// distance * step;.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
@@ -90,7 +102,10 @@ boolean move(int index) {
     if (index < 0 || index >= 7 || cells[index] == 0 || won()) {
         return false;
     }
-    int piece = cells[index], d = direction(piece), step = index + d, jump = index + 2 * d, destination = -1;
+    int piece = cells[index];
+    int step = destination(index, 1, piece);
+    int jump = destination(index, 2, piece);
+    int destination = -1;
     if (step >= 0 && step < 7 && cells[step] == 0) {
         destination = step;
     }

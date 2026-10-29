@@ -10,24 +10,28 @@ import javax.swing.Timer;
 /// Otáčej drátěnou krychlí a sleduj, jak plochá kresba naznačuje hloubku. Počítadlo hran má popsat tvar,
 /// i když vstup uvede hranu dvakrát v opačném směru.
 ///
-/// **Tvoje mise:** Stejná neorientovaná hrana se započítá dvakrát při obráceném pořadí konců. Ať
-/// rovnocenné dvojice představují jednu odlišnou hranu a chybné dvojice se odmítnou.
+/// **Tvoje mise:** Sestav uniqueEdges od prázdného Set (množiny). Projdi dvojice, přeskoč konce mimo
+/// rozsah i hranu do stejného bodu, menší konec dej první a vlož normalised Edge (sjednocenou hranu).
+/// Vrať různé hrany v pořadí prvního výskytu.
 ///
-/// **Dnes trénuješ:** Set (množina) odstraní stejné hodnoty, ne hodnoty, které jen nám připadají
-/// rovnocenné. Dej neorientované hraně jednotnou podobu, aby record equality (rovnost record) poznala
-/// obrácený vstup.
+/// **Dnes trénuješ:** Set (množinu), equality (rovnost) a insertion (vložení) použiješ při tvorbě
+/// celé operace, ne jen poslední podmínky.
 ///
 /// Po spuštění programu pomocí Pause/Run zastav otáčení krychle, přečti Distinct edges a pomocí
 /// Reset angle obnov pohled.
 Set<Edge> uniqueEdges(int[][] candidates) {
     Set<Edge> result = new LinkedHashSet<>();
-    for (int[] pair : candidates) {
-        int a = pair[0], b = pair[1];
-        if (a < 0 || b < 0 || a >= 8 || b >= 8 || a == b) continue;
-        result.add(new Edge(a, b));
-    }
+    // Zde projdi, ověř, sjednoť a vlož kandidáty.
     return result;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Přidej krychli tajný podpis úhlopříček pomocí nových candidate edges (kandidátních hran), včetně
+/// několika obrácených duplicit. Na papíře předpověz počet různých hran a ověř jej v okně dřív, než
+/// změníš otáčení.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F23">
 /// ### Set (množina): členství bez duplikátů
@@ -50,31 +54,30 @@ Set<Edge> uniqueEdges(int[][] candidates) {
 /// Předpověz: po odebrání moon a přidání sun jaká bude velikost a výsledek `contains("moon")`?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// ### Equality (rovnost) potřebuje společný zápis
 ///
-/// - `new LinkedHashSet<>()` — Mutable Set (měnitelná množina), která zachovává první pořadí vložení a
-///   odstraňuje stejné hodnoty.
-/// - `a == b` — Odmítne hranu z vrcholu do sebe ještě před vložením do kolekce.
-/// - `new Edge(a, b)` — Record equality (rovnost record) rozliší Edge(1,0) a Edge(0,1), pokud jejich
-///   podoba není sjednocená.
+/// Představ si neorientovanou silnici mezi městy 2 a 5. (2, 5) i (5, 2) popisují stejnou cestu, ale
+/// dva record values (balíčky) s tímto pořadím složek nejsou stejné. Zvol convention (dohodu)
+/// menší-první: obě budou (2, 5). Set teď rozezná duplicitu běžnou rovností record. Předpověz různé
+/// silnice v [(4,1), (1,4), (4,6)].
 ///
-/// ### Co už obstarává připravená část
-///
-/// Připravené otáčení a promítání vrcholů nakreslí každou vrácenou hranu. Scéna záměrně obsahuje
-/// obrácenou duplicitu, proto popisek Distinct edges odhalí problém; ovládání okna mění jen pohled.
+/// Math.min(a,b) a Math.max(a,b) vracejí menší a větší konec. LinkedHashSet zachovává insertion order
+/// (pořadí vložení), neslibuje číselné řazení. Krychle má osm vrcholů s indexy 0..7. uniqueEdges
+/// hlídá platnost i normalisation (sjednocení zápisu); otočení a kreslení jen používají výsledek.
+/// Neplatná dvojice nic nepřidá, ale nesmí zabránit přečtení pozdějších platných dvojic.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Edge(0,1) a Edge(1,0) nejsou rovné, dokud nezvolíš jednotné vyjádření.
+/// Nejdřív sestav průchod a validaci. Prázdný vstup má vrátit prázdný Set.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Použij min/max pro canonical record value (jednotnou hodnotu record).
+/// Pro přijatou dvojici vytvoř canonical Edge (jednotný zápis) s menším a větším koncem.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Set (množina) pak odstraní stejné i obrácené kopie bez dalšího hledacího loop (cyklu).
+/// Vkládej sjednocené Edge do LinkedHashSet a po cyklu tento Set vrať.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

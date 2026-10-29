@@ -12,7 +12,7 @@
 /// (počítadlo) pro každé písmeno. Dva objevy nespárovaného L musejí oba přispět do stejného počítadla;
 /// shody na přesné pozici jsou již oddělené.
 ///
-/// Spusť program a napiš ALLEY proti cvičnému slovu LEVEL; porovnej vypsanou nápovědu se dvěma
+/// Napiš ALLEY proti cvičnému slovu LEVEL; porovnej vypsanou nápovědu se dvěma
 /// L, která se obě mohou shodovat na jiném místě.
 int[] leftoverLetters(String guess, char[] result) {
     int[] counts = new int[26];
@@ -81,6 +81,12 @@ int[] leftoverLetters(String guess, char[] result) {
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
 /// Použij counts[letter] += 1 místo = 1.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Vytvoř přísnější zpětnou vazbu: ukaž jen zelené přesné pozice a skryj žluté. Úplné hodnocení
+/// zachovej pro porovnání. Zvol jedno tajné slovo a dva tipy, které ukážou, proč oba režimy vyžadují
+/// jinou strategii.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

@@ -3,7 +3,8 @@
 /// Prolom čtyřmístný kód pomocí stop, které odlišují správnou číslici na správném místě od číslice
 /// umístěné jinam. Po známém cvičném kódu spusť nové kolo s ukrytým náhodným kódem.
 ///
-/// **Tvoje mise:** Zadání cvičného kódu dá čtyři přesné číslice, ale žádnou výhru. Oprav matchesCode tak,
+/// **Tvoje mise · Odemkni nesprávné odmítnutí:** Zadání cvičného kódu dá čtyři přesné číslice, ale žádnou
+/// výhru. Oprav matchesCode tak,
 /// aby přijímalo stejný text i ze samostatných String value (řetězcových hodnot).
 ///
 /// **Dnes trénuješ:** Boolean decision (logické rozhodnutí) a rovnost textu: boolean znamená true nebo
@@ -54,6 +55,19 @@ boolean matchesCode(String guess) {
 ///
 /// submit ověří čtyři číslice, spočítá přesné a jinak umístěné shody a požádá matchesCode o rozhodnutí
 /// výhry. První secret je 1234 pro zkoumání; reset pro další kola vytváří náhodné kódy.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Dvě oddělené papírové cedulky mohou obě nést OPEN. Shoda písmen je jiná otázka než totožnost
+/// cedulky. Pro String se equals ptá na znaky; == se ptá na object identity (totožnost objektu).
+/// Napsaná odpověď je nově přijatý text, takže její správnost nesmí záviset na sdílení stejného
+/// uloženého objektu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Po opravě rozhodčího změň známý tréninkový secret (tajný kód) na jiný čtyřciferný kód a nech
+/// kamaráda odhalit jej z vodítek. Počet číslic zachovej. Zkus opakované číslice a sleduj, zda mění
+/// strategii hádání.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">

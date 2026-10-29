@@ -80,6 +80,12 @@ int snowflake(Graphics2D g, int level) {
 /// Začni side = 0 a zachovej side < 3.
 // </editor-fold>
 
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Změň tři připravené souřadnice vrcholů na nesouměrný horský odznak. Nakresli vrcholy a pořadí stran
+/// ve smyčce. Změnou druhého argument (vstupní hodnoty) render v showPicture, nyní 4, porovnej malý a
+/// větší detail; vyber verzi, která zachová tvůj návrh.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 int edge(Graphics2D g, double x, double y, double nx, double ny, int level) {
     if (level == 0) {

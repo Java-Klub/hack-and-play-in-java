@@ -20,6 +20,14 @@ double pitchFrequency(int row, int shift) {
     return 220 * Math.pow(2, (11 - row) / 12.0);
 }
 
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Slož drobnou melodii vlastními černými buňkami v demo. Kamarád ji nejdřív uslyší a potom uvidí
+/// obrázek. Změň transposeShift o oktávu a vysvětli, proč časový vzor zůstává stejný, přestože
+/// melodie zní výš.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F36">
 /// ### Transfer (přenos): zachovej slib a přidej volbu
 ///

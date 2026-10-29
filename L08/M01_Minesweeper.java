@@ -9,69 +9,73 @@ import java.awt.GridLayout;
 /// Odkrývej bezpečná políčka a podle čísel se vyhýbej skrytým minám. Nápověda pomůže jen tehdy, když
 /// započítá každé okolní nebezpečí.
 ///
-/// **Tvoje mise:** V zobrazených počtech chybí miny šikmo. Oprav adjacent(), aby počítalo všechna platná
-/// sousední políčka, ale nikdy samotné dotazované políčko.
+/// **Tvoje mise:** Vytvoř adjacent(row, col): spočítej miny ve všech existujících okolních cell
+/// (políčkách), včetně diagonal (úhlopříčných), ale nikdy v samotné dotazované cell. Na okraji počítej
+/// jen existující cell. Prázdné pravidlo nyní všude ukazuje nulu.
 ///
-/// **Dnes trénuješ:** Grid neighbours (sousedé v mřížce): čtvercové políčko může mít až osm sousedů.
-/// Rozliš kontrolu mezí, vynechání středu a podmínku, kterou chceš počítat.
+/// **Dnes trénuješ:** Převeď malý nákres na coordinates (souřadnice), bounds (hranice) a vztahy
+/// neighbour (sousedů).
 ///
 /// Spusť program a kliknutím odkryj políčko, potom podle čísla vybírej bezpečné sousedy nebo
 /// označuj miny v režimu Flag mode.
 int adjacent(int row, int col) {
-    int count = 0;
-    for (int r = row - 1; r <= row + 1; r++) {
-        for (int c = col - 1; c <= col + 1; c++) {
-            if (inside(r, c) && (r != row || c != col) && (r == row || c == col) && mines[r][c]) {
-                count++;
-            }
-        }
-    }
-    return count;
+    return 0;
 }
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F18">
-/// ### Grids: nejdřív řádek, potom sloupec
+/// ### Coordinates (souřadnice) popisují sousedy
 ///
-/// V array of rows (poli řádků) první index (pozice) vybírá řádek a druhý pozici v něm. Řádky mohou
-/// mít různé délky. Neighbour (soused) je posun od buňky, nikoli další absolutní pozice. Před
-/// kontrolou existence kandidáta urči povolené směry.
+/// Grid (mřížka) ukládá nejdřív row (řádek): `board[y][x]`. Rostoucí x vede doprava, rostoucí y na
+/// obrazovce dolů. Neighbour (soused) vznikne přičtením malého offset (posunu).
 ///
-/// ```java
-/// int[][] mosaic = {{3, 6, 9}, {2, 4, 8}};
-/// int row = 0;
-/// int column = 1;
-/// IO.println(mosaic[row][column + 1]);
+/// ```text
+///           (0,-1)
+/// (-1,0)    HERE    (1,0)
+///           (0,1)
 /// ```
 ///
-/// Výstup je devět: řádek nula a sloupec dva vyberou tento element (prvek). Pohyb dolů mění row;
-/// doprava mění column. Který z těchto pohybů z pravé horní cell (buňky) zůstane uvnitř? U úhlopříčky
-/// se mění obě souřadnice; bounds (meze) musíš ověřit před přístupem ke kandidátovi.
+/// ```java
+/// int[][] board = {{2, 5, 8}, {1, 4, 7}};
+/// int x = 1, y = 0;
+/// int nx = x + 0, ny = y + 1;
+/// if (ny >= 0 && ny < board.length && nx >= 0 && nx < board[ny].length) {
+///     IO.println(board[ny][nx]);
+/// }
+/// ```
+///
+/// Přesun vede z 5 na 4, vypíše se tedy 4. Bounds (hranice) kontrolujeme před indexováním: array (pole)
+/// za okrajem žádné cell (políčko) nemá. Diagonal (úhlopříčný posun) mění obě coordinates. Corridor
+/// (chodba) opakuje stejný offset; neighbourhood (okolí) zkouší několik offset. Jde o různé postupy se
+/// stejným modelem.
+///
+/// Předpověz výsledek offset `(-1,0)` ze stejného začátku. Který offset opustí tento board (hrací
+/// plochu)? Než spojíš směry do loop (opakování), zakresli začátek a cíl na papír.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Jak číst tuto část
 ///
-/// - `row - 1` — Začíná jeden řádek nad dotazovaným políčkem.
-/// - `r <= row + 1` — Zahrnuje kromě středního řádku i řádek bezprostředně pod ním.
-/// - `r != row || c != col` — Vynechá jen dotazovaný střed: nejméně jedna souřadnice se musí lišit.
-/// - `mines[r][c]` — Čte, zda právě tento kandidátní soused obsahuje minu.
-///
-/// ### Co už obstarává připravená část
-///
-/// inside() poskytuje dotaz na meze. reveal() už odkrývá bezpečné oblasti pomocí recursive flood fill
-/// (rekurzivního rozlévání); hodnoty nápověd získává z adjacent(). Vlajky, miny i okno jsou připravené.
+/// Neighbourhood (okolí) 3×3 tvoří row-1..row+1 a col-1..col+1. Připravené `inside(r,c)` ověřuje bounds
+/// (hranice). `mines[r][c]` je true pro minu. Centre (střed) vyřaď zvlášť, i kdyby obsahoval minu.
+/// reveal() tvůj počet používá na skutečném tlačítku.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Okolí 3 × 3 obsahuje střed a osm možných sousedů.
+/// Nakresli kolem políčka okolí 3×3 a označ centre (střed).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// inside() zajišťuje bezpečné hranice rohů a okrajů.
+/// Projdi obě rozmezí coordinates (souřadnic); počítej jen existující miny mimo centre.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Odeber omezení na stejný řádek/sloupec; ponech inside() a vynechání středu.
+/// Použij nested loops (vnořená opakování) a local count (místní počet); vrať jej až po všech
+/// kandidátech.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Navrhni spoluhráči malé pevné rozmístění min s bezpečným prvním políčkem a pravdivými čísly. Dokážou
+/// první čísla vynutit zajímavé rozhodnutí?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

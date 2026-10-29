@@ -1,10 +1,12 @@
-/// # L03.02 · Pig
+/// # L03.01 · Pig
 ///
 /// Dva hráči závodí o uložení 50 bodů. Každý další hod může zvýšit odměnu současného tahu, ale jednička
 /// ztratí neuložené body a předá kostku.
 ///
-/// **Tvoje mise:** Výchozí verze zaměňuje účinky jedničky a šestky. Oprav výběr branch (větve) v roll
-/// beze změny připravených účinků obou větví.
+/// **Tvoje mise · Sestav riskantní tah:** Kostka padá, ale žádná branch (větev) neaktualizuje tah. Doplň
+/// roll: jednička
+/// vymaže turnTotal a přepne player; 2..6 přičtou die do turnTotal a hráče ponechají. Zachovej
+/// připravený guard (ochrannou podmínku) neplatné kostky a ukončené hry.
 ///
 /// **Dnes trénuješ:** Účinky branch (větví): if/else může vybírat mezi změnou několika hodnot a změnou
 /// jediné. Projdi zvlášť průběžné body tahu a hráče při ztrátovém i bodujícím hodu.
@@ -15,16 +17,15 @@ boolean roll(int die) {
     if (winner != -1 || die < 1 || die > 6) {
         return false;
     }
-    if (die == 6) {
-        turnTotal = 0;
-        player = 1 - player;
+    if (die == 1) {
+        // Ztrátová branch (větev): doplň oba účinky.
     } else {
-        turnTotal += die;
+        // Bodovací branch (větev): ponech stejného hráče.
     }
     return true;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Připomenutí · F07">
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F07">
 /// `if` položí boolean question (logickou otázku). Jeho tělo běží jen při pravdivé odpovědi. `else
 /// if` položí další otázku teprve po neúspěchu předchozích; poslední `else` pokrývá všechny zbývající
 /// možnosti.
@@ -52,33 +53,37 @@ boolean roll(int die) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+/// ## Jedna volba, několik účinků
 ///
-/// - `boolean roll(int die)` — Přijmi hodnotu jediné kostky a vrať, zda byl hod přijat.
-/// - `winner != -1 || die < 1 || die > 6` — Připravený guard (ochrana) odmítá ukončené kolo nebo nemožnou
-///   kostku; != znamená nerovnost a || spojuje alternativy.
-/// - `if (die == 6)` — Toto nyní rozhoduje, která platná strana kostky vybere branch (větev) ztráty tahu.
-/// - `turnTotal = 0;` — Nahraď neuložený součet nulou.
-/// - `player = 1 - player;` — Přepni mezi index (indexy) hráčů nula a jedna.
-/// - `turnTotal += die;` — Přičti kostku k předchozímu součtu místo nahrazení součtu.
-/// - `return true;` — Oznam, že platný hod byl zpracován.
-///
-/// ### Co už obstarává připravená část
-///
-/// bank uloží body současného tahu a ověří závod k 50. main vylosuje kostku, zavolá roll, potom vypíše
-/// stav a zpracuje další příkaz. Body neukončeného tahu zůstávají oddělené od uloženého skóre.
+/// První guard (ochranná podmínka) je připravený: odmítá neplatné kostky a ukončenou hru. Tvoje if
+/// volí ztrátu nebo bodování. Assignment (přiřazení) mění uložený state (stav); return true oznámí
+/// přijatý hod. Generátor kostky a ukládání bodů zůstávají připravené. winner používá -1 pro
+/// neukončenou hru; tuto dohodu neměň.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Představ si player = 0 a turnTotal = 9. Ztráta tahu potřebuje dvě změny: součet bude nula a player
+/// bude 1. Bodovací hod čtyři vytvoří součet 13 a ponechá player na 0. Expression (výraz) 1 - player
+/// prohazuje 0 a 1. Branch (větev) může obsahovat několik assignment (přiřazení); provedení jen části
+/// nechá herní state (stav) nesouvislý.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Před hrou se domluvte na domácím pravidle: třeba jiná hodnota kostky zruší neuložený tah. Změň ji
+/// záměrně a ověř ztrátovou i bodovací branch (větev). Ukládají hráči body dřív? Standardní kontrola
+/// dál očekává jako ztrátovou hodnotu jedničku.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Projdi současnou condition (podmínku) pro die = 1.
+/// Vypiš hodnoty měněné při ztrátovém a při bodovacím tahu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Obě těla branch (větví) jsou připravená; chybná je výběrová condition (podmínka).
+/// Použij 1 - player jen ve ztrátové branch (větvi).
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// If comparison (porovnání) musí být die == 1.
+/// Pro die == 1 přiřaď turnTotal = 0 a player = 1 - player; jinak přičti die do turnTotal.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

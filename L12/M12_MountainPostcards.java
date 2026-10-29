@@ -8,18 +8,64 @@ import java.awt.image.BufferedImage;
 /// Vytvoř horskou siluetu a porovnej ji se zrcadleným dvojčetem. Zrcadlení má změnit levé a pravé
 /// vrcholy, ne vymyslet jinou horu.
 ///
-/// **Tvoje mise:** Volba zrcadlení vytvoří nezměněnou kopii hřebene. Sestav obrácený výsledek a zachovej
-/// původní height array (pole výšek) i starý nezrcadlený režim.
+/// **Tvoje mise:** Proveď refactoring (změnu stavby) fungujícího obrázku. render nyní obrací hřeben
+/// přímo uvnitř; tuto odpovědnost vyjmi do reverseRidge a v render nahraď blok voláním své metody.
+/// Zachovej původní neobrácenou variantu, neměň vstup a zachovej chování obrázku.
 ///
-/// **Dnes trénuješ:** Pure transformation (čistá transformace) vytvoří nové uspořádání bez změny input
-/// (vstupu). Oddělené obrácení hřebene dává nové volbě jednu odpovědnost a zachovává nezávislost tvorby
-/// na zobrazení.
+/// **Dnes trénuješ:** Vyjmeš operaci z existujícího fungujícího kódu, dáš jí contract (dohodu) a
+/// původního volajícího na ni napojíš. Chování zachováš, odpovědnosti změníš.
 ///
-/// Po spuštění programu porovnej New rule s Original rule ze stejného seed (počátečního čísla);
-/// po opravě mají ukázat požadovaný rozdíl. Před dalším spuštěním okno zavři.
+/// Nejdřív prohlédni New rule i Original rule. Po vyjmutí pomocné metody zopakuj stejný seed: oba
+/// pohledy mají vypadat stejně jako před změnou. Kontrola helper začíná RED, přestože inline obrázek
+/// už funguje.
 double[] reverseRidge(double[] heights) {
+    // Do této metody vyjmi odpovědnost za obracení z render.
     return heights.clone();
 }
+
+BufferedImage render(long seed, double roughness) {
+    if (!Double.isFinite(roughness) || roughness < 0.2 || roughness > 0.9) {
+        throw new IllegalArgumentException("Roughness: 0.2..0.9.");
+    }
+    var image = new BufferedImage(640, 400, BufferedImage.TYPE_INT_RGB);
+    var g = image.createGraphics();
+    var random = new Random(seed);
+    try {
+        for (int y = 0; y < 400; y++) {
+            g.setColor(new Color(255 - y / 4, 120 - y / 6, 120 + y / 4));
+            g.drawLine(0, y, 640, y);
+        }
+        for (int layer = 0; layer < 5; layer++) {
+            var heights = ridge(random, roughness);
+            if (mirrored) {
+                double[] reversed = new double[heights.length];
+                for (int i = 0; i < heights.length; i++) {
+                    reversed[i] = heights[heights.length - 1 - i];
+                }
+                heights = reversed;
+            }
+            var polygon = new Polygon();
+            polygon.addPoint(0, 400);
+            for (int x = 0; x < 257; x++) {
+                polygon.addPoint(x * 640 / 256, Math.max(20, Math.min(390, 170 + layer * 38 + (int)heights[x])));
+            }
+            polygon.addPoint(640, 400);
+            g.setColor(new Color(100 - layer * 18, 95 - layer * 15, 135 - layer * 20));
+            g.fillPolygon(polygon);
+        }
+    } finally {
+        g.dispose();
+    }
+    return image;
+}
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Navrhni horské logo spojením původního hřebene a jeho obrácené kopie v jednom obrázku, každého
+/// jinou barvou. Rozhodni, zda se potkají uprostřed, nebo překryjí. Generování stále musí dostávat
+/// nezměněná původní data hřebene.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F36">
 /// ### Transfer (přenos): zachovej slib a přidej volbu
@@ -43,30 +89,35 @@ double[] reverseRidge(double[] heights) {
 /// znaku?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// ### Refactoring mění odpovědnosti, výsledky zachovává
 ///
-/// - `double[] heights` — Uspořádané array (pole) výšek hřebene od jedné strany obrázku ke druhé.
-/// - `heights.clone()` — Vytvoří nezávislé array (pole), ale nechá každou hodnotu na původním index
-///   (pořadovém čísle).
-/// - `return` — Předá výsledné array (pole) kreslení; nemusí jít o původní objekt.
+/// Výchozí obrázek už zrcadlí správně. Jeho inline reversal (obracení přímo v místě) je užitečné
+/// chování, ne chyba ke smazání. Dej operaci reusable contract (znovu použitelnou dohodu): vrať nové
+/// obrácené pole a původní nech beze změny. render potom o operaci požádá jménem místo opakování
+/// implementace. Po tomto refactoring se obrázek nemá náhle změnit.
 ///
-/// ### Co už obstarává připravená část
+/// Neutrální příklad: [5, 9, 1, 7] se změní na [7, 1, 9, 5]. Index i výsledku čte index length - 1 -
+/// i originálu. Předpověz výsledek pro [8] a prázdné pole. Prázdný cyklus nic nečte. Clone vytvoří
+/// nezávislou kopii, ale pořadí zachová.
 ///
-/// ridge vytvoří pět vrstev; render případně použije požadovanou transformaci reverseRidge. main
-/// porovná nové a původní pravidlo při stejném seed (počátečním čísle), bez dalších režimů.
+/// Kontroly ověřují výsledek a nezávislost helper (pomocné metody) i obě varianty skutečného
+/// renderer. Nečtou zdroj pro vynucení konkrétního volání. Při self-review (vlastní kontrole) ukaž
+/// jediné místo implementující obrácení i jeho volání z render: dvě správné kopie mohou splnit
+/// chování, ale minou cíl refactoring.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Poslední původní hodnota patří na index (pořadové číslo) nula výsledku.
+/// Při tvorbě pomocné metody si nech fungující inline reversal jako referenci.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Cílové i přiřaď ke zdroji length-1-i.
+/// Vrácené pole musí být nové. Přesuň obracecí cyklus do reverseRidge a vrať jeho výsledek.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Vysvětli, proč převrácení patří do samostatné transformace hodnot a ne do náhodné tvorby hřebene.
+/// Celý inline blok při mirrored nahraď voláním reverseRidge. Porovnej oba obrázky před změnou a po
+/// ní.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
@@ -85,35 +136,7 @@ double[] ridge(Random random, double roughness) {
 }
 
 /// Připravená tvorba obrazu: generování a kreslení zůstávají viditelné v tomto file (souboru).
-BufferedImage render(long seed, double roughness) {
-    if (!Double.isFinite(roughness) || roughness < 0.2 || roughness > 0.9) {
-        throw new IllegalArgumentException("Roughness: 0.2..0.9.");
-    }
-    var image = new BufferedImage(640, 400, BufferedImage.TYPE_INT_RGB);
-    var g = image.createGraphics();
-    var random = new Random(seed);
-    try {
-        for (int y = 0; y < 400; y++) {
-            g.setColor(new Color(255 - y / 4, 120 - y / 6, 120 + y / 4));
-            g.drawLine(0, y, 640, y);
-        }
-        for (int layer = 0; layer < 5; layer++) {
-            var heights = ridge(random, roughness);
-            if (mirrored) heights = reverseRidge(heights);
-            var polygon = new Polygon();
-            polygon.addPoint(0, 400);
-            for (int x = 0; x < 257; x++) {
-                polygon.addPoint(x * 640 / 256, Math.max(20, Math.min(390, 170 + layer * 38 + (int)heights[x])));
-            }
-            polygon.addPoint(640, 400);
-            g.setColor(new Color(100 - layer * 18, 95 - layer * 15, 135 - layer * 20));
-            g.fillPolygon(polygon);
-        }
-    } finally {
-        g.dispose();
-    }
-    return image;
-}
+
 
 
 boolean mirrored = true;

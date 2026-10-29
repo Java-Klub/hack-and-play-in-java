@@ -3,22 +3,16 @@
 /// Sevři soupeřovy kameny mezi své a otoč je. Hráč smí vynechat tah jen tehdy, když opravdu nemá kam
 /// hrát.
 ///
-/// **Tvoje mise:** Už v úvodní pozici lze chybně vynechat tah, protože většina řádků se neprohledává.
-/// Oprav hasMove(int who), aby posoudilo celou desku.
+/// **Tvoje mise:** Nehotové hledání dovolí pasovat, i když existuje zajetí. Sestav hasMove(who): projdi
+/// celou desku 6×6 a vrať true při první buňce s neprázdným captures. False vrať až po neúspěchu všech
+/// kandidátů.
 ///
 /// **Dnes trénuješ:** Traversal and search (průchod a hledání): procházej kandidátní pozice, dokud
 /// nenajdeš legální tah. Výsledek false (ne) patří až úplnému neúspěšnému hledání.
 ///
-/// Spusť program, jako úvodní tah napiš 3 2 a potvrď Enter, potom nech dalšího hráče zvolit
+/// Jako úvodní tah napiš 3 2 a potvrď Enter, potom nech dalšího hráče zvolit
 /// povolený řádek a sloupec.
 boolean hasMove(int who) {
-    for (int r = 0; r < 1; r++) {
-        for (int c = 0; c < 6; c++) {
-            if (!captures(r, c, who).isEmpty()) {
-                return true;
-            }
-        }
-    }
     return false;
 }
 
@@ -46,32 +40,38 @@ boolean hasMove(int who) {
 /// (pole)?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// Hledání na desce navštěvuje dvojice indexů: pro každý řádek zkus každý sloupec. Připravené
+/// captures(r,c,who) vrátí zajaté kameny kandidáta a nic nemění.
 ///
-/// - `for (int r = 0; r < 1; r++)` — Současný vnější loop (opakování) vybírá prohledávané řádky; jeho mez
-///   je důležitá.
-/// - `for (int c = 0; c < 6; c++)` — Vnitřní loop (opakování) prochází sloupce aktuálního řádku.
-/// - `!captures(r, c, who).isEmpty()` — Výsledek captures() není prázdný, takže zde hráč může legálně
-///   položit kámen.
-/// - `return false` — Říká, že žádný kandidát neuspěl; jeho umístění za oběma průchody je podstatné.
+/// | prohlédnutí kandidáti | nalezeno zajetí? | další krok |
+/// | --- | --- | --- |
+/// | první buňka | ne | další sloupec |
+/// | konec řádku | ne | první sloupec dalšího řádku |
+/// | některá další buňka | ano | hned return true |
+/// | všech 36 buněk | ne | return false |
 ///
-/// ### Co už obstarává připravená část
-///
-/// captures() už prochází všech osm směrů a vrací kameny, které by tah otočil. command() přes hasMove()
-/// posuzuje vynechání; otáčení kamenů ani střídání hráčů nepřepisuj.
+/// Stačí nalézt platný tah; query (dotaz) nemusí vybírat nejlepší tah ani jej provést. Předpověz počet
+/// kandidátů, funguje-li až poslední buňka. Připravené tahy používají odpověď pro pasování či konec
+/// kola.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Vnější loop teď prochází jediný řádek.
+/// Zvol jedno počítadlo pro řádek a druhé pro sloupec.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Úspěšné hledání hned vrací true; neúspěšné musí dokončit všechny řádky.
+/// Vnitřní smyčka zkouší captures pro aktuální dvojici; při úspěchu vrať výsledek hned.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Projdi všechny řádky i sloupce a false vrať až za oběma loops.
+/// Použij dva rozsahy 0..5, při neprázdném seznamu zajetí vrať true a závěrečné false nech za oběma
+/// smyčkami.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Vymysli závěrečné skóre, které cení rohy více než běžná políčka. Platnost tahů neměň. Sestav desku,
+/// kde počet kamenů a tvé váhy dávají jiného vedoucího hráče; spolužák má pro obě pravidla zvolit tah.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

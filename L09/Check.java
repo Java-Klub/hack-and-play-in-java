@@ -60,7 +60,7 @@ class M01_WordLadderTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I026: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L09.01: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -108,7 +108,7 @@ class M01_WordLadderTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I026: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L09.01: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -124,7 +124,7 @@ class M02_GapHopperTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I052: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L09.02: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -170,7 +170,7 @@ class M02_GapHopperTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I052: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L09.02: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -186,7 +186,7 @@ class M03_FlipbookStudioTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I080: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L09.03: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -232,7 +232,7 @@ class M03_FlipbookStudioTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I080: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L09.03: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -248,7 +248,7 @@ class M04_VoronoiStainedGlassTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I112: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L09.04: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -291,10 +291,16 @@ class M04_VoronoiStainedGlassTest {
             seeds.removeLast();check(seeds.size()==2,1,seeds.size());
             check(((java.util.List<Object>) Reflect.call(p, "seedList", new Random(42), 0)).isEmpty(),2,"empty");
             reject(()->Reflect.call(p, "seedList", new Random(42), -1),2);
+        var expected = new ArrayList<>();
+        var sameRandom = new Random(43);
+        for (int n = 0; n < 3; n++) expected.add(Reflect.call(p, "nextSeed", sameRandom));
+        check(expected.equals(Reflect.call(p, "seedList", new Random(43), 3)), 0, "successive seeds in generation order");
+        check(((List<?>) Reflect.call(p, "seedList", new Random(42), 100)).size() == 100, 2, "upper bound");
+        reject(() -> Reflect.call(p, "seedList", new Random(42), 101), 2);
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I112: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L09.04: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -304,13 +310,13 @@ class M04_VoronoiStainedGlassTest {
 class M05_PhotoRemixLabTest {
     static int checks;
     static final String[] CASES = {
-        "Opakovaný barevný key (klíč) se sčítá místo přepsání.",
-        "Skutečný remix dvou pixel (bodů obrazu) započte oba výskyty.",
-        "Remix nového obrazu odstraní staré key (klíče)."
+        "Prázdná Map vrací 0.",
+        "Vyhrává nejvyšší počet; při shodě menší RGB key, bez změny počtů.",
+        "Vybraná původní barva se ve skutečném obrázku zvýrazní azurově."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I079: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L09.05: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -345,19 +351,16 @@ class M05_PhotoRemixLabTest {
         return image;
     }
     public static void main(String[] args) throws Exception {
-        try {
-            var p = Reflect.create("M05_PhotoRemixLab");
-            Reflect.call(p, "countColour", 0x123456);Reflect.call(p, "countColour", 0x123456);Reflect.call(p, "countColour", 0xABCDEF);
-            check(((java.util.Map<java.lang.Integer, java.lang.Integer>) Reflect.get(p, "colourCounts")).get(0x123456)==2&&((java.util.Map<java.lang.Integer, java.lang.Integer>) Reflect.get(p, "colourCounts")).get(0xABCDEF)==1,0,((java.util.Map<java.lang.Integer, java.lang.Integer>) Reflect.get(p, "colourCounts")));
-            Reflect.set(p, "source", new BufferedImage(2,1,BufferedImage.TYPE_INT_RGB));((java.awt.image.BufferedImage) Reflect.get(p, "source")).setRGB(0,0,0x112233);((java.awt.image.BufferedImage) Reflect.get(p, "source")).setRGB(1,0,0x112233);Reflect.call(p, "remix");
-            check(((java.util.Map<java.lang.Integer, java.lang.Integer>) Reflect.get(p, "colourCounts")).size()==1&&((java.util.Map<java.lang.Integer, java.lang.Integer>) Reflect.get(p, "colourCounts")).values().iterator().next()==2,1,((java.util.Map<java.lang.Integer, java.lang.Integer>) Reflect.get(p, "colourCounts")));
-            Reflect.set(p, "source", new BufferedImage(1,1,BufferedImage.TYPE_INT_RGB));((java.awt.image.BufferedImage) Reflect.get(p, "source")).setRGB(0,0,0xFFFFFF);Reflect.call(p, "remix");
-            check(((java.util.Map<java.lang.Integer, java.lang.Integer>) Reflect.get(p, "colourCounts")).size()==1&&((java.util.Map<java.lang.Integer, java.lang.Integer>) Reflect.get(p, "colourCounts")).values().iterator().next()==1,2,((java.util.Map<java.lang.Integer, java.lang.Integer>) Reflect.get(p, "colourCounts")));
-        } catch (AssertionError failure) {
-            throw failure;
-        } catch (Exception failure) {
-            throw new AssertionError("MISSION I079: Neočekávané selhání při kontrole aktivního pravidla.", failure);
-        }
+        var p = Reflect.create("M05_PhotoRemixLab");
+        check(((int) Reflect.call(p, "dominantColour")) == 0, 0, "empty palette");
+        var counts = (Map<Integer, Integer>) Reflect.get(p, "colourCounts");
+        counts.put(-5, 2); counts.put(-7, 4); counts.put(-9, 4);
+        var before = new HashMap<>(counts);
+        check(((int) Reflect.call(p, "dominantColour")) == -9, 1, "most frequent; smaller RGB wins a tie");
+        check(counts.equals(before), 1, counts);
+        Reflect.call(p, "restart");
+        var image = (java.awt.image.BufferedImage) Reflect.get(p, "result");
+        check(image.getRGB(200, 150) == java.awt.Color.CYAN.getRGB(), 2, "the frequent white moon is highlighted");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -366,13 +369,13 @@ class M05_PhotoRemixLabTest {
 class M06_TruchetTileLabTest {
     static int checks;
     static final String[] CASES = {
-        "Další LEFT zvýší jen počet LEFT.",
-        "Skutečný render 4×4 započte šestnáct dlaždic.",
-        "Pozdější render 2×2 obnoví součet na čtyři."
+        "První přijatá orientace se vrátí a započte.",
+        "Preference s náskokem dvou se přesměruje na druhou orientaci.",
+        "Skutečné oblouky používají zvolenou orientaci; neznámý vstup nic nemění."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I109: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L09.06: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -407,17 +410,18 @@ class M06_TruchetTileLabTest {
         return image;
     }
     public static void main(String[] args) throws Exception {
-        try {
-            var p = Reflect.create("M06_TruchetTileLab");
-            Reflect.call(p, "countOrientation", "LEFT");Reflect.call(p, "countOrientation", "RIGHT");Reflect.call(p, "countOrientation", "LEFT");
-            check(((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "orientationCounts")).equals(Map.of("LEFT",2,"RIGHT",1)),0,((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "orientationCounts")));
-            Reflect.call(p, "render", 42, 4);check(((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "orientationCounts")).values().stream().mapToInt(Integer::intValue).sum()==16,1,((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "orientationCounts")));
-            Reflect.call(p, "render", 42, 2);check(((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "orientationCounts")).values().stream().mapToInt(Integer::intValue).sum()==4,2,((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "orientationCounts")));
-        } catch (AssertionError failure) {
-            throw failure;
-        } catch (Exception failure) {
-            throw new AssertionError("MISSION I109: Neočekávané selhání při kontrole aktivního pravidla.", failure);
-        }
+        var p = Reflect.create("M06_TruchetTileLab");
+        var counts = (Map<String, Integer>) Reflect.get(p, "orientationCounts");
+        check(Reflect.call(p, "chooseOrientation", "LEFT").equals("LEFT") && counts.equals(Map.of("LEFT", 1)), 0, counts);
+        Reflect.call(p, "chooseOrientation", "LEFT");
+        check(Reflect.call(p, "chooseOrientation", "LEFT").equals("RIGHT") && counts.equals(Map.of("LEFT", 2, "RIGHT", 1)), 1, counts);
+        Reflect.call(p, "render", 42, 12);
+        int left = counts.getOrDefault("LEFT", 0), right = counts.getOrDefault("RIGHT", 0);
+        check(left + right == 144 && Math.abs(left - right) <= 2, 2, counts);
+        var before = new HashMap<>(counts);
+        boolean rejected = false;
+        try { Reflect.call(p, "chooseOrientation", "UP"); } catch (IllegalArgumentException invalid) { rejected = true; }
+        check(rejected && counts.equals(before), 2, counts);
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -432,7 +436,7 @@ class M07_MarkovMischiefTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I130: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L09.07: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -477,7 +481,7 @@ class M07_MarkovMischiefTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I130: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L09.07: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -487,13 +491,13 @@ class M07_MarkovMischiefTest {
 class M08_DungeonBlueprintsTest {
     static int checks;
     static final String[] CASES = {
-        "Plocha 42 je SMALL a opakované druhy se sčítají.",
-        "Skutečně generované podzemí započte jen přijaté místnosti.",
-        "Tvorba dalšího podzemí smaže staré součty."
+        "Plocha 42 patří do SMALL; první tři místnosti se přijmou.",
+        "Plné limity SMALL/LARGE odmítají beze změny Map.",
+        "Skutečně vytvořené místnosti dodržují oba limity kategorií."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I141: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L09.08: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -528,18 +532,19 @@ class M08_DungeonBlueprintsTest {
         return image;
     }
     public static void main(String[] args) throws Exception {
-        try {
-            var p = Reflect.create("M08_DungeonBlueprints");
-            Reflect.call(p, "countRoom", Reflect.create("M08_DungeonBlueprints$Room", 1, 1, 6, 7));Reflect.call(p, "countRoom", Reflect.create("M08_DungeonBlueprints$Room", 1, 1, 4, 4));Reflect.call(p, "countRoom", Reflect.create("M08_DungeonBlueprints$Room", 1, 1, 7, 7));
-            check(((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "roomCounts")).equals(Map.of("SMALL",2,"LARGE",1)),0,((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "roomCounts")));
-            Reflect.call(p, "generate", 42, 8);int total=((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "roomCounts")).values().stream().mapToInt(Integer::intValue).sum();
-            check(total>=2&&total<=8,1,((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "roomCounts")));
-            Reflect.call(p, "generate", 42, 2);check(((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "roomCounts")).values().stream().mapToInt(Integer::intValue).sum()==2,2,((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "roomCounts")));
-        } catch (AssertionError failure) {
-            throw failure;
-        } catch (Exception failure) {
-            throw new AssertionError("MISSION I141: Neočekávané selhání při kontrole aktivního pravidla.", failure);
-        }
+        var p = Reflect.create("M08_DungeonBlueprints");
+        var counts = (Map<String, Integer>) Reflect.get(p, "roomCounts");
+        Object small = Reflect.create("M08_DungeonBlueprints$Room", 1, 1, 6, 7);
+        Object large = Reflect.create("M08_DungeonBlueprints$Room", 1, 1, 7, 7);
+        check((boolean) Reflect.call(p, "admitRoom", small), 0, counts);
+        check((boolean) Reflect.call(p, "admitRoom", small) && (boolean) Reflect.call(p, "admitRoom", small), 0, counts);
+        check(!(boolean) Reflect.call(p, "admitRoom", small) && counts.get("SMALL") == 3, 1, counts);
+        check((boolean) Reflect.call(p, "admitRoom", large) && (boolean) Reflect.call(p, "admitRoom", large), 1, counts);
+        var before = new HashMap<>(counts);
+        check(!(boolean) Reflect.call(p, "admitRoom", large) && counts.equals(before), 1, counts);
+        Reflect.call(p, "generate", 42, 8);
+        int total = counts.values().stream().mapToInt(Integer::intValue).sum();
+        check(total > 0 && total <= 5 && counts.getOrDefault("SMALL", 0) <= 3 && counts.getOrDefault("LARGE", 0) <= 2, 2, counts);
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -554,7 +559,7 @@ class M09_FractalTreeGardenTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I106: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L09.09: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -599,7 +604,7 @@ class M09_FractalTreeGardenTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I106: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L09.09: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -615,7 +620,7 @@ class M10_ImageToASCIITest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I114: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L09.10: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -659,7 +664,7 @@ class M10_ImageToASCIITest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I114: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L09.10: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -675,7 +680,7 @@ class M11_MazePostcardsTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I137: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L09.11: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -716,10 +721,11 @@ class M11_MazePostcardsTest {
             check(((int) Reflect.call(p, "readColumns", " 2 "))==2&&((int) Reflect.call(p, "readColumns", "50"))==50,1,"limits");
             reject(()->Reflect.call(p, "readColumns", "1"),2);reject(()->Reflect.call(p, "readColumns", "51"),2);
             var maze=((boolean[][]) Reflect.call(p, "generate", 42, ((int) Reflect.call(p, "readColumns", "oops")), 2));check(maze[0].length==41,0,maze[0].length);
+        check(((int) Reflect.call(p, "readColumns", " tiny ")) == 6 && ((int) Reflect.call(p, "readColumns", "WIDE")) == 40, 0, "named maze sizes");
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I137: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L09.11: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -729,13 +735,13 @@ class M11_MazePostcardsTest {
 class M12_TileStampStudioTest {
     static int checks;
     static final String[] CASES = {
-        "Platná zadaná hodnota změní repeats.",
-        "Nečíselná hodnota či hodnota mimo rozsah zachová původní hodnotu.",
-        "Hranice 1 a 12 změní skutečné rozměry obrazu."
+        "Platný napsaný počet změní repeats.",
+        "Chybný zápis i rozsah zachová dosavadní repeats.",
+        "Meze 1 a 12 jsou přijaty; hustota vzoru se mění ve stejném náhledu 288 pixelů."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I142: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L09.12: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -775,12 +781,17 @@ class M12_TileStampStudioTest {
             check(((boolean) Reflect.call(p, "applyRepeats", " 3 "))&&((int) Reflect.get(p, "repeats"))==3,0,((int) Reflect.get(p, "repeats")));
             check(!((boolean) Reflect.call(p, "applyRepeats", "banana"))&&((int) Reflect.get(p, "repeats"))==3,1,((int) Reflect.get(p, "repeats")));
             check(!((boolean) Reflect.call(p, "applyRepeats", "0"))&&!((boolean) Reflect.call(p, "applyRepeats", "13"))&&((int) Reflect.get(p, "repeats"))==3,1,((int) Reflect.get(p, "repeats")));
-            check(((boolean) Reflect.call(p, "applyRepeats", "1"))&&((java.awt.image.BufferedImage) Reflect.call(p, "render", ((int) Reflect.get(p, "repeats")))).getWidth()==48,2,((int) Reflect.get(p, "repeats")));
-            check(((boolean) Reflect.call(p, "applyRepeats", "12"))&&((java.awt.image.BufferedImage) Reflect.call(p, "render", ((int) Reflect.get(p, "repeats")))).getWidth()==576,2,((int) Reflect.get(p, "repeats")));
+            check(((boolean) Reflect.call(p, "applyRepeats", "1"))&&((java.awt.image.BufferedImage) Reflect.call(p, "render", ((int) Reflect.get(p, "repeats")))).getWidth()==288,2,((int) Reflect.get(p, "repeats")));
+            check(((boolean) Reflect.call(p, "applyRepeats", "12"))&&((java.awt.image.BufferedImage) Reflect.call(p, "render", ((int) Reflect.get(p, "repeats")))).getWidth()==288,2,((int) Reflect.get(p, "repeats")));
+        Reflect.call(p, "paint", 0, 0, 1);
+        var six = (java.awt.image.BufferedImage) Reflect.call(p, "render", 6);
+        var twelve = (java.awt.image.BufferedImage) Reflect.call(p, "render", 12);
+        check(six.getWidth() == 288 && twelve.getHeight() == 288, 2, "same visible area");
+        check(six.getRGB(3, 0) != twelve.getRGB(3, 0), 2, "density changes within the visible area");
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I142: Neočekávané selhání při kontrole aktivního pravidla.", failure);
+            throw new AssertionError("MISSION L09.12: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }

@@ -28,6 +28,14 @@ BufferedImage hide(BufferedImage mask, long seed) {
     return image;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
+/// ### Udělej z toho vlastní věc
+///
+/// Schovej vlastní malý znak změnou kresby mask (masky). Potom přesuň zprávu do green channel
+/// (zeleného kanálu) a odpovídajícím způsobem změň odhalení. Kamarádovi nejdřív ukaž jen zašuměný
+/// obrázek, potom správný filtr.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F27">
 /// ### Seeded randomness (náhoda se seedem): opakuj pokus
 ///

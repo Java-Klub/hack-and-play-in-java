@@ -3,7 +3,8 @@
 /// Dva hráči vkládají S nebo O na společnou desku a bodují za každé nově vzniklé SOS. Bodující tah
 /// ponechá hráči další tah, proto hledej umístění dokončující i více řad.
 ///
-/// **Tvoje mise:** Skóre zahrnuje i řady SOS existující před tahem. Oprav gainedPoints tak, aby
+/// **Tvoje mise · Odměň jen nové objevy:** Skóre zahrnuje i řady SOS existující před tahem. Oprav
+/// gainedPoints tak, aby
 /// odměňovalo pouze nově vytvořené řady.
 ///
 /// **Dnes trénuješ:** Význam parameter (parametrů) a return value (vrácené hodnoty): before a after
@@ -64,6 +65,19 @@ int gainedPoints(int before, int after) {
 /// vrácenou odměnu ke skóre aktuálního hráče. Volitelný transfer (přenos znalosti): vymysli dvě různé
 /// dvojice before/after se stejnou odměnou a potom jednu dvojici s jinou odměnou. Vysvětli, proč
 /// tvoje pravidlo zvládne všechny tři bez znalosti desky a bez vypisování.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
+/// Pro gainedPoints(2, 3) dostane before hodnotu 2 a after hodnotu 3 jen pro toto call (volání).
+/// Výsledek jde zpět k aktualizaci skóre; method (metoda) neví, kdo je na tahu. Pevně vrácená 1 by
+/// seděla na příklad, ale selhala při stejném počtu nebo dvou nových řadách. Předpověz
+/// gainedPoints(4, 4) a gainedPoints(1, 3).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
+/// Navrhni bonus za dvě SOS v jediném tahu a doplň jej v gainedPoints beze změny triples. Zachovej
+/// běžnou odměnu za jednu řadu. Kamarádovi dej dva příklady before/after a nech jej odvodit tvé
+/// bonusové pravidlo.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">

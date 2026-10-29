@@ -2,21 +2,17 @@
 ///
 /// Vybarvi malou mapu tak, aby sousední oblasti neměly stejnou barvu. Vzdálené oblasti se shodovat mohou.
 ///
-/// **Tvoje mise:** Kontroluje se jen jedna společná hranice, takže ostatní spory počítadlu uniknou. Oprav
-/// conflicts(), aby spočítalo všechny skutečné konflikty.
+/// **Tvoje mise:** Prázdná kontrola hranic hlásí nulu, i když sousedé sdílejí barvu. Sestav průchod
+/// adjacent: hranici započti, jen pokud oba konce mají stejnou nenulovou barvu. Počítej hranice, nikoli
+/// regiony, a obarvení neměň.
 ///
 /// **Dnes trénuješ:** Traversal and search (průchod a hledání): procházej vztahy mezi oblastmi, nejen
 /// oblasti samotné. Každá hranice určuje dvě barvy k porovnání.
 ///
-/// Spusť program, napiš B 2 pro obarvení oblasti B barvou 2 a pokračuj dalšími označenými
-/// oblastmi.
+/// A začíná barvou 1. Zadej B 1 a potom C 1: nyní kolidují tři společné hranice, ale nehotová kontrola
+/// stále hlásí nulu.
 int conflicts() {
     int n = 0;
-    for (int[] edge : new int[][]{adjacent[0]}) {
-        if (colours[edge[0]] != 0 && colours[edge[0]] == colours[edge[1]]) {
-            n++;
-        }
-    }
     return n;
 }
 
@@ -44,30 +40,37 @@ int conflicts() {
 /// (pole)?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
+/// Každá položka adjacent je dvojice indexů regionů. colours[edge[0]] a colours[edge[1]] čtou dva konce
+/// hranice. Nula znamená neobarveno.
 ///
-/// - `int[] edge` — Dvojice indexů (pozic) oblastí, které sdílejí hranici.
-/// - `adjacent[0]` — Vybírá pouze první uloženou dvojici sousedů; sleduj, co průchod dostává.
-/// - `colours[edge[0]] != 0` — Nevybarvená oblast se do počtu konfliktů nezahrnuje.
-/// - `n++` — Započítá jednu konfliktní společnou hranici, nikoli jednu vybarvenou oblast.
+/// | barvy A,B,C | AB | AC | BC | součet |
+/// | --- | --- | --- | --- | --- |
+/// | 1,0,0 | 0 | 0 | 0 | 0 |
+/// | 1,1,0 | 1 | 0 | 0 | 1 |
+/// | 1,1,1 | 1 | 1 | 1 | 3 |
 ///
-/// ### Co už obstarává připravená část
-///
-/// adjacent obsahuje připravené dvojice sousedních oblastí. Reakce na kliknutí mění barvu jedné oblasti;
-/// solved() vyžaduje všechny vybarvené a přes conflicts() posuzuje jejich sousedství.
+/// Další hranice dotýkající se neobarveného regionu nepřispívají. Vytvoř n jednou, navštiv každý pár a
+/// při kolizi jej zvětši. Předpověz případ stejně obarvených vzdálených regionů bez společné hranice.
+/// Připravené solved spojuje tuto kontrolu s obarvením všech regionů.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// adjacent obsahuje právě dvojice se společnou hranicí.
+/// Čti jednu edge (hranu) jako dva indexy regionů, nikoli barvu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Současný průchod navštíví jen první dvojici.
+/// Před započítáním porovnej barvy a vyluč značku neobarveného regionu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Projdi adjacent; počítej stejné nenulové barvy obou konců.
+/// Procházej adjacent po jedné hraně, zvětši n při stejných nenulových barvách konců a nakonec n vrať.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
+/// Přidej do adjacent dosud chybějící hranici a najdi obarvení, které dříve fungovalo a nyní selže.
+/// Změněnou mapu sám obarvi a vyzvi spolužáka k použití méně barev. Protipříkladem určete, která nová
+/// hranice způsobila rozdíl.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
