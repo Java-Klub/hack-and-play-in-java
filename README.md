@@ -6,7 +6,7 @@
 
 12 levels · 143 games, puzzles and creative experiments · 36 core Java skills
 
-![Six programs from Hack & Play in Java: MiniInvaders, MiniPacman, MirrorLaser, SunflowerSpiral, ReactionDiffusionSkins and FractalTreeGarden.](assets/readme/cover.png)
+![Six programs from Hack & Play in Java: MiniInvaders, MiniPacman, MirrorLaser, SunflowerSpiral, ReactionDiffusionSkins and FractalTreeGarden.](cover.png)
 
 Send aliens packing. Steer a laser through mirrors. Turn a handful of numbers into a rainbow spiral, a branching tree or a retro sound.
 
