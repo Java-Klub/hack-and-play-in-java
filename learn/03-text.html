@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3.2 Clean up a signal · Hack &amp; Play in Java</title>
+<link rel="stylesheet" href="assets/book.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to the lesson</a>
+<header class="masthead"><a href="index.html">Hack &amp; Play in Java</a></header>
+<div class="layout">
+<aside class="sidebar"><nav aria-label="Lessons"><ol><li><a href="index.html">Contents</a></li><li><a href="00-start.html">Set up your workshop</a></li><li><a href="01-first-program.html">1.1 Your first program</a></li><li><a href="01-order.html">1.2 Statement order</a></li><li><a href="02-values.html">2.1 Give a value a name</a></li><li><a href="02-change.html">2.2 Change a stored value</a></li><li><a href="02-calculations.html">2.3 Let the program calculate</a></li><li><a href="03-input.html">3.1 Ask the player</a></li><li><a href="03-text.html" aria-current="page">3.2 Clean up a signal</a></li><li><a href="03-stories.html">3.3 Let the player change the story</a></li><li><a href="03-numbers.html">3.4 Turn a reply into a number</a></li><li><a href="glossary.html">Glossary</a></li></ol></nav></aside>
+<main><article id="content">
+<h1>3.2 Clean up an incoming signal</h1>
+<p>The player may enter <code>  Red Fox  </code>. We do not need the spaces at the edges, but we want to keep the space between the words. We will keep the original message alongside the changed version.</p>
+<h2>One message, three values</h2>
+<p>Open <code>learn/examples/03/MessageFilter.java</code>. Before running it, try to predict the last two lines.</p>
+<pre><code class="language-java" data-source="examples/03/MessageFilter.java">void main() {
+    String raw = IO.readln(&quot;Signal: &quot;);
+    String clean = raw.strip();
+    String loud = clean.toUpperCase(Locale.ROOT);
+    IO.println(&quot;Signal [&quot; + loud + &quot;]&quot;);
+    IO.println(&quot;Original [&quot; + raw + &quot;]&quot;);
+}
+</code></pre>
+<p>Enter two spaces, Red Fox, then two more spaces. The square brackets in the output help you see the edges of the text.</p>
+<pre class="transcript"><code>Signal: <span class="typed">  Red Fox  </span>
+Signal [RED FOX]
+Original [  Red Fox  ]</code></pre>
+<div class="table-wrap"><table><thead><tr><th>Name</th><th>Stored text</th><th>Why</th></tr></thead><tbody>
+<tr><td><code>raw</code></td><td><code>"  Red Fox  "</code></td><td>The player's original answer.</td></tr>
+<tr><td><code>clean</code></td><td><code>"Red Fox"</code></td><td><code>strip()</code> removed the spaces at the edges. The space between the words stayed.</td></tr>
+<tr><td><code>loud</code></td><td><code>"RED FOX"</code></td><td><code>toUpperCase(Locale.ROOT)</code> created an uppercase version.</td></tr>
+</tbody></table></div>
+<h2>What the dot does</h2>
+<p>In <code>raw.strip()</code>, the dot selects an operation on the text stored in <code>raw</code>. The empty parentheses say that you supply no extra input. In <code>clean.toUpperCase(Locale.ROOT)</code>, the parentheses contain a value: <code>Locale.ROOT</code> is a supplied setting for converting letters independently of the computer's regional settings. Use it this way for this conversion.</p>
+<p><strong>A String operation gives you a result. It does not overwrite the original text.</strong> That is why each call in the example has its result assigned to a name. A call to <code>raw.strip();</code> on its own runs, but its result is not kept anywhere.</p>
+<h2>Task: fix the badge printer</h2>
+<p>Open <code>learn/practice/03/SignalBadge.java</code>. The code includes a cleaning operation, yet spaces remain in the result.</p>
+<p><strong>Keep <code>raw</code> as the original answer. Store the cleaned text in a new variable, convert it to uppercase and use it to print the badge. Also print the original.</strong> For this answer, you should get:</p>
+<pre class="transcript"><code>Badge: <span class="typed">  nOvA  </span>
+Badge [NOVA]
+Original [  nOvA  ]</code></pre>
+<p>Repeat the experiment with <code> Red Fox </code>. Expect <code>RED FOX</code> on the badge and both outer spaces in the original. Do not replace the supplied input with a fixed message in the code.</p>
+<details><summary>Hint 1: find the lost result</summary><p>The right-hand side of an assignment can be a call. Find the supplied line that calls an operation without assigning its result anywhere.</p></details>
+<details><summary>Hint 2: two steps rather than one leap</summary><p>Store the cleaned text first. Then you can store its uppercase version under the same new name. Leave the original <code>raw</code> alone. Remember: change an existing variable without writing <code>String</code> again.</p></details>
+<h2>Try the other order</h2>
+<p>In MessageFilter, swap the order of the two final print calls. Will their values change, or only their positions? Run it and explain the difference between the order of calculations and the order of printing.</p>
+<p><strong>You can now track original text alongside the results of changing it, and spot a discarded result.</strong></p>
+</article>
+<nav class="page-nav" aria-label="Previous and next lesson"><a href="03-input.html">← 3.1 Ask the player</a><a class="next" href="03-stories.html">3.3 Let the player change the story →</a></nav>
+</main>
+</div>
+</body>
+</html>
