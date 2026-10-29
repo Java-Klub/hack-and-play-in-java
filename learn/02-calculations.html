@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A textbook for self-study · Hack & Play in Java"><title>2.3 Let the program calculate · Hack & Play in Java</title><link rel="stylesheet" href="assets/book.css"></head><body><a class="skip" href="#content">Skip to the lesson</a><header class="masthead"><a href="index.html">Hack & Play in Java</a><small>A textbook for self-study</small></header><div class="layout"><aside class="sidebar"><nav aria-label="Textbook lessons"><p>Read, try, create</p><ol><li><a href="index.html">Contents</a></li><li><a href="00-start.html">Prepare your workshop</a></li><li><a href="01-first-program.html">1.1 Your first program</a></li><li><a href="01-order.html">1.2 Statement order</a></li><li><a href="02-values.html">2.1 Give a value a name</a></li><li><a href="02-change.html">2.2 Change a stored value</a></li><li><a href="02-calculations.html" aria-current="page">2.3 Let the program calculate</a></li><li><a href="glossary.html">Glossary</a></li></ol></nav></aside><main><article id="content"><h1>2.3 Let the program calculate</h1>
+<p>The same code can calculate a result for different numbers of players, energy levels or scores. Instead of writing an answer by hand, you build an expression that calculates it.</p>
+<h2>Basic calculations</h2>
+<p>You can put these expressions inside <code>IO.println(...)</code> in the <code>main</code> you already know:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Result</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>7 + 2</code></td>
+<td><code>9</code></td>
+<td>Add.</td>
+</tr>
+<tr>
+<td><code>7 - 2</code></td>
+<td><code>5</code></td>
+<td>Subtract.</td>
+</tr>
+<tr>
+<td><code>7 * 2</code></td>
+<td><code>14</code></td>
+<td>Multiply; use an asterisk for multiplication.</td>
+</tr>
+<tr>
+<td><code>7 / 2</code></td>
+<td><code>3</code></td>
+<td>Divide two whole numbers; the fractional part is discarded towards zero.</td>
+</tr>
+<tr>
+<td><code>7 % 2</code></td>
+<td><code>1</code></td>
+<td>Return the remainder after integer division.</td>
+</tr>
+</tbody></table></div>
+<p>Multiplication and division take priority over addition and subtraction. <code>2 + 3 * 4</code> gives 14. Parentheses choose a different order: <code>(2 + 3) * 4</code> gives 20. <code>/</code>, <code>*</code> and <code>%</code> have the same priority; operations at that level go from left to right.</p>
+<p>You can use names instead of numbers: <code>energy - cost</code> calculates using their currently stored values.</p>
+<h2>Whole numbers and decimals</h2>
+<p><code>int</code> stores whole numbers. <code>double</code> can also hold a fractional part. In code, we use a decimal <strong>point</strong>, as in <code>2.5</code>.</p>
+<p>Open <a href="examples/02/Sharing.java">Sharing.java</a>:</p>
+<pre><code class="language-java">void main() {
+    double share = 5 / 2.0;
+    IO.println(share);
+}
+</code></pre>
+<p>The result is <code>2.5</code>. The operation with the decimal number <code>2.0</code> uses decimal division.</p>
+<p>Now predict what will happen if you change only <code>2.0</code> to <code>2</code>.</p>
+<details>
+<summary>Why the result can be surprising</summary>
+
+<p>It prints <code>2.0</code>. The right-hand side, <code>5 / 2</code>, first divides two whole numbers and produces the whole number 2. Only then is it stored in <code>double</code> as 2.0. The <code>double</code> on the left cannot bring back the lost half.</p>
+</details>
+
+<p>Restore the original <code>2.0</code>. When dividing, also check the divisor: we do not divide by zero in these examples. <code>double</code> stores some decimal values approximately. We will return to money and exact decimal calculations later. For today&#39;s speeds and energy sharing, it will do the job.</p>
+<h2>Task: split a beam&#39;s energy</h2>
+<p>Open <a href="practice/02/BeamSplit.java">BeamSplit.java</a>. You have <code>double energy = 9;</code> and <code>int beams = 2;</code>.</p>
+<p><strong>Change the calculation of <code>perBeam</code> to divide the energy equally between the beams.</strong> The output should be <code>4.5</code>. Use both names so the program can work with other settings too.</p>
+<p>Then change only the energy to 10 and the number of beams to 4. Expect <code>2.5</code>. <code>energy</code> is already a <code>double</code>, so a calculation with its value keeps the fractional part.</p>
+<details>
+<summary>Hint</summary>
+
+<p>Ask which operation finds an equal share. The total amount and the number of shares already have names. Do not copy their values directly into the calculation.</p>
+</details>
+
+<h2>Adding numbers and joining text</h2>
+<p>In Sharing, you can replace the original print call with these two lines inside <code>main</code>. Predict their output first:</p>
+<pre><code class="language-java">IO.println(&quot;Score: &quot; + 3 + 2);
+IO.println(&quot;Score: &quot; + (3 + 2));
+</code></pre>
+<details>
+<summary>Answer</summary>
+
+<pre><code class="language-text">Score: 32
+Score: 5
+</code></pre>
+<p>In the first line, <code>&quot;Score: &quot; + 3</code> already creates text, and another 2 is joined onto it. The parentheses in the second line calculate the numeric sum, 5, first and then join it to the message.</p>
+</details>
+
+<h2>Task: build the pilot&#39;s score</h2>
+<p>Open <a href="practice/02/Scoreboard.java">Scoreboard.java</a>. The pilot starts with a score of 10.</p>
+<p><strong>Add 5 points to <code>score</code> and replace the two print calls with a single line</strong> that builds a message from <code>pilot</code>, a colon followed by a space, and the current <code>score</code>:</p>
+<pre><code class="language-text">Nova: 15
+</code></pre>
+<p>With a different initial value of 2 and the name Mika, the same procedure should print <code>Mika: 7</code>. Use an assignment to add the points; do not just build a message containing a fixed answer.</p>
+<details>
+<summary>Hint</summary>
+
+<p>Change the stored score first. Then use text joining from lesson 2.1. Only the separator <code>&quot;: &quot;</code> is literal text; the value names do not belong inside quotes.</p>
+</details>
+
+<h2>Use numbers in a picture</h2>
+<p><a href="../L01/M08_SunflowerSpiral.java">SunflowerSpiral</a> has a supplied picture calculation and one angle for you to find. Practise reading and changing a named decimal value. You do not need to write the internal trigonometric calculations for this mission; the supplied part of the file describes them.</p>
+<p><strong>You have understood this chapter when you can write a short program with your own values, change them through calculations, and explain the difference between <code>5 / 2</code> and <code>5 / 2.0</code>.</strong></p>
+<p>The next chapter will cover text and player input. For now, you can continue with your own experiment: in a new small program, calculate a reward for different numbers of players and print it with a label. Compare every prediction with an actual run.</p>
+<p><a href="index.html">Back to the textbook contents</a></p>
+</article><nav class="page-nav" aria-label="Previous and next lesson"><a href="02-change.html">← 2.2 Change a stored value</a><a class="next" href="index.html">Back to contents →</a></nav><p class="page-footer">This page works offline. Run the examples with Java from your downloaded course folder.</p></main></div></body></html>

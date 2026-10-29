@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A textbook for self-study · Hack & Play in Java"><title>Prepare your workshop · Hack & Play in Java</title><link rel="stylesheet" href="assets/book.css"></head><body><a class="skip" href="#content">Skip to the lesson</a><header class="masthead"><a href="index.html">Hack & Play in Java</a><small>A textbook for self-study</small></header><div class="layout"><aside class="sidebar"><nav aria-label="Textbook lessons"><p>Read, try, create</p><ol><li><a href="index.html">Contents</a></li><li><a href="00-start.html" aria-current="page">Prepare your workshop</a></li><li><a href="01-first-program.html">1.1 Your first program</a></li><li><a href="01-order.html">1.2 Statement order</a></li><li><a href="02-values.html">2.1 Give a value a name</a></li><li><a href="02-change.html">2.2 Change a stored value</a></li><li><a href="02-calculations.html">2.3 Let the program calculate</a></li><li><a href="glossary.html">Glossary</a></li></ol></nav></aside><main><article id="content"><h1>Set up your workshop</h1>
+<p>In this lesson, you will run a supplied file for the first time and find out where its result appears. We will take the program apart in the next lesson.</p>
+<h2>What you need</h2>
+<ol>
+<li><strong>JDK 26 or later.</strong> It includes the <code>java</code> program, which compiles and runs your code. An editor alone does not replace Java. If you do not have a JDK yet, install it before working offline. The official <a href="https://dev.java/learn/getting-started/">Getting Started with Java</a> page explains the basic setup.</li>
+<li><strong>The whole course folder, downloaded to your computer.</strong> Its main folder contains <code>README.md</code>, <code>learn</code>, <code>L01</code> and the other games. Extract the ZIP first. Previewing an individual file on GitHub is not enough to run the whole course.</li>
+<li><strong>An editor for Java files.</strong> You can use NetBeans, IntelliJ IDEA, VS Code or a text editor. The course uses ordinary <code>.java</code> files that the JDK can run directly.</li>
+</ol>
+<p>The first programs only print text. They finish after printing it. It is fine if no game window opens.</p>
+<p><a id="run"></a></p>
+<h2>Your first run from a terminal</h2>
+<p>A terminal is a window where you type commands for your computer. It may be a separate application or part of your editor. The following steps also work if your editor is not set up to run Java yet.</p>
+<ol>
+<li><p>Open a terminal <strong>in the main folder of the extracted course</strong>. On Windows, you can click the address bar of that folder in File Explorer, type <code>cmd</code> and press Enter. On macOS, you can use the <strong>New Terminal at Folder</strong> service on a folder in Finder; on Linux, there is usually an <strong>Open in Terminal</strong> option.</p>
+</li>
+<li><p>Check that Java is available:</p>
+<pre><code class="language-text">java --version
+</code></pre>
+<p>The output must show version 26 or later. If the command is not found or shows an older version, sort out your JDK installation or selection first. Your editor and terminal may be using different JDKs.</p>
+</li>
+<li><p>Run the supplied file:</p>
+<pre><code class="language-text">java learn/examples/01/WakeUp.java
+</code></pre>
+<p>The correct result is:</p>
+<pre><code class="language-text">ARCADE
+Power on
+</code></pre>
+<p>The terminal then lets you type another command. The program has finished its work.</p>
+</li>
+</ol>
+<p>If Java says it cannot find the file, check the terminal&#39;s folder. It should contain the <code>learn</code> and <code>L01</code> folders directly. The folder containing the whole course can have any name.</p>
+<h3>How to run other files</h3>
+<p>After <code>java</code>, write the path to the chosen file from the main course folder, including the <code>.java</code> ending. For the first short task, use:</p>
+<pre><code class="language-text">java learn/practice/01/SecretSignal.java
+</code></pre>
+<p>For another example or task, change the whole path to the file named in the lesson. Keep the terminal in the main course folder. In an editor that can run Java, select the corresponding file instead.</p>
+<h2>Open and change a file</h2>
+<p>Open <code>learn/examples/01/WakeUp.java</code> in your editor. <strong>The filename must end in <code>.java</code>, not <code>.java.txt</code>.</strong> Opening a link in a browser may show the file&#39;s text or download it. To edit it, open it in your editor.</p>
+<p>Change <code>ARCADE</code> inside the quotes to <code>HELLO</code>, save, and run the same file again. The first line of output should now say HELLO. Afterwards, you can put the original text back.</p>
+<p><code>Save</code> stores your edited text in the file. The next run reads that saved version. An already open game window does not update itself: close it before running the program again.</p>
+<h2>The same work in NetBeans</h2>
+<p>If you use NetBeans with JDK 26 or later, you can run a program directly from the editor:</p>
+<ol>
+<li>Choose <strong>File → Open File…</strong> and open <code>learn/examples/01/WakeUp.java</code> from the downloaded course folder. You do not need to create a project.</li>
+<li>After editing, choose <strong>File → Save</strong>.</li>
+<li>Choose <strong>Run → Run File</strong> (<code>Shift+F6</code>). This runs the selected file.</li>
+<li>Text appears in the <strong>Output</strong> window. If you cannot see it, choose <strong>Window → Output</strong>. Graphical games will open their own window later.</li>
+</ol>
+<p>Open and run later tasks in the same way. If running Java in your editor is not set up yet, use the terminal steps above. To check one game, use the terminal command under <a href="#checks">How you will check a game change later</a>.</p>
+<p><a id="errors"></a></p>
+<h2>When something goes wrong</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>What you see</th>
+<th>What it means and what to try</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>The <code>java</code> command is not found.</td>
+<td>The terminal cannot access a JDK. Check its installation and setup using the page above.</td>
+</tr>
+<tr>
+<td>Java cannot find <code>WakeUp.java</code>.</td>
+<td>Check the terminal&#39;s folder and the path <code>learn/examples/01/WakeUp.java</code>.</td>
+</tr>
+<tr>
+<td>A message contains <code>error:</code> and a filename with a line number.</td>
+<td>The compiler cannot understand the program as written. Start with the first message; check quotes, brackets and semicolons around the indicated place.</td>
+</tr>
+<tr>
+<td>You still see the old result after an edit.</td>
+<td>Save the file and check that you are running the same copy you edited. Close the old game window.</td>
+</tr>
+<tr>
+<td>Nothing else happens after the output.</td>
+<td>In the first examples, this is the end of the program. Your next command goes to the terminal.</td>
+</tr>
+</tbody></table></div>
+<p>One mistake can produce several messages. Fix the first one, then run the file again. Your editor&#39;s Undo command can reverse the last change.</p>
+<p><a id="checks"></a></p>
+<h2>How you will check a game change later</h2>
+<p>The short textbook tasks give their expected output directly. Run your program and compare it with that output. Games also have prepared functional checks in their own <code>Check.java</code>.</p>
+<p>For example, to check the first game from the same main folder:</p>
+<pre><code class="language-text">java L01/Check.java M01_CafeWallLab.java
+</code></pre>
+<ul>
+<li><strong>GREEN</strong> means the game passed the cases checked for its task.</li>
+<li><strong>RED</strong> means at least one checked case does not match yet. Read the message after the game&#39;s name.</li>
+<li><strong>Compiler error</strong> means a mistake in the code prevented it from being compiled.</li>
+</ul>
+<p>A game may start at RED even though it runs. Its task asks you to fix something or introduce a new rule. Do not edit <code>Check.java</code> while solving the task. When you reach your first game, the lesson will give you that game&#39;s check command.</p>
+<p><strong>You are ready to move on when you can run WakeUp, change its first message and see the new message after saving.</strong></p>
+<p>Continue to <a href="01-first-program.html">Your first program</a>.</p>
+</article><nav class="page-nav" aria-label="Previous and next lesson"><a href="index.html">← Contents</a><a class="next" href="01-first-program.html">1.1 Your first program →</a></nav><p class="page-footer">This page works offline. Run the examples with Java from your downloaded course folder.</p></main></div></body></html>

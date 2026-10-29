@@ -12,6 +12,14 @@ Send aliens packing. Steer a laser through mirrors. Turn a handful of numbers in
 
 Each mission gives you a runnable program and a small piece to finish, fix or change. Predict what the code will do, make your move, check it and play again. Your first repair might fit two lines; later ones give a game a new rule or bring a simulation to life.
 
+## Start learning
+
+**[Open the self-study textbook →](learn/README.md)**
+
+Begin with a tiny complete program. Learn what the new notation means, try it in a short task, then use it in a game. The first two chapters are ready: running and reading a program, statement order, values and calculations. The contents also show the plan for later chapters.
+
+On GitHub, read the textbook using the link above. To read offline, download and extract the whole branch, then open `learn/index.html` in your browser. Run examples and games in your editor or terminal using the setup lesson.
+
 ## The first mystery
 
 The drawing tools are ready. The wall is grey. Which line hides it?
@@ -23,7 +31,7 @@ void paintWall(Graphics2D g) {
 }
 ```
 
-Start here, then work towards mazes, arcade games, generative pictures and sound. New ideas arrive in small steps and return in different games.
+This is a taste of the first repair. The textbook first explains calls and statement order using a few lines, then brings you to this game.
 
 ## What you learn
 
@@ -34,11 +42,13 @@ Start here, then work towards mazes, arcade games, generative pictures and sound
 | Make it respond | Callbacks, coordinates, game ticks, seeded randomness and files |
 | Explain and extend | Contracts, functional checks, interfaces, composition, pattern matching and refactoring |
 
-The guide lives **inside the code**: short explanations, worked examples and hints that open one at a time. Explore the supplied game parts when curious. Once downloaded, the programs and checks work offline using JDK libraries.
+The **[textbook](learn/README.md)** explains new skills and offers short practice tasks. Specific game missions, explanations of supplied parts and staged hints stay inside the code. Once downloaded, the textbook, programs and checks work offline; the code uses JDK libraries.
 
 Find a hidden pass. Install a cheat code. Build a coach to help beat a bot, or change the value of corners in Reversi. Other missions ask you to rescue a broken game, expose a fake rule with an experiment or reconstruct a black box. Worked explanations follow concrete values; open the staged hints when you need them.
 
-## Start playing
+## Want to try a game straight away?
+
+If you can already run and edit Java files, explore the games directly. For step-by-step learning, follow the textbook lessons.
 
 1. Have **JDK 26 or newer** ready. Download your language branch above and open the Java files in your editor or IDE.
 2. Open **[L01/M01_CafeWallLab.java](L01/M01_CafeWallLab.java)** and read the mission inside it. In a terminal, go to the downloaded course folder containing this README and run:
@@ -62,9 +72,9 @@ Designed for curious beginners, coding clubs and guided workshops. Choose extra 
 **After completing a mission, make your own version.** Each program offers a specific follow-up experiment. Its check still expects the precise original mission, so a deliberate rule change may show RED even when your new version works correctly.
 
 <details>
-<summary>A suggested route: choose games, practise new ideas</summary>
+<summary>A selection from the game catalogue</summary>
 
-A level is not one meeting, and all 145 programs are not a compulsory checklist. This selection crosses the core skills; other games offer another theme or more practice. For a first exploration of a tiny complete program, also try [ClubDoor](L01/M10_ClubDoor.java); for inferring a rule, try [NumberMachine](L02/M11_NumberMachine.java). ProgramMirror is a more abstract detour, Nim adds strategy, and Flood and SameGame also use a queue.
+Folders L01–L12 form the current game catalogue. For self-study, follow the textbook lessons and their practice links; the selection below is for free exploration. All 145 programs are not a compulsory checklist.
 
 | Level | Starting selection |
 | --- | --- |
