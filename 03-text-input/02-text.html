@@ -9,13 +9,16 @@
 <h1>3.2 Clean up an incoming signal</h1>
 <p>The player may enter <code>  Red Fox  </code>. We do not need the spaces at the edges, but we want to keep the space between the words. We will keep the original message alongside the changed version.</p>
 <h2>One message, three values</h2>
-<p>Open <code>03-text-input/P03_MessageFilter.java</code>. Before running it, try to predict the last two lines.</p>
-<pre><code class="language-java" data-source="P03_MessageFilter.java">void main() {
-    String raw = IO.readln(&quot;Signal: &quot;);
+<p>Open <code>03-text-input/P03_Example_MessageFilter.java</code>. Before running it, try to predict the last two lines.</p>
+<pre><code class="language-java" data-source="P03_Example_MessageFilter.java">/// # Worked example · 3.2 Clean up an incoming signal
+/// Lesson: 02-text.html
+
+void main() {
+    String raw = IO.readln("Signal: ");
     String clean = raw.strip();
     String loud = clean.toUpperCase(Locale.ROOT);
-    IO.println(&quot;Signal [&quot; + loud + &quot;]&quot;);
-    IO.println(&quot;Original [&quot; + raw + &quot;]&quot;);
+    IO.println("Signal [" + loud + "]");
+    IO.println("Original [" + raw + "]");
 }
 </code></pre>
 <p>Enter two spaces, Red Fox, then two more spaces. The square brackets in the output help you see the edges of the text.</p>
@@ -31,7 +34,7 @@ Original [  Red Fox  ]</code></pre>
 <p>In <code>raw.strip()</code>, the dot selects an operation on the text stored in <code>raw</code>. The empty parentheses say that you supply no extra input. In <code>clean.toUpperCase(Locale.ROOT)</code>, the parentheses contain a value: <code>Locale.ROOT</code> is a supplied setting for converting letters independently of the computer's regional settings. Use it this way for this conversion.</p>
 <p><strong>A String operation gives you a result. It does not overwrite the original text.</strong> That is why each call in the example has its result assigned to a name. A call to <code>raw.strip();</code> on its own runs, but its result is not kept anywhere.</p>
 <h2>Task: fix the badge printer</h2>
-<p>Open <code>03-text-input/P04_SignalBadge.java</code>. The code includes a cleaning operation, yet spaces remain in the result.</p>
+<p>Open <code>03-text-input/P04_Task_SignalBadge.java</code>. The code includes a cleaning operation, yet spaces remain in the result.</p>
 <p><strong>Keep <code>raw</code> as the original answer. Store the cleaned text in a new variable, convert it to uppercase and use it to print the badge. Also print the original.</strong> For this answer, you should get:</p>
 <pre class="transcript"><code>Badge: <span class="typed">  nOvA  </span>
 Badge [NOVA]

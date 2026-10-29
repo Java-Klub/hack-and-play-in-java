@@ -3,84 +3,113 @@ import java.util.*;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-/// Chapter checks: java Check.java
-/// One game: java Check.java P06_CafeWallLab.java
-/// Tests call compact programs through reflection in this JVM.
+/// Game task checks for this chapter. Run short textbook tasks directly.
 class Check {
     int failed;
     int checked;
     String selected;
+    final ArrayList<String> available = new ArrayList<>();
     interface Test { void run() throws Exception; }
 
     void main(String[] args) {
         System.setProperty("java.awt.headless", "true");
-        if (args.length > 1) throw new IllegalArgumentException("Use: java Check.java [game filename]");
+        if (args.length > 1) {
+            IO.println("Supply at most one game filename. With no argument, all game tasks in this chapter are checked.");
+            System.exit(2);
+        }
         selected = args.length == 0 ? "" : Path.of(args[0]).getFileName().toString().replaceFirst("\\.java$", "");
-        run("P06_CafeWallLab", "01.06 CafeWallLab · F01", () -> P06_CafeWallLabTest.main(new String[0]));
-        run("P07_MissingTriangle", "01.07 MissingTriangle · F01", () -> P07_MissingTriangleTest.main(new String[0]));
-        if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " mission goals remaining.");
+        run("P06_Task_CafeWallLab", () -> P06_Task_CafeWallLabTest.main(new String[0]));
+        run("P07_Task_MissingTriangle", () -> P07_Task_MissingTriangleTest.main(new String[0]));
+        if (checked == 0) {
+            IO.println("No game check is prepared here for this file: " + selected + ".java");
+            IO.println("Choose one of these files: " + String.join(", ", available));
+            System.exit(2);
+        }
+        IO.println("Checked: " + checked + "; complete: " + (checked - failed) + "; remaining: " + failed);
         if (failed > 0) System.exit(1);
     }
 
-    void run(String game, String label, Test test) {
+    void run(String game, Test test) {
+        available.add(game + ".java");
         if (!selected.isEmpty() && !selected.equals(game)) return;
         checked++;
         try {
             test.run();
-            IO.println("GREEN " + label);
+            IO.println("GREEN " + game + ".java");
         } catch (Throwable failure) {
             failed++;
-            IO.println("RED " + label + ": " + failure.getMessage());
+            IO.println("RED " + game + ".java");
+            String reason = failure.getMessage();
+            if (reason == null || reason.isBlank()) reason = "The check did not get the expected result.";
+            if (!(failure instanceof AssertionError)) reason = "The program stopped during the check: " + failure.getClass().getSimpleName() + ": " + reason;
+            IO.println("  " + reason.replace("\n", "\n  "));
+            Throwable cause = failure;
+            while (cause.getCause() != null && cause.getCause() != cause) cause = cause.getCause();
+            if (cause != failure) IO.println("  " + cause.getClass().getSimpleName() + ": " + show(cause.getMessage()));
+            for (var frame : cause.getStackTrace()) {
+                if (frame.getClassName().equals(game) || frame.getClassName().startsWith(game + "$")) {
+                    IO.println("  " + "Location in the program: " + frame.getFileName() + ":" + frame.getLineNumber());
+                    break;
+                }
+            }
         }
+    }
+
+    static String show(Object value) {
+        if (value != null && value.getClass().isArray()) {
+            int length = java.lang.reflect.Array.getLength(value);
+            var parts = new ArrayList<String>();
+            for (int i = 0; i < Math.min(length, 8); i++) parts.add(show(java.lang.reflect.Array.get(value, i)));
+            return parts + (length > 8 ? " … (" + length + " items" + ")" : "");
+        }
+        String text = String.valueOf(value).replace("\n", "\\n").replace("\r", "\\r");
+        return text.length() <= 180 ? text : text.substring(0, 177) + "…";
     }
 }
 
 @SuppressWarnings("unchecked")
-class P06_CafeWallLabTest {
+class P06_Task_CafeWallLabTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("01.06 F01: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P06_CafeWallLab");
+        var game = Reflect.create("P06_Task_CafeWallLab");
         Reflect.call(game, "restart");
         var image = new BufferedImage(640, 450, BufferedImage.TYPE_INT_RGB);
         var pen = image.createGraphics();
         Reflect.call(game, "paintWall", pen);
         pen.dispose();
-        check(image.getRGB(100, 50) != new Color(145, 145, 145).getRGB(), "wall tiles must remain visible above the background");
-        check(image.getRGB(5, 420) == new Color(145, 145, 145).getRGB(), "the unused border keeps its background");
-        System.out.println("PASS " + checks + " checks");
+        check(image.getRGB(100, 50) != new Color(145, 145, 145).getRGB(), "The grey canvas is covering the tiles. Check the drawing order in paintWall so the tiles stay visible.");
+        check(image.getRGB(5, 420) == new Color(145, 145, 145).getRGB(), "The empty border should stay grey. In paintWall, preserve the background around the tiles.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P07_MissingTriangleTest {
+class P07_Task_MissingTriangleTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("01.07 F01: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P07_MissingTriangle");
+        var game = Reflect.create("P07_Task_MissingTriangle");
         Reflect.call(game, "restart");
         var image = new BufferedImage(600, 450, BufferedImage.TYPE_INT_RGB);
         var pen = image.createGraphics();
         Reflect.call(game, "paintDisc", pen, 0);
         pen.dispose();
-        check(image.getRGB(300, 100) == Color.WHITE.getRGB(), "the top disc must keep its white bite");
-        check(image.getRGB(300, 30) == Color.BLACK.getRGB(), "the uncut part remains black");
-        System.out.println("PASS " + checks + " checks");
+        check(image.getRGB(300, 100) == Color.WHITE.getRGB(), "paintDisc should produce a black circle with a white cutout. Check both drawing calls and their order.");
+        check(image.getRGB(300, 30) == Color.BLACK.getRGB(), "The circle must stay black outside its white cutout. In paintDisc, keep both drawing steps.");
     }
 }
 

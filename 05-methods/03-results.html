@@ -9,12 +9,15 @@
 <h1>5.3 Return a result to the caller</h1>
 <p>A price calculation can be useful in a shop or to a game referee. It does not have to print something every time; instead, it can provide a result to the place that asked for it.</p>
 <h2>You can store a result or use it further</h2>
-<p>Open <code>05-methods/P06_TokenPrice.java</code>. Enter 4 for the number of potions.</p>
-<pre><code class="language-java" data-source="P06_TokenPrice.java">void main() {
-    int count = Integer.parseInt(IO.readln(&quot;Potions: &quot;).strip());
+<p>Open <code>05-methods/P06_Example_TokenPrice.java</code>. Enter 4 for the number of potions.</p>
+<pre><code class="language-java" data-source="P06_Example_TokenPrice.java">/// # Worked example · 5.3 Return a result to the caller
+/// Lesson: 03-results.html
+
+void main() {
+    int count = Integer.parseInt(IO.readln("Potions: ").strip());
     int tokens = price(count);
-    IO.println(&quot;Tokens needed: &quot; + tokens);
-    IO.println(&quot;One extra potion: &quot; + price(count + 1));
+    IO.println("Tokens needed: " + tokens);
+    IO.println("One extra potion: " + price(count + 1));
 }
 
 int price(int count) {
@@ -27,24 +30,27 @@ One extra potion: 15</code></pre>
 <p>In <code>int tokens = price(count);</code>, price runs first, and its returned value is stored in tokens. When count = 4, that value is 12. In the second print statement, the argument count + 1 provides 5, and a new call returns 15. The method price does not print anything itself.</p>
 <p><strong>Return is not println.</strong> Println displays a message; return passes back a value. A calculation with a result of 12 does not decide whether 12 should be displayed, added to another price, or compared with a budget. The caller can decide that.</p>
 <h2>Every possible path must provide a result</h2>
-<p>Open <code>05-methods/P07_DragonLabel.java</code>. Here, the result is a String:</p>
-<pre><code class="language-java" data-source="P07_DragonLabel.java">void main() {
-    int strength = Integer.parseInt(IO.readln(&quot;Strength: &quot;).strip());
+<p>Open <code>05-methods/P07_Example_DragonLabel.java</code>. Here, the result is a String:</p>
+<pre><code class="language-java" data-source="P07_Example_DragonLabel.java">/// # Worked example · 5.3 Return a result to the caller
+/// Lesson: 03-results.html
+
+void main() {
+    int strength = Integer.parseInt(IO.readln("Strength: ").strip());
     String label = dragonName(strength);
-    IO.println(&quot;You found: &quot; + label);
+    IO.println("You found: " + label);
 }
 
 String dragonName(int strength) {
     if (strength &gt;= 5) {
-        return &quot;Ancient dragon&quot;;
+        return "Ancient dragon";
     }
-    return &quot;Baby dragon&quot;;
+    return "Baby dragon";
 }
 </code></pre>
 <p>With strength 5 or higher, it returns Ancient dragon; it never reaches the second return. Otherwise, the first block does not run, and it returns Baby dragon. If you deleted the second return, some paths would not provide the promised text, and the program would not compile.</p>
 <p>Likewise, a method with the return type boolean can pass back true or false, as you have already seen in game referees. A plain <code>return;</code> without a value belongs in a method with void. Returning from a helper method does not end the whole of main: main continues from where it made the call.</p>
 <h2>Task: count the loot and award a rank</h2>
-<p>Open <code>05-methods/P08_LootScore.java</code>. The game already reads the numbers of coins and gems, but the calculations return placeholder answers.</p>
+<p>Open <code>05-methods/P08_Task_LootScore.java</code>. The game already reads the numbers of coins and gems, but the calculations return placeholder answers.</p>
 <p><strong>Complete score so that a coin is worth 1 and a gem is worth 5. Complete rank so that it returns Master for 20 points or more, and Rookie otherwise. Both methods only return a result; reading and printing stay in main.</strong> Try counts of zero or more in this task.</p>
 <div class="table-wrap"><table><thead><tr><th>Coins</th><th>Gems</th><th>Score</th><th>Rank</th></tr></thead><tbody>
 <tr><td>2</td><td>3</td><td>17</td><td>Rookie</td></tr>
@@ -55,14 +61,14 @@ String dragonName(int strength) {
 <details><summary>Hint: follow the path of one result</summary><p>The result of score is stored in points. The main method prints this value and then passes it to rank. The method rank should not count the coins again or read an answer from the player.</p></details>
 <h2>Imitate the machine and connect the dice</h2>
 <ul>
-<li><code>05-methods/P05_NumberMachine.java</code>: return to your experiments. Complete imitation so that it calculates the same result as the machine from its parameter for every number from -20 to 20. Try zero and a negative number, and compare the rule with your prediction. Do not change the reference machine.</li>
-<li><code>05-methods/P09_ShutTheBox.java</code>: write diceTotal to add the two dice, and connect its result to target in roll. A correct definition that nobody uses will not fix the game. The code that generates firstDie and secondDie is supplied. When you run the game, the target must match the dice shown.</li>
+<li><code>05-methods/P05_Task_NumberMachine.java</code>: return to your experiments. Complete imitation so that it calculates the same result as the machine from its parameter for every number from -20 to 20. Try zero and a negative number, and compare the rule with your prediction. Do not change the reference machine.</li>
+<li><code>05-methods/P09_Task_ShutTheBox.java</code>: write diceTotal to add the two dice, and connect its result to target in roll. A correct definition that nobody uses will not fix the game. The code that generates firstDie and secondDie is supplied. When you run the game, the target must match the dice shown.</li>
 </ul>
 <p>Check.java in the same folder checks both games; select the game's name in Program Arguments. In NumberMachine, also run your own added calls to compare. In ShutTheBox, keep the supplied search for allowed tile closures.</p>
 <p><strong>You can now write a calculation that returns a result, use it in two places, and tell returning a value apart from displaying it.</strong></p>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>CannonPuzzle</strong> · <code>05-methods/P10_CannonPuzzle.java</code><br>Restore launchSpeed in CannonPuzzle: a drag of 100 gives speed 9, and a negative drag keeps its sign. Cannon coordinates are supplied.</li>
-<li><strong>BouncingBalls</strong> · <code>05-methods/P11_BouncingBalls.java</code><br>Find the shared speed-loss calculation in BouncingBalls. Side walls and ceiling should reverse direction without losing speed; keep the softer floor.</li>
+<li><strong>CannonPuzzle</strong> · <code>05-methods/P10_Task_CannonPuzzle.java</code><br>Restore launchSpeed in CannonPuzzle: a drag of 100 gives speed 9, and a negative drag keeps its sign. Cannon coordinates are supplied.</li>
+<li><strong>BouncingBalls</strong> · <code>05-methods/P11_Task_BouncingBalls.java</code><br>Find the shared speed-loss calculation in BouncingBalls. Side walls and ceiling should reverse direction without losing speed; keep the softer floor.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="02-parameters.html">← 5.2 Send values to a method</a><a class="next" href="04-local-values.html">5.4 How far does a name reach? →</a></nav>

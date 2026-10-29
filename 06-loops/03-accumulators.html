@@ -9,14 +9,17 @@
 <h1>6.3 Remember what has passed</h1>
 <p>A crew delivers fuel in three batches. You can read the numbers one at a time; to get the final result, you need to remember their sum rather than every individual answer.</p>
 <h2>The round counter is not the sum</h2>
-<p>Open <code>06-loops/P06_FuelDeliveries.java</code>. Enter 2, 0 and 4 in that order.</p>
-<pre><code class="language-java" data-source="P06_FuelDeliveries.java">void main() {
+<p>Open <code>06-loops/P06_Example_FuelDeliveries.java</code>. Enter 2, 0 and 4 in that order.</p>
+<pre><code class="language-java" data-source="P06_Example_FuelDeliveries.java">/// # Worked example · 6.3 Remember what has passed
+/// Lesson: 03-accumulators.html
+
+void main() {
     int total = 0;
     for (int delivery = 0; delivery &lt; 3; delivery++) {
-        int amount = Integer.parseInt(IO.readln(&quot;Fuel: &quot;).strip());
+        int amount = Integer.parseInt(IO.readln("Fuel: ").strip());
         total = total + amount;
     }
-    IO.println(&quot;Fuel total: &quot; + total);
+    IO.println("Fuel total: " + total);
 }
 </code></pre>
 <p>The variable total is an accumulator. It starts at zero, and each round adds another contribution. With these inputs, it holds 2, then still 2, and finally 6. Meanwhile, delivery only controls the three repetitions.</p>
@@ -24,7 +27,7 @@
 <p>The calculation <code>total = total + amount;</code> first reads the old total, adds amount, and only then stores the new result. It is not a mathematical equality that remains true forever. For these whole numbers, the shorter form <code>total += amount;</code> has the same effect.</p>
 <details><summary>Prediction: deliveries 5, 1, 2</summary><p>The value of total becomes 5, 6 and 8. The final message is Fuel total: 8. Printing inside the loop would show three running totals instead of one final total.</p></details>
 <h2>Task: a noise survey</h2>
-<p>Open <code>06-loops/P07_NoiseSurvey.java</code>. It already reads three measurements, but the results stay at zero. During the traversal, collect two independent results: the sum of all measurements and the number of measurements that are at least 10.</p>
+<p>Open <code>06-loops/P07_Task_NoiseSurvey.java</code>. It already reads three measurements, but the results stay at zero. During the traversal, collect two independent results: the sum of all measurements and the number of measurements that are at least 10.</p>
 <p>Try measurements from 0 to 20. For 9, 10, 14, expect Total: 33 and Loud: 2. For three zeros, both results should be 0. For 10, 10, 10, the sum is 30 and the count is 3. Do not leave out a value of exactly 10.</p>
 <details><summary>Hint 1: two different questions</summary><p>Every measurement contributes to the sum. Only a measurement that passes the condition contributes to the loud count, and it adds one rather than its measured value.</p></details>
 <details><summary>Hint 2: where to make the changes</summary><p>Prepare both results before the loop, update them inside, and print them afterwards. Keep the three input reads.</p></details>

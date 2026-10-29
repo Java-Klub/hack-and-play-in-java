@@ -9,27 +9,30 @@
 <h1>6.5 Read the next move</h1>
 <p>One question is not enough for a command game. A terminal needs to read a line, process it, and show a result repeatedly. The player also needs a clear way to quit.</p>
 <h2>Reading inside repetition</h2>
-<p>Open <code>06-loops/P10_EchoTerminal.java</code>. Enter ping, then something else, and finally q. Press Enter after each answer.</p>
-<pre><code class="language-java" data-source="P10_EchoTerminal.java">void main() {
+<p>Open <code>06-loops/P10_Example_EchoTerminal.java</code>. Enter ping, then something else, and finally q. Press Enter after each answer.</p>
+<pre><code class="language-java" data-source="P10_Example_EchoTerminal.java">/// # Worked example · 6.5 Read the next move
+/// Lesson: 05-game-loop.html
+
+void main() {
     while (true) {
-        String command = IO.readln(&quot;Command: &quot;);
-        if (command == null || command.equals(&quot;q&quot;)) {
+        String command = IO.readln("Command: ");
+        if (command == null || command.equals("q")) {
             break;
         }
-        if (command.equals(&quot;ping&quot;)) {
-            IO.println(&quot;pong&quot;);
+        if (command.equals("ping")) {
+            IO.println("pong");
         } else {
-            IO.println(&quot;Unknown&quot;);
+            IO.println("Unknown");
         }
     }
-    IO.println(&quot;Closed&quot;);
+    IO.println("Closed");
 }
 </code></pre>
 <p>Using true with while always allows another round. A break on command q provides the way out. Reading is inside the body, so every round receives a new line. Reading only before the loop would keep processing the same answer.</p>
 <p>The method readln can return null if input ends without another line. This is neither text nor an empty line. We first test <code>command == null</code>; short-circuit evaluation then prevents calling equals on null. Both q and the end of input leave the loop and print Closed.</p>
 <details><summary>Prediction: an empty line, then q</summary><p>An empty line is not the end of input. You get Unknown, another prompt, and then Closed after q. Commands match exactly here: PING is not ping.</p></details>
 <h2>Task: a small drone controller</h2>
-<p>Open <code>06-loops/P11_DroneConsole.java</code>. The loop and quitting work, but up and down do not change the altitude. Add these rules: up increases altitude by 1, and down reduces it by 1. Altitude must stay between 0 and 3.</p>
+<p>Open <code>06-loops/P11_Task_DroneConsole.java</code>. The loop and quitting work, but up and down do not change the altitude. Add these rules: up increases altitude by 1, and down reduces it by 1. Altitude must stay between 0 and 3.</p>
 <p>After a valid move, print Altitude with its new value. An attempt beyond a boundary prints Blocked and leaves altitude unchanged. Any other command prints Unknown. Q is not q and counts as unknown; lowercase q ends with Landed and no further altitude message. End of input should quit the same way.</p>
 <p>Try up, up, down, q: the altitudes should be 1, 2, 1. Entering down at the start should give Blocked. Four up commands should give 1, 2, 3, Blocked. One variable, altitude, must remember the state between rounds.</p>
 <details><summary>Hint 1: separate the rules</summary><p>The exit is supplied first. Then distinguish a known direction and check its boundary. An unknown command must not change the state.</p></details>

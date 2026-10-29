@@ -9,17 +9,20 @@
 <h1>8.1 Rows become a map</h1>
 <p>A single row of tiles is no longer enough for a map. You need rows above one another, each with several columns. Two numbers identify a place: first choose a row, then a place within it.</p>
 <h2>Y chooses a row; X chooses a column</h2>
-<p>Open <code>08-grids/P01_ArenaCells.java</code>. Coordinates x = 2 and y = 1 point to the bottom-right corner.</p>
-<pre><code class="language-java" data-source="P01_ArenaCells.java">void main() {
+<p>Open <code>08-grids/P01_Example_ArenaCells.java</code>. Coordinates x = 2 and y = 1 point to the bottom-right corner.</p>
+<pre><code class="language-java" data-source="P01_Example_ArenaCells.java">/// # Worked example · 8.1 Rows become a map
+/// Lesson: 01-grids.html
+
+void main() {
     int[][] arena = {
         {1, 0, 2},
         {0, 3, 5}
     };
-    int x = Integer.parseInt(IO.readln(&quot;X: &quot;).strip());
-    int y = Integer.parseInt(IO.readln(&quot;Y: &quot;).strip());
-    IO.println(&quot;Value: &quot; + arena[y][x]);
-    IO.println(&quot;Rows: &quot; + arena.length);
-    IO.println(&quot;Columns: &quot; + arena[0].length);
+    int x = Integer.parseInt(IO.readln("X: ").strip());
+    int y = Integer.parseInt(IO.readln("Y: ").strip());
+    IO.println("Value: " + arena[y][x]);
+    IO.println("Rows: " + arena.length);
+    IO.println("Columns: " + arena[0].length);
 }
 </code></pre>
 <p>The type <code>int[][]</code> means an array of arrays. The outer braces contain two rows; the inner braces contain each row's values. The first index selects a row, and the second selects its element. You can therefore read <code>arena[y][x]</code> as two steps, not one mysterious place number.</p>
@@ -30,14 +33,14 @@ y=1     0   3   5</code></pre>
 <p>Coordinates start at zero. X increases to the right and y downwards because that is how we print the map. Java's square brackets do not define a geometric convention; we chose to arrange rows and columns this way.</p>
 <details><summary>Prediction: x = 1, y = 0</summary><p>You choose the first row and its second place: the value is 0. For x = 1, y = 1, it would be 3.</p></details>
 <h2>Task: a label for the selected place</h2>
-<p>Open <code>08-grids/P02_TileMap.java</code>. The map has two rows and three columns. Fix the place-name lookup using the coordinates, and fix the column count. The row and column counts differ, so swapping them must not stay hidden.</p>
+<p>Open <code>08-grids/P02_Task_TileMap.java</code>. The map has two rows and three columns. Fix the place-name lookup using the coordinates, and fix the column count. The row and column counts differ, so swapping them must not stay hidden.</p>
 <p>For x = 2, y = 1, expect Tile: camp, Rows: 2 and Columns: 3. For 1, 0, the place is pond; for 0, 1, it is tree. For now, enter only x from 0 to 2 and y from 0 to 1. Handling coordinates outside the map will be a separate next step.</p>
 <details><summary>Hint 1: keep the coordinates straight</summary><p>Find the correct row using y. Only then choose x inside it. The same convention applies throughout this example.</p></details>
 <details><summary>Hint 2: the length of what?</summary><p>The outer array contains rows, not individual columns. Read the column count from a row.</p></details>
 <p>Next, you will protect the map from coordinates that do not identify any place.</p>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>MiniBattleshipHunt</strong> · <code>08-grids/P03_MiniBattleshipHunt.java</code><br>In MiniBattleshipHunt fill board from every selected coordinate pair. The first two belong to ship 1 and the remaining three to ship 2; use the data&#x27;s actual length.</li>
-<li><strong>LoopBuilder</strong> · <code>08-grids/P04_LoopBuilder.java</code><br>In LoopBuilder convert a horizontal or vertical edge number into two vertex numbers on a 4×4 grid. Check both group boundaries and invalid numbers.</li>
+<li><strong>MiniBattleshipHunt</strong> · <code>08-grids/P03_Task_MiniBattleshipHunt.java</code><br>In MiniBattleshipHunt fill board from every selected coordinate pair. The first two belong to ship 1 and the remaining three to ship 2; use the data&#x27;s actual length.</li>
+<li><strong>LoopBuilder</strong> · <code>08-grids/P04_Task_LoopBuilder.java</code><br>In LoopBuilder convert a horizontal or vertical edge number into two vertex numbers on a 4×4 grid. Check both group boundaries and invalid numbers.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="../07-arrays/05-copies.html">← 7.5 A memory is not a second name</a><a class="next" href="02-bounds.html">8.2 Check the boundary first →</a></nav>

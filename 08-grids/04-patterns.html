@@ -9,16 +9,19 @@
 <h1>8.4 Make a pattern from coordinates</h1>
 <p>You do not need to store a pattern as a long list of hand-written symbols. For a checkerboard or frame, a small coordinate rule can decide every place. Changing the size then creates a different map automatically.</p>
 <h2>Create, fill, display</h2>
-<p>Open <code>08-grids/P18_CheckerTiles.java</code>. Enter size 3.</p>
-<pre><code class="language-java" data-source="P18_CheckerTiles.java">void main() {
-    int size = Integer.parseInt(IO.readln(&quot;Size: &quot;).strip());
+<p>Open <code>08-grids/P18_Example_CheckerTiles.java</code>. Enter size 3.</p>
+<pre><code class="language-java" data-source="P18_Example_CheckerTiles.java">/// # Worked example · 8.4 Make a pattern from coordinates
+/// Lesson: 04-patterns.html
+
+void main() {
+    int size = Integer.parseInt(IO.readln("Size: ").strip());
     String[][] tiles = new String[size][size];
     for (int y = 0; y &lt; size; y++) {
         for (int x = 0; x &lt; size; x++) {
             if ((x + y) % 2 == 0) {
-                tiles[y][x] = &quot;#&quot;;
+                tiles[y][x] = "#";
             } else {
-                tiles[y][x] = &quot;.&quot;;
+                tiles[y][x] = ".";
             }
         }
     }
@@ -27,7 +30,7 @@
 
 void show(String[][] tiles) {
     for (String[] row : tiles) {
-        String line = &quot;&quot;;
+        String line = "";
         for (String tile : row) {
             line += tile;
         }
@@ -41,15 +44,15 @@ void show(String[][] tiles) {
 <details><summary>Prediction: size 2</summary><p>These two rows appear:</p><pre><code>#.
 .#</code></pre><p>With size 0, there are no rows, so nothing follows the prompt. Try the example with sizes from 0 to 6.</p></details>
 <h2>Task: a hollow panel</h2>
-<p>Open <code>08-grids/P19_HollowPanel.java</code>. Complete frame: every edge of the square must be #, and every interior place must be a dot. Both main and show are complete. Change the rule for an individual cell rather than printing rows by hand.</p>
+<p>Open <code>08-grids/P19_Task_HollowPanel.java</code>. Complete frame: every edge of the square must be #, and every interior place must be a dot. Both main and show are complete. Change the rule for an individual cell rather than printing rows by hand.</p>
 <p>Try sizes from 1 to 6. For 1, the whole result is a single #. For 2, both rows are ##. For 4, expect top and bottom rows of #### and two middle rows of #..#. The only place at size 1 belongs to all four edges at once.</p>
 <details><summary>Hint 1: four ways to be on an edge</summary><p>A cell is on an edge if it belongs to the first or last row, or the first or last column. One of these is enough.</p></details>
 <details><summary>Hint 2: the last index</summary><p>The last valid index is one less than the size. Fill the other cells too, or they will not receive a text symbol.</p></details>
 <p>Next, the rule will depend not just on coordinates but on the neighbourhood in the grid's previous state.</p>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>Quarto</strong> · <code>08-grids/P20_Quarto.java</code><br>Quarto recognises rows but misses columns and diagonals. Extend won with the missing groups and let the supplied line judge each quartet.</li>
-<li><strong>Reversi</strong> · <code>08-grids/P21_Reversi.java</code><br>In Reversi award three points for a corner and one for another occupied square. The same score must drive both the live display and final winner.</li>
-<li><strong>LightUp</strong> · <code>08-grids/P22_LightUp.java</code><br>LightUp must see a bulb along the whole open corridor up to a wall or border. In visible continue beyond the immediate neighbour.</li>
+<li><strong>Quarto</strong> · <code>08-grids/P20_Task_Quarto.java</code><br>Quarto recognises rows but misses columns and diagonals. Extend won with the missing groups and let the supplied line judge each quartet.</li>
+<li><strong>Reversi</strong> · <code>08-grids/P21_Task_Reversi.java</code><br>In Reversi award three points for a corner and one for another occupied square. The same score must drive both the live display and final winner.</li>
+<li><strong>LightUp</strong> · <code>08-grids/P22_Task_LightUp.java</code><br>LightUp must see a bulb along the whole open corridor up to a wall or border. In visible continue beyond the immediate neighbour.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="03-neighbours.html">← 8.3 Ask the neighbouring cells</a><a class="next" href="05-generations.html">8.5 Read the past; write the future →</a></nav>

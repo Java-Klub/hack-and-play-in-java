@@ -3,55 +3,86 @@ import java.util.*;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-/// Chapter checks: java Check.java
-/// One game: java Check.java P05_VirtualScribbler.java
-/// Tests call compact programs through reflection in this JVM.
+/// Game task checks for this chapter. Run short textbook tasks directly.
 class Check {
     int failed;
     int checked;
     String selected;
+    final ArrayList<String> available = new ArrayList<>();
     interface Test { void run() throws Exception; }
 
     void main(String[] args) {
         System.setProperty("java.awt.headless", "true");
-        if (args.length > 1) throw new IllegalArgumentException("Use: java Check.java [game filename]");
+        if (args.length > 1) {
+            IO.println("Supply at most one game filename. With no argument, all game tasks in this chapter are checked.");
+            System.exit(2);
+        }
         selected = args.length == 0 ? "" : Path.of(args[0]).getFileName().toString().replaceFirst("\\.java$", "");
-        run("P05_VirtualScribbler", "06.05 VirtualScribbler · F11", () -> P05_VirtualScribblerTest.main(new String[0]));
-        if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " mission goals remaining.");
+        run("P05_Task_VirtualScribbler", () -> P05_Task_VirtualScribblerTest.main(new String[0]));
+        if (checked == 0) {
+            IO.println("No game check is prepared here for this file: " + selected + ".java");
+            IO.println("Choose one of these files: " + String.join(", ", available));
+            System.exit(2);
+        }
+        IO.println("Checked: " + checked + "; complete: " + (checked - failed) + "; remaining: " + failed);
         if (failed > 0) System.exit(1);
     }
 
-    void run(String game, String label, Test test) {
+    void run(String game, Test test) {
+        available.add(game + ".java");
         if (!selected.isEmpty() && !selected.equals(game)) return;
         checked++;
         try {
             test.run();
-            IO.println("GREEN " + label);
+            IO.println("GREEN " + game + ".java");
         } catch (Throwable failure) {
             failed++;
-            IO.println("RED " + label + ": " + failure.getMessage());
+            IO.println("RED " + game + ".java");
+            String reason = failure.getMessage();
+            if (reason == null || reason.isBlank()) reason = "The check did not get the expected result.";
+            if (!(failure instanceof AssertionError)) reason = "The program stopped during the check: " + failure.getClass().getSimpleName() + ": " + reason;
+            IO.println("  " + reason.replace("\n", "\n  "));
+            Throwable cause = failure;
+            while (cause.getCause() != null && cause.getCause() != cause) cause = cause.getCause();
+            if (cause != failure) IO.println("  " + cause.getClass().getSimpleName() + ": " + show(cause.getMessage()));
+            for (var frame : cause.getStackTrace()) {
+                if (frame.getClassName().equals(game) || frame.getClassName().startsWith(game + "$")) {
+                    IO.println("  " + "Location in the program: " + frame.getFileName() + ":" + frame.getLineNumber());
+                    break;
+                }
+            }
         }
+    }
+
+    static String show(Object value) {
+        if (value != null && value.getClass().isArray()) {
+            int length = java.lang.reflect.Array.getLength(value);
+            var parts = new ArrayList<String>();
+            for (int i = 0; i < Math.min(length, 8); i++) parts.add(show(java.lang.reflect.Array.get(value, i)));
+            return parts + (length > 8 ? " … (" + length + " items" + ")" : "");
+        }
+        String text = String.valueOf(value).replace("\n", "\\n").replace("\r", "\\r");
+        return text.length() <= 180 ? text : text.substring(0, 177) + "…";
     }
 }
 
 @SuppressWarnings("unchecked")
-class P05_VirtualScribblerTest {
+class P05_Task_VirtualScribblerTest {
     static int checks;
 
     static void expect(boolean correct, String message) {
         checks++;
-        if (!correct) throw new AssertionError("06.05/F11: " + message);
+        if (!correct) throw new AssertionError(message);
     }
 
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-                + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-                + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P05_VirtualScribbler");
+        var game = Reflect.create("P05_Task_VirtualScribbler");
         Reflect.call(game, "restart");
         Reflect.set(game, "drift", 9);
         Reflect.set(game, "jitter", 10);
@@ -60,30 +91,29 @@ class P05_VirtualScribblerTest {
         int width = (int) Reflect.get(game, "WIDTH");
         int height = (int) Reflect.get(game, "HEIGHT");
         expect(Math.abs((double) Reflect.get(game, "x") - width / 2) < .00001,
-                "the square returns to its starting horizontal position");
+                "signature must finish at the same horizontal position where its square started: the canvas centre.");
         expect(Math.abs((double) Reflect.get(game, "y") - height / 2) < .00001,
-                "the square returns to its starting vertical position");
-        equal(120, Reflect.get(game, "steps"), "four thirty-step sides draw 120 pen steps");
-        equal(true, Reflect.get(game, "paused"), "the signature ends paused");
-        equal(0, Reflect.get(game, "drift"), "straight sides have no drift");
-        equal(0, Reflect.get(game, "jitter"), "repeated stamps have no random jitter");
+                "signature must finish at the same vertical position where its square started: the canvas centre.");
+        equal(120, Reflect.get(game, "steps"), "signature must make 120 pen steps: four sides of thirty steps each. Check the repeated side drawing.");
+        equal(true, Reflect.get(game, "paused"), "signature must finish paused so the square does not keep moving afterwards.");
+        equal(0, Reflect.get(game, "drift"), "signature must clear drift before drawing so all four sides stay straight.");
+        equal(0, Reflect.get(game, "jitter"), "signature must clear jitter so the same square can be drawn again without random changes.");
         var image = (java.awt.image.BufferedImage) Reflect.get(game, "canvas");
         int cx = width / 2;
         int cy = height / 2;
         for (int[] point : new int[][]{{cx + 33, cy}, {cx + 66, cy + 33},
                 {cx + 33, cy + 66}, {cx, cy + 33}}) {
             expect((image.getRGB(point[0], point[1]) & 0xffffff) != 0xffffff,
-                    "each of the four square sides must actually draw");
+                    "At least one side of the square is missing from the canvas. In signature, draw every side as well as counting its steps.");
         }
         int[] pixels = image.getRGB(0, 0, width, height, null, 0, width);
         Reflect.set(game, "paused", false);
         Reflect.call(game, "burst", 11);
         Reflect.call(game, "signature");
         var again = (java.awt.image.BufferedImage) Reflect.get(game, "canvas");
-        equal(pixels, again.getRGB(0, 0, width, height, null, 0, width), "a second signature resets earlier drawing and settings");
+        equal(pixels, again.getRGB(0, 0, width, height, null, 0, width), "A second signature must recreate the same square, clearing earlier marks and changed settings first.");
         Reflect.call(game, "oneShot", 1);
-        equal(121, Reflect.get(game, "steps"), "ordinary step controls still use the working drawing model");
-        System.out.println("PASS " + checks + " checks");
+        equal(121, Reflect.get(game, "steps"), "After signature, oneShot(1) must advance the step count from 120 to 121. Preserve the ordinary pen controls.");
     }
 }
 

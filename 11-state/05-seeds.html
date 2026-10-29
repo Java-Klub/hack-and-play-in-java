@@ -9,12 +9,15 @@
 <h1>11.5 Same start, same experiment</h1>
 <p>A random maze may produce a strange route worth showing someone else. A seed lets you replay the same experiment rather than describing it from memory. Reproducibility is useful both for sharing challenges and for investigating an unexpected program result.</p>
 <h2>A seed starts a sequence; it is not every answer</h2>
-<pre><code class="language-java" data-source="P20_ReplayNumbers.java">void main() {
+<pre><code class="language-java" data-source="P20_Example_ReplayNumbers.java">/// # Worked example · 11.5 Same start, same experiment
+/// Lesson: 05-seeds.html
+
+void main() {
     int[] first = sequence(42);
     int[] replay = sequence(42);
-    IO.println(&quot;First: &quot; + Arrays.toString(first));
-    IO.println(&quot;Replay: &quot; + Arrays.toString(replay));
-    IO.println(&quot;Same: &quot; + Arrays.equals(first, replay));
+    IO.println("First: " + Arrays.toString(first));
+    IO.println("Replay: " + Arrays.toString(replay));
+    IO.println("Same: " + Arrays.equals(first, replay));
 }
 
 int[] sequence(int seed) {
@@ -26,22 +29,22 @@ int[] sequence(int seed) {
     return values;
 }
 </code></pre>
-<p>Open 11-state/P20_ReplayNumbers.java. New Random(seed) starts a generator from a specified initial state. The constructor accepts a long integer; our int seed is automatically widened to that type without losing its value. No special seed value is required for the generator to work.</p>
+<p>Open 11-state/P20_Example_ReplayNumbers.java. New Random(seed) starts a generator from a specified initial state. The constructor accepts a long integer; our int seed is automatically widened to that type without losing its value. No special seed value is required for the generator to work.</p>
 <p>One generator is created before the loop. NextInt(10) supplies a value from 0 through 9 and advances its state. The four calls therefore continue one sequence. Arrays.toString displays the elements; Arrays.equals checks their values rather than array identity.</p>
 <p>Calling sequence(42) twice creates two generators with the same start and the same requests, so both produce [0, 3, 8, 4]. A seed alone is not the whole recipe: changing bounds, adding a random call or rearranging calls can change later outcomes.</p>
 <details><summary>Predict a restarted generator</summary><p>If a new Random(42) were created before each individual sample, all four values would be 0. Why? Every generator would make only the first request from the same starting state. Which value would the nextInt(10) call after the first one return with one reused generator? 3.</p></details>
 <h2>Task: repair the repeatable door route</h2>
-<p>Open 11-state/P21_ReplayDoors.java. Each route should use one generator for four successive door numbers from 1 to 6. Repair its lifetime so every route restarts from the supplied seed, but individual doors continue that route’s sequence. Preserve both main calls.</p>
+<p>Open 11-state/P21_Task_ReplayDoors.java. Each route should use one generator for four successive door numbers from 1 to 6. Repair its lifetime so every route restarts from the supplied seed, but individual doors continue that route’s sequence. Preserve both main calls.</p>
 <p>For seed 42 expect [3, 4, 1, 3]; for seed 0 expect [1, 5, 2, 6]. Both must report Replay matches: true. A repeated door within a route is allowed. A different seed need not produce different values at every position.</p>
 <details><summary>Hint 1: locate the restart</summary><p>Find where new Random runs. Ask whether it should run once per route or once per door.</p></details>
 <details><summary>Hint 2: keep the state local to one route</summary><p>Create the generator inside route but outside its loop. Sharing one generator across both route calls would continue rather than replay the sequence.</p></details>
 <p>You can now choose between unchanged data snapshots, growing collections and stateful objects. Next, use those tools to organise interactive programs whose events happen over time.</p>
 <details><summary>Further reading online</summary><p><a href="https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/util/Random.html">Java 26 API: Random</a></p></details>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>VoronoiStainedGlass</strong> · <code>11-state/P22_VoronoiStainedGlass.java</code><br>VoronoiStainedGlass needs exactly count successive nextSeed results from one generator. Preserve order and a mutable list; check 0, 100 and rejected counts.</li>
-<li><strong>MandelbrotPostcards</strong> · <code>11-state/P23_MandelbrotPostcards.java</code><br>In MandelbrotPostcards find every seed 0–255 with the requested palette prefix. Return ordered candidates rather than promising one unique secret answer.</li>
-<li><strong>ColourFilterSecrets</strong> · <code>11-state/P24_ColourFilterSecrets.java</code><br>ColourFilterSecrets ignores the requested seed. Repair the noise source while preserving the mask channel; the same seed must reproduce the picture.</li>
-<li><strong>TwoNoisyPictures</strong> · <code>11-state/P25_TwoNoisyPictures.java</code><br>TwoNoisyPictures restarts its generator inside the pixel loop. Use one reproducible sequence instead of repeatedly drawing the first random value.</li>
+<li><strong>VoronoiStainedGlass</strong> · <code>11-state/P22_Task_VoronoiStainedGlass.java</code><br>VoronoiStainedGlass needs exactly count successive nextSeed results from one generator. Preserve order and a mutable list; check 0, 100 and rejected counts.</li>
+<li><strong>MandelbrotPostcards</strong> · <code>11-state/P23_Task_MandelbrotPostcards.java</code><br>In MandelbrotPostcards find every seed 0–255 with the requested palette prefix. Return ordered candidates rather than promising one unique secret answer.</li>
+<li><strong>ColourFilterSecrets</strong> · <code>11-state/P24_Task_ColourFilterSecrets.java</code><br>ColourFilterSecrets ignores the requested seed. Repair the noise source while preserving the mask channel; the same seed must reproduce the picture.</li>
+<li><strong>TwoNoisyPictures</strong> · <code>11-state/P25_Task_TwoNoisyPictures.java</code><br>TwoNoisyPictures restarts its generator inside the pixel loop. Use one reproducible sequence instead of repeatedly drawing the first random value.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="04-random.html">← 11.4 Chance proposes, a rule decides</a><a class="next" href="../12-files/01-validation.html">12.1 Decide which values belong →</a></nav>

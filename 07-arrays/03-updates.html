@@ -9,14 +9,17 @@
 <h1>7.3 Change the actual place</h1>
 <p>A panel has several lights. Here, a number typed into Output stands in for a click: the selected light should switch state while the others stay unchanged. Changing a working copy of a value is not enough.</p>
 <h2>Square brackets on both sides</h2>
-<p>Open <code>07-arrays/P10_ChargeSlot.java</code>. Enter slot 1.</p>
-<pre><code class="language-java" data-source="P10_ChargeSlot.java">void main() {
+<p>Open <code>07-arrays/P10_Example_ChargeSlot.java</code>. Enter slot 1.</p>
+<pre><code class="language-java" data-source="P10_Example_ChargeSlot.java">/// # Worked example · 7.3 Change the actual place
+/// Lesson: 03-updates.html
+
+void main() {
     int[] charges = {2, 5, 1};
-    int slot = Integer.parseInt(IO.readln(&quot;Slot: &quot;).strip());
+    int slot = Integer.parseInt(IO.readln("Slot: ").strip());
     if (slot &gt;= 0 &amp;&amp; slot &lt; charges.length) {
         charges[slot] = charges[slot] + 2;
     } else {
-        IO.println(&quot;Invalid slot&quot;);
+        IO.println("Invalid slot");
     }
     IO.println(Arrays.toString(charges));
 }
@@ -26,15 +29,15 @@
 <p>For a numeric array, assigning to the variable power inside for-each would change only that local variable. To write to a particular element, you need the array itself and its index. That is why the program checks the selected index first.</p>
 <details><summary>Prediction: slot -1</summary><p>It prints Invalid slot, followed by the unchanged [2, 5, 1]. A rejected choice performs no assignment to the array.</p></details>
 <h2>Task: a light switch</h2>
-<p>Open <code>07-arrays/P11_LightSwitch.java</code>. All four lights start off. For a valid slot, change only the selected light to the opposite boolean value. This makes the same step able to switch a light both on and off.</p>
+<p>Open <code>07-arrays/P11_Task_LightSwitch.java</code>. All four lights start off. For a valid slot, change only the selected light to the opposite boolean value. This makes the same step able to switch a light both on and off.</p>
 <p>For slot 2, expect [false, false, true, false]. For 0, only the first value should be true; for 3, only the last. For -1 or 4, print Invalid slot followed by four false values. An invalid choice must not change any other light either.</p>
 <p>After fixing it, change the second starting light to true and enter 1. It must switch off. Then restore the original starting array. This experiment distinguishes toggling from simply assigning true.</p>
 <details><summary>Hint 1: the opposite answer</summary><p>You already know NOT from conditions. It turns true into false and false into true.</p></details>
 <details><summary>Hint 2: the assignment target</summary><p>Store the result in the element at the chosen index, not in the slot number or the whole variable lights.</p></details>
 <p>Next, the player will not know the required index. You will write a search that chooses the right place by its contents.</p>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>Chopsticks</strong> · <code>07-arrays/P12_Chopsticks.java</code><br>Chopsticks must validate both indices before looking up both living hands. HandsAlive only answers; it does not add fingers.</li>
-<li><strong>WordleStyleWordHunt</strong> · <code>07-arrays/P13_WordleStyleWordHunt.java</code><br>Repair WordleStyleWordHunt&#x27;s leftoverLetters so a repeated letter increases its earlier count rather than erasing it. Compare LEVEL and ALLEY.</li>
+<li><strong>Chopsticks</strong> · <code>07-arrays/P12_Task_Chopsticks.java</code><br>Chopsticks must validate both indices before looking up both living hands. HandsAlive only answers; it does not add fingers.</li>
+<li><strong>WordleStyleWordHunt</strong> · <code>07-arrays/P13_Task_WordleStyleWordHunt.java</code><br>Repair WordleStyleWordHunt&#x27;s leftoverLetters so a repeated letter increases its earlier count rather than erasing it. Compare LEVEL and ALLEY.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="02-traversal.html">← 7.2 Visit values without picking each one</a><a class="next" href="04-search.html">7.4 Find a place that fits →</a></nav>

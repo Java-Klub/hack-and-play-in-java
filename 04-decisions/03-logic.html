@@ -9,15 +9,18 @@
 <h1>4.3 Combine rules</h1>
 <p>Two different passes are valid for the laboratory. Either one is enough, but you also need energy, and the door must not be locked.</p>
 <h2>Or, and, not</h2>
-<p>Open <code>04-decisions/P08_TwoKeys.java</code>.</p>
-<pre><code class="language-java" data-source="P08_TwoKeys.java">void main() {
-    String badge = IO.readln(&quot;Badge: &quot;).strip();
-    int energy = Integer.parseInt(IO.readln(&quot;Energy: &quot;).strip());
-    boolean trusted = badge.equals(&quot;SUN&quot;) || badge.equals(&quot;MOON&quot;);
+<p>Open <code>04-decisions/P08_Example_TwoKeys.java</code>.</p>
+<pre><code class="language-java" data-source="P08_Example_TwoKeys.java">/// # Worked example · 4.3 Combine rules
+/// Lesson: 03-logic.html
+
+void main() {
+    String badge = IO.readln("Badge: ").strip();
+    int energy = Integer.parseInt(IO.readln("Energy: ").strip());
+    boolean trusted = badge.equals("SUN") || badge.equals("MOON");
     boolean enough = energy &gt;= 3;
     boolean locked = false;
     boolean enter = trusted &amp;&amp; enough &amp;&amp; !locked;
-    IO.println(&quot;Access: &quot; + enter);
+    IO.println("Access: " + enter);
 }
 </code></pre><pre class="transcript"><code>Badge: <span class="typed">SUN</span>
 Energy: <span class="typed">3</span>
@@ -32,7 +35,7 @@ Access: true</code></pre>
 <p>The variable <code>trusted</code> answers one question about the pass. The variable <code>enough</code> answers the energy question. <code>!locked</code> means the door is not locked. The final expression needs all three conditions to be true.</p>
 <p>When mixing OR and AND, parentheses or named intermediate results such as trusted help. AND takes priority over OR; parentheses let you choose your own grouping. Write OR with two vertical bars, and AND with two &amp; symbols.</p>
 <h2>Task: find the false permission</h2>
-<p>Open <code>04-decisions/P09_LabPermit.java</code>. Try the outsider's pass STAR and energy 9. The program grants access even though that pass does not belong to the laboratory.</p>
+<p>Open <code>04-decisions/P09_Task_LabPermit.java</code>. Try the outsider's pass STAR and energy 9. The program grants access even though that pass does not belong to the laboratory.</p>
 <p><strong>Fix the rules: BLUE or GOLD is valid, energy must be at least 3, and locked must be false. All three requirements apply at the same time.</strong> The result stays as one Access message.</p>
 <div class="table-wrap"><table><thead><tr><th>Badge</th><th>Energy</th><th>locked</th><th>Access</th></tr></thead><tbody>
 <tr><td>BLUE</td><td>3</td><td>false</td><td>true</td></tr>
@@ -53,8 +56,8 @@ IO.println(exact);
 <p>It prints false. With pieces equal to 3, the result is true; with 5, it is false. Reversing the two questions would start with invalid division when the value is zero. Order can protect the next calculation.</p>
 <h2>Hack a lock or fix a judge</h2>
 <ul>
-<li><code>04-decisions/P10_Codebreaker.java</code>: add a service code as the task describes. An ordinary correct guess must still work, and other wrong guesses must stay wrong. Find the question that decides victory; keep the supplied four-digit validation.</li>
-<li><code>04-decisions/P11_PokerDice.java</code>: a full house needs both a triple and a pair. The supplied action receives two numbers: <code>largestGroup</code> is the size of the largest group of matching dice, and <code>pairs</code> is the number of groups containing exactly two dice. Use these numbers to create two boolean results and a combined verdict. A triple on its own should remain a lower-scoring win. Scoring help in the window explains the game rules.</li>
+<li><code>04-decisions/P10_Task_Codebreaker.java</code>: add a service code as the task describes. An ordinary correct guess must still work, and other wrong guesses must stay wrong. Find the question that decides victory; keep the supplied four-digit validation.</li>
+<li><code>04-decisions/P11_Task_PokerDice.java</code>: a full house needs both a triple and a pair. The supplied action receives two numbers: <code>largestGroup</code> is the size of the largest group of matching dice, and <code>pairs</code> is the number of groups containing exactly two dice. Use these numbers to create two boolean results and a combined verdict. A triple on its own should remain a lower-scoring win. Scoring help in the window explains the game rules.</li>
 </ul>
 <p>Both tasks are checked by <code>04-decisions/Check.java</code>. In Program Arguments, select the file you are working on.</p>
 <p><strong>You can now build a rule from several questions and find a case that the wrong operator accidentally lets through.</strong></p>

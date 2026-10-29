@@ -9,12 +9,15 @@
 <h1>8.3 Ask the neighbouring cells</h1>
 <p>A sensor does not need to read the whole map: it cares about the immediate area around a selected place. First, you must define the neighbourhood. Do diagonal corners count? Does the cell itself count?</p>
 <h2>A small traversal around the centre</h2>
-<p>Open <code>08-grids/P10_NeighbourScan.java</code>. One means an active cell. Select the centre, 1, 1.</p>
-<pre><code class="language-java" data-source="P10_NeighbourScan.java">void main() {
+<p>Open <code>08-grids/P10_Example_NeighbourScan.java</code>. One means an active cell. Select the centre, 1, 1.</p>
+<pre><code class="language-java" data-source="P10_Example_NeighbourScan.java">/// # Worked example · 8.3 Ask the neighbouring cells
+/// Lesson: 03-neighbours.html
+
+void main() {
     int[][] board = {{0, 1, 0}, {1, 1, 1}, {0, 1, 0}};
-    int x = Integer.parseInt(IO.readln(&quot;X: &quot;).strip());
-    int y = Integer.parseInt(IO.readln(&quot;Y: &quot;).strip());
-    IO.println(&quot;Neighbours: &quot; + neighbours(board, x, y));
+    int x = Integer.parseInt(IO.readln("X: ").strip());
+    int y = Integer.parseInt(IO.readln("Y: ").strip());
+    IO.println("Neighbours: " + neighbours(board, x, y));
 }
 
 int neighbours(int[][] board, int x, int y) {
@@ -42,19 +45,19 @@ boolean inside(int[][] board, int x, int y) {
 <p>A neighbour's coordinates come from adding an offset to the centre. Before using them, we call inside. Because of AND, the cell is not read if its place is outside the map. A neighbour beyond an edge therefore does not count and does not wrap to the opposite side.</p>
 <details><summary>Prediction: the centre and top-left corner</summary><p>The centre has four active neighbours; its own one does not count. Corner 0, 0 has three: right, below, and diagonally down-right.</p></details>
 <h2>Task: the sensor sees only four directions</h2>
-<p>Open <code>08-grids/P11_CardinalSensors.java</code>. Complete cardinal to count ones only to the left, right, above and below the place. Exclude diagonals and the cell itself. The supplied isOn also returns false outside the map.</p>
+<p>Open <code>08-grids/P11_Task_CardinalSensors.java</code>. Complete cardinal to count ones only to the left, right, above and below the place. Exclude diagonals and the cell itself. The supplied isOn also returns false outside the map.</p>
 <p>Enter x and y from 0 to 2. For 1, 1, expect Neighbours: 2. For 0, 0, the answer is 1; for 2, 0, it is 2; for 0, 2, it is 0. These cases distinguish directions, a corner, and an empty neighbourhood.</p>
 <details><summary>Hint 1: draw four candidates</summary><p>Write four coordinate pairs around the centre. Each candidate changes exactly one coordinate by one.</p></details>
 <details><summary>Hint 2: safe questions</summary><p>Each true answer from isOn adds one to the result. The helper already handles edges; you do not need four copies of its internal rule.</p></details>
 <p>Next, you will use row and column traversal to create a new pattern rather than only read prepared data.</p>
 <details><summary>Four ports in one number</summary><p>Net stores north, east, south and west as flags with values 1, 2, 4 and 8. The number 5 means north and south because it contains 1 + 4. The expression <code>1 &lt;&lt; direction</code> creates a mask for direction 0 to 3. <code>(ports &amp; mask) != 0</code> then tests whether that port is present. A single &amp; compares integer bits; double &amp;&amp; combines boolean conditions. These forms are not interchangeable.</p><p>For a link, check both ends: the opposite direction is <code>(direction + 2) % 4</code>. Validate neighbour coordinates before reading its ports. Searching the whole network is supplied; your judge decides one local connection.</p></details>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>Hexapawn</strong> · <code>08-grids/P12_Hexapawn.java</code><br>Give both Hexapawn armies their direction and goal row. GoalRow and forwardStep return facts; the supplied game performs the moves.</li>
-<li><strong>FourColourMap</strong> · <code>08-grids/P13_FourColourMap.java</code><br>FourColourMap should read adjacency from map rather than a fixed border table. Sides count, corners do not; a long border still forms one pair.</li>
-<li><strong>Minesweeper</strong> · <code>08-grids/P14_Minesweeper.java</code><br>Build Minesweeper&#x27;s inspection lens for a 3×3 neighbourhood including its centre. Clip the edges and preserve normal reveal, flags and round progress.</li>
-<li><strong>Net</strong> · <code>08-grids/P15_Net.java</code><br>Build Net&#x27;s linked rule: the neighbour must exist and both touching ports must agree. Merely touching a blank edge does not create a wire.</li>
-<li><strong>BlackBox</strong> · <code>08-grids/P16_BlackBox.java</code><br>BlackBox examines one side of the ray twice. Repair the second side neighbour in trace and compare mirrored situations.</li>
-<li><strong>AntHighway</strong> · <code>08-grids/P17_AntHighway.java</code><br>Repair AntHighway&#x27;s westward offset, which currently moves east. Turning, repainting and edge wrapping already work.</li>
+<li><strong>Hexapawn</strong> · <code>08-grids/P12_Task_Hexapawn.java</code><br>Give both Hexapawn armies their direction and goal row. GoalRow and forwardStep return facts; the supplied game performs the moves.</li>
+<li><strong>FourColourMap</strong> · <code>08-grids/P13_Task_FourColourMap.java</code><br>FourColourMap should read adjacency from map rather than a fixed border table. Sides count, corners do not; a long border still forms one pair.</li>
+<li><strong>Minesweeper</strong> · <code>08-grids/P14_Task_Minesweeper.java</code><br>Build Minesweeper&#x27;s inspection lens for a 3×3 neighbourhood including its centre. Clip the edges and preserve normal reveal, flags and round progress.</li>
+<li><strong>Net</strong> · <code>08-grids/P15_Task_Net.java</code><br>Build Net&#x27;s linked rule: the neighbour must exist and both touching ports must agree. Merely touching a blank edge does not create a wire.</li>
+<li><strong>BlackBox</strong> · <code>08-grids/P16_Task_BlackBox.java</code><br>BlackBox examines one side of the ray twice. Repair the second side neighbour in trace and compare mirrored situations.</li>
+<li><strong>AntHighway</strong> · <code>08-grids/P17_Task_AntHighway.java</code><br>Repair AntHighway&#x27;s westward offset, which currently moves east. Turning, repainting and edge wrapping already work.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="02-bounds.html">← 8.2 Check the boundary first</a><a class="next" href="04-patterns.html">8.4 Make a pattern from coordinates →</a></nav>

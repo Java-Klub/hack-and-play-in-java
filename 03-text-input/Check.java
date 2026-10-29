@@ -3,148 +3,174 @@ import java.util.*;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-/// Chapter checks: java Check.java
-/// One game: java Check.java P07_TypeMelody.java
-/// Tests call compact programs through reflection in this JVM.
+/// Game task checks for this chapter. Run short textbook tasks directly.
 class Check {
     int failed;
     int checked;
     String selected;
+    final ArrayList<String> available = new ArrayList<>();
     interface Test { void run() throws Exception; }
 
     void main(String[] args) {
         System.setProperty("java.awt.headless", "true");
-        if (args.length > 1) throw new IllegalArgumentException("Use: java Check.java [game filename]");
+        if (args.length > 1) {
+            IO.println("Supply at most one game filename. With no argument, all game tasks in this chapter are checked.");
+            System.exit(2);
+        }
         selected = args.length == 0 ? "" : Path.of(args[0]).getFileName().toString().replaceFirst("\\.java$", "");
-        run("P07_TypeMelody", "03.07 TypeMelody · F02", () -> P07_TypeMelodyTest.main(new String[0]));
-        run("P08_BitmapBanner", "03.08 BitmapBanner · F02", () -> P08_BitmapBannerTest.main(new String[0]));
-        run("P09_ProgramMirror", "03.09 ProgramMirror · F02", () -> P09_ProgramMirrorTest.main(new String[0]));
-        run("P10_MadLibsStoryMachine", "03.10 MadLibsStoryMachine · F05", () -> P10_MadLibsStoryMachineTest.main(new String[0]));
-        run("P11_AnagramRounds", "03.11 AnagramRounds · F05", () -> P11_AnagramRoundsTest.main(new String[0]));
-        if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " mission goals remaining.");
+        run("P07_Task_TypeMelody", () -> P07_Task_TypeMelodyTest.main(new String[0]));
+        run("P08_Task_BitmapBanner", () -> P08_Task_BitmapBannerTest.main(new String[0]));
+        run("P09_Task_ProgramMirror", () -> P09_Task_ProgramMirrorTest.main(new String[0]));
+        run("P10_Task_MadLibsStoryMachine", () -> P10_Task_MadLibsStoryMachineTest.main(new String[0]));
+        run("P11_Task_AnagramRounds", () -> P11_Task_AnagramRoundsTest.main(new String[0]));
+        if (checked == 0) {
+            IO.println("No game check is prepared here for this file: " + selected + ".java");
+            IO.println("Choose one of these files: " + String.join(", ", available));
+            System.exit(2);
+        }
+        IO.println("Checked: " + checked + "; complete: " + (checked - failed) + "; remaining: " + failed);
         if (failed > 0) System.exit(1);
     }
 
-    void run(String game, String label, Test test) {
+    void run(String game, Test test) {
+        available.add(game + ".java");
         if (!selected.isEmpty() && !selected.equals(game)) return;
         checked++;
         try {
             test.run();
-            IO.println("GREEN " + label);
+            IO.println("GREEN " + game + ".java");
         } catch (Throwable failure) {
             failed++;
-            IO.println("RED " + label + ": " + failure.getMessage());
+            IO.println("RED " + game + ".java");
+            String reason = failure.getMessage();
+            if (reason == null || reason.isBlank()) reason = "The check did not get the expected result.";
+            if (!(failure instanceof AssertionError)) reason = "The program stopped during the check: " + failure.getClass().getSimpleName() + ": " + reason;
+            IO.println("  " + reason.replace("\n", "\n  "));
+            Throwable cause = failure;
+            while (cause.getCause() != null && cause.getCause() != cause) cause = cause.getCause();
+            if (cause != failure) IO.println("  " + cause.getClass().getSimpleName() + ": " + show(cause.getMessage()));
+            for (var frame : cause.getStackTrace()) {
+                if (frame.getClassName().equals(game) || frame.getClassName().startsWith(game + "$")) {
+                    IO.println("  " + "Location in the program: " + frame.getFileName() + ":" + frame.getLineNumber());
+                    break;
+                }
+            }
         }
+    }
+
+    static String show(Object value) {
+        if (value != null && value.getClass().isArray()) {
+            int length = java.lang.reflect.Array.getLength(value);
+            var parts = new ArrayList<String>();
+            for (int i = 0; i < Math.min(length, 8); i++) parts.add(show(java.lang.reflect.Array.get(value, i)));
+            return parts + (length > 8 ? " … (" + length + " items" + ")" : "");
+        }
+        String text = String.valueOf(value).replace("\n", "\\n").replace("\r", "\\r");
+        return text.length() <= 180 ? text : text.substring(0, 177) + "…";
     }
 }
 
 @SuppressWarnings("unchecked")
-class P07_TypeMelodyTest {
+class P07_Task_TypeMelodyTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("03.07 F02: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P07_TypeMelody");
-        check(((java.lang.String) Reflect.call(game, "defaultMessage")).equals("JAVA"), "the opening melody must use the literal JAVA");
+        var game = Reflect.create("P07_Task_TypeMelody");
+        check(((java.lang.String) Reflect.call(game, "defaultMessage")).equals("JAVA"), "defaultMessage must return exactly JAVA. Check the characters between the quotation marks.");
         byte[] audio = ((byte[]) Reflect.call(game, "synthesize", ((java.lang.String) Reflect.call(game, "defaultMessage")), 42));
         boolean audible = false;
         for (byte sample : audio) {
             audible |= sample != 0;
         }
-        check(audible, "letters generate actual non-silent audio samples");
-        check(audio.length == 4 * 2205 * 2, "four characters retain four time slots");
-        System.out.println("PASS " + checks + " checks");
+        check(audible, "synthesize produced only silence for JAVA. Preserve the supplied conversion of letters into notes.");
+        check(audio.length == 4 * 2205 * 2, "JAVA must produce four equal note slots. Keep the supplied timing for all four characters.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P08_BitmapBannerTest {
+class P08_Task_BitmapBannerTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("03.08 F02: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P08_BitmapBanner");
-        check(((java.lang.String) Reflect.call(game, "bannerMessage")).equals("JAVA CLUB!"), "the default banner must say JAVA CLUB!");
+        var game = Reflect.create("P08_Task_BitmapBanner");
+        check(((java.lang.String) Reflect.call(game, "bannerMessage")).equals("JAVA CLUB!"), "bannerMessage must return exactly JAVA CLUB!, including the space and exclamation mark.");
         String pixels = ((java.lang.String) Reflect.call(game, "banner", ((java.lang.String) Reflect.call(game, "bannerMessage")), '#'));
-        check(pixels.contains("#") && pixels.lines().count() == 5, "the message produces five visible pixel rows");
-        System.out.println("PASS " + checks + " checks");
+        check(pixels.contains("#") && pixels.lines().count() == 5, "banner must draw the message in five rows containing # marks. Preserve the supplied letter drawing.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P09_ProgramMirrorTest {
+class P09_Task_ProgramMirrorTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("03.09 F02: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P09_ProgramMirror");
-        check(((java.lang.String) Reflect.call(game, "templateLine")).equals("IO.println(\"HELLO\");"), "the printed statement needs literal quotation marks around HELLO");
-        check(!((java.lang.String) Reflect.call(game, "templateLine")).equals("HELLO"), "the template is a printed Java statement, not its output");
-        System.out.println("PASS " + checks + " checks");
+        var game = Reflect.create("P09_Task_ProgramMirror");
+        check(((java.lang.String) Reflect.call(game, "templateLine")).equals("IO.println(\"HELLO\");"), "The line from templateLine is missing quotation marks around HELLO. Check the text that the program prints.");
+        check(!((java.lang.String) Reflect.call(game, "templateLine")).equals("HELLO"), "templateLine must return the Java statement to print, rather than only the greeting HELLO.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P10_MadLibsStoryMachineTest {
+class P10_Task_MadLibsStoryMachineTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("03.10 F05: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P10_MadLibsStoryMachine");
-        check(((java.lang.String) Reflect.call(game, "cleanWord", "  Red Fox  ")).equals("Red Fox"), "edge spaces must disappear while a multiword name stays whole");
-        check(((java.lang.String) Reflect.call(game, "cleanWord", "New   Moon")).equals("New   Moon"), "internal spacing is not silently rewritten");
+        var game = Reflect.create("P10_Task_MadLibsStoryMachine");
+        check(((java.lang.String) Reflect.call(game, "cleanWord", "  Red Fox  ")).equals("Red Fox"), "cleanWord must turn the input with spaces around Red Fox into Red Fox, keeping both words.");
+        check(((java.lang.String) Reflect.call(game, "cleanWord", "New   Moon")).equals("New   Moon"), "cleanWord changed the spaces inside New   Moon. Remove only the spaces at the edges.");
         String story = ((java.lang.String) Reflect.call(game, "story", "  Red Fox  ", " robot ", " Moon Base ", " spoon "));
-        check(story.startsWith("Red Fox hired a robot to guard Moon Base."), "the actual story uses cleaned full inputs");
-        check(((String) Reflect.call(game, "headline", "  Red Fox  ")).equals("Report from Red Fox:"), "the title must use the cleaned name");
-        check(((String) Reflect.call(game, "headline", "Ada")).equals("Report from Ada:"), "another name needs its own title");
-        System.out.println("PASS " + checks + " checks");
+        check(story.startsWith("Red Fox hired a robot to guard Moon Base."), "The story should begin Red Fox hired a robot to guard Moon Base. Keep all input phrases and clean their edges.");
+        check(((String) Reflect.call(game, "headline", "  Red Fox  ")).equals("Report from Red Fox:"), "headline for a name with spaces around Red Fox must return \"Report from Red Fox:\". Use the cleaned name in the title.");
+        check(((String) Reflect.call(game, "headline", "Ada")).equals("Report from Ada:"), "headline(\"Ada\") must return \"Report from Ada:\". Build the title from its argument.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P11_AnagramRoundsTest {
+class P11_Task_AnagramRoundsTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("03.11 F05: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P11_AnagramRounds");
-        check(((java.lang.String) Reflect.call(game, "normalize", "  silent  ")).equals("SILENT"), "a whole lower-case answer must become the accepted upper-case word");
-        check(((java.lang.String) Reflect.call(game, "normalize", "LiStEn")).equals("LISTEN"), "mixed case is normalized");
+        var game = Reflect.create("P11_Task_AnagramRounds");
+        check(((java.lang.String) Reflect.call(game, "normalize", "  silent  ")).equals("SILENT"), "normalize must turn silent with surrounding spaces into SILENT. Keep edge cleaning and convert the letter case.");
+        check(((java.lang.String) Reflect.call(game, "normalize", "LiStEn")).equals("LISTEN"), "normalize(\"LiStEn\") must return LISTEN. Mixed-case answers need the same treatment.");
         Reflect.call(game, "reset");
         Reflect.call(game, "command", " silent ");
-        check(((int) Reflect.get(game, "score")) == 1 && ((int) Reflect.get(game, "round")) == 1, "the real anagram round accepts the normalized answer");
-        System.out.println("PASS " + checks + " checks");
+        check(((int) Reflect.get(game, "score")) == 1 && ((int) Reflect.get(game, "round")) == 1, "The opening round must accept silent with surrounding spaces, award one point and advance one round. Keep command using normalize.");
     }
 }
 

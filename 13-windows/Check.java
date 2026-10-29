@@ -7,91 +7,121 @@ import java.io.*;
 import java.awt.Point;
 import javax.imageio.ImageIO;
 
-/// Chapter checks: java Check.java
-/// One game: java Check.java P03_PixelMonsters.java
-/// Tests call compact programs through reflection in this JVM.
+/// Game task checks for this chapter. Run short textbook tasks directly.
 class Check {
     int failed;
     int checked;
     String selected;
+    final ArrayList<String> available = new ArrayList<>();
     interface Test { void run() throws Exception; }
 
     void main(String[] args) {
         System.setProperty("java.awt.headless", "true");
-        if (args.length > 1) throw new IllegalArgumentException("Use: java Check.java [game filename]");
+        if (args.length > 1) {
+            IO.println("Supply at most one game filename. With no argument, all game tasks in this chapter are checked.");
+            System.exit(2);
+        }
         selected = args.length == 0 ? "" : Path.of(args[0]).getFileName().toString().replaceFirst("\\.java$", "");
-        run("P03_PixelMonsters", "13.03 PixelMonsters · F03", () -> P03_PixelMonstersTest.main(new String[0]));
-        run("P04_Untangle", "13.04 Untangle · F29", () -> P04_UntangleTest.main(new String[0]));
-        run("P05_MirrorArt", "13.05 MirrorArt · F29", () -> P05_MirrorArtTest.main(new String[0]));
-        run("P06_Moire", "13.06 Moire · F29", () -> P06_MoireTest.main(new String[0]));
-        run("P07_StarTunnel", "13.07 StarTunnel · F29", () -> P07_StarTunnelTest.main(new String[0]));
-        run("P10_CrossingRush", "13.10 CrossingRush · F25", () -> P10_CrossingRushTest.main(new String[0]));
-        run("P11_Snake", "13.11 Snake · F30", () -> P11_SnakeTest.main(new String[0]));
-        run("P14_MiniInvaders", "13.14 MiniInvaders · F25", () -> P14_MiniInvadersTest.main(new String[0]));
-        run("P15_SoftLanding", "13.15 SoftLanding · F25", () -> P15_SoftLandingTest.main(new String[0]));
-        run("P16_AsteroidDrift", "13.16 AsteroidDrift · F28", () -> P16_AsteroidDriftTest.main(new String[0]));
-        run("P17_FireworkPainter", "13.17 FireworkPainter · F28", () -> P17_FireworkPainterTest.main(new String[0]));
-        run("P18_ShadowPlayground", "13.18 ShadowPlayground · F28", () -> P18_ShadowPlaygroundTest.main(new String[0]));
-        run("P21_TiltTray", "13.21 TiltTray · F25", () -> P21_TiltTrayTest.main(new String[0]));
-        run("P22_PlatformDash", "13.22 PlatformDash · F25", () -> P22_PlatformDashTest.main(new String[0]));
-        run("P23_Pong", "13.23 Pong · F30", () -> P23_PongTest.main(new String[0]));
-        run("P24_OrbitPainter", "13.24 OrbitPainter · F30", () -> P24_OrbitPainterTest.main(new String[0]));
-        run("P25_PendulumWaves", "13.25 PendulumWaves · F30", () -> P25_PendulumWavesTest.main(new String[0]));
-        run("P28_SpringToy", "13.28 SpringToy · F29", () -> P28_SpringToyTest.main(new String[0]));
-        run("P29_Breakout", "13.29 Breakout · F30", () -> P29_BreakoutTest.main(new String[0]));
-        run("P30_RippleTank", "13.30 RippleTank · F30", () -> P30_RippleTankTest.main(new String[0]));
-        run("P31_PictureMusic", "13.31 PictureMusic · F36", () -> P31_PictureMusicTest.main(new String[0]));
-        run("P32_SecretBeeps", "13.32 SecretBeeps · F36", () -> P32_SecretBeepsTest.main(new String[0]));
-        if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " mission goals remaining.");
+        run("P03_Task_PixelMonsters", () -> P03_Task_PixelMonstersTest.main(new String[0]));
+        run("P04_Task_Untangle", () -> P04_Task_UntangleTest.main(new String[0]));
+        run("P05_Task_MirrorArt", () -> P05_Task_MirrorArtTest.main(new String[0]));
+        run("P06_Task_Moire", () -> P06_Task_MoireTest.main(new String[0]));
+        run("P07_Task_StarTunnel", () -> P07_Task_StarTunnelTest.main(new String[0]));
+        run("P10_Task_CrossingRush", () -> P10_Task_CrossingRushTest.main(new String[0]));
+        run("P11_Task_Snake", () -> P11_Task_SnakeTest.main(new String[0]));
+        run("P14_Task_MiniInvaders", () -> P14_Task_MiniInvadersTest.main(new String[0]));
+        run("P15_Task_SoftLanding", () -> P15_Task_SoftLandingTest.main(new String[0]));
+        run("P16_Task_AsteroidDrift", () -> P16_Task_AsteroidDriftTest.main(new String[0]));
+        run("P17_Task_FireworkPainter", () -> P17_Task_FireworkPainterTest.main(new String[0]));
+        run("P18_Task_ShadowPlayground", () -> P18_Task_ShadowPlaygroundTest.main(new String[0]));
+        run("P21_Task_TiltTray", () -> P21_Task_TiltTrayTest.main(new String[0]));
+        run("P22_Task_PlatformDash", () -> P22_Task_PlatformDashTest.main(new String[0]));
+        run("P23_Task_Pong", () -> P23_Task_PongTest.main(new String[0]));
+        run("P24_Task_OrbitPainter", () -> P24_Task_OrbitPainterTest.main(new String[0]));
+        run("P25_Task_PendulumWaves", () -> P25_Task_PendulumWavesTest.main(new String[0]));
+        run("P28_Task_SpringToy", () -> P28_Task_SpringToyTest.main(new String[0]));
+        run("P29_Task_Breakout", () -> P29_Task_BreakoutTest.main(new String[0]));
+        run("P30_Task_RippleTank", () -> P30_Task_RippleTankTest.main(new String[0]));
+        run("P31_Task_PictureMusic", () -> P31_Task_PictureMusicTest.main(new String[0]));
+        run("P32_Task_SecretBeeps", () -> P32_Task_SecretBeepsTest.main(new String[0]));
+        if (checked == 0) {
+            IO.println("No game check is prepared here for this file: " + selected + ".java");
+            IO.println("Choose one of these files: " + String.join(", ", available));
+            System.exit(2);
+        }
+        IO.println("Checked: " + checked + "; complete: " + (checked - failed) + "; remaining: " + failed);
         if (failed > 0) System.exit(1);
     }
 
-    void run(String game, String label, Test test) {
+    void run(String game, Test test) {
+        available.add(game + ".java");
         if (!selected.isEmpty() && !selected.equals(game)) return;
         checked++;
         try {
             test.run();
-            IO.println("GREEN " + label);
+            IO.println("GREEN " + game + ".java");
         } catch (Throwable failure) {
             failed++;
-            IO.println("RED " + label + ": " + failure.getMessage());
+            IO.println("RED " + game + ".java");
+            String reason = failure.getMessage();
+            if (reason == null || reason.isBlank()) reason = "The check did not get the expected result.";
+            if (!(failure instanceof AssertionError)) reason = "The program stopped during the check: " + failure.getClass().getSimpleName() + ": " + reason;
+            IO.println("  " + reason.replace("\n", "\n  "));
+            Throwable cause = failure;
+            while (cause.getCause() != null && cause.getCause() != cause) cause = cause.getCause();
+            if (cause != failure) IO.println("  " + cause.getClass().getSimpleName() + ": " + show(cause.getMessage()));
+            for (var frame : cause.getStackTrace()) {
+                if (frame.getClassName().equals(game) || frame.getClassName().startsWith(game + "$")) {
+                    IO.println("  " + "Location in the program: " + frame.getFileName() + ":" + frame.getLineNumber());
+                    break;
+                }
+            }
         }
+    }
+
+    static String show(Object value) {
+        if (value != null && value.getClass().isArray()) {
+            int length = java.lang.reflect.Array.getLength(value);
+            var parts = new ArrayList<String>();
+            for (int i = 0; i < Math.min(length, 8); i++) parts.add(show(java.lang.reflect.Array.get(value, i)));
+            return parts + (length > 8 ? " … (" + length + " items" + ")" : "");
+        }
+        String text = String.valueOf(value).replace("\n", "\\n").replace("\r", "\\r");
+        return text.length() <= 180 ? text : text.substring(0, 177) + "…";
     }
 }
 
 @SuppressWarnings("unchecked")
-class P03_PixelMonstersTest {
+class P03_Task_PixelMonstersTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("13.03 F03: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P03_PixelMonsters");
+        var game = Reflect.create("P03_Task_PixelMonsters");
         var image = ((java.awt.image.BufferedImage) Reflect.call(game, "render", 42));
-        check(image.getRGB(5 * 16 + 8, 5 * 16 + 8) == Color.WHITE.getRGB(), "left eye must read the shared white eyeColour");
-        check(image.getRGB(10 * 16 + 8, 5 * 16 + 8) == Color.WHITE.getRGB(), "right eye must read that same white eyeColour");
-        check(((int) Reflect.get(game, "eyeColour")) == Color.WHITE.getRGB(), "one named value controls both eyes");
-        System.out.println("PASS " + checks + " checks");
+        check(image.getRGB(5 * 16 + 8, 5 * 16 + 8) == Color.WHITE.getRGB(), "The left eye is not white. render must use the shared eyeColour value for that eye.");
+        check(image.getRGB(10 * 16 + 8, 5 * 16 + 8) == Color.WHITE.getRGB(), "The right eye is not white. Both eye positions must use the same eyeColour value.");
+        check(((int) Reflect.get(game, "eyeColour")) == Color.WHITE.getRGB(), "Set the shared eyeColour value to white so both eyes change together; do not repaint just one eye separately.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P04_UntangleTest {
+class P04_Task_UntangleTest {
     static int checks;
     static final String[] CASES = {
-        "An asymmetric point draws a correctly centred node.",
-        "Drawing does not change Point/model values.",
-        "The real full scene uses the repaired helper."
+        "drawNode must centre the node at the supplied Point. For Point(120,70), the node should cover pixel (128,70); check x and y roles.",
+        "Drawing a node changed its Point. drawNode and draw must read positions without moving the model.",
+        "The full-scene draw must use the repaired node coordinates too. A node at (80,90) should remain centred there."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 13.04: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -100,7 +130,7 @@ class P04_UntangleTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -110,7 +140,7 @@ class P04_UntangleTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -127,7 +157,7 @@ class P04_UntangleTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P04_Untangle");
+            var p = Reflect.create("P04_Task_Untangle");
             Reflect.call(p, "restart");var point=new Point(120,70);var image=draw(g->Reflect.call(p, "drawNode", g, point, 3),600,420);
             check((image.getRGB(128,70)&0xFFFFFF)==0x23375A,0,Integer.toHexString(image.getRGB(128,70)));
             check(point.equals(new Point(120,70)),1,point);
@@ -137,23 +167,22 @@ class P04_UntangleTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 13.04: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P05_MirrorArtTest {
+class P05_Task_MirrorArtTest {
     static int checks;
     static final String[] CASES = {
-        "The normal asymmetric point has the specified screen position.",
-        "Centre/rotation or near-depth boundary stays correct.",
-        "The real drawing uses the transform and preserves model state."
+        "transform must leave the drawing centre (320,220) fixed.",
+        "With four axes, one sector must rotate (350,220) to (320,250). Reflection must turn (320,250) into (320,190).",
+        "stroke must use transform to add visible ink to the canvas. The transformed drawing should not leave the canvas unchanged."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 13.05: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -162,7 +191,7 @@ class P05_MirrorArtTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -172,7 +201,7 @@ class P05_MirrorArtTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -189,28 +218,27 @@ class P05_MirrorArtTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P05_MirrorArt");
+            var p = Reflect.create("P05_Task_MirrorArt");
             Reflect.call(p, "restart");var c=((java.awt.geom.Point2D.Double) Reflect.call(p, "transform", 320, 220, 0, false));check(c.distance(320,220)<1e-9,0,c);Reflect.set(p, "axes", 4);var q=((java.awt.geom.Point2D.Double) Reflect.call(p, "transform", 350, 220, 1, false));check(q.distance(320,250)<1e-9,1,q);var r=((java.awt.geom.Point2D.Double) Reflect.call(p, "transform", 320, 250, 0, true));check(r.distance(320,190)<1e-9,1,r);long before=hash(((java.awt.image.BufferedImage) Reflect.get(p, "canvas")));Reflect.call(p, "stroke", 350, 220, 360, 230);check(hash(((java.awt.image.BufferedImage) Reflect.get(p, "canvas")))!=before,2,hash(((java.awt.image.BufferedImage) Reflect.get(p, "canvas"))));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 13.05: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P06_MoireTest {
+class P06_Task_MoireTest {
     static int checks;
     static final String[] CASES = {
-        "The normal asymmetric point has the specified screen position.",
-        "Centre/rotation or near-depth boundary stays correct.",
-        "The real drawing uses the transform and preserves model state."
+        "gridPoint(0,0,0) must return the screen centre (320,220). Check the translation from grid coordinates to screen coordinates.",
+        "gridPoint(1,0,Math.PI/2) must return (320,242), one spacing below the centre after a quarter-turn.",
+        "draw must preserve angle and produce identical pixels on repeated calls. Repainting must not rotate the model."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 13.06: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -219,7 +247,7 @@ class P06_MoireTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -229,7 +257,7 @@ class P06_MoireTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -246,28 +274,27 @@ class P06_MoireTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P06_Moire");
+            var p = Reflect.create("P06_Task_Moire");
             Reflect.call(p, "restart");var c=((java.awt.geom.Point2D.Double) Reflect.call(p, "gridPoint", 0, 0, 0));check(c.distance(320,220)<1e-9,0,c);var q=((java.awt.geom.Point2D.Double) Reflect.call(p, "gridPoint", 1, 0, Math.PI/2));check(q.distance(320,242)<1e-8,1,q);double old=((double) Reflect.get(p, "angle"));var a=draw(((java.util.function.Consumer<java.awt.Graphics2D>) ((value0) -> { Reflect.call(p, "draw", value0); })),((int) Reflect.get(p, "WIDTH")),((int) Reflect.get(p, "HEIGHT")));var b=draw(((java.util.function.Consumer<java.awt.Graphics2D>) ((value0) -> { Reflect.call(p, "draw", value0); })),((int) Reflect.get(p, "WIDTH")),((int) Reflect.get(p, "HEIGHT")));check(((double) Reflect.get(p, "angle"))==old&&hash(a)==hash(b),2,((double) Reflect.get(p, "angle")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 13.06: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P07_StarTunnelTest {
+class P07_Task_StarTunnelTest {
     static int checks;
     static final String[] CASES = {
-        "The normal asymmetric point has the specified screen position.",
-        "Centre/rotation or near-depth boundary stays correct.",
-        "The real drawing uses the transform and preserves model state."
+        "project for Star(10,20,100) at depth 100 must place the point 26 pixels right and 52 down from the screen centre.",
+        "project must clamp a depth of zero before dividing. The test star should then be offset by (520,1040) from the centre.",
+        "draw changed the stored stars. Project and paint them without changing their model values or their order."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 13.07: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -276,7 +303,7 @@ class P07_StarTunnelTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -286,7 +313,7 @@ class P07_StarTunnelTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -303,19 +330,18 @@ class P07_StarTunnelTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P07_StarTunnel");
-            Reflect.call(p, "restart");var star=Reflect.create("P07_StarTunnel$Star", 10, 20, 100);var q=((java.awt.geom.Point2D.Double) Reflect.call(p, "project", star, 100));check(q.distance(((double) Reflect.get(p, "centreX"))+26,((double) Reflect.get(p, "centreY"))+52)<1e-9,0,q);var near=((java.awt.geom.Point2D.Double) Reflect.call(p, "project", star, 0));check(near.distance(((double) Reflect.get(p, "centreX"))+520,((double) Reflect.get(p, "centreY"))+1040)<1e-9,1,near);var before=List.copyOf(((java.util.ArrayList<Object>) Reflect.get(p, "stars")));draw(((java.util.function.Consumer<java.awt.Graphics2D>) ((value0) -> { Reflect.call(p, "draw", value0); })),((int) Reflect.get(p, "WIDTH")),((int) Reflect.get(p, "HEIGHT")));check(((java.util.ArrayList<Object>) Reflect.get(p, "stars")).equals(before),2,((java.util.ArrayList<Object>) Reflect.get(p, "stars")).size());
+            var p = Reflect.create("P07_Task_StarTunnel");
+            Reflect.call(p, "restart");var star=Reflect.create("P07_Task_StarTunnel$Star", 10, 20, 100);var q=((java.awt.geom.Point2D.Double) Reflect.call(p, "project", star, 100));check(q.distance(((double) Reflect.get(p, "centreX"))+26,((double) Reflect.get(p, "centreY"))+52)<1e-9,0,q);var near=((java.awt.geom.Point2D.Double) Reflect.call(p, "project", star, 0));check(near.distance(((double) Reflect.get(p, "centreX"))+520,((double) Reflect.get(p, "centreY"))+1040)<1e-9,1,near);var before=List.copyOf(((java.util.ArrayList<Object>) Reflect.get(p, "stars")));draw(((java.util.function.Consumer<java.awt.Graphics2D>) ((value0) -> { Reflect.call(p, "draw", value0); })),((int) Reflect.get(p, "WIDTH")),((int) Reflect.get(p, "HEIGHT")));check(((java.util.ArrayList<Object>) Reflect.get(p, "stars")).equals(before),2,((java.util.ArrayList<Object>) Reflect.get(p, "stars")).size());
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 13.07: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P10_CrossingRushTest {
+class P10_Task_CrossingRushTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -325,37 +351,36 @@ class P10_CrossingRushTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P10_CrossingRush");
+        var g = Reflect.create("P10_Task_CrossingRush");
         Reflect.call(g, "restart");
         Reflect.call(g, "hop", -1000, 0);
-        equal(12, ((int) Reflect.get(g, "x")), "13.10/F25: whole player remains inside left boundary");
+        equal(12, ((int) Reflect.get(g, "x")), "After a large left hop, the player centre must stop at x=12 so the whole player stays on the road.");
         Reflect.call(g, "hop", 1000, 0);
-        equal(588, ((int) Reflect.get(g, "x")), "13.10/F25: whole player remains inside right boundary");
+        equal(588, ((int) Reflect.get(g, "x")), "After a large right hop, the player centre must stop at x=588 so its right edge stays inside the road.");
         ((java.util.ArrayList<Object>) Reflect.get(g, "cars")).clear();
         Reflect.call(g, "hop", 0, -500);
-        expect(((boolean) Reflect.get(g, "won")), "13.10/F25: legitimate top goal still wins");
+        expect(((boolean) Reflect.get(g, "won")), "Reaching the top goal without a car collision must still set won. Preserve the successful crossing when repairing hop.");
         int x = ((int) Reflect.get(g, "x"));
         Reflect.call(g, "hop", -30, 0);
-        equal(x, ((int) Reflect.get(g, "x")), "13.10/F25: terminal round does not keep moving");
-        System.out.println("PASS " + checks + " checks");
+        equal(x, ((int) Reflect.get(g, "x")), "hop moved the player after victory. Once the round has ended, later movement requests must leave the position unchanged.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P11_SnakeTest {
+class P11_Task_SnakeTest {
     static int checks;
     static final String[] CASES = {
-        "Paused, queued or normal input respects the stated tick boundary.",
-        "An active tick changes the model exactly once; a finished/paused tick cannot drift.",
-        "Invalid boundaries, restart or input cleanup remain correct."
+        "turn changed the committed direction or moved the head before a tick. Queue the requested turn and leave dx, dy and the body unchanged until step.",
+        "The next step must apply the first queued turn exactly once. A second key before that step must not replace it or move the snake early.",
+        "step must leave a lost snake still. restart must clear the loss and restore score zero."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 13.11: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -364,7 +389,7 @@ class P11_SnakeTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -374,7 +399,7 @@ class P11_SnakeTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -391,29 +416,30 @@ class P11_SnakeTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P11_Snake");
-            Reflect.call(p, "restart");var head=((java.util.List<Object>) Reflect.get(p, "body")).getFirst();int dx=((int) Reflect.get(p, "dx")),dy=((int) Reflect.get(p, "dy"));Reflect.call(p, "turn", 0, -1);check(((int) Reflect.get(p, "dx"))==dx&&((int) Reflect.get(p, "dy"))==dy&&((boolean) Reflect.call(((java.util.List<Object>) Reflect.get(p, "body")).getFirst(), "equals", head)),0,((java.util.List<Object>) Reflect.get(p, "body")).getFirst());Reflect.call(p, "turn", -1, 0);Reflect.call(p, "step");check(((boolean) Reflect.call(((java.util.List<Object>) Reflect.get(p, "body")).getFirst(), "equals", Reflect.create("P11_Snake$Cell", ((int) Reflect.call(head, "x")), ((int) Reflect.call(head, "y"))-1))),1,((java.util.List<Object>) Reflect.get(p, "body")).getFirst());Reflect.set(p, "lost", true);var stopped=List.copyOf(((java.util.List<Object>) Reflect.get(p, "body")));Reflect.call(p, "step");check(((java.util.List<Object>) Reflect.get(p, "body")).equals(stopped),2,((java.util.List<Object>) Reflect.get(p, "body")));Reflect.call(p, "restart");check(!((boolean) Reflect.get(p, "lost"))&&((int) Reflect.get(p, "score"))==0,2,((int) Reflect.get(p, "score")));
+            var p = Reflect.create("P11_Task_Snake");
+            Reflect.call(p, "restart");var head=((java.util.List<Object>) Reflect.get(p, "body")).getFirst();int dx=((int) Reflect.get(p, "dx")),dy=((int) Reflect.get(p, "dy"));Reflect.call(p, "turn", 0, -1);check(((int) Reflect.get(p, "dx"))==dx&&((int) Reflect.get(p, "dy"))==dy&&((boolean) Reflect.call(((java.util.List<Object>) Reflect.get(p, "body")).getFirst(), "equals", head)),0,((java.util.List<Object>) Reflect.get(p, "body")).getFirst());Reflect.call(p, "turn", -1, 0);Reflect.call(p, "step");check(((boolean) Reflect.call(((java.util.List<Object>) Reflect.get(p, "body")).getFirst(), "equals", Reflect.create("P11_Task_Snake$Cell", ((int) Reflect.call(head, "x")), ((int) Reflect.call(head, "y"))-1))),1,((java.util.List<Object>) Reflect.get(p, "body")).getFirst());Reflect.set(p, "lost", true);var stopped=List.copyOf(((java.util.List<Object>) Reflect.get(p, "body")));Reflect.call(p, "step");check(((java.util.List<Object>) Reflect.get(p, "body")).equals(stopped),2,((java.util.List<Object>) Reflect.get(p, "body")));Reflect.call(p, "restart");check(!((boolean) Reflect.get(p, "lost"))&&((int) Reflect.get(p, "score"))==0,2,((int) Reflect.get(p, "score")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 13.11: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P14_MiniInvadersTest {
+class P14_Task_MiniInvadersTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
         if (!correct) throw new AssertionError(message);
     }
     static void equal(Object expected, Object actual, String message) {
-        expect(java.util.Objects.deepEquals(expected, actual), message + " | expected=" + expected + " actual=" + actual);
+        expect(java.util.Objects.deepEquals(expected, actual), message
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P14_MiniInvaders");
+        var g = Reflect.create("P14_Task_MiniInvaders");
         Reflect.call(g, "restart");
         Reflect.set(g, "speedX", 0.0);
         Reflect.set(g, "fire", true);
@@ -422,74 +448,74 @@ class P14_MiniInvadersTest {
         Reflect.set(g, "bulletX", (double) Reflect.get(g, "formationX") + 10);
         Reflect.set(g, "bulletY", (double) Reflect.get(g, "formationY") + 2 * 34 + 17);
         Reflect.call(g, "step");
-        equal(1, Reflect.get(g, "score"), "13.14: first real hit scores once");
-        expect((boolean) Reflect.get(g, "bulletActive"), "13.14: piercing pulse survives its first alien");
+        equal(1, Reflect.get(g, "score"), "The first real collision should remove one alien and add exactly one point. Check the hit handling used by step.");
+        expect((boolean) Reflect.get(g, "bulletActive"), "The piercing pulse disappeared after its first alien. Keep it active until its second valid hit.");
         Reflect.call(g, "hitAlien", 2, 0);
-        equal(1, Reflect.get(g, "score"), "13.14: an already removed alien cannot score again");
+        equal(1, Reflect.get(g, "score"), "hitAlien counted an already removed alien again. Repeated contact with the same empty cell must not add another point.");
         Reflect.set(g, "bulletY", (double) Reflect.get(g, "formationY") + 34 + 17);
         Reflect.call(g, "step");
-        equal(2, Reflect.get(g, "score"), "13.14: the same pulse reaches a second alien");
-        expect(!(boolean) Reflect.get(g, "bulletActive"), "13.14: the two-hit pulse ends after its second hit");
+        equal(2, Reflect.get(g, "score"), "The same pulse should reach a second alien and bring the score to two. Preserve it between those two collisions.");
+        expect(!(boolean) Reflect.get(g, "bulletActive"), "The pulse is still active after its second valid hit. Each pulse may remove at most two aliens.");
         Reflect.call(g, "hitAlien", 0, 0);
-        equal(2, Reflect.get(g, "score"), "13.14: no third score from a spent pulse");
+        equal(2, Reflect.get(g, "score"), "A spent pulse added a third point. hitAlien must ignore further targets once that pulse has ended.");
         Reflect.set(g, "fire", true); Reflect.call(g, "step"); Reflect.set(g, "fire", false);
         Reflect.call(g, "hitAlien", 0, 0);
-        expect((boolean) Reflect.get(g, "bulletActive") && (int) Reflect.get(g, "score") == 3, "13.14: a newly fired pulse receives a fresh allowance");
+        expect((boolean) Reflect.get(g, "bulletActive") && (int) Reflect.get(g, "score") == 3, "A new pulse needs its own two-hit allowance. Its first hit should add one point and leave that pulse active.");
         Reflect.call(g, "hitAlien", 0, 1);
-        expect(!(boolean) Reflect.get(g, "bulletActive") && (int) Reflect.get(g, "score") == 4, "13.14: that new allowance is also finite");
+        expect(!(boolean) Reflect.get(g, "bulletActive") && (int) Reflect.get(g, "score") == 4, "The new pulse must also stop after two valid hits. Reset its allowance per shot without making it unlimited.");
         Reflect.call(g, "restart");
-        expect(!(boolean) Reflect.get(g, "bulletActive") && (int) Reflect.get(g, "score") == 0 && (int) Reflect.call(g, "countAliens") == 15, "13.14: restart resets the battle");
-        System.out.println("PASS " + checks + " checks");
+        expect(!(boolean) Reflect.get(g, "bulletActive") && (int) Reflect.get(g, "score") == 0 && (int) Reflect.call(g, "countAliens") == 15, "restart must restore all 15 aliens, clear the score and remove any active pulse.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P15_SoftLandingTest {
+class P15_Task_SoftLandingTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
         if (!correct) throw new AssertionError(message);
     }
     static void equal(Object expected, Object actual, String message) {
-        expect(java.util.Objects.deepEquals(expected, actual), message + " | expected=" + expected + " actual=" + actual);
+        expect(java.util.Objects.deepEquals(expected, actual), message
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P15_SoftLanding");
+        var g = Reflect.create("P15_Task_SoftLanding");
         Reflect.call(g, "restart"); Reflect.call(g, "begin");
         Reflect.set(g, "fuel", 0);
         Reflect.set(g, "up", true);
         Reflect.call(g, "step");
-        expect(Math.abs((double) Reflect.get(g, "velocityY") + 0.05) < 1e-9, "13.15: empty training tank still brakes against gravity");
-        equal(0, Reflect.get(g, "fuel"), "13.15: training leaves the counter unchanged at zero");
+        expect(Math.abs((double) Reflect.get(g, "velocityY") + 0.05) < 1e-9, "Up thrust must still work with fuel=0. After one step, vertical velocity should be -0.05 with the original thrust and gravity.");
+        equal(0, Reflect.get(g, "fuel"), "Training thrust changed the zero fuel counter. In this mode, using engines must leave fuel unchanged.");
         Reflect.call(g, "restart"); Reflect.call(g, "begin");
         Reflect.set(g, "left", true); Reflect.set(g, "right", true); Reflect.set(g, "up", true);
         Reflect.call(g, "step");
-        equal(240, Reflect.get(g, "fuel"), "13.15: combined thrust does not spend training fuel");
-        expect(Math.abs((double) Reflect.get(g, "velocityX") - 1.2) < 1e-9 && Math.abs((double) Reflect.get(g, "velocityY") + 0.05) < 1e-9, "13.15: opposing engines cancel while vertical thrust works");
+        equal(240, Reflect.get(g, "fuel"), "Using several engines spent fuel. Training must preserve the original counter value of 240 as well as zero.");
+        expect(Math.abs((double) Reflect.get(g, "velocityX") - 1.2) < 1e-9 && Math.abs((double) Reflect.get(g, "velocityY") + 0.05) < 1e-9, "With Left, Right and Up together, horizontal thrust should cancel while Up still brakes the fall. Preserve both original engine strengths.");
         Reflect.call(g, "restart"); Reflect.call(g, "begin");
         Reflect.call(g, "step");
-        expect(Math.abs((double) Reflect.get(g, "velocityY") - 0.04) < 1e-9, "13.15: no key means gravity only");
+        expect(Math.abs((double) Reflect.get(g, "velocityY") - 0.04) < 1e-9, "With no thrust key held, step must apply gravity alone; vertical velocity should increase to 0.04.");
         Reflect.set(g, "state", "CRASH");
         double y = (double) Reflect.get(g, "y");
         Reflect.set(g, "up", true); Reflect.call(g, "step");
-        equal(y, Reflect.get(g, "y"), "13.15: a crash remains terminal");
+        equal(y, Reflect.get(g, "y"), "step moved a crashed lander. A CRASH state must stay terminal even when Up is held.");
         Reflect.call(g, "restart"); Reflect.call(g, "begin");
-        expect(!(boolean) Reflect.get(g, "left") && !(boolean) Reflect.get(g, "right") && !(boolean) Reflect.get(g, "up"), "13.15: restart releases thrust");
-        System.out.println("PASS " + checks + " checks");
+        expect(!(boolean) Reflect.get(g, "left") && !(boolean) Reflect.get(g, "right") && !(boolean) Reflect.get(g, "up"), "restart left an engine key active. Clear Left, Right and Up so the next flight starts without held thrust.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P16_AsteroidDriftTest {
+class P16_Task_AsteroidDriftTest {
     static int checks;
     static final String[] CASES = {
-        "F fires through the actual held-key path and keeps cooldown.",
-        "Space brakes both velocity components without firing.",
-        "Restart and a lost game keep their original boundaries."
+        "Holding F must fire through key and step, with the original cooldown. The first two ticks should contain only one shot.",
+        "Space must brake both velocity components by 8% per active tick and create no shot. Check the held-key action used by step.",
+        "R must clear held keys and cooldown and wait for a new start. A lost flight must not fire through firingAction."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 13.16: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -498,7 +524,7 @@ class P16_AsteroidDriftTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -508,7 +534,7 @@ class P16_AsteroidDriftTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -524,7 +550,7 @@ class P16_AsteroidDriftTest {
         return image;
     }
     public static void main(String[] args) throws Exception {
-        var p = Reflect.create("P16_AsteroidDrift");
+        var p = Reflect.create("P16_Task_AsteroidDrift");
         Reflect.call(p, "restart");
         Reflect.call(p, "key", java.awt.event.KeyEvent.VK_F, true);
         Reflect.call(p, "step");
@@ -548,21 +574,20 @@ class P16_AsteroidDriftTest {
         Reflect.set(p, "lost", true);
         ((Runnable) Reflect.call(p, "firingAction")).run();
         check(((java.util.List<?>) Reflect.get(p, "shots")).isEmpty(), 2, "lost flight");
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P17_FireworkPainterTest {
+class P17_Task_FireworkPainterTest {
     static int checks;
     static final String[] CASES = {
-        "Creating the callback creates no particles.",
-        "Invocation creates 120 particles in a clicked and reflected pair.",
-        "A real press adds another mirrored pair and restart clears all particles."
+        "Calling burstAction must only create the action, not particles. Wait until the returned action is invoked before launching fireworks.",
+        "Invoking the action at (43,91) must create 120 particles at that point and its reflected partner, then resume animation.",
+        "press must use the same paired-firework action: another click adds another reflected pair. restart must then clear every particle."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 13.17: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -571,7 +596,7 @@ class P17_FireworkPainterTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -581,7 +606,7 @@ class P17_FireworkPainterTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -598,7 +623,7 @@ class P17_FireworkPainterTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P17_FireworkPainter");
+            var p = Reflect.create("P17_Task_FireworkPainter");
             Reflect.call(p, "restart");var action=((java.util.function.BiConsumer<java.lang.Integer, java.lang.Integer>) Reflect.call(p, "burstAction"));check(((java.util.ArrayList<Object>) Reflect.get(p, "particles")).isEmpty(),0,((java.util.ArrayList<Object>) Reflect.get(p, "particles")).size());
             action.accept(43,91);check(((java.util.ArrayList<Object>) Reflect.get(p, "particles")).size()==120&&!((boolean) Reflect.get(p, "paused")),1,((java.util.ArrayList<Object>) Reflect.get(p, "particles")).size());
             check(((double) Reflect.call(((java.util.ArrayList<Object>) Reflect.get(p, "particles")).getFirst(), "x"))==43&&((double) Reflect.call(((java.util.ArrayList<Object>) Reflect.get(p, "particles")).getFirst(), "y"))==91,1,((java.util.ArrayList<Object>) Reflect.get(p, "particles")).getFirst());
@@ -607,23 +632,22 @@ class P17_FireworkPainterTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 13.17: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P18_ShadowPlaygroundTest {
+class P18_Task_ShadowPlaygroundTest {
     static int checks;
     static final String[] CASES = {
-        "Callback creation preserves the starting light position.",
-        "Invocation and actual press/drag snap the supplied x/y to the 20-pixel grid.",
-        "Out-of-bounds coordinates are clamped by moveLight."
+        "Creating lightAction moved the lamp. Leave its initial position (100,80) unchanged until the returned action receives coordinates.",
+        "The light action must snap (43,91) down to (40,80). The real press and drag paths must use that same 20-pixel grid rule.",
+        "Out-of-bounds coordinates must still pass through moveLight. A request at (-20,999) should leave the light at (0,HEIGHT)."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 13.18: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -632,7 +656,7 @@ class P18_ShadowPlaygroundTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -642,7 +666,7 @@ class P18_ShadowPlaygroundTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -659,7 +683,7 @@ class P18_ShadowPlaygroundTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P18_ShadowPlayground");
+            var p = Reflect.create("P18_Task_ShadowPlayground");
             Reflect.call(p, "restart");var action=((java.util.function.BiConsumer<java.lang.Integer, java.lang.Integer>) Reflect.call(p, "lightAction"));check(((double) Reflect.get(p, "lightX"))==100&&((double) Reflect.get(p, "lightY"))==80,0,((double) Reflect.get(p, "lightX")));
             action.accept(43,91);check(((double) Reflect.get(p, "lightX"))==40&&((double) Reflect.get(p, "lightY"))==80,1,((double) Reflect.get(p, "lightX"))+","+((double) Reflect.get(p, "lightY")));
             action.accept(-20,999);check(((double) Reflect.get(p, "lightX"))==0&&((double) Reflect.get(p, "lightY"))==((int) Reflect.get(p, "HEIGHT")),2,((double) Reflect.get(p, "lightX"))+","+((double) Reflect.get(p, "lightY")));
@@ -667,14 +691,13 @@ class P18_ShadowPlaygroundTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 13.18: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P21_TiltTrayTest {
+class P21_Task_TiltTrayTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -684,11 +707,11 @@ class P21_TiltTrayTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P21_TiltTray");
+        var g = Reflect.create("P21_Task_TiltTray");
         Reflect.call(g, "restart");
         Reflect.set(g, "started", true);
         Reflect.set(g, "x", 168);
@@ -696,26 +719,25 @@ class P21_TiltTrayTest {
         Reflect.set(g, "vx", 3);
         Reflect.set(g, "vy", 0);
         Reflect.call(g, "step");
-        equal(170.0, ((double) Reflect.get(g, "x")), "13.21/F25: collision separates the ball outside obstacle");
-        expect(((double) Reflect.get(g, "vx")) < 0 && !((boolean) Reflect.call(g, "hit", ((java.awt.Rectangle[]) Reflect.get(g, "obstacles"))[0])), "13.21/F25: reflected ball is not left penetrating");
+        equal(170.0, ((double) Reflect.get(g, "x")), "After a side collision, step must place the marble at x=170, outside the obstacle. Reversing velocity alone leaves it trapped inside.");
+        expect(((double) Reflect.get(g, "vx")) < 0 && !((boolean) Reflect.call(g, "hit", ((java.awt.Rectangle[]) Reflect.get(g, "obstacles"))[0])), "The bounced marble must have reversed horizontal velocity and no longer overlap the obstacle. Check position correction as well as reflection.");
         Reflect.call(g, "clearKeys");
         for (int n = 0; n < 100; n++) {
             Reflect.call(g, "step");
         }
-        expect(Double.isFinite(((double) Reflect.get(g, "x"))) && Double.isFinite(((double) Reflect.get(g, "y"))), "13.21/F25: later updates remain finite");
+        expect(Double.isFinite(((double) Reflect.get(g, "x"))) && Double.isFinite(((double) Reflect.get(g, "y"))), "After later steps, marble coordinates must remain finite numbers. The collision repair must not create NaN or infinite positions.");
         Reflect.call(g, "restart");
         Reflect.set(g, "started", true);
         Reflect.set(g, "x", 530);
         Reflect.set(g, "y", 345);
         Reflect.set(g, "vx", ((double) Reflect.set(g, "vy", 0)));
         Reflect.call(g, "step");
-        expect(((boolean) Reflect.get(g, "won")), "13.21/F25: slow target entry still works");
-        System.out.println("PASS " + checks + " checks");
+        expect(((boolean) Reflect.get(g, "won")), "A slow entry into the green target must still win. Preserve the existing goal test when repairing collision handling.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P22_PlatformDashTest {
+class P22_Task_PlatformDashTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -725,24 +747,24 @@ class P22_PlatformDashTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P22_PlatformDash");
+        var g = Reflect.create("P22_Task_PlatformDash");
         Reflect.call(g, "restart");
         Reflect.set(g, "started", true);
         Reflect.set(g, "x", 240);
         Reflect.set(g, "y", 285);
         Reflect.set(g, "vy", -4);
         Reflect.call(g, "step");
-        expect(!((boolean) Reflect.get(g, "grounded")) && ((double) Reflect.get(g, "y")) < 285, "13.22/F25: rising from below cannot snap onto platform top");
+        expect(!((boolean) Reflect.get(g, "grounded")) && ((double) Reflect.get(g, "y")) < 285, "step snapped the player onto a platform while rising from below. Upward movement through its underside must not count as landing.");
         Reflect.set(g, "x", 240);
         Reflect.set(g, "y", 240);
         Reflect.set(g, "vy", 12);
         Reflect.call(g, "step");
-        equal(252.0, ((double) Reflect.get(g, "y")), "13.22/F25: descending top crossing still lands");
-        expect(((boolean) Reflect.get(g, "grounded")) && ((double) Reflect.get(g, "vy")) == 0, "13.22/F25: valid landing rests on top");
+        equal(252.0, ((double) Reflect.get(g, "y")), "A downward crossing of the platform top must still land at y=252. Check the previous bottom edge as well as the new position.");
+        expect(((boolean) Reflect.get(g, "grounded")) && ((double) Reflect.get(g, "vy")) == 0, "A valid landing must set grounded and stop vertical velocity. Do not leave the player falling after placing it on the platform.");
         Reflect.call(g, "restart");
         ((boolean[]) Reflect.get(g, "held"))[java.awt.event.KeyEvent.VK_RIGHT] = true;
         Reflect.call(g, "jump");
@@ -752,22 +774,21 @@ class P22_PlatformDashTest {
                 Reflect.call(g, "jump");
             }
         }
-        expect(((boolean) Reflect.get(g, "won")) && ((int) Reflect.get(g, "falls")) == 0, "13.22/F25: original two-jump course remains playable");
-        System.out.println("PASS " + checks + " checks");
+        expect(((boolean) Reflect.get(g, "won")) && ((int) Reflect.get(g, "falls")) == 0, "The original route should still reach the flag with two jumps and no falls. Keep ordinary movement and landing playable after the repair.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P23_PongTest {
+class P23_Task_PongTest {
     static int checks;
     static final String[] CASES = {
-        "The selected bot follows the current ball at three pixels per tick.",
-        "Dead-zone boundaries, manual speed and paddle clamps remain correct.",
-        "Switching, restart and a finished match preserve lifecycle promises."
+        "With bot mode selected, step must move the right paddle three pixels toward the current ball. Check that the running update actually uses the bot decision.",
+        "The bot must stay still within 8 pixels of the paddle centre and move outside that band. Keep human speed at five pixels and clamp the paddle inside the court.",
+        "Switching opponent must not move the paddle or keep a held direction. A finished match must stay still; restart must clear the winner and return to human control."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 13.23: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -776,7 +797,7 @@ class P23_PongTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -786,7 +807,7 @@ class P23_PongTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -802,7 +823,7 @@ class P23_PongTest {
         return image;
     }
     public static void main(String[] args) throws Exception {
-        var p = Reflect.create("P23_Pong");
+        var p = Reflect.create("P23_Task_Pong");
         Reflect.call(p, "restart");
         Reflect.set(p, "ballY", 300.0);
         double before = (double) Reflect.get(p, "rightY");
@@ -827,21 +848,20 @@ class P23_PongTest {
         check((double) Reflect.get(p, "rightY") == 315 && (double) Reflect.get(p, "ballX") == stopped, 2, "finished match");
         Reflect.call(p, "restart");
         check(!(boolean) Reflect.get(p, "bot") && !(boolean) Reflect.get(p, "rightUp") && (int) Reflect.get(p, "winner") == 0, 2, "restart");
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P24_OrbitPainterTest {
+class P24_Task_OrbitPainterTest {
     static int checks;
     static final String[] CASES = {
-        "Paused, queued or normal input respects the stated tick boundary.",
-        "An active tick changes the model exactly once; a finished/paused tick cannot drift.",
-        "Invalid boundaries, restart or input cleanup remain correct."
+        "A paused step must preserve position, tick count and the painted trail. Move the orbit only while paused is false.",
+        "One active step must advance the position and increment ticks exactly once. The running orbit currently did not make that update.",
+        "restart must restore x=440, ticks=0 and paused=true so a fresh orbit waits for the player."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 13.24: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -850,7 +870,7 @@ class P24_OrbitPainterTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -860,7 +880,7 @@ class P24_OrbitPainterTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -877,28 +897,27 @@ class P24_OrbitPainterTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P24_OrbitPainter");
+            var p = Reflect.create("P24_Task_OrbitPainter");
             Reflect.call(p, "restart");double x=((double) Reflect.get(p, "x")),y=((double) Reflect.get(p, "y"));Reflect.call(p, "step");check(((double) Reflect.get(p, "x"))==x&&((double) Reflect.get(p, "y"))==y&&((int) Reflect.get(p, "ticks"))==0,0,((int) Reflect.get(p, "ticks")));Reflect.set(p, "paused", false);Reflect.call(p, "step");check(((int) Reflect.get(p, "ticks"))==1&&(((double) Reflect.get(p, "x"))!=x||((double) Reflect.get(p, "y"))!=y),1,((int) Reflect.get(p, "ticks")));Reflect.set(p, "paused", true);x=((double) Reflect.get(p, "x"));y=((double) Reflect.get(p, "y"));long ink=hash(((java.awt.image.BufferedImage) Reflect.get(p, "canvas")));Reflect.call(p, "step");check(((double) Reflect.get(p, "x"))==x&&((double) Reflect.get(p, "y"))==y&&hash(((java.awt.image.BufferedImage) Reflect.get(p, "canvas")))==ink,0,((int) Reflect.get(p, "ticks")));Reflect.call(p, "restart");check(((boolean) Reflect.get(p, "paused"))&&((int) Reflect.get(p, "ticks"))==0&&((double) Reflect.get(p, "x"))==440,2,((double) Reflect.get(p, "x")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 13.24: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P25_PendulumWavesTest {
+class P25_Task_PendulumWavesTest {
     static int checks;
     static final String[] CASES = {
-        "Paused, queued or normal input respects the stated tick boundary.",
-        "An active tick changes the model exactly once; a finished/paused tick cannot drift.",
-        "Invalid boundaries, restart or input cleanup remain correct."
+        "A paused step must leave the shared time at zero. Repainting or waiting while paused must not advance the pendulums.",
+        "With speed=2, one running step must advance time by 0.04. Update the shared clock once per active tick.",
+        "Keep speed within 0.25..2. restart must restore speed=1, time=0 and the paused state."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 13.25: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -907,7 +926,7 @@ class P25_PendulumWavesTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -917,7 +936,7 @@ class P25_PendulumWavesTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -934,28 +953,27 @@ class P25_PendulumWavesTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P25_PendulumWaves");
+            var p = Reflect.create("P25_Task_PendulumWaves");
             Reflect.call(p, "restart");Reflect.call(p, "step");check(((double) Reflect.get(p, "time"))==0,0,((double) Reflect.get(p, "time")));Reflect.set(p, "paused", false);Reflect.set(p, "speed", 2);Reflect.call(p, "step");check(Math.abs(((double) Reflect.get(p, "time"))-.04)<1e-12,1,((double) Reflect.get(p, "time")));Reflect.call(p, "adjust", 100);check(((double) Reflect.get(p, "speed"))==2,2,((double) Reflect.get(p, "speed")));Reflect.call(p, "adjust", -100);check(((double) Reflect.get(p, "speed"))==.25,2,((double) Reflect.get(p, "speed")));Reflect.call(p, "restart");check(((double) Reflect.get(p, "time"))==0&&((boolean) Reflect.get(p, "paused"))&&((double) Reflect.get(p, "speed"))==1,2,((double) Reflect.get(p, "time")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 13.25: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P28_SpringToyTest {
+class P28_Task_SpringToyTest {
     static int checks;
     static final String[] CASES = {
-        "Rendering preserves all motion fields.",
-        "Repeated rendering has the same pixels and no new trail points.",
-        "An explicit step still advances the model."
+        "draw changed x, y or velocity. Painting must only observe the spring model; step owns motion.",
+        "Repeated draw calls must produce the same pixels without adding trail points. A repaint is not another simulation step.",
+        "The explicit step must still move the weight and add a trail point. Remove motion from draw without disabling the real update."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 13.28: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -964,7 +982,7 @@ class P28_SpringToyTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -974,7 +992,7 @@ class P28_SpringToyTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -991,7 +1009,7 @@ class P28_SpringToyTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P28_SpringToy");
+            var p = Reflect.create("P28_Task_SpringToy");
             Reflect.call(p, "restart");Reflect.set(p, "paused", false);double x=((double) Reflect.get(p, "x")),y=((double) Reflect.get(p, "y")),vx=((double) Reflect.get(p, "vx")),vy=((double) Reflect.get(p, "vy"));
             var first=draw(((java.util.function.Consumer<java.awt.Graphics2D>) ((value0) -> { Reflect.call(p, "draw", value0); })),((int) Reflect.get(p, "WIDTH")),((int) Reflect.get(p, "HEIGHT")));
             check(((double) Reflect.get(p, "x"))==x&&((double) Reflect.get(p, "y"))==y&&((double) Reflect.get(p, "vx"))==vx&&((double) Reflect.get(p, "vy"))==vy,0,((double) Reflect.get(p, "y")));
@@ -1001,23 +1019,22 @@ class P28_SpringToyTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 13.28: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P29_BreakoutTest {
+class P29_Task_BreakoutTest {
     static int checks;
     static final String[] CASES = {
-        "Repeated misses serve another ball without finishing the practice round.",
-        "A miss preserves cleared bricks and score.",
-        "The last brick still wins and freezes motion; restart restores the whole wall."
+        "A missed ball ended the practice round or failed to serve again. step must allow unlimited misses, not just a larger life count.",
+        "A miss erased progress. Serving again must preserve the score and every brick already removed.",
+        "restart must restore all 18 bricks and score zero. The last brick must still win, and later steps must leave the won round motionless."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 13.29: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -1026,7 +1043,7 @@ class P29_BreakoutTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -1036,7 +1053,7 @@ class P29_BreakoutTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -1052,7 +1069,7 @@ class P29_BreakoutTest {
         return image;
     }
     public static void main(String[] args) throws Exception {
-        var p = Reflect.create("P29_Breakout");
+        var p = Reflect.create("P29_Task_Breakout");
         Reflect.call(p, "restart");
         boolean[][] bricks = (boolean[][]) Reflect.get(p, "bricks");
         bricks[0][0] = false;
@@ -1082,21 +1099,20 @@ class P29_BreakoutTest {
         double stoppedY = (double) Reflect.get(p, "ballY");
         Reflect.call(p, "step");
         check((double) Reflect.get(p, "ballX") == stoppedX && (double) Reflect.get(p, "ballY") == stoppedY, 2, "win is stable");
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P30_RippleTankTest {
+class P30_Task_RippleTankTest {
     static int checks;
     static final String[] CASES = {
-        "Paused, queued or normal input respects the stated tick boundary.",
-        "An active tick changes the model exactly once; a finished/paused tick cannot drift.",
-        "Invalid boundaries, restart or input cleanup remain correct."
+        "A valid tap at (20,10) must add a disturbance of 60 and start the water moving. Do not leave the tank paused after that input.",
+        "After a valid tap, step must propagate the disturbance: the neighbouring cell should become 29.76. Check that the input really resumed the update.",
+        "A border tap must leave a fresh tank still and empty. Once paused, step must also preserve the existing water energy."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 13.30: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -1105,7 +1121,7 @@ class P30_RippleTankTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -1115,7 +1131,7 @@ class P30_RippleTankTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -1132,28 +1148,27 @@ class P30_RippleTankTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P30_RippleTank");
+            var p = Reflect.create("P30_Task_RippleTank");
             Reflect.call(p, "restart");Reflect.call(p, "tap", 20, 10);check(!((boolean) Reflect.get(p, "paused"))&&((double[][]) Reflect.get(p, "height"))[10][20]==60,0,((double[][]) Reflect.get(p, "height"))[10][20]);Reflect.call(p, "step");check(((double[][]) Reflect.get(p, "previous"))[10][20]==60&&Math.abs(((double[][]) Reflect.get(p, "height"))[10][21]-29.76)<1e-9,1,((double[][]) Reflect.get(p, "height"))[10][21]);Reflect.call(p, "restart");Reflect.call(p, "tap", 0, 0);check(((boolean) Reflect.get(p, "paused"))&&((double) Reflect.call(p, "energy"))==0,2,((double) Reflect.call(p, "energy")));Reflect.call(p, "tap", 20, 10);Reflect.set(p, "paused", true);double energy=((double) Reflect.call(p, "energy"));Reflect.call(p, "step");check(((double) Reflect.call(p, "energy"))==energy,2,((double) Reflect.call(p, "energy")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 13.30: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P31_PictureMusicTest {
+class P31_Task_PictureMusicTest {
     static int checks;
     static final String[] CASES = {
-        "The new +12 shift doubles frequency and changes actual samples.",
-        "Zero and -12 retain the old mapping and octave relation.",
-        "Invalid rows and shifts are rejected."
+        "pitchFrequency with shift +12 must double the original frequency. signal must use that shift so the actual sound samples change too.",
+        "Keep the original frequency at shift 0 and halve it at shift -12. In particular, row 11 at shift 0 must still give 220 Hz.",
+        "pitchFrequency must reject row 12 and shift 13 with IllegalArgumentException. Preserve the original input limits when adding transposition."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 13.31: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -1162,7 +1177,7 @@ class P31_PictureMusicTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -1172,7 +1187,7 @@ class P31_PictureMusicTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -1189,7 +1204,7 @@ class P31_PictureMusicTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P31_PictureMusic");
+            var p = Reflect.create("P31_Task_PictureMusic");
             double base=((double) Reflect.call(p, "pitchFrequency", 4, 0));check(Math.abs(((double) Reflect.call(p, "pitchFrequency", 4, 12))-base*2)<1e-9,0,((double) Reflect.call(p, "pitchFrequency", 4, 12)));
             check(Math.abs(((double) Reflect.call(p, "pitchFrequency", 4, -12))-base/2)<1e-9,1,((double) Reflect.call(p, "pitchFrequency", 4, -12)));
             check(Math.abs(((double) Reflect.call(p, "pitchFrequency", 11, 0))-220)<1e-9,1,((double) Reflect.call(p, "pitchFrequency", 11, 0)));
@@ -1198,23 +1213,22 @@ class P31_PictureMusicTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 13.31: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P32_SecretBeepsTest {
+class P32_Task_SecretBeepsTest {
     static int checks;
     static final String[] CASES = {
-        "The new word gap changes the actual waveform length.",
-        "The original seven-unit mode and three-unit letter gap remain unchanged.",
-        "Word-gap values outside 3–12 are rejected."
+        "units(\"E E\",10) must use a ten-unit word gap, and signal must include the longer silence. Changing only a displayed setting is not enough.",
+        "Preserve the original seven-unit word gap and the three-unit gap between letters. Only the requested space between words should change.",
+        "units must reject word gaps 2 and 13 with IllegalArgumentException; the permitted range is 3..12."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 13.32: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -1223,7 +1237,7 @@ class P32_SecretBeepsTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -1233,7 +1247,7 @@ class P32_SecretBeepsTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -1250,7 +1264,7 @@ class P32_SecretBeepsTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P32_SecretBeeps");
+            var p = Reflect.create("P32_Task_SecretBeeps");
             check(((java.util.List<java.lang.Integer>) Reflect.call(p, "units", "E E", 10)).equals(List.of(1,-10,1)),0,((java.util.List<java.lang.Integer>) Reflect.call(p, "units", "E E", 10)));
             check(((java.util.List<java.lang.Integer>) Reflect.call(p, "units", "E E")).equals(List.of(1,-7,1))&&((java.util.List<java.lang.Integer>) Reflect.call(p, "units", "EE", 10)).equals(List.of(1,-3,1)),1,((java.util.List<java.lang.Integer>) Reflect.call(p, "units", "EE", 10)));
             reject(()->Reflect.call(p, "units", "E E", 2),2);reject(()->Reflect.call(p, "units", "E E", 13),2);
@@ -1258,9 +1272,8 @@ class P32_SecretBeepsTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 13.32: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 

@@ -9,12 +9,15 @@
 <h1>9.4 Data can know their operations</h1>
 <p>A battery plan should answer how much charge remains without erasing the original plan. A method inside a record can read its components and return a calculated value or another record. Data and the operations that make sense for it stay together.</p>
 <h2>The receiver supplies the component values</h2>
-<pre><code class="language-java" data-source="P08_BatteryPlan.java">void main() {
+<pre><code class="language-java" data-source="P08_Example_BatteryPlan.java">/// # Worked example · 9.4 Data can know their operations
+/// Lesson: 04-data-methods.html
+
+void main() {
     Battery original = new Battery(8);
-    IO.println(&quot;Ready: &quot; + original.canSpend(3));
+    IO.println("Ready: " + original.canSpend(3));
     Battery after = original.spend(3);
-    IO.println(&quot;Original: &quot; + original.charge());
-    IO.println(&quot;After: &quot; + after.charge());
+    IO.println("Original: " + original.charge());
+    IO.println("After: " + after.charge());
 }
 
 record Battery(int charge) {
@@ -27,20 +30,20 @@ record Battery(int charge) {
     }
 }
 </code></pre>
-<p>Open 09-data/P08_BatteryPlan.java. In original.canSpend(3), original is the receiver of the call. Its charge is 8 and cost receives 3, so the answer is true. Calling the same method on a battery with charge 2 would answer false.</p>
+<p>Open 09-data/P08_Example_BatteryPlan.java. In original.canSpend(3), original is the receiver of the call. Its charge is 8 and cost receives 3, so the answer is true. Calling the same method on a battery with charge 2 would answer false.</p>
 <p>Inside a record method, a component name such as charge reads that receiver’s component. No extra Battery parameter is needed. The return type Battery says spend constructs a result of the same data type. Original still prints 8 because the result was stored separately.</p>
 <p>Spend is a calculation with a stated precondition: call it only for a nonnegative cost that canSpend accepts. For the prepared cost 3, the condition holds; canSpend simply displays true. A method name does not automatically enforce another method’s rule. Later you will design objects that protect changes themselves.</p>
 <details><summary>Predict another plan</summary><p>Spending 0 returns a battery with charge 8. Spending 8 returns charge 0. Both leave original at 8. What if you discard the result of original.spend(3)? Original still has charge 8; returned data are not an assignment.</p></details>
 <h2>Task: leave a trail of positions</h2>
-<p>Open 09-data/P09_VectorTrail.java. Complete moved so it returns a new Vector shifted by dx and dy. Complete distanceSquared so it returns x times x plus y times y for its receiver. Keep the starting vector unchanged.</p>
+<p>Open 09-data/P09_Task_VectorTrail.java. Complete moved so it returns a new Vector shifted by dx and dy. Complete distanceSquared so it returns x times x plus y times y for its receiver. Keep the starting vector unchanged.</p>
 <p>The prepared movement is 2,-1. From 0,0 it ends at 2,-1 with squared distance 5. From -2,1 it reaches 0,0 with distance 0. From 1,3 it reaches 3,2 with distance 13. No square root is needed.</p>
 <details><summary>Hint 1: which position belongs to this call?</summary><p>The special name this means the current receiver. Returning this simply returns the old vector; it does not apply the displacement.</p></details>
 <details><summary>Hint 2: separate the two answers</summary><p>Moved constructs two new coordinates. DistanceSquared returns one number. Neither method needs to read input or print a message.</p></details>
 <p>Next, give a fixed family of choices meaningful names instead of remembering which arbitrary number means which direction.</p>
 <details><summary>Further reading online</summary><p><a href="https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Record.html">Java 26 API: Record</a></p></details>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>MirrorLaser</strong> · <code>09-data/P10_MirrorLaser.java</code><br>Repair MirrorLaser&#x27;s RayState.advance so the new position follows that ray&#x27;s direction. Return a new state rather than rewriting the original record.</li>
-<li><strong>InequalityLatin</strong> · <code>09-data/P11_InequalityLatin.java</code><br>Repair InequalityLatin&#x27;s Rule.satisfiedBy using the rule&#x27;s own coordinates. Check the less-than relation in both directions, not just one example.</li>
+<li><strong>MirrorLaser</strong> · <code>09-data/P10_Task_MirrorLaser.java</code><br>Repair MirrorLaser&#x27;s RayState.advance so the new position follows that ray&#x27;s direction. Return a new state rather than rewriting the original record.</li>
+<li><strong>InequalityLatin</strong> · <code>09-data/P11_Task_InequalityLatin.java</code><br>Repair InequalityLatin&#x27;s Rule.satisfiedBy using the rule&#x27;s own coordinates. Check the less-than relation in both directions, not just one example.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="03-references.html">← 9.3 Two names can point to the same thing</a><a class="next" href="05-enums.html">9.5 Name the allowed choices →</a></nav>

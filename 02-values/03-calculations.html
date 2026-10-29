@@ -48,7 +48,7 @@
 <p>You can use names instead of numbers: <code>energy - cost</code> calculates using their currently stored values.</p>
 <h2>Whole numbers and decimals</h2>
 <p><code>int</code> stores whole numbers. <code>double</code> can also hold a fractional part. In code, we use a decimal <strong>point</strong>, as in <code>2.5</code>.</p>
-<p>Open <code>02-values/P08_Sharing.java</code>:</p>
+<p>Open <code>02-values/P08_Example_Sharing.java</code>:</p>
 <pre><code class="language-java">void main() {
     double share = 5 / 2.0;
     IO.println(share);
@@ -64,7 +64,7 @@
 
 <p>Restore the original <code>2.0</code>. When dividing, also check the divisor: we do not divide by zero in these examples. <code>double</code> stores some decimal values approximately. We will return to money and exact decimal calculations later. For today&#39;s speeds and energy sharing, it will do the job.</p>
 <h2>Task: split a beam&#39;s energy</h2>
-<p>Open <code>02-values/P09_BeamSplit.java</code>. You have <code>double energy = 9;</code> and <code>int beams = 2;</code>.</p>
+<p>Open <code>02-values/P09_Task_BeamSplit.java</code>. You have <code>double energy = 9;</code> and <code>int beams = 2;</code>.</p>
 <p><strong>Change the calculation of <code>perBeam</code> to divide the energy equally between the beams.</strong> The output should be <code>4.5</code>. Use both names so the program can work with other settings too.</p>
 <p>Then change only the energy to 10 and the number of beams to 4. Expect <code>2.5</code>. <code>energy</code> is already a <code>double</code>, so a calculation with its value keeps the fractional part.</p>
 <details>
@@ -88,7 +88,7 @@ Score: 5
 </details>
 
 <h2>Task: build the pilot&#39;s score</h2>
-<p>Open <code>02-values/P10_Scoreboard.java</code>. The pilot starts with a score of 10.</p>
+<p>Open <code>02-values/P10_Task_Scoreboard.java</code>. The pilot starts with a score of 10.</p>
 <p><strong>Add 5 points to <code>score</code> and replace the two print calls with a single line</strong> that builds a message from <code>pilot</code>, a colon followed by a space, and the current <code>score</code>:</p>
 <pre><code class="language-text">Nova: 15
 </code></pre>
@@ -100,13 +100,13 @@ Score: 5
 </details>
 
 <h2>Use numbers in a picture</h2>
-<p><code>02-values/P11_SunflowerSpiral.java</code> has a supplied picture calculation and one angle for you to find. Practise reading and changing a named decimal value. You do not need to write the internal trigonometric calculations for this mission; the supplied part of the file describes them.</p>
+<p><code>02-values/P11_Task_SunflowerSpiral.java</code> has a supplied picture calculation and one angle for you to find. Practise reading and changing a named decimal value. You do not need to write the internal trigonometric calculations for this mission; the supplied part of the file describes them.</p>
 <p><strong>You have understood this chapter when you can write a short program with your own values, change them through calculations, and explain the difference between <code>5 / 2</code> and <code>5 / 2.0</code>.</strong></p>
 <p>Now let the player supply values. Continue to <a href="../03-text-input/01-input.html">Ask the player</a>.</p>
 <p><a href="../index.html">Back to the textbook contents</a></p>
 <details><summary>Dividing two named whole numbers</summary><p>When both values are int, you can convert one for the calculation: <code>(double) amount / parts</code>. Parentheses containing a type name form a cast. The value of amount is converted before division; the variable itself stays int. For amount 5 and parts 2 the result is 2.5. In contrast, <code>(double) (amount / parts)</code> converts the completed integer result and gives 2.0.</p></details>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>Spirograph</strong> · <code>02-values/P12_Spirograph.java</code><br>Spirograph loses the fractional part of a ratio of integer radii. Repair radiusRatio and check a ratio below one as well.</li>
+<li><strong>Spirograph</strong> · <code>02-values/P12_Task_Spirograph.java</code><br>Spirograph loses the fractional part of a ratio of integer radii. Repair radiusRatio and check a ratio below one as well.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="02-change.html">← 2.2 Change a stored value</a><a class="next" href="../03-text-input/01-input.html">3.1 Ask the player →</a></nav>

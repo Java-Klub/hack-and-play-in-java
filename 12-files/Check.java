@@ -6,121 +6,154 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
-/// Chapter checks: java Check.java
-/// One game: java Check.java P03_WordLadder.java
-/// Tests call compact programs through reflection in this JVM.
+/// Game task checks for this chapter. Run short textbook tasks directly.
 class Check {
     int failed;
     int checked;
     String selected;
+    final ArrayList<String> available = new ArrayList<>();
     interface Test { void run() throws Exception; }
 
     void main(String[] args) {
         System.setProperty("java.awt.headless", "true");
-        if (args.length > 1) throw new IllegalArgumentException("Use: java Check.java [game filename]");
+        if (args.length > 1) {
+            IO.println("Supply at most one game filename. With no argument, all game tasks in this chapter are checked.");
+            System.exit(2);
+        }
         selected = args.length == 0 ? "" : Path.of(args[0]).getFileName().toString().replaceFirst("\\.java$", "");
-        run("P03_WordLadder", "12.03 WordLadder · F22", () -> P03_WordLadderTest.main(new String[0]));
-        run("P04_TileStampStudio", "12.04 TileStampStudio · F31", () -> P04_TileStampStudioTest.main(new String[0]));
-        run("P07_FractalTreeGarden", "12.07 FractalTreeGarden · F31", () -> P07_FractalTreeGardenTest.main(new String[0]));
-        run("P08_ImageToASCII", "12.08 ImageToASCII · F31", () -> P08_ImageToASCIITest.main(new String[0]));
-        run("P11_MazePostcards", "12.11 MazePostcards · F31", () -> P11_MazePostcardsTest.main(new String[0]));
-        run("P14_EndlessToneStaircase", "12.14 EndlessToneStaircase · F32", () -> P14_EndlessToneStaircaseTest.main(new String[0]));
-        run("P15_PixelSortingGlitch", "12.15 PixelSortingGlitch · F32", () -> P15_PixelSortingGlitchTest.main(new String[0]));
-        run("P16_MirrorCylinderPicture", "12.16 MirrorCylinderPicture · F32", () -> P16_MirrorCylinderPictureTest.main(new String[0]));
-        run("P19_SecretPNGPostcard", "12.19 SecretPNGPostcard · F32", () -> P19_SecretPNGPostcardTest.main(new String[0]));
-        run("P20_MagicEyeStrip", "12.20 MagicEyeStrip · F32", () -> P20_MagicEyeStripTest.main(new String[0]));
-        if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " mission goals remaining.");
+        run("P03_Task_WordLadder", () -> P03_Task_WordLadderTest.main(new String[0]));
+        run("P04_Task_TileStampStudio", () -> P04_Task_TileStampStudioTest.main(new String[0]));
+        run("P07_Task_FractalTreeGarden", () -> P07_Task_FractalTreeGardenTest.main(new String[0]));
+        run("P08_Task_ImageToASCII", () -> P08_Task_ImageToASCIITest.main(new String[0]));
+        run("P11_Task_MazePostcards", () -> P11_Task_MazePostcardsTest.main(new String[0]));
+        run("P14_Task_EndlessToneStaircase", () -> P14_Task_EndlessToneStaircaseTest.main(new String[0]));
+        run("P15_Task_PixelSortingGlitch", () -> P15_Task_PixelSortingGlitchTest.main(new String[0]));
+        run("P16_Task_MirrorCylinderPicture", () -> P16_Task_MirrorCylinderPictureTest.main(new String[0]));
+        run("P19_Task_SecretPNGPostcard", () -> P19_Task_SecretPNGPostcardTest.main(new String[0]));
+        run("P20_Task_MagicEyeStrip", () -> P20_Task_MagicEyeStripTest.main(new String[0]));
+        if (checked == 0) {
+            IO.println("No game check is prepared here for this file: " + selected + ".java");
+            IO.println("Choose one of these files: " + String.join(", ", available));
+            System.exit(2);
+        }
+        IO.println("Checked: " + checked + "; complete: " + (checked - failed) + "; remaining: " + failed);
         if (failed > 0) System.exit(1);
     }
 
-    void run(String game, String label, Test test) {
+    void run(String game, Test test) {
+        available.add(game + ".java");
         if (!selected.isEmpty() && !selected.equals(game)) return;
         checked++;
         try {
             test.run();
-            IO.println("GREEN " + label);
+            IO.println("GREEN " + game + ".java");
         } catch (Throwable failure) {
             failed++;
-            IO.println("RED " + label + ": " + failure.getMessage());
+            IO.println("RED " + game + ".java");
+            String reason = failure.getMessage();
+            if (reason == null || reason.isBlank()) reason = "The check did not get the expected result.";
+            if (!(failure instanceof AssertionError)) reason = "The program stopped during the check: " + failure.getClass().getSimpleName() + ": " + reason;
+            IO.println("  " + reason.replace("\n", "\n  "));
+            Throwable cause = failure;
+            while (cause.getCause() != null && cause.getCause() != cause) cause = cause.getCause();
+            if (cause != failure) IO.println("  " + cause.getClass().getSimpleName() + ": " + show(cause.getMessage()));
+            for (var frame : cause.getStackTrace()) {
+                if (frame.getClassName().equals(game) || frame.getClassName().startsWith(game + "$")) {
+                    IO.println("  " + "Location in the program: " + frame.getFileName() + ":" + frame.getLineNumber());
+                    break;
+                }
+            }
         }
+    }
+
+    static String show(Object value) {
+        if (value != null && value.getClass().isArray()) {
+            int length = java.lang.reflect.Array.getLength(value);
+            var parts = new ArrayList<String>();
+            for (int i = 0; i < Math.min(length, 8); i++) parts.add(show(java.lang.reflect.Array.get(value, i)));
+            return parts + (length > 8 ? " … (" + length + " items" + ")" : "");
+        }
+        String text = String.valueOf(value).replace("\n", "\\n").replace("\r", "\\r");
+        return text.length() <= 180 ? text : text.substring(0, 177) + "…";
     }
 }
 
 @SuppressWarnings("unchecked")
-class P03_WordLadderTest {
+class P03_Task_WordLadderTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
         if (!correct) throw new AssertionError(message);
     }
     static void equal(Object expected, Object actual, String message) {
-        expect(java.util.Objects.deepEquals(expected, actual), message + " | expected=" + expected + " actual=" + actual);
+        expect(java.util.Objects.deepEquals(expected, actual), message
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P03_WordLadder");
+        var g = Reflect.create("P03_Task_WordLadder");
         Reflect.call(g, "reset");
         Reflect.call(g, "command", " cord  card ");
-        equal(List.of("COLD", "CORD", "CARD"), Reflect.get(g, "history"), "12.03: a planned route preserves every stop");
+        equal(List.of("COLD", "CORD", "CARD"), Reflect.get(g, "history"), "After command(\" cord  card \"), history should contain COLD, CORD, CARD in that order. Keep every accepted stop, including the starting word.");
         Object before = List.copyOf((List<?>) Reflect.get(g, "history"));
         boolean rejected = false;
         try { Reflect.call(g, "command", "WARD COLD"); } catch (IllegalArgumentException invalid) { rejected = true; }
-        expect(rejected, "12.03: an invalid later step refuses the whole route");
-        equal(before, Reflect.get(g, "history"), "12.03: refused route keeps its original history");
-        equal("CARD", Reflect.get(g, "current"), "12.03: refused route keeps its current word");
+        expect(rejected, "From CARD, command(\"WARD COLD\") must reject the entire route: its second step is invalid. Validate all stops before accepting the plan.");
+        equal(before, Reflect.get(g, "history"), "A rejected route changed history. In command, leave the complete previous journey unchanged when any planned step fails.");
+        equal("CARD", Reflect.get(g, "current"), "A rejected route changed current. After refusing WARD COLD from CARD, the current word must still be CARD.");
         Reflect.call(g, "command", "WARD WARM");
-        equal("Reached WARM in 4 moves!", Reflect.get(g, "outcome"), "12.03: winning batch counts moves, not batches");
+        equal("Reached WARM in 4 moves!", Reflect.get(g, "outcome"), "The route to WARM has four individual moves, even when submitted in two batches. Build the winning message from moves, not submission count.");
         Reflect.call(g, "reset");
         rejected = false;
         try { Reflect.call(g, "command", "CORD CARD WARD WARM WARD"); } catch (IllegalArgumentException invalid) { rejected = true; }
-        expect(rejected && ((List<?>) Reflect.get(g, "history")).equals(List.of("COLD")), "12.03: nothing may continue past the target in one batch");
+        expect(rejected && ((List<?>) Reflect.get(g, "history")).equals(List.of("COLD")), "command must reject a batch that continues after WARM. The rejected batch must leave history at its original COLD entry.");
         Reflect.call(g, "command", "CORD");
-        equal("CORD", Reflect.get(g, "current"), "12.03: a single ordinary move still works");
-        System.out.println("PASS " + checks + " checks");
+        equal("CORD", Reflect.get(g, "current"), "A single CORD move stopped working. command must still accept one legal word and make it current.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P04_TileStampStudioTest {
+class P04_Task_TileStampStudioTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
         if (!correct) throw new AssertionError(message);
     }
     static void equal(Object expected, Object actual, String message) {
-        expect(java.util.Objects.deepEquals(expected, actual), message + " | expected=" + expected + " actual=" + actual);
+        expect(java.util.Objects.deepEquals(expected, actual), message
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P04_TileStampStudio");
-        expect((boolean) Reflect.call(g, "applyRepeats", "3"), "12.04: ordinary numeric choice still works");
-        expect((boolean) Reflect.call(g, "applyRepeats", " DENSER "), "12.04: a relative command accepts whitespace and case");
-        equal(6, Reflect.get(g, "repeats"), "12.04: denser doubles the current setting");
+        var g = Reflect.create("P04_Task_TileStampStudio");
+        expect((boolean) Reflect.call(g, "applyRepeats", "3"), "applyRepeats(\"3\") must still accept a normal numeric repeat count.");
+        expect((boolean) Reflect.call(g, "applyRepeats", " DENSER "), "applyRepeats must recognise \" DENSER \" despite outer spaces and uppercase letters.");
+        equal(6, Reflect.get(g, "repeats"), "After setting 3, denser should change repeats to 6. Base the relative command on the last accepted setting.");
         Reflect.call(g, "applyRepeats", "denser");
-        equal(12, Reflect.get(g, "repeats"), "12.04: a command sequence reaches twelve");
-        expect(!(boolean) Reflect.call(g, "applyRepeats", "denser") && (int) Reflect.get(g, "repeats") == 12, "12.04: oversized relative choice preserves its setting");
-        Reflect.call(g, "applyRepeats", "sparser"); equal(6, Reflect.get(g, "repeats"), "12.04: sparser halves an even setting");
+        equal(12, Reflect.get(g, "repeats"), "A second denser command should change 6 repeats to 12, rather than starting from the original setting again.");
+        expect(!(boolean) Reflect.call(g, "applyRepeats", "denser") && (int) Reflect.get(g, "repeats") == 12, "Denser at 12 must be refused and leave repeats at 12. Do not commit a result outside 1..12.");
+        Reflect.call(g, "applyRepeats", "sparser"); equal(6, Reflect.get(g, "repeats"), "Sparser at 12 should be accepted and change repeats to 6.");
         Reflect.call(g, "applyRepeats", "3");
-        expect(!(boolean) Reflect.call(g, "applyRepeats", "sparser") && (int) Reflect.get(g, "repeats") == 3, "12.04: odd halving is refused without rounding");
-        expect(!(boolean) Reflect.call(g, "applyRepeats", "oops") && (int) Reflect.get(g, "repeats") == 3, "12.04: typo preserves the live setting");
+        expect(!(boolean) Reflect.call(g, "applyRepeats", "sparser") && (int) Reflect.get(g, "repeats") == 3, "Sparser at 3 must be refused without rounding or changing repeats.");
+        expect(!(boolean) Reflect.call(g, "applyRepeats", "oops") && (int) Reflect.get(g, "repeats") == 3, "applyRepeats(\"oops\") must report refusal and preserve the previous repeat count.");
         Reflect.call(g, "paint", 0, 0, 1);
         var three = (java.awt.image.BufferedImage) Reflect.call(g, "render", 3);
         var six = (java.awt.image.BufferedImage) Reflect.call(g, "render", 6);
-        expect(three.getWidth() == 288 && six.getWidth() == 288 && three.getRGB(6, 0) != six.getRGB(6, 0), "12.04: relative choices have visible density feedback");
-        System.out.println("PASS " + checks + " checks");
+        expect(three.getWidth() == 288 && six.getWidth() == 288 && three.getRGB(6, 0) != six.getRGB(6, 0), "The accepted repeat count must change the rendered tile density. render(3) and render(6) should produce different patterns at the same 288-pixel width.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P07_FractalTreeGardenTest {
+class P07_Task_FractalTreeGardenTest {
     static int checks;
     static final String[] CASES = {
-        "Malformed numeric text returns 28.",
-        "Both inclusive bounds and surrounding spaces work.",
-        "Out-of-range numeric input is rejected."
+        "readAngle(\"oops\") should return the fallback angle 28, because the text cannot be parsed as a number.",
+        "readAngle should accept 10 and 70, including outer spaces. Both endpoints belong to the permitted angle range.",
+        "readAngle must reject 9, 71 and NaN with IllegalArgumentException. A readable number must still be finite and within 10..70."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 12.07: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -129,7 +162,7 @@ class P07_FractalTreeGardenTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -139,7 +172,7 @@ class P07_FractalTreeGardenTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -156,7 +189,7 @@ class P07_FractalTreeGardenTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P07_FractalTreeGarden");
+            var p = Reflect.create("P07_Task_FractalTreeGarden");
             check(((double) Reflect.call(p, "readAngle", "oops"))==28,0,((double) Reflect.call(p, "readAngle", "oops")));
             check(((double) Reflect.call(p, "readAngle", " 10 "))==10&&((double) Reflect.call(p, "readAngle", "70"))==70,1,"bounds");
             reject(()->Reflect.call(p, "readAngle", "9"),2);
@@ -165,23 +198,22 @@ class P07_FractalTreeGardenTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 12.07: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P08_ImageToASCIITest {
+class P08_Task_ImageToASCIITest {
     static int checks;
     static final String[] CASES = {
-        "Malformed numeric text returns 80.",
-        "Both inclusive bounds and surrounding spaces work.",
-        "Out-of-range numeric input is rejected."
+        "readWidth(\"oops\") should return the fallback width 80, not the smallest permitted width.",
+        "readWidth should accept 4 and 160, including outer spaces. Keep both width limits valid.",
+        "readWidth must reject 3 and 161 with IllegalArgumentException. Use the fallback only for text that cannot be parsed."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 12.08: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -190,7 +222,7 @@ class P08_ImageToASCIITest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -200,7 +232,7 @@ class P08_ImageToASCIITest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -217,7 +249,7 @@ class P08_ImageToASCIITest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P08_ImageToASCII");
+            var p = Reflect.create("P08_Task_ImageToASCII");
             check(((int) Reflect.call(p, "readWidth", "oops"))==80,0,((int) Reflect.call(p, "readWidth", "oops")));
             check(((int) Reflect.call(p, "readWidth", " 4 "))==4&&((int) Reflect.call(p, "readWidth", "160"))==160,1,"bounds");
             reject(()->Reflect.call(p, "readWidth", "3"),2);
@@ -225,23 +257,22 @@ class P08_ImageToASCIITest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 12.08: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P11_MazePostcardsTest {
+class P11_Task_MazePostcardsTest {
     static int checks;
     static final String[] CASES = {
-        "Malformed text gives the 20-column maze.",
-        "Both inclusive bounds are accepted.",
-        "Out-of-range integers are rejected."
+        "readColumns must use 20 for malformed text and recognise tiny=6 and wide=40. The fallback must also feed the real maze generator.",
+        "readColumns should accept 2 and 50, including outer spaces. Both ends of the allowed range are valid.",
+        "readColumns must reject 1 and 51 with IllegalArgumentException instead of replacing a readable out-of-range number."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 12.11: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -250,7 +281,7 @@ class P11_MazePostcardsTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -260,7 +291,7 @@ class P11_MazePostcardsTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -277,7 +308,7 @@ class P11_MazePostcardsTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P11_MazePostcards");
+            var p = Reflect.create("P11_Task_MazePostcards");
             check(((int) Reflect.call(p, "readColumns", "oops"))==20,0,((int) Reflect.call(p, "readColumns", "oops")));
             check(((int) Reflect.call(p, "readColumns", " 2 "))==2&&((int) Reflect.call(p, "readColumns", "50"))==50,1,"limits");
             reject(()->Reflect.call(p, "readColumns", "1"),2);reject(()->Reflect.call(p, "readColumns", "51"),2);
@@ -286,23 +317,22 @@ class P11_MazePostcardsTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 12.11: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P14_EndlessToneStaircaseTest {
+class P14_Task_EndlessToneStaircaseTest {
     static int checks;
     static final String[] CASES = {
-        "The complete nested destination is created.",
-        "The actual WAV contains the expected number/rate of frames.",
-        "A parent that is a file causes an expected IOException."
+        "write must create the WAV at the complete supplied destination, including its nested folder and filename. Check the Path passed to the output stream.",
+        "The saved WAV should contain four frames at 22050 Hz for the four supplied samples. Check that write encodes the supplied audio stream.",
+        "write must throw IOException when a required parent folder is actually a file. Do not silently choose another destination."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 12.14: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -311,7 +341,7 @@ class P14_EndlessToneStaircaseTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -321,7 +351,7 @@ class P14_EndlessToneStaircaseTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -342,7 +372,7 @@ class P14_EndlessToneStaircaseTest {
         Path misplaced = Path.of(filename).toAbsolutePath();
         boolean absent = Files.notExists(misplaced);
         try {
-            var p = Reflect.create("P14_EndlessToneStaircase");
+            var p = Reflect.create("P14_Task_EndlessToneStaircase");
             if (!absent) throw new IllegalStateException("Unique test filename already exists: " + misplaced);
             Path file = root.resolve("nested").resolve(filename);
             Reflect.call(p, "write", file, new double[]{0, .2, -.2, 0});
@@ -356,7 +386,7 @@ class P14_EndlessToneStaircaseTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 12.14: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         } finally {
             if (absent) Files.deleteIfExists(misplaced);
             try (var paths = Files.walk(root)) {
@@ -365,21 +395,20 @@ class P14_EndlessToneStaircaseTest {
                 }
             }
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P15_PixelSortingGlitchTest {
+class P15_Task_PixelSortingGlitchTest {
     static int checks;
     static final String[] CASES = {
-        "The exact nested filename exists after export.",
-        "The decoded PNG is sorted while input pixels remain unchanged.",
-        "An unusable parent produces an expected IOException."
+        "saveSorted did not create the requested nested/glitch.png file. Preserve the destination folder and filename supplied by the caller.",
+        "saveSorted must save the sorted pixels while leaving the input image unchanged. For the test row, the first saved pixel should be grey 0x555555, but the input should still start white.",
+        "saveSorted must throw IOException when its parent path is a file rather than a folder. Do not redirect the output elsewhere."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 12.15: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -388,7 +417,7 @@ class P15_PixelSortingGlitchTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -398,7 +427,7 @@ class P15_PixelSortingGlitchTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -416,7 +445,7 @@ class P15_PixelSortingGlitchTest {
     public static void main(String[] args) throws Exception {
         Path root = Files.createTempDirectory("pixels-check-");
         try {
-            var p = Reflect.create("P15_PixelSortingGlitch");
+            var p = Reflect.create("P15_Task_PixelSortingGlitch");
             var input = new BufferedImage(3, 1, BufferedImage.TYPE_INT_ARGB);
             input.setRGB(0, 0, 0xFFFFFFFF);
             input.setRGB(1, 0, 0xFF555555);
@@ -433,7 +462,7 @@ class P15_PixelSortingGlitchTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 12.15: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         } finally {
             try (var paths = Files.walk(root)) {
                 for (Path path : paths.sorted(java.util.Comparator.reverseOrder()).toList()) {
@@ -441,21 +470,20 @@ class P15_PixelSortingGlitchTest {
                 }
             }
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P16_MirrorCylinderPictureTest {
+class P16_Task_MirrorCylinderPictureTest {
     static int checks;
     static final String[] CASES = {
-        "The chosen file supplies its stripped first line.",
-        "UTF-8 contents are preserved and the caption affects the real image.",
-        "Missing files and invalid first lines report an I/O failure."
+        "readCaption should return MOON from a first line containing outer spaces. Read the selected file, strip that line, and ignore later lines.",
+        "readCaption must preserve UTF-8 text such as π!, and render must use the loaded caption. JAVA and MOON should change the actual picture.",
+        "readCaption must throw IOException for a missing file, no first line, a blank first line, or more than eight characters. Do not skip an invalid first line."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 12.16: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -464,7 +492,7 @@ class P16_MirrorCylinderPictureTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -474,7 +502,7 @@ class P16_MirrorCylinderPictureTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -492,7 +520,7 @@ class P16_MirrorCylinderPictureTest {
     public static void main(String[] args) throws Exception {
         Path root = Files.createTempDirectory("mirror-check-");
         try {
-            var p = Reflect.create("P16_MirrorCylinderPicture");
+            var p = Reflect.create("P16_Task_MirrorCylinderPicture");
             Path file = root.resolve("nested/word.txt");
             Files.createDirectories(file.getParent());
             Files.writeString(file, "  MOON  \nignored second line\n");
@@ -513,7 +541,7 @@ class P16_MirrorCylinderPictureTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 12.16: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         } finally {
             try (var paths = Files.walk(root)) {
                 for (Path path : paths.sorted(java.util.Comparator.reverseOrder()).toList()) {
@@ -521,21 +549,20 @@ class P16_MirrorCylinderPictureTest {
                 }
             }
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P19_SecretPNGPostcardTest {
+class P19_Task_SecretPNGPostcardTest {
     static int checks;
     static final String[] CASES = {
-        "The actual cover supplies the new postcard pixels and dimensions.",
-        "The message persists while the source file stays unchanged.",
-        "Unreadable inputs and using the cover as its own destination are rejected."
+        "postcardFromCover must keep the supplied cover artwork and its 48×20 dimensions. Only the low colour bits used for the message may change.",
+        "The saved postcard must reopen with the full message \"Meet π at noon\", while the source cover stays unchanged. A refused input must also preserve any previous postcard.",
+        "postcardFromCover must reject using the cover as its destination, and report IOException for missing or unreadable image data. Validate before replacing the saved postcard."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 12.19: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -544,7 +571,7 @@ class P19_SecretPNGPostcardTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -554,7 +581,7 @@ class P19_SecretPNGPostcardTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -572,7 +599,7 @@ class P19_SecretPNGPostcardTest {
     public static void main(String[] args) throws Exception {
         Path root = Files.createTempDirectory("cover-check-");
         try {
-            var p = Reflect.create("P19_SecretPNGPostcard");
+            var p = Reflect.create("P19_Task_SecretPNGPostcard");
             Path cover = root.resolve("cover.png");
             Path card = root.resolve("nested/card.png");
             var original = new BufferedImage(48, 20, BufferedImage.TYPE_INT_RGB);
@@ -585,7 +612,7 @@ class P19_SecretPNGPostcardTest {
             boolean sameArtwork = true;
             for (int y = 0; y < 20; y++) for (int x = 0; x < 48; x++) sameArtwork &= (original.getRGB(x,y) & 0xFEFEFE) == (result.getRGB(x,y) & 0xFEFEFE);
             check(sameArtwork, 0, "only the message bits may change");
-            check(Reflect.call(Reflect.create("P19_SecretPNGPostcard"), "readMessage", card).equals("Meet π at noon"), 1, "persisted message");
+            check(Reflect.call(Reflect.create("P19_Task_SecretPNGPostcard"), "readMessage", card).equals("Meet π at noon"), 1, "persisted message");
             check(Arrays.equals(before, Files.readAllBytes(cover)), 1, "cover bytes");
             reject(() -> Reflect.call(p, "postcardFromCover", cover, cover, "overwrite"), 2);
             check(Arrays.equals(before, Files.readAllBytes(cover)), 1, "cover after rejected write");
@@ -599,21 +626,20 @@ class P19_SecretPNGPostcardTest {
                 for (Path path : paths.sorted(java.util.Comparator.reverseOrder()).toList()) Files.deleteIfExists(path);
             }
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P20_MagicEyeStripTest {
+class P20_Task_MagicEyeStripTest {
     static int checks;
     static final String[] CASES = {
-        "The notebook selects the last numeric data line, skipping blanks and # comments.",
-        "The selected seed reproduces its actual picture without rewriting the notebook.",
-        "Typos, no data and missing files remain explicit failures."
+        "readSeed should select the last numeric data line: the notebook with 42 followed by -7 selects -7. Skip blank lines and whole-line # comments, and accept zero as data.",
+        "Reading the notebook must not rewrite it. Use the selected seed so that rendering the selected -7 matches rendering -7 directly.",
+        "readSeed must reject a notebook with no numbers or an invalid data line, even before a later valid number. A missing file must produce IOException."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 12.20: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -622,7 +648,7 @@ class P20_MagicEyeStripTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -632,7 +658,7 @@ class P20_MagicEyeStripTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -650,7 +676,7 @@ class P20_MagicEyeStripTest {
     public static void main(String[] args) throws Exception {
         Path root = Files.createTempDirectory("notebook-check-");
         try {
-            var p = Reflect.create("P20_MagicEyeStrip");
+            var p = Reflect.create("P20_Task_MagicEyeStrip");
             Path file = root.resolve("seed.txt");
             Files.writeString(file, "  # first trial\n42\n\n # selected trial\n -7 \n");
             byte[] before = Files.readAllBytes(file);
@@ -678,7 +704,6 @@ class P20_MagicEyeStripTest {
                 for (Path path : paths.sorted(java.util.Comparator.reverseOrder()).toList()) Files.deleteIfExists(path);
             }
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 

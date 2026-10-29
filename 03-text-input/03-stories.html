@@ -9,13 +9,16 @@
 <h1>3.3 Let the player shape the story</h1>
 <p>A short story can respond to a name and place supplied by the player. Instead of making several copies by hand, you will prepare one text template.</p>
 <h2>Replace markers with answers</h2>
-<p>Open <code>03-text-input/P05_StoryMachine.java</code>. First read the text in <code>story</code>. Where should the same pilot appear twice?</p>
-<pre><code class="language-java" data-source="P05_StoryMachine.java">void main() {
-    String pilot = IO.readln(&quot;Pilot: &quot;);
-    String place = IO.readln(&quot;Place: &quot;);
-    String story = &quot;PLAYER shouts \&quot;Go!\&quot; in PLACE.\nPLAYER runs.&quot;;
-    story = story.replace(&quot;PLAYER&quot;, pilot);
-    story = story.replace(&quot;PLACE&quot;, place);
+<p>Open <code>03-text-input/P05_Example_StoryMachine.java</code>. First read the text in <code>story</code>. Where should the same pilot appear twice?</p>
+<pre><code class="language-java" data-source="P05_Example_StoryMachine.java">/// # Worked example · 3.3 Let the player shape the story
+/// Lesson: 03-stories.html
+
+void main() {
+    String pilot = IO.readln("Pilot: ");
+    String place = IO.readln("Place: ");
+    String story = "PLAYER shouts \"Go!\" in PLACE.\nPLAYER runs.";
+    story = story.replace("PLAYER", pilot);
+    story = story.replace("PLACE", place);
     IO.println(story);
 }
 </code></pre>
@@ -33,7 +36,7 @@ Nova runs.</code></pre>
 </tbody></table></div>
 <p>This is called an escape sequence. The outer quotes that end the whole String have no backslash before them. The line break inside <code>story</code> makes a single println call print the story on two lines.</p>
 <h2>Task: the story forgot the name and the loot</h2>
-<p>Open <code>03-text-input/P06_SecretStory.java</code>. It reads a name and an item, but still prints NAME and ITEM in their place.</p>
+<p>Open <code>03-text-input/P06_Task_SecretStory.java</code>. It reads a name and an item, but still prints NAME and ITEM in their place.</p>
 <p><strong>Fix how the first replacement's result is stored, and add the second replacement. Both NAME markers must use the entered name, and ITEM must use the entered item.</strong></p>
 <pre class="transcript"><code>Name: <span class="typed">Nova</span>
 Item: <span class="typed">a rubber duck</span>
@@ -50,11 +53,11 @@ Nova steals a rubber duck. Nova escapes.</code></pre>
 <p>The first <code>String</code> says that the action returns text; the earlier <code>void main()</code> did not return a result value. <code>label</code> is the action's name. <code>String word</code> names the text passed in. <code>return</code> gives the result back to the place that made the call: <code>label("map")</code> provides <code>"Found: map"</code>. This definition does not run on its own; another part of the program uses it. You will explore how to write your own actions in the chapter on methods. For these games, you need to follow the text passed in and change the expression after return.</p>
 <h2>Use text in games</h2>
 <ul>
-<li><code>03-text-input/P07_TypeMelody.java</code>: text becomes a melody. Change the supplied message as the task asks and listen to the difference between letters and spaces.</li>
-<li><code>03-text-input/P08_BitmapBanner.java</code>: light up a sign by changing its text. Letters become supplied rows of pixels.</li>
-<li><code>03-text-input/P09_ProgramMirror.java</code>: fix text that looks like a Java statement. You will use quotes inside quotes.</li>
-<li><code>03-text-input/P10_MadLibsStoryMachine.java</code>: remove outer spaces and build a headline from the entered name. The supplied program then uses your headline with a longer, absurd story.</li>
-<li><code>03-text-input/P11_AnagramRounds.java</code>: you guess anagrams, but the judge rejects lowercase letters. Fix how the answer is processed while keeping the removal of outer spaces. In the supplied chain of calls, the next dot selects an operation on the previous call's result.</li>
+<li><code>03-text-input/P07_Task_TypeMelody.java</code>: text becomes a melody. Change the supplied message as the task asks and listen to the difference between letters and spaces.</li>
+<li><code>03-text-input/P08_Task_BitmapBanner.java</code>: light up a sign by changing its text. Letters become supplied rows of pixels.</li>
+<li><code>03-text-input/P09_Task_ProgramMirror.java</code>: fix text that looks like a Java statement. You will use quotes inside quotes.</li>
+<li><code>03-text-input/P10_Task_MadLibsStoryMachine.java</code>: remove outer spaces and build a headline from the entered name. The supplied program then uses your headline with a longer, absurd story.</li>
+<li><code>03-text-input/P11_Task_AnagramRounds.java</code>: you guess anagrams, but the judge rejects lowercase letters. Fix how the answer is processed while keeping the removal of outer spaces. In the supplied chain of calls, the next dot selects an operation on the previous call's result.</li>
 </ul>
 <p>Read each task's specific goal first. To check your work, open Check.java from the same folder and select the file you are working on in Program Arguments. The <a href="../00-setup/index.html#checks">introductory lesson</a> reminds you how.</p>
 <p><strong>You can now fill a text template, write a quote inside a message and follow text returned by a supplied action.</strong></p>

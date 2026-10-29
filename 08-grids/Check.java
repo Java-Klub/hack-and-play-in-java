@@ -3,57 +3,88 @@ import java.util.*;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-/// Chapter checks: java Check.java
-/// One game: java Check.java P03_MiniBattleshipHunt.java
-/// Tests call compact programs through reflection in this JVM.
+/// Game task checks for this chapter. Run short textbook tasks directly.
 class Check {
     int failed;
     int checked;
     String selected;
+    final ArrayList<String> available = new ArrayList<>();
     interface Test { void run() throws Exception; }
 
     void main(String[] args) {
         System.setProperty("java.awt.headless", "true");
-        if (args.length > 1) throw new IllegalArgumentException("Use: java Check.java [game filename]");
+        if (args.length > 1) {
+            IO.println("Supply at most one game filename. With no argument, all game tasks in this chapter are checked.");
+            System.exit(2);
+        }
         selected = args.length == 0 ? "" : Path.of(args[0]).getFileName().toString().replaceFirst("\\.java$", "");
-        run("P03_MiniBattleshipHunt", "08.03 MiniBattleshipHunt · F16", () -> P03_MiniBattleshipHuntTest.main(new String[0]));
-        run("P04_LoopBuilder", "08.04 LoopBuilder · F18", () -> P04_LoopBuilderTest.main(new String[0]));
-        run("P07_TicTacToe", "08.07 TicTacToe · F08", () -> P07_TicTacToeTest.main(new String[0]));
-        run("P08_Chomp", "08.08 Chomp · F08", () -> P08_ChompTest.main(new String[0]));
-        run("P09_Sudoku", "08.09 Sudoku · F08", () -> P09_SudokuTest.main(new String[0]));
-        run("P12_Hexapawn", "08.12 Hexapawn · F13", () -> P12_HexapawnTest.main(new String[0]));
-        run("P13_FourColourMap", "08.13 FourColourMap · F17", () -> P13_FourColourMapTest.main(new String[0]));
-        run("P14_Minesweeper", "08.14 Minesweeper · F18", () -> P14_MinesweeperTest.main(new String[0]));
-        run("P15_Net", "08.15 Net · F18", () -> P15_NetTest.main(new String[0]));
-        run("P16_BlackBox", "08.16 BlackBox · F18", () -> P16_BlackBoxTest.main(new String[0]));
-        run("P17_AntHighway", "08.17 AntHighway · F18", () -> P17_AntHighwayTest.main(new String[0]));
-        run("P20_Quarto", "08.20 Quarto · F16", () -> P20_QuartoTest.main(new String[0]));
-        run("P21_Reversi", "08.21 Reversi · F17", () -> P21_ReversiTest.main(new String[0]));
-        run("P22_LightUp", "08.22 LightUp · F18", () -> P22_LightUpTest.main(new String[0]));
-        run("P25_Slant", "08.25 Slant · F20", () -> P25_SlantTest.main(new String[0]));
-        run("P26_BinaryBalance", "08.26 BinaryBalance · F20", () -> P26_BinaryBalanceTest.main(new String[0]));
-        run("P27_RuleGarden", "08.27 RuleGarden · F26", () -> P27_RuleGardenTest.main(new String[0]));
-        run("P28_ForestFireSandbox", "08.28 ForestFireSandbox · F26", () -> P28_ForestFireSandboxTest.main(new String[0]));
-        if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " mission goals remaining.");
+        run("P03_Task_MiniBattleshipHunt", () -> P03_Task_MiniBattleshipHuntTest.main(new String[0]));
+        run("P04_Task_LoopBuilder", () -> P04_Task_LoopBuilderTest.main(new String[0]));
+        run("P07_Task_TicTacToe", () -> P07_Task_TicTacToeTest.main(new String[0]));
+        run("P08_Task_Chomp", () -> P08_Task_ChompTest.main(new String[0]));
+        run("P09_Task_Sudoku", () -> P09_Task_SudokuTest.main(new String[0]));
+        run("P12_Task_Hexapawn", () -> P12_Task_HexapawnTest.main(new String[0]));
+        run("P13_Task_FourColourMap", () -> P13_Task_FourColourMapTest.main(new String[0]));
+        run("P14_Task_Minesweeper", () -> P14_Task_MinesweeperTest.main(new String[0]));
+        run("P15_Task_Net", () -> P15_Task_NetTest.main(new String[0]));
+        run("P16_Task_BlackBox", () -> P16_Task_BlackBoxTest.main(new String[0]));
+        run("P17_Task_AntHighway", () -> P17_Task_AntHighwayTest.main(new String[0]));
+        run("P20_Task_Quarto", () -> P20_Task_QuartoTest.main(new String[0]));
+        run("P21_Task_Reversi", () -> P21_Task_ReversiTest.main(new String[0]));
+        run("P22_Task_LightUp", () -> P22_Task_LightUpTest.main(new String[0]));
+        run("P25_Task_Slant", () -> P25_Task_SlantTest.main(new String[0]));
+        run("P26_Task_BinaryBalance", () -> P26_Task_BinaryBalanceTest.main(new String[0]));
+        run("P27_Task_RuleGarden", () -> P27_Task_RuleGardenTest.main(new String[0]));
+        run("P28_Task_ForestFireSandbox", () -> P28_Task_ForestFireSandboxTest.main(new String[0]));
+        if (checked == 0) {
+            IO.println("No game check is prepared here for this file: " + selected + ".java");
+            IO.println("Choose one of these files: " + String.join(", ", available));
+            System.exit(2);
+        }
+        IO.println("Checked: " + checked + "; complete: " + (checked - failed) + "; remaining: " + failed);
         if (failed > 0) System.exit(1);
     }
 
-    void run(String game, String label, Test test) {
+    void run(String game, Test test) {
+        available.add(game + ".java");
         if (!selected.isEmpty() && !selected.equals(game)) return;
         checked++;
         try {
             test.run();
-            IO.println("GREEN " + label);
+            IO.println("GREEN " + game + ".java");
         } catch (Throwable failure) {
             failed++;
-            IO.println("RED " + label + ": " + failure.getMessage());
+            IO.println("RED " + game + ".java");
+            String reason = failure.getMessage();
+            if (reason == null || reason.isBlank()) reason = "The check did not get the expected result.";
+            if (!(failure instanceof AssertionError)) reason = "The program stopped during the check: " + failure.getClass().getSimpleName() + ": " + reason;
+            IO.println("  " + reason.replace("\n", "\n  "));
+            Throwable cause = failure;
+            while (cause.getCause() != null && cause.getCause() != cause) cause = cause.getCause();
+            if (cause != failure) IO.println("  " + cause.getClass().getSimpleName() + ": " + show(cause.getMessage()));
+            for (var frame : cause.getStackTrace()) {
+                if (frame.getClassName().equals(game) || frame.getClassName().startsWith(game + "$")) {
+                    IO.println("  " + "Location in the program: " + frame.getFileName() + ":" + frame.getLineNumber());
+                    break;
+                }
+            }
         }
+    }
+
+    static String show(Object value) {
+        if (value != null && value.getClass().isArray()) {
+            int length = java.lang.reflect.Array.getLength(value);
+            var parts = new ArrayList<String>();
+            for (int i = 0; i < Math.min(length, 8); i++) parts.add(show(java.lang.reflect.Array.get(value, i)));
+            return parts + (length > 8 ? " … (" + length + " items" + ")" : "");
+        }
+        String text = String.valueOf(value).replace("\n", "\\n").replace("\r", "\\r");
+        return text.length() <= 180 ? text : text.substring(0, 177) + "…";
     }
 }
 
 @SuppressWarnings("unchecked")
-class P03_MiniBattleshipHuntTest {
+class P03_Task_MiniBattleshipHuntTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -63,11 +94,11 @@ class P03_MiniBattleshipHuntTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P03_MiniBattleshipHunt");
+        var g = Reflect.create("P03_Task_MiniBattleshipHunt");
         for (int layout = 0; layout < 3; layout++) {
             Reflect.call(g, "layout", layout);
             int[] counts = new int[3];
@@ -76,17 +107,16 @@ class P03_MiniBattleshipHuntTest {
                     counts[cell]++;
                 }
             }
-            equal(3, counts[2], "08.03/F16: every layout has all three cells of ship two");
-            equal(2, counts[1], "08.03/F16: ship one occupies two cells");
+            equal(3, counts[2], "layout must place all three cells of ship 2 in every fleet arrangement. Check that its loop visits every selected coordinate.");
+            equal(2, counts[1], "layout must place exactly two cells of ship 1 in every fleet arrangement.");
         }
         Reflect.call(g, "layout", 0);
-        equal(2, ((int[][]) Reflect.get(g, "board"))[3][4], "08.03/F16: last coordinate is not omitted");
-        System.out.println("PASS " + checks + " checks");
+        equal(2, ((int[][]) Reflect.get(g, "board"))[3][4], "For layout(0), board[3][4] must contain ship 2. The last coordinate must not be skipped.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P04_LoopBuilderTest {
+class P04_Task_LoopBuilderTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -96,205 +126,200 @@ class P04_LoopBuilderTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P04_LoopBuilder");
-        equal(new int[]{0, 4}, ((int[]) Reflect.call(g, "vertices", 12)), "08.04/F18: vertical edge joins the next vertex row");
-        equal(new int[]{11, 15}, ((int[]) Reflect.call(g, "vertices", 23)), "08.04/F18: final vertical edge stays in its column");
-        equal(new int[]{14, 15}, ((int[]) Reflect.call(g, "vertices", 11)), "08.04/F18: horizontal edge joins adjacent columns");
+        var g = Reflect.create("P04_Task_LoopBuilder");
+        equal(new int[]{0, 4}, ((int[]) Reflect.call(g, "vertices", 12)), "vertices(12) must return [0, 4]: the first vertical edge joins adjacent vertex rows.");
+        equal(new int[]{11, 15}, ((int[]) Reflect.call(g, "vertices", 23)), "vertices(23) must return [11, 15]: the last vertical edge stays in its column.");
+        equal(new int[]{14, 15}, ((int[]) Reflect.call(g, "vertices", 11)), "vertices(11) must return [14, 15]: the final horizontal edge joins adjacent columns.");
         Reflect.call(g, "reset");
         for (int n : new int[]{0, 1, 2, 9, 10, 11, 12, 15, 16, 19, 20, 23}) {
             ((boolean[]) Reflect.get(g, "edges"))[n] = true;
         }
-        expect(((boolean) Reflect.call(g, "oneLoop")), "08.04/F18: perimeter edges form one real loop");
-        equal(new int[]{0, 1}, Reflect.call(g, "vertices", 0), "first horizontal edge");
-        equal(new int[]{14, 15}, Reflect.call(g, "vertices", 11), "last horizontal edge");
+        expect(((boolean) Reflect.call(g, "oneLoop")), "oneLoop must recognise the twelve outer perimeter edges as one closed loop. Check the endpoints returned by vertices.");
+        equal(new int[]{0, 1}, Reflect.call(g, "vertices", 0), "vertices(0) must return [0, 1] for the first horizontal edge.");
+        equal(new int[]{14, 15}, Reflect.call(g, "vertices", 11), "vertices(11) must return [14, 15] for the last horizontal edge.");
         boolean rejected = false;
         try { Reflect.call(g, "vertices", 24); } catch (IllegalArgumentException invalid) { rejected = true; }
-        expect(rejected, "outside edge index is rejected");
-        System.out.println("PASS " + checks + " checks");
+        expect(rejected, "vertices must reject edge numbers outside 0–23 rather than invent endpoints.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P07_TicTacToeTest {
+class P07_Task_TicTacToeTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("08.07 F08: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P07_TicTacToe");
+        var game = Reflect.create("P07_Task_TicTacToe");
         Reflect.call(game, "reset");
-        check(((boolean) Reflect.call(game, "play", 9)) && ((char[]) Reflect.get(game, "board"))[8] == 'X', "cell nine is a legal empty boundary cell");
-        check(!((boolean) Reflect.call(game, "play", 9)) && ((int) Reflect.get(game, "moves")) == 1, "an occupied cell must be rejected without consuming a move");
-        check(!((boolean) Reflect.call(game, "play", 0)) && !((boolean) Reflect.call(game, "play", 10)), "out-of-range cells must be rejected before indexing the board");
-        check(((char) Reflect.get(game, "player")) == 'O', "rejected commands must not pass play again");
+        check(((boolean) Reflect.call(game, "play", 9)) && ((char[]) Reflect.get(game, "board"))[8] == 'X', "play(9) must accept the empty final square and put X there. Check mayPlay's valid range.");
+        check(!((boolean) Reflect.call(game, "play", 9)) && ((int) Reflect.get(game, "moves")) == 1, "Playing square 9 again must be rejected without increasing the move count.");
+        check(!((boolean) Reflect.call(game, "play", 0)) && !((boolean) Reflect.call(game, "play", 10)), "play must reject squares 0 and 10 before reading the board. Valid player-facing squares are 1–9.");
+        check(((char) Reflect.get(game, "player")) == 'O', "Rejected moves must leave O on turn after X has played once.");
         Reflect.set(game, "winner", 'X');
-        check(!((boolean) Reflect.call(game, "play", 1)) && ((char[]) Reflect.get(game, "board"))[0] == '.', "a finished round rejects even an empty legal square");
-        check(((int) Reflect.get(game, "moves")) == 1 && ((char) Reflect.get(game, "player")) == 'O', "rejecting a finished round preserves count and turn");
-        System.out.println("PASS " + checks + " checks");
+        check(!((boolean) Reflect.call(game, "play", 1)) && ((char[]) Reflect.get(game, "board"))[0] == '.', "After the round ends, play(1) must reject even an empty square and leave it empty.");
+        check(((int) Reflect.get(game, "moves")) == 1 && ((char) Reflect.get(game, "player")) == 'O', "Rejecting a move after the round ends must preserve the move count and current player.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P08_ChompTest {
+class P08_Task_ChompTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("08.08 F08: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P08_Chomp");
+        var game = Reflect.create("P08_Task_Chomp");
         Reflect.call(game, "reset");
-        check(((boolean) Reflect.call(game, "bite", 4, 5)) && ((int[]) Reflect.get(game, "widths"))[3] == 4, "the last row must accept a legal remaining bite");
+        check(((boolean) Reflect.call(game, "bite", 4, 5)) && ((int[]) Reflect.get(game, "widths"))[3] == 4, "bite(4, 5) must accept the remaining chocolate in the fourth row and shorten that row to four cells.");
         int[] before = ((int[]) Reflect.get(game, "widths")).clone();
-        check(!((boolean) Reflect.call(game, "bite", 5, 1)) && Arrays.equals(before, ((int[]) Reflect.get(game, "widths"))), "an invalid row must not mutate chocolate");
-        check(!((boolean) Reflect.call(game, "bite", 4, 5)), "already eaten chocolate must be rejected");
+        check(!((boolean) Reflect.call(game, "bite", 5, 1)) && Arrays.equals(before, ((int[]) Reflect.get(game, "widths"))), "bite(5, 1) must reject the nonexistent fifth row without changing any chocolate.");
+        check(!((boolean) Reflect.call(game, "bite", 4, 5)), "A second bite(4, 5) must reject the piece already eaten by the first bite.");
         Reflect.call(game, "reset");
-        check(((boolean) Reflect.call(game, "bite", 1, 1)) && ((int) Reflect.get(game, "winner")) == 2, "the legal poison cell still causes a loss");
-        System.out.println("PASS " + checks + " checks");
+        check(((boolean) Reflect.call(game, "bite", 1, 1)) && ((int) Reflect.get(game, "winner")) == 2, "bite(1, 1) must still allow eating the poison cell and award the win to the other player.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P09_SudokuTest {
+class P09_Task_SudokuTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("08.09 F08: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P09_Sudoku");
+        var game = Reflect.create("P09_Task_Sudoku");
         Reflect.call(game, "reset");
-        check(((boolean) Reflect.call(game, "place", 0, 1, 2)) && ((int[][]) Reflect.get(game, "board"))[0][1] == 2, "a valid empty square must accept a number");
-        check(!((boolean) Reflect.call(game, "place", 0, 0, 0)) && ((int[][]) Reflect.get(game, "board"))[0][0] == 1, "a printed clue must never be erased");
-        check(!((boolean) Reflect.call(game, "place", -1, 0, 1)) && !((boolean) Reflect.call(game, "place", 0, 4, 1)), "invalid coordinates are rejected before clue access");
-        check(!((boolean) Reflect.call(game, "place", 0, 2, 2)) && ((int[][]) Reflect.get(game, "board"))[0][2] == 0, "a conflicting number is rejected before writing");
-        System.out.println("PASS " + checks + " checks");
+        check(((boolean) Reflect.call(game, "place", 0, 1, 2)) && ((int[][]) Reflect.get(game, "board"))[0][1] == 2, "place(0, 1, 2) must accept 2 in that initially empty, legal square.");
+        check(!((boolean) Reflect.call(game, "place", 0, 0, 0)) && ((int[][]) Reflect.get(game, "board"))[0][0] == 1, "place(0, 0, 0) must not erase the fixed 1 in the top-left square.");
+        check(!((boolean) Reflect.call(game, "place", -1, 0, 1)) && !((boolean) Reflect.call(game, "place", 0, 4, 1)), "place must reject row -1 and column 4 before reading clues or writing the board.");
+        check(!((boolean) Reflect.call(game, "place", 0, 2, 2)) && ((int[][]) Reflect.get(game, "board"))[0][2] == 0, "place(0, 2, 2) must reject the repeated 2 and leave that square empty.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P12_HexapawnTest {
+class P12_Task_HexapawnTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("08.12 F13: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P12_Hexapawn");
-        check(((int) Reflect.call(game, "goalRow", 2)) == 2, "player two must have the bottom goal row");
-        check(((int) Reflect.call(game, "goalRow", 1)) == 0, "player one must have the top goal row");
+        var game = Reflect.create("P12_Task_Hexapawn");
+        check(((int) Reflect.call(game, "goalRow", 2)) == 2, "goalRow(2) must identify the bottom row, whose internal index is 2.");
+        check(((int) Reflect.call(game, "goalRow", 1)) == 0, "goalRow(1) must identify the top row, whose internal index is 0.");
         Reflect.call(game, "reset");
         Reflect.set(game, "player", 2);
         Reflect.set(game, "board", new int[][]{{0,0,0},{2,0,0},{0,0,1}});
         Reflect.call(game, "command", "2 1 3 1");
-        check(((java.lang.String) Reflect.get(game, "outcome")).contains("2 wins"), "the real promotion uses goalRow for the current player");
-        check(((int) Reflect.call(game, "forwardStep", 1)) == -1 && ((int) Reflect.call(game, "forwardStep", 2)) == 1, "the two armies need opposite forward directions");
-        System.out.println("PASS " + checks + " checks");
+        check(((java.lang.String) Reflect.get(game, "outcome")).contains("2 wins"), "When player 2 reaches the bottom row in real play, the game must announce player 2's win.");
+        check(((int) Reflect.call(game, "forwardStep", 1)) == -1 && ((int) Reflect.call(game, "forwardStep", 2)) == 1, "forwardStep must move player 1 up by one row and player 2 down by one row.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P13_FourColourMapTest {
+class P13_Task_FourColourMapTest {
     static int checks;
 
     static void expect(boolean correct, String message) {
         checks++;
-        if (!correct) throw new AssertionError("08.13/F17: " + message);
+        if (!correct) throw new AssertionError(message);
     }
 
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-                + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-                + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P13_FourColourMap");
+        var game = Reflect.create("P13_Task_FourColourMap");
         Reflect.call(game, "reset");
         Reflect.set(game, "map", new String[]{"AABCCDEE"});
-        expect(!((boolean) Reflect.call(game, "touches", 0, 3)), "changing geography removes an obsolete A-D border");
-        expect((boolean) Reflect.call(game, "touches", 0, 1), "horizontal contact is discovered");
-        expect((boolean) Reflect.call(game, "touches", 1, 0), "neighbour order is symmetric");
-        expect(!((boolean) Reflect.call(game, "touches", 0, 0)), "a region is not its own neighbouring region");
+        expect(!((boolean) Reflect.call(game, "touches", 0, 3)), "touches must read the changed map: A and D no longer share a side.");
+        expect((boolean) Reflect.call(game, "touches", 0, 1), "touches must detect the side shared horizontally by A and B.");
+        expect((boolean) Reflect.call(game, "touches", 1, 0), "touches must give the same answer for B–A as for A–B.");
+        expect(!((boolean) Reflect.call(game, "touches", 0, 0)), "touches(A, A) must be false: a region is not its own neighbour.");
         Reflect.set(game, "map", new String[]{"AB", "CD"});
-        expect((boolean) Reflect.call(game, "touches", 0, 2), "vertical A-C contact is discovered");
-        expect((boolean) Reflect.call(game, "touches", 1, 3), "a new vertical B-D border is discovered");
-        expect(!((boolean) Reflect.call(game, "touches", 0, 3)), "corner-only A-D contact does not count");
+        expect((boolean) Reflect.call(game, "touches", 0, 2), "touches must detect that A is directly above C in this map.");
+        expect((boolean) Reflect.call(game, "touches", 1, 3), "touches must detect that B is directly above D in the changed map.");
+        expect(!((boolean) Reflect.call(game, "touches", 0, 3)), "A and D touch only at a corner here, so touches must return false.");
         Reflect.set(game, "map", new String[]{"AA", "BB"});
         int[] colours = {1, 1, 0, 0, 0};
         Reflect.set(game, "colours", colours.clone());
-        equal(1, Reflect.call(game, "conflicts"), "a two-cell shared boundary is one conflicting region pair");
-        equal(colours, Reflect.get(game, "colours"), "inspection preserves the colouring");
+        equal(1, Reflect.call(game, "conflicts"), "conflicts must count a pair of same-coloured neighbours once, even when their border is two cells long.");
+        equal(colours, Reflect.get(game, "colours"), "Reading neighbours and conflicts must not change the player's colours.");
         Reflect.set(game, "map", new String[]{"ABCDE", "ABCDE"});
         Reflect.set(game, "colours", new int[]{2, 2, 2, 2, 2});
-        equal(4, Reflect.call(game, "conflicts"), "all and only the four neighbouring pairs conflict");
+        equal(4, Reflect.call(game, "conflicts"), "When every region has the same colour, this map has exactly four conflicting neighbour pairs.");
         Reflect.set(game, "colours", new int[]{1, 2, 1, 2, 1});
-        equal(true, Reflect.call(game, "solved"), "real solved query follows the new geography");
-        System.out.println("PASS " + checks + " checks");
+        equal(true, Reflect.call(game, "solved"), "solved must use the changed map's actual neighbours when deciding whether colouring is complete.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P14_MinesweeperTest {
+class P14_Task_MinesweeperTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
         if (!correct) throw new AssertionError(message);
     }
     static void equal(Object expected, Object actual, String message) {
-        expect(java.util.Objects.deepEquals(expected, actual), message + " | expected=" + expected + " actual=" + actual);
+        expect(java.util.Objects.deepEquals(expected, actual), message
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P14_Minesweeper");
+        var g = Reflect.create("P14_Task_Minesweeper");
         boolean[][] mines = new boolean[6][6];
         mines[1][1] = true; mines[2][2] = true; mines[3][3] = true; mines[5][5] = true;
         Reflect.set(g, "mines", (Object) mines);
         Reflect.call(g, "inspect", 2, 2);
         boolean[][] lens = (boolean[][]) Reflect.get(g, "inspected");
-        expect(lens[1][1] && lens[2][2] && lens[3][3] && !lens[5][5], "08.14: a lens includes diagonal, centre and all local mines only");
+        expect(lens[1][1] && lens[2][2] && lens[3][3] && !lens[5][5], "inspect(2, 2) must include mines at the centre and diagonals inside its 3×3 view, but not the distant mine at (5, 5).");
         var buttons = (javax.swing.JButton[][]) Reflect.get(g, "buttons");
         for (int r = 0; r < 6; r++) {
             for (int c = 0; c < 6; c++) buttons[r][c] = new javax.swing.JButton();
         }
         Reflect.call(g, "refresh");
-        equal("*", buttons[1][1].getText(), "08.14: a scanned diagonal mine is really shown on its button");
-        expect((int) Reflect.get(g, "opened") == 0 && !(boolean) Reflect.get(g, "lost"), "08.14: inspection does not play a turn or lose");
-        equal(new boolean[6][6], Reflect.get(g, "revealed"), "08.14: the safe-cell progress is untouched");
+        equal("*", buttons[1][1].getText(), "refresh must show * on the button of a diagonal mine found by Inspect.");
+        expect((int) Reflect.get(g, "opened") == 0 && !(boolean) Reflect.get(g, "lost"), "Inspect must neither increase opened nor set lost; looking is not a played move.");
+        equal(new boolean[6][6], Reflect.get(g, "revealed"), "Inspect must leave every revealed square unchanged.");
         Reflect.call(g, "inspect", 5, 5);
         lens = (boolean[][]) Reflect.get(g, "inspected");
-        expect(lens[5][5] && !lens[1][1], "08.14: moving the lens replaces rather than accumulates its view");
+        expect(lens[5][5] && !lens[1][1], "A new inspection must replace the old view, not keep distant mines visible.");
         Reflect.call(g, "inspect", -1, 0);
-        equal(new boolean[6][6], Reflect.get(g, "inspected"), "08.14: outside inspection clears the lens safely");
-        equal(2, Reflect.call(g, "adjacent", 2, 2), "08.14: ordinary mine clues remain correct");
+        equal(new boolean[6][6], Reflect.get(g, "inspected"), "Inspect outside the board must safely clear the extra view without reading an invalid cell.");
+        equal(2, Reflect.call(g, "adjacent", 2, 2), "adjacent(2, 2) must still count two neighbouring mines, excluding the centre itself.");
         Reflect.call(g, "reset", 42L);
-        equal(new boolean[6][6], Reflect.get(g, "inspected"), "08.14: a new board clears the inspection");
-        System.out.println("PASS " + checks + " checks");
+        equal(new boolean[6][6], Reflect.get(g, "inspected"), "Starting a new board must clear all mines shown only by Inspect.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P15_NetTest {
+class P15_Task_NetTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -304,25 +329,24 @@ class P15_NetTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P15_Net");
+        var g = Reflect.create("P15_Task_Net");
         Reflect.set(g, "tiles", new int[4][4]);
         ((int[][]) Reflect.get(g, "tiles"))[0][0] = 2;
-        expect(!((boolean[][]) Reflect.call(g, "connected"))[0][1], "08.15/F18: neighbour needs a reciprocal connector");
+        expect(!((boolean[][]) Reflect.call(g, "connected"))[0][1], "linked must reject a neighbouring tile that has no connector facing back to the current tile.");
         ((int[][]) Reflect.get(g, "tiles"))[0][1] = 8;
-        expect(((boolean[][]) Reflect.call(g, "connected"))[0][1], "08.15/F18: right-left ports form a connection");
-        expect(!((boolean[][]) Reflect.call(g, "connected"))[1][1], "08.15/F18: diagonal tile is not automatically connected");
+        expect(((boolean[][]) Reflect.call(g, "connected"))[0][1], "A right-facing port and the neighbour's left-facing port must connect and carry power.");
+        expect(!((boolean[][]) Reflect.call(g, "connected"))[1][1], "A diagonal tile must not receive power merely because it touches the source at a corner.");
         Reflect.call(g, "solvedBoard");
-        expect(((boolean) Reflect.call(g, "won")), "08.15/F18: authored pipe tree remains valid");
-        System.out.println("PASS " + checks + " checks");
+        expect(((boolean) Reflect.call(g, "won")), "The supplied correctly connected pipe tree must satisfy won. Check both ends of each linked connection.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P16_BlackBoxTest {
+class P16_Task_BlackBoxTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -332,34 +356,33 @@ class P16_BlackBoxTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P16_BlackBox");
+        var g = Reflect.create("P16_Task_BlackBox");
         Reflect.call(g, "reset");
         boolean[][] box = new boolean[4][4];
         box[1][1] = true;
-        equal("W1", ((java.lang.String) Reflect.call(g, "trace", box, "N1")), "08.16/F18: a right-side diagonal ball deflects the ray left");
+        equal("W1", ((java.lang.String) Reflect.call(g, "trace", box, "N1")), "trace from N1 must exit at W1 when a ball lies diagonally to the ray's right. Check the two different side neighbours.");
         box = new boolean[4][4];
-        equal("S1", ((java.lang.String) Reflect.call(g, "trace", box, "N1")), "08.16/F18: empty corridor crosses straight");
+        equal("S1", ((java.lang.String) Reflect.call(g, "trace", box, "N1")), "trace from N1 through an empty box must continue straight to S1.");
         box[0][0] = true;
-        equal("HIT", ((java.lang.String) Reflect.call(g, "trace", box, "N1")), "08.16/F18: direct hit retains priority");
-        equal("REFLECT", ((java.lang.String) Reflect.call(g, "trace", box, "N2")), "08.16/F18: entry-edge diagonal reflects");
+        equal("HIT", ((java.lang.String) Reflect.call(g, "trace", box, "N1")), "A ball directly ahead of the ray must produce HIT before any side deflection.");
+        equal("REFLECT", ((java.lang.String) Reflect.call(g, "trace", box, "N2")), "A diagonal ball beside the entry must make the N2 ray return REFLECT.");
         Reflect.call(g, "command", "mark 1 1");
         Reflect.call(g, "command", "mark 1 2");
         Reflect.call(g, "command", "check");
-        expect(((java.lang.String) Reflect.get(g, "message")).contains("disagree"), "08.16/F18: incorrect guesses give a current disagreement");
+        expect(((java.lang.String) Reflect.get(g, "message")).contains("disagree"), "Checking an incorrect arrangement must report that its ray results disagree with the observations.");
         Reflect.call(g, "command", "ray N1");
-        equal("Probe recorded", ((java.lang.String) Reflect.get(g, "message")), "08.16/F18: a new probe replaces the earlier failed-check event");
+        equal("Probe recorded", ((java.lang.String) Reflect.get(g, "message")), "A new ray probe must replace the old disagreement message with Probe recorded.");
         Reflect.call(g, "command", "mark 1 1");
-        equal("Guess removed", ((java.lang.String) Reflect.get(g, "message")), "08.16/F18: a changed guess reports its own event");
-        System.out.println("PASS " + checks + " checks");
+        equal("Guess removed", ((java.lang.String) Reflect.get(g, "message")), "Removing a guess must report Guess removed rather than repeat an earlier event.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P17_AntHighwayTest {
+class P17_Task_AntHighwayTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -369,32 +392,31 @@ class P17_AntHighwayTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P17_AntHighway");
+        var g = Reflect.create("P17_Task_AntHighway");
         Reflect.call(g, "reset");
         Reflect.set(g, "x", 0);
         Reflect.set(g, "y", 0);
         Reflect.set(g, "direction", 2);
         Reflect.call(g, "step");
-        equal(80, ((int) Reflect.get(g, "x")), "08.17/F18: west neighbour wraps to the final column");
-        equal(0, ((int) Reflect.get(g, "y")), "08.17/F18: horizontal step does not change row");
+        equal(80, ((int) Reflect.get(g, "x")), "A westward step from column 0 must wrap to column 80, not move east.");
+        equal(0, ((int) Reflect.get(g, "y")), "A horizontal ant step must preserve its row coordinate.");
         Reflect.call(g, "reset");
         Reflect.set(g, "x", 0);
         Reflect.set(g, "y", 0);
         Reflect.set(g, "direction", 1);
         ((boolean[][]) Reflect.get(g, "black"))[0][0] = true;
         Reflect.call(g, "step");
-        equal(60, ((int) Reflect.get(g, "y")), "08.17/F18: north neighbour wraps to final row");
-        expect(!((boolean[][]) Reflect.get(g, "black"))[0][0] && ((long) Reflect.get(g, "steps")) == 1, "08.17/F18: old tile flipped exactly once");
-        System.out.println("PASS " + checks + " checks");
+        equal(60, ((int) Reflect.get(g, "y")), "A northward step from row 0 must wrap to row 60.");
+        expect(!((boolean[][]) Reflect.get(g, "black"))[0][0] && ((long) Reflect.get(g, "steps")) == 1, "One step must flip the old cell once and increase steps by exactly one.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P20_QuartoTest {
+class P20_Task_QuartoTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -404,62 +426,61 @@ class P20_QuartoTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P20_Quarto");
+        var g = Reflect.create("P20_Task_Quarto");
         Reflect.call(g, "reset");
         int[] diagonal = {0, 5, 10, 15};
         for (int n = 0; n < 4; n++) {
             ((int[]) Reflect.get(g, "board"))[diagonal[n]] = n;
         }
-        expect(((boolean) Reflect.call(g, "won")), "08.20/F16: the main diagonal must be searched");
+        expect(((boolean) Reflect.call(g, "won")), "won must recognise a completed main diagonal whose pieces share a property.");
         Reflect.call(g, "reset");
         for (int n = 0; n < 4; n++) {
             ((int[]) Reflect.get(g, "board"))[1 + n * 4] = n;
         }
-        expect(((boolean) Reflect.call(g, "won")), "08.20/F16: a full column can win");
+        expect(((boolean) Reflect.call(g, "won")), "won must recognise a completed column, not only horizontal rows.");
         Reflect.call(g, "reset");
         for (int n = 0; n < 4; n++) {
             ((int[]) Reflect.get(g, "board"))[n] = n;
         }
-        expect(((boolean) Reflect.call(g, "won")), "08.20/F16: existing row wins remain");
+        expect(((boolean) Reflect.call(g, "won")), "The existing horizontal winning row must still satisfy won.");
         Reflect.call(g, "reset");
-        expect(!((boolean) Reflect.call(g, "won")), "08.20/F16: empty slots cannot form a line");
-        System.out.println("PASS " + checks + " checks");
+        expect(!((boolean) Reflect.call(g, "won")), "An empty board must not satisfy won; empty squares cannot form a winning line.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P21_ReversiTest {
+class P21_Task_ReversiTest {
     static int checks;
 
     static void expect(boolean correct, String message) {
         checks++;
-        if (!correct) throw new AssertionError("08.21/F17: " + message);
+        if (!correct) throw new AssertionError(message);
     }
 
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-                + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-                + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P21_Reversi");
+        var game = Reflect.create("P21_Task_Reversi");
         Reflect.call(game, "reset");
-        equal(2, Reflect.call(game, "score", 1), "ordinary opening discs still earn one each");
+        equal(2, Reflect.call(game, "score", 1), "score must give each player 2 points for their two ordinary opening discs.");
         int[][] board = new int[6][6];
         board[0][0] = 1;
         board[2][2] = board[2][3] = 2;
         Reflect.set(game, "board", board);
-        equal(3, Reflect.call(game, "score", 1), "one owned corner is worth three");
-        equal(2, Reflect.call(game, "score", 2), "two ordinary discs are worth two");
-        expect(!((boolean) Reflect.call(game, "hasMove", 1)) && !((boolean) Reflect.call(game, "hasMove", 2)), "counterexample board has no legal capture for either player");
+        equal(3, Reflect.call(game, "score", 1), "score must give player 1 three points for the single owned corner.");
+        equal(2, Reflect.call(game, "score", 2), "score must give player 2 two points for two ordinary discs.");
+        expect(!((boolean) Reflect.call(game, "hasMove", 1)) && !((boolean) Reflect.call(game, "hasMove", 2)), "On this final position neither player has a legal move. Preserve the existing capture rules while changing scoring.");
         Reflect.call(game, "command", "pass");
         Reflect.call(game, "command", "pass");
-        equal("Player 1 wins", Reflect.get(game, "outcome"), "the actual outcome uses prize score, not disc count");
+        equal("Player 1 wins", Reflect.get(game, "outcome"), "After both players pass, player 1's corner must beat player 2's two ordinary discs. Use the weighted score to decide the winner.");
         var output = new java.io.ByteArrayOutputStream();
         var before = System.out;
         try (var capture = new java.io.PrintStream(output)) {
@@ -468,24 +489,23 @@ class P21_ReversiTest {
         } finally {
             System.setOut(before);
         }
-        expect(output.toString().contains("Score P1: 3  P2: 2"), "the live display uses the same score");
+        expect(output.toString().contains("Score P1: 3  P2: 2"), "The live display must show Score P1: 3  P2: 2 for this position.");
         board = new int[6][6];
         board[0][0] = board[0][5] = board[5][0] = board[5][5] = 2;
         board[0][3] = board[4][5] = 1;
         Reflect.set(game, "board", board);
         int[][] snapshot = new int[6][];
         for (int row = 0; row < board.length; row++) snapshot[row] = board[row].clone();
-        equal(12, Reflect.call(game, "score", 2), "all four distinct corners contribute");
-        equal(2, Reflect.call(game, "score", 1), "a non-corner edge is still ordinary");
-        equal(snapshot, Reflect.get(game, "board"), "scoring preserves every board cell");
-        equal(2, board[5][5], "scoring leaves the board unchanged");
-        equal(0, board[3][3], "empty squares remain empty and earn nothing");
-        System.out.println("PASS " + checks + " checks");
+        equal(12, Reflect.call(game, "score", 2), "Four corners owned by player 2 must contribute 12 points in total.");
+        equal(2, Reflect.call(game, "score", 1), "Two non-corner discs on an edge are still worth one point each.");
+        equal(snapshot, Reflect.get(game, "board"), "Calling score for either player must preserve every board cell.");
+        equal(2, board[5][5], "Scoring must leave the existing player-2 disc at board[5][5] unchanged.");
+        equal(0, board[3][3], "Scoring must leave board[3][3] empty rather than create a disc there.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P22_LightUpTest {
+class P22_Task_LightUpTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -495,26 +515,25 @@ class P22_LightUpTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P22_LightUp");
+        var g = Reflect.create("P22_Task_LightUp");
         Reflect.call(g, "reset");
         ((boolean[][]) Reflect.get(g, "bulbs"))[0][2] = true;
-        equal(1, ((int) Reflect.call(g, "visible", 0, 0)), "08.22/F18: light travels beyond the immediate neighbour");
+        equal(1, ((int) Reflect.call(g, "visible", 0, 0)), "visible(0, 0) must detect the bulb farther along the open corridor, not stop at the next square.");
         Reflect.set(g, "bulbs", new boolean[3][3]);
         ((boolean[][]) Reflect.get(g, "bulbs"))[1][2] = true;
-        equal(0, ((int) Reflect.call(g, "visible", 1, 0)), "08.22/F18: numbered wall blocks a ray");
+        equal(0, ((int) Reflect.call(g, "visible", 1, 0)), "visible must stop at a numbered wall; a bulb behind that wall is not visible.");
         Reflect.set(g, "bulbs", new boolean[3][3]);
         ((boolean[][]) Reflect.get(g, "bulbs"))[2][2] = true;
-        equal(0, ((int) Reflect.call(g, "visible", 0, 0)), "08.22/F18: diagonal bulb is not visible");
-        System.out.println("PASS " + checks + " checks");
+        equal(0, ((int) Reflect.call(g, "visible", 0, 0)), "visible must not count a bulb on a diagonal. Only straight corridors carry light.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P25_SlantTest {
+class P25_Task_SlantTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -524,34 +543,34 @@ class P25_SlantTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P25_Slant");
+        var g = Reflect.create("P25_Task_Slant");
         Reflect.call(g, "reset");
         Reflect.call(g, "command", "1 1 /");
         Reflect.call(g, "command", "undo");
-        equal('.', ((char[][]) Reflect.get(g, "cells"))[0][0], "08.25/F20: undo needs independent row arrays");
+        equal('.', ((char[][]) Reflect.get(g, "cells"))[0][0], "Undo must restore the empty first cell after placing a slash. Snapshot rows must remain independent of the live board.");
         Reflect.call(g, "command", "1 1 /");
         Reflect.call(g, "command", "2 2 /");
         Reflect.call(g, "command", "undo");
-        equal('/', ((char[][]) Reflect.get(g, "cells"))[0][0], "08.25/F20: older diagonal retained");
-        equal('.', ((char[][]) Reflect.get(g, "cells"))[1][1], "08.25/F20: latest diagonal reverted");
+        equal('/', ((char[][]) Reflect.get(g, "cells"))[0][0], "Undoing the newest move must keep the older slash at cells[0][0].");
+        equal('.', ((char[][]) Reflect.get(g, "cells"))[1][1], "Undo must remove the latest slash at cells[1][1], leaving that cell empty.");
         char[][] copy = ((char[][]) Reflect.call(g, "snapshot"));
         copy[0][0] = '.';
-        equal('/', ((char[][]) Reflect.get(g, "cells"))[0][0], "08.25/F20: snapshot edits cannot change current board");
+        equal('/', ((char[][]) Reflect.get(g, "cells"))[0][0], "Editing a returned snapshot must not change the current slash at cells[0][0].");
         Reflect.call(g, "reset");
         for (int r = 1; r <= 3; r++) {
             for (int c = 1; c <= 3; c++) {
                 Reflect.call(g, "command", r + " " + c + " /");
             }
         }
-        expect(((boolean) Reflect.call(g, "solved")) && !((java.lang.String) Reflect.get(g, "outcome")).isEmpty(), "08.25/F20: authored all-slash board completes");
+        expect(((boolean) Reflect.call(g, "solved")) && !((java.lang.String) Reflect.get(g, "outcome")).isEmpty(), "The prepared board of slashes must complete the puzzle and report its result.");
         Reflect.call(g, "command", "undo");
-        expect(!((boolean) Reflect.call(g, "solved")) && ((java.lang.String) Reflect.get(g, "outcome")).isEmpty(), "08.25/F20: undo after completion restores an unfinished round");
+        expect(!((boolean) Reflect.call(g, "solved")) && ((java.lang.String) Reflect.get(g, "outcome")).isEmpty(), "Undo after a winning move must restore the unfinished board and clear the completed-round message.");
         Reflect.call(g, "command", "3 3 /");
-        expect(((boolean) Reflect.call(g, "solved")) && !((java.lang.String) Reflect.get(g, "outcome")).isEmpty(), "08.25/F20: restored round can be completed again");
+        expect(((boolean) Reflect.call(g, "solved")) && !((java.lang.String) Reflect.get(g, "outcome")).isEmpty(), "The move undone after victory must be playable again and complete the puzzle again.");
         StringBuilder input = new StringBuilder();
         for (int r = 1; r <= 3; r++) {
             for (int c = 1; c <= 3; c++) {
@@ -565,20 +584,19 @@ class P25_SlantTest {
         try (var redirected = new java.io.PrintStream(captured, true, java.nio.charset.StandardCharsets.UTF_8)) {
             System.setIn(new java.io.ByteArrayInputStream(input.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8)));
             System.setOut(redirected);
-            Reflect.call(Reflect.create("P25_Slant"), "main");
+            Reflect.call(Reflect.create("P25_Task_Slant"), "main");
         } finally {
             System.setIn(originalIn);
             System.setOut(originalOut);
         }
         String output = captured.toString(java.nio.charset.StandardCharsets.UTF_8);
         int last = output.lastIndexOf("Cell diagonals");
-        expect(last >= 0 && output.substring(last).contains("3 [/, /, .]"), "08.25/F20: real finished input loop permits undo");
-        System.out.println("PASS " + checks + " checks");
+        expect(last >= 0 && output.substring(last).contains("3 [/, /, .]"), "The actual console must accept undo after completion and show the final slash removed.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P26_BinaryBalanceTest {
+class P26_Task_BinaryBalanceTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -588,26 +606,25 @@ class P26_BinaryBalanceTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P26_BinaryBalance");
+        var g = Reflect.create("P26_Task_BinaryBalance");
         Reflect.call(g, "restart");
         Reflect.call(g, "cycle", 1, 0);
-        equal(0, ((int[][]) Reflect.get(g, "givens"))[0][1], "08.26/F20: playing must not rewrite the fixed clue template");
+        equal(0, ((int[][]) Reflect.get(g, "givens"))[0][1], "Editing cells[0][1] must not change its originally empty entry in givens.");
         Reflect.call(g, "restart");
-        equal(0, ((int[][]) Reflect.get(g, "cells"))[0][1], "08.26/F20: reset restores originally empty cell");
+        equal(0, ((int[][]) Reflect.get(g, "cells"))[0][1], "Reset must restore cells[0][1] to its originally empty value 0.");
         int[][] copy = ((int[][]) Reflect.call(g, "copyBoard", (Object) ((int[][]) Reflect.get(g, "givens"))));
         copy[2][1] = 2;
-        equal(0, ((int[][]) Reflect.get(g, "givens"))[2][1], "08.26/F20: every inner row is independent");
-        equal(1, copy[0][0], "08.26/F20: copying retains given values");
-        System.out.println("PASS " + checks + " checks");
+        equal(0, ((int[][]) Reflect.get(g, "givens"))[2][1], "Changing a later copied row must not change givens[2][1]. Copying only the outer array is insufficient.");
+        equal(1, copy[0][0], "copyBoard must preserve the original clue value at [0][0].");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P27_RuleGardenTest {
+class P27_Task_RuleGardenTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -617,17 +634,17 @@ class P27_RuleGardenTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P27_RuleGarden");
-        equal(java.util.List.of("...#...", "..#.#..", ".#...#."), ((java.util.List<java.lang.String>) Reflect.call(g, "grow", 90, 7, 3)), "08.27/F26: each row reads only the previous generation");
+        var g = Reflect.create("P27_Task_RuleGarden");
+        equal(java.util.List.of("...#...", "..#.#..", ".#...#."), ((java.util.List<java.lang.String>) Reflect.call(g, "grow", 90, 7, 3)), "grow with rule 90 must produce ...#..., then ..#.#.., then .#...#. Every new cell reads the same previous row.");
         boolean[] before = {false, true, false, false, false};
         boolean[] saved = before.clone();
         Reflect.call(g, "nextRow", before, 90);
-        equal(saved, before, "08.27/F26: computing next row does not overwrite its input");
-        equal(java.util.List.of(".#.", "#.#", "..."), ((java.util.List<java.lang.String>) Reflect.call(g, "grow", 90, 3, 3)), "08.27/F26: outside cells stay off");
+        equal(saved, before, "nextRow must preserve every value in its input row.");
+        equal(java.util.List.of(".#.", "#.#", "..."), ((java.util.List<java.lang.String>) Reflect.call(g, "grow", 90, 3, 3)), "At width 3, rule 90 must give .#., then #.#, then ...; cells outside the row stay off.");
         var random = new java.util.Random(3);
         for (int sample = 0; sample < 10; sample++) {
             boolean[] row = new boolean[13];
@@ -646,41 +663,41 @@ class P27_RuleGardenTest {
                 }
                 reverseOracle[c] = ((rule>>pattern)&1) != 0;
             }
-            equal(reverseOracle, ((boolean[]) Reflect.call(g, "nextRow", row, rule)), "08.27/F26: traversal order does not affect a generation");
+            equal(reverseOracle, ((boolean[]) Reflect.call(g, "nextRow", row, rule)), "nextRow must give the same generation whether cells are calculated left-to-right or right-to-left.");
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P28_ForestFireSandboxTest {
+class P28_Task_ForestFireSandboxTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
         if (!correct) throw new AssertionError(message);
     }
     static void equal(Object expected, Object actual, String message) {
-        expect(java.util.Objects.deepEquals(expected, actual), message + " | expected=" + expected + " actual=" + actual);
+        expect(java.util.Objects.deepEquals(expected, actual), message
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P28_ForestFireSandbox");
+        var g = Reflect.create("P28_Task_ForestFireSandbox");
         int[][] old = new int[40][60];
         old[20][10] = 2; old[20][9] = 1; old[20][11] = 1; old[20][12] = 1;
         old[19][10] = 1; old[21][10] = 1; old[21][11] = 1;
         int[][] snapshot = java.util.Arrays.stream(old).map(int[]::clone).toArray(int[][]::new);
         int[][] next = (int[][]) Reflect.call(g, "nextForest", (Object) old);
-        expect(next[20][11] == 2 && next[20][12] == 1, "08.28: wind advances exactly one cell east");
-        expect(next[20][9] == 1 && next[19][10] == 1 && next[21][10] == 1 && next[21][11] == 1, "08.28: no west, north, south or diagonal ignition");
-        equal(0, next[20][10], "08.28: old flame burns out");
-        equal(snapshot, old, "08.28: old forest remains unchanged");
+        expect(next[20][11] == 2 && next[20][12] == 1, "nextForest must ignite the tree immediately east of the old fire, but not the next tree beyond it.");
+        expect(next[20][9] == 1 && next[19][10] == 1 && next[21][10] == 1 && next[21][11] == 1, "The eastward wind must not ignite trees west, north, south or diagonally from the old fire.");
+        equal(0, next[20][10], "The cell that was already burning must become empty in the next generation.");
+        equal(snapshot, old, "Calculating the next forest must not overwrite any cell of the old forest.");
         Reflect.set(g, "cells", (Object) old); Reflect.call(g, "step");
-        equal(next, Reflect.get(g, "cells"), "08.28: actual Step uses the wind rule");
+        equal(next, Reflect.get(g, "cells"), "The real Step operation must display the forest produced by the new wind rule.");
         Reflect.call(g, "step");
-        equal(2, ((int[][]) Reflect.get(g, "cells"))[20][12], "08.28: replay advances the next generation");
+        equal(2, ((int[][]) Reflect.get(g, "cells"))[20][12], "A second Step must advance fire one more cell east, using the result of the previous step.");
         old = new int[40][60]; old[0][59] = 2; old[0][0] = 1;
         next = (int[][]) Reflect.call(g, "nextForest", (Object) old);
-        expect(next[0][0] == 1 && next[0][59] == 0, "08.28: wind does not wrap across a border");
-        System.out.println("PASS " + checks + " checks");
+        expect(next[0][0] == 1 && next[0][59] == 0, "Fire at the right border must not ignite the left border; the old border fire still burns out.");
     }
 }
 

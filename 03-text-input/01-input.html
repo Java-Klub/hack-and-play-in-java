@@ -9,10 +9,13 @@
 <h1>3.1 Ask the player</h1>
 <p>The robot can already talk. Now you will teach it to wait for an answer and use it in a message.</p>
 <h2>A program can wait</h2>
-<p>In Favorites, open <code>03-text-input/P01_NameTag.java</code> and use Run File.</p>
-<pre><code class="language-java" data-source="P01_NameTag.java">void main() {
-    String pilot = IO.readln(&quot;Pilot name: &quot;);
-    IO.println(&quot;Welcome, &quot; + pilot + &quot;!&quot;);
+<p>In Favorites, open <code>03-text-input/P01_Example_NameTag.java</code> and use Run File.</p>
+<pre><code class="language-java" data-source="P01_Example_NameTag.java">/// # Worked example · 3.1 Ask the player
+/// Lesson: 01-input.html
+
+void main() {
+    String pilot = IO.readln("Pilot name: ");
+    IO.println("Welcome, " + pilot + "!");
 }
 </code></pre>
 <p><code>Pilot name: </code> appears in Output. The program is now waiting. In the bottom Output pane, click after <code>Pilot name:</code>, type <code>Nova</code> and press Enter. The green text below is your reply, not something the program prints.</p>
@@ -31,7 +34,7 @@ Welcome, Nova!</code></pre>
 <p>The whole answer Red Fox stays together, including the space between the words. Enter on its own supplies empty text, giving <code>Welcome, !</code>. Enter ends the line but is not part of the stored text. Do not type quotes around your answer: they belong to the way Java code represents text, not to ordinary typing in Output.</p>
 </details>
 <h2>Task: the robot repeats your code</h2>
-<p>Open <code>03-text-input/P02_EchoRoom.java</code>. The robot keeps repeating its old <code>offline</code>.</p>
+<p>Open <code>03-text-input/P02_Task_EchoRoom.java</code>. The robot keeps repeating its old <code>offline</code>.</p>
 <p><strong>Replace the fixed code with a call that reads an answer, using the prompt <code>Your code: </code>. Keep the entered value in <code>code</code>; the supplied print call should repeat it.</strong> With the answer Open sesame, expect:</p>
 <pre class="transcript"><code>Your code: <span class="typed">Open sesame</span>
 Robot repeats: Open sesame</code></pre>

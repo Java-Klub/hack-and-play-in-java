@@ -9,15 +9,18 @@
 <h1>4.2 Choose what happens</h1>
 <p>The radar knows how far away the dragon is. It should use that distance to print one message. You will now use a boolean answer to choose the next step.</p>
 <h2>One path based on the answer</h2>
-<p>Open <code>04-decisions/P05_DragonRadar.java</code>. First predict the result for -1, 3 and 4.</p>
-<pre><code class="language-java" data-source="P05_DragonRadar.java">void main() {
-    int distance = Integer.parseInt(IO.readln(&quot;Distance: &quot;).strip());
+<p>Open <code>04-decisions/P05_Example_DragonRadar.java</code>. First predict the result for -1, 3 and 4.</p>
+<pre><code class="language-java" data-source="P05_Example_DragonRadar.java">/// # Worked example · 4.2 Choose what happens
+/// Lesson: 02-branches.html
+
+void main() {
+    int distance = Integer.parseInt(IO.readln("Distance: ").strip());
     if (distance &lt; 0) {
-        IO.println(&quot;Behind you&quot;);
+        IO.println("Behind you");
     } else if (distance &lt;= 3) {
-        IO.println(&quot;Very close&quot;);
+        IO.println("Very close");
     } else {
-        IO.println(&quot;Far away&quot;);
+        IO.println("Far away");
     }
 }
 </code></pre>
@@ -26,7 +29,7 @@
 <p>Once a branch in this chain is chosen, the others are skipped. For -1, <code>distance &lt;= 3</code> is also true, but that later question never gets asked.</p>
 <p>A block can contain several steps: printing, assignments and other calls. Braces determine which steps belong to each branch. We do not add another semicolon after closing the whole if/else chain here.</p>
 <h2>Task: the alarm must not speak twice</h2>
-<p>Open <code>04-decisions/P06_DroneAlarm.java</code>. For distance 2, it prints both Near and Danger. Read how many separate questions it asks.</p>
+<p>Open <code>04-decisions/P06_Task_DroneAlarm.java</code>. For distance 2, it prints both Near and Danger. Read how many separate questions it asks.</p>
 <p><strong>Rebuild the decision as one if / else if / else chain with a single resulting message:</strong></p>
 <div class="table-wrap"><table><thead><tr><th>Distance</th><th>Message</th></tr></thead><tbody>
 <tr><td>2 or less</td><td>Danger</td></tr>
@@ -39,7 +42,7 @@ Danger</code></pre>
 <details><summary>Hint 1: which case takes priority?</summary><p>Consider the closest distance first. If everything up to five were chosen earlier, the closest case would never get its own turn in the chain.</p></details>
 <details><summary>Hint 2: separate if statements</summary><p>Two separate if statements ask independent questions. Else if belongs to the previous decision and only asks its question when the preceding branch did not match.</p></details>
 <h2>Decide who won</h2>
-<p>In <code>04-decisions/P07_BlackjackTwentyOne.java</code>, you will complete the supplied compareTotals action. It receives the numbers human and house. Based on them, <code>return</code> should give back one message:</p>
+<p>In <code>04-decisions/P07_Task_BlackjackTwentyOne.java</code>, you will complete the supplied compareTotals action. It receives the numbers human and house. Based on them, <code>return</code> should give back one message:</p>
 <div class="table-wrap"><table><thead><tr><th>human</th><th>house</th><th>Result</th></tr></thead><tbody>
 <tr><td>20</td><td>19</td><td>You win</td></tr>
 <tr><td>21</td><td>21</td><td>Draw</td></tr>
@@ -47,7 +50,7 @@ Danger</code></pre>
 <tr><td>22</td><td>23</td><td>You bust</td></tr>
 <tr><td>18</td><td>20</td><td>Dealer wins</td></tr>
 </tbody></table></div>
-<p>A player over 21 has lost before ordinary totals are compared. After that, consider a dealer over 21, the larger valid total, or equality. As soon as return runs, this action call ends and hands its text to the supplied game. Do not print the message inside compareTotals instead of returning it. To check your work, use <code>04-decisions/Check.java</code> and <code>P07_BlackjackTwentyOne.java</code>.</p>
+<p>A player over 21 has lost before ordinary totals are compared. After that, consider a dealer over 21, the larger valid total, or equality. As soon as return runs, this action call ends and hands its text to the supplied game. Do not print the message inside compareTotals instead of returning it. To check your work, use <code>04-decisions/Check.java</code> and <code>P07_Task_BlackjackTwentyOne.java</code>.</p>
 <p><strong>You can now choose one of several paths and explain why the order of questions matters.</strong></p>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="01-questions.html">← 4.1 Ask a question in code</a><a class="next" href="03-logic.html">4.3 Combine rules →</a></nav>

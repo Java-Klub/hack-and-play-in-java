@@ -9,26 +9,29 @@
 <h1>9.3 Two names can point to the same thing</h1>
 <p>A preview should let you try a card without changing your real hand. Copying a variable name is not enough: two variables can refer to the very same container. This is worth investigating before adding more complicated game state.</p>
 <h2>The array changes; the old tile does not</h2>
-<pre><code class="language-java" data-source="P06_SharedTiles.java">void main() {
-    Tile[] tiles = {new Tile(&quot;Blue&quot;), new Tile(&quot;White&quot;)};
+<pre><code class="language-java" data-source="P06_Example_SharedTiles.java">/// # Worked example · 9.3 Two names can point to the same thing
+/// Lesson: 03-references.html
+
+void main() {
+    Tile[] tiles = {new Tile("Blue"), new Tile("White")};
     Tile[] view = tiles;
     Tile saved = tiles[0];
-    view[0] = new Tile(&quot;Gold&quot;);
-    IO.println(&quot;Board: &quot; + tiles[0].color());
-    IO.println(&quot;Saved: &quot; + saved.color());
-    IO.println(&quot;Same array: &quot; + (tiles == view));
-    IO.println(&quot;Equal tile: &quot; + saved.equals(new Tile(&quot;Blue&quot;)));
+    view[0] = new Tile("Gold");
+    IO.println("Board: " + tiles[0].color());
+    IO.println("Saved: " + saved.color());
+    IO.println("Same array: " + (tiles == view));
+    IO.println("Equal tile: " + saved.equals(new Tile("Blue")));
 }
 
 record Tile(String color) {
 }
 </code></pre>
-<p>Open 09-data/P06_SharedTiles.java. A reference is a value that identifies an object. The assignment view = tiles copies that reference, not the array’s elements into a fresh array. Both names therefore reach the same two slots.</p>
+<p>Open 09-data/P06_Example_SharedTiles.java. A reference is a value that identifies an object. The assignment view = tiles copies that reference, not the array’s elements into a fresh array. Both names therefore reach the same two slots.</p>
 <p>The saved variable receives the reference to the original blue Tile. Replacing slot 0 through view stores a new gold Tile reference in the shared array. It changes neither the original blue record nor saved. Trace the container and each tile separately.</p>
 <p>For references, == asks whether both values identify the same object; != asks the opposite. Record equals compares component values. Arrays do not automatically compare all their elements with equals. Here the two explicit questions deliberately examine different things.</p>
 <details><summary>Predict another replacement</summary><p>If view[1] becomes a red Tile too, tiles[1] also reads Red. Saved still reads Blue: it was obtained from slot 0 before either replacement. Would assigning view to another array change tiles? No; that only redirects view.</p></details>
 <h2>Task: make the preview independent</h2>
-<p>Open 09-data/P07_HandPreview.java. Create a separate Card array of the same length and copy each original element reference into the matching slot. Then let the prepared replacement affect only preview. Keep the second card and all printed checks.</p>
+<p>Open 09-data/P07_Task_HandPreview.java. Create a separate Card array of the same length and copy each original element reference into the matching slot. Then let the prepared replacement affect only preview. Keep the second card and all printed checks.</p>
 <p>Expect Hand: Moon 2, Preview: Star 9, Separate arrays: true and Second card kept: true. The card objects may be shared because this task only replaces array slots and never changes a record’s components. A newly allocated object array initially contains null, meaning no object; fill its slots before calling accessors.</p>
 <details><summary>Hint 1: identify the shared container</summary><p>Find the assignment that gives two names to one array. You need a new array, not a new variable alone.</p></details>
 <details><summary>Hint 2: reuse your array loop</summary><p>Allocate with the original length, then copy from index 0 up to the last valid index. Do not replace the prepared preview card until copying is complete.</p></details>

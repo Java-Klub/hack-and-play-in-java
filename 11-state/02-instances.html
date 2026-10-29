@@ -9,12 +9,15 @@
 <h1>11.2 Each robot has its own battery</h1>
 <p>Two robots share the same instructions but not one battery. A class describes their common behavior, while every instance carries its own field values. Construction is the moment to give each robot a meaningful starting state.</p>
 <h2>The constructor receives the starting data</h2>
-<pre><code class="language-java" data-source="P07_TwoDrones.java">void main() {
-    Drone first = new Drone(&quot;Dot&quot;, 5);
-    Drone second = new Drone(&quot;Dash&quot;, 8);
+<pre><code class="language-java" data-source="P07_Example_TwoDrones.java">/// # Worked example · 11.2 Each robot has its own battery
+/// Lesson: 02-instances.html
+
+void main() {
+    Drone first = new Drone("Dot", 5);
+    Drone second = new Drone("Dash", 8);
     first.move();
-    IO.println(first.name + &quot;: &quot; + first.charge);
-    IO.println(second.name + &quot;: &quot; + second.charge);
+    IO.println(first.name + ": " + first.charge);
+    IO.println(second.name + ": " + second.charge);
 }
 
 class Drone {
@@ -31,18 +34,18 @@ class Drone {
     }
 }
 </code></pre>
-<p>Open 11-state/P07_TwoDrones.java. Drone(String name, int charge) is a constructor. It has the class name and no return type, not even void. New Drone(&quot;Dot&quot;, 5) creates an object and runs this constructor with those arguments.</p>
+<p>Open 11-state/P07_Example_TwoDrones.java. Drone(String name, int charge) is a constructor. It has the class name and no return type, not even void. New Drone(&quot;Dot&quot;, 5) creates an object and runs this constructor with those arguments.</p>
 <p>The parameter name temporarily hides the field name. This.name means the field belonging to the object being constructed; the plain name on the right means the parameter. Assignment copies the supplied text reference into the field. This.charge similarly stores the number.</p>
 <p>Each new expression creates another instance. First.move() changes only first’s charge, from 5 to 4. Second still has 8. Both calls would use the same method definition, but the receiver determines which object’s fields that method reads and writes.</p>
 <details><summary>Predict a different receiver</summary><p>Calling second.move() once as well makes Dash: 7. What if another variable is assigned first and move is called through it? Dot changes again: copying a reference does not create a third drone.</p></details>
 <h2>Task: feed only the intended robot</h2>
-<p>Open 11-state/P08_PetBots.java. Make the constructor store its supplied name and energy. Make feed add amount to the receiver’s existing energy instead of replacing it. Preserve the two constructed robots and the prepared call feeding only first.</p>
+<p>Open 11-state/P08_Task_PetBots.java. Make the constructor store its supplied name and energy. Make feed add amount to the receiver’s existing energy instead of replacing it. Preserve the two constructed robots and the prepared call feeding only first.</p>
 <p>With food 3, expect Dot: 5 and Dash: 6. With food 0, expect Dot: 2 and Dash: 6. With food 7, Dot becomes 9. Use amounts from 0 to 100. Limits and rejected operations come in the next lesson.</p>
 <details><summary>Hint 1: find which name means which value</summary><p>In the constructor, distinguish this.energy from parameter energy. Assigning energy to itself would leave the field at its default 0.</p></details>
 <details><summary>Hint 2: feeding uses the saved state</summary><p>Read the existing field before adding the parameter. Do not recreate the robot or reset its name inside feed.</p></details>
 <p>Next, make an object refuse an impossible change without leaving any part of its state damaged.</p>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>ConnectFour</strong> · <code>11-state/P09_ConnectFour.java</code><br>In ConnectFour separate round state from the opening-player sequence. Rematches alternate X and O regardless of defeat; board, winner and moves reset each time.</li>
+<li><strong>ConnectFour</strong> · <code>11-state/P09_Task_ConnectFour.java</code><br>In ConnectFour separate round state from the opening-player sequence. Rematches alternate X and O regardless of defeat; board, winner and moves reset each time.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="01-state.html">← 11.1 An object remembers a change</a><a class="next" href="03-invariants.html">11.3 Rejection must preserve state →</a></nav>

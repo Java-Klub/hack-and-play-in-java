@@ -9,15 +9,18 @@
 <h1>8.2 Check the boundary first</h1>
 <p>A radar can receive coordinates outside the map. These are not extra hidden cells. The program must first decide whether a place exists, and only then read its contents.</p>
 <h2>Four conditions for a rectangle</h2>
-<p>Open <code>08-grids/P05_MapBoundary.java</code>. Try x = 2, y = 1, then x = 3, y = 1.</p>
-<pre><code class="language-java" data-source="P05_MapBoundary.java">void main() {
+<p>Open <code>08-grids/P05_Example_MapBoundary.java</code>. Try x = 2, y = 1, then x = 3, y = 1.</p>
+<pre><code class="language-java" data-source="P05_Example_MapBoundary.java">/// # Worked example · 8.2 Check the boundary first
+/// Lesson: 02-bounds.html
+
+void main() {
     int[][] map = {{2, 0, 1}, {0, 3, 7}};
-    int x = Integer.parseInt(IO.readln(&quot;X: &quot;).strip());
-    int y = Integer.parseInt(IO.readln(&quot;Y: &quot;).strip());
+    int x = Integer.parseInt(IO.readln("X: ").strip());
+    int y = Integer.parseInt(IO.readln("Y: ").strip());
     if (inside(map, x, y)) {
-        IO.println(&quot;Value: &quot; + map[y][x]);
+        IO.println("Value: " + map[y][x]);
     } else {
-        IO.println(&quot;Outside&quot;);
+        IO.println("Outside");
     }
 }
 
@@ -30,16 +33,16 @@ boolean inside(int[][] map, int x, int y) {
 <p>The check in main happens before array access. Printing Outside does not require reading any cell. As before, we assume a nonempty rectangular grid; this helper does not handle rows of different lengths or a missing array.</p>
 <details><summary>Prediction: x = 0, y = -1</summary><p>X is fine, but negative y rejects the whole selection. The result is Outside. Having only one valid coordinate is not enough.</p></details>
 <h2>Task: unlock the radar only inside the map</h2>
-<p>Open <code>08-grids/P06_DroneRadar.java</code>. The supplied main already uses inside to decide whether to show a signal. The helper currently rejects everything. Complete its rule using the actual dimensions of the array it receives; do not hard-code dimension numbers.</p>
+<p>Open <code>08-grids/P06_Task_DroneRadar.java</code>. The supplied main already uses inside to decide whether to show a signal. The helper currently rejects everything. Complete its rule using the actual dimensions of the array it receives; do not hard-code dimension numbers.</p>
 <p>For 3, 1, expect Signal: 9; for 1, 0, expect Signal: 4. For 4, 1 and 0, 2, expect Outside. Also reject -1, 0 and 3, -1. Notice that the map is wider than it is tall: swapping the dimensions would break the right edge.</p>
 <p>The method must not repair coordinates or move them to the nearest edge. It only answers whether they exist. An invalid selection must therefore not display another cell's contents.</p>
 <details><summary>Hint 1: write the bounds separately</summary><p>For each coordinate, first write its lowest and highest allowed values. Then build the combined test.</p></details>
 <details><summary>Hint 2: dimensions of the supplied data</summary><p>The outer array gives the row count. The length of its first row gives the width. You know both lengths from the previous lesson.</p></details>
 <p>Next, similar checks will repeat for neighbouring cells. One correct helper can protect several different visits.</p>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>TicTacToe</strong> · <code>08-grids/P07_TicTacToe.java</code><br>TicTacToe needs mayPlay: reject a finished game, an invalid number and an occupied square before allowing a write. Refusal must not pass the turn.</li>
-<li><strong>Chomp</strong> · <code>08-grids/P08_Chomp.java</code><br>Repair Chomp&#x27;s row range so the fourth row can be bitten too. Continue rejecting missing or already eaten chocolate.</li>
-<li><strong>Sudoku</strong> · <code>08-grids/P09_Sudoku.java</code><br>Add guards to Sudoku&#x27;s place: validate coordinates before indexing, then the value, fixed clue, rules and game completion. Valid is supplied.</li>
+<li><strong>TicTacToe</strong> · <code>08-grids/P07_Task_TicTacToe.java</code><br>TicTacToe needs mayPlay: reject a finished game, an invalid number and an occupied square before allowing a write. Refusal must not pass the turn.</li>
+<li><strong>Chomp</strong> · <code>08-grids/P08_Task_Chomp.java</code><br>Repair Chomp&#x27;s row range so the fourth row can be bitten too. Continue rejecting missing or already eaten chocolate.</li>
+<li><strong>Sudoku</strong> · <code>08-grids/P09_Task_Sudoku.java</code><br>Add guards to Sudoku&#x27;s place: validate coordinates before indexing, then the value, fixed clue, rules and game completion. Valid is supplied.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="01-grids.html">← 8.1 Rows become a map</a><a class="next" href="03-neighbours.html">8.3 Ask the neighbouring cells →</a></nav>

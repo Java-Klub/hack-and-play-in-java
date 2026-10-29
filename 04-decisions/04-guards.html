@@ -9,23 +9,26 @@
 <h1>4.4 Stop an illegal move in time</h1>
 <p>The player enters the cost of a move. We want to subtract energy only when the move is allowed. A refused attempt must preserve the original energy.</p>
 <h2>Refuse first, then change</h2>
-<p>Open <code>04-decisions/P12_EnergyTurn.java</code>. Try cost 0, then 6, then 3.</p>
-<pre><code class="language-java" data-source="P12_EnergyTurn.java">void main() {
+<p>Open <code>04-decisions/P12_Example_EnergyTurn.java</code>. Try cost 0, then 6, then 3.</p>
+<pre><code class="language-java" data-source="P12_Example_EnergyTurn.java">/// # Worked example · 4.4 Stop an illegal move in time
+/// Lesson: 04-guards.html
+
+void main() {
     int energy = 5;
-    int cost = Integer.parseInt(IO.readln(&quot;Move cost: &quot;).strip());
+    int cost = Integer.parseInt(IO.readln("Move cost: ").strip());
     if (cost &lt; 1) {
-        IO.println(&quot;Cost must be positive&quot;);
-        IO.println(&quot;Energy: &quot; + energy);
+        IO.println("Cost must be positive");
+        IO.println("Energy: " + energy);
         return;
     }
     if (cost &gt; energy) {
-        IO.println(&quot;Not enough energy&quot;);
-        IO.println(&quot;Energy: &quot; + energy);
+        IO.println("Not enough energy");
+        IO.println("Energy: " + energy);
         return;
     }
     energy = energy - cost;
-    IO.println(&quot;Move accepted&quot;);
-    IO.println(&quot;Energy: &quot; + energy);
+    IO.println("Move accepted");
+    IO.println("Energy: " + energy);
 }
 </code></pre>
 <div class="table-wrap"><table><thead><tr><th>Move cost</th><th>Decision</th><th>Energy at the end</th></tr></thead><tbody>
@@ -37,7 +40,7 @@
 <p>This kind of early refusal is called a guard clause. It rules out forbidden cases at the start. After both guards, only a valid move remains, so you can subtract the cost directly.</p>
 <p>Each fresh run of this small program sets energy back to 5. One run makes one attempt.</p>
 <h2>Task: the move was refused, but energy disappeared</h2>
-<p>Open <code>04-decisions/P13_SafeMove.java</code>. Enter cost 6. The program announces both refusal and acceptance, and shows negative energy. Find the first line where it changed the stored state too soon.</p>
+<p>Open <code>04-decisions/P13_Task_SafeMove.java</code>. Enter cost 6. The program announces both refusal and acceptance, and shows negative energy. Find the first line where it changed the stored state too soon.</p>
 <p><strong>Move the subtraction after the decision. Refuse a cost below 1 or above the available energy, print Move refused and the unchanged energy, then end main. For a valid move, subtract the cost and print Move accepted with the remaining energy.</strong></p>
 <pre class="transcript"><code>Move cost: <span class="typed">6</span>
 Move refused
@@ -58,8 +61,8 @@ Energy: 5</code></pre>
 <p>The <code>boolean</code> before accepts says what type of result the caller receives. <code>int cost</code> names the number passed in. Return false ends this one call and hands back a refusal; the whole game can keep running. Similarly, an action with an int result can return a number, and one with a String result can return a message.</p>
 <h2>Guard the sea, then try a coach</h2>
 <ul>
-<li><code>04-decisions/P14_SonarTreasureHunt.java</code>: the window labels rows and columns 1 to 8. The supplied input code subtracts 1 from each label and passes numbers 0 to 7 to insideSea. You are fixing that internal question: both numbers must be within their own ranges. Buttons outside the map must not spend a probe. Guard all four edges, including the valid edge squares.</li>
-<li><code>04-decisions/P15_Nim.java</code>: the game already runs against a bot. Watch its moves and complete your own coach. It should only recommend a number of stones, leaving the actual move and player switching to the supplied game. Return 0 for an empty pile. Here you will also use the remainder operation from earlier and practise reading someone else's code.</li>
+<li><code>04-decisions/P14_Task_SonarTreasureHunt.java</code>: the window labels rows and columns 1 to 8. The supplied input code subtracts 1 from each label and passes numbers 0 to 7 to insideSea. You are fixing that internal question: both numbers must be within their own ranges. Buttons outside the map must not spend a probe. Guard all four edges, including the valid edge squares.</li>
+<li><code>04-decisions/P15_Task_Nim.java</code>: the game already runs against a bot. Watch its moves and complete your own coach. It should only recommend a number of stones, leaving the actual move and player switching to the supplied game. Return 0 for an empty pile. Here you will also use the remainder operation from earlier and practise reading someone else's code.</li>
 </ul>
 <p>To check your work, open Check.java from the same folder as the game. In Nim, also notice whether asking for advice really left the current pile unchanged.</p>
 <p><strong>You can now refuse an illegal action before changing values, and distinguish ending main from returning one supplied action's verdict.</strong></p>
