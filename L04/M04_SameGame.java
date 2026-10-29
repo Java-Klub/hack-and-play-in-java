@@ -10,16 +10,8 @@
 /// **Dnes trénuješ:** While do vyčerpání práce: čekající queue a nasbíraný result odpovídají na různé
 /// otázky. Nalezení jednoho políčka neznamená, že už žádná políčka nečekají na prozkoumání.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L04/M04_SameGame.java`
-/// - Kontrola této mise: `java L04/Check.java M04_SameGame.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a navzdory předčasné zprávě „No groups remain“
-/// najdi dvě políčka stejné barvy, která sdílejí hranu; po opravě zadej řádek a sloupec některého
-/// políčka z této skupiny. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F10 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a navzdory předčasné zprávě „No groups remain“ najdi dvě políčka stejné barvy,
+/// která sdílejí hranu; po opravě zadej řádek a sloupec některého políčka z této skupiny.
 List<int[]> group(int row, int col) {
     var result = new ArrayList<int[]>();
     if (row < 0 || row >= 5 || col < 0 || col >= 5 || board[row][col] == 0) {

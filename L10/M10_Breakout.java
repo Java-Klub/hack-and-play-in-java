@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Lifecycle guard (podmínka životního cyklu) má popsat povolení aktualizace včetně
 /// všech zastavených stavů. Tick (časový krok) nesmí měnit hru označenou jako vyhranou či ukončenou.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L10/M10_Breakout.java`
-/// - Kontrola této mise: `java L10/Check.java M10_Breakout.java`
-///
-/// Po spuštění programu si prohlédni plochu a potom stiskni Space nebo klikni pro start; myší miř
-/// pálku. Odstraň všech 18 cihel před třetím pádem; R obnoví začátek a čeká na další start. Po
-/// opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F30 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Po spuštění programu si prohlédni plochu a potom stiskni Space nebo klikni pro start; myší
+/// miř pálku. Odstraň všech 18 cihel před třetím pádem; R obnoví začátek a čeká na další start.
 void step() {
     if (!state.equals("PLAY")) return;
     double previousX = ballX, previousY = ballY;
@@ -227,8 +219,6 @@ void showWindow() {
     timer.start();
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

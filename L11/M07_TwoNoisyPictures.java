@@ -16,16 +16,8 @@ import java.util.List;
 /// **Dnes trénuješ:** Random se seed (počáteční hodnotou) je průběžný zdroj voleb. Nové vytvoření se
 /// stejným seed zopakuje první volbu; sdílená instance dá dalším blokům další volby.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L11/M07_TwoNoisyPictures.java`
-/// - Kontrola této mise: `java L11/Check.java M07_TwoNoisyPictures.java`
-///
 /// Po spuštění programu napiš seed (počáteční číslo) nebo stiskni Enter pro 42; prohlédni Java
-/// obrázek, potom jej zavři a zopakuj stejný seed nebo porovnej 43. Po opravě: ulož soubor, spusť
-/// uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F27 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// obrázek, potom jej zavři a zopakuj stejný seed nebo porovnej 43.
 BufferedImage[] shares(BufferedImage secret, long seed) {
     var images = new BufferedImage[3];
     for (int i = 0; i < 3; i++) {
@@ -126,8 +118,6 @@ BufferedImage render(long seed, double option) {
 }
 
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

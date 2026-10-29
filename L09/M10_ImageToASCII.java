@@ -15,16 +15,8 @@ import java.awt.image.BufferedImage;
 /// platného integer (celého čísla) s chybnou hodnotou. Náhradní šířku má vybrat jen očekávaná conversion
 /// exception (výjimka převodu).
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L09/M10_ImageToASCII.java`
-/// - Kontrola této mise: `java L09/Check.java M10_ImageToASCII.java`
-///
 /// Po spuštění programu napiš šířku od 4 do 160 nebo zkus oops; prohlédni označený ASCII obrázek
-/// přímo v výstup v terminálu a dalším command pro hraní porovnej jinou šířku. Po opravě: ulož
-/// soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F31 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// přímo v terminálu a dalším spuštěním programu porovnej jinou šířku.
 int readWidth(String text) {
     try {
         int value = Integer.parseInt(text.strip());
@@ -75,8 +67,8 @@ int readWidth(String text) {
 /// ### Co už obstarává připravená část
 ///
 /// main předá zadanou šířku přes readWidth a convert převede pevnou ukázku pomocí character ramp
-/// (stupnice znaků). Výsledek vznikne pouze v výstup v terminálu; další command pro hraní umožní
-/// jinou šířku.
+/// (stupnice znaků). Výsledek vznikne pouze v terminálu; další spuštění programu umožní jinou
+/// šířku.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
@@ -131,8 +123,6 @@ String convert(BufferedImage image, int width) {
     return result.toString();
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
     String input = IO.readln("Width 4..160 (blank/default 80, q quits): ");
     if (input == null || input.strip().equalsIgnoreCase("q")) return;

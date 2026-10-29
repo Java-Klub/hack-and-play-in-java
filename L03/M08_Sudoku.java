@@ -15,16 +15,8 @@ import java.awt.GridLayout;
 /// **Dnes trénuješ:** Chraň zápis časným return (návratem): spoj důvody odmítnutí a jediný zápis proveď
 /// až tehdy, když žádný neplatí. Souřadnice musí být ověřené před čtením tabulky pevných čísel.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L03/M08_Sudoku.java`
-/// - Kontrola této mise: `java L03/Check.java M08_Sudoku.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, ve výběru čísla zvol 2 a klikni na prázdné
-/// políčko bezprostředně vpravo od levé horní 1. Po opravě: ulož soubor, spusť uvedenou kontrolu a
-/// zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F08 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, ve výběru čísla zvol 2 a klikni na prázdné políčko bezprostředně vpravo od
+/// levé horní 1.
 boolean place(int row, int col, int value) {
     if (complete() || !valid(row, col, value) || clues[row][col] != 0) return false;
     board[row][col] = value;

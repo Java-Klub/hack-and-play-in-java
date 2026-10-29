@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Grid neighbours (sousedé v mřížce): zobrazené hrany spojují vrcholy v samostatné
 /// síti. Převeď sousedství řádků a sloupců na ploché indexy podle šířky sítě vrcholů.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L08/M05_LoopBuilder.java`
-/// - Kontrola této mise: `java L08/Check.java M05_LoopBuilder.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a zadáním 1 přepni první očíslovanou hranu, potom
-/// dalšími hranami sestav jedinou uzavřenou smyčku. Po opravě: ulož soubor, spusť uvedenou kontrolu
-/// a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F18 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a zadáním 1 přepni první očíslovanou hranu, potom dalšími hranami sestav
+/// jedinou uzavřenou smyčku.
 int[] vertices(int edge) {
     if (edge < 12) {
         int r = edge / 3;

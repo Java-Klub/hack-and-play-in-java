@@ -16,16 +16,8 @@ import java.awt.GridLayout;
 /// používá běžný tah. Jeho účinky patří field (proměnné programu), kterou je třeba po přípravě obnovit,
 /// nikoli zastínit.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L06/M03_SlidingTiles.java`
-/// - Kontrola této mise: `java L06/Check.java M03_SlidingTiles.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a klikni na očíslovaný dílek hned vedle mezery,
-/// aby se přesunul na prázdné místo. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si
-/// znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F14 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a klikni na očíslovaný dílek hned vedle mezery, aby se přesunul na prázdné
+/// místo.
 void reset(long seed) {
     for (int i = 0; i < 9; i++) {
         tiles[i] = (i + 1) % 9;

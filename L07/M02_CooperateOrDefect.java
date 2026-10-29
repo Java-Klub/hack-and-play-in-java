@@ -14,16 +14,8 @@ import java.awt.BorderLayout;
 /// **Dnes trénuješ:** Switch expressions (výrazy s výběrem větve): spoj dvě rozhodnutí ano/ne do malého
 /// čísla případu a vrať jeho odměnu. Každou větev čti z pohledu jednoho hráče.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L07/M02_CooperateOrDefect.java`
-/// - Kontrola této mise: `java L07/Check.java M02_CooperateOrDefect.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, klikni na Private choices for next round a před
-/// odhalením obou voleb si mezi soukromými dialogy předejte počítač. Po opravě: ulož soubor, spusť
-/// uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F09 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, klikni na Private choices for next round a před odhalením obou voleb si mezi
+/// soukromými dialogy předejte počítač.
 int reward(boolean cooperate, boolean otherCooperates) {
     int choice = (cooperate ? 2 : 0) + (otherCooperates ? 1 : 0);
     return switch (choice) {

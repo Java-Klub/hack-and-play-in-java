@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Arrays (pole): vnořená pole uchovávají několik rozestavení i jejich dvojice
 /// souřadnic. Rozsah průchodu odvoď od velikosti vybraných dat.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L05/M02_MiniBattleshipHunt.java`
-/// - Kontrola této mise: `java L05/Check.java M02_MiniBattleshipHunt.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, první střelu zadej jako 1 1 a potvrď Enter, potom
-/// zkoušej další dvojice řádku a sloupce. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj
-/// si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F16 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, první střelu zadej jako 1 1 a potvrď Enter, potom zkoušej další dvojice řádku
+/// a sloupce.
 void layout(int n) {
     board = new int[6][6];
     int[][][] maps = {{{0, 0}, {0, 1}, {3, 2}, {3, 3}, {3, 4}}, {{1, 4}, {2, 4}, {5, 0}, {5, 1}, {5, 2}}, {{4, 0}, {4, 1}, {0, 5}, {1, 5}, {2, 5}}};

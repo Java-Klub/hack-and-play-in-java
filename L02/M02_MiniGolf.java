@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Číselné měřítko a jednotky: vzdálenost se musí převést na rychlost ve správném
 /// poměru. Než posoudíš celou pohyblivou scénu, ověř malý kladný příklad, záporný příklad a nulu.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L02/M02_MiniGolf.java`
-/// - Kontrola této mise: `java L02/Check.java M02_MiniGolf.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, natáhni myš dozadu od stojícího míčku a pusť ji
-/// pro odpal; před dalším úderem počkej na zastavení nebo stiskni R pro nový začátek. Po opravě:
-/// ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F04 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, natáhni myš dozadu od stojícího míčku a pusť ji pro odpal; před dalším úderem
+/// počkej na zastavení nebo stiskni R pro nový začátek.
 double dragVelocity(double distance) {
     return distance / 12.5;
 }

@@ -10,16 +10,8 @@
 /// (metodě) pracovat s libovolnou dvojicí kostek. Volání s 1 a 1 nebo se 6 a 6 má například sledovat
 /// stejné pravidlo bez kopírování těla.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L03/M10_ShutTheBox.java`
-/// - Kontrola této mise: `java L03/Check.java M10_ShutTheBox.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, porovnej dvě vypsané hodnoty Dice s cílem rolled
-/// a potom napiš různá otevřená čísla, která mají tento součet vytvořit. Po opravě: ulož soubor,
-/// spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F13 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, porovnej dvě vypsané hodnoty Dice s cílem rolled a potom napiš různá otevřená
+/// čísla, která mají tento součet vytvořit.
 int diceTotal(int first, int second) {
     return first + second;
 }

@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Records (datové záznamy): stejné hodnoty složek vytvoří shodné hodnoty záznamu. Než
 /// Domino použiješ jako klíč jedinečnosti, zvol jednotné uspořádání.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L05/M11_Dominosa.java`
-/// - Kontrola této mise: `java L05/Check.java M11_Dominosa.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a zadáním 1 1 1 2 spoj první dvě sousední políčka,
-/// potom pokračuj dalšími sousedy. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si
-/// znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F19 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a zadáním 1 1 1 2 spoj první dvě sousední políčka, potom pokračuj dalšími
+/// sousedy.
 record Domino(int low, int high) {
 }
 

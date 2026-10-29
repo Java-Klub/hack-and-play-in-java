@@ -17,15 +17,7 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Invariants (vždy platné podmínky): po vyřešení srážky se kulička na řešené ose už
 /// nesmí překrývat s blokem. Samotná změna rychlosti neplatnou polohu neopraví.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L07/M11_TiltTray.java`
-/// - Kontrola této mise: `java L07/Check.java M11_TiltTray.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a šipkami nakláněj kuličku kolem bloků, přičemž
-/// před zeleným cílem přibrzdi. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F25 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a šipkami nakláněj kuličku kolem bloků, přičemž před zeleným cílem přibrzdi.
 void step() {
     if (!started || won) {
         return;

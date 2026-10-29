@@ -18,16 +18,8 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Pause (pozastavení) slibuje, že tick (časový krok) nic nezmění. Boolean guard
 /// (logická podmínka) musí tento slib dodržet ještě před připravenou fyzikou či trvalým kreslením.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L10/M11_OrbitPainter.java`
-/// - Kontrola této mise: `java L10/Check.java M11_OrbitPainter.java`
-///
-/// Po spuštění programu stiskni Space pro start nebo tažením zvol novou počáteční rychlost; Space
-/// pozastaví pohyb a R vymaže stopu a obnoví pokus. Po opravě: ulož soubor, spusť uvedenou kontrolu
-/// a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F30 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Po spuštění programu stiskni Space pro start nebo tažením zvol novou počáteční rychlost;
+/// Space pozastaví pohyb a R vymaže stopu a obnoví pokus.
 void step() {
     if (paused) {
         return;
@@ -255,8 +247,6 @@ void showWindow() {
     timer.start();
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

@@ -15,16 +15,7 @@ import java.util.List;
 /// **Dnes trénuješ:** Členství v Set (množině) a vložení jsou různé operace. Boolean result (logický
 /// výsledek) vložení může oznámit nový střed a současně jej zaznamenat pro další pokusy.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L11/M02_CirclePacking.java`
-/// - Kontrola této mise: `java L11/Check.java M02_CirclePacking.java`
-///
-/// Po spuštění programu prohlédni Java obrázek; zavři okno, uprav aktivní pravidlo, použij uložení
-/// a kontrolu hry a dalším command pro hraní porovnej výsledek. Po opravě: ulož soubor, spusť
-/// uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F23 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a porovnej obrázek před opravou a po ní.
 boolean claimCentre(Set<Centre> seen, int x, int y) {
     return seen.add(new Centre(x, y));
 }
@@ -145,8 +136,6 @@ BufferedImage render(long seed, double option) {
 
 record Centre(int x, int y) {}
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

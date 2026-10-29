@@ -16,16 +16,8 @@ import javax.imageio.ImageIO;
 /// resource (prostředku) stream bezpečně zavře, ale bajty dorazí jen tehdy, když encoding (kódování)
 /// opravdu dostane tento stream.
 ///
-/// command pro hraní zapíše exports/mirror.png přes save a otevře skutečně uložená data v Javě.
-/// Prázdný nebo neplatný soubor vyvolá jasnou zprávu v výstup v terminálu místo náhradního obrázku.
-/// Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L11/M11_MirrorCylinderPicture.java`
-/// - Kontrola této mise: `java L11/Check.java M11_MirrorCylinderPicture.java`
-///
-/// Potřebuješ výklad? Připomenutí · F32 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Program zapíše exports/mirror.png přes save a otevře skutečně uložená data v Javě. Prázdný nebo
+/// neplatný soubor vyvolá jasnou zprávu v terminálu místo náhradního obrázku.
 void save(Path path, long seed, double option) throws Exception {
     Files.createDirectories(path.toAbsolutePath().getParent());
     try (var output = Files.newOutputStream(path)) {
@@ -134,8 +126,6 @@ BufferedImage render(long seed, double option) {
     return image;
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

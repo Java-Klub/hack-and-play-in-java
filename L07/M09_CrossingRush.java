@@ -18,15 +18,7 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Invariants (vždy platné podmínky): každá přijatá poloha má držet celý tvar hráče
 /// uvnitř plochy. Souřadnice středu nepředstavuje celý kolizní tvar.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L07/M09_CrossingRush.java`
-/// - Kontrola této mise: `java L07/Check.java M09_CrossingRush.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a šipkami přeskakuj mezi projíždějícími auty až k
-/// zelenému břehu nahoře. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F25 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a šipkami přeskakuj mezi projíždějícími auty až k zelenému břehu nahoře.
 void hop(int dx, int dy) {
     if (lost || won) {
         return;

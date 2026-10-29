@@ -10,16 +10,8 @@
 /// průchodu potřebuje pro každý průchod nový začátek. Rozliš dočasný součet od vyřešených nápověd
 /// uložených mezi příkazy.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L06/M04_MiniCrossword.java`
-/// - Kontrola této mise: `java L06/Check.java M04_MiniCrossword.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, jako první odpověď napiš 1 CAT a potvrď Enter,
-/// potom si přečti zbývající očíslované nápovědy. Po opravě: ulož soubor, spusť uvedenou kontrolu a
-/// zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F14 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, jako první odpověď napiš 1 CAT a potvrď Enter, potom si přečti zbývající
+/// očíslované nápovědy.
 void command(String input) {
     require(outcome.isEmpty());
     String[] p = input.toUpperCase(Locale.ROOT).split("\\s+");

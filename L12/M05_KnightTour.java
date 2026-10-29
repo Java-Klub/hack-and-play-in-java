@@ -16,16 +16,8 @@ import javax.swing.*;
 /// pattern (vzor record) rozbalí component (složky) Move; exhaustive switch (úplný switch) vybere
 /// pravidlo a guard (podmínka) oddělí použitelné souřadnice od odmítnutých.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L12/M05_KnightTour.java`
-/// - Kontrola této mise: `java L12/Check.java M05_KnightTour.java`
-///
-/// Po spuštění programu klikni na zelený tah jezdce, například na sloupec 1 a řádek 2 při číslování
-/// od nuly, a klávesou R začni cestu znovu. Po opravě: ulož soubor, spusť uvedenou kontrolu a
-/// zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F35 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Po spuštění programu klikni na zelený tah jezdce, například na sloupec 1 a řádek 2 při
+/// číslování od nuly, a klávesou R začni cestu znovu.
 boolean apply(Command command) {
     return switch (command) {
         case Move(var xx, var yy) when xx >= 0 && yy >= 0 && xx < 5 && yy < 5 -> move(xx, yy);
@@ -213,8 +205,6 @@ sealed interface Command permits Move, Restart {}
 record Move(int x, int y) implements Command {}
 record Restart() implements Command {}
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

@@ -11,16 +11,8 @@
 /// zisk. Zde jsou dva samostatné accumulator (průběžné součty), protože sum počítá všechny kategorie,
 /// zatímco upper jen prvních šest pro pozdější rozhodnutí o bonusu.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L04/M13_YatzyScorecard.java`
-/// - Kontrola této mise: `java L04/Check.java M13_YatzyScorecard.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, napiš bank 13, potom zapiš jinou volnou kategorii
-/// ukazující nenulové body a porovnej vypsaný součet s oběma vyplněnými výsledky. Po opravě: ulož
-/// soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F12 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, napiš bank 13, potom zapiš jinou volnou kategorii ukazující nenulové body a
+/// porovnej vypsaný součet s oběma vyplněnými výsledky.
 int total() {
     int sum = 0;
     int upper = 0;

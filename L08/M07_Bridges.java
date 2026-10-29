@@ -17,16 +17,8 @@ import java.util.Arrays;
 /// **Dnes trénuješ:** Copies and aliasing (kopie a sdílené odkazy): vrácení dalšího odkazu na pole
 /// nekopíruje jeho hodnoty. Uložený snapshot (snímek) musí přežít pozdější zápisy do pracovního stavu.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L08/M07_Bridges.java`
-/// - Kontrola této mise: `java L08/Check.java M07_Bridges.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, kliknutím na slabě vyznačené spojení změň počet
-/// mostů a klávesou U zkus tuto úpravu vrátit. Po opravě: ulož soubor, spusť uvedenou kontrolu a
-/// zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F20 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, kliknutím na slabě vyznačené spojení změň počet mostů a klávesou U zkus tuto
+/// úpravu vrátit.
 int[] snapshot() {
     return bridges.clone();
 }

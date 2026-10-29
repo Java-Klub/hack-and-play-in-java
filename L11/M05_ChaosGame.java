@@ -14,16 +14,8 @@ import java.awt.image.BufferedImage;
 /// **Dnes trénuješ:** Meze Random mají exclusive upper end (nezahrnutý horní konec). Převeď počet
 /// platných kandidátů na správné rozmezí volby a nevyřaď omylem posledního kandidáta.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L11/M05_ChaosGame.java`
-/// - Kontrola této mise: `java L11/Check.java M05_ChaosGame.java`
-///
 /// Po spuštění programu napiš seed (počáteční číslo) nebo stiskni Enter pro 42; prohlédni Java
-/// obrázek, potom jej zavři a zopakuj stejný seed nebo porovnej 43. Po opravě: ulož soubor, spusť
-/// uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F27 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// obrázek, potom jej zavři a zopakuj stejný seed nebo porovnej 43.
 int chooseVertex(Random random, int count) {
     if (count < 1) throw new IllegalArgumentException("No legal vertices.");
     return random.nextInt(count);
@@ -102,8 +94,6 @@ BufferedImage render(long seed, double option) {
 }
 
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

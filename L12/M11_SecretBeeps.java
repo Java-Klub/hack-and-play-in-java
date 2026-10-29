@@ -13,16 +13,8 @@
 /// (operace s parametrem). Zachovej časování písmen a značek, zatímco nový parameter (parametr) řídí
 /// oddělení slov; původní chování ověř, ale nekopíruj kvůli němu celý postup.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L12/M11_SecretBeeps.java`
-/// - Kontrola této mise: `java L12/Check.java M11_SecretBeeps.java`
-///
-/// Po spuštění programu napiš zprávu nebo stiskni Enter pro E E; v Java okně porovnej Play gap 10 s
-/// Play gap 7 a pomocí Stop či dalšího přehrání prozkoumej mezery mezi slovy. Po opravě: ulož
-/// soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F36 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Po spuštění programu napiš zprávu nebo stiskni Enter pro E E; v Java okně porovnej Play gap
+/// 10 s Play gap 7 a pomocí Stop či dalšího přehrání prozkoumej mezery mezi slovy.
 List<Integer> units(String text, int wordGap) {
     if (wordGap < 3 || wordGap > 12) throw new IllegalArgumentException("Word gap: 3..12 units.");
     var result = new ArrayList<Integer>();
@@ -149,8 +141,6 @@ List<Integer> units(String text) {
     return units(text, 7);
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 volatile javax.sound.sampled.SourceDataLine playingLine;
 volatile int playbackVersion;
 

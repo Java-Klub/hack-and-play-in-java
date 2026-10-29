@@ -18,15 +18,7 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Enum states (pojmenované stavy): PLAY, CAUGHT a WON jsou vzájemně výlučné výsledky.
 /// Když platí více podmínek současně, pravidlo přechodu musí určit přednost.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L07/M06_MiniPacman.java`
-/// - Kontrola této mise: `java L07/Check.java M06_MiniPacman.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a šipkou se rozjeď bludištěm, potom miř k tečkám a
-/// vyhýbej se duchovi. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F21 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a šipkou se rozjeď bludištěm, potom miř k tečkám a vyhýbej se duchovi.
 enum RoundState {
     PLAY, CAUGHT, WON
 }

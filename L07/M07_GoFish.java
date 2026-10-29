@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Invariants (vždy platné podmínky): některé veličiny musí souhlasit po každém tahu.
 /// Karty v rukou a balíčku spolu s kartami v hotových sadách musí stále odpovídat původnímu balíčku.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L07/M07_GoFish.java`
-/// - Kontrola této mise: `java L07/Check.java M07_GoFish.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a požádej o hodnotu, kterou máš v ruce, zadáním
-/// jejího čísla od 2 do 14 potvrzeného Enter. Po opravě: ulož soubor, spusť uvedenou kontrolu a
-/// zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F25 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a požádej o hodnotu, kterou máš v ruce, zadáním jejího čísla od 2 do 14
+/// potvrzeného Enter.
 void collect(int who) {
     for (int rank = 2; rank <= 14; rank++) {
         if (Collections.frequency(hands.get(who), rank) == 4) {

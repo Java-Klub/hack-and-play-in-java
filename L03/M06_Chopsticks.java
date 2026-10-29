@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Několik guard (ochran) v pořadí: nejdřív ověř, že místo existuje, a potom zkoumej,
 /// zda je použitelné. Odmítnutý zásah nesmí změnit prsty ani předat tah.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L03/M06_Chopsticks.java`
-/// - Kontrola této mise: `java L03/Check.java M06_Chopsticks.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a třikrát zadej 1 1 pro vyřazení ruky, potom zkus
-/// čtvrté 1 1 a sleduj, zda neplatný zásah změní hráče. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F08 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a třikrát zadej 1 1 pro vyřazení ruky, potom zkus čtvrté 1 1 a sleduj, zda
+/// neplatný zásah změní hráče.
 boolean handsAlive(int own, int opposing) {
     if (own < 0 || own >= 2 || opposing < 0 || opposing >= 2) {
         return false;

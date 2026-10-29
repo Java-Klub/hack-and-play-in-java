@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Writing functional checks (psaní funkčních kontrol): užitečná sada obsahuje i
 /// protipříklady, nejen úspěšné tahy. Očekávaný boolean (ano/ne) říká, zda je právě tento skok legální.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L06/M11_PegSolitaire.java`
-/// - Kontrola této mise: `java L06/Check.java M11_PegSolitaire.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a zadáním 1 2 3 2 proveď první skok krátkého
-/// hlavolamu s kolíky, potom pomocí kontroly hry prověř své příklady. Po opravě: ulož soubor, spusť
-/// uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F33 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a zadáním 1 2 3 2 proveď první skok krátkého hlavolamu s kolíky, potom pomocí
+/// kontroly hry prověř své příklady.
 record JumpExample(int row, int column, int toRow, int toColumn, boolean expected) {
 }
 

@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** For loop (počítaná smyčka) a krajní body: řada tří políček má jen dvě mezery. Zde n
 /// počítá mezery; sleduj postupné hodnoty i a rozhodni, kolik písmen je potřeba přečíst.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L04/M05_WordSearch.java`
-/// - Kontrola této mise: `java L04/Check.java M05_WordSearch.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a napiš 1 1 1 3 pro výběr CAT v prvním řádku;
-/// starter (výchozí program) přečte jen CA a nález odmítne. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F11 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a napiš 1 1 1 3 pro výběr CAT v prvním řádku; starter (výchozí program) přečte
+/// jen CA a nález odmítne.
 String read(int r, int c, int nr, int nc) {
     require(r >= 0 && r < 5 && c >= 0 && c < 5 && nr >= 0 && nr < 5 && nc >= 0 && nc < 5);
     int dr = Integer.signum(nr - r);

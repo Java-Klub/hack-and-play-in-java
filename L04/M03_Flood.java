@@ -18,16 +18,8 @@ import java.util.Random;
 /// každém průchodu index (pozice) postoupí a mohou přibýt noví sousedé; porovnávej s aktuální velikostí
 /// místo předpokládaného pevného počtu průchodů.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L04/M03_Flood.java`
-/// - Kontrola této mise: `java L04/Check.java M03_Flood.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a zvol barvu kliknutím na její políčko v paletě
-/// nebo stiskem 1–4; sleduj změny propojených políček a pomocí R obnov desku. Po opravě: ulož
-/// soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F10 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a zvol barvu kliknutím na její políčko v paletě nebo stiskem 1–4; sleduj změny
+/// propojených políček a pomocí R obnov desku.
 void spread(ArrayList<Point> queue, int old, int colour) {
     int index = 0;
     while (index < queue.size()) {

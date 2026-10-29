@@ -16,16 +16,8 @@ import java.util.ArrayList;
 /// **Dnes trénuješ:** Grid neighbours (sousedé v mřížce): sousedství samo neznamená propojení. Pro
 /// přechod určitým směrem prověř vývod i příchozí stranu souseda.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L08/M02_Net.java`
-/// - Kontrola této mise: `java L08/Check.java M02_Net.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a kliknutím otáčej potrubí dílku, přitom sleduj,
-/// které dílky při spojení se zdrojem zezelenají. Po opravě: ulož soubor, spusť uvedenou kontrolu a
-/// zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F18 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a kliknutím otáčej potrubí dílku, přitom sleduj, které dílky při spojení se
+/// zdrojem zezelenají.
 boolean[][] connected() {
     boolean[][] reached = new boolean[4][4];
     var queue = new ArrayList<Point>();

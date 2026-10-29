@@ -19,16 +19,8 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Počítané opakování: vyber rozsah for podle počtu průchodů. Pro count rovné jedné
 /// musí tělo běžet jednou; pro nulu se nesmí provést vůbec.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L04/M06_VirtualScribbler.java`
-/// - Kontrola této mise: `java L04/Check.java M06_VirtualScribbler.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, klávesou Space spusť pero a šipkami měň kresbu;
-/// sleduj Steps a potom pomocí kontroly hry ověř přesné dávky nuly, jednoho a čtyř kroků. Po
-/// opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F11 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, klávesou Space spusť pero a šipkami měň kresbu; sleduj Steps a potom pomocí
+/// kontroly hry ověř přesné dávky nuly, jednoho a čtyř kroků.
 void burst(int count) {
     if (count < 0 || count > 60) {
         return;

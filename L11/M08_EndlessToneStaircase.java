@@ -17,16 +17,8 @@ import java.io.ByteArrayInputStream;
 /// **Dnes trénuješ:** Path (cesta) nese adresáře i název souboru. Ponechání jen posledního názvu změní
 /// cíl; příprava nadřazených adresářů neopraví pozdější zápis jinam.
 ///
-/// command pro hraní zapíše exports/shepard.wav přes write a načte právě tento WAV pro Java
-/// Play/Stop. Chybný cíl vyvolá jasnou zprávu v výstup v terminálu; jiný soubor se nepřehraje. Po
-/// opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L11/M08_EndlessToneStaircase.java`
-/// - Kontrola této mise: `java L11/Check.java M08_EndlessToneStaircase.java`
-///
-/// Potřebuješ výklad? Nová dovednost · F32 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Program zapíše exports/shepard.wav přes write a načte právě tento WAV pro Java Play/Stop. Chybný
+/// cíl vyvolá jasnou zprávu v terminálu; jiný soubor se nepřehraje.
 void write(Path path, double[] signal) throws Exception {
     byte[] pcm = new byte[signal.length * 2];
     for (int i = 0; i < signal.length; i++) {
@@ -119,8 +111,6 @@ double[] signal(int layers) {
     return signal;
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 
 /// Připravený Java Sound: worker (pracovní vlákno) vlastní kanál; Stop a zavření jej uvolní.
 /// Play/Stop používají oddělený Java Sound worker (pracovní vlákno); zavření jej uvolní.

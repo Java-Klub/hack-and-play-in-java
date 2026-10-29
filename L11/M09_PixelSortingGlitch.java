@@ -15,16 +15,8 @@ import javax.imageio.ImageIO;
 /// **Dnes trénuješ:** Path (cesta) je součást export contract (smlouvy ukládání), včetně názvu. Úprava
 /// obrázku a cíl jsou dvě oddělené volby; zápis má respektovat obě a nevymýšlet sousední soubor.
 ///
-/// command pro hraní zapíše exports/pixel-sorted.png přes saveSorted a načte právě tento soubor do
-/// Java okna. Pokud požadovaný soubor chybí, přečti výstup v terminálu a oprav jeho cíl. Po opravě:
-/// ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L11/M09_PixelSortingGlitch.java`
-/// - Kontrola této mise: `java L11/Check.java M09_PixelSortingGlitch.java`
-///
-/// Potřebuješ výklad? Připomenutí · F32 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Program zapíše exports/pixel-sorted.png přes saveSorted a načte právě tento soubor do Java okna.
+/// Pokud požadovaný soubor chybí, přečti výstup v terminálu a oprav jeho cíl.
 void saveSorted(Path path, BufferedImage input, int threshold) throws IOException {
     Files.createDirectories(path.toAbsolutePath().getParent());
     if (!ImageIO.write(sort(input, threshold), "png", path.toFile())) {
@@ -129,8 +121,6 @@ BufferedImage sort(BufferedImage input, int threshold) {
     return output;
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

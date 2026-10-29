@@ -17,16 +17,8 @@ import javax.swing.Timer;
 /// AccelerationNow propojí aktuální state (stav) s pravidlem, takže jej lze vyměnit bez přepisování
 /// časového kroku či kreslení.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L12/M04_PendulumPainter.java`
-/// - Kontrola této mise: `java L12/Check.java M04_PendulumPainter.java`
-///
-/// Po spuštění programu měň Length a Gravity pro zkoumání stopy kyvadla; Pause/Run ovládá pohyb a
-/// Reset stopu vymaže a obnoví pokus. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si
-/// znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F34 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Po spuštění programu měň Length a Gravity pro zkoumání stopy kyvadla; Pause/Run ovládá pohyb
+/// a Reset stopu vymaže a obnoví pokus.
 double accelerationNow() {
     return acceleration.at(angle, length);
 }
@@ -184,8 +176,6 @@ void showWindow() {
 interface Acceleration { double at(double angle, double length); }
 Acceleration acceleration = (a, len) -> -gravity / len * Math.sin(a);
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
     reset(42);

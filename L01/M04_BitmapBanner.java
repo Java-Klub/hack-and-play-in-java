@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Literal (doslovný zápis) a output (výstup): zvolený text určuje, co další akce
 /// vytiskne. Mezery v uvozovkách jsou také skutečné znaky, i když jejich výstup může vypadat prázdně.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L01/M04_BitmapBanner.java`
-/// - Kontrola této mise: `java L01/Check.java M04_BitmapBanner.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a v výstup v terminálu si prohlédni pětiřádkovou
-/// ceduli; po opravě ji zkus přečíst z větší vzdálenosti. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F02 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a v terminálu si prohlédni pětiřádkovou ceduli; po opravě ji zkus přečíst z větší
+/// vzdálenosti.
 String bannerMessage() {
     return "JAVA CLUB!";
 }

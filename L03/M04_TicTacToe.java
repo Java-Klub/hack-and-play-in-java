@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Guard clause (ochranná podmínka): pokud je akce zakázaná, vrať se včas před změnou
 /// stavu. Ověř poslední platné políčko, opakované políčko a číslo těsně mimo rozsah.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L03/M04_TicTacToe.java`
-/// - Kontrola této mise: `java L03/Check.java M04_TicTacToe.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, vyber políčko 9 a potom jej zkus znovu; porovnej
-/// přijaté prázdné políčko s odmítnutým obsazeným. Po opravě: ulož soubor, spusť uvedenou kontrolu
-/// a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F08 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, vyber políčko 9 a potom jej zkus znovu; porovnej přijaté prázdné políčko s
+/// odmítnutým obsazeným.
 boolean play(int cell) {
     if (winner != '.' || cell < 1 || cell > 9 || board[cell - 1] != '.') {
         return false;

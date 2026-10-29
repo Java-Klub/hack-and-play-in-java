@@ -14,16 +14,8 @@ import java.awt.BorderLayout;
 /// **Dnes trénuješ:** Enum states (pojmenované stavy): používej malou sadu srozumitelných výsledků místo
 /// nevysvětlených čísel. holderAfterSwap() má vrátit správnou hodnotu Holder pro konečnou situaci.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L07/M04_CarrotInABox.java`
-/// - Kontrola této mise: `java L07/Check.java M04_CarrotInABox.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, klikni na Look, bluff, then choose, nech prvního
-/// hráče tajně nahlédnout a druhého rozhodnout o ponechání či výměně. Po opravě: ulož soubor, spusť
-/// uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F21 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, klikni na Look, bluff, then choose, nech prvního hráče tajně nahlédnout a
+/// druhého rozhodnout o ponechání či výměně.
 enum Holder {
     PLAYER_ONE, PLAYER_TWO
 }

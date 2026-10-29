@@ -15,16 +15,8 @@ import java.util.List;
 /// **Dnes trénuješ:** List (seznam) popisuje přístup v pořadí, ale ne každý List dovoluje mutation
 /// (změnu). Tato method (metoda) sestavuje výsledek postupně, proto její implementace musí přijímat add.
 ///
-/// command pro hraní sestaví obrázek. Pokud seedList odmítne přidat první barevný bod, čti výstup v
-/// terminálu. Po opravě command pro hraní otevře barevný obrázek. Po opravě: ulož soubor, spusť
-/// uvedenou kontrolu a zahraj si znovu.
-///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L09/M04_VoronoiStainedGlass.java`
-/// - Kontrola této mise: `java L09/Check.java M04_VoronoiStainedGlass.java`
-///
-/// Potřebuješ výklad? Připomenutí · F22 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Program sestaví obrázek. Pokud seedList odmítne přidat první barevný bod, čti výstup v
+/// terminálu. Po opravě program otevře barevný obrázek.
 List<Seed> seedList(Random random, int count) {
     if (count < 0 || count > 100) throw new IllegalArgumentException("Seeds: 0..100.");
     List<Seed> seeds = new ArrayList<>();
@@ -126,8 +118,6 @@ BufferedImage render(long seed, double option) {
 }
 
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

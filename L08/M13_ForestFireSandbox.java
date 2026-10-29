@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Simultaneous updates (současné aktualizace): vytvoř úplnou novou mřížku z nezměněné
 /// staré. Nově zapálené stromy musí s vlastním šířením počkat na další generaci.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L08/M13_ForestFireSandbox.java`
-/// - Kontrola této mise: `java L08/Check.java M13_ForestFireSandbox.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, vyber Fire a kliknutím zapal strom, potom přes
-/// Step sleduj pohyb fronty, než vyzkoušíš Run/Pause. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F26 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, vyber Fire a kliknutím zapal strom, potom přes Step sleduj pohyb fronty, než
+/// vyzkoušíš Run/Pause.
 int[][] nextForest(int[][] before) {
     int[][] next = new int[40][60];
     int[][] offsets = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};

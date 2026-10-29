@@ -10,16 +10,8 @@
 /// (pozici). Existují dva běžné konce: return true při nalezení vhodného slova, nebo dosažení konce
 /// slovníku a return false.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L04/M02_Ghost.java`
-/// - Kontrola této mise: `java L04/Check.java M02_Ghost.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, přečti vypsaný slovník a napiš R; starter
-/// (výchozí program) chybně oznámí slepý začátek navzdory uvedeným slovům na R. Po opravě: ulož
-/// soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F10 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, přečti vypsaný slovník a napiš R; starter (výchozí program) chybně oznámí
+/// slepý začátek navzdory uvedeným slovům na R.
 boolean possiblePrefix(String candidate) {
     int index = 0;
     while (index < words.length) {

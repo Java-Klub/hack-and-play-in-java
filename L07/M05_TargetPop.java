@@ -17,16 +17,8 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Enum states (pojmenované stavy): přechod mění jen stavy, kterých se týká. Vypršení
 /// RUNNING nesmí omylem obnovit dokončené ani dosud nezačaté kolo.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L07/M05_TargetPop.java`
-/// - Kontrola této mise: `java L07/Check.java M05_TargetPop.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a kliknutím na kruh začni časované kolo, potom
-/// zasahuj další terče až do vypršení času. Po opravě: ulož soubor, spusť uvedenou kontrolu a
-/// zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F21 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a kliknutím na kruh začni časované kolo, potom zasahuj další terče až do
+/// vypršení času.
 enum Phase {
     READY, RUNNING, FINISHED
 }

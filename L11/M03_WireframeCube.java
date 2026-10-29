@@ -17,15 +17,8 @@ import javax.swing.Timer;
 /// rovnocenné. Dej neorientované hraně jednotnou podobu, aby record equality (rovnost record) poznala
 /// obrácený vstup.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L11/M03_WireframeCube.java`
-/// - Kontrola této mise: `java L11/Check.java M03_WireframeCube.java`
-///
 /// Po spuštění programu pomocí Pause/Run zastav otáčení krychle, přečti Distinct edges a pomocí
-/// Reset angle obnov pohled. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F23 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Reset angle obnov pohled.
 Set<Edge> uniqueEdges(int[][] candidates) {
     Set<Edge> result = new LinkedHashSet<>();
     for (int[] pair : candidates) {
@@ -164,8 +157,6 @@ void showWindow() {
 
 record Edge(int a, int b) {}
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
     reset(42);

@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Grid neighbours (sousedé v mřížce): vlevo a vpravo se určují podle aktuálního směru
 /// paprsku, nikoli pevně podle obrazovky. Sleduj kolmé posuny při zatáčení paprsku.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L08/M03_BlackBox.java`
-/// - Kontrola této mise: `java L08/Check.java M03_BlackBox.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a zadáním ray N1 prozkoumej krabici shora, potom
-/// pozorování porovnej s paprsky z dalších označených vstupů. Po opravě: ulož soubor, spusť
-/// uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F18 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a zadáním ray N1 prozkoumej krabici shora, potom pozorování porovnej s paprsky
+/// z dalších označených vstupů.
 String trace(boolean[][] grid, String entry) {
     require(entry.matches("[NSEW][1-4]"));
     int n = entry.charAt(1) - '1';

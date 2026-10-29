@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Traversal and search (průchod a hledání): procházej kandidátní pozice, dokud
 /// nenajdeš legální tah. Výsledek false (ne) patří až úplnému neúspěšnému hledání.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L05/M05_Reversi.java`
-/// - Kontrola této mise: `java L05/Check.java M05_Reversi.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, jako úvodní tah napiš 3 2 a potvrď Enter, potom
-/// nech dalšího hráče zvolit povolený řádek a sloupec. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F17 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, jako úvodní tah napiš 3 2 a potvrď Enter, potom nech dalšího hráče zvolit
+/// povolený řádek a sloupec.
 boolean hasMove(int who) {
     for (int r = 0; r < 6; r++) {
         for (int c = 0; c < 6; c++) {

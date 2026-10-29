@@ -8,16 +8,8 @@
 /// **Dnes trénuješ:** Traversal and search (průchod a hledání): procházej vztahy mezi oblastmi, nejen
 /// oblasti samotné. Každá hranice určuje dvě barvy k porovnání.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L05/M09_FourColourMap.java`
-/// - Kontrola této mise: `java L05/Check.java M09_FourColourMap.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, napiš B 2 pro obarvení oblasti B barvou 2 a
-/// pokračuj dalšími označenými oblastmi. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj
-/// si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F17 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, napiš B 2 pro obarvení oblasti B barvou 2 a pokračuj dalšími označenými
+/// oblastmi.
 int conflicts() {
     int n = 0;
     for (int[] edge : adjacent) {

@@ -10,16 +10,8 @@
 /// práce a posuň se ke konci. U šestipísmenného slova jsou platné index (pozice) 0 až 5; následující
 /// index už musí smyčku zastavit.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L04/M01_Hangman.java`
-/// - Kontrola této mise: `java L04/Check.java M01_Hangman.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a napiš A pro cvičné slovo BANANA; porovnej
-/// zobrazené _A_A_ se šesti místy, která slovo potřebuje. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F10 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a napiš A pro cvičné slovo BANANA; porovnej zobrazené _A_A_ se šesti místy,
+/// která slovo potřebuje.
 String mask() {
     String result = "";
     int index = 0;

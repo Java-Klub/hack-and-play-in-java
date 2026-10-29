@@ -15,16 +15,8 @@ import java.awt.GridLayout;
 /// **Dnes trénuješ:** Arrays (pole): související pole popisují stejné očíslované pozice. Přečti
 /// požadovanou pozici a zachovej pravidlo, které rozhoduje o jejím odkrytí.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L05/M01_MemoryPairs.java`
-/// - Kontrola této mise: `java L05/Check.java M01_MemoryPairs.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a klikni na dvě zakryté karty; po neshodě začne
-/// kliknutí na další zakrytou kartu nový pokus. Po opravě: ulož soubor, spusť uvedenou kontrolu a
-/// zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F16 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a klikni na dvě zakryté karty; po neshodě začne kliknutí na další zakrytou
+/// kartu nový pokus.
 int visible(int index) {
     return matched[index] || index == first || index == second ? cards[index] : 0;
 }

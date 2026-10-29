@@ -16,15 +16,7 @@ import java.util.Arrays;
 /// **Dnes trénuješ:** Copies and aliasing (kopie a sdílené odkazy): dvě jména mohou sdílet jedno
 /// měnitelné pole. Zde stačí kopírovat jednorozměrné hodnoty, protože stav každého domina je int.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L08/M08_MagnetDominoes.java`
-/// - Kontrola této mise: `java L08/Check.java M08_MagnetDominoes.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, kliknutím na domino změň polaritu a klávesou U
-/// zkus obnovit předchozí volbu. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F20 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, kliknutím na domino změň polaritu a klávesou U zkus obnovit předchozí volbu.
 int[] copyState() {
     return state.clone();
 }

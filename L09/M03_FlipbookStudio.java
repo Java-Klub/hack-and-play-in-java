@@ -18,16 +18,8 @@ import javax.swing.Timer;
 /// přicházejí v časovém pořadí a vracejí se opačně. Každý Edit uchovává původní data pro obnovení jednoho
 /// pixel (obrazového bodu).
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L09/M03_FlipbookStudio.java`
-/// - Kontrola této mise: `java L09/Check.java M03_FlipbookStudio.java`
-///
 /// Po spuštění programu namaluj dvě různá políčka a stiskni Z pro vrácení posledního; pravé
-/// kliknutí maže, 1–4 mění snímek, Space přehrává animaci a R obnoví začátek. Po opravě: ulož
-/// soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F22 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// kliknutí maže, 1–4 mění snímek, Space přehrává animaci a R obnoví začátek.
 boolean undo() {
     if (history.isEmpty()) return false;
     Edit edit = history.removeLast();
@@ -253,8 +245,6 @@ void showWindow() {
 record Edit(int frame, int x, int y, int oldColour) {}
 List<Edit> history = new ArrayList<>();
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

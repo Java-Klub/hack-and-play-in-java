@@ -10,16 +10,9 @@
 /// data. Switch má předat rozpoznaná data správnému připravenému postupu, ne považovat každou kartu za
 /// stejnou operaci.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L12/M06_CipherPostcards.java`
-/// - Kontrola této mise: `java L12/Check.java M06_CipherPostcards.java`
-///
-/// Po spuštění programu stiskni Enter pro vigenere a ORANGE, potom napiš ATTACK AT DAWN!; přečti
-/// zvolený cipher (šifru) a porovnej Result s původní zprávou: Vigenere branch (větev) má změnit
-/// její písmena. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F35 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Po spuštění programu stiskni Enter pro vigenere a ORANGE, potom napiš ATTACK AT DAWN!;
+/// přečti zvolený cipher (šifru) a porovnej Result s původní zprávou: Vigenere branch (větev)
+/// má změnit její písmena.
 String transform(String text, Cipher cipher, boolean decode) {
     return switch (cipher) {
         case Caesar(var shift) -> applyText(text, "caesar", Integer.toString(shift), decode);
@@ -140,8 +133,6 @@ Cipher chooseCipher(String mode, String key) {
     };
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
     String mode = IO.readln("Cipher caesar/substitution/vigenere (blank vigenere, q quits): ");
     if (mode == null || mode.strip().equalsIgnoreCase("q")) return;

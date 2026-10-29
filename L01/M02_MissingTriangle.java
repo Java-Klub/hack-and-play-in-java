@@ -16,18 +16,10 @@ import javax.swing.*;
 /// běží v zapsaném pořadí. Předpověz, která barva zůstane nahoře. Samotná definice čeká, až ji připravená
 /// kreslicí část zavolá.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L01/M02_MissingTriangle.java`
-/// - Kontrola této mise: `java L01/Check.java M02_MissingTriangle.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, kliknutím otoč kruh a klávesou O zobraz obrysy,
-/// které program skutečně kreslí. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si
-/// znovu.
+/// Spusť program, kliknutím otoč kruh a klávesou O zobraz obrysy, které program skutečně
+/// kreslí.
 ///
 /// Řádky s `///` jsou průvodce pro tebe; při spuštění se neprovádějí.
-///
-/// Potřebuješ výklad? Připomenutí · F01 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
 void paintDisc(Graphics2D g, int i) {
     darkDisc(g, i);
     whiteBite(g, i);

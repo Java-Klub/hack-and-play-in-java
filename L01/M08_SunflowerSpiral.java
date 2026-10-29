@@ -14,16 +14,7 @@ import java.awt.image.BufferedImage;
 /// **Dnes trénuješ:** Named numeric value (pojmenovaná číselná hodnota): srozumitelné jméno spojuje
 /// jediný zvolený úhel s pozdějším obrázkem. double dokáže uložit i část stupně, například polovinu.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L01/M08_SunflowerSpiral.java`
-/// - Kontrola této mise: `java L01/Check.java M08_SunflowerSpiral.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše: obrázek se ihned objeví v Java okně. Po úpravě
-/// source (zdrojového textu) okno zavři a znovu spusť command pro hraní; Kontrola hry ověřuje
-/// výpočet odděleně.
-///
-/// Potřebuješ výklad? Připomenutí · F03 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program: obrázek se ihned objeví v Java okně.
 double defaultAngle = 137.5;
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F03">
@@ -64,10 +55,9 @@ double defaultAngle = 137.5;
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Pro tuto hru">
-/// command pro hraní vytvoří obrázek v paměti a zobrazí jej přímo v Javě. Zvolený úhel je ve
-/// stupních; Java zapisuje desetinná čísla tečkou. Po změně defaultAngle znovu spusť soubor, aby se
-/// nová hodnota načetla. Kontrola hry kontroluje chování, nikoli zastaralý obrázek v dřívějším
-/// okně.
+/// Program vytvoří obrázek v paměti a zobrazí jej přímo v Javě. Zvolený úhel je ve stupních; Java
+/// zapisuje desetinná čísla tečkou. Po změně defaultAngle znovu spusť soubor, aby se nová hodnota
+/// načetla. Kontrola hry kontroluje chování, nikoli zastaralý obrázek v dřívějším okně.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
@@ -79,7 +69,7 @@ double defaultAngle = 137.5;
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Nastav double defaultAngle = 137.5; a znovu spusť command pro hraní pro nový obrázek.
+/// Nastav double defaultAngle = 137.5; a znovu spusť program pro nový obrázek.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

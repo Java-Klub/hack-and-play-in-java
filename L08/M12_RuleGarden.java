@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Simultaneous updates (současné aktualizace): odděl čtený snapshot (snímek) od
 /// zapisované generace. Výsledek nemá záviset na průchodu sloupců zleva či zprava.
 ///
-/// command pro hraní hned ukáže rule (pravidlo) 30 v výstup v terminálu (výstupu). V další výzvě
-/// napiš 90 pro porovnání, stiskni Enter pro opakování současného pravidla, nebo q pro konec. Po
-/// opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L08/M12_RuleGarden.java`
-/// - Kontrola této mise: `java L08/Check.java M12_RuleGarden.java`
-///
-/// Potřebuješ výklad? Nová dovednost · F26 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Program hned ukáže rule (pravidlo) 30 v terminálu. V další výzvě napiš 90 pro porovnání, stiskni
+/// Enter pro opakování současného pravidla, nebo q pro konec.
 boolean[] nextRow(boolean[] current, int rule) {
     boolean[] next = new boolean[current.length];
     for (int column = 0; column < current.length; column++) {
@@ -113,9 +105,9 @@ void displayRule(int rule, int width, int rows) {
     }
 }
 
-/// command pro hraní hned vypíše rule (pravidlo) 30. # znamená zapnuto a . vypnuto; řádek je jedna
-/// generace. V dalším prompt (výzvě) zkus jiné pravidlo, Enter zopakuje současné a q skončí. Žádný
-/// soubor neotvíráš.
+/// Program hned vypíše rule (pravidlo) 30. # znamená zapnuto a . vypnuto; řádek je jedna generace.
+/// V dalším prompt (výzvě) zkus jiné pravidlo, Enter zopakuje současné a q skončí. Žádný soubor
+/// neotvíráš.
 void main() {
     int rule = 30;
     IO.println("RULE GARDEN: watch one starting cell grow into a pattern.");

@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Tick (časový krok) závisí na lifecycle state (stavu životního cyklu) hry. Značka
 /// winner rozhoduje, zda krok smí posunout pálky a míček; kreslení má zůstat možné i po konci hry.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L10/M09_Pong.java`
-/// - Kontrola této mise: `java L10/Check.java M09_Pong.java`
-///
 /// Po spuštění programu stiskni Space nebo klikni pro start; levou pálku ovládej W/S a pravou
-/// Up/Down. První s pěti body vyhrává; R obnoví začátek a čeká na další start. Po opravě: ulož
-/// soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F30 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Up/Down. První s pěti body vyhrává; R obnoví začátek a čeká na další start.
 void step() {
     if (winner != 0) return;
     leftY = clampPaddle(leftY + (leftDown ? 5 : 0) - (leftUp ? 5 : 0));
@@ -227,8 +219,6 @@ void showWindow() {
     timer.start();
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

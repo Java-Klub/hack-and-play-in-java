@@ -11,16 +11,8 @@
 /// jej aktualizuj s využitím předchozí hodnoty. Skupina se třemi slovy potřebuje tři příspěvky, nikoli
 /// trojí nahrazení stejným číslem.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L04/M09_EvilHangman.java`
-/// - Kontrola této mise: `java L04/Check.java M09_EvilHangman.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a tipni E, abys viděl vybranou nápovědu; potom
-/// pomocí kontroly hry porovnej skupinu tří slov se skupinou jediného slova. Po opravě: ulož
-/// soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F12 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a tipni E, abys viděl vybranou nápovědu; potom pomocí kontroly hry porovnej
+/// skupinu tří slov se skupinou jediného slova.
 int familySize(List<String> family) {
     int total = 0;
     for (int i = 0; i < family.size(); i++) {

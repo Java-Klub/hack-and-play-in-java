@@ -12,16 +12,8 @@
 /// (počítadlo) pro každé písmeno. Dva objevy nespárovaného L musejí oba přispět do stejného počítadla;
 /// shody na přesné pozici jsou již oddělené.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L04/M10_WordleStyleWordHunt.java`
-/// - Kontrola této mise: `java L04/Check.java M10_WordleStyleWordHunt.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a napiš ALLEY proti cvičnému slovu LEVEL; porovnej
-/// vypsanou nápovědu se dvěma L, která se obě mohou shodovat na jiném místě. Po opravě: ulož
-/// soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F12 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a napiš ALLEY proti cvičnému slovu LEVEL; porovnej vypsanou nápovědu se dvěma
+/// L, která se obě mohou shodovat na jiném místě.
 int[] leftoverLetters(String guess, char[] result) {
     int[] counts = new int[26];
     for (int i = 0; i < 5; i++) {

@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Switch expressions (výrazy s výběrem větve): vyber jednu vracenou hodnotu podle
 /// případů a náhradní větve. Speciální případ nemá nahradit běžnou podmínku stejné hodnoty či barvy.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L07/M01_CrazyEightsSimpleMauMau.java`
-/// - Kontrola této mise: `java L07/Check.java M01_CrazyEightsSimpleMauMau.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, prohlédni si očíslované karty a zahraj zadáním p
-/// a indexu karty; při osmičce přidej také číslo barvy. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F09 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, prohlédni si očíslované karty a zahraj zadáním p a indexu karty; při osmičce
+/// přidej také číslo barvy.
 boolean legal(int card) {
     return switch (rank(card)) {
         case 8 -> true;

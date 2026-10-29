@@ -20,15 +20,8 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Projection (promítání) mění pozici modelu a hloubku na bod obrazovky. Menší
 /// bezpečná hloubka dává větší odchylku; převod má důsledně použít předaný požadavek.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L10/M08_StarTunnel.java`
-/// - Kontrola této mise: `java L10/Check.java M08_StarTunnel.java`
-///
-/// Po spuštění programu kliknutím nebo tažením spusť a řiď hvězdný tunel; Space pozastaví pohyb a R
-/// obnoví výchozí pohled. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F29 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Po spuštění programu kliknutím nebo tažením spusť a řiď hvězdný tunel; Space pozastaví pohyb
+/// a R obnoví výchozí pohled.
 Point2D.Double project(Star star, double depth) {
     double z = Math.max(5, depth);
     return new Point2D.Double(centreX + star.x * 260 / z, centreY + star.y * 260 / z);
@@ -219,8 +212,6 @@ void showWindow() {
     timer.start();
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

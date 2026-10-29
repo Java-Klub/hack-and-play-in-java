@@ -10,16 +10,8 @@
 /// popisují dva okamžiky stejného počtu. Pokud oba obsahují tři řady, žádná nová řada nemá být odměněna;
 /// method (metoda) tento jediný výsledek vrátí volající části.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L03/M09_SOS.java`
-/// - Kontrola této mise: `java L03/Check.java M09_SOS.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a jako samostatné tahy zadej 1 S, 2 O, 3 S a 4 S;
-/// porovnej odměnu za poslední tah, který nové SOS nevytvoří. Po opravě: ulož soubor, spusť
-/// uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F13 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a jako samostatné tahy zadej 1 S, 2 O, 3 S a 4 S; porovnej odměnu za poslední
+/// tah, který nové SOS nevytvoří.
 int gainedPoints(int before, int after) {
     return after - before;
 }

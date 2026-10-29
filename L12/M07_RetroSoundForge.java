@@ -13,16 +13,8 @@
 /// parameter (parametry). Různé Wobble musí používat vlastní střed i odchylku a čas musí dál ovlivňovat
 /// výsledek.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L12/M07_RetroSoundForge.java`
-/// - Kontrola této mise: `java L12/Check.java M07_RetroSoundForge.java`
-///
 /// Po spuštění programu porovnej Java tlačítka Play wobble, Play laser a Play jump; Stop zvuk
-/// přeruší a opakované přehrání umožní slyšet opravu wobble. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F35 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// přeruší a opakované přehrání umožní slyšet opravu wobble.
 double frequency(Sound sound, double t) {
     if (!Double.isFinite(t) || t < 0 || t > 1) throw new IllegalArgumentException("Time: 0..1.");
     return switch (sound) {
@@ -132,8 +124,6 @@ Sound chooseSound(String kind) {
     };
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 volatile javax.sound.sampled.SourceDataLine playingLine;
 volatile int playbackVersion;
 

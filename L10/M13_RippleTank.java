@@ -17,15 +17,8 @@ import javax.swing.Timer;
 /// Platné vnitřní klepnutí zde spouští pohyb; klepnutí mimo meze nesmí skrytě obnovit běh ani změnit
 /// vodu.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L10/M13_RippleTank.java`
-/// - Kontrola této mise: `java L10/Check.java M13_RippleTank.java`
-///
-/// Po spuštění programu klikni dovnitř vody pro vytvoření vln, pomocí Space zastav pohyb a klávesou
-/// R obnov klidnou nádrž. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F30 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Po spuštění programu klikni dovnitř vody pro vytvoření vln, pomocí Space zastav pohyb a
+/// klávesou R obnov klidnou nádrž.
 void tap(int x, int y) {
     if (x > 0 && y > 0 && x < COLUMNS - 1 && y < ROWS - 1) {
         height[y][x] = Math.min(120, height[y][x] + 60);
@@ -204,8 +197,6 @@ void showWindow() {
     timer.start();
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

@@ -14,16 +14,7 @@ import java.awt.image.BufferedImage;
 /// **Dnes trénuješ:** Map (mapa) může vést samostatný počet pro každou pojmenovanou kategorii. Změna
 /// jednoho natočení musí zachovat jeho předchozí počet a nezasáhnout druhou kategorii.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L09/M06_TruchetTileLab.java`
-/// - Kontrola této mise: `java L09/Check.java M06_TruchetTileLab.java`
-///
-/// Po spuštění programu prohlédni Java obrázek; zavři okno, uprav aktivní pravidlo, použij uložení
-/// a kontrolu hry a dalším command pro hraní porovnej výsledek. Po opravě: ulož soubor, spusť
-/// uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F24 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a porovnej obrázek před opravou a po ní.
 void countOrientation(String orientation) {
     orientationCounts.put(orientation, orientationCounts.getOrDefault(orientation, 0) + 1);
 }
@@ -115,8 +106,6 @@ BufferedImage render(long seed, double option) {
 
 Map<String, Integer> orientationCounts = new HashMap<>();
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

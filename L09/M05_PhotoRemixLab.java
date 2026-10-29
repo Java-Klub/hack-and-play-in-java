@@ -16,15 +16,8 @@ import java.awt.image.BufferedImage;
 /// **Dnes trénuješ:** Map (mapa) spojuje každý colour key (klíč barvy) s aktuálním počtem. Opakovaný key
 /// potřebuje nový součet; put starou hodnotu nahrazuje, samo k ní nepřičítá.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L09/M05_PhotoRemixLab.java`
-/// - Kontrola této mise: `java L09/Check.java M05_PhotoRemixLab.java`
-///
-/// Po spuštění programu porovnej Pixels counted s celkovým počtem bodů; Up/Down mění práh plakátu a
-/// R obnoví ukázku. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F24 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Po spuštění programu porovnej Pixels counted s celkovým počtem bodů; Up/Down mění práh
+/// plakátu a R obnoví ukázku.
 void countColour(int rgb) {
     colourCounts.put(rgb, colourCounts.getOrDefault(rgb, 0) + 1);
 }
@@ -188,8 +181,6 @@ int countedPixels() {
     return total;
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Switch expressions (výrazy s výběrem větve): několik vstupních případů může sdílet
 /// jednu vracenou hodnotu. Direction sdružuje vodorovnou a svislou změnu pro danou klávesu.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L07/M03_TrailDuel.java`
-/// - Kontrola této mise: `java L07/Check.java M03_TrailDuel.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a hrajte společně na jedné klávesnici, první
-/// člověk řídí pomocí W, A, S, D a druhý šipkami. Po opravě: ulož soubor, spusť uvedenou kontrolu a
-/// zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F09 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a hrajte společně na jedné klávesnici, první člověk řídí pomocí W, A, S, D a
+/// druhý šipkami.
 Direction directionFor(int code) {
     return switch (code) {
         case KeyEvent.VK_W, KeyEvent.VK_UP -> new Direction(0, -1);

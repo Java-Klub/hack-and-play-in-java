@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Writing functional checks (psaní funkčních kontrol): výsledek může mít více
 /// pozorovatelných částí. Uveď změněný řádek i skóre a zvol případy rozlišující uvěřitelné chyby.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L06/M12_Merge2048.java`
-/// - Kontrola této mise: `java L06/Check.java M12_Merge2048.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a napiš A potvrzené Enter pro posun vlevo, potom
-/// vyzkoušej další směry a pomocí kontroly hry prověř řádkové příklady. Po opravě: ulož soubor,
-/// spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F33 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a napiš A potvrzené Enter pro posun vlevo, potom vyzkoušej další směry a
+/// pomocí kontroly hry prověř řádkové příklady.
 record MergeExample(int[] input, int[] expected, int score) {
 }
 
