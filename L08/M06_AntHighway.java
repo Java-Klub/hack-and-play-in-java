@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Grid neighbours (sousedé v mřížce): souběžná pole dx a dy popisují jeden krok pro
 /// každý hlavní směr. Stejný index směru musí vybírat odpovídající vodorovný i svislý posun.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L08/M06_AntHighway.java`
-/// - Kontrola této mise: `java L08/Check.java M06_AntHighway.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a kliknutím na One step si prohlédni jeden krok
-/// mravence, potom pomocí Run/Pause nech vyrůst delší stopu. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F18 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a kliknutím na One step si prohlédni jeden krok mravence, potom pomocí
+/// Run/Pause nech vyrůst delší stopu.
 void step() {
     direction = Math.floorMod(direction + (black[y][x] ? -1 : 1), 4);
     black[y][x] = !black[y][x];

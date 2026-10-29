@@ -15,16 +15,8 @@ import java.awt.image.BufferedImage;
 /// (vstupu). Oddělené obrácení hřebene dává nové volbě jednu odpovědnost a zachovává nezávislost tvorby
 /// na zobrazení.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L12/M12_MountainPostcards.java`
-/// - Kontrola této mise: `java L12/Check.java M12_MountainPostcards.java`
-///
-/// Po spuštění programu porovnej New rule s Original rule ze stejného seed (počátečního čísla); po
-/// opravě mají ukázat požadovaný rozdíl. Před dalším spuštěním okno zavři. Po opravě: ulož soubor,
-/// spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F36 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Po spuštění programu porovnej New rule s Original rule ze stejného seed (počátečního čísla);
+/// po opravě mají ukázat požadovaný rozdíl. Před dalším spuštěním okno zavři.
 double[] reverseRidge(double[] heights) {
     return heights.clone();
 }
@@ -126,8 +118,6 @@ BufferedImage render(long seed, double roughness) {
 
 boolean mirrored = true;
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

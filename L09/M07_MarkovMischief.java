@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Tato Map (mapa) ukládá jako hodnotu List (seznam): jedno slovo může mít více
 /// následníků včetně opakovaných. Kolekci pro slovo založ záměrně a při dalších výskytech ji zachovej.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L09/M07_MarkovMischief.java`
-/// - Kontrola této mise: `java L09/Check.java M07_MarkovMischief.java`
-///
-/// Po spuštění programu stiskni Enter pro remix ukázkového corpus (učebního textu) moon cat moon
-/// dog moon cat, nebo napiš vlastní krátkou větu. Po opravě: ulož soubor, spusť uvedenou kontrolu a
-/// zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F24 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Po spuštění programu stiskni Enter pro remix ukázkového corpus (učebního textu) moon cat
+/// moon dog moon cat, nebo napiš vlastní krátkou větu.
 Map<String, List<String>> train(String text) {
     if (text.isBlank() || text.length() > 100000) {
         throw new IllegalArgumentException("Corpus size: 1..100000 characters.");
@@ -121,8 +113,6 @@ String generate(String text, long seed, int count) {
     return output.toString();
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
     String input = IO.readln("Corpus (blank moon cat moon dog moon cat, q quits): ");
     if (input == null || input.strip().equalsIgnoreCase("q")) return;

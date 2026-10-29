@@ -10,16 +10,7 @@
 /// návratu z reset() zanikne, ale field (proměnná programu) player zůstává. Obnov stav, který skutečně
 /// čtou příkazy.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L06/M02_MancalaKalah.java`
-/// - Kontrola této mise: `java L06/Check.java M02_MancalaKalah.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a zadej číslo jedné své jamky od 1 do 6, aby se
-/// její kameny rozesely po desce. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si
-/// znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F14 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a zadej číslo jedné své jamky od 1 do 6, aby se její kameny rozesely po desce.
 void reset() {
     pits = new int[14];
     Arrays.fill(pits, 4);

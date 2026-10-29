@@ -15,16 +15,8 @@ import java.awt.GridLayout;
 /// **Dnes trénuješ:** Grid neighbours (sousedé v mřížce): čtvercové políčko může mít až osm sousedů.
 /// Rozliš kontrolu mezí, vynechání středu a podmínku, kterou chceš počítat.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L08/M01_Minesweeper.java`
-/// - Kontrola této mise: `java L08/Check.java M01_Minesweeper.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a kliknutím odkryj políčko, potom podle čísla
-/// vybírej bezpečné sousedy nebo označuj miny v režimu Flag mode. Po opravě: ulož soubor, spusť
-/// uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F18 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a kliknutím odkryj políčko, potom podle čísla vybírej bezpečné sousedy nebo
+/// označuj miny v režimu Flag mode.
 int adjacent(int row, int col) {
     int count = 0;
     for (int r = row - 1; r <= row + 1; r++) {

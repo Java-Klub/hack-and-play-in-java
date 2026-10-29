@@ -18,16 +18,7 @@ import java.util.List;
 /// již uložená odbočení. Než začneš uvažovat o podrobném obrázku s jedenácti přehyby, ověř drobné
 /// požadavky nula a jedna.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L04/M08_DragonCurve.java`
-/// - Kontrola této mise: `java L04/Check.java M08_DragonCurve.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše: obrázek se ihned objeví v Java okně. Po úpravě
-/// source (zdrojového textu) okno zavři a znovu spusť command pro hraní; Kontrola hry ověřuje
-/// výpočet odděleně.
-///
-/// Potřebuješ výklad? Připomenutí · F11 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program: obrázek se ihned objeví v Java okně.
 List<Integer> foldTurns(int folds) {
     var turns = new ArrayList<Integer>();
     for (int fold = 1; fold < folds; fold++) {

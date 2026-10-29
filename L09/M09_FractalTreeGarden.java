@@ -14,16 +14,8 @@ import java.awt.image.BufferedImage;
 /// **Dnes trénuješ:** Parsing (rozbor vstupu) mění text v číslo a může selhat ještě před kontrolou
 /// rozmezí. Zachyť konkrétní chybu převodu textu; číslo mimo rozmezí je jiný problém.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L09/M09_FractalTreeGarden.java`
-/// - Kontrola této mise: `java L09/Check.java M09_FractalTreeGarden.java`
-///
 /// Po spuštění programu napiš úhel 10–70 nebo zkus oops; přečti Chosen value a prohlédni Java
-/// obrázek. Pro další vstup zavři okno a znovu spusť command pro hraní. Po opravě: ulož soubor,
-/// spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F31 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// obrázek. Pro další vstup zavři okno a znovu spusť program.
 double readAngle(String text) {
     try {
         double value = Double.parseDouble(text.strip());
@@ -134,8 +126,6 @@ BufferedImage render(long seed, double angle) {
 }
 
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

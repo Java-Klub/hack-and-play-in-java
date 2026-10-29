@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Uspořádané branch (větve): první vybraná větev může rozhodnout výsledek dřív, než
 /// se posoudí další možnosti. Překročení hráče nad 21 se musí řešit před porovnáním velikosti součtů.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L03/M03_BlackjackTwentyOne.java`
-/// - Kontrola této mise: `java L03/Check.java M03_BlackjackTwentyOne.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a zadáním s zůstaň na cvičném součtu 20, potom
-/// porovnej oznámený výsledek s krupiérovou 19. Po opravě: ulož soubor, spusť uvedenou kontrolu a
-/// zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F07 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a zadáním s zůstaň na cvičném součtu 20, potom porovnej oznámený výsledek s
+/// krupiérovou 19.
 String compareTotals(int human, int house) {
     if (human > 21) {
         return "You bust";

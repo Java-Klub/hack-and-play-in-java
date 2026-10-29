@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Traversal and search (průchod a hledání): uspořádané indexy (pozice) vybírají
 /// kombinace bez opakování karty. Meze průchodů jsou stejně důležité jako pravidlo shody.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L05/M07_SetStyleTripleHunt.java`
-/// - Kontrola této mise: `java L05/Check.java M07_SetStyleTripleHunt.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, prohlédni si zobrazené vlastnosti karet a zadej
-/// čísla tří karet, které podle tebe tvoří platnou trojici. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F17 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, prohlédni si zobrazené vlastnosti karet a zadej čísla tří karet, které podle
+/// tebe tvoří platnou trojici.
 boolean hasSet() {
     for (int a = 0; a < table.size(); a++) {
         for (int b = a + 1; b < table.size(); b++) {

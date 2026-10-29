@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Pure contracts (smlouvy čistých dotazů): odděl otázku, zda se tah vejde, od
 /// provedení tahu. Opakované i neúspěšné zkoušky musí ponechat desku beze změny.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L06/M07_TrafficJamEscape.java`
-/// - Kontrola této mise: `java L06/Check.java M07_TrafficJamEscape.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a zkus posun auta zadáním B 2, potom pomocí
-/// písmene auta a počtu kroků se znaménkem uvolni výjezd auta A. Po opravě: ulož soubor, spusť
-/// uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F15 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a zkus posun auta zadáním B 2, potom pomocí písmene auta a počtu kroků se
+/// znaménkem uvolni výjezd auta A.
 boolean fits(int car, int x, int y) {
     xs[car] = x;
     ys[car] = y;

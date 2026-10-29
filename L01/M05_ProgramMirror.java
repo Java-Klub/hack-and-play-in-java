@@ -10,16 +10,8 @@
 /// (program) uvnitř String (řetězce) je stále jen data. Uvozovka patřící dovnitř potřebuje zvláštní
 /// zápis, aby ji Java nepovažovala za konec řetězce.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L01/M05_ProgramMirror.java`
-/// - Kontrola této mise: `java L01/Check.java M05_ProgramMirror.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a porovnej dva řádky v výstup v terminálu: první
-/// má popisovat instrukci a druhý má být její zprávou. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F02 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a porovnej dva řádky v terminálu: první má popisovat instrukci a druhý má být její
+/// zprávou.
 String templateLine() {
     return "IO.println(HELLO);";
 }
@@ -67,10 +59,10 @@ String templateLine() {
 
 // <editor-fold defaultstate="expanded" desc="Pro tuto hru">
 /// Odděl tři vrstvy: Java source (zdrojový text), který upravuješ, text vrácený templateLine a dva
-/// řádky vypsané v výstup v terminálu. První vypsaný řádek musí obsahovat uvozovky kolem HELLO;
-/// druhý je samostatná zpráva. Znaky prvního řádku jsou data, nikoli další prováděný příkaz.
-/// Neutrální příklad: source text `"A \"B\" C"` představuje hodnotu `A "B" C`: každé `\"` přidá
-/// jednu uvozovku bez ukončení vnějšího literal (doslovného řetězce). Než změníš vlastní literal,
+/// řádky vypsané v terminálu. První vypsaný řádek musí obsahovat uvozovky kolem HELLO; druhý je
+/// samostatná zpráva. Znaky prvního řádku jsou data, nikoli další prováděný příkaz. Neutrální
+/// příklad: source text `"A \"B\" C"` představuje hodnotu `A "B" C`: každé `\"` přidá jednu
+/// uvozovku bez ukončení vnějšího literal (doslovného řetězce). Než změníš vlastní literal,
 /// předpověz tuto hodnotu. Rozlišuj poslední středník skutečného return statement (příkazu vrácení)
 /// a středník vypsaný uvnitř textu.
 // </editor-fold>

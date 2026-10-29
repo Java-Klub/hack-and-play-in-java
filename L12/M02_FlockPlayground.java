@@ -16,15 +16,8 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Composition (skládání) dovolí hejnu používat roli Avoidance bez vlastnictví jejího
 /// vzorce. Předání skutečné vzdálenosti je podstatné: jiné pravidlo může reagovat jinak zblízka a zdálky.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L12/M02_FlockPlayground.java`
-/// - Kontrola této mise: `java L12/Check.java M02_FlockPlayground.java`
-///
-/// Po spuštění programu posouvej oranžovou překážku myší do dráhy ptáků a pomocí Pause/Run či New
-/// flock porovnej jejich reakci. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F34 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Po spuštění programu posouvej oranžovou překážku myší do dráhy ptáků a pomocí Pause/Run či
+/// New flock porovnej jejich reakci.
 double obstaclePush(double distance) {
     return 0;
 }
@@ -222,8 +215,6 @@ void showWindow() {
 interface Avoidance { double strength(double distance); }
 Avoidance avoidance = distance -> distance > 0 && distance < 75 ? 0.2 : 0;
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
     reset(42);

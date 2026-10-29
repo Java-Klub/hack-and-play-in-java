@@ -16,15 +16,8 @@ import java.awt.geom.Line2D;
 /// **Dnes trénuješ:** Rendering (vykreslení) převádí coordinate (souřadnice) modelu na viditelné značky.
 /// Levý horní roh kolečka je posunutý od středu, ale x stále znamená vodorovně a y svisle.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L10/M04_Untangle.java`
-/// - Kontrola této mise: `java L10/Check.java M04_Untangle.java`
-///
-/// Po spuštění programu tahej očíslované body a rozmotej křížení sítě; klávesou R ji můžeš znovu
-/// promíchat. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F29 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Po spuštění programu tahej očíslované body a rozmotej křížení sítě; klávesou R ji můžeš
+/// znovu promíchat.
 void drawNode(Graphics2D g, Point point, int label) {
     g.setColor(new Color(35, 55, 90));
     g.fillOval(point.y - 13, point.x - 13, 26, 26);
@@ -238,8 +231,6 @@ void showWindow() {
     panel.requestFocusInWindow();
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

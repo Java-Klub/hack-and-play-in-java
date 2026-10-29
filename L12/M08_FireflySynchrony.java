@@ -17,15 +17,8 @@ import javax.swing.Timer;
 /// použitelné hodnoty jedné alternativy. Zbývající Coupling case záměrně nic nedělá; Toggle a Restart
 /// mají samostatné účinky.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L12/M08_FireflySynchrony.java`
-/// - Kontrola této mise: `java L12/Check.java M08_FireflySynchrony.java`
-///
-/// Po spuštění programu posuň Coupling směrem k 2 a sleduj číslo sladění; pomocí Pause/Run či New
-/// phases porovnej záblesky. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F35 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Po spuštění programu posuň Coupling směrem k 2 a sleduj číslo sladění; pomocí Pause/Run či
+/// New phases porovnej záblesky.
 void apply(Control control) {
     switch (control) {
         case Coupling(var value) when Double.isFinite(value) && value >= 0 && value <= 2 -> coupling = 0;
@@ -196,8 +189,6 @@ record Coupling(double value) implements Control {}
 record Toggle() implements Control {}
 record Restart(long seed) implements Control {}
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: vytvoří počáteční model (model pravidel); neotevírá okno.
     reset(42);

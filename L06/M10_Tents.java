@@ -17,16 +17,8 @@ import java.util.Arrays;
 /// **Dnes trénuješ:** Writing functional checks (psaní funkčních kontrol): vybírej příklady, na kterých
 /// se odliší řešení shodná v prvním snadném případě. Nesouměrné souřadnice zviditelní prohození os.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L06/M10_Tents.java`
-/// - Kontrola této mise: `java L06/Check.java M10_Tents.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a klikni na prázdné políčko vedle stromu pro
-/// postavení stanu, potom pomocí kontroly hry prověř své příklady čtení mapy. Po opravě: ulož
-/// soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F33 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a klikni na prázdné políčko vedle stromu pro postavení stanu, potom pomocí
+/// kontroly hry prověř své příklady čtení mapy.
 record TreeExample(int x, int y, boolean expected) {
 }
 

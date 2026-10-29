@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Pure contracts (smlouvy čistých dotazů): kontrola čte desku a kandidátní polohu a
 /// vrací boolean (ano/ne). O zápisu kandidáta rozhoduje až volající kód.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L06/M08_FallingBlocks.java`
-/// - Kontrola této mise: `java L06/Check.java M08_FallingBlocks.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, šipkami vlevo a vpravo posouvej padající dílek a
-/// šipkou nahoru vyzkoušej otočení u skládačky nebo stěny. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F15 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, šipkami vlevo a vpravo posouvej padající dílek a šipkou nahoru vyzkoušej
+/// otočení u skládačky nebo stěny.
 boolean fits(int[][] cells, int x, int y) {
     px = x;
     py = y;

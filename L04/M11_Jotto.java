@@ -10,16 +10,8 @@
 /// příspěvek přidej pouze při splnění připravené podmínky shody. Výsledkem je počet nálezů, nikoli jen
 /// informace, zda nějaký nález nastal.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L04/M11_Jotto.java`
-/// - Kontrola této mise: `java L04/Check.java M11_Jotto.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a napiš STONE proti cvičnému slovu PLANT; T a N
-/// jsou společná, ale starter (výchozí program) hlásí jen jedno. Po opravě: ulož soubor, spusť
-/// uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F12 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a napiš STONE proti cvičnému slovu PLANT; T a N jsou společná, ale starter
+/// (výchozí program) hlásí jen jedno.
 int matches(String word) {
     int n = 0;
     for (char c : word.toCharArray()) {

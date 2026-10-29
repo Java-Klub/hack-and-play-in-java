@@ -19,15 +19,8 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Callback (předaná akce) je kód připravený pro pozdější event (událost).
 /// FiringAction vrací tento balíček; herní loop (cyklus) rozhoduje, kdy jej při držení Space spustí.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L10/M01_AsteroidDrift.java`
-/// - Kontrola této mise: `java L10/Check.java M01_AsteroidDrift.java`
-///
-/// Po spuštění programu řiď a zrychluj šipkami, drž Space pro střelbu a klávesou R začni let znovu.
-/// Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F28 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Po spuštění programu řiď a zrychluj šipkami, drž Space pro střelbu a klávesou R začni let
+/// znovu.
 Runnable firingAction() {
     return () -> {};
 }
@@ -284,8 +277,6 @@ void showWindow() {
 
 Runnable fireCallback = firingAction();
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

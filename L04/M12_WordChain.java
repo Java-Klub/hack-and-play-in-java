@@ -10,16 +10,8 @@
 /// místo čísla. Prázdný seznam vytvoř jednou a při objevování dalších platných možností uchovej dřívější
 /// položky.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L04/M12_WordChain.java`
-/// - Kontrola této mise: `java L04/Check.java M12_WordChain.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a porovnej celý Dictionary s jedinou další
-/// nabídkou; po opravě napiš APPLE a prohlédni nabídnutá pokračování na E. Po opravě: ulož soubor,
-/// spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F12 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a porovnej celý Dictionary s jedinou další nabídkou; po opravě napiš APPLE a
+/// prohlédni nabídnutá pokračování na E.
 List<String> choices() {
     var list = new ArrayList<String>();
     for (String w : words) {

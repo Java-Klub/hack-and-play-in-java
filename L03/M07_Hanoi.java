@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Ochrana před zakázaným stavem: popiš špatnou situaci v condition (podmínce) a vrať
 /// se bez provedení tahu. Prázdný cíl posuzuj odděleně od cíle s horním diskem.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L03/M07_Hanoi.java`
-/// - Kontrola této mise: `java L03/Check.java M07_Hanoi.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, zadej A B a potom znovu A B pro prohlédnutí
-/// zakázaného většího disku na menším; r obnoví původní věž. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F08 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, zadej A B a potom znovu A B pro prohlédnutí zakázaného většího disku na
+/// menším; r obnoví původní věž.
 boolean move(int from, int to) {
     if (won() || from < 0 || from > 2 || to < 0 || to > 2 || from == to || sizes[from] == 0) {
         return false;

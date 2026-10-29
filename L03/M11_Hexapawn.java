@@ -10,16 +10,8 @@
 /// odpovídat na různá volání. goalRow(1) a goalRow(2) předají stejnému tělu různé hodnoty who; vrácený
 /// řádek dostane pravidlo tahu.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L03/M11_Hexapawn.java`
-/// - Kontrola této mise: `java L03/Check.java M11_Hexapawn.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a jako čtyři samostatné tahy zadej 3 1 2 1; 1 2 2
-/// 1; 3 3 2 3; 2 1 3 1, čímž hráč 2 dojde dolů. Po opravě: ulož soubor, spusť uvedenou kontrolu a
-/// zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F13 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a jako čtyři samostatné tahy zadej 3 1 2 1; 1 2 2 1; 3 3 2 3; 2 1 3 1, čímž
+/// hráč 2 dojde dolů.
 int goalRow(int who) {
     return 0;
 }

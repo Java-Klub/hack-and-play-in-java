@@ -17,15 +17,8 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** List (seznam) může vyjadřovat pořadí zleva doprava, nejen hromadu objektů. Odebrání
 /// první zmizelé trubky i vložení náhrady musí tento význam zachovat.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L09/M02_GapHopper.java`
-/// - Kontrola této mise: `java L09/Check.java M02_GapHopper.java`
-///
 /// Po spuštění programu udržuj letce mezi trubkami pomocí Space nebo klikání a po nárazu začni
-/// znovu klávesou R. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F22 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// znovu klávesou R.
 void recyclePipes() {
     if (!pipes.isEmpty() && pipes.getFirst().x + PIPE_WIDTH < 0) {
         double furthest = pipes.getLast().x;
@@ -216,8 +209,6 @@ void showWindow() {
     timer.start();
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

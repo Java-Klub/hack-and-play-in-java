@@ -17,15 +17,7 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Invariants (vždy platné podmínky): dopad musí souhlasit se směrem i předchozí
 /// polohou, nestačí překryv v novém snímku. Zachovej rozdíl mezi stoupáním, pádem a stáním.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L07/M12_PlatformDash.java`
-/// - Kontrola této mise: `java L07/Check.java M12_PlatformDash.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, běhej šipkami vlevo a vpravo a mezerníkem skákej
-/// směrem k plošinám a vlajce. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F25 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, běhej šipkami vlevo a vpravo a mezerníkem skákej směrem k plošinám a vlajce.
 void step() {
     if (!started || won) {
         return;

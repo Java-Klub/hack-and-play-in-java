@@ -20,15 +20,8 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Rendering (vykreslení) má být věrný snapshot (snímek), ne další hodiny. Pohyb už
 /// spravuje timer (časovač); požadavek na kreslení může přijít bez nového kroku simulace.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L10/M05_SpringToy.java`
-/// - Kontrola této mise: `java L10/Check.java M05_SpringToy.java`
-///
 /// Po spuštění programu odtáhni a pusť závaží, pomocí Space zastav pohyb a šipkami měň tuhost a
-/// tlumení pružiny. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F29 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// tlumení pružiny.
 void draw(Graphics2D g) {
 // Připravený omezený update (aktualizace): jedno volání znamená jeden krok; aktivní oprava je popsaná výše.
     step();
@@ -257,8 +250,6 @@ void showWindow() {
     timer.start();
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

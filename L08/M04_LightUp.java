@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Grid neighbours (sousedé v mřížce): opakovaným použitím směrového posunu prozkoumáš
 /// řadu políček. Test jednoho souseda a průchod chodbou odpovídají na různé otázky.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L08/M04_LightUp.java`
-/// - Kontrola této mise: `java L08/Check.java M04_LightUp.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a zadáním 1 1 přepni žárovku vlevo nahoře, potom
-/// zkus osvětlit ostatní volná políčka bez střetů žárovek. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F18 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a zadáním 1 1 přepni žárovku vlevo nahoře, potom zkus osvětlit ostatní volná
+/// políčka bez střetů žárovek.
 int visible(int r, int c) {
     int n = 0;
     for (int[] d : dirs) {

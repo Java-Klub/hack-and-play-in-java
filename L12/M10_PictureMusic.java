@@ -13,16 +13,8 @@
 /// části). PitchFrequency spojí známé pravidlo řádku a tónu s půltónovým posunem; nula zůstane případem
 /// zachování původního chování.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L12/M10_PictureMusic.java`
-/// - Kontrola této mise: `java L12/Check.java M10_PictureMusic.java`
-///
 /// Po spuštění programu prohlédni Java obrázek a porovnej Play shift 12 s Play original; Stop
-/// přehrávání přeruší a opravený posun má změnit výšku tónů při stejném rytmu. Po opravě: ulož
-/// soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F36 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// přehrávání přeruší a opravený posun má změnit výšku tónů při stejném rytmu.
 double pitchFrequency(int row, int shift) {
     if (row < 0 || row >= 12 || shift < -12 || shift > 12) throw new IllegalArgumentException("Row 0..11; transpose -12..12.");
     return 220 * Math.pow(2, (11 - row) / 12.0);
@@ -112,8 +104,6 @@ double[] signal(java.awt.image.BufferedImage image) {
 
 int transpose = 0;
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 volatile javax.sound.sampled.SourceDataLine playingLine;
 volatile int playbackVersion;
 

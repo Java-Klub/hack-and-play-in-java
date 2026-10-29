@@ -16,16 +16,8 @@ import java.util.Arrays;
 /// **Dnes trénuješ:** Records (datové záznamy): pravidlo může nést svá data i dotaz nad nimi. Components
 /// (složky) x a y vybírají sousední čísla k porovnání.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L05/M12_InequalityLatin.java`
-/// - Kontrola této mise: `java L05/Check.java M12_InequalityLatin.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a opakovaným klikáním na volné políčko měň jeho
-/// číslo při sledování okolních znamének nerovnosti. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F19 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a opakovaným klikáním na volné políčko měň jeho číslo při sledování okolních
+/// znamének nerovnosti.
 record Rule(int x, int y) {
     boolean satisfiedBy(int[][] values) {
         return values[y][x] > values[y][x + 1];

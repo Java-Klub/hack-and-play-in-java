@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Pure contracts (smlouvy čistých dotazů): přečtení ceny a přidělení bodů jsou různé
 /// odpovědnosti. scoreAt() vrací požadovanou hodnotu bez změny součtu nebo pohybu.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L06/M06_PegDrop.java`
-/// - Kontrola této mise: `java L06/Check.java M06_PegDrop.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a kliknutím nad přihrádkou pusť kotouček, potom
-/// porovnej číslo přihrádky dopadu se získanými body. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F15 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a kliknutím nad přihrádkou pusť kotouček, potom porovnej číslo přihrádky
+/// dopadu se získanými body.
 int scoreAt(int index) {
     // Dodaná ochrana hlásí neplatný index; exception handling přijde v L09.
     if (index < 0 || index >= values.length) {

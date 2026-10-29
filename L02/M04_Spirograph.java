@@ -19,16 +19,8 @@ import java.awt.image.BufferedImage;
 /// návratový typ double nezachrání celočíselné dělení; k úvaze o požadovaném zlomku použij například 40
 /// děleno 80.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L02/M04_Spirograph.java`
-/// - Kontrola této mise: `java L02/Check.java M04_Spirograph.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, šipkami vlevo/vpravo měň vnitřní poloměr a
-/// nahoru/dolů vzdálenost pera a porovnávej překreslené křivky. Po opravě: ulož soubor, spusť
-/// uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F04 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, šipkami vlevo/vpravo měň vnitřní poloměr a nahoru/dolů vzdálenost pera a
+/// porovnávej překreslené křivky.
 double radiusRatio(int outer, int innerRadius) {
     return (outer - innerRadius) / innerRadius;
 }

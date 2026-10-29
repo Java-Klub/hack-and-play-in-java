@@ -17,16 +17,8 @@ import javax.swing.Timer;
 /// Dva statement (příkazy) mohou dát x dvě postupné hodnoty; připravená kresba čte poslední z nich pro
 /// obě nohy.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L01/M07_SteppingFeet.java`
-/// - Kontrola této mise: `java L01/Check.java M07_SteppingFeet.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, klávesou M ukaž společnou pozici a potom pomocí
-/// Space spusť pohyb; C přepíná pruhované a hladké pozadí. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F03 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, klávesou M ukaž společnou pozici a potom pomocí Space spusť pohyb; C přepíná
+/// pruhované a hladké pozadí.
 void startingPosition() {
     x = 20;
     x = -80;

@@ -21,15 +21,8 @@ import javax.swing.Timer;
 /// do pozdější akce. Vytvoření callback nesmí změnit částice; spuštění má použít právě dané kliknutí
 /// jednou.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L10/M02_FireworkPainter.java`
-/// - Kontrola této mise: `java L10/Check.java M02_FireworkPainter.java`
-///
-/// Po spuštění programu klikáním do plochy vypouštěj ohňostroj; Space pozastaví pohyb a R vyčistí
-/// oblohu a obnoví začátek. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F28 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Po spuštění programu klikáním do plochy vypouštěj ohňostroj; Space pozastaví pohyb a R
+/// vyčistí oblohu a obnoví začátek.
 java.util.function.BiConsumer<Integer, Integer> burstAction() {
     return (x, y) -> {};
 }
@@ -219,8 +212,6 @@ void showWindow() {
 
 java.util.function.BiConsumer<Integer, Integer> burstCallback = burstAction();
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

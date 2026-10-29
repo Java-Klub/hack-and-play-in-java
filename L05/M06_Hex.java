@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Traversal and search (průchod a hledání): hledání cesty závisí na povolených
 /// sousedních pozicích. Kandidátní graph (síť spojení) je zde šestiúhelníková deska.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L05/M06_Hex.java`
-/// - Kontrola této mise: `java L05/Check.java M06_Hex.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a zaber levý horní šestiúhelník zadáním 1 1, potom
-/// se s kamarádem střídejte ve volbě řádku a sloupce. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F17 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a zaber levý horní šestiúhelník zadáním 1 1, potom se s kamarádem střídejte ve
+/// volbě řádku a sloupce.
 boolean connected(int who) {
     boolean[][] seen = new boolean[5][5];
     var queue = new ArrayDeque<int[]>();

@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Copies and aliasing (kopie a sdílené odkazy): dvojrozměrný snapshot (snímek)
 /// potřebuje samostatné řádky i vnější pole. Uložené znaky musí zůstat dřívějším stavem.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L08/M10_Slant.java`
-/// - Kontrola této mise: `java L08/Check.java M10_Slant.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, zadáním 1 1 / polož první lomítko a potom napiš
-/// undo pro kontrolu vrácení právě této úpravy. Po opravě: ulož soubor, spusť uvedenou kontrolu a
-/// zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F20 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, zadáním 1 1 / polož první lomítko a potom napiš undo pro kontrolu vrácení
+/// právě této úpravy.
 char[][] snapshot() {
     return cells.clone();
 }

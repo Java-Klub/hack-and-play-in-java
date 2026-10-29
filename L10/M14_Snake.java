@@ -20,16 +20,8 @@ import javax.swing.Timer;
 /// další tick (časový krok) jej použije jednou, takže zákaz otočení stále vychází z posledního skutečného
 /// pohybu.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L10/M14_Snake.java`
-/// - Kontrola této mise: `java L10/Check.java M14_Snake.java`
-///
 /// Po spuštění programu šipka spustí hada; dalšími šipkami jej veď k jídlu. Náraz nebo zaplněná
-/// plocha ukončí kolo; R obnoví začátek a čeká na další šipku. Po opravě: ulož soubor, spusť
-/// uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F30 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// plocha ukončí kolo; R obnoví začátek a čeká na další šipku.
 void turn(int x, int y) {
     if (turnQueued || lost || won || Math.abs(x) + Math.abs(y) != 1) return;
     if (x == -dx && y == -dy) return;
@@ -219,8 +211,6 @@ void showWindow() {
     timer.start();
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

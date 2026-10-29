@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Mutable List (měnitelný seznam) pamatuje položky v pořadí. Jedno přijaté slovo má
 /// prodloužit existující cestu; nahrazení celého List změní, co si hráč pamatuje.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L09/M01_WordLadder.java`
-/// - Kontrola této mise: `java L09/Check.java M01_WordLadder.java`
-///
 /// Po spuštění programu napiš CORD a potom CARD a posouvej se od COLD; /r obnoví začátek a /q
-/// ukončí hru. Po výhře Enter zahájí novou cestu. Po opravě: ulož soubor, spusť uvedenou kontrolu a
-/// zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F22 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// ukončí hru. Po výhře Enter zahájí novou cestu.
 void command(String input) {
     require(outcome.isEmpty());
     String word = input.toUpperCase(Locale.ROOT);
@@ -122,8 +114,6 @@ void display() {
     IO.println(String.join(" -> ", history) + "; target WARM");
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
     reset();
     IO.println("Word Ladder: transform COLD to WARM using the listed words. /r restarts; /q quits.");

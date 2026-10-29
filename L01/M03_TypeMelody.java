@@ -14,15 +14,8 @@ import javax.sound.sampled.AudioSystem;
 /// **Dnes trénuješ:** Text literal (doslovný text): dvojité uvozovky označí svůj obsah jako textová data.
 /// Číslice v uvozovkách například zůstane znakem zprávy; nestane se výpočtem.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L01/M03_TypeMelody.java`
-/// - Kontrola této mise: `java L01/Check.java M03_TypeMelody.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše: otevře se Java přehrávač se zprávou. Stiskni Play
-/// / Replay; číslice tvoří tiché pauzy, takže výchozí 1234 má být tiché. Stop přehrávání ukončí.
-///
-/// Potřebuješ výklad? Nová dovednost · F02 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program: otevře se Java přehrávač se zprávou. Stiskni Play / Replay; číslice tvoří
+/// tiché pauzy, takže výchozí 1234 má být tiché. Stop přehrávání ukončí.
 String defaultMessage() {
     return "1234";
 }
@@ -69,8 +62,8 @@ String defaultMessage() {
 
 // <editor-fold defaultstate="expanded" desc="Pro tuto hru">
 /// Zvuk přehrává přímo Java. Není třeba hledat soubor ani jiný přehrávač. Panel ukáže skutečnou
-/// zprávu; výchozí číslice jsou pauzy, nikoli porucha zvuku. Po úpravě defaultMessage ulož source
-/// (zdrojový text), zavři okno a znovu spusť command pro hraní. Nové okno načte upravenou zprávu;
+/// zprávu; výchozí číslice jsou pauzy, nikoli porucha zvuku. Po úpravě defaultMessage ulož
+/// source (zdrojový text), zavři okno a znovu spusť program. Nové okno načte upravenou zprávu;
 /// Play / Replay opakuje zprávu současného okna.
 // </editor-fold>
 
@@ -83,7 +76,7 @@ String defaultMessage() {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Použij return "JAVA"; potom zavři přehrávač a znovu spusť command pro hraní.
+/// Použij return "JAVA"; potom zavři přehrávač a znovu spusť program.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">

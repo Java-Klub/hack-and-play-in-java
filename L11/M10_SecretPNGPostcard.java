@@ -16,16 +16,8 @@ import javax.imageio.ImageIO;
 /// Try-with-resources (automatická správa prostředků) vlastní input stream (vstupní proud); dekódování
 /// obrázku a skryté zprávy jsou další kroky.
 ///
-/// command pro hraní přečte data/postcard.png přes readMessage a zobrazí získanou zprávu s
-/// pohlednicí. Ukázková pohlednice vznikne pouze při neexistenci souboru. Po opravě: ulož soubor,
-/// spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L11/M10_SecretPNGPostcard.java`
-/// - Kontrola této mise: `java L11/Check.java M10_SecretPNGPostcard.java`
-///
-/// Potřebuješ výklad? Připomenutí · F32 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Program přečte data/postcard.png přes readMessage a zobrazí získanou zprávu s pohlednicí.
+/// Ukázková pohlednice vznikne pouze při neexistenci souboru.
 String readMessage(Path path) throws IOException {
     try (var input = Files.newInputStream(Path.of(path.getFileName().toString()))) {
         var image = ImageIO.read(input);
@@ -161,8 +153,6 @@ void save(Path path, long seed, double option) throws Exception {
     }
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

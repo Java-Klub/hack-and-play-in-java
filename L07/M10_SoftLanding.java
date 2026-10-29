@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Invariants (vždy platné podmínky): palivo neklesá pod nulu a prázdná nádrž
 /// neposkytuje tah. Několik současně držených směrových kláves stále patří jednomu kroku simulace.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L07/M10_SoftLanding.java`
-/// - Kontrola této mise: `java L07/Check.java M10_SoftLanding.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, šipkou nahoru začni brzdit pád a tahem vlevo či
-/// vpravo se srovnej nad přistávací plošinu. Po opravě: ulož soubor, spusť uvedenou kontrolu a
-/// zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F25 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, šipkou nahoru začni brzdit pád a tahem vlevo či vpravo se srovnej nad
+/// přistávací plošinu.
 void step() {
     if (!state.equals("FLYING")) {
         return;

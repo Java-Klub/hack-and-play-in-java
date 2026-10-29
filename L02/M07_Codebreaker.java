@@ -10,16 +10,8 @@
 /// false. U textu se porovnání znaků liší od otázky, zda dvě jména ukazují na tentýž uložený String
 /// object (objekt řetězce).
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L02/M07_Codebreaker.java`
-/// - Kontrola této mise: `java L02/Check.java M07_Codebreaker.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a zadej 1234 pro prozkoumání chybné cvičné výhry;
-/// po opravě zadej r a vyzkoušej nově ukrytý kód. Po opravě: ulož soubor, spusť uvedenou kontrolu a
-/// zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F06 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a zadej 1234 pro prozkoumání chybné cvičné výhry; po opravě zadej r a
+/// vyzkoušej nově ukrytý kód.
 boolean matchesCode(String guess) {
     return secret == guess;
 }

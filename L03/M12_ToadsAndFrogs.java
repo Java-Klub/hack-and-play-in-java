@@ -16,16 +16,8 @@ import java.util.Arrays;
 /// **Dnes trénuješ:** Vrať užitečnou hodnotu: pravidlo směru popisuje krok, aniž samo cokoli přesouvá.
 /// Volající část může vrácený směr použít pro jediný krok i delší skok.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L03/M12_ToadsAndFrogs.java`
-/// - Kontrola této mise: `java L03/Check.java M12_ToadsAndFrogs.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a stiskni 5, abys požádal žábu vedle počáteční
-/// mezery o krok doleva; R obnoví výchozí uspořádání. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F13 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a stiskni 5, abys požádal žábu vedle počáteční mezery o krok doleva; R obnoví
+/// výchozí uspořádání.
 int direction(int piece) {
     return 1;
 }

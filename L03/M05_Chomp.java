@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Hranice před čtením: guard (ochrana) musí přijmout hranici patřící do hry a
 /// odmítnout následující hodnotu. Zároveň chrání pozdější čtení řádku před použitím neexistujícího řádku.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L03/M05_Chomp.java`
-/// - Kontrola této mise: `java L03/Check.java M05_Chomp.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a zadáním 4 5 ukousni viditelný pravý dolní dílek,
-/// potom zkus stejné souřadnice znovu, když už tam není. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F08 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a zadáním 4 5 ukousni viditelný pravý dolní dílek, potom zkus stejné
+/// souřadnice znovu, když už tam není.
 boolean bite(int row, int column) {
     if (winner != 0 || row < 1 || row >= 4 || column < 1 || column > widths[row - 1]) {
         return false;

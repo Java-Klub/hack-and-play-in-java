@@ -18,15 +18,8 @@ import java.awt.geom.Area;
 /// Akce se dvěma souřadnicemi má předat hodnoty události, ne uložit pevnou pozici či jednat už při
 /// přípravě.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L10/M03_ShadowPlayground.java`
-/// - Kontrola této mise: `java L10/Check.java M03_ShadowPlayground.java`
-///
 /// Po spuštění programu klikáním či tažením kolem překážek posouvej lampu a pomocí R obnov její
-/// počáteční pozici. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F28 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// počáteční pozici.
 java.util.function.BiConsumer<Integer, Integer> lightAction() {
     return (x, y) -> {};
 }
@@ -202,8 +195,6 @@ void showWindow() {
 
 java.util.function.BiConsumer<Integer, Integer> lightCallback = lightAction();
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

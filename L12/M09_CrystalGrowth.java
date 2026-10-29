@@ -14,16 +14,8 @@ import java.awt.image.BufferedImage;
 /// **Dnes trénuješ:** Transfer (přenos znalosti) znovu použije známé pravidlo sousedství pro novou volbu.
 /// Pojmenovaná operace dotyku má vyjádřit rozdíl čtyř a osmi sousedů a zachovat postup růstu.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L12/M09_CrystalGrowth.java`
-/// - Kontrola této mise: `java L12/Check.java M09_CrystalGrowth.java`
-///
-/// Po spuštění programu porovnej New rule s Original rule ze stejného seed (počátečního čísla); po
-/// opravě mají ukázat požadovaný rozdíl. Před dalším spuštěním okno zavři. Po opravě: ulož soubor,
-/// spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F36 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Po spuštění programu porovnej New rule s Original rule ze stejného seed (počátečního čísla);
+/// po opravě mají ukázat požadovaný rozdíl. Před dalším spuštěním okno zavři.
 boolean touching(boolean[][] grid, int x, int y, boolean diagonals) {
     for (int dy = -1; dy <= 1; dy++) {
         for (int dx = -1; dx <= 1; dx++) {
@@ -145,8 +137,6 @@ BufferedImage render(long seed, double option) {
 
 boolean diagonalGrowth = true;
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

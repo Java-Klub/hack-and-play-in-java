@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Text celého řádku: přečíst frázi se liší od převzetí jen jejího prvního slova.
 /// Pracuj s vráceným String (řetězcem) a zachovej mezery, které patří dovnitř fráze.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L02/M06_MadLibsStoryMachine.java`
-/// - Kontrola této mise: `java L02/Check.java M06_MadLibsStoryMachine.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a na otázku na jméno napiš Red Fox s mezerami
-/// kolem, potom doplň další tři fráze a prohlédni hotový příběh. Po opravě: ulož soubor, spusť
-/// uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F05 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a na otázku na jméno napiš Red Fox s mezerami kolem, potom doplň další tři
+/// fráze a prohlédni hotový příběh.
 String cleanWord(String word) {
     return word;
 }

@@ -16,16 +16,8 @@ import java.awt.Color;
 /// **Dnes trénuješ:** Writing functional checks (psaní funkčních kontrol): vyber vstupy a očekávané
 /// výsledky, které vyvrátí chybná pravidla. Tvou prací jsou příklady, nikoli náhradní algoritmus flip().
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L06/M09_LightsOut.java`
-/// - Kontrola této mise: `java L06/Check.java M09_LightsOut.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a zkus klikáním zhasnout všechna světla, potom
-/// pomocí kontroly hry zjisti, které chybné pravidlo tvé příklady ještě přehlížejí. Po opravě: ulož
-/// soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F33 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a zkus klikáním zhasnout všechna světla, potom pomocí kontroly hry zjisti,
+/// které chybné pravidlo tvé příklady ještě přehlížejí.
 record CrossExample(int row, int column, int expected) {
 }
 
@@ -68,9 +60,8 @@ CrossExample[] learnerChecks() {
 ///
 /// ### Co už obstarává připravená část
 ///
-/// flip() je správně, takže command pro hraní zůstává hratelné. Start ověří příklady proti tomuto
-/// pravidlu; Kontrola hry zkouší také pojmenovaná chybná pravidla a hlásí, které tvé příklady
-/// neodmítly.
+/// flip() je správně, takže hra zůstává hratelná. Start ověří příklady proti tomuto pravidlu;
+/// Kontrola hry zkouší také pojmenovaná chybná pravidla a hlásí, které tvé příklady neodmítly.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Pro tuto hru">

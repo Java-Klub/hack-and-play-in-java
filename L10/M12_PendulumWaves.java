@@ -16,15 +16,8 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Jediný simulation clock (čas simulace) může řídit mnoho viditelných objektů.
 /// Oddělení změny času od kreslení zastaví všechna kyvadla současně a obnoví je ze stejného okamžiku.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L10/M12_PendulumWaves.java`
-/// - Kontrola této mise: `java L10/Check.java M12_PendulumWaves.java`
-///
-/// Po spuštění programu klávesou Space rozběhni či zastav kyvadla, pomocí Up/Down měň rychlost a
-/// klávesou R je znovu srovnej. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F30 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Po spuštění programu klávesou Space rozběhni či zastav kyvadla, pomocí Up/Down měň rychlost
+/// a klávesou R je znovu srovnej.
 void step() {
     if (paused) {
         time += .02 * speed;
@@ -181,8 +174,6 @@ void showWindow() {
     timer.start();
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

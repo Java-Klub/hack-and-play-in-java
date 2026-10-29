@@ -16,15 +16,7 @@ import java.util.HashSet;
 /// **Dnes trénuješ:** Records (datové záznamy): spoj související hodnoty do přehledného stavu. Pohyb
 /// vytvoří novou hodnotu paprsku a původní poloha i směr zůstanou k dispozici.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L05/M10_MirrorLaser.java`
-/// - Kontrola této mise: `java L05/Check.java M10_MirrorLaser.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, kliknutím otoč zrcadlo a mezerníkem nech paprsek
-/// projít tvým uspořádáním. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F19 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, kliknutím otoč zrcadlo a mezerníkem nech paprsek projít tvým uspořádáním.
 record RayState(int x, int y, int dx, int dy) {
     RayState advance() {
         return new RayState(x + dy, y + dx, dx, dy);

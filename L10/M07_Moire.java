@@ -16,16 +16,8 @@ import java.awt.geom.Point2D;
 /// **Dnes trénuješ:** Grid coordinate (souřadnice mřížky) a screen coordinate (souřadnice obrazovky) mají
 /// různé počátky. Vzorec otáčení je připravený; obě výsledné osy musí ležet kolem stejného středu plátna.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L10/M07_Moire.java`
-/// - Kontrola této mise: `java L10/Check.java M07_Moire.java`
-///
-/// Po spuštění programu pomocí Left/Right otáčej jednu grid (mřížku) a Up/Down měň rozestupy pro
-/// zkoumání překrytí; R obnoví počáteční vzor. Po opravě: ulož soubor, spusť uvedenou kontrolu a
-/// zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F29 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Po spuštění programu pomocí Left/Right otáčej jednu grid (mřížku) a Up/Down měň rozestupy
+/// pro zkoumání překrytí; R obnoví počáteční vzor.
 Point2D.Double gridPoint(int column, int row, double a) {
     double x = column * spacing, y = row * spacing;
     return new Point2D.Double(WIDTH / 2 + x * Math.cos(a) - y * Math.sin(a), x * Math.sin(a) + y * Math.cos(a));
@@ -168,8 +160,6 @@ void showWindow() {
     panel.requestFocusInWindow();
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
 /// Připravený restart: obnoví počáteční model (model pravidel) před použitím v UI (rozhraní).
     restart();

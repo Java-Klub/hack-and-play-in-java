@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Arrays (pole): jednorozměrné pole může představovat čtvercovou desku. Sleduj převod
 /// řádku a sloupce na index (pozici) a použij stejný dotaz line().
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L05/M04_Quarto.java`
-/// - Kontrola této mise: `java L05/Check.java M04_Quarto.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, vyber číslo nepoužité figurky od 0 do 15 a nech
-/// druhého hráče zadat její cílové políčko od 1 do 16. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F16 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, vyber číslo nepoužité figurky od 0 do 15 a nech druhého hráče zadat její
+/// cílové políčko od 1 do 16.
 boolean won() {
     for (int row = 0; row < 4; row++) {
         if (line(row * 4, row * 4 + 1, row * 4 + 2, row * 4 + 3)) {

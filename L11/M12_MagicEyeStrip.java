@@ -14,16 +14,8 @@ import java.awt.image.BufferedImage;
 /// **Dnes trénuješ:** Path (cesta) pojmenovává umístění; jeho text není obsahem tohoto místa. Před
 /// převodem čísla přečti file (soubor), aby chybějící a chybně zapsaná data zůstala různými chybami.
 ///
-/// command pro hraní načte číslo uložené v seed.txt a použije je pro Java obrázek z teček.
-/// Chybějící seed.txt vznikne s 42; existující obsah zůstane zachovaný. Chyba čtení se výslovně
-/// oznámí. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L11/M12_MagicEyeStrip.java`
-/// - Kontrola této mise: `java L11/Check.java M12_MagicEyeStrip.java`
-///
-/// Potřebuješ výklad? Připomenutí · F32 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Program načte číslo uložené v seed.txt a použije je pro Java obrázek z teček. Chybějící seed.txt
+/// vznikne s 42; existující obsah zůstane zachovaný. Chyba čtení se výslovně oznámí.
 long readSeed(Path path) throws IOException {
     return Long.parseLong(path.toString());
 }
@@ -99,8 +91,6 @@ BufferedImage render(long seed, double option) {
 }
 
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Dnes trénuješ:** Invariants (vždy platné podmínky): jedna aktivní střela má jednu životnost a
 /// nejvýše jeden bodovaný zásah. Změna nepřítele i střely musí tento vztah zachovat.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L07/M08_MiniInvaders.java`
-/// - Kontrola této mise: `java L07/Check.java M08_MiniInvaders.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, řiď šipkami vlevo a vpravo a drž mezerník pro
-/// další střelu vždy po skončení předchozí. Po opravě: ulož soubor, spusť uvedenou kontrolu a
-/// zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F25 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, řiď šipkami vlevo a vpravo a drž mezerník pro další střelu vždy po skončení
+/// předchozí.
 void step() {
     if (!state.equals("PLAY")) {
         return;

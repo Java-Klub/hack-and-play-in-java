@@ -10,16 +10,8 @@
 /// musíš použít. Řádek lze očistit na okrajích a potom upravit na velikost písmen očekávanou další částí
 /// programu.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L02/M05_AnagramRounds.java`
-/// - Kontrola této mise: `java L02/Check.java M05_AnagramRounds.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a v prvním kole napiš silent; po opravě vyzkoušej
-/// i směs velkých a malých písmen a sleduj, zda je posouzena stejně. Po opravě: ulož soubor, spusť
-/// uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F05 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a v prvním kole napiš silent; po opravě vyzkoušej i směs velkých a malých
+/// písmen a sleduj, zda je posouzena stejně.
 String normalize(String input) {
     return input.strip();
 }

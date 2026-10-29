@@ -10,16 +10,8 @@
 /// textu místo arithmetic (aritmetiky). Stejně vypadající text může být uložen samostatně a velikost
 /// písmen je další vlastnost, kterou musí porovnání řešit.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L02/M10_MagicNumberCards.java`
-/// - Kontrola této mise: `java L02/Check.java M10_MagicNumberCards.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, mysli si 5 a na šest karet odpověz y, n, y, n, n,
-/// n, abys porovnal oznámené číslo před opravou a po ní. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F06 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, mysli si 5 a na šest karet odpověz y, n, y, n, n, n, abys porovnal oznámené
+/// číslo před opravou a po ní.
 boolean yesAnswer(String input) {
     return input == "y";
 }

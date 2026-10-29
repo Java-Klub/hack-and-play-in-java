@@ -18,16 +18,8 @@ import javax.swing.*;
 /// obdélníkovou oblast. Řádek i sloupec musejí být mezi svými dolními a horními hranicemi; osm pozic
 /// začínajících nulou končí sedmičkou.
 ///
-/// command pro hraní otevře moře. Kliknutím prozkoumej políčko. Zkus obě tlačítka Try outside: ani
-/// jedno nemá spotřebovat sondu. Po opravě obou mezí začne New sea nový lov pokladů. Po opravě:
-/// ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L02/M09_SonarTreasureHunt.java`
-/// - Kontrola této mise: `java L02/Check.java M09_SonarTreasureHunt.java`
-///
-/// Potřebuješ výklad? Připomenutí · F06 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Program otevře moře. Kliknutím prozkoumej políčko. Zkus obě tlačítka Try outside: ani jedno nemá
+/// spotřebovat sondu. Po opravě obou mezí začne New sea nový lov pokladů.
 boolean insideSea(int row, int column) {
     return row >= 0 && row <= 8 && column >= 0 && column <= 8;
 }

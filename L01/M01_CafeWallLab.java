@@ -16,40 +16,23 @@ import javax.swing.*;
 /// když je akce zavolána. Pozdější kreslicí akce může zakrýt dřívější. Samotná definice akce nahoře v
 /// souboru ji nespustí.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L01/M01_CafeWallLab.java`
-/// - Kontrola této mise: `java L01/Check.java M01_CafeWallLab.java`
+/// Left/Right mění posunutí dlaždic, Up/Down šířku spár. Space zapíná a vypíná červené pravítko.
 ///
-/// Spusť command (příkaz) pro hraní uvedený výše, šipkami změň stěnu a potom pomocí Space porovnej
-/// její spáry s rovným červeným pravítkem. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj
-/// si znovu.
-///
-/// Řádky s `///` jsou průvodce pro tebe; při spuštění se neprovádějí.
-///
-/// Potřebuješ výklad? Nová dovednost · F01 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
-///
-/// **První spuštění:** z hlavní složky obsahující README.md spusť výše uvedený command (příkaz) pro
-/// hraní. Šedé okno je připravená chyba. Zavři je a uprav dva řádky níže. Začni tady · spuštění a
-/// kontrola vysvětluje command i výsledky.
+/// **První spuštění:** šedá stěna je záměrná chyba. Dva řádky k úpravě jsou níže; první kroky
+/// najdeš v Začni tady · spuštění a kontrola.
 // <editor-fold defaultstate="collapsed" desc="Začni tady · spuštění a kontrola">
-/// - Otevři hlavní staženou složku obsahující README.md. V editoru otevři L01/M01_CafeWallLab.java;
-///   později postupuj v každé úrovni podle souborů M01, M02…
-/// - V této hlavní složce otevři terminál. Zkopíruj výše uvedený command (příkaz) pro hraní a
-///   potvrď Enter. Když hra žádá text, napiš odpověď do běžícího terminálu a potvrď Enter; jde o
-///   input (vstup) do hry.
-/// - Před opakováním hru zavři. Po úpravě soubor ulož, spusť uvedenou kontrolu a potom znovu
-///   command pro hraní. Běžící okno upravenou Javu nenačte.
-/// - `java L01/Check.java` zkontroluje celou úroveň včetně dosud neopravených her. Kontroly jsou v
-///   L01/Check.java; při řešení misí kontrolní soubory neměň.
-/// - Výsledek čti v terminálu. `PASS` znamená úspěch ověřených případů. RED ve výchozí verzi je
-///   očekávaná stopa: ukazuje záměrnou chybu. Čti zprávu: popisuje chování, které se liší.
-/// - Compiler error (chyba překladu) znamená, že se Java nemohla spustit. Čti první hlášení a jeho
-///   řádek, ověř znaménka kolem úpravy nebo se pomocí Undo vrať k poslední přeložitelné verzi. Ulož
-///   a zkus znovu.
-/// - Některé editory umějí sekce s názvem sbalit. Pokud to tvůj umí, podle potřeby sekci rozbal;
-///   jinak stejné comment (komentáře) čti běžně. Fold marker (značky sbalení) a výklad s `///` se
-///   neprovádějí.
+/// - V terminálu přejdi do složky kurzu obsahující README.md a zadej
+///   `java L01/M01_CafeWallLab.java`.
+/// - Zavři okno, uprav paintWall níže, ulož soubor a zadej
+///   `java L01/Check.java M01_CafeWallLab.java`.
+/// - RED před opravou je záměrné; zpráva popisuje odlišné chování. PASS znamená shodu ověřených
+///   případů. Změny uvidíš po novém spuštění prvním příkazem.
+/// - `java L01/Check.java` zkontroluje celý level včetně neopravených her. Check.java při řešení
+///   neměň.
+/// - Compiler error (chyba překladu): čti první hlášení a řádek; ověř znaménka nebo použij Undo
+///   (Zpět), ulož a zkus znovu.
+/// - Výklad otevřeš kliknutím na šipku či plus u názvu sekce; bez sbalování čti comment (komentáře)
+///   běžně. Java řádky s `///` přeskočí.
 // </editor-fold>
 
 void paintWall(Graphics2D g) {

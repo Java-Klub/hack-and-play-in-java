@@ -17,16 +17,8 @@ import java.util.Arrays;
 /// pole. Kopie jen vnějšího pole nechá měnitelné řádky společné, proto nezávislá deska potřebuje
 /// nezávislé řádky.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L08/M11_BinaryBalance.java`
-/// - Kontrola této mise: `java L08/Check.java M11_BinaryBalance.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a opakovaným klikáním na neoranžové políčko
-/// přepínej neznámou, černou a bílou podle pravidel vyvážení. Po opravě: ulož soubor, spusť
-/// uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F20 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a opakovaným klikáním na neoranžové políčko přepínej neznámou, černou a bílou
+/// podle pravidel vyvážení.
 int[][] copyBoard(int[][] original) {
     return original.clone();
 }

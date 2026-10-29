@@ -14,16 +14,7 @@ import java.awt.image.BufferedImage;
 /// **Dnes trénuješ:** Rozsah for nad pozicemi: tři uložené rohy mají index (pozice) 0, 1 a 2. Počáteční
 /// hodnota a ukončovací porovnání společně rozhodují, které strany budou v obrázku existovat.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L04/M07_KochSnowflakeCards.java`
-/// - Kontrola této mise: `java L04/Check.java M07_KochSnowflakeCards.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše: obrázek se ihned objeví v Java okně. Po úpravě
-/// source (zdrojového textu) okno zavři a znovu spusť command pro hraní; Kontrola hry ověřuje
-/// výpočet odděleně.
-///
-/// Potřebuješ výklad? Připomenutí · F11 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program: obrázek se ihned objeví v Java okně.
 int snowflake(Graphics2D g, int level) {
     int[] xs = {270, 70, 470};
     int[] ys = {45, 390, 390};

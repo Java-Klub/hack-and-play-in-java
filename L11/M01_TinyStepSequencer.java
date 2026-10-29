@@ -15,16 +15,8 @@ import javax.swing.*;
 /// **Dnes trénuješ:** Set (množina) říká, zda obsahuje danou odlišnou hodnotu. Toggle (přepnutí) má dvě
 /// cesty: dosud nepřítomný Note přibude, přítomný Note má naopak přestat patřit do Set.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L11/M01_TinyStepSequencer.java`
-/// - Kontrola této mise: `java L11/Check.java M01_TinyStepSequencer.java`
-///
 /// Po spuštění programu klikáním přepínej tóny, zvol BPM a tlačítkem Play si čtyři opakování
-/// přehraj přímo v Javě; Stop přeruší zvuk, Restart obnoví začátek. Po opravě: ulož soubor, spusť
-/// uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F23 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// přehraj přímo v Javě; Stop přeruší zvuk, Restart obnoví začátek.
 boolean toggle(int row, int step) {
     if (row < 0 || row >= 4 || step < 0 || step >= 8) return false;
     Note note = new Note(row, step);
@@ -176,8 +168,6 @@ void showWindow() {
     frame.setVisible(true);
 }
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 volatile javax.sound.sampled.SourceDataLine playingLine;
 volatile int playbackVersion;
 

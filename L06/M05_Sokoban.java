@@ -9,15 +9,8 @@
 /// **Dnes trénuješ:** Pure contracts (smlouvy čistých dotazů): dotaz slibuje odpověď pro dané vstupy bez
 /// změny hry. Přesně určuj, které souřadnice představují průchozí podlahu.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L06/M05_Sokoban.java`
-/// - Kontrola této mise: `java L06/Check.java M05_Sokoban.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a zadávej W, A, S nebo D potvrzené Enter pro pohyb
-/// hráče a tlačení bedny k cíli. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F15 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a zadávej W, A, S nebo D potvrzené Enter pro pohyb hráče a tlačení bedny k
+/// cíli.
 boolean floor(int px, int py) {
     return py >= 0 && py < 5 && px >= 0 && px < 7;
 }

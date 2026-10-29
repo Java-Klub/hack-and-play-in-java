@@ -15,16 +15,8 @@ import java.awt.image.BufferedImage;
 /// pokaždé novou. Jeden vybraný hue (barevný tón) zde řídí paletu: stejné seed mají souhlasit a různé se
 /// mají umět lišit.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L11/M04_MandelbrotPostcards.java`
-/// - Kontrola této mise: `java L11/Check.java M04_MandelbrotPostcards.java`
-///
 /// Po spuštění programu napiš seed (počáteční číslo) nebo stiskni Enter pro 42; prohlédni Java
-/// obrázek, potom jej zavři a zopakuj stejný seed nebo porovnej 43. Po opravě: ulož soubor, spusť
-/// uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F27 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// obrázek, potom jej zavři a zopakuj stejný seed nebo porovnej 43.
 BufferedImage render(long seed, double span) {
     if (!Double.isFinite(span) || span <= 1.0E-5 || span > 6 || !Double.isFinite(centerX + centerY)) {
         throw new IllegalArgumentException("Span must be 0.00001..6.");
@@ -106,8 +98,6 @@ double centerX = -0.6;
 double centerY = 0;
 
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

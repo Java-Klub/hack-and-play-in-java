@@ -13,16 +13,8 @@
 /// Voice odpovídají na převod času na sample (vzorek); mix spojuje odpovědi a nemusí znát vznik
 /// jednotlivých rytmů.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L12/M03_PhasingRhythms.java`
-/// - Kontrola této mise: `java L12/Check.java M03_PhasingRhythms.java`
-///
 /// Po spuštění programu v Java okně porovnej Play two voices s Play one voice; poslouchej
-/// proměnlivé překrývání, použij Stop a po opravě mix si zvuk přehraj znovu. Po opravě: ulož
-/// soubor, spusť uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F34 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// proměnlivé překrývání, použij Stop a po opravě mix si zvuk přehraj znovu.
 double mix(double time) {
     return 0.17 * first.sample(time);
 }
@@ -111,8 +103,6 @@ interface Voice { double sample(double time); }
 Voice first = time -> tap(time, 0.12);
 Voice second = time -> tap(time, 0.13);
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 volatile javax.sound.sampled.SourceDataLine playingLine;
 volatile int playbackVersion;
 

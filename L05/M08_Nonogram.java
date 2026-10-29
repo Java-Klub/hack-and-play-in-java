@@ -17,16 +17,8 @@ import java.util.Arrays;
 /// **Dnes trénuješ:** Traversal and search (průchod a hledání): při čtení řádku udržuj průběžný počet a
 /// všimni si i skupiny ukončené koncem vstupu místo bílého políčka.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L05/M08_Nonogram.java`
-/// - Kontrola této mise: `java L05/Check.java M08_Nonogram.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a podle čísel u řádků a sloupců označuj levým
-/// kliknutím černá a pravým bílá políčka. Po opravě: ulož soubor, spusť uvedenou kontrolu a zahraj
-/// si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F17 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a podle čísel u řádků a sloupců označuj levým kliknutím černá a pravým bílá
+/// políčka.
 int[] runs(int[] values) {
     var result = new ArrayList<Integer>();
     int count = 0;

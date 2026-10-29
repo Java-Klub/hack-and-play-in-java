@@ -15,16 +15,7 @@ import java.awt.image.BufferedImage;
 /// má zeptat připravené role Chemistry na tuto cell (buňku), aby jiná implementace změnila chemii bez
 /// přepisování difuze.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L12/M01_ReactionDiffusionSkins.java`
-/// - Kontrola této mise: `java L12/Check.java M01_ReactionDiffusionSkins.java`
-///
-/// Po spuštění programu prohlédni Java obrázek; zavři okno, uprav aktivní pravidlo, použij uložení
-/// a kontrolu hry a dalším command pro hraní porovnej výsledek. Po opravě: ulož soubor, spusť
-/// uvedenou kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F34 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a porovnej obrázek před opravou a po ní.
 double reactionAt(int x, int y) {
     return 0;
 }
@@ -157,8 +148,6 @@ BufferedImage render(long seed, double option) {
 interface Chemistry { double reaction(double a, double b); }
 Chemistry chemistry = (a, b) -> a * b * b;
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

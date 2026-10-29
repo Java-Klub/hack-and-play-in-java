@@ -15,16 +15,8 @@ import java.awt.image.BufferedImage;
 /// **Dnes trénuješ:** Nejprve proveď parsing (rozbor) a ověření candidate (kandidáta), teprve potom změň
 /// sdílený state (stav). Úspěch má znamenat skutečné použití požadované volby, ne pouhý zdařený převod.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L09/M12_TileStampStudio.java`
-/// - Kontrola této mise: `java L09/Check.java M12_TileStampStudio.java`
-///
-/// Po spuštění programu klikáním zapínej či vypínej barvu políček; napiš 3 a klikni na Repeats pro
-/// změnu hustoty vzoru. Clear obnoví dlaždici. Po opravě: ulož soubor, spusť uvedenou kontrolu a
-/// zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F31 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Po spuštění programu klikáním zapínej či vypínej barvu políček; napiš 3 a klikni na Repeats
+/// pro změnu hustoty vzoru. Clear obnoví dlaždici.
 boolean applyRepeats(String text) {
     try {
         int candidate = Integer.parseInt(text.strip());
@@ -198,8 +190,6 @@ void showWindow() {
 
 int repeats = 6;
 
-/// Program spusť uvedeným command (příkazem) pro hraní. Kontrola hry ověří pravidlo bez otevření
-/// okna. Připravená část zajišťuje pouze uvedenou hlavní hru nebo pokus.
 void main() {
     SwingUtilities.invokeLater(this::showWindow);
 }

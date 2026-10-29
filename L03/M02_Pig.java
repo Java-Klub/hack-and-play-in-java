@@ -9,16 +9,8 @@
 /// **Dnes trénuješ:** Účinky branch (větví): if/else může vybírat mezi změnou několika hodnot a změnou
 /// jediné. Projdi zvlášť průběžné body tahu a hráče při ztrátovém i bodujícím hodu.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L03/M02_Pig.java`
-/// - Kontrola této mise: `java L03/Check.java M02_Pig.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše a zadávej d pro hod nebo b pro uložení tahu;
-/// sleduj, co se stane při jedničce a šestce. Po opravě: ulož soubor, spusť uvedenou kontrolu a
-/// zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F07 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program a zadávej d pro hod nebo b pro uložení tahu; sleduj, co se stane při jedničce
+/// a šestce.
 boolean roll(int die) {
     if (winner != -1 || die < 1 || die > 6) {
         return false;

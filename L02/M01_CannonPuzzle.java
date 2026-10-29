@@ -17,16 +17,8 @@ import javax.swing.Timer;
 /// Například celočíselné 5 / 2 dá 2, zatímco desetinný operand může zachovat 2.5; výsledný návratový typ
 /// už ztracenou část neobnoví.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L02/M01_CannonPuzzle.java`
-/// - Kontrola této mise: `java L02/Check.java M01_CannonPuzzle.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, táhni od děla směrem vpravo nahoru a pusť myš pro
-/// výstřel na oranžový cíl; R připraví další pokus. Po opravě: ulož soubor, spusť uvedenou kontrolu
-/// a zahraj si znovu.
-///
-/// Potřebuješ výklad? Nová dovednost · F04 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, táhni od děla směrem vpravo nahoru a pusť myš pro výstřel na oranžový cíl; R
+/// připraví další pokus.
 double launchSpeed(double drag) {
     return drag * (9 / 100);
 }

@@ -19,16 +19,8 @@ import javax.swing.Timer;
 /// násobením. Porovnej celočíselný a desetinný poměr a potom předpověz zachovanou rychlost míčku
 /// přilétajícího rychlostí 4.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L02/M03_BouncingBalls.java`
-/// - Kontrola této mise: `java L02/Check.java M03_BouncingBalls.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, tažením do strany hoď míček na stěnu a sleduj
-/// odraz; Space místnost pozastaví a R ji vyprázdní. Po opravě: ulož soubor, spusť uvedenou
-/// kontrolu a zahraj si znovu.
-///
-/// Potřebuješ výklad? Připomenutí · F04 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, tažením do strany hoď míček na stěnu a sleduj odraz; Space místnost pozastaví
+/// a R ji vyprázdní.
 double bounceSpeed(double speed) {
     return Math.abs(speed) * (3 / 4);
 }

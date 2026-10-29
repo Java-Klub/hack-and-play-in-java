@@ -9,15 +9,8 @@
 /// **Dnes trénuješ:** Named value (pojmenovaná hodnota): target uchovává jediný údaj, který může číst
 /// několik částí. Změna jedné initialization (inicializace) má udržet soulad vypsaného a skutečného cíle.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L01/M06_HigherOrLower.java`
-/// - Kontrola této mise: `java L01/Check.java M06_HigherOrLower.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše, prohlédni Current card a klikni Higher pro vyšší
-/// nebo Lower pro nižší příští kartu. Výsledek i cíl zůstanou vidět; New round obnoví kolo.
-///
-/// Potřebuješ výklad? Nová dovednost · F03 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program, prohlédni Current card a klikni Higher pro vyšší nebo Lower pro nižší příští
+/// kartu. Výsledek i cíl zůstanou vidět; New round obnoví kolo.
 int target = 1;
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F03">
@@ -58,10 +51,10 @@ int target = 1;
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Pro tuto hru">
-/// Defaultní main poskytuje karty a tlačítka přímo v Javě. Vyšší karta má větší hodnotu; Jack je
-/// 11, Queen 12, King 13 a Ace 14. Shodná karta nepočítá správný tip ani neprohrává. Cíl i počet
-/// správných tipů čtou stejný target. Po změně target ulož soubor, zavři staré okno a znovu spusť
-/// command pro hraní; New round samo upravenou Javu nenačte.
+/// Defaultní main poskytuje karty a tlačítka přímo v Javě. Vyšší karta má větší hodnotu; Jack
+/// je 11, Queen 12, King 13 a Ace 14. Shodná karta nepočítá správný tip ani neprohrává. Cíl i
+/// počet správných tipů čtou stejný target. Po změně target ulož soubor, zavři staré okno a
+/// znovu spusť program; New round samo upravenou Javu nenačte.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">

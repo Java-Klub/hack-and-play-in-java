@@ -14,16 +14,7 @@ import java.awt.image.BufferedImage;
 /// **Dnes trénuješ:** Jedna named value (pojmenovaná hodnota), několik čtenářů: obě oči dostávají stejnou
 /// uloženou barvu. Jediná vědomá změna proto má ovlivnit dvě místa obrázku.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L01/M09_PixelMonsters.java`
-/// - Kontrola této mise: `java L01/Check.java M09_PixelMonsters.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše: obrázek se ihned objeví v Java okně. Po úpravě
-/// source (zdrojového textu) okno zavři a znovu spusť command pro hraní; Kontrola hry ověřuje
-/// výpočet odděleně.
-///
-/// Potřebuješ výklad? Připomenutí · F03 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program: obrázek se ihned objeví v Java okně.
 int eyeColour = Color.BLACK.getRGB();
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F03">

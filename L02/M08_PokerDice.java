@@ -10,16 +10,9 @@
 /// AND vyžaduje obě. U trojice bez dvojice nejdřív urči obě pravdivostní hodnoty zvlášť a teprve potom je
 /// spoj.
 ///
-/// Z hlavní složky obsahující README.md:
-/// - Hraní: `java L02/M08_PokerDice.java`
-/// - Kontrola této mise: `java L02/Check.java M08_PokerDice.java`
-///
-/// Spusť command (příkaz) pro hraní uvedený výše: kostky jsou očíslované a kliknutím je vybereš k
-/// přehození. V úvodní kombinaci ponech tři dvojky, vyber kostky 4 a 5 a stiskni Reroll selected.
-/// Bank points uloží body a připraví další kolo; Scoring help vysvětlí kombinace.
-///
-/// Potřebuješ výklad? Připomenutí · F06 vysvětluje dovednost; Jak číst tento kód vysvětluje tyto
-/// řádky. Nápovědy 1 a 2 se otevírají zvlášť; Možná oprava prozrazuje postup.
+/// Spusť program: kostky jsou očíslované a kliknutím je vybereš k přehození. V úvodní kombinaci
+/// ponech tři dvojky, vyber kostky 4 a 5 a stiskni Reroll selected. Bank points uloží body a
+/// připraví další kolo; Scoring help vysvětlí kombinace.
 boolean fullHouse(int largestGroup, int pairs) {
     return largestGroup == 3 || pairs == 1;
 }
