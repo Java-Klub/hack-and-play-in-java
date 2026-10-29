@@ -248,15 +248,15 @@ class M06_VirtualScribblerTest {
                 "the square returns to its starting horizontal position");
         expect(Math.abs((double) Reflect.get(game, "y") - height / 2) < .00001,
                 "the square returns to its starting vertical position");
-        equal(24, Reflect.get(game, "steps"), "four six-step sides draw 24 pen steps");
+        equal(120, Reflect.get(game, "steps"), "four thirty-step sides draw 120 pen steps");
         equal(true, Reflect.get(game, "paused"), "the signature ends paused");
         equal(0, Reflect.get(game, "drift"), "straight sides have no drift");
         equal(0, Reflect.get(game, "jitter"), "repeated stamps have no random jitter");
         var image = (java.awt.image.BufferedImage) Reflect.get(game, "canvas");
         int cx = width / 2;
         int cy = height / 2;
-        for (int[] point : new int[][]{{cx + 6, cy}, {cx + 13, cy + 6},
-                {cx + 6, cy + 13}, {cx, cy + 6}}) {
+        for (int[] point : new int[][]{{cx + 33, cy}, {cx + 66, cy + 33},
+                {cx + 33, cy + 66}, {cx, cy + 33}}) {
             expect((image.getRGB(point[0], point[1]) & 0xffffff) != 0xffffff,
                     "each of the four square sides must actually draw");
         }
@@ -267,7 +267,7 @@ class M06_VirtualScribblerTest {
         var again = (java.awt.image.BufferedImage) Reflect.get(game, "canvas");
         equal(pixels, again.getRGB(0, 0, width, height, null, 0, width), "a second signature resets earlier drawing and settings");
         Reflect.call(game, "oneShot", 1);
-        equal(25, Reflect.get(game, "steps"), "ordinary step controls still use the working drawing model");
+        equal(121, Reflect.get(game, "steps"), "ordinary step controls still use the working drawing model");
         System.out.println("PASS " + checks + " checks");
     }
 }
