@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>3.4 Turn a reply into a number · Hack &amp; Play in Java</title>
+<title>3.4 Turn an answer into a number · Hack &amp; Play in Java</title>
 <link rel="stylesheet" href="assets/book.css">
 </head>
 <body>
 <a class="skip" href="#content">Skip to the lesson</a>
 <header class="masthead"><a href="index.html">Hack &amp; Play in Java</a></header>
 <div class="layout">
-<aside class="sidebar"><nav aria-label="Lessons"><ol><li><a href="index.html">Contents</a></li><li><a href="00-start.html">Set up your workshop</a></li><li><a href="01-first-program.html">1.1 Your first program</a></li><li><a href="01-order.html">1.2 Statement order</a></li><li><a href="02-values.html">2.1 Give a value a name</a></li><li><a href="02-change.html">2.2 Change a stored value</a></li><li><a href="02-calculations.html">2.3 Let the program calculate</a></li><li><a href="03-input.html">3.1 Ask the player</a></li><li><a href="03-text.html">3.2 Clean up a signal</a></li><li><a href="03-stories.html">3.3 Let the player change the story</a></li><li><a href="03-numbers.html" aria-current="page">3.4 Turn a reply into a number</a></li><li><a href="glossary.html">Glossary</a></li></ol></nav></aside>
+<aside class="sidebar"><nav aria-label="Lessons"><ol><li><a href="index.html">Contents</a></li><li><a href="00-start.html">Set up your workshop</a></li><li><a href="01-first-program.html">1.1 Your first program</a></li><li><a href="01-order.html">1.2 Statement order</a></li><li><a href="02-values.html">2.1 Give a value a name</a></li><li><a href="02-change.html">2.2 Change a stored value</a></li><li><a href="02-calculations.html">2.3 Let the program calculate</a></li><li><a href="03-input.html">3.1 Ask the player</a></li><li><a href="03-text.html">3.2 Clean up an incoming signal</a></li><li><a href="03-stories.html">3.3 Let the player shape the story</a></li><li><a href="03-numbers.html" aria-current="page">3.4 Turn an answer into a number</a></li><li><a href="04-questions.html">4.1 Ask a question in code</a></li><li><a href="04-branches.html">4.2 Choose what happens</a></li><li><a href="04-logic.html">4.3 Combine rules</a></li><li><a href="04-guards.html">4.4 Stop an illegal move in time</a></li><li><a href="04-switch.html">4.5 Choose a value with switch</a></li><li><a href="glossary.html">Glossary</a></li></ol></nav></aside>
 <main><article id="content">
 <h1>3.4 Turn an answer into a number</h1>
 <p>The player enters how many people are playing. The program calculates how many tokens you need. An entered digit starts as text; before calculating, you need to get a number from it.</p>
@@ -29,7 +29,7 @@ Tokens needed: 12</code></pre>
 <div class="table-wrap"><table><thead><tr><th>Step for the answer <code> 4 </code></th><th>Result</th></tr></thead><tbody>
 <tr><td><code>text</code></td><td>The text <code>" 4 "</code>.</td></tr>
 <tr><td><code>text.strip()</code></td><td>The text <code>"4"</code>, without outer spaces.</td></tr>
-<tr><td><code>Integer.parseInt(text.strip())</code></td><td>The number <code>4</code>. The inner call must produce its result first.</td></tr>
+<tr><td><code>Integer.parseInt(text.strip())</code></td><td>The number <code>4</code>. The inner strip call runs first; parseInt receives its result.</td></tr>
 <tr><td><code>players * 3</code></td><td>The number <code>12</code>.</td></tr>
 </tbody></table></div>
 <p>Read nested parentheses from the inside out: clean the text first, then convert it. The result stored under <code>players</code> is a number, so you can multiply it.</p>
@@ -48,8 +48,9 @@ Boosted energy: 10</code></pre>
 <p>Return to TicketCounter. Add a question asking how many tokens each player gets. Convert the second answer too and use it instead of the fixed three. With four players and five tokens each, expect 20. Then try three players and two tokens: the result should be 6.</p>
 <p><strong>You can now read text, convert it to a whole number and use it in a calculation instead of a fixed value.</strong></p>
 <details><summary>Further reading online</summary><p><a href="https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/Integer.html#parseInt(java.lang.String)">Java API: Integer.parseInt</a> describes accepted number formats and invalid inputs in detail.</p></details>
+<p>Continue to <a href="04-questions.html">Ask the code a question</a>: your program will start making decisions from the entered values.</p>
 </article>
-<nav class="page-nav" aria-label="Previous and next lesson"><a href="03-stories.html">← 3.3 Let the player change the story</a><a class="next" href="index.html">Contents →</a></nav>
+<nav class="page-nav" aria-label="Previous and next lesson"><a href="03-stories.html">← 3.3 Let the player shape the story</a><a class="next" href="04-questions.html">4.1 Ask a question in code →</a></nav>
 </main>
 </div>
 </body>
