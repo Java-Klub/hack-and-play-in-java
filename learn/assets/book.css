@@ -79,3 +79,8 @@ details > :last-child { margin-bottom: 18px; }
   pre { white-space: pre-wrap; color: black; background: #eee; border: 1px solid #aaa; }
   pre, table, details { break-inside: avoid; }
 }
+
+.transcript { background: #f0f4ed; color: var(--ink); border-color: var(--line); }
+.transcript .typed { color: #006f64; font-weight: 800; }
+.sidebar nav { max-height: calc(100vh - 48px); overflow-y: auto; }
+@media (max-width: 920px) { .sidebar nav { max-height: none; overflow: visible; } }
