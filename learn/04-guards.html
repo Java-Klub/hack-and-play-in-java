@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4.4 Zastav neplatný tah včas · Hack &amp; Play in Java</title>
+<link rel="stylesheet" href="assets/book.css">
+</head>
+<body>
+<a class="skip" href="#content">Přejít na výklad</a>
+<header class="masthead"><a href="index.html">Hack &amp; Play in Java</a></header>
+<div class="layout">
+<aside class="sidebar"><nav aria-label="Lekce"><ol><li><a href="index.html">Obsah</a></li><li><a href="00-start.html">Připrav si dílnu</a></li><li><a href="01-first-program.html">1.1 Tvůj první program</a></li><li><a href="01-order.html">1.2 Pořadí příkazů</a></li><li><a href="02-values.html">2.1 Dej hodnotě jméno</a></li><li><a href="02-change.html">2.2 Změň uloženou hodnotu</a></li><li><a href="02-calculations.html">2.3 Nech program počítat</a></li><li><a href="03-input.html">3.1 Zeptej se hráče</a></li><li><a href="03-text.html">3.2 Vyčisti přijatý signál</a></li><li><a href="03-stories.html">3.3 Nech hráče měnit příběh</a></li><li><a href="03-numbers.html">3.4 Z odpovědi udělej číslo</a></li><li><a href="04-questions.html">4.1 Polož otázku kódu</a></li><li><a href="04-branches.html">4.2 Vyber, co se stane</a></li><li><a href="04-logic.html">4.3 Spoj pravidla dohromady</a></li><li><a href="04-guards.html" aria-current="page">4.4 Zastav neplatný tah včas</a></li><li><a href="04-switch.html">4.5 Vyber hodnotu pomocí switch</a></li><li><a href="glossary.html">Slovníček</a></li></ol></nav></aside>
+<main><article id="content">
+<h1>4.4 Zastav neplatný tah včas</h1>
+<p>Hráč zadá cenu tahu. Energii mu chceme odečíst teprve tehdy, když je tah povolený. Odmítnutý pokus má původní energii zachovat.</p>
+<h2>Nejdřív odmítni, potom měň</h2>
+<p>Otevři <code>learn/examples/04/EnergyTurn.java</code>. Zkus cenu 0, potom 6 a nakonec 3.</p>
+<pre><code class="language-java" data-source="examples/04/EnergyTurn.java">void main() {
+    int energy = 5;
+    int cost = Integer.parseInt(IO.readln(&quot;Move cost: &quot;).strip());
+    if (cost &lt; 1) {
+        IO.println(&quot;Cost must be positive&quot;);
+        IO.println(&quot;Energy: &quot; + energy);
+        return;
+    }
+    if (cost &gt; energy) {
+        IO.println(&quot;Not enough energy&quot;);
+        IO.println(&quot;Energy: &quot; + energy);
+        return;
+    }
+    energy = energy - cost;
+    IO.println(&quot;Move accepted&quot;);
+    IO.println(&quot;Energy: &quot; + energy);
+}
+</code></pre>
+<div class="table-wrap"><table><thead><tr><th>Move cost</th><th>Rozhodnutí</th><th>Energie na konci</th></tr></thead><tbody>
+<tr><td>0</td><td>Cost must be positive</td><td>5</td></tr>
+<tr><td>6</td><td>Not enough energy</td><td>5</td></tr>
+<tr><td>3</td><td>Move accepted</td><td>2</td></tr>
+</tbody></table></div>
+<p><code>return;</code> v main okamžitě ukončí toto volání. Proto se po odmítnutí už neprovede odečet ani zpráva o přijetí tahu. Main má v hlavičce void, a tak zde za return nepředáváme žádnou hodnotu.</p>
+<p>Takové včasné odmítnutí nazýváme guard clause (ochranná podmínka). Na začátku odstraní zakázané možnosti. Za oběma guards zbývá platný tah, takže můžeš přímo odečíst cenu.</p>
+<p>Při každém novém spuštění se energie tohoto malého programu nastaví znovu na 5. Jeden běh provádí jeden pokus.</p>
+<h2>Úkol: tah je odmítnutý, ale energie zmizela</h2>
+<p>Otevři <code>learn/practice/04/SafeMove.java</code>. Zadej cenu 6. Program současně oznámí odmítnutí i přijetí a ukáže zápornou energii. Najdi první řádek, kde změnil uložený stav příliš brzy.</p>
+<p><strong>Přesuň odečet za rozhodnutí. Odmítni cenu menší než 1 nebo větší než dostupná energie, vypiš Move refused a nezměněnou energii, potom ukonči main. Platný tah odečti a vypiš Move accepted se zbývající energií.</strong></p>
+<pre class="transcript"><code>Move cost: <span class="typed">6</span>
+Move refused
+Energy: 5</code></pre>
+<p>Ověř také -1, 0, 1 a 5. Poslední dvě ceny jsou platné a zanechají energii 4 a 0. Záporná cena nesmí energii přidat.</p>
+<p>Potom změň počáteční energii na 8 a zadej cenu 6: tah musí projít a nechat energii 2. S cenou 9 musí zůstat všech 8. Nakonec vrať počáteční energii na 5.</p>
+<details><summary>Nápověda 1: zpráva nestačí</summary><p>If provede jen svůj blok. Po jeho konci se pokračuje dalším řádkem. Kde potřebuješ ukončit celé volání, aby se zpráva o přijetí už nevypsala?</p></details>
+<details><summary>Nápověda 2: zachovej původní hodnotu</summary><p>Porovnávej cenu s energií před odečtem. Do odmítacího bloku patří výpis nezměněné energie. Odečet a obě úspěšné zprávy nechej až za tímto blokem.</p></details>
+<h2>Připravená akce může vracet verdikt</h2>
+<p>V jiné hře neodmítáš celé main, ale jedno volání rozhodčího:</p>
+<pre><code class="language-java">boolean accepts(int cost) {
+    if (cost &lt; 1) {
+        return false;
+    }
+    return true;
+}
+</code></pre>
+<p><code>boolean</code> před accepts říká, jaký typ výsledku dostane volající. <code>int cost</code> pojmenovává přijaté číslo. Return false skončí toto jedno volání a předá odmítnutí; celá hra může běžet dál. Podobně může akce s výsledkem int vrátit číslo nebo akce s výsledkem String vrátit zprávu.</p>
+<h2>Hlídej moře, potom zkus rádce</h2>
+<ul>
+<li><code>L02/M09_SonarTreasureHunt.java</code>: v okně jsou řádky a sloupce označené 1 až 8. Připravený vstup od každého označení odečte 1 a předá akci insideSea čísla 0 až 7. Opravuješ tuto vnitřní otázku: obě čísla musejí ležet ve svém rozsahu. Tlačítka mimo mapu nesmějí spotřebovat sondu. Hlídej všechny čtyři okraje včetně krajních platných políček.</li>
+<li><code>L03/M02_Nim.java</code>: hra už běží proti botovi. Sleduj jeho tahy a doplň svého rádce. Má jen doporučit počet kamenů, zatímco skutečný tah a střídání hráčů ponechá připravené hře. Pro prázdnou hromádku vrať 0. Tady využiješ také dřívější zbytek po dělení a čtení cizího kódu.</li>
+</ul>
+<p>Pro ověření otevři Check.java ze stejné složky jako daná hra. U Nim si navíc všimni, zda dotaz na radu opravdu nechal aktuální hromádku beze změny.</p>
+<p><strong>Teď umíš odmítnout neplatnou akci před změnou hodnot a rozlišit konec main od vrácení verdiktu jedné připravené akce.</strong></p>
+</article>
+<nav class="page-nav" aria-label="Předchozí a další lekce"><a href="04-logic.html">← 4.3 Spoj pravidla dohromady</a><a class="next" href="04-switch.html">4.5 Vyber hodnotu pomocí switch →</a></nav>
+</main>
+</div>
+</body>
+</html>
