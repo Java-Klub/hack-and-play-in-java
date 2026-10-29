@@ -15,8 +15,8 @@ import javax.swing.Timer;
 ///
 ///
 /// **Your mission:** Turn the Signature button into a repeatable square stamp: start at the centre,
-/// travel four straight equal sides of six pen steps, and stop paused at the starting point. The
-/// counter must show 24. Previous drift, jitter, position and drawings must not affect the stamp. The
+/// travel four straight equal sides of thirty pen steps, and stop paused at the starting point. The
+/// counter must show 120. Previous drift, jitter, position and drawings must not affect the stamp. The
 /// drawing toy and step buttons already work.
 ///
 /// **Today you learn:** A for loop can repeat a small program containing several actions. Calls change
@@ -30,7 +30,7 @@ void signature() {
     jitter = 0;
     paused = false;
     for (int side = 0; side < 4; side++) {
-        burst(6);
+        burst(30);
         angle += Math.PI / 2;
     }
     paused = true;
@@ -85,7 +85,7 @@ void signature() {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Reset once, remove drift and jitter, repeat a six-step side followed by a quarter-turn four times,
+/// Reset once, remove drift and jitter, repeat a thirty-step side followed by a quarter-turn four times,
 /// then pause. A side requires drawing enabled.
 // </editor-fold>
 
