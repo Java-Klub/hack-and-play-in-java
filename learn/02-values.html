@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A textbook for self-study · Hack & Play in Java"><title>2.1 Give a value a name · Hack & Play in Java</title><link rel="stylesheet" href="assets/book.css"></head><body><a class="skip" href="#content">Skip to the lesson</a><header class="masthead"><a href="index.html">Hack & Play in Java</a><small>A textbook for self-study</small></header><div class="layout"><aside class="sidebar"><nav aria-label="Textbook lessons"><p>Read, try, create</p><ol><li><a href="index.html">Contents</a></li><li><a href="00-start.html">Prepare your workshop</a></li><li><a href="01-first-program.html">1.1 Your first program</a></li><li><a href="01-order.html">1.2 Statement order</a></li><li><a href="02-values.html" aria-current="page">2.1 Give a value a name</a></li><li><a href="02-change.html">2.2 Change a stored value</a></li><li><a href="02-calculations.html">2.3 Let the program calculate</a></li><li><a href="glossary.html">Glossary</a></li></ol></nav></aside><main><article id="content"><h1>2.1 Give a value a name</h1>
+<p>A program can store a number of lives, a player&#39;s name or a chosen target. Giving a value a name lets you use it again later.</p>
+<h2>Two named values</h2>
+<p>Open <a href="examples/02/Lives.java">Lives.java</a>:</p>
+<pre><code class="language-java">void main() {
+    int lives = 3;
+    String pilot = &quot;Nova&quot;;
+    IO.println(pilot);
+    IO.println(lives);
+}
+</code></pre>
+<p>The output is:</p>
+<pre><code class="language-text">Nova
+3
+</code></pre>
+<p>The line <code>int lives = 3;</code> introduces a variable named <code>lives</code> with an initial value of 3.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Part</th>
+<th>What it says</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>int</code></td>
+<td>The type: this name stores a whole number.</td>
+</tr>
+<tr>
+<td><code>lives</code></td>
+<td>The name the author chose for the value.</td>
+</tr>
+<tr>
+<td><code>=</code></td>
+<td>Store the following value under this name.</td>
+</tr>
+<tr>
+<td><code>3</code></td>
+<td>The initial value.</td>
+</tr>
+<tr>
+<td><code>;</code></td>
+<td>The end of the statement.</td>
+</tr>
+</tbody></table></div>
+<p><code>String</code> is the type for text, so <code>pilot</code> gets the value <code>&quot;Nova&quot;</code>. For a new variable, write both its type and its name. When using it later, write only the name, as in <code>IO.println(lives);</code>.</p>
+<p>Write the name exactly: <code>lives</code> and <code>Lives</code> are two different names. In these examples, use a name only after the line that introduces it. Clear English names such as <code>lives</code>, <code>score</code> and <code>pilot</code> help show what a value means.</p>
+<h2>A name and literal text are not the same</h2>
+<p>Predict these two printed lines when <code>lives</code> holds 3:</p>
+<pre><code class="language-java">IO.println(&quot;lives&quot;);
+IO.println(lives);
+</code></pre>
+<p>These two lines belong inside the <code>main</code> you already know, after the line introducing <code>lives</code>.</p>
+<details>
+<summary>Answer</summary>
+
+<pre><code class="language-text">lives
+3
+</code></pre>
+<p>Quotes say “use these characters as text”. A name without quotes asks for the value stored under it. Java does not look for variables inside a quoted message.</p>
+</details>
+
+<p>In Lives, change the pilot&#39;s name to <code>Mika</code> and the number of lives to 5. Before running it, say which two output lines will change and why.</p>
+<h2>Join a message and a value</h2>
+<p>The <code>+</code> symbol can join text. In Lives, you can replace the line that prints the number of lives with:</p>
+<pre><code class="language-java">IO.println(&quot;Lives: &quot; + lives);
+</code></pre>
+<p>For <code>lives</code> equal to 3, the result is <code>Lives: 3</code>. There is a space after the colon inside the quotes. The name <code>lives</code> is outside the quotes, so its value is used. The joined text is passed to <code>println</code> as one complete result.</p>
+<h2>A small task of your own</h2>
+<p>Create <code>PilotCard.java</code> in <code>learn/practice/02</code>. Inside <code>main</code>, introduce <code>String pilot</code> and <code>int lives</code> with your own values. Then print a two-line card, for example:</p>
+<pre><code class="language-text">Pilot: Nova
+Lives: 3
+</code></pre>
+<p>Build the messages using the names <code>pilot</code> and <code>lives</code>. Then change only their initial values and check that both messages reflect the new details.</p>
+<details>
+<summary>Hint</summary>
+
+<p>Introduce both values before printing. Put text labels inside quotes, and use the names after <code>+</code> without quotes. Lives shows how to begin and end the file.</p>
+</details>
+
+<p><strong>You have understood this lesson when you can distinguish a name from quoted text and use a name to print its stored value.</strong></p>
+<p>Continue to <a href="02-change.html">Change a stored value</a>.</p>
+</article><nav class="page-nav" aria-label="Previous and next lesson"><a href="01-order.html">← 1.2 Statement order</a><a class="next" href="02-change.html">2.2 Change a stored value →</a></nav><p class="page-footer">This page works offline. Run the examples with Java from your downloaded course folder.</p></main></div></body></html>

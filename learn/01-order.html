@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A textbook for self-study · Hack & Play in Java"><title>1.2 Statement order · Hack & Play in Java</title><link rel="stylesheet" href="assets/book.css"></head><body><a class="skip" href="#content">Skip to the lesson</a><header class="masthead"><a href="index.html">Hack & Play in Java</a><small>A textbook for self-study</small></header><div class="layout"><aside class="sidebar"><nav aria-label="Textbook lessons"><p>Read, try, create</p><ol><li><a href="index.html">Contents</a></li><li><a href="00-start.html">Prepare your workshop</a></li><li><a href="01-first-program.html">1.1 Your first program</a></li><li><a href="01-order.html" aria-current="page">1.2 Statement order</a></li><li><a href="02-values.html">2.1 Give a value a name</a></li><li><a href="02-change.html">2.2 Change a stored value</a></li><li><a href="02-calculations.html">2.3 Let the program calculate</a></li><li><a href="glossary.html">Glossary</a></li></ol></nav></aside><main><article id="content"><h1>1.2 Statement order</h1>
+<p>You can already print your own messages. Now you will find out why two programs with the same steps can do different things.</p>
+<h2>Read, predict, run</h2>
+<p>Open <a href="examples/01/MissionControl.java">MissionControl.java</a>. First, try writing its output on paper or in a note:</p>
+<pre><code class="language-java">void main() {
+    IO.println(&quot;Check power&quot;);
+    IO.println(&quot;Open gate&quot;);
+    IO.println(&quot;Go&quot;);
+}
+</code></pre>
+<details>
+<summary>Output to compare</summary>
+
+<pre><code class="language-text">Check power
+Open gate
+Go
+</code></pre>
+<p>Inside <code>main</code>, these calls run from top to bottom. The first prints its message and finishes; then the second starts, followed by the third.</p>
+</details>
+
+<p>Move the last call before the first. What will be at the top of the output now? Save and run it. You changed the order of the steps; their three messages stayed the same.</p>
+<h2>Statements and comments</h2>
+<p>A comment is a message for people reading the code. Java does not carry out an action because of it. <code>//</code> marks a comment that continues to the end of that line:</p>
+<pre><code class="language-java">void main() {
+    // Say hello to the pilot.
+    IO.println(&quot;Hello&quot;);
+}
+</code></pre>
+<p>This program prints only Hello. The line beginning with <code>//</code> is skipped when it runs. Even an <code>IO.println</code> written <strong>after <code>//</code> on the same line</strong> stays a comment.</p>
+<p>In games, you will also see lines beginning with <code>///</code>: these are explanatory comments for you. Arrows beside some sections in the editor let you collapse a longer explanation. If your editor does not offer folding, you can read the comments normally like any other text.</p>
+<h2>Task: fix the launch procedure</h2>
+<p>Open <a href="practice/01/LaunchSequence.java">LaunchSequence.java</a>. It has all three messages it needs, but in the wrong order.</p>
+<p><strong>Move whole lines inside <code>main</code> so the output is:</strong></p>
+<pre><code class="language-text">Doors closed
+Engine on
+Launch
+</code></pre>
+<p>Keep each message exactly once. Changing a comment alone will not change the output. After editing, predict the output and compare it with a run.</p>
+<details>
+<summary>Hint</summary>
+
+<p>The doors must close first. Then the engine can start, and only then can the ship launch. Move whole lines, including their semicolons.</p>
+</details>
+
+<h2>Use the same idea in a game</h2>
+<p>Now open <a href="../L01/M01_CafeWallLab.java">CafeWallLab</a> in folder <code>L01</code>. Running it shows a grey surface: the tiles are hidden beneath a later coat of paint. The task at the start of the file identifies two lines to move.</p>
+<p>Here, you call supplied drawing actions instead of printing text. <code>paintTiles(g);</code> asks for tiles, and <code>paintBackground(g);</code> asks for grey paint. <code>g</code> is the supplied drawing tool. These actions work; you decide their order. <code>Graphics2D g</code> in the declaration simply describes the tool that the supplied code provides. You do not need to change it today.</p>
+<p>Close the old window, save your change and run the file again. The result should show tiles on a grey background. Check your change from the course&#39;s main folder:</p>
+<pre><code class="language-text">java L01/Check.java M01_CafeWallLab.java
+</code></pre>
+<p>GREEN confirms the checked cases. If you get RED, read the message and return to the two drawing steps.</p>
+<p>Want another picture? <a href="../L01/M02_MissingTriangle.java">MissingTriangle</a> practises the same ordering idea. Its task asks you to build a drawing from two supplied calls; you do not need to know their internal drawing algorithm to choose between them.</p>
+<p><strong>You have understood this lesson when you can predict the order of printed lines and explain why later drawing can cover earlier drawing.</strong></p>
+<p>Continue to <a href="02-values.html">Give a value a name</a>.</p>
+</article><nav class="page-nav" aria-label="Previous and next lesson"><a href="01-first-program.html">← 1.1 Your first program</a><a class="next" href="02-values.html">2.1 Give a value a name →</a></nav><p class="page-footer">This page works offline. Run the examples with Java from your downloaded course folder.</p></main></div></body></html>
