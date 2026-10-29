@@ -7,36 +7,23 @@ import javax.swing.Timer;
 
 /// # L12.02 · FlockPlayground
 ///
-/// Guide a flock by moving an obstacle through its path. Watch how local steering choices turn many
-/// separate birds into a flowing group.
+/// The flock already avoids your orange obstacle. Give it a second personality and predict whether
+/// attraction will produce a cluster, a swirl or something else.
 ///
-/// **Your mission:** Build makeAvoidance(radius) and install makeAvoidance(75) in avoidance. The
-/// returned role gives zero for distance <= 0 or >= radius; inside, its strength is 0.2 × (1 -
-/// distance / radius). Keep obstaclePush as the supplied adapter.
+/// **Your mission:** Make the personality button change behaviour, not just its label. Shy uses the
+/// existing repulsion; Curious uses exactly its negative at the same distance. Switching must
+/// preserve every bird’s position and velocity, pause state and obstacle. Switching twice returns to
+/// Shy; a new flock keeps the selected personality.
 ///
-/// **Today you learn:** Author an implementation of a small interface and install it in the running
-/// program. Keep its calculation separate from input, updates and drawing.
+/// **Investigation:** Swap a behavioural role live and test a motion hypothesis.
 ///
-/// Run the program, then move the orange mouse obstacle into the birds’ path and use Pause/Run
-/// or New flock to compare their response.
-Avoidance makeAvoidance(double radius) {
-    if (!Double.isFinite(radius) || radius <= 0) {
-        throw new IllegalArgumentException("Positive finite radius required.");
-    }
-    return distance -> {
-        if (distance <= 0 || distance >= radius) return 0;
-        return 0.2 * (1 - distance / radius);
-    };
-}
-
-Avoidance avoidance = makeAvoidance(75);
+/// Move the orange obstacle through the birds. Use Shy/Curious, Pause/Run and New flock to compare;
+/// the personality button in the starter changes only its label.
 
 // <editor-fold defaultstate="collapsed" desc="Your next version · optional">
-/// ### Make it yours
-///
-/// Invent a shy flock and a curious flock by providing two Avoidance implementations with opposite
-/// responses near the obstacle. Keep distances safe and strength modest. Ask a friend to identify the
-/// personality from motion without reading the formula.
+/// Design a third personality that repels very close birds but attracts farther birds inside the
+/// existing radius. Predict a shape before running it, then describe what the flock actually does.
+/// Give the role a name without promising a stable ring.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F34">
@@ -65,41 +52,52 @@ Avoidance avoidance = makeAvoidance(75);
 /// award three times the input?
 // </editor-fold>
 
-// <editor-fold defaultstate="expanded" desc="Read this code">
-/// ### A rule remembers the factory's parameter
+// <editor-fold defaultstate="expanded" desc="Investigator notebook · worked example">
+/// ### Compose a new response from an existing one
 ///
-/// The returned lambda can use radius after makeAvoidance has returned. This captured parameter is
-/// not the bird's current distance: distance arrives on each strength call. A neutral factory:
+/// A replaceable role need not copy the original formula. It can call another implementation and
+/// transform its result, preserving its boundaries.
 ///
 /// ```java
-/// IntUnaryOperator offset(int amount) {
-///     return value -> value + amount;
-/// }
+/// DoubleUnaryOperator original = x -> x * x;
+/// DoubleUnaryOperator opposite = x -> -original.applyAsDouble(x);
 /// ```
 ///
-/// The JDK IntUnaryOperator role maps one int to another; the factory creates offset(3). That rule
-/// maps 8 to 11 even after the factory call ends. Predict the result of offset(5) applied to 8.
-///
-/// For a separate radius 100, distance 25 gives strength 0.15 and distance 100 gives zero. Predict
-/// distance 50. The supplied guard validates radius; your body validates the distance interval.
-/// obstaclePush passes the current distance to the selected avoidance field. step owns direction,
-/// speed limits and movement. Your role only calculates a strength; it must not move birds or close
-/// the window. Install the factory result so the real flock uses your rule.
+/// The JDK role maps one double to another. original returns 9 for 3, while opposite returns -9.
+/// Predict both results for -2. This is composition, not mutation of original. If a rule returns zero
+/// outside a radius, negation still returns zero there. The direction vector and speed limit can
+/// remain unchanged; changing just the scalar response is enough to produce different movement.
+/// Separate the selected behaviour from resetting the flock's data.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Keep the supplied radius guard. The returned lambda receives distance later.
+/// Follow the new button event, then find the stored role used when an obstacle distance becomes a
+/// push.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Inside the radius, the linear factor goes from nearly one to zero. At the boundary return zero.
+/// changePersonality already flips curious. makeAvoidance can build the Shy rule; obstaclePush
+/// already delegates to the avoidance field.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Build the two-branch rule, return it, and set avoidance = makeAvoidance(75).
+/// Install the base role for Shy and a lambda returning its negated strength for Curious. Keep reset,
+/// arrays, pause and obstacle coordinates untouched.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="expanded" desc="Program to explore">
+Avoidance makeAvoidance(double radius) {
+    if (!Double.isFinite(radius) || radius <= 0) {
+        throw new IllegalArgumentException("Positive finite radius required.");
+    }
+    return distance -> {
+        if (distance <= 0 || distance >= radius) return 0;
+        return 0.2 * (1 - distance / radius);
+    };
+}
+
+Avoidance avoidance = makeAvoidance(75);
+
 double obstaclePush(double distance) {
     return avoidance.strength(distance);
 }
@@ -218,6 +216,12 @@ void showWindow() {
         reset(System.nanoTime());
         canvas.repaint();
     });
+    var personality = new JButton("Shy: switch to Curious");
+    personality.addActionListener(event -> {
+        changePersonality();
+        personality.setText(curious ? "Curious: switch to Shy" : "Shy: switch to Curious");
+    });
+    controls.add(personality);
     controls.add(pause);
     controls.add(restart);
     var timer = new Timer(25, event -> {
@@ -243,6 +247,18 @@ void showWindow() {
 
 interface Avoidance { double strength(double distance); }
 
+
+boolean curious;
+
+void changePersonality() {
+    curious = !curious;
+    Avoidance shy = makeAvoidance(75);
+    if (curious) {
+        avoidance = distance -> -shy.strength(distance);
+    } else {
+        avoidance = shy;
+    }
+}
 
 void main() {
 /// Restore the starting game state.

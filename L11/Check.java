@@ -33,7 +33,7 @@ class Check {
         run("M11_MirrorCylinderPicture", "L11.11 MirrorCylinderPicture · F32", () -> M11_MirrorCylinderPictureTest.main(new String[0]));
         run("M12_MagicEyeStrip", "L11.12 MagicEyeStrip · F32", () -> M12_MagicEyeStripTest.main(new String[0]));
         if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " still need repair.");
+        IO.println(checked + " missions; " + failed + " mission goals remaining.");
         if (failed > 0) System.exit(1);
     }
 
@@ -240,9 +240,9 @@ class M03_WireframeCubeTest {
 class M04_MandelbrotPostcardsTest {
     static int checks;
     static final String[] CASES = {
-        "Changing seed changes the palette.",
-        "The same seed and window reproduce every pixel.",
-        "Escape geometry remains independent of palette choice."
+        "The tool finds every matching seed in the inclusive 0..255 range.",
+        "Prefixes, no match and input preservation behave correctly.",
+        "The normal seeded palette and fractal generation remain reproducible."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -281,30 +281,30 @@ class M04_MandelbrotPostcardsTest {
         return image;
     }
     public static void main(String[] args) throws Exception {
-        try {
-            var p = Reflect.create("M04_MandelbrotPostcards");
-            int[] colours = (int[]) Reflect.call(p, "palette", 42L);
-            check(colours.length == 16 && Arrays.equals(colours, (int[]) Reflect.call(p, "palette", 42L)), 1, Arrays.toString(colours));
-            check(!Arrays.equals(colours, (int[]) Reflect.call(p, "palette", 43L)), 0, "different palettes");
-            var expectedRandom = new Random(42);
-            for (int i = 0; i < colours.length; i++) {
-                int expected = java.awt.Color.HSBtoRGB(expectedRandom.nextInt(360) / 360.0F, 0.8F, 1);
-                check(colours[i] == expected, 0, "palette slot " + i + ": " + colours[i]);
-            }
-            var a=((java.awt.image.BufferedImage) Reflect.call(p, "render", 42, 3.2));var b=((java.awt.image.BufferedImage) Reflect.call(p, "render", 43, 3.2));check(hash(a)!=hash(b),0,hash(a));
-            int changed = 0;
-            for (int y = 0; y < a.getHeight(); y++) {
-                for (int x = 0; x < a.getWidth(); x++) {
-                    if (a.getRGB(x, y) != b.getRGB(x, y)) changed++;
-                }
-            }
-            check(changed > 10000, 0, "visibly changed pixels: " + changed);
-            check(hash(a)==hash(((java.awt.image.BufferedImage) Reflect.call(p, "render", 42, 3.2))),1,hash(a));check(((int) Reflect.call(p, "escape", 0, 0))==160&&((int) Reflect.call(p, "escape", 3, 3))<160,2,((int) Reflect.call(p, "escape", 3, 3)));
-        } catch (AssertionError failure) {
-            throw failure;
-        } catch (Exception failure) {
-            throw new AssertionError("MISSION L11.04: Unexpected failure while checking the active rule.", failure);
+        var p = Reflect.create("M04_MandelbrotPostcards");
+        int[] palette = (int[]) Reflect.call(p, "palette", 7L);
+        int[] sample = Arrays.copyOf(palette, 4);
+        int[] before = sample.clone();
+        var found = (java.util.List<?>) Reflect.call(p, "matchingSeeds", (Object) sample);
+        check(found.equals(java.util.List.of(7L)), 0, found);
+        check(Arrays.equals(sample, before), 1, "sample unchanged");
+        var edge = (java.util.List<?>) Reflect.call(p, "matchingSeeds", (Object) (int[]) Reflect.call(p, "palette", 255L));
+        check(edge.equals(java.util.List.of(255L)), 0, edge);
+        var expected = new java.util.ArrayList<Long>();
+        for (long seed = 0; seed <= 255; seed++) {
+            var random = new Random(seed);
+            int colour = java.awt.Color.HSBtoRGB(random.nextInt(360) / 360.0F, .8F, 1);
+            if (colour == palette[0]) expected.add(seed);
         }
+        check(Reflect.call(p, "matchingSeeds", (Object) new int[]{palette[0]}).equals(expected), 1, "all prefix candidates");
+        check(((java.util.List<?>) Reflect.call(p, "matchingSeeds", (Object) new int[]{0})).isEmpty(), 1, "impossible colour");
+        reject(() -> Reflect.call(p, "matchingSeeds", (Object) new int[0]), 1);
+        reject(() -> Reflect.call(p, "matchingSeeds", (Object) new int[17]), 1);
+        var random = new Random(7);
+        for (int colour : palette) check(colour == java.awt.Color.HSBtoRGB(random.nextInt(360) / 360.0F, .8F, 1), 2, "unchanged palette recipe");
+        var a = (BufferedImage) Reflect.call(p, "render", 42L, 3.2);
+        check(hash(a) == hash((BufferedImage) Reflect.call(p, "render", 42L, 3.2)), 2, "repeatable picture");
+        check((int) Reflect.call(p, "escape", 0.0, 0.0) == 160, 2, "fractal geometry");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -642,9 +642,9 @@ class M09_PixelSortingGlitchTest {
 class M10_SecretPNGPostcardTest {
     static int checks;
     static final String[] CASES = {
-        "A nested PNG round-trips a UTF-8 message.",
-        "An empty message survives the same path.",
-        "Unsupported and missing input paths cause IOException."
+        "The actual cover supplies the new postcard pixels and dimensions.",
+        "The message persists while the source file stays unchanged.",
+        "Unreadable inputs and using the cover as its own destination are rejected."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -683,36 +683,33 @@ class M10_SecretPNGPostcardTest {
         return image;
     }
     public static void main(String[] args) throws Exception {
-        Path root = Files.createTempDirectory("secret-check-");
+        Path root = Files.createTempDirectory("cover-check-");
         try {
             var p = Reflect.create("M10_SecretPNGPostcard");
-            Path file = root.resolve("nested/secret.png");
-            Reflect.set(p, "message", "Pixel π");
-            Reflect.call(p, "save", file, 42, 1);
-            check(Files.isRegularFile(file), 0, "requested postcard file: " + file);
-            check(((java.lang.String) Reflect.call(p, "readMessage", file)).equals("Pixel π"), 0, ((java.lang.String) Reflect.call(p, "readMessage", file)));
-            var fresh = Reflect.create("M10_SecretPNGPostcard");
-            check(((String) Reflect.call(fresh, "readMessage", file)).equals("Pixel π"), 0, "message survives a new instance");
-            byte[] stored = Files.readAllBytes(file);
-            Reflect.call(fresh, "readMessage", file);
-            check(Arrays.equals(stored, Files.readAllBytes(file)), 1, "reading preserves the card");
-            Reflect.set(p, "message", "");
-            Reflect.call(p, "save", file, 42, 1);
-            check(Files.isRegularFile(file), 0, "requested postcard file: " + file);
-            check(((java.lang.String) Reflect.call(p, "readMessage", file)).isEmpty(), 1, ((java.lang.String) Reflect.call(p, "readMessage", file)));
-            Path text = root.resolve("plain.txt");
-            Files.writeString(text, "not a PNG");
-            ioFailure(() -> Reflect.call(p, "readMessage", text), 2);
-            ioFailure(() -> Reflect.call(p, "readMessage", root.resolve("missing.png")), 2);
-        } catch (AssertionError failure) {
-            throw failure;
-        } catch (Exception failure) {
-            throw new AssertionError("MISSION L11.10: Unexpected failure while checking the active rule.", failure);
+            Path cover = root.resolve("cover.png");
+            Path card = root.resolve("nested/card.png");
+            var original = new BufferedImage(48, 20, BufferedImage.TYPE_INT_RGB);
+            for (int y = 0; y < 20; y++) for (int x = 0; x < 48; x++) original.setRGB(x, y, java.awt.Color.HSBtoRGB(x / 48.0F, .7F, .6F + y / 60.0F));
+            ImageIO.write(original, "png", cover.toFile());
+            byte[] before = Files.readAllBytes(cover);
+            Reflect.call(p, "postcardFromCover", cover, card, "Meet π at noon");
+            var result = ImageIO.read(card.toFile());
+            check(result != null && result.getWidth() == 48 && result.getHeight() == 20, 0, result == null ? "no image" : result.getWidth() + "x" + result.getHeight());
+            boolean sameArtwork = true;
+            for (int y = 0; y < 20; y++) for (int x = 0; x < 48; x++) sameArtwork &= (original.getRGB(x,y) & 0xFEFEFE) == (result.getRGB(x,y) & 0xFEFEFE);
+            check(sameArtwork, 0, "only the message bits may change");
+            check(Reflect.call(Reflect.create("M10_SecretPNGPostcard"), "readMessage", card).equals("Meet π at noon"), 1, "persisted message");
+            check(Arrays.equals(before, Files.readAllBytes(cover)), 1, "cover bytes");
+            reject(() -> Reflect.call(p, "postcardFromCover", cover, cover, "overwrite"), 2);
+            check(Arrays.equals(before, Files.readAllBytes(cover)), 1, "cover after rejected write");
+            ioFailure(() -> Reflect.call(p, "postcardFromCover", root.resolve("missing.png"), card, "x"), 2);
+            Path invalid = root.resolve("not-image.txt");
+            Files.writeString(invalid, "not a PNG");
+            ioFailure(() -> Reflect.call(p, "postcardFromCover", invalid, card, "x"), 2);
+            check(Reflect.call(p, "readMessage", card).equals("Meet π at noon"), 1, "bad input preserves the prior card");
         } finally {
             try (var paths = Files.walk(root)) {
-                for (Path path : paths.sorted(java.util.Comparator.reverseOrder()).toList()) {
-                    Files.deleteIfExists(path);
-                }
+                for (Path path : paths.sorted(java.util.Comparator.reverseOrder()).toList()) Files.deleteIfExists(path);
             }
         }
         System.out.println("PASS " + checks + " checks");
@@ -803,9 +800,9 @@ class M11_MirrorCylinderPictureTest {
 class M12_MagicEyeStripTest {
     static int checks;
     static final String[] CASES = {
-        "The seed comes from content rather than the filename.",
-        "Whitespace and a negative seed work in the real rendering input.",
-        "Bad numeric text and a missing path remain visible expected failures."
+        "The notebook selects the last numeric data line, skipping blanks and # comments.",
+        "The selected seed reproduces its actual picture without rewriting the notebook.",
+        "Typos, no data and missing files remain explicit failures."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
@@ -844,32 +841,34 @@ class M12_MagicEyeStripTest {
         return image;
     }
     public static void main(String[] args) throws Exception {
-        Path root = Files.createTempDirectory("eye-check-");
+        Path root = Files.createTempDirectory("notebook-check-");
         try {
             var p = Reflect.create("M12_MagicEyeStrip");
             Path file = root.resolve("seed.txt");
-            Files.writeString(file, " 42\n");
-            check(((long) Reflect.call(p, "readSeed", file)) == 42, 0, ((long) Reflect.call(p, "readSeed", file)));
-            check(hash(((java.awt.image.BufferedImage) Reflect.call(p, "render", ((long) Reflect.call(p, "readSeed", file)), 16))) == hash(((java.awt.image.BufferedImage) Reflect.call(p, "render", 42, 16))), 1, "same picture");
-            Files.writeString(file, "-7");
-            check(((long) Reflect.call(p, "readSeed", file)) == -7, 1, ((long) Reflect.call(p, "readSeed", file)));
-            Files.writeString(file, "banana");
+            Files.writeString(file, "  # first trial\n42\n\n # selected trial\n -7 \n");
+            byte[] before = Files.readAllBytes(file);
+            long selected;
             try {
-                Reflect.call(p, "readSeed", file);
-                check(false, 2, "accepted");
-            } catch (NumberFormatException expected) {
-                check(true, 2, "bad number");
+                selected = (long) Reflect.call(p, "readSeed", file);
+            } catch (NumberFormatException failure) {
+                check(false, 0, "valid notebook rejected: " + failure.getMessage());
+                return;
             }
+            check(selected == -7, 0, selected);
+            check(Arrays.equals(before, Files.readAllBytes(file)), 1, "notebook bytes");
+            check(hash((BufferedImage) Reflect.call(p, "render", selected, 16.0)) == hash((BufferedImage) Reflect.call(p, "render", -7L, 16.0)), 1, "same dot field");
+            Files.writeString(file, " 0 ");
+            check((long) Reflect.call(p, "readSeed", file) == 0, 0, "zero is real data");
+            Files.writeString(file, "# notes only\n  ");
+            reject(() -> Reflect.call(p, "readSeed", file), 2);
+            Files.writeString(file, "banana\n42");
+            reject(() -> Reflect.call(p, "readSeed", file), 2);
+            Files.writeString(file, "42 # not a whole-line comment");
+            reject(() -> Reflect.call(p, "readSeed", file), 2);
             ioFailure(() -> Reflect.call(p, "readSeed", root.resolve("missing.txt")), 2);
-        } catch (AssertionError failure) {
-            throw failure;
-        } catch (Exception failure) {
-            throw new AssertionError("MISSION L11.12: Read the file contents before parsing its number; actual failure=" + failure.getClass().getSimpleName(), failure);
         } finally {
             try (var paths = Files.walk(root)) {
-                for (Path path : paths.sorted(java.util.Comparator.reverseOrder()).toList()) {
-                    Files.deleteIfExists(path);
-                }
+                for (Path path : paths.sorted(java.util.Comparator.reverseOrder()).toList()) Files.deleteIfExists(path);
             }
         }
         System.out.println("PASS " + checks + " checks");

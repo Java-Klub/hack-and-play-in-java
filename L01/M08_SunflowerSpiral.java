@@ -5,18 +5,15 @@ import java.awt.image.BufferedImage;
 
 /// # L01.08 · SunflowerSpiral
 ///
-/// Grow a sunflower-like arrangement from a thousand coloured dots. Small changes in the angle between
-/// dots can turn a spiral into a few spokes.
+/// **Your mission · Follow a picture recipe:** The working picture uses a half-turn between seeds.
+/// Find where its launch recipe chooses that angle and make the ordinary run use 137.5 degrees. Leave
+/// the coordinate formula intact. Then follow the chosen value into rendering and into the
+/// coordinates of one seed.
 ///
-/// **Your mission · Tune a visual instrument:** The default picture collapses into two spokes. Repair
-/// defaultAngle so the ordinary
-/// run uses 137.5 degrees and spreads the seeds into a spiral.
+/// The starter works by its original rules. The check already expects your new goal.
 ///
-/// **Today you learn:** Named numeric values: a descriptive name connects one chosen angle to the later
-/// picture. A double can store a fractional angle, for example half a degree.
-///
-/// Run the program: the picture appears immediately in a Java window.
-double defaultAngle = 137.5;
+/// Run to see the picture; close and rerun after editing. Compare the two-spoke starting image with
+/// your new spread-out flower.
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F03">
 /// A variable gives a stored value a name. Its type describes the values it can hold: `int` holds
@@ -40,55 +37,35 @@ double defaultAngle = 137.5;
 /// Now predict the final charge if its initialization uses six instead of four.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
-///
-/// - `double` — A numeric type that can hold a fractional part, as well as whole values such as 180.
-/// - `defaultAngle` — The name of the angle used when the program starts with ordinary defaults.
-/// - `=` — Initialize this named value from the number on the right.
-/// - `180` — The current angle turns halfway around a circle, so successive dots alternate directions.
-/// - `;` — The declaration ends here; the later picture code reads the stored angle.
-///
-/// ### What the prepared part already does
-///
-/// position computes each dot’s location, render colours the dots, and the prepared window shows
-/// the result directly. main passes your default into that ready-made mathematics; you do not need
-/// to rewrite the spiral formula.
+// <editor-fold defaultstate="expanded" desc="Explore and experiment">
+/// Follow values rather than memorising a formula. Start at main and follow the call that requests
+/// the picture. A name can pass a chosen number through several methods. Neutral example:
+/// `show(size)` supplies the value currently stored under size, not the word "size". Fractional
+/// literals use a dot. Before editing, predict whether a chosen angle is read once per launch or
+/// newly typed for each dot.
 // </editor-fold>
 
-// <editor-fold defaultstate="expanded" desc="For this game">
-/// The program builds the picture in memory and shows it directly in Java. The angle is in
-/// degrees; Java writes fractional numbers with a decimal point. Rerun the file after changing
-/// defaultAngle so the new value is loaded. The mission checks verify behaviour, not an old
-/// picture left in an earlier window.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · search area">
+/// Find the picture request, not the sine and cosine calculations.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
-/// A double literal uses a decimal point: 12.5. A comma is not an alternative decimal separator in
-/// Java source. The name defaultAngle stores one value that many dot positions read. A small
-/// numerical change can have a large visual effect because that same change is repeated across many
-/// dots.
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a concrete route">
+/// showPicture passes one named angle into render. Follow that name to its initialization.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Possible change · reveals the direction">
+/// The field defaultAngle starts at 180. Change that one initialization to 137.5.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Your own version · optional">
-/// After restoring 137.5, try angles 120, 137 and 137.6. Before each run predict spokes or a
-/// spread-out pattern. Pick one image as an alien flower and give your friend its angle as a recipe,
-/// without showing the picture first.
+/// Try three nearby values and give a friend a numeric recipe without showing the image. Ask them to
+/// predict spokes or a spiral.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// The current 180-degree turn alternates between two directions.
-// </editor-fold>
+// <editor-fold defaultstate="collapsed" desc="Program · explore as needed">
+double defaultAngle = 137.5;
 
-// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// A decimal point in Java is a dot.
-// </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Set double defaultAngle = 137.5; then run the program to see the new picture.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
 double[] position(int index, double degrees) {
     double angle = Math.toRadians(degrees) * index;
     double radius = 7 * Math.sqrt(index);
@@ -137,8 +114,6 @@ void showPicture() {
 void main() {
     showPicture();
 }
-
-/// Prepared entry points: main, render.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">

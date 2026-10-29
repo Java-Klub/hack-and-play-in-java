@@ -6,85 +6,22 @@ import java.awt.image.BufferedImage;
 
 /// # L09.12 · TileStampStudio
 ///
-/// Stamp your own tile across a surface and watch a small motif become a pattern. The repeat control
-/// should let you choose a sparse design or a dense one.
+/// The stamp editor already accepts numbers. Give it a tiny command language so a planned sequence can
+/// zoom the density without calculating every new number yourself.
 ///
-/// **Your mission:** Build applyRepeats(text): accept stripped whole numbers 1–12 inclusive, store the
-/// accepted candidate in repeats and return true. On a typo or out-of-range integer, return false and
-/// preserve the old repeats. The 288×288 preview must visibly change pattern density.
+/// **Your mission:** Add denser to double the current repeat count and sparser to halve it only when it
+/// is even. Commands ignore case and surrounding whitespace. Keep numeric choices 1–12. Reject a typo,
+/// an odd halving or any result outside 1–12 without changing the live pattern. A command is relative
+/// to the last accepted setting, not always the initial one.
 ///
-/// **Today you learn:** Build a deliberate input boundary: distinguish conversion, validation and
-/// committing a live setting.
+/// **Today you learn:** Explore the boundary between text, a proposed value and a committed live
+/// setting. Named commands and numeric text share validation but take different conversion paths.
 ///
-/// Run the program, then click tile cells to switch ink on or off; enter 3 and click Repeats to
-/// change the pattern density. Clear resets the tile.
-boolean applyRepeats(String text) {
-    try {
-        int candidate = Integer.parseInt(text.strip());
-        if (candidate < 1 || candidate > 12) return false;
-        repeats = candidate;
-        return true;
-    } catch (NumberFormatException invalid) {
-        return false;
-    }
-}
+/// Draw an asymmetric tile. Enter 3 and click Repeats, then try denser, denser, sparser. The starter
+/// refuses those words; your command tool must visibly produce densities 6, 12, 6. Clear resets the
+/// drawing, not the density.
 
-// <editor-fold defaultstate="collapsed" desc="Recall · F31">
-/// ### Text conversion and valid values are different questions
-///
-/// A number field starts as text. Conversion can fail because no number was written; validation can
-/// reject a perfectly readable number. Decide the two policies separately.
-///
-/// ```java
-/// int readZoom(String text) {
-///     try {
-///         int zoom = Integer.parseInt(text.strip());
-///         if (zoom < 1 || zoom > 4) throw new IllegalArgumentException("Zoom: 1..4");
-///         return zoom;
-///     } catch (NumberFormatException typo) {
-///         return 2;
-///     }
-/// }
-/// ```
-///
-/// Trace `" 3 "`: strip removes surrounding whitespace, parseInt produces 3, bounds accept it. `"oops"`
-/// cannot convert, so catch returns 2. `"7"` converts successfully but fails validation; the explicitly
-/// thrown IllegalArgumentException leaves this method. Catching only NumberFormatException keeps those
-/// paths distinct.
-///
-/// For a decimal, use Double.parseDouble; also consider NaN and infinity, which are readable but not
-/// finite numbers. For an interactive setting, parse into a local candidate before changing the stored
-/// field. Predict the path for `"0"`, `"two"` and `"4"`. Which inputs should preserve the previous live
-/// setting?
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read this part
-///
-/// The live field repeats starts at 6. Parse into a local candidate so refusal cannot damage the
-/// current setting. Here both format and range failures return false; unlike the tree task, a bad range
-/// does not throw. The supplied render(repeats) fits that many tile repeats across the same preview, so
-/// 3 and 9 genuinely look different.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Keep the proposed number separate from the currently visible setting.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Only a fully accepted candidate may reach the repeats field.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Try parsing; return false for a bad range or format; otherwise assign the candidate and return true.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
-/// Draw an asymmetric 8×8 tile and compare three versus nine repeats. Then try offsetting every other
-/// row of stamps in render() to create a brick-like fabric pattern.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="expanded" desc="Program · explore the rules">
 int[][] tile = new int[8][8];
 int[] palette = {0xFFFFFF, 0x182030};
 JButton[][] buttons = new JButton[8][8];
@@ -110,6 +47,26 @@ BufferedImage render(int repeats) {
         }
     }
     return image;
+}
+
+boolean applyRepeats(String text) {
+    String command = text.strip();
+    try {
+        int candidate;
+        if (command.equalsIgnoreCase("denser")) {
+            candidate = repeats * 2;
+        } else if (command.equalsIgnoreCase("sparser")) {
+            if (repeats % 2 != 0) return false;
+            candidate = repeats / 2;
+        } else {
+            candidate = Integer.parseInt(command);
+        }
+        if (candidate < 1 || candidate > 12) return false;
+        repeats = candidate;
+        return true;
+    } catch (NumberFormatException invalid) {
+        return false;
+    }
 }
 
 void refresh() {
@@ -183,6 +140,74 @@ void main() {
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
+
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F31">
+/// ### Text conversion and valid values are different questions
+///
+/// A number field starts as text. Conversion can fail because no number was written; validation can
+/// reject a perfectly readable number. Decide the two policies separately.
+///
+/// ```java
+/// int readZoom(String text) {
+///     try {
+///         int zoom = Integer.parseInt(text.strip());
+///         if (zoom < 1 || zoom > 4) throw new IllegalArgumentException("Zoom: 1..4");
+///         return zoom;
+///     } catch (NumberFormatException typo) {
+///         return 2;
+///     }
+/// }
+/// ```
+///
+/// Trace `" 3 "`: strip removes surrounding whitespace, parseInt produces 3, bounds accept it. `"oops"`
+/// cannot convert, so catch returns 2. `"7"` converts successfully but fails validation; the explicitly
+/// thrown IllegalArgumentException leaves this method. Catching only NumberFormatException keeps those
+/// paths distinct.
+///
+/// For a decimal, use Double.parseDouble; also consider NaN and infinity, which are readable but not
+/// finite numbers. For an interactive setting, parse into a local candidate before changing the stored
+/// field. Predict the path for `"0"`, `"two"` and `"4"`. Which inputs should preserve the previous live
+/// setting?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Read this code">
+/// ### Observe, then trace the flow
+///
+/// Trace the text from the button through conversion to a possible setting and finally to the live
+/// preview. An intentional word is not a malformed number: recognise it before numeric parsing. A
+/// relative command reads the current accepted value. Work on a local candidate so a refused command
+/// cannot damage the previous picture. Odd/even uses remainder: a whole number divided by two has
+/// remainder zero exactly when it is even.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Experiment and replay">
+/// Draw one off-centre mark and execute the planned 3 → denser → denser → sparser sequence. Compare
+/// each visible density with the plan. Try denser at twelve, sparser at three and a typo; the previous
+/// picture must remain. Finally enter an ordinary number again.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Write the expected density after each of 3, denser, denser, sparser. Then predict one more denser
+/// from twelve.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Find where the Repeats button converts text. Recognise the two words before the existing integer
+/// parser; keep one shared range check afterwards.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Find applyRepeats. Compute a local candidate from repeats for denser/sparser, refuse odd halving,
+/// otherwise parse the number. Commit only a candidate inside 1–12 and preserve the old value on every
+/// refusal.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Invent a reset-density command with your favourite sparse setting. Decide whether it should also
+/// erase the tile, then make that distinction clear in the interface.
+// </editor-fold>
+
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
 /// ## An unfamiliar piece of Java?

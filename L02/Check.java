@@ -27,8 +27,9 @@ class Check {
         run("M08_PokerDice", "L02.08 PokerDice · F06", () -> M08_PokerDiceTest.main(new String[0]));
         run("M09_SonarTreasureHunt", "L02.09 SonarTreasureHunt · F06", () -> M09_SonarTreasureHuntTest.main(new String[0]));
         run("M10_MagicNumberCards", "L02.10 MagicNumberCards · F06", () -> M10_MagicNumberCardsTest.main(new String[0]));
+        run("M11_NumberMachine", "L02.11 NumberMachine · F04", () -> M11_NumberMachineTest.main(new String[0]));
         if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " still need repair.");
+        IO.println(checked + " missions; " + failed + " mission goals remaining.");
         if (failed > 0) System.exit(1);
     }
 
@@ -96,24 +97,32 @@ class M02_MiniGolfTest {
 @SuppressWarnings("unchecked")
 class M03_BouncingBallsTest {
     static int checks;
-
     static void check(boolean okay, String reason) {
         checks++;
-        if (!okay) {
-            throw new AssertionError("L02.03 F04: " + reason);
-        }
+        if (!okay) throw new AssertionError(reason);
     }
-
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("M03_BouncingBalls");
-        check(Math.abs(((double) Reflect.call(game, "bounceSpeed", 4)) - 3) < 1e-8, "a wall bounce retains three quarters of speed");
-        check(Math.abs(((double) Reflect.call(game, "bounceSpeed", -8)) - 6) < 1e-8, "the supplied magnitude conversion must retain a fraction");
-        check(((double) Reflect.call(game, "bounceSpeed", 0)) == 0, "zero speed remains zero");
-        Reflect.call(game, "restart");
-        Reflect.call(game, "add", 11, 100, -4, 0);
-        Reflect.call(game, "step");
-        check(((double) Reflect.call(((java.util.ArrayList<Object>) Reflect.get(game, "balls")).getFirst(), "vx")) > 2.9, "the real ball reverses away from the left wall");
-        System.out.println("PASS " + checks + " checks");
+        var p=Reflect.create("M03_BouncingBalls");
+        for (double value : new double[]{-8,-1.5,0,3.25,8}) {
+            check(Math.abs((double)Reflect.call(p,"bounceSpeed",value)-Math.abs(value))<1e-8,"Elastic walls retain the full incoming magnitude: "+value);
+        }
+        Reflect.call(p,"restart");
+        Reflect.call(p,"add",11.0,100.0,-4.0,0.0);
+        Reflect.call(p,"step");
+        Object left=((List<?>)Reflect.get(p,"balls")).getFirst();
+        check(Math.abs((double)Reflect.call(left,"vx")-3.992)<1e-8,"A real left-wall bounce reverses the horizontal direction without extra loss.");
+        Reflect.call(p,"restart");
+        int width=(int)Reflect.get(p,"WIDTH");
+        Reflect.call(p,"add",width-11.0,100.0,4.0,0.0);
+        Reflect.call(p,"step");
+        Object right=((List<?>)Reflect.get(p,"balls")).getFirst();
+        check(Math.abs((double)Reflect.call(right,"vx")+3.992)<1e-8,"A real right-wall bounce keeps the opposite outgoing sign.");
+        Reflect.call(p,"restart");
+        Reflect.call(p,"add",100.0,11.0,0.0,-4.0);
+        Reflect.call(p,"step");
+        Object ceiling=((List<?>)Reflect.get(p,"balls")).getFirst();
+        check(Math.abs((double)Reflect.call(ceiling,"vy")-3.85)<1e-8,"The ceiling shares the elastic rule; gravity is applied before collision.");
+        IO.println("PASS " + checks + " checks");
     }
 }
 
@@ -188,23 +197,22 @@ class M05_MadLibsStoryMachineTest {
 @SuppressWarnings("unchecked")
 class M07_CodebreakerTest {
     static int checks;
-
     static void check(boolean okay, String reason) {
         checks++;
-        if (!okay) {
-            throw new AssertionError("L02.07 F06: " + reason);
-        }
+        if (!okay) throw new AssertionError(reason);
     }
-
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("M07_Codebreaker");
-        Reflect.set(game, "secret", new String("1234"));
-        check(((boolean) Reflect.call(game, "matchesCode", new String("1234"))), "equal code text must match even when stored as different String objects");
-        check(!((boolean) Reflect.call(game, "matchesCode", "1235")), "a different final digit must not match");
-        Reflect.set(game, "attempts", 0);
-        Reflect.set(game, "won", false);
-        check(((boolean) Reflect.call(game, "submit", new String("1234"))) && ((boolean) Reflect.get(game, "won")), "the actual matching guess must end the round");
-        System.out.println("PASS " + checks + " checks");
+        var p=Reflect.create("M07_Codebreaker");
+        Reflect.set(p,"secret",new String("6543"));
+        check((boolean)Reflect.call(p,"matchesCode",new String("1111")),"The service code must win without replacing the hidden code.");
+        check((boolean)Reflect.call(p,"matchesCode",new String("6543")),"Ordinary text-equal guesses still win.");
+        check(!(boolean)Reflect.call(p,"matchesCode","6542"),"Other wrong guesses still fail.");
+        check((boolean)Reflect.call(p,"submit","1111") && (boolean)Reflect.get(p,"won"),"A real accepted service guess wins the round.");
+        check(((String)Reflect.get(p,"secret")).equals("6543") && (int)Reflect.get(p,"attempts")==1,"Cheating must not replace the code or bypass the accepted attempt.");
+        Reflect.call(p,"reset");
+        check(!(boolean)Reflect.call(p,"submit","abcd") && (int)Reflect.get(p,"attempts")==0,"Four-digit validation remains in force.");
+        check((boolean)Reflect.call(p,"submit","1111") && (boolean)Reflect.get(p,"won"),"The service code survives a new random round.");
+        IO.println("PASS " + checks + " checks");
     }
 }
 
@@ -272,6 +280,23 @@ class M10_MagicNumberCardsTest {
         boolean[] answers = {((boolean) Reflect.call(game, "yesAnswer", "Y")), false, true, false, false, false};
         check(((int) Reflect.call(game, "reveal", answers)) == 5, "the actual trick must include the first yes card");
         System.out.println("PASS " + checks + " checks");
+    }
+}
+
+class M11_NumberMachineTest {
+    static int checks;
+    static void check(boolean okay, String reason) {
+        checks++;
+        if (!okay) throw new AssertionError(reason);
+    }
+    public static void main(String[] args) throws Exception {
+        var p=Reflect.create("M11_NumberMachine");
+        for(int n=-20;n<=20;n++) {
+            int expected=n*n+1;
+            check((int)Reflect.call(p,"machine",n)==expected,"Keep the reference machine unchanged.");
+            check((int)Reflect.call(p,"imitation",n)==expected,"Your copy disagrees for input "+n);
+        }
+        IO.println("PASS " + checks + " checks");
     }
 }
 

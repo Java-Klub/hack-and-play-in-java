@@ -30,7 +30,7 @@ class Check {
         run("M11_Hexapawn", "L03.11 Hexapawn · F13", () -> M11_HexapawnTest.main(new String[0]));
         run("M12_ToadsAndFrogs", "L03.12 ToadsAndFrogs · F13", () -> M12_ToadsAndFrogsTest.main(new String[0]));
         if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " still need repair.");
+        IO.println(checked + " missions; " + failed + " mission goals remaining.");
         if (failed > 0) System.exit(1);
     }
 
@@ -50,25 +50,22 @@ class Check {
 @SuppressWarnings("unchecked")
 class M02_NimTest {
     static int checks;
-
     static void check(boolean okay, String reason) {
         checks++;
-        if (!okay) {
-            throw new AssertionError("L03.02 F07: " + reason);
-        }
+        if (!okay) throw new AssertionError(reason);
     }
-
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("M02_Nim");
-        Reflect.set(game, "stones", 7);
-        check(((int) Reflect.call(game, "botMove")) == 3, "seven stones need the nonzero remainder branch");
-        Reflect.set(game, "stones", 8);
-        check(((int) Reflect.call(game, "botMove")) == 1, "a multiple of four still needs a legal fallback move");
-        Reflect.set(game, "stones", 1);
-        check(((int) Reflect.call(game, "botMove")) == 1, "one remaining stone is taken");
-        Reflect.set(game, "stones", 0);
-        check(((int) Reflect.call(game, "botMove")) == 0, "an empty pile has no bot move");
-        System.out.println("PASS " + checks + " checks");
+        var p=Reflect.create("M02_Nim");
+        Reflect.set(p,"stones",13);
+        for (int[] example:new int[][]{{0,0},{1,1},{2,2},{3,3},{7,3},{8,1},{10,2},{12,1}}) {
+            check((int)Reflect.call(p,"advice",example[0])==example[1],"Coach must use its requested pile: "+example[0]);
+            check((int)Reflect.get(p,"stones")==13,"Advice does not take actual stones.");
+        }
+        Reflect.set(p,"stones",7);
+        check((int)Reflect.call(p,"botMove")==3,"The original bot remains unchanged.");
+        Reflect.set(p,"stones",8);
+        check((int)Reflect.call(p,"botMove")==1,"The original fallback remains legal.");
+        IO.println("PASS " + checks + " checks");
     }
 }
 
@@ -204,24 +201,30 @@ class M06_ChopsticksTest {
 @SuppressWarnings("unchecked")
 class M07_HanoiTest {
     static int checks;
-
     static void check(boolean okay, String reason) {
         checks++;
-        if (!okay) {
-            throw new AssertionError("L03.07 F08: " + reason);
-        }
+        if (!okay) throw new AssertionError(reason);
     }
-
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("M07_Hanoi");
-        Reflect.call(game, "reset");
-        check(((boolean) Reflect.call(game, "move", 0, 1)), "a small disc may move onto an empty peg");
-        int before = ((int) Reflect.get(game, "moves"));
-        check(!((boolean) Reflect.call(game, "move", 0, 1)), "a larger disc must be rejected above a smaller disc");
-        check(((int) Reflect.get(game, "moves")) == before && ((int[]) Reflect.get(game, "sizes"))[0] == 2 && ((int[]) Reflect.get(game, "sizes"))[1] == 1, "rejected moves preserve both stacks and the counter");
-        check(((boolean) Reflect.call(game, "move", 0, 2)) && ((boolean) Reflect.call(game, "move", 1, 2)), "a smaller disc may land above a larger one");
-        check(!((boolean) Reflect.call(game, "move", -1, 0)) && !((boolean) Reflect.call(game, "move", 0, 3)) && !((boolean) Reflect.call(game, "move", 0, 0)), "outer guards still reject invalid or identical pegs");
-        System.out.println("PASS " + checks + " checks");
+        var p=Reflect.create("M07_Hanoi");
+        Reflect.call(p,"reset");
+        String[] lines=((String)Reflect.call(p,"demonstration")).strip().split("\\R");
+        check(lines.length==2,"The shortest witness contains two attempts, got "+lines.length);
+        for(int i=0;i<2;i++) {
+            String[] pair=lines[i].strip().toUpperCase(Locale.ROOT).split("\\s+");
+            check(pair.length==2 && pair[0].matches("[ABC]") && pair[1].matches("[ABC]"),"Use real peg commands, not invalid syntax.");
+            int from=pair[0].charAt(0)-'A',to=pair[1].charAt(0)-'A';
+            int[] sizes=((int[])Reflect.get(p,"sizes"));
+            int[][] pegs=((int[][])Reflect.get(p,"pegs"));
+            check(from!=to && sizes[from]>0,"Each attempt needs a real movable top disc.");
+            if(i==1)check(sizes[to]>0 && pegs[from][sizes[from]-1]>pegs[to][sizes[to]-1],"The second attempt must expose the larger-on-smaller rule.");
+            int[][] before=Arrays.stream(pegs).map(int[]::clone).toArray(int[][]::new);
+            boolean moved=(boolean)Reflect.call(p,"move",from,to);
+            check(moved==(i==0),"Only the first attempt is accepted.");
+            if(i==1)check(Arrays.deepEquals(before,(int[][])Reflect.get(p,"pegs")),"Rejection preserves both towers.");
+        }
+        check((int)Reflect.get(p,"moves")==1,"Rejected evidence is not counted as a move.");
+        IO.println("PASS " + checks + " checks");
     }
 }
 
@@ -250,25 +253,23 @@ class M08_SudokuTest {
 @SuppressWarnings("unchecked")
 class M09_SOSTest {
     static int checks;
-
     static void check(boolean okay, String reason) {
         checks++;
-        if (!okay) {
-            throw new AssertionError("L03.09 F13: " + reason);
-        }
+        if (!okay) throw new AssertionError(reason);
     }
-
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("M09_SOS");
-        check(((int) Reflect.call(game, "gainedPoints", 2, 3)) == 1, "one new SOS adds one point rather than rescoring old triples");
-        check(((int) Reflect.call(game, "gainedPoints", 3, 3)) == 0, "no new triple adds no points");
-        check(((int) Reflect.call(game, "gainedPoints", 0, 2)) == 2, "two simultaneous new triples add two points");
-        Reflect.call(game, "reset");
-        Reflect.set(game, "board", "SOS......".toCharArray());
-        Reflect.set(game, "moves", 3);
-        Reflect.call(game, "command", "4 S");
-        check(((int[]) Reflect.get(game, "scores"))[1] == 0 && ((int) Reflect.get(game, "player")) == 2, "an actual non-scoring move must not score the old SOS again");
-        System.out.println("PASS " + checks + " checks");
+        var p=Reflect.create("M09_SOS");
+        check((int)Reflect.call(p,"gainedPoints",3,3)==0,"Existing lines are not rewarded again.");
+        check((int)Reflect.call(p,"gainedPoints",2,3)==1,"A single new line keeps its reward.");
+        check((int)Reflect.call(p,"gainedPoints",1,3)==4,"A double line earns the combo reward four.");
+        check((int)Reflect.call(p,"gainedPoints",0,3)==6,"The combo doubles all new lines, not the old total.");
+        Reflect.call(p,"reset");
+        Reflect.set(p,"board","S.S...S.S".toCharArray());
+        Reflect.set(p,"moves",4);
+        Reflect.call(p,"command","5 O");
+        check(((int[])Reflect.get(p,"scores"))[1]==4 && (int)Reflect.call(p,"triples")==2,"The actual centre move awards two new lines as four points.");
+        check((int)Reflect.get(p,"player")==1,"The existing scoring bonus turn remains.");
+        IO.println("PASS " + checks + " checks");
     }
 }
 

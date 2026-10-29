@@ -5,27 +5,18 @@ import java.awt.image.BufferedImage;
 
 /// # L11.04 · MandelbrotPostcards
 ///
-/// Send a postcard from the edge of the Mandelbrot set, where changing scale reveals new detail. Seeds
-/// should give the same landscape different, repeatable colour moods.
+/// A postcard arrived without its colour recipe. Its landscape is easy to redraw; the little colour
+/// strip is your clue to the missing seed.
 ///
-/// **Your mission:** Create palette: build 16 bright colours with one Random created from seed. Each
-/// colour uses the next random integer hue from 0 through 359, divided by 360.0, with saturation 0.8
-/// and brightness 1. Return the array for the supplied fractal renderer.
+/// **Your mission:** A mystery palette came from one seed between 0 and 255. Build a finder that
+/// returns every seed whose palette begins with the supplied colour sample, in increasing order. An
+/// impossible sample returns no candidates. Keep the normal postcard generator working; use your tool
+/// to choose a seed for the picture rather than guessing it.
 ///
-/// **Today you learn:** Create one seeded random generator and consume a reproducible sequence while
-/// constructing a complete palette.
+/// **Investigation:** Solve a deterministic mystery by building a bounded search tool.
 ///
-/// Run the program, then choose a palette seed and horizontal span, or press Enter for 42 and
-/// 3.2. Close the picture before rerunning. The same seed repeats the palette; span changes the view.
-int[] palette(long seed) {
-    var random = new Random(seed);
-    int[] colours = new int[16];
-    for (int i = 0; i < colours.length; i++) {
-        float hue = random.nextInt(360) / 360.0F;
-        colours[i] = Color.HSBtoRGB(hue, 0.8F, 1);
-    }
-    return colours;
-}
+/// Read the mystery sample and candidate report, then choose a palette seed and span. The picture
+/// shows the reference colour strip. Enter keeps the normal defaults; /q quits.
 
 // <editor-fold defaultstate="collapsed" desc="Your next version · optional">
 /// ### Make it yours
@@ -58,35 +49,52 @@ int[] palette(long seed) {
 /// Predict: which integers can `nextInt(3)` return, and can it return 3?
 // </editor-fold>
 
-// <editor-fold defaultstate="expanded" desc="Read this code">
-/// ### Reproducibility is a sequence, not one nearly equal draw
+// <editor-fold defaultstate="expanded" desc="Investigator notebook · worked example">
+/// ### Exhaust a small space; do not confuse a clue with an answer
 ///
-/// Create one generator before filling the array. Each nextInt(360) advances it and returns 0..359.
-/// Recreating Random(seed) inside the loop would repeat its first hue in every slot. A neutral
-/// example: `var r = new Random(7); int a = r.nextInt(6); int b = r.nextInt(6);` makes two draws;
-/// another generator seeded 7 repeats the pair. It need not make a and b different. Predict what
-/// happens when only the second generator is seeded 8.
+/// Seeded generation is repeatable when calls occur in the same order. A search can regenerate
+/// candidates and compare their observable results, without reversing Random's internal mathematics.
 ///
-/// HSBtoRGB converts hue, saturation and brightness into the packed colour expected by setRGB. The
-/// supplied renderer selects a palette slot from a point's escape count and keeps interior points
-/// black. The seed colours the landscape; it does not move it. span is the visible horizontal width
-/// and centreX/centreY locate its centre. Those are the controls for investigating a smaller region.
+/// ```java
+/// var matches = new ArrayList<Integer>();
+/// for (int n = 0; n <= 20; n++) {
+///     if (n * n % 10 == 6) matches.add(n);
+/// }
+/// ```
+///
+/// This neutral search finds 4, 6, 14 and 16. Predict the result if the upper bound becomes 10.
+/// Return all matches: a short clue may identify several possibilities. A colour sample is a prefix,
+/// not necessarily a whole palette. Compare its entries to the beginning of each generated array and
+/// stop comparing that candidate at the first mismatch. Equal individual colours do not prove equal
+/// palettes; the sequence is the evidence.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Make the Random once, then traverse all 16 slots.
+/// Find the operation that turns a seed into the complete colour sequence. Check where the mystery
+/// sample reaches the report.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Use nextInt(360); divide by a fractional 360 before converting HSB to RGB.
+/// The unfinished matchingSeeds tool sits beside main. It can reuse palette without changing escape
+/// or rendering.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Store one HSBtoRGB result per slot and return the completed array. The renderer already calls
-/// palette.
+/// Try seeds 0..255, compare each supplied sample entry to that palette prefix, and collect every
+/// matching long seed. Keep the supplied sample-length guard.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="expanded" desc="Program to explore">
+int[] palette(long seed) {
+    var random = new Random(seed);
+    int[] colours = new int[16];
+    for (int i = 0; i < colours.length; i++) {
+        float hue = random.nextInt(360) / 360.0F;
+        colours[i] = Color.HSBtoRGB(hue, 0.8F, 1);
+    }
+    return colours;
+}
+
 BufferedImage render(long seed, double span) {
     if (!Double.isFinite(span) || span <= 1.0E-5 || span > 6 || !Double.isFinite(centerX + centerY)) {
         throw new IllegalArgumentException("Span must be 0.00001..6.");
@@ -142,19 +150,48 @@ void showImages(String title, String[] captions, java.awt.image.BufferedImage[] 
 }
 
 
+java.util.List<Long> matchingSeeds(int[] sample) {
+    if (sample.length < 1 || sample.length > 16) {
+        throw new IllegalArgumentException("Supply 1..16 palette colours.");
+    }
+    var matches = new java.util.ArrayList<Long>();
+    for (long seed = 0; seed <= 255; seed++) {
+        int[] colours = palette(seed);
+        boolean match = true;
+        for (int i = 0; i < sample.length; i++) {
+            if (sample[i] != colours[i]) {
+                match = false;
+                break;
+            }
+        }
+        if (match) matches.add(seed);
+    }
+    return matches;
+}
+
+BufferedImage paletteStrip(int[] colours) {
+    var image = new BufferedImage(colours.length * 30, 40, BufferedImage.TYPE_INT_RGB);
+    for (int y = 0; y < image.getHeight(); y++) {
+        for (int x = 0; x < image.getWidth(); x++) image.setRGB(x, y, colours[x / 30]);
+    }
+    return image;
+}
+
 void main() {
+    int[] mystery = {-13420801, -13369474, -52415, -13369522, -13369416, -27085, -13369386, -6684877, -5112013, -52256, -13369355, -35789, -52405, -6684877, -13369372, -13409281};
     try {
+        IO.println("Mystery palette: " + java.util.Arrays.toString(mystery));
+        IO.println("Matching seeds 0..255: " + matchingSeeds(mystery));
         String seedText = IO.readln("Palette seed [42], /q to quit: ");
         if (seedText == null || seedText.strip().equalsIgnoreCase("/q")) return;
-        String spanText = IO.readln("Horizontal span [3.2], smaller means a closer view, /q to quit: ");
+        String spanText = IO.readln("Horizontal span [3.2], /q to quit: ");
         if (spanText == null || spanText.strip().equalsIgnoreCase("/q")) return;
         long seed = seedText.isBlank() ? 42 : Long.parseLong(seedText.strip());
-        double span = spanText.isBlank() ? 3.2 : Double.parseDouble(spanText.strip());
-        var image = render(seed, span);
-        IO.println("Centre: " + centerX + ", " + centerY + "; span: " + span + "; palette seed: " + seed);
-        showImages("Mandelbrot Postcards", new String[]{"Seed " + seed + ", span " + span}, new BufferedImage[]{image});
+        double size = spanText.isBlank() ? 3.2 : Double.parseDouble(spanText.strip());
+        showImages("Mandelbrot Mystery", new String[]{"Mystery palette", "Chosen seed " + seed},
+                   new BufferedImage[]{paletteStrip(mystery), render(seed, size)});
     } catch (Exception failure) {
-        IO.println("Cannot draw this view: " + failure.getMessage());
+        IO.println("Cannot draw this experiment: " + failure.getMessage());
     }
 }
 // </editor-fold>

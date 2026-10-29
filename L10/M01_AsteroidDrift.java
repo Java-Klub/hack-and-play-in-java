@@ -10,20 +10,18 @@ import javax.swing.Timer;
 
 /// # L10.01 · AsteroidDrift
 ///
-/// Steer a little ship through drifting asteroids and carve a safe path with shots. The fire control has
-/// gone silent even though the rest of the flight still works.
+/// Fly a tiny ship through five drifting rocks. The standard flight already works; this time you are
+/// its control hacker rather than its repair mechanic.
 ///
-/// **Your mission:** Holding Space produces no shots because the stored firing action does nothing.
-/// Reconnect the delayed action without firing during its creation.
+/// **Your mission:** Rewire this working flight: F must fire, Space must brake by multiplying both
+/// velocity components by 0.92 each active tick, and arrows must keep steering. Shooting still obeys
+/// cooldown. First sketch the route from a key press to a new shot; find the actual route in the
+/// source before editing.
 ///
-/// **Today you learn:** A callback is code packaged for a later event. firingAction returns that package;
-/// the game loop decides when to run it while Space is held.
+/// **Investigation:** Trace an input through delayed actions, then hack the controls.
 ///
-/// Run the program, then steer and thrust with the arrow keys, hold Space to fire and press R
-/// to restart the flight.
-Runnable firingAction() {
-    return this::fire;
-}
+/// Start with an arrow. Test Space and F, then compare them again after the hack. R resets; the
+/// window shows the controls implemented by your current version.
 
 // <editor-fold defaultstate="collapsed" desc="Your next version · optional">
 /// ### Make it yours
@@ -53,32 +51,49 @@ Runnable firingAction() {
 /// Predict: what prints if the last line becomes two consecutive calls to `cheer.run()`?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Investigator notebook · worked example">
+/// ### Follow a message, not just a method name
 ///
-/// - `Runnable` — A JDK role for an action with no arguments and no returned result.
-/// - `firingAction()` — Creates an action; its name does not mean the shot should happen immediately.
-/// - `() -> {}` — A lambda with no parameters and an empty body: running it currently changes nothing.
+/// A key listener may store a boolean now while a timer reads it later. The timer can invoke a
+/// Runnable, whose body calls another operation. Draw those arrows as you read: definition is
+/// different from execution.
 ///
-/// ### What the prepared part already does
+/// ```java
+/// boolean requested;
+/// Runnable signal = () -> IO.println("Ping");
+/// void press() { requested = true; }
+/// void tick() {
+///     if (requested) signal.run();
+/// }
+/// ```
 ///
-/// The supplied fire method handles cooldown and bullet creation. The held-key update runs fireCallback,
-/// then advances shots and asteroids; the Swing window handles keys and stops its timer when closed.
+/// press alone prints nothing; one tick prints Ping, and another tick prints it again because
+/// requested stayed true. Predict the result if tick also sets requested to false after running
+/// signal. A KeyEvent constant such as VK_P identifies the physical P key. Keep this experiment's
+/// event, stored state and callback responsibilities separate; changing the callback body alone does
+/// not change which key requests it.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// A Runnable represents an action, not its result.
+/// Begin at keyPressed, then follow the stored key values into the timer update. Mark which call
+/// actually creates a Shot.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Return a method reference or a lambda that calls fire later.
+/// The held-key lookup in step currently requests firing with VK_SPACE. The callback eventually
+/// reaches fire; that operation owns cooldown.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Keep fire’s cooldown/lost guards; do not copy those rules into the callback.
+/// Request firing with VK_F, let F start the flight, and give held Space its two velocity
+/// multiplications. Update the visible controls; keep fire and reset guards.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="expanded" desc="Program to explore">
+Runnable firingAction() {
+    return this::fire;
+}
+
 final int WIDTH = 600, HEIGHT = 420;
 
 record Rock(double x, double y, double vx, double vy, double radius) {
@@ -141,12 +156,16 @@ void step() {
         vx *= 5 / speed;
         vy *= 5 / speed;
     }
+    if (held[KeyEvent.VK_SPACE]) {
+        vx *= 0.92;
+        vy *= 0.92;
+    }
     x = wrap(x + vx, WIDTH);
     y = wrap(y + vy, HEIGHT);
     if (cooldown > 0) {
         cooldown--;
     }
-    if (held[KeyEvent.VK_SPACE]) {
+    if (held[KeyEvent.VK_F]) {
         fireCallback.run();
     }
     for (int i = 0; i < rocks.size(); i++) {
@@ -206,7 +225,7 @@ void draw(Graphics2D g) {
     g.setColor(lost ? Color.RED : Color.CYAN);
     g.draw(ship);
     g.setColor(Color.WHITE);
-    g.drawString(!started ? "Press an arrow or Space to launch" : lost ? "Ship lost! R: retry" : rocks.isEmpty() ? "All five cleared! R: replay" : "Rocks: " + rocks.size(), 15, 22);
+    g.drawString(!started ? "Press an arrow or F to launch" : lost ? "Ship lost! R: retry" : rocks.isEmpty() ? "All five cleared! R: replay" : "Rocks: " + rocks.size(), 15, 22);
 }
 
 boolean[] held = new boolean[512];
@@ -223,7 +242,7 @@ void key(int code, boolean pressed) {
         restart();
         clearKeys();
     }
-    if (pressed && (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_UP || code == KeyEvent.VK_SPACE)) {
+    if (pressed && (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_UP || code == KeyEvent.VK_F)) {
         started = true;
     }
 }
@@ -270,7 +289,7 @@ void showWindow() {
     });
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.add(panel);
-    var help = new JLabel("<html><div style=\"text-align:center\">Arrows: turn / thrust   Space: fire   R: restart</div></html>", SwingConstants.CENTER);
+    var help = new JLabel("<html><div style=\"text-align:center\">Arrows: turn / thrust   F: fire   Space: brake   R: restart</div></html>", SwingConstants.CENTER);
     help.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
     frame.add(help, BorderLayout.SOUTH);
     frame.pack();

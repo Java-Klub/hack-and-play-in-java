@@ -6,20 +6,25 @@ import java.awt.GridLayout;
 
 /// # L05.01 · MemoryPairs
 ///
-/// Flip two cards and remember where their partners hide. The game is unfair when different cards all
-/// show the same face.
+/// Flip two cards and remember where their partners hide. An X-ray can help a beginner, but deciding
+/// exactly what it may reveal changes the challenge.
 ///
-/// **Your mission:** No chosen card reveals its face. Build visible(index): return that slot’s card
-/// when it is matched, first or second; otherwise return the hidden marker zero. Different slots must
-/// read their own stored values.
 ///
-/// **Today you learn:** Arrays: related arrays describe the same numbered positions. Read the requested
-/// position without changing the rule that decides whether it is visible.
+/// **Your mission:** Turn the all-seeing X-ray into a partner finder. With one card selected, X-ray
+/// should reveal only cards with that same face, alongside normally visible cards. With no selection it
+/// reveals nothing extra. Toggle it off or play another valid card to hide the extra information. It
+/// must never mark a pair, spend an attempt or alter the deck.
 ///
-/// Click a covered card. The unfinished viewer still shows it as covered even though it has become the
-/// first selected position. Build the visibility decision before trying to remember pairs.
+/// **Today you learn:** An array lookup turns a selected position into a value; comparing positions is
+/// different from comparing the values stored there.
+///
+/// Select one card and toggle X-ray. Notice which private faces leak. Turn it off, then try it before
+/// selecting any card in a fresh round.
 int visible(int index) {
     if (matched[index] || index == first || index == second) {
+        return cards[index];
+    }
+    if (xray && first >= 0 && cards[index] == cards[first]) {
         return cards[index];
     }
     return 0;
@@ -44,37 +49,32 @@ int visible(int index) {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Read this code">
-/// Parallel arrays use the same position number: cards[index] is its face, matched[index] says whether
-/// its pair was found. first and second store the currently selected positions.
+/// A view can reveal information without changing the matching rules. Follow a card click and an X-ray
+/// click separately: which one calls play, and which one only refreshes labels?
 ///
-/// | cards | first | requested index | matched there | answer |
-/// | --- | --- | --- | --- | --- |
-/// | 2, 5, 2, 5 | 1 | 0 | false | 0 |
-/// | 2, 5, 2, 5 | 1 | 1 | false | 5 |
-/// | 2, 5, 2, 5 | 1 | 2 | true | 2 |
-///
-/// Use one decision to distinguish public faces from hidden ones. In the revealing branch, the
-/// requested index must select both related facts. Predict the last slot when second is 3. Matching and
-/// turn handling are supplied; visible only answers what may be shown.
+/// For separate cards [7, 3, 7, 5], selected position 2 contains value 7, so position 0 is its partner.
+/// Position 2 and value 7 are not interchangeable. Predict the matching position if selection becomes
+/// 1. No selection uses -1; that marker cannot be used as an array index. Preserve normal visibility
+/// for matched and currently selected cards.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// List the three independent reasons a card may be visible.
+/// Trace the button to the rule deciding what a face may show, rather than changing card values.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// When any reason holds, read cards at the requested index; otherwise keep zero.
+/// visible already handles ordinary visibility. Its xray branch currently reveals every cards[index];
+/// first gives the selected position.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Combine matched[index], first and second with OR, then return the selected card or the hidden
-/// marker.
+/// Permit the extra reveal only when first is valid and cards[index] equals cards[first]. Keep ordinary
+/// visibility and the hidden zero marker.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Make it yours">
-/// Create a beacon card: one chosen position stays visible even before it is selected. Add that one
-/// condition to the visibility rule, then choose a position that helps a beginner without exposing
-/// every pair. Explain which cards remain private.
+/// Design a different fair assistance rule, such as showing only one partner after two failed attempts.
+/// Explain what information it reveals and what it must leave unchanged.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
@@ -82,6 +82,7 @@ int[] cards = new int[12];
 boolean[] matched = new boolean[12];
 int first = -1;
 int second = -1;
+boolean xray;
 int attempts;
 int pairs;
 JButton[] buttons = new JButton[12];
@@ -102,6 +103,7 @@ void reset(long seed) {
     matched = new boolean[12];
     first = -1;
     second = -1;
+    xray = false;
     attempts = 0;
     pairs = 0;
 }
@@ -111,6 +113,7 @@ boolean play(int index) {
     if (index < 0 || index >= cards.length || matched[index] || index == first || index == second || pairs == 6) {
         return false;
     }
+    xray = false;
     if (second != -1) {
         first = -1;
         second = -1;
@@ -141,7 +144,7 @@ void refresh() {
     String guidance = pairs == 6 ? "All pairs found!" : second != -1
             ? "Not a match: click another covered card." : first != -1
             ? "Choose a second card." : "Find matching pairs.";
-    status.setText("<html>" + guidance + "<br>Pairs: " + pairs + "/6. Attempts: " + attempts + "</html>");
+    status.setText("<html>" + guidance + "<br>X-ray: " + (xray ? "on" : "off") + ". Pairs: " + pairs + "/6. Attempts: " + attempts + "</html>");
 }
 
 /// show(): Supplied later topic: Swing button callbacks invoke the model and refresh its visible
@@ -167,7 +170,15 @@ void show() {
     });
     frame.add(status, BorderLayout.NORTH);
     frame.add(grid, BorderLayout.CENTER);
-    frame.add(restart, BorderLayout.SOUTH);
+    var peek = new JButton("X-ray on / off");
+    peek.addActionListener(event -> {
+        xray = !xray;
+        refresh();
+    });
+    var actions = new JPanel();
+    actions.add(peek);
+    actions.add(restart);
+    frame.add(actions, BorderLayout.SOUTH);
     refresh();
     frame.setSize(470, 350);
     frame.setLocationByPlatform(true);

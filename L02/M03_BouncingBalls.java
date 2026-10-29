@@ -9,25 +9,16 @@ import javax.swing.Timer;
 
 /// # L02.03 · BouncingBalls
 ///
-/// Throw several coloured balls into a room and watch gravity and wall rebounds shape their motion.
-/// You can compare gentle and fast throws.
+/// **Your mission · Hack the wall physics:** Make the side walls and ceiling perfectly elastic: each
+/// bounce retains the full incoming speed magnitude in its direction and reverses that direction.
+/// Find their shared energy-loss calculation. Keep the separately softened floor, gravity and mouse
+/// throws unchanged.
 ///
-/// **Your mission · Rebuild a rebound:** Rebuild bounceSpeed in two stages: find three times the supplied
-/// magnitude, then
-/// return one quarter of that intermediate result. Both 8 and -8 must return magnitude 6; zero stays
-/// zero. Do not choose a direction here.
+/// The starter works by its original rules. The check already expects your new goal.
 ///
-/// **Today you learn:** Fractional arithmetic: grouping can make an integer division happen before a
-/// multiplication. Compare an exact whole-number ratio with a fractional ratio, then predict the retained
-/// speed of a ball arriving at speed 4.
-///
-/// Run the program, drag sideways to throw a ball at a wall and watch its rebound; Space pauses
-/// the room and R empties it.
-double bounceSpeed(double speed) {
-    double magnitude = Math.abs(speed);
-    double retained = magnitude * 3;
-    return retained / 4;
-}
+/// Throw sideways towards a wall; Space pauses and R clears the room. Compare the motion before and
+/// after your change. The picture shows motion, not numeric speeds; Check compares exact values at
+/// collisions, separately from gravity between them.
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F04">
 /// Arithmetic uses the operand types at the moment an operation runs. When both operands of `/` are
@@ -51,40 +42,37 @@ double bounceSpeed(double speed) {
 /// Now predict all three results when pages is nine.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Follow three named values
-///
-/// `speed` is the incoming signed value. `magnitude` removes its sign. `retained` names the
-/// intermediate result you are building. Return the final retained magnitude, rather than changing
-/// speed or the ball. The supplied wall handlers use the result with the correct sign.
+// <editor-fold defaultstate="expanded" desc="Explore and experiment">
+/// One calculation answers "how much speed remains?" while its callers choose a direction. Trace a
+/// collision and separate those responsibilities. The ceiling shares this calculation with the side
+/// walls; the floor has its own rule. Math.abs gives the non-negative magnitude: Math.abs(-6) and
+/// Math.abs(6) both give 6. Retaining half of magnitude 8 gives 4. Predict what fraction an elastic
+/// rule must retain. The supplied collision code already handles positions and signs.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
-/// Separate magnitude from sign. Math.abs(-8) is 8; retaining one half gives magnitude 4. The
-/// prepared left and right walls choose the outgoing sign themselves. A local variable can name an
-/// intermediate calculation so you can predict it before returning the final value. What magnitude
-/// should one quarter of 12 retain?
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · search area">
+/// Search the wall branches for the calculation they share.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a concrete route">
+/// Both branches ask bounceSpeed for a magnitude; their assignments choose the sign.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Possible change · reveals the direction">
+/// Return Math.abs(speed) from bounceSpeed so no magnitude is lost. Keep the callers unchanged.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Your own version · optional">
-/// Create a nearly bouncy room and a very soft room by changing the retained fraction. Compare the
-/// same sideways throw. Keep the direction handling in the supplied wall code: your experiment
-/// changes lost energy, not which side of a wall the ball moves towards.
+/// Create a deliberately soft room, then restore the elastic rule. For the same incoming value,
+/// explain which numerical change predicts the different bounce.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// magnitude already stores a nonnegative speed.
-// </editor-fold>
+// <editor-fold defaultstate="collapsed" desc="Program · explore as needed">
+double bounceSpeed(double speed) {
+    return Math.abs(speed);
+}
 
-// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Multiplication followed by division must keep the fractional part.
-// </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Set retained to magnitude * 3 and return retained / 4.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
 final int WIDTH = 640, HEIGHT = 440;
 
 record Ball(double x, double y, double vx, double vy, Color colour) {
@@ -254,8 +242,6 @@ void main() {
     restart();
     SwingUtilities.invokeLater(this::showWindow);
 }
-
-/// Prepared entry points: main, restart, draw, showWindow.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">

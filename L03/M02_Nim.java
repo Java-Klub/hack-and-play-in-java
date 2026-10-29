@@ -1,28 +1,14 @@
 /// # L03.02 · Nim
 ///
-/// Take one, two or three stones from a shared pile and try to take the last one before the bot does.
-/// Watch how leaving a particular pile size changes the bot’s next choice.
+/// **Your mission · Build a tool for winning:** Observe the working bot, infer which pile it wants to
+/// leave, and turn that idea into a coach for the human player. Typing ? must recommend 3 from seven
+/// and 1 from eight. Check also asks the coach about an empty pile: return 0, since no move exists
+/// there. A request only advises: it must not take stones or pass the turn. The bot stays unchanged.
 ///
-/// **Your mission · Teach a bot a strategy:** The bot takes one even when another legal choice is useful.
-/// Repair the two paths in
-/// botMove while keeping the empty-pile case safe.
+/// The starter works by its original rules. The check already expects your new goal.
 ///
-/// **Today you learn:** If/else branching: one condition chooses which result is returned. Compare piles
-/// of seven and eight stones: their remainders differ, so the selected branch should matter.
-///
-/// Run the program and take 2 stones; compare the bot’s next move from 19 stones, then use r to
-/// try the same opening again.
-int botMove() {
-    if (stones == 0) {
-        return 0;
-    }
-    int remainder = stones % 4;
-    if (remainder == 0) {
-        return 1;
-    } else {
-        return remainder;
-    }
-}
+/// Play with 1–3, ask ? for advice, r restarts and q quits. The starter already lets you play against
+/// the bot; its unfinished coach says 0.
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F07">
 /// An `if` asks a boolean question. Its body runs only when that question is true. An `else if` asks
@@ -50,63 +36,54 @@ int botMove() {
 /// Now predict the message at exactly zero degrees.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
-///
-/// - `int botMove()` — A no-input calculation returning one whole-number move; it reads the supplied
-///   stones value.
-/// - `if (stones == 0)` — Evaluate the numeric equality inside parentheses and take this branch only if
-///   the pile is empty.
-/// - `return 0;` — Immediately finish the calculation with no move; later statements in this call do not
-///   run.
-/// - `stones % 4` — The remainder after dividing the pile size by four; for example, seven leaves
-///   remainder three.
-/// - `if (remainder == 0)` — Select the fallback branch for a multiple of four.
-/// - `else` — The alternative body runs when that if condition is false; its braces group that body.
-///
-/// ### What the prepared part already does
-///
-/// take checks and applies moves, changes turns and records the winner. main calls botMove on the bot
-/// turn and supplies the pile display, typed moves, restart and quit. The bot calculation must return a
-/// move, not remove stones itself.
+// <editor-fold defaultstate="expanded" desc="Explore and experiment">
+/// Before reading the strategy, observe two different bot choices. Then find the calculation that
+/// chooses a move and distinguish choosing from applying it. Your coach receives the pile to analyse
+/// as a parameter, so it can advise about another position without changing the actual game. Neutral
+/// example: a weather helper can predict for a supplied temperature without changing today’s stored
+/// temperature. Reuse the idea, not a read of an unrelated global value.
 // </editor-fold>
 
-// <editor-fold defaultstate="expanded" desc="For this game">
-/// The last stone wins; each turn removes one, two or three. Think backwards: a player facing four
-/// stones cannot prevent the other player from taking the rest on the next turn. The same idea
-/// repeats in groups of four: after an opponent takes some, a reply can make the pair of turns remove
-/// four together. For a non-multiple of four, aim to leave the opponent a multiple of four. From an
-/// exact positive multiple, no move guarantees a win against perfect replies; this bot uses the legal
-/// fallback of one. An empty pile has no move. Translate that rule into the two existing branches
-/// without removing stones inside botMove.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · search area">
+/// Search the input branch for ?. Which returned value does it print? Compare that helper with the
+/// bot’s decision.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
-/// The strategy is a choice, not a move performed inside botMove. With seven stones, removing three
-/// leaves four. With eight stones, this bot uses the legal fallback one. An if selects a result; the
-/// supplied take applies it later. Trace zero separately because there is no legal move to return. If
-/// the strategy feels like a second puzzle, begin with Pig first.
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a concrete route">
+/// advice(pile) must analyse pile; botMove reads stones. Their branching idea can be shared without
+/// moving anything.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Possible change · reveals the direction">
+/// Use pile % 4: return 0 for zero, 1 for a positive multiple of four, and the remainder otherwise.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Your own version · optional">
-/// After the remainder strategy works, replace it with a deliberate weaker strategy such as always
-/// taking one legal stone. Compare both bots by playing the same opening. Explain which pile sizes
-/// expose the weaker strategy, then challenge a friend to beat the original bot.
+/// Give a friend a deliberately weak coach while keeping the bot strong. Explain a pile where the
+/// weak advice loses an advantage. Restore the strong coach and compare the same position.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Trace seven stones: the remainder is three.
-// </editor-fold>
+// <editor-fold defaultstate="collapsed" desc="Program · explore as needed">
+int advice(int pile) {
+    if (pile == 0) return 0;
+    int remainder = pile % 4;
+    if (remainder == 0) return 1;
+    return remainder;
+}
 
-// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The else branch should differ from the zero-remainder branch.
-// </editor-fold>
+int botMove() {
+    if (stones == 0) {
+        return 0;
+    }
+    int remainder = stones % 4;
+    if (remainder == 0) {
+        return 1;
+    } else {
+        return remainder;
+    }
+}
 
-// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// In else, return remainder instead of 1.
-// </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
 int stones = 21;
 boolean humanTurn = true;
 int winner;
@@ -132,7 +109,7 @@ boolean take(int amount) {
 
 void main() {
     IO.println("NIM: take 1-3 stones. Taking the last stone wins.");
-    IO.println("You play first against the bot. r restarts; q quits.");
+    IO.println("You play first against the bot. ?: coach; r restarts; q quits.");
     boolean showState = true;
     while (true) {
         if (showState) {
@@ -161,6 +138,10 @@ void main() {
             IO.println("Round finished. Press Enter or /r for a new round; /q quits.");
             continue;
         }
+        if (input.equals("?")) {
+            IO.println("Coach suggests: " + advice(stones));
+            continue;
+        }
         try {
             if (take(Integer.parseInt(input))) {
                 showState = true;
@@ -172,8 +153,6 @@ void main() {
         }
     }
 }
-
-/// Prepared entry points: main, reset.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">

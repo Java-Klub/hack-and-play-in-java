@@ -1,33 +1,14 @@
 /// # L03.07 · Hanoi
 ///
-/// Move three discs from peg A to peg C, one top disc at a time. Work out a sequence that never places a
-/// larger disc on a smaller one, and see how close you get to seven moves.
+/// **Your mission · Find the shortest forbidden sequence:** The tower rules already work. Find a
+/// shortest two-attempt demonstration: the first move is legal; the second tries to put a larger disc
+/// on a smaller one and is rejected without changing the tower. Store those two commands as the
+/// program’s demonstration. Changing the guard to permit the forbidden move is not the goal.
 ///
-/// **Your mission · Enforce a physical rule:** The tower accepts a larger disc on a smaller one and
-/// refuses some harmless
-/// placements. Repair the rejecting comparison in move before either stack changes.
+/// The starter works by its original rules. The check already expects your new goal.
 ///
-/// **Today you learn:** Guarding a forbidden state: describe the bad situation in the condition, then
-/// return without applying the move. Check an empty destination separately from a destination with a top
-/// disc.
-///
-/// Run the program, enter A B and then A B again to inspect the forbidden larger-on-smaller
-/// move; r restores the original tower.
-boolean move(int from, int to) {
-    if (won() || from < 0 || from > 2 || to < 0 || to > 2 || from == to || sizes[from] == 0) {
-        return false;
-    }
-    int disc = pegs[from][sizes[from] - 1];
-    if (sizes[to] > 0 && pegs[to][sizes[to] - 1] < disc) {
-        return false;
-    }
-    sizes[from]--;
-    pegs[from][sizes[from]] = 0;
-    pegs[to][sizes[to]] = disc;
-    sizes[to]++;
-    moves++;
-    return true;
-}
+/// Use A B or other peg pairs to investigate; r restarts. D replays your stored commands from a fresh
+/// tower and prints moved/rejected. The initial demonstration contains only one legal move.
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F08">
 /// A guard rejects a request before protected work happens. Read the rejected cases first, then ask
@@ -53,53 +34,55 @@ boolean move(int from, int to) {
 /// zero.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
-///
-/// - `won()` — Ask the supplied win check whether play has already finished.
-/// - `sizes[from] == 0` — Reject an empty source peg before trying to read its top disc.
-/// - `&&` — The second part is checked only when the first is true, so an empty destination has no
-///   top-disc lookup.
-/// - `pegs[to][sizes[to] - 1]` — The supplied storage keeps a peg’s top disc at its current size minus
-///   one.
-/// - `> disc` — This currently asks whether the target’s top disc is larger than the moving disc; reason
-///   whether that is the forbidden situation.
-/// - `return false;` — Reject before the later writes remove or insert a disc.
-/// - `moves++;` — Count one accepted move after both stacks have been updated.
-///
-/// ### What the prepared part already does
-///
-/// The later part of move already transfers one top disc and updates both stack sizes. reset rebuilds the
-/// three-disc puzzle; main prints the top disc on the right and translates peg letters into supplied
-/// storage indices.
+// <editor-fold defaultstate="expanded" desc="Explore and experiment">
+/// A useful negative example reaches the actual forbidden situation. A nonexistent peg is also
+/// invalid, but does not prove the size rule. First play manually, then replay your evidence. Read
+/// the guard to explain why one attempt passes and the other returns before writes. A String can
+/// carry two commands using \n; the supplied runner translates command data into moves. No new loop
+/// needs to be written.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
-/// A smaller disc number means a smaller disc. An empty destination has no top disc to compare. The
-/// && operator can skip the top lookup when sizes[to] is zero. A rejected move returns before either
-/// tower changes. Predict disc 3 onto disc 1, then disc 1 onto disc 3, and identify which case is
-/// forbidden.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · search area">
+/// Can the first move be forbidden by size when both other pegs are empty? What changes after moving
+/// the smallest disc?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a concrete route">
+/// D reads the String returned by demonstration(). Each line is one ordinary command. Keep the guard
+/// unchanged.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Possible change · reveals the direction">
+/// One valid example is A B followed by A B. Encode the line break as \n inside the quoted String.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Your own version · optional">
-/// After seven-move play works, deliberately reverse the size rule as a separate game variant. Which
-/// moves become impossible and does the original goal still make sense? Restore the rule, then write
-/// your own seven-move solution for a friend to execute without improvising.
+/// Find a different equally short demonstration, then a longer one exposing the same guard. Ask a
+/// partner to remove redundant moves without losing the forbidden situation.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Disc numbers are sizes: 1 is smaller than 2.
-// </editor-fold>
+// <editor-fold defaultstate="collapsed" desc="Program · explore as needed">
+String demonstration() {
+    return "A B\nA B";
+}
 
-// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The target-empty case must skip its top-disc read.
-// </editor-fold>
+boolean move(int from, int to) {
+    if (won() || from < 0 || from > 2 || to < 0 || to > 2 || from == to || sizes[from] == 0) {
+        return false;
+    }
+    int disc = pegs[from][sizes[from] - 1];
+    if (sizes[to] > 0 && pegs[to][sizes[to] - 1] < disc) {
+        return false;
+    }
+    sizes[from]--;
+    pegs[from][sizes[from]] = 0;
+    pegs[to][sizes[to]] = disc;
+    sizes[to]++;
+    moves++;
+    return true;
+}
 
-// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Inside the nonempty guard, reject targetTop < disc.
-// </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
 int[][] pegs = {{3, 2, 1}, {0, 0, 0}, {0, 0, 0}};
 int[] sizes = {3, 0, 0};
 int moves;
@@ -124,7 +107,7 @@ boolean won() {
 void main() {
     IO.println("HANOI: move all three discs from A to C.");
     IO.println("Move only the top disc, never a larger disc onto a smaller one.");
-    IO.println("The top disc is the rightmost number on each peg.");
+    IO.println("The top disc is the rightmost number on each peg. D: replay your demonstration from a fresh tower.");
     boolean showState = true;
     while (true) {
         if (showState) {
@@ -147,6 +130,18 @@ void main() {
             showState = true;
             continue;
         }
+        if (input.equals("D") || input.equals("/D")) {
+            reset();
+            int attempt = 0;
+            for (String line : demonstration().lines().toList()) {
+                String[] pair = line.strip().toUpperCase(Locale.ROOT).split("\\s+");
+                boolean accepted = pair.length == 2 && pair[0].length() == 1 && pair[1].length() == 1
+                    && move(pair[0].charAt(0) - 'A', pair[1].charAt(0) - 'A');
+                IO.println("Demo " + (++attempt) + ": " + line + " -> " + (accepted ? "moved" : "rejected"));
+            }
+            showState = true;
+            continue;
+        }
         if (won()) {
             IO.println("Round finished. Press Enter or /r for a new round; /q quits.");
             continue;
@@ -160,8 +155,6 @@ void main() {
         }
     }
 }
-
-/// Prepared entry points: main, reset.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">

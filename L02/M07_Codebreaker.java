@@ -1,21 +1,14 @@
 /// # L02.07 · Codebreaker
 ///
-/// Break a four-digit code using clues that distinguish the right digit in the right place from a digit
-/// placed elsewhere. After the known training code, restart to try a hidden random code.
+/// **Your mission · Install a cheat code:** Add a universal service code: 1111 wins against every
+/// hidden code. Ordinary correct guesses must still win and other wrong guesses must still fail. Do
+/// not replace the hidden code, bypass four-digit validation or change the clues. The cheat must
+/// survive restart.
 ///
-/// **Your mission · Unlock a false rejection:** Entering the training code gives four exact digits but no
-/// win. Repair matchesCode so
-/// equal text is accepted even when it came from separate String values.
+/// The starter works by its original rules. The check already expects your new goal.
 ///
-/// **Today you learn:** Boolean decisions and text equality: boolean means true or false. For text,
-/// comparing the characters is different from asking whether two names point to the very same stored
-/// String object.
-///
-/// Run the program and enter 1234 to investigate the failed training win; after repairing it,
-/// enter r to try a newly hidden code.
-boolean matchesCode(String guess) {
-    return secret.equals(guess);
-}
+/// The known opening is 1234. Enter r for a new hidden code, then try 1111. This must be a real
+/// accepted winning guess, not just a printed victory message.
 
 // <editor-fold defaultstate="expanded" desc="Learn · F06">
 /// A boolean expression produces `true` or `false`. `&&` requires both conditions, `||` needs at
@@ -40,49 +33,36 @@ boolean matchesCode(String guess) {
 /// Now predict enter for age twelve with a ticket.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
-///
-/// - `boolean` — The result is a yes/no decision: true for a match and false otherwise.
-/// - `matchesCode(String guess)` — The supplied caller asks this rule about the complete guessed text.
-/// - `secret` — The stored target code for this round.
-/// - `guess` — The text received for this attempt, not necessarily the same stored object as secret.
-/// - `==` — With String objects this asks about identity, not matching characters; it is different from
-///   numeric equality.
-/// - `return` — Give the decision back to submit, where it determines whether the round was won.
-///
-/// ### What the prepared part already does
-///
-/// submit validates the four digits, computes exact/elsewhere clues and asks matchesCode for the win
-/// decision. The first secret is 1234 for investigation; reset generates random codes for later rounds.
+// <editor-fold defaultstate="expanded" desc="Explore and experiment">
+/// Trace how a typed guess becomes a yes/no winning decision. Validation, feedback and victory are
+/// separate questions. Combine two legitimate ways to win without accepting every input. Neutral
+/// example: a door may open for its ordinary pass OR a maintenance pass. String equals compares
+/// characters even when two Strings were created separately. Predict which of the two questions
+/// should change for your cheat.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
-/// Two separate paper labels can both say OPEN. Asking whether their letters agree differs from
-/// asking whether they are the very same label. For String, equals asks about letters; == asks about
-/// object identity. A typed answer is newly received text, so a correct answer must not depend on
-/// sharing the very same stored object.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · search area">
+/// Follow the write to the won flag backwards; leave the digit guard alone.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a concrete route">
+/// submit asks matchesCode for the winning decision. That calculation needs two alternatives.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Possible change · reveals the direction">
+/// Return secret.equals(guess) || "1111".equals(guess). The existing submit still validates and
+/// counts the guess.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Your own version · optional">
-/// After the judge works, change the known training secret to another four-digit code and let a
-/// friend discover it from the exact/misplaced clues. Keep the number of digits unchanged. Try a code
-/// with repeated digits and see whether guessing strategy changes.
+/// Invent another service code and explain why it still has to obey the accepted input alphabet. Give
+/// a friend only the ordinary game rules and let them inspect your modified source for the backdoor.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Two separate String values can contain the same text.
-// </editor-fold>
+// <editor-fold defaultstate="collapsed" desc="Program · explore as needed">
 
-// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Use the String content comparison operation.
-// </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Return secret.equals(guess).
-// </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
 String secret = "1234";
 int attempts;
 boolean won;
@@ -135,6 +115,10 @@ int[] score(String guess) {
     return new int[] {exact, elsewhere};
 }
 
+boolean matchesCode(String guess) {
+    return secret.equals(guess) || "1111".equals(guess);
+}
+
 boolean submit(String guess) {
     if (over() || !guess.matches("[1-6]{4}")) {
         return false;
@@ -179,8 +163,6 @@ void main() {
         }
     }
 }
-
-/// Prepared entry points: main, reset.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">

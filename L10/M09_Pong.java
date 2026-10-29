@@ -7,49 +7,18 @@ import javax.swing.Timer;
 
 /// # L10.09 · Pong
 ///
-/// Challenge a friend to a first-to-five paddle match. The ball should move while a rally is alive and
-/// stop once the winner is known.
+/// A two-player paddle duel already works. Turn it into a training partner you can beat, and find the
+/// situations where a very simple opponent surprises you.
 ///
-/// **Your mission:** The game keeps moving after a winner exists because its stop condition never matches
-/// a normal game state. Repair when updates are allowed, including the finished-match boundary.
+/// **Your mission:** Make B switch the right paddle between a person and a bot. The bot watches the
+/// ball now, moves at 3 pixels per tick toward it, and stays still when the ball is within 8 pixels
+/// of its paddle centre. Human controls keep their 5-pixel speed. Predict whether this slower bot
+/// will always lose, then play to challenge your prediction.
 ///
-/// **Today you learn:** A tick is conditional on the game’s lifecycle state. The winner marker decides
-/// whether one step may move paddles and ball; drawing should still be allowed after play ends.
+/// **Investigation:** Form a hypothesis about a simple opponent, then build and connect it.
 ///
-/// Run the program, then press Space or click to start; play the left paddle with W/S and the
-/// right with Up/Down. First to five wins; R resets and waits for another start.
-void step() {
-    if (winner != 0) return;
-    leftY = clampPaddle(leftY + (leftDown ? 5 : 0) - (leftUp ? 5 : 0));
-    rightY = clampPaddle(rightY + (rightDown ? 5 : 0) - (rightUp ? 5 : 0));
-    ballX += velocityX;
-    ballY += velocityY;
-    if (ballY < RADIUS) {
-        ballY = RADIUS;
-        velocityY = Math.abs(velocityY);
-    }
-    if (ballY > HEIGHT - RADIUS) {
-        ballY = HEIGHT - RADIUS;
-        velocityY = -Math.abs(velocityY);
-    }
-    if (velocityX < 0 && ballX - RADIUS <= 36 && ballX + RADIUS >= 24
-            && ballY + RADIUS >= leftY && ballY - RADIUS <= leftY + PADDLE) {
-        bounce(1, leftY);
-    }
-    if (velocityX > 0 && ballX + RADIUS >= WIDTH - 36 && ballX - RADIUS <= WIDTH - 24
-            && ballY + RADIUS >= rightY && ballY - RADIUS <= rightY + PADDLE) {
-        bounce(-1, rightY);
-    }
-    if (ballX < -RADIUS) {
-        rightScore++;
-        serve(-1);
-    } else if (ballX > WIDTH + RADIUS) {
-        leftScore++;
-        serve(1);
-    }
-    if (leftScore >= 5) winner = 1;
-    if (rightScore >= 5) winner = 2;
-}
+/// Space or click starts. W/S controls the left paddle; Up/Down controls a human right paddle. B
+/// selects the opponent; R resets. First to five wins.
 
 // <editor-fold defaultstate="collapsed" desc="Your next version · optional">
 /// ### Make it yours
@@ -85,33 +54,75 @@ void step() {
 /// Predict: from the initial state, what happens after press, tick, press, tick?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Investigator notebook · worked example">
+/// ### A tick can use a policy instead of a key
 ///
-/// - `winner == -1` — No normal game state uses -1 here: zero means no winner, and one or two identifies
-///   the winner.
-/// - `return;` — Leaves the whole update early, so everything below it is skipped.
-/// - `leftScore >= 5` — A score at or above five ends the match for the left player.
+/// An input event records a choice; a tick consumes the current choice while moving the model. A bot
+/// can calculate a choice at that same boundary without pretending to press keys.
 ///
-/// ### What the prepared part already does
+/// ```java
+/// int direction(double target, double centre) {
+///     if (Math.abs(target - centre) <= 2) return 0;
+///     return target > centre ? 1 : -1;
+/// }
+/// ```
 ///
-/// The supplied collision code bounces the ball off walls and paddles, while serve starts a new rally
-/// after a point. Keyboard flags move paddles; restart restores scores and the no-winner marker.
+/// This independent example returns 0 for target 11 and centre 10, but +1 for target 15. Predict
+/// target 6. The quiet interval avoids twitching near the target. Multiply a direction by a speed
+/// only when updating a position, then clamp that position to the permitted range. A policy decides;
+/// the tick moves. A finished-game guard must still run before either human or bot movement.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// The winner values are 0, 1 and 2.
+/// Look for where rightY changes rather than where the paddle is drawn. Compare the two paddles in
+/// one tick.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The stop guard belongs before paddles, ball and scores.
+/// botDirection can return -1, 0 or +1. Its inputs are the current ball height and the top of the
+/// paddle; add half PADDLE to get its centre.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// A finished tick must not change even a held paddle key’s position.
+/// When bot is true, use botDirection at speed 3; otherwise keep the right-hand key calculation at
+/// speed 5. Preserve clampPaddle, the winner guard and reset behaviour.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="expanded" desc="Program to explore">
+void step() {
+    if (winner != 0) return;
+    leftY = clampPaddle(leftY + (leftDown ? 5 : 0) - (leftUp ? 5 : 0));
+    int direction = bot ? botDirection(ballY, rightY) : (rightDown ? 1 : 0) - (rightUp ? 1 : 0);
+    rightY = clampPaddle(rightY + direction * (bot ? 3 : 5));
+    ballX += velocityX;
+    ballY += velocityY;
+    if (ballY < RADIUS) {
+        ballY = RADIUS;
+        velocityY = Math.abs(velocityY);
+    }
+    if (ballY > HEIGHT - RADIUS) {
+        ballY = HEIGHT - RADIUS;
+        velocityY = -Math.abs(velocityY);
+    }
+    if (velocityX < 0 && ballX - RADIUS <= 36 && ballX + RADIUS >= 24
+            && ballY + RADIUS >= leftY && ballY - RADIUS <= leftY + PADDLE) {
+        bounce(1, leftY);
+    }
+    if (velocityX > 0 && ballX + RADIUS >= WIDTH - 36 && ballX - RADIUS <= WIDTH - 24
+            && ballY + RADIUS >= rightY && ballY - RADIUS <= rightY + PADDLE) {
+        bounce(-1, rightY);
+    }
+    if (ballX < -RADIUS) {
+        rightScore++;
+        serve(-1);
+    } else if (ballX > WIDTH + RADIUS) {
+        leftScore++;
+        serve(1);
+    }
+    if (leftScore >= 5) winner = 1;
+    if (rightScore >= 5) winner = 2;
+}
+
 final int WIDTH = 640, HEIGHT = 400, PADDLE = 80, RADIUS = 7;
 double leftY, rightY, ballX, ballY, velocityX, velocityY;
 int leftScore, rightScore, winner;
@@ -121,6 +132,7 @@ boolean leftUp, leftDown, rightUp, rightDown;
 void restart() {
     leftY = rightY = (HEIGHT - PADDLE) / 2.0;
     leftScore = rightScore = winner = 0;
+    bot = false;
     clearKeys();
     serve(1);
 }
@@ -162,7 +174,8 @@ void draw(Graphics g) {
     g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 28));
     g.drawString(leftScore + "    " + rightScore, WIDTH / 2 - 42, 38);
     g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14));
-    g.drawString("Left: W / S     Right: Up / Down     First to 5     R: restart", 98, HEIGHT - 12);
+    g.drawString("W/S: left    Up/Down: human right    B: opponent    R: restart", 32, HEIGHT - 24);
+    g.drawString(bot ? "Opponent: Bot (3 px/tick)" : "Opponent: Human (5 px/tick)", 32, HEIGHT - 8);
     if (winner != 0) {
         g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 28));
         g.drawString((winner == 1 ? "LEFT" : "RIGHT") + " WINS!  Press R", 150, HEIGHT / 2);
@@ -194,6 +207,7 @@ void showWindow() {
                 case KeyEvent.VK_S -> leftDown = pressed;
                 case KeyEvent.VK_UP -> rightUp = pressed;
                 case KeyEvent.VK_DOWN -> rightDown = pressed;
+                case KeyEvent.VK_B -> { if (pressed) toggleBot(); }
                 case KeyEvent.VK_R -> { if (pressed) { restart(); launched[0] = false; } }
             }
         }
@@ -225,6 +239,19 @@ void showWindow() {
     frame.setVisible(true);
     panel.requestFocusInWindow();
     timer.start();
+}
+
+boolean bot;
+
+void toggleBot() {
+    bot = !bot;
+    rightUp = rightDown = false;
+}
+
+int botDirection(double targetY, double paddleTop) {
+    double difference = targetY - (paddleTop + PADDLE / 2.0);
+    if (Math.abs(difference) <= 8) return 0;
+    return difference > 0 ? 1 : -1;
 }
 
 void main() {

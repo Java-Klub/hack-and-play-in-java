@@ -3,20 +3,30 @@
 /// Push a crate onto its goal in a cramped warehouse. Planning matters because you can push a box but
 /// cannot pull it back.
 ///
-/// **Your mission:** The unfinished floor sensor rejects every move. Build a read-only query: reject
-/// positions outside terrain before looking up a cell, then accept every in-bounds character except
-/// wall '#'. A goal '.' is floor too; do not move the player or crate.
 ///
-/// **Today you learn:** Pure contracts: a query promises an answer for its inputs without changing the
-/// game. Define precisely which coordinates count as walkable floor.
+/// **Your mission:** Make ? list exactly the legal immediate W/A/S/D moves without moving the player or
+/// crate. A push is legal only if the crate has free floor beyond it; a wall, map boundary, diagonal or
+/// finished round is never a legal move. Asking repeatedly must leave everything unchanged. This is a
+/// one-move radar, not a promise that the puzzle remains solvable.
 ///
-/// Enter A to try the open cell left of the starting player. The unfinished sensor refuses it just like
-/// a wall; your query must distinguish them before movement is committed.
-boolean floor(int px, int py) {
-    if (py < 0 || py >= terrain.length || px < 0 || px >= terrain[py].length()) {
+/// **Today you learn:** A query and a command can agree about legality while only the command changes
+/// state. Check both accepted and rejected candidates for side effects.
+///
+/// Enter ? twice, then d twice, then ? again. Compare the advice with an attempted third d and inspect
+/// whether asking alone changes the printed warehouse.
+boolean canMove(int dx, int dy) {
+    if (!outcome.isEmpty() || Math.abs(dx) + Math.abs(dy) != 1) {
         return false;
     }
-    return terrain[py].charAt(px) != '#';
+    int nx = x + dx;
+    int ny = y + dy;
+    if (!floor(nx, ny)) {
+        return false;
+    }
+    if (nx == bx && ny == by) {
+        return floor(bx + dx, by + dy);
+    }
+    return true;
 }
 
 // <editor-fold defaultstate="expanded" desc="Learn · F15">
@@ -39,52 +49,45 @@ boolean floor(int px, int py) {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Read this code">
-/// px is horizontal; py chooses the map row. A range rejection must happen before terrain[py] or
-/// charAt(px) is evaluated.
+/// The next player square and the next crate square are different candidates. Inspect terrain before
+/// changing either position.
 ///
-/// | proposed px,py | map fact | answer |
-/// | --- | --- | --- |
-/// | 0,2 | wall # | false |
-/// | 1,2 | open space | true |
-/// | 5,2 | goal . | true |
-/// | 7,2 | beyond the row | false |
-///
-/// The character at a valid position supplies the second decision. floor answers a question; command
-/// separately moves the player and may push the crate. Two identical floor calls must give the same
-/// answer with every position unchanged. Predict a negative py before writing either lookup.
+/// In a separate corridor @ $ #, stepping into the crate square is not enough: the square beyond is a
+/// wall, so the push is illegal. With @ $ . it is legal. A planning query must produce the same answer
+/// twice without first performing and undoing a move. Snapshot the player, crate and outcome before
+/// asking. Predict a query aimed away from the crate and one at the map edge.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="For this game">
-/// ### Reading one map character
-///
-/// A terrain row is a String. `row.charAt(index)` reads one char at a zero-based position; for
-/// example, `"map".charAt(1)` reads the middle character. A char literal uses single quotes, unlike a
-/// String literal. Here `#` marks a wall. Preserve the existing bounds before reading the selected
-/// row and character. Predict the query's answer for an interior wall and explain why asking twice
-/// must not move the player or crate.
-// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Separate an absent cell from a present wall cell.
+/// Compare the radar path with the actual move path. Find a candidate they judge differently.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Return false for bad coordinates before reading terrain; then inspect just one character.
+/// The ? branch calls canMove for the four directions. canMove currently checks only floor at the next
+/// player square; command also checks where a pushed crate would go.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Guard row and column ranges, then return whether the requested character differs from #. Do not
-/// assign positions.
+/// Reject non-cardinal steps and a finished round, reject missing floor, then inspect the square beyond
+/// a crate only when the next square contains it. Return an answer without assigning positions.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Make it yours">
-/// Design a warehouse layout with one tempting crate push that traps the crate and one route to the
-/// goal. Keep the supplied map dimensions and author a solution before exchanging it. Use floor queries
-/// to explain both routes without moving the player during inspection.
+/// Add a second advisor that warns about a crate pushed into a non-goal corner. Keep that warning
+/// separate from immediate legality and author one legal but losing push to demonstrate the
+/// distinction.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
-String[] terrain = {"#######", "#     #", "#    .#", "#     #", "#######"};
+boolean floor(int px, int py) {
+    if (py < 0 || py >= terrain.length || px < 0 || px >= terrain[py].length()) {
+        return false;
+    }
+    return terrain[py].charAt(px) != '#';
+}
+
+String[] terrain = {"#######", "#    .#", "#     #", "#     #", "#######"};
 int x;
 int y;
 int bx;
@@ -140,7 +143,7 @@ void main() {
     reset();
     IO.println("Sokoban");
     IO.println("Push the crate $ onto the goal dot. You can push, but cannot pull; restart if you trap the crate.");
-    IO.println("W/A/S/D move. @ player, $ crate, . goal, * crate on goal. Push only. /r restarts; /q quits.");
+    IO.println("W/A/S/D move; ? asks the move radar. @ player, $ crate, . goal, * crate on goal. Push only. /r restarts; /q quits.");
     IO.println("Example: d moves right; pressing Enter submits the command. Use /r to reset a stuck attempt.");
     display();
     while (true) {
@@ -162,6 +165,15 @@ void main() {
             IO.println("That round is over. Press Enter to play again, or /q to quit.");
             continue;
         }
+        if (input.equals("?")) {
+            String advice = "";
+            if (canMove(0, -1)) advice += "W ";
+            if (canMove(-1, 0)) advice += "A ";
+            if (canMove(0, 1)) advice += "S ";
+            if (canMove(1, 0)) advice += "D ";
+            IO.println("Immediate moves: " + (advice.isEmpty() ? "none" : advice.strip()));
+            continue;
+        }
         try {
             command(input);
             display();
@@ -169,7 +181,7 @@ void main() {
                 IO.println(outcome);
             }
         } catch (IllegalArgumentException invalid) {
-            IO.println("Invalid move. " + "W/A/S/D move. @ player, $ crate, . goal, * crate on goal. Push only. /r restarts; /q quits.");
+            IO.println("Invalid move. " + "W/A/S/D move; ? asks the move radar. @ player, $ crate, . goal, * crate on goal. Push only. /r restarts; /q quits.");
         }
     }
 }

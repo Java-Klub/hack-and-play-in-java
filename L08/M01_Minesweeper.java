@@ -6,17 +6,35 @@ import java.awt.GridLayout;
 
 /// # L08.01 · Minesweeper
 ///
-/// Reveal safe squares and use their numbers to avoid hidden mines. A clue is useful only if it counts
-/// every nearby danger.
+/// The normal mine game and a point inspection lens already work. Expand that lens into a local X-ray
+/// tool, then use what it reveals to plan a safe route.
 ///
-/// **Your mission:** Build adjacent(row, col) from scratch: count mines in all valid surrounding cells,
-/// including diagonals, but never the queried cell itself. Edge and corner clues must use only existing
-/// cells. The empty rule currently displays zero everywhere.
+/// **Your mission:** With Inspect selected, a click must show every mine in the clicked 3×3
+/// neighbourhood, including the centre, but none outside it. A new inspection replaces the old one.
+/// Inspection must not reveal safe cells, place flags, advance progress or lose the round. Corners must
+/// clip safely; New board clears the lens. Ordinary reveal and mine clues stay unchanged.
 ///
-/// **Today you learn:** Translate a small drawing into coordinates, bounds and neighbour relationships.
+/// **Today you learn:** Explore how a click updates a separate view of grid data. Bounds and
+/// neighbourhood coordinates belong to the tool; the real game state must remain independent.
 ///
-/// Run the program and click a square to reveal it, then use its number to choose nearby safe
-/// squares or place a flag in Flag mode.
+/// Select Inspect and click: the starter peeks at only that square. After expanding the lens, inspect
+/// beside a suspected mine to see diagonal as well as straight neighbours. Turn Inspect off to reveal
+/// safe cells normally; Flag mode and New board still work.
+
+// <editor-fold defaultstate="expanded" desc="Program · explore the rules">
+final int SIZE = 6;
+final int MINE_COUNT = 6;
+boolean[][] mines = new boolean[SIZE][SIZE];
+boolean[][] revealed = new boolean[SIZE][SIZE];
+boolean[][] flags = new boolean[SIZE][SIZE];
+boolean lost;
+boolean[][] inspected = new boolean[SIZE][SIZE];
+int opened;
+JButton[][] buttons = new JButton[SIZE][SIZE];
+JLabel status = new JLabel();
+JToggleButton flagMode = new JToggleButton("Flag mode");
+JToggleButton inspectMode = new JToggleButton("Inspect");
+
 int adjacent(int row, int col) {
     int count = 0;
     for (int r = row - 1; r <= row + 1; r++) {
@@ -26,73 +44,6 @@ int adjacent(int row, int col) {
     }
     return count;
 }
-
-// <editor-fold defaultstate="expanded" desc="Learn · F18">
-/// ### Coordinates describe neighbours
-///
-/// A grid stores rows first: `board[y][x]`. Increasing x goes right; increasing y goes down on our
-/// screens. A neighbour is the current coordinate plus a small offset.
-///
-/// ```text
-///           (0,-1)
-/// (-1,0)    HERE    (1,0)
-///           (0,1)
-/// ```
-///
-/// ```java
-/// int[][] board = {{2, 5, 8}, {1, 4, 7}};
-/// int x = 1, y = 0;
-/// int nx = x + 0, ny = y + 1;
-/// if (ny >= 0 && ny < board.length && nx >= 0 && nx < board[ny].length) {
-///     IO.println(board[ny][nx]);
-/// }
-/// ```
-///
-/// The move goes from 5 to 4; the printed value is 4. Bounds are checked before indexing, because an
-/// array has no cell outside its edges. A diagonal changes both coordinates. A corridor repeats the
-/// same offset; a neighbourhood tries several offsets. These are different algorithms using the same
-/// coordinate model.
-///
-/// Predict the result of offset `(-1,0)` from the same start. Which offset leaves this board? Mark the
-/// start and destination on paper before combining directions in a loop.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read this part
-///
-/// The 3×3 neighbourhood consists of row-1..row+1 and col-1..col+1. `inside(r,c)` is the supplied
-/// bounds check. `mines[r][c]` is true for a mine. Exclude the centre separately, even if it contains a
-/// mine. reveal() uses your count for the actual button caption.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Sketch a 3×3 box around one square and mark its centre.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Visit the two coordinate ranges; count only inside, non-centre mine cells.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Use nested loops with a local count, then return the count after all candidates have been examined.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
-/// Design a small fixed mine layout for a partner, with a safe opening square and truthful clues. Can
-/// the first few clues force an interesting choice?
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
-final int SIZE = 6;
-final int MINE_COUNT = 6;
-boolean[][] mines = new boolean[SIZE][SIZE];
-boolean[][] revealed = new boolean[SIZE][SIZE];
-boolean[][] flags = new boolean[SIZE][SIZE];
-boolean lost;
-int opened;
-JButton[][] buttons = new JButton[SIZE][SIZE];
-JLabel status = new JLabel();
-JToggleButton flagMode = new JToggleButton("Flag mode");
 
 boolean inside(int row, int col) {
     return row >= 0 && row < SIZE && col >= 0 && col < SIZE;
@@ -104,6 +55,7 @@ void reset(long seed) {
     mines = new boolean[SIZE][SIZE];
     revealed = new boolean[SIZE][SIZE];
     flags = new boolean[SIZE][SIZE];
+    inspected = new boolean[SIZE][SIZE];
     var random = new Random(seed);
     int placed = 0;
     while (placed < MINE_COUNT) {
@@ -144,6 +96,16 @@ boolean reveal(int row, int col) {
     return true;
 }
 
+void inspect(int row, int col) {
+    inspected = new boolean[SIZE][SIZE];
+    if (!inside(row, col)) return;
+    for (int r = row - 1; r <= row + 1; r++) {
+        for (int c = col - 1; c <= col + 1; c++) {
+            if (inside(r, c)) inspected[r][c] = mines[r][c];
+        }
+    }
+}
+
 boolean toggleFlag(int row, int col) {
     if (!inside(row, col) || revealed[row][col] || lost || won()) {
         return false;
@@ -156,7 +118,7 @@ boolean toggleFlag(int row, int col) {
 void refresh() {
     for (int r = 0; r < SIZE; r++) {
         for (int c = 0; c < SIZE; c++) {
-            String text = flags[r][c] ? "F" : "?";
+            String text = inspected[r][c] ? "*" : flags[r][c] ? "F" : "?";
             if (revealed[r][c] || (lost && mines[r][c])) {
                 int count = adjacent(r, c);
                 text = mines[r][c] ? "*" : count == 0 ? "" : Integer.toString(count);
@@ -181,7 +143,10 @@ void show() {
             var button = new JButton();
             buttons[r][c] = button;
             button.addActionListener(event -> {
-                if (flagMode.isSelected()) {
+                if (inspectMode.isSelected()) {
+                    inspect(row, col);
+                }
+                else if (flagMode.isSelected()) {
                     toggleFlag(row, col);
                 }
                 else {
@@ -197,8 +162,10 @@ void show() {
     restart.addActionListener(event -> {
         reset(System.nanoTime());
         flagMode.setSelected(false);
+        inspectMode.setSelected(false);
         refresh();
     });
+    controls.add(inspectMode);
     controls.add(flagMode);
     controls.add(restart);
     frame.add(status, BorderLayout.NORTH);
@@ -216,6 +183,72 @@ void main() {
     SwingUtilities.invokeLater(this::show);
 }
 // </editor-fold>
+
+
+// <editor-fold defaultstate="expanded" desc="Learn · F18">
+/// ### Coordinates describe neighbours
+///
+/// A grid stores rows first: `board[y][x]`. Increasing x goes right; increasing y goes down on our
+/// screens. A neighbour is the current coordinate plus a small offset.
+///
+/// ```text
+///           (0,-1)
+/// (-1,0)    HERE    (1,0)
+///           (0,1)
+/// ```
+///
+/// ```java
+/// int[][] board = {{2, 5, 8}, {1, 4, 7}};
+/// int x = 1, y = 0;
+/// int nx = x + 0, ny = y + 1;
+/// if (ny >= 0 && ny < board.length && nx >= 0 && nx < board[ny].length) {
+///     IO.println(board[ny][nx]);
+/// }
+/// ```
+///
+/// The move goes from 5 to 4; the printed value is 4. Bounds are checked before indexing, because an
+/// array has no cell outside its edges. A diagonal changes both coordinates. A corridor repeats the
+/// same offset; a neighbourhood tries several offsets. These are different algorithms using the same
+/// coordinate model.
+///
+/// Predict the result of offset `(-1,0)` from the same start. Which offset leaves this board? Mark the
+/// start and destination on paper before combining directions in a loop.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Read this code">
+/// ### Observe, then trace the flow
+///
+/// The lens is an observation, not a move. Follow a button click to the selected input mode, then
+/// distinguish the information drawn on a button from the cells actually counted as opened. A mask is a
+/// same-shaped boolean grid marking which mines the lens currently shows. Replacing that mask avoids
+/// leaving old discoveries on screen.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Experiment and replay">
+/// Inspect two different places and confirm that stars from the first view disappear. The safe-cell
+/// count stays fixed even when the lens sees a mine. Try a corner and then turn Inspect off before
+/// making a planned safe move. New board must erase the previous inspection.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// Compare Inspect with a real reveal: the progress number must change only for the latter.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Search the Inspect button’s action path. Keep its grid separate from flags and the real
+/// revealed-cell grid; do not change the existing clue counter.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Find inspect. It currently copies only the clicked mine into inspected. Replace that single-point
+/// work with bounded row/column ranges one step around the click, using a fresh mask each time.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Limit your lens to three uses per board and display the remaining charges. Can that smaller
+/// advantage still help a partner finish a board?
+// </editor-fold>
+
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
 /// ## An unfamiliar piece of Java?

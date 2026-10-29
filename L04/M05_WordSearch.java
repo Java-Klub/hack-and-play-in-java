@@ -3,26 +3,26 @@
 /// Hunt for CAT, DOG and TIGER in a letter grid by selecting the two ends of a word. A selection can run
 /// horizontally, vertically or diagonally, so its direction is part of the puzzle.
 ///
-/// **Your mission:** The selected path currently returns no letters. Reconstruct the for loop that
-/// appends every selected cell to word, including both endpoints. Use the supplied dr, dc and gap count
-/// n; preserve validation.
 ///
-/// **Today you learn:** For loops and endpoints: a row of three cells has only two gaps. Here n counts
-/// the gaps; trace the successive i values to decide how many letters must be read.
+/// **Your mission:** Let a player select every target word from either end. CAT and TAC must record the
+/// same target CAT, so selecting it backwards after finding it cannot earn a second find. Keep
+/// straight-path validation and reject paths that spell no target. First use the game to find exactly
+/// where the current direction matters.
 ///
-/// Select the first row with 1 1 1 3. The unfinished reader returns empty text; the full path must read
-/// CAT. Reversing the endpoints must read TAC.
-String read(int r, int c, int nr, int nc) {
-    require(r >= 0 && r < 5 && c >= 0 && c < 5 && nr >= 0 && nr < 5 && nc >= 0 && nc < 5);
-    int dr = Integer.signum(nr - r);
-    int dc = Integer.signum(nc - c);
-    int n = Math.max(Math.abs(nr - r), Math.abs(nc - c));
-    require(n > 0 && (r == nr || c == nc || Math.abs(nr - r) == Math.abs(nc - c)));
-    String word = "";
-    for (int i = 0; i <= n; i++) {
-        word += grid[r + i * dr].charAt(c + i * dc);
+/// **Today you learn:** Counted traversal can build a new String in a different order without changing
+/// the grid or the original selected text.
+///
+/// Compare 1 1 1 3 with 1 3 1 1 in fresh rounds. They visit the same cells, but the game currently
+/// accepts only one direction.
+String targetName(String selected) {
+    String reversed = "";
+    for (int index = selected.length() - 1; index >= 0; index--) {
+        reversed += selected.charAt(index);
     }
-    return word;
+    if (Set.of("CAT", "DOG", "TIGER").contains(reversed)) {
+        return reversed;
+    }
+    return selected;
 }
 
 // <editor-fold defaultstate="expanded" desc="Learn · F11">
@@ -48,40 +48,48 @@ String read(int r, int c, int nr, int nc) {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Read this code">
-/// The supplied calculations give a start (r,c), one-step direction (dr,dc) and n gaps. They already
-/// reject bent and off-board paths.
+/// Reading a path and deciding which target it names are separate jobs. Trace the caller of the path
+/// reader: which text is checked for membership, then stored in found?
 ///
-/// | i along CAT | row | column | collected text |
-/// | --- | --- | --- | --- |
-/// | 0 | 0 | 0 | C |
-/// | 1 | 0 | 1 | CA |
-/// | 2 | 0 | 2 | CAT |
-///
-/// Three positions need two gaps. At step i, read `grid[r + i * dr].charAt(c + i * dc)` and append the
-/// returned character to word. Build a for header whose visited values include the last position.
-/// Predict coordinates for the same selection backwards. command uses the returned word to record a
-/// real find.
+/// A separate reversal of MAP reads positions 2, 1, 0 and builds P, PA, PAM. The last valid index is
+/// length minus one; a negative index must never be read. Predict the visited positions for a
+/// one-character String. A non-target still has to fail the supplied validation even if its reversal
+/// looks different.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// List the i values needed for a three-letter selection.
+/// Find the last place where selected text can be renamed before a find is stored.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Start from zero; each pass appends one character before i advances.
+/// command calls targetName after read. The current targetName returns its input unchanged; found
+/// should always receive the canonical target name.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Visit i from zero through n inclusive and append the supplied grid lookup to word.
+/// Build the reversed text with a descending index, use it only when it names a target, and otherwise
+/// preserve the original text.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Make it yours">
-/// Hide a new word in your grid in a reverse or diagonal direction. Give a partner only its length and
-/// endpoint coordinates in the opposite order. Predict both strings before trying the selection; which
-/// order spells the intended word?
+/// Hide one new target diagonally, then exchange only the endpoint coordinates. A partner should be
+/// able to select either direction without learning a second spelling.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+String read(int r, int c, int nr, int nc) {
+    require(r >= 0 && r < 5 && c >= 0 && c < 5 && nr >= 0 && nr < 5 && nc >= 0 && nc < 5);
+    int dr = Integer.signum(nr - r);
+    int dc = Integer.signum(nc - c);
+    int n = Math.max(Math.abs(nr - r), Math.abs(nc - c));
+    require(n > 0 && (r == nr || c == nc || Math.abs(nr - r) == Math.abs(nc - c)));
+    String word = "";
+    for (int i = 0; i <= n; i++) {
+        word += grid[r + i * dr].charAt(c + i * dc);
+    }
+    return word;
+}
+
 String[] grid = {"CATER", "ADOGX", "TIGER", "XXXXX", "XXXXX"};
 Set<String> found;
 String outcome;
@@ -95,7 +103,7 @@ void command(String input) {
     require(outcome.isEmpty());
     String[] p = input.split("\\s+");
     require(p.length == 4);
-    String word = read(Integer.parseInt(p[0]) - 1, Integer.parseInt(p[1]) - 1, Integer.parseInt(p[2]) - 1, Integer.parseInt(p[3]) - 1);
+    String word = targetName(read(Integer.parseInt(p[0]) - 1, Integer.parseInt(p[1]) - 1, Integer.parseInt(p[2]) - 1, Integer.parseInt(p[3]) - 1));
     require(Set.of("CAT", "DOG", "TIGER").contains(word) && !found.contains(word));
     found.add(word);
     if (found.size() == 3) {

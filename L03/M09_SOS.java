@@ -1,21 +1,14 @@
 /// # L03.09 · SOS
 ///
-/// Two players place S or O on a shared board and score every new SOS they create. A scoring move keeps
-/// the turn, so look for a placement that completes more than one line.
+/// **Your mission · Trace and change the reward:** Install a combo reward: one newly made SOS scores
+/// one, but two or more in the same move score double their new-line count. Existing lines score
+/// nothing again. Find the route from a placed letter to the score; leave line detection and bonus
+/// turns intact.
 ///
-/// **Your mission · Reward only new discoveries:** The score includes SOS lines that already existed
-/// before the move. Repair
-/// gainedPoints so it rewards only newly created lines.
+/// The starter works by its original rules. The check already expects your new goal.
 ///
-/// **Today you learn:** Parameter meaning and return values: before and after describe two moments of the
-/// same count. If both moments contain three lines, no new line should be rewarded; the method returns
-/// that one result to the caller.
-///
-/// Run the program and enter 1 S, 2 O, 3 S and 4 S as separate moves; compare the reward for
-/// the final move, which creates no new SOS.
-int gainedPoints(int before, int after) {
-    return after - before;
-}
+/// Play cell number plus S or O. /r restarts and /q quits. The standard starter scores one per new
+/// line. Try making two lines through the centre in one move to see your new rule.
 
 // <editor-fold defaultstate="expanded" desc="Learn · F13">
 /// A method packages an operation under one name. Parameters are local names for the information
@@ -42,58 +35,39 @@ int gainedPoints(int before, int after) {
 /// Now predict remaining(10, 6).
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
-///
-/// - `int gainedPoints(int before, int after)` — Receive the old count first and the new count second;
-///   return one whole-number reward.
-/// - `before` — The count saved before this move changed the board.
-/// - `after` — The count obtained from the board after the move.
-/// - `+` — This currently adds two snapshots of the count together, including old lines twice.
-/// - `return` — Give the reward to command; the rule itself does not change the score.
-///
-/// ### What the prepared part already does
-///
-/// triples counts all SOS lines on the real board. command saves the before count, applies one letter and
-/// asks gainedPoints for the reward, then handles scores and bonus turns. Board scanning and input are
-/// supplied.
+// <editor-fold defaultstate="expanded" desc="Explore and experiment">
+/// Separate a count of all existing lines from a reward for one move. Follow where the old count is
+/// saved, where the board changes and where the new count returns. Your changed calculation should
+/// receive those two counts and return a reward; it should not need to know the board or whose turn
+/// it is. Neutral example: two inventory counts can describe an increase without revealing the whole
+/// inventory.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="For this game">
-/// before and after count complete SOS lines on the whole board; they are not the two players'
-/// existing scores. If both counts are equal, this move earned no new line. The prepared caller will
-/// add your returned reward to the current player's score. Optional transfer: invent two different
-/// before/after pairs that should give the same reward, then one pair that must give a different
-/// reward. Explain why your rule should handle all three without knowing the board or printing
-/// anything.
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · search area">
+/// Search for the place that adds to a player’s score, then follow the value being added.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
-/// For gainedPoints(2, 3), before receives 2 and after receives 3 for that call only. The result goes
-/// back to the score update; the method does not know whose turn it is. A fixed returned 1 would fit
-/// that example but fail an unchanged count or two simultaneous lines. Predict gainedPoints(4, 4) and
-/// gainedPoints(1, 3).
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a concrete route">
+/// command obtains that value from gainedPoints(before, triples()). Keep triples unchanged.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Possible change · reveals the direction">
+/// Calculate after - before; double it when it is at least two, otherwise return it unchanged.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Your own version · optional">
-/// Design a bonus rule for making two SOS lines in one move, then implement the bonus in gainedPoints
-/// without changing triples. Keep the normal one-line reward. Give a friend two before/after examples
-/// and ask them to infer your bonus rule.
+/// Build a position where the centre finishes two lines, then propose another combo table. A friend
+/// should be able to infer your rule from three scored examples.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// The parameters are counts from two moments, not two rewards.
-// </editor-fold>
+// <editor-fold defaultstate="collapsed" desc="Program · explore as needed">
+int gainedPoints(int before, int after) {
+    int gained = after - before;
+    if (gained >= 2) return gained * 2;
+    return gained;
+}
 
-// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// An unchanged count must return zero.
-// </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Return after - before.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
 char[] board;
 int player;
 int moves;
@@ -195,8 +169,6 @@ void require(boolean valid) {
         throw new IllegalArgumentException("Invalid move or command.");
     }
 }
-
-/// Prepared entry points: main, reset, command.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">

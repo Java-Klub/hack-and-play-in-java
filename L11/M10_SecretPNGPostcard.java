@@ -6,33 +6,23 @@ import javax.imageio.ImageIO;
 
 /// # L11.10 · SecretPNGPostcard
 ///
-/// Send a secret postcard whose visible picture gives little away. The program hides your text in PNG
-/// pixel data and tries to read the message back from the saved card.
+/// The message carrier already works. Now give it real artwork: use your own PNG instead of a picture
+/// that is regenerated inside the program.
 ///
-/// **Your mission:** Implement save as the postcard writer: create parent directories, open the
-/// requested output stream, and encode render(seed, option) as PNG into it. Use try-with-resources
-/// and report a missing PNG writer. Then write your own message and reopen it on a later run.
+/// **Your mission:** Use data/cover.png as the actual artwork for a new secret postcard. Read that
+/// input, hide the entered message and write the separate data/postcard.png without changing the
+/// cover. Enter later must reopen the saved postcard unchanged. Replacing the cover must affect the
+/// next newly written card, not rewrite an older one automatically.
 ///
-/// **Today you learn:** Implement a real file boundary: open the chosen resource, route actual
-/// contents through it and close it reliably. The artifact must survive beyond a method call.
+/// **Investigation:** Investigate persisted input data and make a real image-to-postcard tool.
 ///
-/// Enter a new secret message, or press Enter to open data/postcard.png unchanged. On the first run,
-/// Enter creates Pixel moon. A later run reads the persisted card; /q quits.
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    try (var output = Files.newOutputStream(path)) {
-        if (!ImageIO.write(render(seed, option), "png", output)) {
-            throw new IOException("PNG writer missing.");
-        }
-    }
-}
+/// The first run creates a sample cover. Put another PNG at the printed cover path, type a new
+/// message and compare the resulting card. Enter opens the existing card; /q quits.
 
 // <editor-fold defaultstate="collapsed" desc="Your next version · optional">
-/// ### Make it yours
-///
-/// Send a real local postcard: write a short riddle, close the program, and let a friend open the
-/// existing card without typing a new message. Then change only the visible background in render and
-/// check whether an older saved card still reveals its original text.
+/// Design a visual riddle in your cover image and send two different messages in separate cards.
+/// Compare the images at normal size before decoding, then compare which low pixel bits changed. Keep
+/// both original artworks intact.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F32">
@@ -58,36 +48,45 @@ void save(Path path, long seed, double option) throws Exception {
 /// Predict: if file becomes `Path.of("cards", "one.txt")`, where is the note written?
 // </editor-fold>
 
-// <editor-fold defaultstate="expanded" desc="Read this code">
-/// ### Your message survives the next run
+// <editor-fold defaultstate="expanded" desc="Investigator notebook · worked example">
+/// ### Follow bytes across two distinct file roles
 ///
-/// ImageIO.write(image, "png", output) returns true when it finds a PNG encoder; it sends the encoded
-/// bytes to the supplied stream. A neutral example is a tiny painted icon saved to a notebook cover:
-/// create its directory, open the cover.png stream in try-with-resources, then pass that stream to
-/// ImageIO.write. After the block, another program can read the file. Predict what remains if the
-/// stream is opened but the write call is omitted.
+/// An input path identifies what you read; an output path identifies what you create. Changing an
+/// in-memory object does not rewrite its input file unless you explicitly write there. Keep input
+/// validation ahead of opening the destination so an unreadable input does not erase useful output.
 ///
-/// render already hides the current message in image pixels using encode. You own persistence, not
-/// the bit algorithm. readMessage opens the actual PNG and extracts its stored text. main only writes
-/// when you enter a new message or no postcard exists. Enter on a later run opens the existing
-/// postcard unchanged, even in a fresh game object. Thus the file carries a message between runs, not
-/// merely between two adjacent method calls.
+/// ```java
+/// String original = Files.readString(Path.of("draft.txt"));
+/// String edited = original.toUpperCase(Locale.ROOT);
+/// Files.writeString(Path.of("poster.txt"), edited);
+/// ```
+///
+/// If draft.txt contains Nova, poster.txt receives NOVA while draft.txt still contains Nova. Predict
+/// a second run after draft.txt is changed to Orbit. Images have a similar boundary: ImageIO.read
+/// decodes an image, a transformation creates a result, and ImageIO.write encodes that result. A PNG
+/// encoder preserves the low bits used by this toy's message format. Opening an existing card is a
+/// read operation; creating a card is a separate choice.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// The prepared render already returns the encoded postcard. save only owns its durable destination.
+/// Find where a new message and its background meet. Compare that route with opening an already saved
+/// card.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Create the directory, then use newOutputStream(path) in try-with-resources.
+/// main routes new cards through postcardFromCover. Its current body still calls the old
+/// generated-background writer; encode can already hide text in any supplied image.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Call ImageIO.write(render(seed, option), "png", output), check its boolean result, and keep the
-/// actual stream as its destination.
+/// Read and validate cover with ImageIO, encode that image and text before opening the output, then
+/// write PNG to the separate destination. Preserve the cover and reject using it as its own
+/// destination.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="expanded" desc="Program to explore">
+
+
 String readMessage(Path path) throws IOException {
     try (var input = Files.newInputStream(path)) {
         var image = ImageIO.read(input);
@@ -153,7 +152,7 @@ String decode(BufferedImage image) {
 }
 
 /// Supplied image creation: generation and drawing remain visible in this file.
-BufferedImage render(long seed, double option) {
+BufferedImage background(long seed) {
     var image = new BufferedImage(400, 240, BufferedImage.TYPE_INT_RGB);
     var random = new Random(seed);
     for (int y = 0; y < 240; y++) {
@@ -161,8 +160,10 @@ BufferedImage render(long seed, double option) {
             image.setRGB(x, y, Color.HSBtoRGB(x / 400.0F, 0.5F, 0.6F + random.nextFloat() * 0.4F));
         }
     }
-    return encode(image, message);
+    return image;
 }
+
+
 
 
 
@@ -190,25 +191,45 @@ void showImages(String title, String[] captions, java.awt.image.BufferedImage[] 
 }
 
 
+void postcardFromCover(Path cover, Path destination, String text) throws Exception {
+    if (Files.exists(destination) && Files.isSameFile(cover, destination)) {
+        throw new IllegalArgumentException("Cover and postcard must be different files.");
+    }
+    BufferedImage original;
+    try (var input = Files.newInputStream(cover)) {
+        original = ImageIO.read(input);
+        if (original == null) throw new IOException("Cover is not a readable image.");
+    }
+    BufferedImage postcard = encode(original, text);
+    Files.createDirectories(destination.toAbsolutePath().getParent());
+    try (var output = Files.newOutputStream(destination)) {
+        if (!ImageIO.write(postcard, "png", output)) throw new IOException("PNG writer missing.");
+    }
+}
+
 void main() {
+    Path cover = Path.of("data", "cover.png");
     Path card = Path.of("data", "postcard.png");
     try {
+        if (!Files.exists(cover)) {
+            Files.createDirectories(cover.toAbsolutePath().getParent());
+            if (!ImageIO.write(background(42), "png", cover.toFile())) throw new IOException("PNG writer missing.");
+        }
+        IO.println("Artwork input: " + cover.toAbsolutePath());
         String text = IO.readln("New secret message, Enter opens the saved postcard, /q to quit: ");
         if (text == null || text.strip().equalsIgnoreCase("/q")) return;
         if (!text.isEmpty() || !Files.exists(card)) {
-            message = text.isEmpty() ? "Pixel moon" : text;
-            save(card, 42, 1);
+            String chosen = text.isEmpty() ? "Pixel moon" : text;
+            postcardFromCover(cover, card, chosen);
         }
         String recovered = readMessage(card);
-        if (!text.isEmpty() && !recovered.equals(text)) {
-            throw new IOException("The saved postcard does not contain the new message.");
-        }
+        if (!text.isEmpty() && !recovered.equals(text)) throw new IOException("The saved message differs from the new text.");
         var image = ImageIO.read(card.toFile());
         if (image == null) throw new IOException("The postcard is not a readable PNG.");
         IO.println("Recovered from " + card.toAbsolutePath() + ": " + recovered);
         showImages("Secret PNG Postcard", new String[]{recovered}, new BufferedImage[]{image});
     } catch (Exception failure) {
-        IO.println("Cannot open the saved postcard: " + failure.getMessage());
+        IO.println("Cannot open the postcard: " + failure.getMessage());
     }
 }
 // </editor-fold>

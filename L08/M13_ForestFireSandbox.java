@@ -7,107 +7,22 @@ import javax.swing.Timer;
 
 /// # L08.13 · ForestFireSandbox
 ///
-/// Plant trees, cut a firebreak, and ignite one end of the forest. Explore how a toy fire front spreads
-/// one neighbourhood at a time.
+/// The sandbox already spreads a toy fire to four neighbouring trees. Change the world to a
+/// deliberately one-way east wind, then design a firebreak and test a prediction.
 ///
-/// **Your mission:** Fire can cascade across many trees during one tick and old flames fail to clear.
-/// Repair nextForest() so every cell advances from the same previous forest.
+/// **Your mission:** In the new toy model, a tree ignites only if the cell immediately west of it was
+/// burning in the previous generation. Old fire becomes empty; empty cells stay empty. Never wrap at
+/// borders, mutate the old forest, or spread twice within one tick. North, south, west and diagonal
+/// spread must stop. Keep the painting and Step/Run controls.
 ///
-/// **Today you learn:** Simultaneous updates: compute a complete new grid from an unchanged old grid.
-/// Newly ignited trees must wait for the next generation before igniting their own neighbours.
+/// **Today you learn:** Compare two neighbourhood hypotheses while preserving a shared old generation.
+/// A new wind rule changes which facts are read, not when new facts become visible.
 ///
-/// Run the program, choose Fire and click a tree to ignite it, then click Step to inspect how
-/// the front moves before trying Run/Pause.
-int[][] nextForest(int[][] before) {
-    int[][] next = new int[40][60];
-    int[][] offsets = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-    for (int y = 0; y < 40; y++) {
-        for (int x = 0; x < 60; x++) {
-            if (before[y][x] != 1) {
-                continue;
-            }
-            next[y][x] = 1;
-            for (var d : offsets) {
-                int nx = x + d[0], ny = y + d[1];
-                if (nx >= 0 && nx < 60 && ny >= 0 && ny < 40 && before[ny][nx] == 2) {
-                    next[y][x] = 2;
-                }
-            }
-        }
-    }
-    return next;
-}
+/// Use Erase to make space, Tree to draw a short horizontal line, and Fire to ignite its middle. Step
+/// pauses and advances once. In the starter it spreads both ways; after the hack only the east/right
+/// half burns one cell per step.
 
-// <editor-fold defaultstate="collapsed" desc="Recall · F26">
-/// ### One generation uses one shared past
-///
-/// A simultaneous update means every new cell reads the same old world. If you overwrite the old cells
-/// as you go, the next column may see a future that its neighbour never saw.
-///
-/// Consider a toy line: a cell turns on when it or its left neighbour was on. The left edge has an off
-/// neighbour. For old `[true,false,false]`, the next row must be `[true,true,false]`.
-///
-/// ```java
-/// boolean[] old = {true, false, false};
-/// boolean[] next = new boolean[old.length];
-/// for (int x = 0; x < old.length; x++) {
-///     next[x] = old[x] || (x > 0 && old[x - 1]);
-/// }
-/// ```
-///
-/// Why not three true cells? The third cell reads old[1], which is false, not the newly written
-/// next[1]. Old remains untouched, so visiting columns in reverse would give the same result. Publish
-/// the complete next row only after computing it.
-///
-/// Draw OLD above NEXT, with arrows from the cells read to the cell written. Predict the second
-/// generation. A two-dimensional world follows the same principle, with separate writable rows as well
-/// as a separate outer array.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
-///
-/// - `int[][] next = before` — The new and old grids currently share storage, defeating a simultaneous
-///   step.
-/// - `int[][] offsets` — Lists the four cardinal neighbours, deliberately excluding diagonals.
-/// - `before[y][x] != 1` — Only old tree cells enter this propagation branch.
-/// - `before[ny][nx] == 2` — Tests for a fire in the previous generation, not one just created in next.
-///
-/// ### What the prepared part already does
-///
-/// edit() supplies Tree, Fire, and Erase brushes, while step() publishes the result of nextForest() once.
-/// Buttons and a stopped-on-close timer handle stepping and running; this is a propagation toy, not a
-/// wildfire predictor.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="For this game">
-/// ### Apply the model here
-///
-/// States are 0=empty, 1=tree, 2=fire. For one generation, a tree burns only beside an old cardinal
-/// fire; old fire becomes empty and empty remains empty. Trace `[2,1,1]` away from other trees: one
-/// tick gives `[0,2,1]`, not a whole burning row. Use this prediction to check both clearing and
-/// delayed spreading.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Writing into before lets a new fire immediately ignite the next tree in traversal order.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// A new zero-filled matrix also makes old fire disappear naturally.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Allocate a fresh 40×60 next matrix; read only before and publish next once after every cell is
-/// computed.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
-/// Design a firebreak, ignite one end, and predict the stopped front. Then try an explicitly different
-/// eight-neighbour model on exactly the same forest.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+// <editor-fold defaultstate="expanded" desc="Program · explore the rules">
 int[][] cells = new int[40][60];
 boolean running;
 int brush = 1;
@@ -131,6 +46,18 @@ boolean edit(int x, int y, int value) {
     }
     cells[y][x] = value;
     return true;
+}
+
+int[][] nextForest(int[][] before) {
+    int[][] next = new int[40][60];
+    for (int y = 0; y < 40; y++) {
+        for (int x = 0; x < 60; x++) {
+            if (before[y][x] == 1) {
+                next[y][x] = x > 0 && before[y][x - 1] == 2 ? 2 : 1;
+            }
+        }
+    }
+    return next;
 }
 
 void step() {
@@ -218,6 +145,68 @@ void main() {
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
+
+
+// <editor-fold defaultstate="collapsed" desc="Recall · F26">
+/// ### One generation uses one shared past
+///
+/// A simultaneous update means every new cell reads the same old world. If you overwrite the old cells
+/// as you go, the next column may see a future that its neighbour never saw.
+///
+/// Consider a toy line: a cell turns on when it or its left neighbour was on. The left edge has an off
+/// neighbour. For old `[true,false,false]`, the next row must be `[true,true,false]`.
+///
+/// ```java
+/// boolean[] old = {true, false, false};
+/// boolean[] next = new boolean[old.length];
+/// for (int x = 0; x < old.length; x++) {
+///     next[x] = old[x] || (x > 0 && old[x - 1]);
+/// }
+/// ```
+///
+/// Why not three true cells? The third cell reads old[1], which is false, not the newly written
+/// next[1]. Old remains untouched, so visiting columns in reverse would give the same result. Publish
+/// the complete next row only after computing it.
+///
+/// Draw OLD above NEXT, with arrows from the cells read to the cell written. Predict the second
+/// generation. A two-dimensional world follows the same principle, with separate writable rows as well
+/// as a separate outer array.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Read this code">
+/// ### Observe, then trace the flow
+///
+/// Draw OLD above NEXT and predict a tiny line before running it. A tree reads the old neighbour that
+/// could send fire into it: eastward travel means reading the neighbour to the west. Do not confuse
+/// travel direction with lookup direction. The drawing and brushes already work, so use them to build a
+/// controlled experiment rather than changing random forests repeatedly.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Experiment and replay">
+/// Place one fire with trees on all four sides, then Step. Only the eastern tree should ignite and the
+/// old fire should clear. Add a second eastern tree: it waits one more Step. Break that line with an
+/// empty square and predict where the front stops.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
+/// For OLD [tree, fire, tree, tree], draw the next line. A tree beyond the newly lit tree must wait.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
+/// Bound the search to the generation calculation called by Step. Keep its new grid; change the
+/// neighbour evidence used for a tree.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
+/// Find nextForest. For a tree at (x,y), read only old[y][x-1] when x>0. Preserve old-fire-to-empty and
+/// empty-to-empty transitions and return an independently built next grid.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Invent a north-east wind with two explicit incoming neighbours. Reuse the same painted test scene to
+/// distinguish it from both earlier models.
+// </editor-fold>
+
 
 // <editor-fold defaultstate="collapsed" desc="Small Java map · optional">
 /// ## An unfamiliar piece of Java?
