@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 /// Kontrola celého levelu: `java Check.java`
 /// Jedna hra: `java Check.java M01_CannonPuzzle.java`
 /// Kontroly volají testovací metody přímo v této JVM.
+/// Hry zůstávají compact sources; následující kontroly k nim přistupují pomocí reflection.
 class Check {
     int failed;
     int checked;
@@ -44,6 +45,7 @@ class Check {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M01_CannonPuzzleTest {
     static int checks;
 
@@ -55,16 +57,17 @@ class M01_CannonPuzzleTest {
     }
 
     public static void main(String[] args) throws Exception {
-        var game = new M01_CannonPuzzle();
-        check(Math.abs(game.launchSpeed(100) - 9) < 1e-8, "100 pixels of drag must give speed 9");
-        check(Math.abs(game.launchSpeed(-80) + 7.2) < 1e-8, "upward drag must keep its negative fractional speed");
-        game.restart();
-        game.launch();
-        check(game.vx > 0 && game.vy < 0, "the actual cannon must launch right and upward");
+        var game = Reflect.create("M01_CannonPuzzle");
+        check(Math.abs(((double) Reflect.call(game, "launchSpeed", 100)) - 9) < 1e-8, "100 pixels of drag must give speed 9");
+        check(Math.abs(((double) Reflect.call(game, "launchSpeed", -80)) + 7.2) < 1e-8, "upward drag must keep its negative fractional speed");
+        Reflect.call(game, "restart");
+        Reflect.call(game, "launch");
+        check(((double) Reflect.get(game, "vx")) > 0 && ((double) Reflect.get(game, "vy")) < 0, "the actual cannon must launch right and upward");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M02_MiniGolfTest {
     static int checks;
 
@@ -76,18 +79,19 @@ class M02_MiniGolfTest {
     }
 
     public static void main(String[] args) throws Exception {
-        var game = new M02_MiniGolf();
-        check(Math.abs(game.dragVelocity(100) - 8) < 1e-8, "100 pixels must produce speed 8 before the supplied cap");
-        check(Math.abs(game.dragVelocity(-25) + 2) < 1e-8, "negative distance must produce -2");
-        check(game.dragVelocity(0) == 0, "no pull means no velocity");
-        game.restart();
-        game.begin(90, 110);
-        game.shoot(-10, 110);
-        check(Math.abs(game.vx - 8) < 1e-8 && game.strokes == 1, "the actual putt uses the repaired scale");
+        var game = Reflect.create("M02_MiniGolf");
+        check(Math.abs(((double) Reflect.call(game, "dragVelocity", 100)) - 8) < 1e-8, "100 pixels must produce speed 8 before the supplied cap");
+        check(Math.abs(((double) Reflect.call(game, "dragVelocity", -25)) + 2) < 1e-8, "negative distance must produce -2");
+        check(((double) Reflect.call(game, "dragVelocity", 0)) == 0, "no pull means no velocity");
+        Reflect.call(game, "restart");
+        Reflect.call(game, "begin", 90, 110);
+        Reflect.call(game, "shoot", -10, 110);
+        check(Math.abs(((double) Reflect.get(game, "vx")) - 8) < 1e-8 && ((int) Reflect.get(game, "strokes")) == 1, "the actual putt uses the repaired scale");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M03_BouncingBallsTest {
     static int checks;
 
@@ -99,18 +103,19 @@ class M03_BouncingBallsTest {
     }
 
     public static void main(String[] args) throws Exception {
-        var game = new M03_BouncingBalls();
-        check(Math.abs(game.bounceSpeed(4) - 3) < 1e-8, "a wall bounce retains three quarters of speed");
-        check(Math.abs(game.bounceSpeed(-8) - 6) < 1e-8, "the supplied magnitude conversion must retain a fraction");
-        check(game.bounceSpeed(0) == 0, "zero speed remains zero");
-        game.restart();
-        game.add(11, 100, -4, 0);
-        game.step();
-        check(game.balls.getFirst().vx() > 2.9, "the real ball reverses away from the left wall");
+        var game = Reflect.create("M03_BouncingBalls");
+        check(Math.abs(((double) Reflect.call(game, "bounceSpeed", 4)) - 3) < 1e-8, "a wall bounce retains three quarters of speed");
+        check(Math.abs(((double) Reflect.call(game, "bounceSpeed", -8)) - 6) < 1e-8, "the supplied magnitude conversion must retain a fraction");
+        check(((double) Reflect.call(game, "bounceSpeed", 0)) == 0, "zero speed remains zero");
+        Reflect.call(game, "restart");
+        Reflect.call(game, "add", 11, 100, -4, 0);
+        Reflect.call(game, "step");
+        check(((double) Reflect.call(((java.util.ArrayList<Object>) Reflect.get(game, "balls")).getFirst(), "vx")) > 2.9, "the real ball reverses away from the left wall");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M04_SpirographTest {
     static int checks;
 
@@ -122,17 +127,18 @@ class M04_SpirographTest {
     }
 
     public static void main(String[] args) throws Exception {
-        var game = new M04_Spirograph();
-        check(Math.abs(game.radiusRatio(120, 45) - 5.0 / 3) < 1e-8, "75 divided by 45 must retain its fractional ratio");
-        check(game.radiusRatio(120, 60) == 1, "an exact ratio remains exact");
-        check(game.radiusRatio(120, 80) == 0.5, "a ratio below one must not become zero");
-        game.restart();
-        var p = game.point(1);
+        var game = Reflect.create("M04_Spirograph");
+        check(Math.abs(((double) Reflect.call(game, "radiusRatio", 120, 45)) - 5.0 / 3) < 1e-8, "75 divided by 45 must retain its fractional ratio");
+        check(((double) Reflect.call(game, "radiusRatio", 120, 60)) == 1, "an exact ratio remains exact");
+        check(((double) Reflect.call(game, "radiusRatio", 120, 80)) == 0.5, "a ratio below one must not become zero");
+        Reflect.call(game, "restart");
+        var p = ((java.awt.geom.Point2D.Double) Reflect.call(game, "point", 1));
         check(Math.abs(p.x - (75 * Math.cos(1) + 65 * Math.cos(5.0 / 3))) < 1e-8, "the visible curve uses the repaired ratio");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M05_AnagramRoundsTest {
     static int checks;
 
@@ -144,16 +150,17 @@ class M05_AnagramRoundsTest {
     }
 
     public static void main(String[] args) throws Exception {
-        var game = new M05_AnagramRounds();
-        check(game.normalize("  silent  ").equals("SILENT"), "a whole lower-case answer must become the accepted upper-case word");
-        check(game.normalize("LiStEn").equals("LISTEN"), "mixed case is normalized");
-        game.reset();
-        game.command(" silent ");
-        check(game.score == 1 && game.round == 1, "the real anagram round accepts the normalized answer");
+        var game = Reflect.create("M05_AnagramRounds");
+        check(((java.lang.String) Reflect.call(game, "normalize", "  silent  ")).equals("SILENT"), "a whole lower-case answer must become the accepted upper-case word");
+        check(((java.lang.String) Reflect.call(game, "normalize", "LiStEn")).equals("LISTEN"), "mixed case is normalized");
+        Reflect.call(game, "reset");
+        Reflect.call(game, "command", " silent ");
+        check(((int) Reflect.get(game, "score")) == 1 && ((int) Reflect.get(game, "round")) == 1, "the real anagram round accepts the normalized answer");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M06_MadLibsStoryMachineTest {
     static int checks;
 
@@ -165,15 +172,16 @@ class M06_MadLibsStoryMachineTest {
     }
 
     public static void main(String[] args) throws Exception {
-        var game = new M06_MadLibsStoryMachine();
-        check(game.cleanWord("  Red Fox  ").equals("Red Fox"), "edge spaces must disappear while a multiword name stays whole");
-        check(game.cleanWord("New   Moon").equals("New   Moon"), "internal spacing is not silently rewritten");
-        String story = game.story("  Red Fox  ", " robot ", " Moon Base ", " spoon ");
+        var game = Reflect.create("M06_MadLibsStoryMachine");
+        check(((java.lang.String) Reflect.call(game, "cleanWord", "  Red Fox  ")).equals("Red Fox"), "edge spaces must disappear while a multiword name stays whole");
+        check(((java.lang.String) Reflect.call(game, "cleanWord", "New   Moon")).equals("New   Moon"), "internal spacing is not silently rewritten");
+        String story = ((java.lang.String) Reflect.call(game, "story", "  Red Fox  ", " robot ", " Moon Base ", " spoon "));
         check(story.startsWith("Red Fox hired a robot to guard Moon Base."), "the actual story uses cleaned full inputs");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M07_CodebreakerTest {
     static int checks;
 
@@ -185,17 +193,18 @@ class M07_CodebreakerTest {
     }
 
     public static void main(String[] args) throws Exception {
-        var game = new M07_Codebreaker();
-        game.secret = new String("1234");
-        check(game.matchesCode(new String("1234")), "equal code text must match even when stored as different String objects");
-        check(!game.matchesCode("1235"), "a different final digit must not match");
-        game.attempts = 0;
-        game.won = false;
-        check(game.submit(new String("1234")) && game.won, "the actual matching guess must end the round");
+        var game = Reflect.create("M07_Codebreaker");
+        Reflect.set(game, "secret", new String("1234"));
+        check(((boolean) Reflect.call(game, "matchesCode", new String("1234"))), "equal code text must match even when stored as different String objects");
+        check(!((boolean) Reflect.call(game, "matchesCode", "1235")), "a different final digit must not match");
+        Reflect.set(game, "attempts", 0);
+        Reflect.set(game, "won", false);
+        check(((boolean) Reflect.call(game, "submit", new String("1234"))) && ((boolean) Reflect.get(game, "won")), "the actual matching guess must end the round");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M08_PokerDiceTest {
     static int checks;
 
@@ -207,18 +216,19 @@ class M08_PokerDiceTest {
     }
 
     public static void main(String[] args) throws Exception {
-        var game = new M08_PokerDice();
-        check(!game.fullHouse(3, 0), "three equal dice alone are not a full house");
-        check(!game.fullHouse(2, 1), "a pair alone is not a full house");
-        check(game.fullHouse(3, 1), "three equal dice plus a pair form a full house");
-        game.dice = new int[]{2, 2, 2, 3, 4};
-        check(game.points() == 20, "actual three-kind scores 20 rather than full-house 35");
-        game.dice = new int[]{2, 2, 2, 3, 3};
-        check(game.points() == 35, "actual full house scores 35");
+        var game = Reflect.create("M08_PokerDice");
+        check(!((boolean) Reflect.call(game, "fullHouse", 3, 0)), "three equal dice alone are not a full house");
+        check(!((boolean) Reflect.call(game, "fullHouse", 2, 1)), "a pair alone is not a full house");
+        check(((boolean) Reflect.call(game, "fullHouse", 3, 1)), "three equal dice plus a pair form a full house");
+        Reflect.set(game, "dice", new int[]{2, 2, 2, 3, 4});
+        check(((int) Reflect.call(game, "points")) == 20, "actual three-kind scores 20 rather than full-house 35");
+        Reflect.set(game, "dice", new int[]{2, 2, 2, 3, 3});
+        check(((int) Reflect.call(game, "points")) == 35, "actual full house scores 35");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M09_SonarTreasureHuntTest {
     static int checks;
 
@@ -230,15 +240,16 @@ class M09_SonarTreasureHuntTest {
     }
 
     public static void main(String[] args) throws Exception {
-        var game = new M09_SonarTreasureHunt();
-        check(!game.insideSea(8, 7), "row index 8 is outside the eight-row sea");
-        check(!game.insideSea(7, 8), "column index 8 is outside the sea");
-        check(game.insideSea(0, 0) && game.insideSea(7, 7), "both valid corners are included");
-        check(!game.insideSea(-1, 0) && !game.insideSea(0, -1), "negative indices are excluded");
+        var game = Reflect.create("M09_SonarTreasureHunt");
+        check(!((boolean) Reflect.call(game, "insideSea", 8, 7)), "row index 8 is outside the eight-row sea");
+        check(!((boolean) Reflect.call(game, "insideSea", 7, 8)), "column index 8 is outside the sea");
+        check(((boolean) Reflect.call(game, "insideSea", 0, 0)) && ((boolean) Reflect.call(game, "insideSea", 7, 7)), "both valid corners are included");
+        check(!((boolean) Reflect.call(game, "insideSea", -1, 0)) && !((boolean) Reflect.call(game, "insideSea", 0, -1)), "negative indices are excluded");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M10_MagicNumberCardsTest {
     static int checks;
 
@@ -250,12 +261,170 @@ class M10_MagicNumberCardsTest {
     }
 
     public static void main(String[] args) throws Exception {
-        var game = new M10_MagicNumberCards();
-        check(game.yesAnswer(new String("y")), "a typed lower-case y must mean yes");
-        check(game.yesAnswer("Y"), "upper-case Y must also mean yes");
-        check(!game.yesAnswer("n"), "n must mean no");
-        boolean[] answers = {game.yesAnswer("Y"), false, true, false, false, false};
-        check(game.reveal(answers) == 5, "the actual trick must include the first yes card");
+        var game = Reflect.create("M10_MagicNumberCards");
+        check(((boolean) Reflect.call(game, "yesAnswer", new String("y"))), "a typed lower-case y must mean yes");
+        check(((boolean) Reflect.call(game, "yesAnswer", "Y")), "upper-case Y must also mean yes");
+        check(!((boolean) Reflect.call(game, "yesAnswer", "n")), "n must mean no");
+        boolean[] answers = {((boolean) Reflect.call(game, "yesAnswer", "Y")), false, true, false, false, false};
+        check(((int) Reflect.call(game, "reveal", answers)) == 5, "the actual trick must include the first yes card");
         System.out.println("PASS " + checks + " checks");
+    }
+}
+
+// Připravený přístup ke compact programům. Testy používají běžné assertions, pole a JDK collections.
+class Reflect {
+    static Class<?> type(String name) {
+        return switch (name) {
+            case "boolean" -> boolean.class;
+            case "byte" -> byte.class;
+            case "short" -> short.class;
+            case "char" -> char.class;
+            case "int" -> int.class;
+            case "long" -> long.class;
+            case "float" -> float.class;
+            case "double" -> double.class;
+            case "void" -> void.class;
+            default -> load(name);
+        };
+    }
+
+    private static Class<?> load(String name) {
+        try {
+            try {
+                return Class.forName(name);
+            } catch (ClassNotFoundException missing) {
+                int nested = name.indexOf('$');
+                if (nested < 0) throw missing;
+                Class.forName(name.substring(0, nested));
+                return Class.forName(name);
+            }
+        } catch (ClassNotFoundException failure) {
+            throw new IllegalStateException("Cannot find compact program type: " + name, failure);
+        }
+    }
+
+    static Object create(String name, Object... args) {
+        var matches = new ArrayList<Constructor<?>>();
+        for (var constructor : type(name).getDeclaredConstructors()) {
+            if (accepts(constructor.getParameterTypes(), args)) matches.add(constructor);
+        }
+        var constructor = one(matches, "constructor " + name);
+        try {
+            constructor.setAccessible(true);
+            return constructor.newInstance(args);
+        } catch (InvocationTargetException failure) {
+            throw Reflect.<RuntimeException>raise(failure.getCause());
+        } catch (ReflectiveOperationException failure) {
+            throw new IllegalStateException("Cannot construct " + name, failure);
+        }
+    }
+
+    static Object get(Object target, String name) {
+        try {
+            return field(target, name).get(target instanceof Class<?> ? null : target);
+        } catch (ReflectiveOperationException failure) {
+            throw new IllegalStateException("Cannot read field " + name, failure);
+        }
+    }
+
+    static Object set(Object target, String name, Object value) {
+        try {
+            var field = field(target, name);
+            Object receiver = target instanceof Class<?> ? null : target;
+            field.set(receiver, value);
+            return field.get(receiver);
+        } catch (ReflectiveOperationException failure) {
+            throw new IllegalStateException("Cannot write field " + name, failure);
+        }
+    }
+
+    private static Field field(Object target, String name) throws NoSuchFieldException {
+        Class<?> owner = target instanceof Class<?> type ? type : target.getClass();
+        for (var current = owner; current != null; current = current.getSuperclass()) {
+            try {
+                var field = current.getDeclaredField(name);
+                if (target instanceof Class<?> && !Modifier.isStatic(field.getModifiers())) {
+                    throw new IllegalStateException("An instance is required for field " + name);
+                }
+                field.setAccessible(true);
+                return field;
+            } catch (NoSuchFieldException missing) {
+                // Continue with inherited fields.
+            }
+        }
+        throw new NoSuchFieldException(owner.getName() + "." + name);
+    }
+
+    static Object call(Object target, String name, Object... args) {
+        Class<?> owner = target instanceof Class<?> type ? type : target.getClass();
+        var methods = new LinkedHashMap<String, Method>();
+        for (var current = owner; current != null; current = current.getSuperclass()) {
+            for (var method : current.getDeclaredMethods()) {
+                methods.putIfAbsent(method.getName() + Arrays.toString(method.getParameterTypes()), method);
+            }
+        }
+        for (var method : owner.getMethods()) {
+            methods.putIfAbsent(method.getName() + Arrays.toString(method.getParameterTypes()), method);
+        }
+        var matches = new ArrayList<Method>();
+        for (var method : methods.values()) {
+            if (!method.isBridge() && !method.isSynthetic()
+                    && method.getName().equals(name) && accepts(method.getParameterTypes(), args)
+                    && (!(target instanceof Class<?>) || Modifier.isStatic(method.getModifiers()))) {
+                matches.add(method);
+            }
+        }
+        var method = one(matches, "method " + owner.getName() + "." + name);
+        try {
+            method.setAccessible(true);
+            return method.invoke(target instanceof Class<?> ? null : target, args);
+        } catch (InvocationTargetException failure) {
+            throw Reflect.<RuntimeException>raise(failure.getCause());
+        } catch (ReflectiveOperationException failure) {
+            throw new IllegalStateException("Cannot call " + owner.getName() + "." + name, failure);
+        }
+    }
+
+    static Object array(String component, Object... values) {
+        Object result = Array.newInstance(type(component), values.length);
+        for (int index = 0; index < values.length; index++) Array.set(result, index, values[index]);
+        return result;
+    }
+
+    private static boolean accepts(Class<?>[] parameters, Object[] args) {
+        if (parameters.length != args.length) return false;
+        for (int index = 0; index < parameters.length; index++) {
+            Class<?> to = parameters[index];
+            Object value = args[index];
+            if (value == null) {
+                if (to.isPrimitive()) return false;
+            } else if (to.isPrimitive()) {
+                String targets = switch (value) {
+                    case Boolean ignored -> "boolean";
+                    case Byte ignored -> "byte short int long float double";
+                    case Short ignored -> "short int long float double";
+                    case Character ignored -> "char int long float double";
+                    case Integer ignored -> "int long float double";
+                    case Long ignored -> "long float double";
+                    case Float ignored -> "float double";
+                    case Double ignored -> "double";
+                    default -> "";
+                };
+                if (!Arrays.asList(targets.split(" ")).contains(to.getName())) return false;
+            } else if (!to.isInstance(value)) return false;
+        }
+        return true;
+    }
+
+    private static <T> T one(List<T> matches, String description) {
+        if (matches.size() != 1) {
+            throw new IllegalStateException((matches.isEmpty() ? "No compatible " : "Ambiguous ") + description);
+        }
+        return matches.getFirst();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Throwable> RuntimeException raise(Throwable failure) throws T {
+        throw (T) failure;
     }
 }
