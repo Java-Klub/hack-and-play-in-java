@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Switch expressions: several input cases can share one returned value. A Direction
 /// groups the horizontal and vertical changes for that key.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L07/M03_TrailDuel.java`
-/// - Check this mission: `java L07/Check.java M03_TrailDuel.java`
-///
-/// Run the play command above and play together on one keyboard, with one person steering using W,
-/// A, S, D and the other using the arrow keys. After your repair: save the file, run the check
-/// command above, then play again.
-///
-/// Need an explanation? Recall · F09 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and play together on one keyboard, with one person steering using W, A, S, D
+/// and the other using the arrow keys.
 Direction directionFor(int code) {
     return switch (code) {
         case KeyEvent.VK_W, KeyEvent.VK_UP -> new Direction(0, -1);

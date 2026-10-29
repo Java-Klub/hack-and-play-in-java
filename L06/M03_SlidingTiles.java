@@ -15,15 +15,8 @@ import java.awt.GridLayout;
 /// **Today you learn:** Scope and state lifetime: the shuffle deliberately uses the normal move method.
 /// Its effects belong to a field that must be reset after setup, not hidden by a temporary variable.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L06/M03_SlidingTiles.java`
-/// - Check this mission: `java L06/Check.java M03_SlidingTiles.java`
-///
-/// Run the play command above and click a numbered tile immediately beside the gap to slide it into
-/// the empty space. After your repair: save the file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F14 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and click a numbered tile immediately beside the gap to slide it into the
+/// empty space.
 void reset(long seed) {
     for (int i = 0; i < 9; i++) {
         tiles[i] = (i + 1) % 9;

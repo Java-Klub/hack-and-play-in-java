@@ -16,16 +16,8 @@ import java.util.Arrays;
 /// **Today you learn:** Return a useful value: the direction rule describes a step without moving
 /// anything itself. The caller can use the returned direction for both a single step and a longer jump.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L03/M12_ToadsAndFrogs.java`
-/// - Check this mission: `java L03/Check.java M12_ToadsAndFrogs.java`
-///
-/// Run the play command above and press 5 to ask the frog beside the initial gap to move left; R
-/// restores the starting arrangement. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Recall · F13 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and press 5 to ask the frog beside the initial gap to move left; R restores
+/// the starting arrangement.
 int direction(int piece) {
     if (piece == 1) {
         return 1;

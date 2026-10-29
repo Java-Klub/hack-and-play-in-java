@@ -14,16 +14,8 @@ import java.awt.image.BufferedImage;
 /// **Today you learn:** One seeded Random should supply the noise across the whole image. Its
 /// repeatability is useful for comparison, while a different seed should change the distracting channels.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L11/M06_ColourFilterSecrets.java`
-/// - Check this mission: `java L11/Check.java M06_ColourFilterSecrets.java`
-///
-/// After the play command, type a seed or press Enter for 42; inspect the Java picture, then close
-/// it and repeat the same seed or try 43 to compare. After your repair: save the file, run the
-/// check command above, then play again.
-///
-/// Need an explanation? Recall · F27 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then type a seed or press Enter for 42; inspect the Java picture, then
+/// close it and repeat the same seed or try 43 to compare.
 BufferedImage hide(BufferedImage mask, long seed) {
     var random = new Random(seed);
     var image = new BufferedImage(mask.getWidth(), mask.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -131,8 +123,6 @@ BufferedImage render(long seed, double option) {
 }
 
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

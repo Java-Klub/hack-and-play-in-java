@@ -10,16 +10,8 @@
 /// same count. If both moments contain three lines, no new line should be rewarded; the method returns
 /// that one result to the caller.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L03/M09_SOS.java`
-/// - Check this mission: `java L03/Check.java M09_SOS.java`
-///
-/// Run the play command above and enter 1 S, 2 O, 3 S and 4 S as separate moves; compare the reward
-/// for the final move, which creates no new SOS. After your repair: save the file, run the check
-/// command above, then play again.
-///
-/// Need an explanation? Learn · F13 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and enter 1 S, 2 O, 3 S and 4 S as separate moves; compare the reward for
+/// the final move, which creates no new SOS.
 int gainedPoints(int before, int after) {
     return after - before;
 }

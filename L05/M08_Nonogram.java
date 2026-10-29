@@ -17,16 +17,8 @@ import java.util.Arrays;
 /// **Today you learn:** Traversal and search: carry a running count while scanning a line, and notice
 /// when a group ends because input ends rather than a white cell appearing.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L05/M08_Nonogram.java`
-/// - Check this mission: `java L05/Check.java M08_Nonogram.java`
-///
-/// the play command, left-click cells you believe are black and right-click cells you believe are
-/// white, using the row and column clues. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Recall · F17 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, left-click cells you believe are black and right-click cells you believe
+/// are white, using the row and column clues.
 int[] runs(int[] values) {
     var result = new ArrayList<Integer>();
     int count = 0;

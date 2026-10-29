@@ -16,16 +16,8 @@ import java.util.Arrays;
 /// **Today you learn:** Copies and aliasing: an int[][] stores references to row arrays. Copying only the
 /// outer array leaves mutable rows shared, so an independent board needs independent rows.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L08/M11_BinaryBalance.java`
-/// - Check this mission: `java L08/Check.java M11_BinaryBalance.java`
-///
-/// Run the play command above and click a non-orange cell repeatedly to switch between unknown,
-/// black, and white while following the balance rules. After your repair: save the file, run the
-/// check command above, then play again.
-///
-/// Need an explanation? Recall · F20 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and click a non-orange cell repeatedly to switch between unknown, black, and
+/// white while following the balance rules.
 int[][] copyBoard(int[][] original) {
     int[][] copy = new int[original.length][];
     for (int row = 0; row < original.length; row++) {

@@ -14,16 +14,7 @@ import java.awt.image.BufferedImage;
 /// **Today you learn:** Named numeric values: a descriptive name connects one chosen angle to the later
 /// picture. A double can store a fractional angle, for example half a degree.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L01/M08_SunflowerSpiral.java`
-/// - Check this mission: `java L01/Check.java M08_SunflowerSpiral.java`
-///
-/// Run the play command above: the picture appears immediately in a Java window. After editing the
-/// source, close the window and run the play command again; the check command checks the
-/// calculation separately.
-///
-/// Need an explanation? Recall · F03 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program: the picture appears immediately in a Java window.
 double defaultAngle = 137.5;
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F03">
@@ -65,10 +56,10 @@ double defaultAngle = 137.5;
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="For this game">
-/// The play command builds the picture in memory and shows it directly in Java. The angle is in
+/// The program builds the picture in memory and shows it directly in Java. The angle is in
 /// degrees; Java writes fractional numbers with a decimal point. Rerun the file after changing
-/// defaultAngle so the new value is loaded. The check command checks behaviour, not an old picture
-/// left in an earlier window.
+/// defaultAngle so the new value is loaded. The mission checks verify behaviour, not an old
+/// picture left in an earlier window.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -80,7 +71,7 @@ double defaultAngle = 137.5;
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Set double defaultAngle = 137.5; then run the play command to see the new picture.
+/// Set double defaultAngle = 137.5; then run the program to see the new picture.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

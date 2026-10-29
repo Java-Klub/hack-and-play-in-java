@@ -16,16 +16,7 @@ import java.util.List;
 /// already stored. Check the tiny requests zero and one before reasoning about a detailed eleven-fold
 /// picture.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L04/M08_DragonCurve.java`
-/// - Check this mission: `java L04/Check.java M08_DragonCurve.java`
-///
-/// Run the play command above: the picture appears immediately in a Java window. After editing the
-/// source, close the window and run the play command again; the check command checks the
-/// calculation separately.
-///
-/// Need an explanation? Recall · F11 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program: the picture appears immediately in a Java window.
 List<Integer> foldTurns(int folds) {
     var turns = new ArrayList<Integer>();
     for (int fold = 0; fold < folds; fold++) {

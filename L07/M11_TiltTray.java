@@ -17,16 +17,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Invariants: after collision handling, the marble must no longer overlap the block
 /// on the resolved axis. Changing velocity alone cannot repair an invalid position.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L07/M11_TiltTray.java`
-/// - Check this mission: `java L07/Check.java M11_TiltTray.java`
-///
-/// Run the play command above and use the arrow keys to tilt the marble around blocks, braking
-/// before it reaches the green target. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Recall · F25 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and use the arrow keys to tilt the marble around blocks, braking before it
+/// reaches the green target.
 void step() {
     if (!started || won) {
         return;

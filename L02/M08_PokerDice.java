@@ -9,16 +9,9 @@
 /// **Today you learn:** Combining boolean conditions: OR accepts either part, while AND requires both.
 /// Work out the two truth values separately for a triple without a pair before combining them.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L02/M08_PokerDice.java`
-/// - Check this mission: `java L02/Check.java M08_PokerDice.java`
-///
-/// Run the play command above: dice are numbered and clicking selects them for reroll. In the
-/// opening hand, keep the three twos, select dice 4 and 5 and press Reroll selected. Bank points
-/// keeps the score and prepares the next round; Scoring help explains the hands.
-///
-/// Need an explanation? Recall · F06 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program: dice are numbered and clicking selects them for reroll. In the opening
+/// hand, keep the three twos, select dice 4 and 5 and press Reroll selected. Bank points keeps
+/// the score and prepares the next round; Scoring help explains the hands.
 boolean fullHouse(int largestGroup, int pairs) {
     return largestGroup == 3 && pairs == 1;
 }

@@ -10,16 +10,8 @@
 /// its previous value. A family containing three words needs three contributions, not three replacements
 /// with the same number.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L04/M09_EvilHangman.java`
-/// - Check this mission: `java L04/Check.java M09_EvilHangman.java`
-///
-/// Run the play command above and guess E to see the chosen clue, then use the check command to
-/// compare a three-word family with a one-word family. After your repair: save the file, run the
-/// check command above, then play again.
-///
-/// Need an explanation? Learn · F12 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and guess E to see the chosen clue, then run the checks to compare a
+/// three-word family with a one-word family.
 int familySize(List<String> family) {
     int total = 0;
     for (int i = 0; i < family.size(); i++) {

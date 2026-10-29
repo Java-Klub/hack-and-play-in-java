@@ -10,16 +10,8 @@
 /// failed match. There are two normal endings: return true when a word fits, or reach the dictionary’s
 /// end and return false.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L04/M02_Ghost.java`
-/// - Check this mission: `java L04/Check.java M02_Ghost.java`
-///
-/// Run the play command above, read the printed dictionary and type R; the starter wrongly declares
-/// a dead prefix despite the listed R words. After your repair: save the file, run the check
-/// command above, then play again.
-///
-/// Need an explanation? Recall · F10 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, read the printed dictionary and type R; the starter wrongly declares a dead
+/// prefix despite the listed R words.
 boolean possiblePrefix(String candidate) {
     int index = 0;
     while (index < words.length) {

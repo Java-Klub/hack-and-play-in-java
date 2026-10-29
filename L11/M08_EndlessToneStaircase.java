@@ -17,16 +17,9 @@ import java.io.ByteArrayInputStream;
 /// **Today you learn:** A Path carries both directories and filename. Keeping only its last name changes
 /// the destination; preparing parent directories does not fix a later write to another location.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L11/M08_EndlessToneStaircase.java`
-/// - Check this mission: `java L11/Check.java M08_EndlessToneStaircase.java`
-///
-/// the play command writes exports/shepard.wav through write and loads that exact WAV for Java
-/// Play/Stop. A wrong destination produces a clear terminal output failure; no substitute file is
-/// played. After your repair: save the file, run the check command above, then play again.
-///
-/// Need an explanation? Learn · F32 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// The program writes exports/shepard.wav through write and loads that exact WAV for Java
+/// Play/Stop. A wrong destination produces a clear terminal output failure; no substitute file
+/// is played.
 void write(Path path, double[] signal) throws Exception {
     byte[] pcm = new byte[signal.length * 2];
     for (int i = 0; i < signal.length; i++) {
@@ -119,8 +112,6 @@ double[] signal(int layers) {
     return signal;
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 
 /// Supplied Java Sound: a worker owns the line; Stop and window closing release it.
 /// Play/Stop use a separate Java Sound worker; closing releases it.

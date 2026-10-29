@@ -9,16 +9,8 @@
 /// **Today you learn:** Grid neighbours: displayed edges connect vertices on a separate grid. Translate
 /// row/column neighbours into flat vertex indices using the vertex grid’s width.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L08/M05_LoopBuilder.java`
-/// - Check this mission: `java L08/Check.java M05_LoopBuilder.java`
-///
-/// Run the play command above and enter 1 to toggle the first numbered edge, then add other edges
-/// to build a single loop. After your repair: save the file, run the check command above, then play
-/// again.
-///
-/// Need an explanation? Recall · F18 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and enter 1 to toggle the first numbered edge, then add other edges to build
+/// a single loop.
 int[] vertices(int edge) {
     if (edge < 12) {
         int r = edge / 3;

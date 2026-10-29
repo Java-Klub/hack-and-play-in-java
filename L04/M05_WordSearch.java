@@ -9,16 +9,8 @@
 /// **Today you learn:** For loops and endpoints: a row of three cells has only two gaps. Here n counts
 /// the gaps; trace the successive i values to decide how many letters must be read.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L04/M05_WordSearch.java`
-/// - Check this mission: `java L04/Check.java M05_WordSearch.java`
-///
-/// Run the play command above and enter 1 1 1 3 to select CAT in the first row; the starter reads
-/// only CA and rejects the find. After your repair: save the file, run the check command above,
-/// then play again.
-///
-/// Need an explanation? Learn · F11 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and enter 1 1 1 3 to select CAT in the first row; the starter reads only CA
+/// and rejects the find.
 String read(int r, int c, int nr, int nc) {
     require(r >= 0 && r < 5 && c >= 0 && c < 5 && nr >= 0 && nr < 5 && nc >= 0 && nc < 5);
     int dr = Integer.signum(nr - r);

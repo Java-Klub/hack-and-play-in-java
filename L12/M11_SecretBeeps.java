@@ -13,16 +13,8 @@
 /// and mark timing stable while one new parameter controls word separation; compatibility is a behaviour
 /// to check, not a reason to duplicate the whole algorithm.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L12/M11_SecretBeeps.java`
-/// - Check this mission: `java L12/Check.java M11_SecretBeeps.java`
-///
-/// After the play command, type a message or press Enter for E E; compare Play gap 10 with Play gap
-/// 7 in Java, and use Stop or replay to hear word separation. After your repair: save the file, run
-/// the check command above, then play again.
-///
-/// Need an explanation? Recall · F36 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then type a message or press Enter for E E; compare Play gap 10 with Play
+/// gap 7 in Java, and use Stop or replay to hear word separation.
 List<Integer> units(String text, int wordGap) {
     if (wordGap < 3 || wordGap > 12) throw new IllegalArgumentException("Word gap: 3..12 units.");
     var result = new ArrayList<Integer>();
@@ -151,8 +143,6 @@ List<Integer> units(String text) {
     return units(text, 7);
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 volatile javax.sound.sampled.SourceDataLine playingLine;
 volatile int playbackVersion;
 

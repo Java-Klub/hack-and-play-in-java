@@ -9,16 +9,8 @@
 /// **Today you learn:** Guard clauses: return early when an action is forbidden, before any state
 /// changes. Test the last legal cell, a repeated cell and a number just outside the range.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L03/M04_TicTacToe.java`
-/// - Check this mission: `java L03/Check.java M04_TicTacToe.java`
-///
-/// Run the play command above, choose cell 9 and then try it again; compare an accepted empty
-/// square with a rejected occupied square. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Learn · F08 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, choose cell 9 and then try it again; compare an accepted empty square with
+/// a rejected occupied square.
 boolean play(int cell) {
     if (winner != '.' || cell < 1 || cell > 9 || board[cell - 1] != '.') {
         return false;

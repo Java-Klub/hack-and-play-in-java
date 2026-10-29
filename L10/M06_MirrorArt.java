@@ -19,16 +19,8 @@ import java.awt.image.BufferedImage;
 /// to screen coordinates. The supplied trigonometry handles rotation; check which centre offsets are
 /// still missing.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L10/M06_MirrorArt.java`
-/// - Check this mission: `java L10/Check.java M06_MirrorArt.java`
-///
-/// After the play command, drag a stroke to inspect its reflections, use Up/Down to change mirror
-/// axes and R to clear and restart. After your repair: save the file, run the check command above,
-/// then play again.
-///
-/// Need an explanation? Recall · F29 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then drag a stroke to inspect its reflections, use Up/Down to change mirror
+/// axes and R to clear and restart.
 Point2D.Double transform(int x, int y, int copy, boolean reflect) {
     double dx = x - WIDTH / 2, dy = (y - HEIGHT / 2) * (reflect ? -1 : 1), a = 2 * Math.PI * copy / axes;
     return new Point2D.Double(WIDTH / 2 + dx * Math.cos(a) - dy * Math.sin(a), HEIGHT / 2 + dx * Math.sin(a) + dy * Math.cos(a));
@@ -213,8 +205,6 @@ void showWindow() {
     panel.requestFocusInWindow();
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

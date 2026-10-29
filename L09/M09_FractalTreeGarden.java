@@ -14,16 +14,8 @@ import java.awt.image.BufferedImage;
 /// **Today you learn:** Parsing turns text into a number and can fail before range checking begins. Catch
 /// the specific text-conversion failure; an out-of-range number is a different problem.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L09/M09_FractalTreeGarden.java`
-/// - Check this mission: `java L09/Check.java M09_FractalTreeGarden.java`
-///
-/// After the play command, enter an angle 10–70 or try oops; read Chosen value and inspect the Java
-/// picture. Close it and run the play command again for another input. After your repair: save the
-/// file, run the check command above, then play again.
-///
-/// Need an explanation? Learn · F31 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then enter an angle 10–70 or try oops; read Chosen value and inspect the
+/// Java picture. Close it and run the program again for another input.
 double readAngle(String text) {
     try {
         double value = Double.parseDouble(text.strip());
@@ -136,8 +128,6 @@ BufferedImage render(long seed, double angle) {
 }
 
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

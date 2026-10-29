@@ -15,16 +15,8 @@ import java.awt.image.BufferedImage;
 /// contact operation should explain the difference between four and eight neighbours while leaving the
 /// growth algorithm unchanged.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L12/M09_CrystalGrowth.java`
-/// - Check this mission: `java L12/Check.java M09_CrystalGrowth.java`
-///
-/// After the play command, compare New rule with Original rule from the same seed; after the repair
-/// they should show the intended difference. Close the window before replaying. After your repair:
-/// save the file, run the check command above, then play again.
-///
-/// Need an explanation? Learn · F36 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then compare New rule with Original rule from the same seed; after the
+/// repair they should show the intended difference. Close the window before replaying.
 boolean touching(boolean[][] grid, int x, int y, boolean diagonals) {
     for (int dy = -1; dy <= 1; dy++) {
         for (int dx = -1; dx <= 1; dx++) {
@@ -147,8 +139,6 @@ BufferedImage render(long seed, double option) {
 
 boolean diagonalGrowth = true;
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

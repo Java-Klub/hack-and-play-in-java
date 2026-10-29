@@ -9,15 +9,8 @@
 /// **Today you learn:** Named values: target stores one fact that several parts can read. Changing one
 /// initialization should keep the displayed goal and the actual goal in agreement.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L01/M06_HigherOrLower.java`
-/// - Check this mission: `java L01/Check.java M06_HigherOrLower.java`
-///
-/// Run the play command above, read Current card and click Higher or Lower to predict the next
-/// rank. The result and target stay visible; New round restarts play.
-///
-/// Need an explanation? Learn · F03 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, read Current card and click Higher or Lower to predict the next rank. The
+/// result and target stay visible; New round restarts play.
 int target = 10;
 
 // <editor-fold defaultstate="expanded" desc="Learn · F03">
@@ -60,10 +53,10 @@ int target = 10;
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="For this game">
-/// The default main provides cards and buttons directly in Java. Jack is 11, Queen 12, King 13 and
-/// Ace 14. An equal card does not count a correct guess or lose. Both the target display and win
-/// rule read the same target. After changing target, save, close the old window and run the play
-/// command again; New round does not reload edited Java.
+/// The default main provides cards and buttons directly in Java. Jack is 11, Queen 12, King 13
+/// and Ace 14. An equal card does not count a correct guess or lose. Both the target display
+/// and win rule read the same target. After changing target, save, close the old window and run
+/// the program again; New round does not reload edited Java.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">

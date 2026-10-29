@@ -15,16 +15,8 @@ import java.awt.image.BufferedImage;
 /// default, while a parsed value still has to pass its bounds. A specific catch keeps these cases
 /// separate.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L09/M11_MazePostcards.java`
-/// - Check this mission: `java L09/Check.java M11_MazePostcards.java`
-///
-/// After the play command, enter a column count 2–50 or try oops; read Chosen value and inspect the
-/// Java picture. Close it and run the play command again for another input. After your repair: save
-/// the file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F31 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then enter a column count 2–50 or try oops; read Chosen value and inspect
+/// the Java picture. Close it and run the program again for another input.
 int readColumns(String text) {
     try {
         int columns = Integer.parseInt(text.strip());
@@ -159,8 +151,6 @@ BufferedImage render(long seed, double option) {
 }
 
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

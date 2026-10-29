@@ -9,16 +9,8 @@
 /// **Today you learn:** Records: equal component values give equal record values. Choose a consistent
 /// representation before using a Domino as a uniqueness key.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L05/M11_Dominosa.java`
-/// - Check this mission: `java L05/Check.java M11_Dominosa.java`
-///
-/// Run the play command above and type 1 1 1 2 to pair the first two adjacent cells, then continue
-/// with other neighbouring cells. After your repair: save the file, run the check command above,
-/// then play again.
-///
-/// Need an explanation? Recall · F19 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and type 1 1 1 2 to pair the first two adjacent cells, then continue with
+/// other neighbouring cells.
 record Domino(int low, int high) {
 }
 

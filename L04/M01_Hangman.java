@@ -11,16 +11,8 @@
 /// towards the end. For a six-letter word the valid character indices are 0 through 5; the next index
 /// must stop the loop.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L04/M01_Hangman.java`
-/// - Check this mission: `java L04/Check.java M01_Hangman.java`
-///
-/// Run the play command above and type A for the training word BANANA; compare the displayed _A_A_
-/// with the six places the word needs. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Learn · F10 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and type A for the training word BANANA; compare the displayed _A_A_ with
+/// the six places the word needs.
 String mask() {
     String result = "";
     int index = 0;

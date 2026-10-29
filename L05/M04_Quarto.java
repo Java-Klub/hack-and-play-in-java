@@ -9,16 +9,8 @@
 /// **Today you learn:** Arrays: a flat array can represent a square board. Follow how row and column
 /// positions become indices before asking the same line rule about them.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L05/M04_Quarto.java`
-/// - Check this mission: `java L05/Check.java M04_Quarto.java`
-///
-/// the play command, choose an unused piece number from 0 to 15, then let the other player enter
-/// its destination cell from 1 to 16. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Recall · F16 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, choose an unused piece number from 0 to 15, then let the other player enter
+/// its destination cell from 1 to 16.
 boolean won() {
     for (int i = 0; i < 4; i++) {
         if (line(i * 4, i * 4 + 1, i * 4 + 2, i * 4 + 3) || line(i, i + 4, i + 8, i + 12)) {

@@ -17,16 +17,8 @@ import java.util.Arrays;
 /// **Today you learn:** Writing functional checks: select examples that distinguish implementations which
 /// agree on the obvious case. Asymmetrical coordinates make a swapped-axis bug observable.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L06/M10_Tents.java`
-/// - Check this mission: `java L06/Check.java M10_Tents.java`
-///
-/// Run the play command above and click an empty cell beside a tree to pitch a tent, then use the
-/// check command to see whether your map examples catch the cheats. After your repair: save the
-/// file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F33 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and click an empty cell beside a tree to pitch a tent, then run the checks
+/// to see whether your map examples catch the cheats.
 record TreeExample(int x, int y, boolean expected) {
 }
 

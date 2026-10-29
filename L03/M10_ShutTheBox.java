@@ -9,16 +9,8 @@
 /// **Today you learn:** Reusable calculation: two parameters let one method work for any pair of dice.
 /// For example, calls with 1 and 1 or with 6 and 6 should follow the same rule without copying its body.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L03/M10_ShutTheBox.java`
-/// - Check this mission: `java L03/Check.java M10_ShutTheBox.java`
-///
-/// Run the play command above, compare the two printed Dice values with the rolled target, then
-/// type distinct open numbers that should add up to that target. After your repair: save the file,
-/// run the check command above, then play again.
-///
-/// Need an explanation? Recall · F13 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, compare the two printed Dice values with the rolled target, then type
+/// distinct open numbers that should add up to that target.
 int diceTotal(int first, int second) {
     return first + second;
 }

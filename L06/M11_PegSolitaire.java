@@ -9,16 +9,8 @@
 /// **Today you learn:** Writing functional checks: a useful suite includes counterexamples, not just
 /// happy paths. Each expected boolean states whether that exact move should be legal.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L06/M11_PegSolitaire.java`
-/// - Check this mission: `java L06/Check.java M11_PegSolitaire.java`
-///
-/// Run the play command above and enter 1 2 3 2 to make the first jump in the short peg puzzle,
-/// then use the check command to challenge your examples. After your repair: save the file, run the
-/// check command above, then play again.
-///
-/// Need an explanation? Recall · F33 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and enter 1 2 3 2 to make the first jump in the short peg puzzle, then run
+/// the checks to challenge your examples.
 record JumpExample(int row, int column, int toRow, int toColumn, boolean expected) {
 }
 
@@ -64,8 +56,9 @@ JumpExample[] learnerChecks() {
 ///
 /// ### What the prepared part already does
 ///
-/// legal() already checks bounds, straight distance, the source peg, the middle peg, and an empty
-/// destination. The check command runs your examples on it and on deliberately wrong jump rules.
+/// legal() already checks bounds, straight distance, the source peg, the middle peg, and an
+/// empty destination. The mission checks run your examples on it and on deliberately wrong jump
+/// rules.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="For this game">

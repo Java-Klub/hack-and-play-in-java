@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Assignment over time: a later assignment replaces the old stored value. The two
 /// statements can give x two successive values; the supplied drawing reads the last one for both feet.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L01/M07_SteppingFeet.java`
-/// - Check this mission: `java L01/Check.java M07_SteppingFeet.java`
-///
-/// Run the play command above, press M to show the shared position, then Space to move; C switches
-/// between striped and plain backgrounds. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Recall · F03 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, press M to show the shared position, then Space to move; C switches between
+/// striped and plain backgrounds.
 void startingPosition() {
     x = 20;
     x = x + 60;

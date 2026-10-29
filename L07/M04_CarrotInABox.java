@@ -14,16 +14,8 @@ import java.awt.BorderLayout;
 /// **Today you learn:** Enum states: use a small set of meaningful named outcomes instead of unexplained
 /// numbers. holderAfterSwap() must return the correct Holder value for the final situation.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L07/M04_CarrotInABox.java`
-/// - Check this mission: `java L07/Check.java M04_CarrotInABox.java`
-///
-/// the play command, click Look, bluff, then choose, let the first player peek privately, and let
-/// the other decide whether to keep or swap. After your repair: save the file, run the check
-/// command above, then play again.
-///
-/// Need an explanation? Learn · F21 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, click `Look, bluff, then choose`, let the first player peek privately, and
+/// let the other decide whether to keep or swap.
 enum Holder {
     PLAYER_ONE, PLAYER_TWO
 }

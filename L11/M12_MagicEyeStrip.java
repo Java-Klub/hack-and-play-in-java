@@ -14,16 +14,9 @@ import java.awt.image.BufferedImage;
 /// **Today you learn:** A Path names a location; its text is not that location’s contents. Read the file
 /// before numeric conversion so missing data and malformed data remain distinct failures.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L11/M12_MagicEyeStrip.java`
-/// - Check this mission: `java L11/Check.java M12_MagicEyeStrip.java`
-///
-/// the play command loads the number stored in seed.txt and uses it for the Java dot picture. If
+/// The program loads the number stored in seed.txt and uses it for the Java dot picture. If
 /// absent, seed.txt is created with 42; existing contents stay untouched. A bad read reports
-/// failure. After your repair: save the file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F32 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// failure.
 long readSeed(Path path) throws IOException {
     return Long.parseLong(Files.readString(path).strip());
 }
@@ -96,8 +89,6 @@ BufferedImage render(long seed, double option) {
 }
 
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

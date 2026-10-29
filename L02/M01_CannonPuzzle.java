@@ -17,16 +17,8 @@ import javax.swing.Timer;
 /// integer 5 / 2 gives 2, while a fractional operand can keep the result 2.5; the final return type does
 /// not recover a fraction already lost.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L02/M01_CannonPuzzle.java`
-/// - Check this mission: `java L02/Check.java M01_CannonPuzzle.java`
-///
-/// Run the play command above, drag from the cannon towards the upper right and release to shoot at
-/// the orange target; R prepares another attempt. After your repair: save the file, run the check
-/// command above, then play again.
-///
-/// Need an explanation? Learn · F04 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, drag from the cannon towards the upper right and release to shoot at the
+/// orange target; R prepares another attempt.
 double launchSpeed(double drag) {
     return drag * 0.09;
 }

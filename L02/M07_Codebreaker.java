@@ -10,16 +10,8 @@
 /// comparing the characters is different from asking whether two names point to the very same stored
 /// String object.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L02/M07_Codebreaker.java`
-/// - Check this mission: `java L02/Check.java M07_Codebreaker.java`
-///
-/// Run the play command above and enter 1234 to investigate the failed training win; after
-/// repairing it, enter r to try a newly hidden code. After your repair: save the file, run the
-/// check command above, then play again.
-///
-/// Need an explanation? Learn · F06 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and enter 1234 to investigate the failed training win; after repairing it,
+/// enter r to try a newly hidden code.
 boolean matchesCode(String guess) {
     return secret.equals(guess);
 }

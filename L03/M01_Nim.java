@@ -9,16 +9,8 @@
 /// **Today you learn:** If/else branching: one condition chooses which result is returned. Compare piles
 /// of seven and eight stones: their remainders differ, so the selected branch should matter.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L03/M01_Nim.java`
-/// - Check this mission: `java L03/Check.java M01_Nim.java`
-///
-/// Run the play command above and take 2 stones; compare the bot’s next move from 19 stones, then
-/// use r to try the same opening again. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Learn · F07 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and take 2 stones; compare the bot’s next move from 19 stones, then use r to
+/// try the same opening again.
 int botMove() {
     if (stones == 0) {
         return 0;

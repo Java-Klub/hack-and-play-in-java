@@ -17,16 +17,8 @@ import javax.swing.Timer;
 /// alternative. The remaining Coupling case deliberately does nothing; Toggle and Restart have
 /// independent effects.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L12/M08_FireflySynchrony.java`
-/// - Check this mission: `java L12/Check.java M08_FireflySynchrony.java`
-///
-/// After the play command, move Coupling toward 2 and watch the synchrony number, using Pause/Run
-/// or New phases to compare the flashes. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Recall · F35 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then move Coupling toward 2 and watch the synchrony number, using Pause/Run
+/// or New phases to compare the flashes.
 void apply(Control control) {
     switch (control) {
         case Coupling(var value) when Double.isFinite(value) && value >= 0 && value <= 2 -> coupling = value;
@@ -197,8 +189,6 @@ record Coupling(double value) implements Control {}
 record Toggle() implements Control {}
 record Restart(long seed) implements Control {}
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Restore the starting game state.
     reset(42);

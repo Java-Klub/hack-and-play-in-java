@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Simultaneous updates: compute a complete new grid from an unchanged old grid.
 /// Newly ignited trees must wait for the next generation before igniting their own neighbours.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L08/M13_ForestFireSandbox.java`
-/// - Check this mission: `java L08/Check.java M13_ForestFireSandbox.java`
-///
-/// the play command, choose Fire and click a tree to ignite it, then click Step to inspect how the
-/// front moves before trying Run/Pause. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Recall · F26 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, choose Fire and click a tree to ignite it, then click Step to inspect how
+/// the front moves before trying Run/Pause.
 int[][] nextForest(int[][] before) {
     int[][] next = new int[40][60];
     int[][] offsets = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};

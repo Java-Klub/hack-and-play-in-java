@@ -17,16 +17,8 @@ import javax.swing.Timer;
 /// **Today you learn:** A List can represent left-to-right order, not just a bag of objects. Removing the
 /// expired first pipe and placing its replacement must preserve that meaning.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L09/M02_GapHopper.java`
-/// - Check this mission: `java L09/Check.java M02_GapHopper.java`
-///
-/// After the play command, keep the flyer between pipes by pressing Space or clicking, and press R
-/// to restart after a crash. After your repair: save the file, run the check command above, then
-/// play again.
-///
-/// Need an explanation? Recall · F22 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then keep the flyer between pipes by pressing Space or clicking, and press
+/// R to restart after a crash.
 void recyclePipes() {
     if (!pipes.isEmpty() && pipes.getFirst().x + PIPE_WIDTH < 0) {
         double furthest = pipes.getLast().x;
@@ -218,8 +210,6 @@ void showWindow() {
     timer.start();
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

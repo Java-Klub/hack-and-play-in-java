@@ -10,16 +10,8 @@
 /// possibilities are considered. A player total above 21 must be handled before deciding which total is
 /// larger.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L03/M03_BlackjackTwentyOne.java`
-/// - Check this mission: `java L03/Check.java M03_BlackjackTwentyOne.java`
-///
-/// Run the play command above and enter s to stand on the training total 20, then compare the
-/// reported result against the dealer’s 19. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Recall · F07 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and enter s to stand on the training total 20, then compare the reported
+/// result against the dealer’s 19.
 String compareTotals(int human, int house) {
     if (human > 21) {
         return "You bust";

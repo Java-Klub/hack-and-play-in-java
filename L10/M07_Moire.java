@@ -16,16 +16,8 @@ import java.awt.geom.Point2D;
 /// **Today you learn:** Grid coordinates and screen coordinates use different origins. The rotation
 /// formula is supplied; both resulting axes must be placed around the same canvas centre.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L10/M07_Moire.java`
-/// - Check this mission: `java L10/Check.java M07_Moire.java`
-///
-/// After the play command, rotate one grid with Left/Right and change spacing with Up/Down to
-/// explore the overlap; R restores the starting pattern. After your repair: save the file, run the
-/// check command above, then play again.
-///
-/// Need an explanation? Recall · F29 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then rotate one grid with Left/Right and change spacing with Up/Down to
+/// explore the overlap; R restores the starting pattern.
 Point2D.Double gridPoint(int column, int row, double a) {
     double x = column * spacing, y = row * spacing;
     return new Point2D.Double(WIDTH / 2 + x * Math.cos(a) - y * Math.sin(a), HEIGHT / 2 + x * Math.sin(a) + y * Math.cos(a));
@@ -169,8 +161,6 @@ void showWindow() {
     panel.requestFocusInWindow();
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

@@ -9,16 +9,8 @@
 /// **Today you learn:** Pure contracts: a query promises an answer for its inputs without changing the
 /// game. Define precisely which coordinates count as walkable floor.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L06/M05_Sokoban.java`
-/// - Check this mission: `java L06/Check.java M05_Sokoban.java`
-///
-/// Run the play command above and type W, A, S, or D followed by Enter to move the player and push
-/// the crate toward its goal. After your repair: save the file, run the check command above, then
-/// play again.
-///
-/// Need an explanation? Learn · F15 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and type W, A, S, or D followed by Enter to move the player and push the
+/// crate toward its goal.
 boolean floor(int px, int py) {
     return py >= 0 && py < 5 && px >= 0 && px < 7 && terrain[py].charAt(px) != '#';
 }

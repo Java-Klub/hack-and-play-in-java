@@ -9,16 +9,8 @@
 /// **Today you learn:** Traversal and search: ordered indices enumerate combinations without repeating a
 /// card. Check the loop boundaries as carefully as the matching rule.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L05/M07_SetStyleTripleHunt.java`
-/// - Check this mission: `java L05/Check.java M07_SetStyleTripleHunt.java`
-///
-/// the play command, inspect the displayed card attributes, and submit the numbers of three cards
-/// you think form a set. After your repair: save the file, run the check command above, then play
-/// again.
-///
-/// Need an explanation? Recall · F17 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, inspect the displayed card attributes, and submit the numbers of three
+/// cards you think form a set.
 boolean hasSet() {
     for (int a = 0; a < table.size(); a++) {
         for (int b = a + 1; b < table.size(); b++) {

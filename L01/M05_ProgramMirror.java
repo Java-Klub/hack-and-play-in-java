@@ -10,16 +10,8 @@
 /// quote that belongs inside that text needs special notation so Java does not mistake it for the end of
 /// the String.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L01/M05_ProgramMirror.java`
-/// - Check this mission: `java L01/Check.java M05_ProgramMirror.java`
-///
-/// Run the play command above and compare the two lines in terminal output: the first should
-/// describe an instruction and the second should be its message. After your repair: save the file,
-/// run the check command above, then play again.
-///
-/// Need an explanation? Recall · F02 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and compare the two lines in terminal output: the first should describe an
+/// instruction and the second should be its message.
 String templateLine() {
     return "IO.println(\"HELLO\");";
 }

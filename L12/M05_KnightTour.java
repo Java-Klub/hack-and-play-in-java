@@ -16,16 +16,8 @@ import javax.swing.*;
 /// unpack a Move’s components; an exhaustive switch chooses its rule and a guard separates usable
 /// coordinates from rejected ones.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L12/M05_KnightTour.java`
-/// - Check this mission: `java L12/Check.java M05_KnightTour.java`
-///
-/// After the play command, click a green knight move such as zero-based column 1, row 2 from the
-/// start, and press R to restart the tour. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Learn · F35 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then click a green knight move such as zero-based column 1, row 2 from the
+/// start, and press R to restart the tour.
 boolean apply(Command command) {
     return switch (command) {
         case Move(var xx, var yy) when xx >= 0 && yy >= 0 && xx < 5 && yy < 5 -> move(xx, yy);
@@ -214,8 +206,6 @@ sealed interface Command permits Move, Restart {}
 record Move(int x, int y) implements Command {}
 record Restart() implements Command {}
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

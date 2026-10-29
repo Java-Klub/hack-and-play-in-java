@@ -19,16 +19,8 @@ import javax.swing.Timer;
 /// **Today you learn:** A callback is code packaged for a later event. firingAction returns that package;
 /// the game loop decides when to run it while Space is held.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L10/M01_AsteroidDrift.java`
-/// - Check this mission: `java L10/Check.java M01_AsteroidDrift.java`
-///
-/// After the play command, steer and thrust with the arrow keys, hold Space to fire and press R to
-/// restart the flight. After your repair: save the file, run the check command above, then play
-/// again.
-///
-/// Need an explanation? Learn · F28 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then steer and thrust with the arrow keys, hold Space to fire and press R
+/// to restart the flight.
 Runnable firingAction() {
     return this::fire;
 }
@@ -283,8 +275,6 @@ void showWindow() {
 
 Runnable fireCallback = firingAction();
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

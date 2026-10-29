@@ -9,16 +9,8 @@
 /// **Today you learn:** Scope and state lifetime: a local player disappears when reset() returns, while
 /// the game’s player field remains. Reset the state actually read by commands.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L06/M02_MancalaKalah.java`
-/// - Check this mission: `java L06/Check.java M02_MancalaKalah.java`
-///
-/// Run the play command above and enter one of your pit numbers from 1 to 6 to sow its stones
-/// around the board. After your repair: save the file, run the check command above, then play
-/// again.
-///
-/// Need an explanation? Recall · F14 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and enter one of your pit numbers from 1 to 6 to sow its stones around the
+/// board.
 void reset() {
     pits = new int[14];
     Arrays.fill(pits, 4);

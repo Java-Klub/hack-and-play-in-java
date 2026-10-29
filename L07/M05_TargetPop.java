@@ -17,16 +17,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Enum states: a transition changes only the states to which it applies. Expiring
 /// RUNNING must not accidentally restart a finished or not-yet-started round.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L07/M05_TargetPop.java`
-/// - Check this mission: `java L07/Check.java M05_TargetPop.java`
-///
-/// Run the play command above and click a circle to begin the timed round, then keep clicking
-/// targets until the clock expires. After your repair: save the file, run the check command above,
-/// then play again.
-///
-/// Need an explanation? Recall · F21 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and click a circle to begin the timed round, then keep clicking targets
+/// until the clock expires.
 enum Phase {
     READY, RUNNING, FINISHED
 }

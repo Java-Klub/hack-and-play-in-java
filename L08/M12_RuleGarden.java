@@ -9,16 +9,8 @@
 /// **Today you learn:** Simultaneous updates: separate the snapshot being read from the generation being
 /// written. The result should not depend on whether columns are visited left-to-right or right-to-left.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L08/M12_RuleGarden.java`
-/// - Check this mission: `java L08/Check.java M12_RuleGarden.java`
-///
-/// the play command immediately shows rule 30 in terminal output. Enter 90 at the next prompt to
-/// compare, press Enter to repeat the current rule, or q to quit. After your repair: save the file,
-/// run the check command above, then play again.
-///
-/// Need an explanation? Learn · F26 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// The program immediately shows rule 30 in terminal output. Enter 90 at the next prompt to
+/// compare, press Enter to repeat the current rule, or q to quit.
 boolean[] nextRow(boolean[] current, int rule) {
     boolean[] next = new boolean[current.length];
     for (int column = 0; column < current.length; column++) {
@@ -114,7 +106,7 @@ void displayRule(int rule, int width, int rows) {
     }
 }
 
-/// the play command immediately prints rule 30. Read # as on and . as off; every line is one
+/// The program immediately prints rule 30. Read # as on and . as off; every line is one
 /// generation. At the next prompt try another rule, repeat with Enter, or quit with q. No file
 /// needs opening.
 void main() {

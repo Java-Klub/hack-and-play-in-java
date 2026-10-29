@@ -17,15 +17,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Invariants: a landing must agree with direction and previous position, not just
 /// overlap in the newest frame. Preserve the distinction between rising, falling, and standing.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L07/M12_PlatformDash.java`
-/// - Check this mission: `java L07/Check.java M12_PlatformDash.java`
-///
-/// the play command, run with Left and Right, and press Space to jump toward the platforms and
-/// flag. After your repair: save the file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F25 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, move with Left and Right, and press Space to jump toward the platforms and
+/// flag.
 void step() {
     if (!started || won) {
         return;

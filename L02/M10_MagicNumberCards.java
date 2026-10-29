@@ -10,16 +10,8 @@
 /// Equal-looking text can be stored separately, and letter case is another choice the comparison must
 /// handle.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L02/M10_MagicNumberCards.java`
-/// - Check this mission: `java L02/Check.java M10_MagicNumberCards.java`
-///
-/// Run the play command above, think of 5 and answer the six cards with y, n, y, n, n, n to compare
-/// the reported number before and after your repair. After your repair: save the file, run the
-/// check command above, then play again.
-///
-/// Need an explanation? Recall · F06 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, think of 5 and answer the six cards with y, n, y, n, n, n to compare the
+/// reported number before and after your repair.
 boolean yesAnswer(String input) {
     return input.equalsIgnoreCase("y");
 }

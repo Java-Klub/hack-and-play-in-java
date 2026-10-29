@@ -15,16 +15,7 @@ import java.awt.image.BufferedImage;
 /// installed Chemistry role about this cell, so a different implementation changes chemistry without
 /// replacing diffusion.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L12/M01_ReactionDiffusionSkins.java`
-/// - Check this mission: `java L12/Check.java M01_ReactionDiffusionSkins.java`
-///
-/// After the play command, inspect the Java picture; close its window, edit the active rule, Save
-/// and the check command, then run the play command again to compare. After your repair: save the
-/// file, run the check command above, then play again.
-///
-/// Need an explanation? Learn · F34 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and compare the picture before and after your repair.
 double reactionAt(int x, int y) {
     return chemistry.reaction(a[y][x], b[y][x]);
 }
@@ -156,8 +147,6 @@ BufferedImage render(long seed, double option) {
 interface Chemistry { double reaction(double a, double b); }
 Chemistry chemistry = (a, b) -> a * b * b;
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

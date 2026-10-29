@@ -17,16 +17,8 @@ import javax.swing.Timer;
 /// accelerationNow connects current state to that rule, allowing an alternative rule without rewriting
 /// integration or drawing.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L12/M04_PendulumPainter.java`
-/// - Check this mission: `java L12/Check.java M04_PendulumPainter.java`
-///
-/// After the play command, adjust Length and Gravity to explore the pendulum trace; Pause/Run
-/// controls motion and Reset clears and restarts it. After your repair: save the file, run the
-/// check command above, then play again.
-///
-/// Need an explanation? Recall · F34 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then adjust Length and Gravity to explore the pendulum trace; Pause/Run
+/// controls motion and Reset clears and restarts it.
 double accelerationNow() {
     return acceleration.at(angle, length);
 }
@@ -184,8 +176,6 @@ void showWindow() {
 interface Acceleration { double at(double angle, double length); }
 Acceleration acceleration = (a, len) -> -gravity / len * Math.sin(a);
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Restore the starting game state.
     reset(42);

@@ -15,16 +15,8 @@ import java.util.List;
 /// **Today you learn:** List describes ordered access, but not every List permits mutation. This method
 /// builds its result incrementally, so its chosen implementation must accept add.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L09/M04_VoronoiStainedGlass.java`
-/// - Check this mission: `java L09/Check.java M04_VoronoiStainedGlass.java`
-///
-/// the play command tries to build the picture. If seedList refuses to add a seed, read terminal
-/// output. After your repair, The play command opens the coloured picture. After your repair: save
-/// the file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F22 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// The program tries to build the picture. If seedList refuses to add a seed, read terminal
+/// output. The repaired program opens the coloured picture.
 List<Seed> seedList(Random random, int count) {
     if (count < 0 || count > 100) throw new IllegalArgumentException("Seeds: 0..100.");
     List<Seed> seeds = new ArrayList<>();
@@ -125,8 +117,6 @@ BufferedImage render(long seed, double option) {
 }
 
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

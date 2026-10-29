@@ -16,16 +16,8 @@ import java.util.Arrays;
 /// **Today you learn:** Records: a rule can carry both its data and a query about that data. Its x and y
 /// components choose which neighbouring numbers to compare.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L05/M12_InequalityLatin.java`
-/// - Check this mission: `java L05/Check.java M12_InequalityLatin.java`
-///
-/// Run the play command above and repeatedly click a free cell to cycle its number while checking
-/// the inequality signs beside it. After your repair: save the file, run the check command above,
-/// then play again.
-///
-/// Need an explanation? Recall · F19 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and repeatedly click a free cell to cycle its number while checking the
+/// inequality signs beside it.
 record Rule(int x, int y) {
     boolean satisfiedBy(int[][] values) {
         return values[y][x] < values[y][x + 1];

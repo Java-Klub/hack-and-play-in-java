@@ -16,40 +16,24 @@ import javax.swing.*;
 /// called. A later paint action can cover an earlier one. Defining an action near the top of the file
 /// does not start it.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L01/M01_CafeWallLab.java`
-/// - Check this mission: `java L01/Check.java M01_CafeWallLab.java`
+/// Left/Right change the tile offset; Up/Down change the mortar width. Space toggles a straight red
+/// guide.
 ///
-/// Run the play command above, change the wall with the arrow keys, then press Space to compare it
-/// with the straight red ruler. After your repair: save the file, run the check command above, then
-/// play again.
-///
-/// Lines starting with `///` are your guide; they do not run as Java instructions.
-///
-/// Need an explanation? Learn · F01 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
-///
-/// **First run:** run the play command above from the course folder containing README.md. The grey
-/// window is the prepared fault. Close it, then work on the two lines below. Start here · run and
-/// check explains the commands and their results.
+/// **First run:** the grey wall is the deliberate fault. Your two-line task is below; Start here ·
+/// run and check covers the first launch and check.
 // <editor-fold defaultstate="collapsed" desc="Start here · run and check">
-/// - Open the downloaded course folder containing README.md. Open L01/M01_CafeWallLab.java in your
-///   editor; later, follow the numbered M01, M02… files in each level.
-/// - Open a terminal in that top folder. Copy the play command above and press Enter. If a game
-///   asks for text, type your answer in that running terminal and press Enter; it is input to the
-///   game.
-/// - Close the game before replaying. After an edit, save the file, run the check command above,
-///   then run the play command again. A running window does not reload edited Java.
-/// - `java L01/Check.java` checks the whole level, including games you have not repaired yet. The
-///   checks are in L01/Check.java; keep check files unchanged while solving missions.
-/// - Read the result in the terminal. `PASS` means those cases passed. A failed check in the
-///   starter is expected: it exposes the deliberate fault. Read its message: it describes the
-///   behavior that differs.
-/// - A compiler error means Java could not start. Read the first diagnostic and its line, check
-///   punctuation near your edit, or Undo to the last compiling version. Save and try again.
-/// - Some editors fold the labelled sections. If yours does, expand the section when needed;
-///   otherwise read the same comment lines normally. Fold markers and `///` explanations do not
-///   run.
+/// - From a terminal in the course folder containing README.md, enter
+///   `java L01/M01_CafeWallLab.java`.
+/// - Close the window, edit paintWall below, save, then enter
+///   `java L01/Check.java M01_CafeWallLab.java`.
+/// - RED before repair is intentional: its message describes the mismatch. PASS means those cases
+///   passed. Launch again with the first command to see saved changes.
+/// - `java L01/Check.java` checks the whole level, including unrepaired games. Keep Check.java
+///   unchanged.
+/// - For a compiler error, read the first diagnostic and line; check punctuation or use Undo, save
+///   and retry.
+/// - Click a section's triangle or plus to unfold it if available; otherwise read the comments
+///   normally. Java skips the `///` lines.
 // </editor-fold>
 
 void paintWall(Graphics2D g) {

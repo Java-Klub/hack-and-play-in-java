@@ -16,16 +16,8 @@ import java.awt.Color;
 /// **Today you learn:** Writing functional checks: choose inputs and expected results that could disprove
 /// a broken rule. The learner’s work is the examples, not a replacement flip() algorithm.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L06/M09_LightsOut.java`
-/// - Check this mission: `java L06/Check.java M09_LightsOut.java`
-///
-/// Run the play command above and click cells to try extinguishing every light, then use the check
-/// command to see which wrong rule your examples still miss. After your repair: save the file, run
-/// the check command above, then play again.
-///
-/// Need an explanation? Learn · F33 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and click cells to try extinguishing every light, then run the checks to see
+/// which wrong rule your examples still miss.
 record CrossExample(int row, int column, int expected) {
 }
 
@@ -65,12 +57,13 @@ CrossExample[] learnerChecks() {
 /// - `CrossExample[]` — An array lets the checker run several independent examples.
 /// - `new CrossExample(2, 2, 5)` — The existing example selects a legal centre cell and its expected
 ///   result.
-/// - `return` — Hands your example data to both the startup check and the check command.
+/// - `return` — Hands your example data to both the game's startup check and the mission
+///   checks.
 ///
 /// ### What the prepared part already does
 ///
-/// flip() is already correct, so the play command remains playable. Startup checks examples against
-/// that rule; the check command also tries named wrong rules and reports which one your examples
+/// flip() is already correct, so the game remains playable. Startup checks examples against
+/// that rule; the mission checks also try named wrong rules and report which one your examples
 /// failed to reject.
 // </editor-fold>
 
@@ -87,10 +80,10 @@ CrossExample[] learnerChecks() {
 ///
 /// Both coordinates are internal indices. That sample's two cells can be listed on paper
 /// independently of any implementation. Now return to the actual cross rule. Each CrossExample
-/// starts from a fresh all-off five-by-five board and makes one click; `expected` counts lit cells
-/// afterwards. Array entries are separated by commas. Draw your own boundary click and list its
-/// distinct affected cells. Which plausible wrong cross would disagree with your expectation?
-/// Supply your own counterexample and explain it before the check command.
+/// starts from a fresh all-off five-by-five board and makes one click; `expected` counts lit
+/// cells afterwards. Array entries are separated by commas. Draw your own boundary click and
+/// list its distinct affected cells. Which plausible wrong cross would disagree with your
+/// expectation? Supply your own counterexample and explain it before running the checks.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">

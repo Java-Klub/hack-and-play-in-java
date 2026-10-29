@@ -14,16 +14,8 @@ import java.awt.BorderLayout;
 /// **Today you learn:** Switch expressions: encode two yes/no choices into one small case number, then
 /// return the corresponding payoff. Read each case from one player’s viewpoint.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L07/M02_CooperateOrDefect.java`
-/// - Check this mission: `java L07/Check.java M02_CooperateOrDefect.java`
-///
-/// the play command, click Private choices for next round, and pass the computer between the two
-/// private choice dialogs before revealing both decisions. After your repair: save the file, run
-/// the check command above, then play again.
-///
-/// Need an explanation? Recall · F09 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, click Private choices for next round, and pass the computer between the two
+/// private choice dialogs before revealing both decisions.
 int reward(boolean cooperate, boolean otherCooperates) {
     int choice = (cooperate ? 2 : 0) + (otherCooperates ? 1 : 0);
     return switch (choice) {

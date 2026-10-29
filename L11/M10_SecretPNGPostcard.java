@@ -15,16 +15,8 @@ import javax.imageio.ImageIO;
 /// **Today you learn:** A Path identifies the actual resource to open, not just a decorative name.
 /// try-with-resources owns the input stream; image decoding and hidden-message decoding are later steps.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L11/M10_SecretPNGPostcard.java`
-/// - Check this mission: `java L11/Check.java M10_SecretPNGPostcard.java`
-///
-/// the play command reads data/postcard.png through readMessage and displays the recovered message
-/// with the postcard. A sample postcard is created only when this file is absent. After your
-/// repair: save the file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F32 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// The program reads data/postcard.png through readMessage and displays the recovered message
+/// with the postcard. A sample postcard is created only when this file is absent.
 String readMessage(Path path) throws IOException {
     try (var input = Files.newInputStream(path)) {
         var image = ImageIO.read(input);
@@ -161,8 +153,6 @@ void save(Path path, long seed, double option) throws Exception {
     }
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

@@ -19,16 +19,8 @@ import java.awt.image.BufferedImage;
 /// result declaration alone cannot rescue integer division; use an example such as 40 divided by 80 to
 /// reason about the intended fraction.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L02/M04_Spirograph.java`
-/// - Check this mission: `java L02/Check.java M04_Spirograph.java`
-///
-/// Run the play command above, change the inner radius with Left/Right and the pen distance with
-/// Up/Down, then compare the redrawn curves. After your repair: save the file, run the check
-/// command above, then play again.
-///
-/// Need an explanation? Recall · F04 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, change the inner radius with Left/Right and the pen distance with Up/Down,
+/// then compare the redrawn curves.
 double radiusRatio(int outer, int innerRadius) {
     return (outer - innerRadius) / (double) innerRadius;
 }

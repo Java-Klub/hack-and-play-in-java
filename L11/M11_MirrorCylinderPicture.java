@@ -16,16 +16,9 @@ import javax.imageio.ImageIO;
 /// ownership closes the stream safely, but useful bytes arrive only if the encoder actually receives that
 /// stream.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L11/M11_MirrorCylinderPicture.java`
-/// - Check this mission: `java L11/Check.java M11_MirrorCylinderPicture.java`
-///
-/// the play command writes exports/mirror.png through save and opens those actual bytes in Java. An
-/// empty or invalid file produces a clear terminal output failure instead of a substitute picture.
-/// After your repair: save the file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F32 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// The program writes exports/mirror.png through save and opens those actual bytes in Java. An
+/// empty or invalid file produces a clear terminal output failure instead of a substitute
+/// picture.
 void save(Path path, long seed, double option) throws Exception {
     Files.createDirectories(path.toAbsolutePath().getParent());
     try (var output = Files.newOutputStream(path)) {
@@ -134,8 +127,6 @@ BufferedImage render(long seed, double option) {
     return image;
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

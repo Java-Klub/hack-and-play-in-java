@@ -18,16 +18,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Pause is a promise that a tick changes nothing. The boolean guard must match that
 /// promise before the supplied physics or persistent drawing begins.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L10/M11_OrbitPainter.java`
-/// - Check this mission: `java L10/Check.java M11_OrbitPainter.java`
-///
-/// After the play command, press Space to start the orbit or drag a new launch; Space pauses and R
-/// clears and restores the starting experiment. After your repair: save the file, run the check
-/// command above, then play again.
-///
-/// Need an explanation? Recall · F30 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then press Space to start the orbit or drag a new launch; Space pauses and
+/// R clears and restores the starting experiment.
 void step() {
     if (paused) {
         return;
@@ -255,8 +247,6 @@ void showWindow() {
     timer.start();
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

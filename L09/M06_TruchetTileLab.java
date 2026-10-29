@@ -14,16 +14,7 @@ import java.awt.image.BufferedImage;
 /// **Today you learn:** A Map can keep a separate tally for each named category. Updating one orientation
 /// must retain its previous count and leave the other category untouched.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L09/M06_TruchetTileLab.java`
-/// - Check this mission: `java L09/Check.java M06_TruchetTileLab.java`
-///
-/// After the play command, inspect the Java picture; close its window, edit the active rule, Save
-/// and the check command, then run the play command again to compare. After your repair: save the
-/// file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F24 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and compare the picture before and after your repair.
 void countOrientation(String orientation) {
     orientationCounts.put(orientation, orientationCounts.getOrDefault(orientation, 0) + 1);
 }
@@ -116,8 +107,6 @@ BufferedImage render(long seed, double option) {
 
 Map<String, Integer> orientationCounts = new HashMap<>();
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

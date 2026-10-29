@@ -15,16 +15,7 @@ import java.util.List;
 /// **Today you learn:** Set membership and insertion are different operations. The boolean result of an
 /// insertion can report whether a centre was new while recording it for future attempts.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L11/M02_CirclePacking.java`
-/// - Check this mission: `java L11/Check.java M02_CirclePacking.java`
-///
-/// After the play command, inspect the Java picture; close its window, edit the active rule, Save
-/// and the check command, then run the play command again to compare. After your repair: save the
-/// file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F23 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and compare the picture before and after your repair.
 boolean claimCentre(Set<Centre> seen, int x, int y) {
     return seen.add(new Centre(x, y));
 }
@@ -146,8 +137,6 @@ BufferedImage render(long seed, double option) {
 
 record Centre(int x, int y) {}
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

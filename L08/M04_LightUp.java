@@ -9,16 +9,8 @@
 /// **Today you learn:** Grid neighbours: reuse a direction offset repeatedly to explore a ray of cells.
 /// One neighbour test and a corridor traversal answer different questions.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L08/M04_LightUp.java`
-/// - Check this mission: `java L08/Check.java M04_LightUp.java`
-///
-/// Run the play command above and enter 1 1 to toggle a bulb in the upper-left cell, then try
-/// lighting the other open cells without bulb conflicts. After your repair: save the file, run the
-/// check command above, then play again.
-///
-/// Need an explanation? Recall · F18 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and enter 1 1 to toggle a bulb in the upper-left cell, then try lighting the
+/// other open cells without bulb conflicts.
 int visible(int r, int c) {
     int n = 0;
     for (int[] d : dirs) {

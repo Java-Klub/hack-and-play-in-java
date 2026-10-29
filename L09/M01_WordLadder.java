@@ -9,16 +9,8 @@
 /// **Today you learn:** A mutable List remembers items in order. Here one accepted word should extend an
 /// existing journey; replacing the whole list changes what the player remembers.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L09/M01_WordLadder.java`
-/// - Check this mission: `java L09/Check.java M01_WordLadder.java`
-///
-/// After the play command, type CORD and then CARD to climb from COLD; use /r to restart and /q to
-/// quit. After winning, Enter starts a new trail. After your repair: save the file, run the check
-/// command above, then play again.
-///
-/// Need an explanation? Learn · F22 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then type CORD and then CARD to climb from COLD; use /r to restart and /q
+/// to quit. After winning, Enter starts a new trail.
 void command(String input) {
     require(outcome.isEmpty());
     String word = input.toUpperCase(Locale.ROOT);
@@ -123,8 +115,6 @@ void display() {
     IO.println(String.join(" -> ", history) + "; target WARM");
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
     reset();
     IO.println("Word Ladder: transform COLD to WARM using the listed words. /r restarts; /q quits.");

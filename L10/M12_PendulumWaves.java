@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Today you learn:** A single simulation clock can drive many visible objects. Keeping time updates
 /// separate from drawing makes every pendulum pause together and resume from the same instant.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L10/M12_PendulumWaves.java`
-/// - Check this mission: `java L10/Check.java M12_PendulumWaves.java`
-///
-/// After the play command, press Space to play or pause the pendulums, change speed with Up/Down
-/// and press R to align them again. After your repair: save the file, run the check command above,
-/// then play again.
-///
-/// Need an explanation? Recall · F30 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then press Space to play or pause the pendulums, change speed with Up/Down
+/// and press R to align them again.
 void step() {
     if (!paused) {
         time += .02 * speed;
@@ -182,8 +174,6 @@ void showWindow() {
     timer.start();
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

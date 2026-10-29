@@ -10,16 +10,9 @@
 /// should forward that matched data to the correct supplied algorithm, rather than treating every card as
 /// the same operation.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L12/M06_CipherPostcards.java`
-/// - Check this mission: `java L12/Check.java M06_CipherPostcards.java`
-///
-/// After the play command, press Enter for vigenere and ORANGE, then type ATTACK AT DAWN!; read the
-/// selected cipher and compare Result with your original message: the Vigenere branch should change
-/// its letters. After your repair: save the file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F35 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then press Enter for vigenere and ORANGE, then type ATTACK AT DAWN!; read
+/// the selected cipher and compare Result with your original message: the Vigenere branch
+/// should change its letters.
 String transform(String text, Cipher cipher, boolean decode) {
     return switch (cipher) {
         case Caesar(var shift) -> applyText(text, "caesar", Integer.toString(shift), decode);
@@ -138,8 +131,6 @@ Cipher chooseCipher(String mode, String key) {
     };
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
     String mode = IO.readln("Cipher caesar/substitution/vigenere (blank vigenere, q quits): ");
     if (mode == null || mode.strip().equalsIgnoreCase("q")) return;

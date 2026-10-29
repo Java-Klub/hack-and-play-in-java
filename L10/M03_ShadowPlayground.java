@@ -18,16 +18,8 @@ import java.awt.geom.Area;
 /// two-coordinate action should forward the event’s values, rather than store one fixed position or act
 /// during setup.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L10/M03_ShadowPlayground.java`
-/// - Check this mission: `java L10/Check.java M03_ShadowPlayground.java`
-///
-/// After the play command, click or drag around the obstacles to move the lamp and press R to
-/// restore its starting position. After your repair: save the file, run the check command above,
-/// then play again.
-///
-/// Need an explanation? Recall · F28 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then click or drag around the obstacles to move the lamp and press R to
+/// restore its starting position.
 java.util.function.BiConsumer<Integer, Integer> lightAction() {
     return this::moveLight;
 }
@@ -204,8 +196,6 @@ void showWindow() {
 
 java.util.function.BiConsumer<Integer, Integer> lightCallback = lightAction();
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();
