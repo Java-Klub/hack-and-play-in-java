@@ -38,8 +38,21 @@ The guide lives **inside the code**: short explanations, worked examples and hin
 
 ## Start playing
 
-1. Have **NetBeans and JDK 26 or newer** ready.
-2. Download your language branch above. Open **[L01](L01/)** with **File → Open Project**, then open `M01_CafeWallLab.java` under **Source Packages**.
-3. Choose **Run → Run File**. Read the mission, edit, **Save → Test File**, then play again. The starter's first failed check is an intentional clue; `PASS` means the checked cases agree with your repair.
+1. Have **JDK 26 or newer** ready. Download your language branch above and open the Java files in your editor or IDE.
+2. Open **[L01/M01_CafeWallLab.java](L01/M01_CafeWallLab.java)** and read the mission inside it. In a terminal, go to the downloaded course folder containing this README and run:
+
+   ```text
+   java L01/M01_CafeWallLab.java
+   ```
+
+3. Close the game, edit and save the file. Check this mission, then run the game again:
+
+   ```text
+   java L01/Check.java M01_CafeWallLab.java
+   ```
+
+The starter's first failed check is an intentional clue; `PASS` means the checked cases agree with your repair. To check a whole level, use `java L01/Check.java`; this includes games you have not repaired yet.
+
+Games live directly in `L01` through `L12`, in numbered order. Each level has its own `Check.java`. Already inside `L01`? Use `java Check.java` for the level or `java Check.java M01_CafeWallLab.java` for one mission. Keep check files unchanged while solving missions. No project build setup is needed.
 
 Designed for curious beginners, coding clubs and guided workshops. Choose extra games whenever an idea needs another round.
