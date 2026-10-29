@@ -9,11 +9,14 @@
 <h1>5.5 Slož malé rozhodčí</h1>
 <p>Kniha kouzel má tři úkoly: očistit vstup, poznat povolené kouzlo a zvolit efekt. Každý kousek může mít vlastní jméno a vracet výsledek dalšímu.</p>
 <h2>Od odpovědi k efektu</h2>
-<p>Otevři <code>05-methods/P15_SpellPipeline.java</code>. Spusť program dvakrát: jednou zadej RED s mezerami, podruhé neznámé green.</p>
-<pre><code class="language-java" data-source="P15_SpellPipeline.java">void main() {
-    String input = IO.readln(&quot;Spell: &quot;);
+<p>Otevři <code>05-methods/P15_Example_SpellPipeline.java</code>. Spusť program dvakrát: jednou zadej RED s mezerami, podruhé neznámé green.</p>
+<pre><code class="language-java" data-source="P15_Example_SpellPipeline.java">/// # Hotový příklad · 5.5 Slož malé rozhodčí
+/// Lekce: 05-composition.html
+
+void main() {
+    String input = IO.readln("Spell: ");
     String spell = clean(input);
-    IO.println(&quot;Effect: &quot; + effect(spell));
+    IO.println("Effect: " + effect(spell));
 }
 
 String clean(String input) {
@@ -21,16 +24,16 @@ String clean(String input) {
 }
 
 boolean isKnown(String spell) {
-    return spell.equals(&quot;red&quot;) || spell.equals(&quot;blue&quot;);
+    return spell.equals("red") || spell.equals("blue");
 }
 
 String effect(String spell) {
     if (!isKnown(spell)) {
-        return &quot;Fizzle&quot;;
+        return "Fizzle";
     }
     return switch (spell) {
-        case &quot;red&quot; -&gt; &quot;Fire&quot;;
-        default -&gt; &quot;Ice&quot;;
+        case "red" -&gt; "Fire";
+        default -&gt; "Ice";
     };
 }
 </code></pre><pre class="transcript"><code>Spell: <span class="typed"> RED </span>
@@ -39,7 +42,7 @@ Effect: Fire</code></pre>
 <p>Jde o composition (skládání) metod. Sleduj jedno volání: effect dostane red → zavolá isKnown(red) → dostane true → přeskočí odmítnutí → vybere Fire → vrátí ho do main. Return true v isKnown ukončí pouze isKnown; effect teprve pokračuje.</p>
 <p>Výpočet kouzla nic nečte ani netiskne. Pro pokus bez dotazování hráče dočasně nahraď tělo main jediným příkazem <code>IO.println(effect("blue"));</code> a očekávej Ice. Definice pomocných metod ponech. Potom vrať původní tělo main. Effect dostává už očištěný text; pro libovolný vstup používej nejprve clean. Každá metoda má malý, konkrétní slib.</p>
 <h2>Úkol: sestav rozhodčího arény</h2>
-<p>Otevři <code>05-methods/P16_ArenaReferee.java</code>. Main je hotové. Rozhodčí zatím schvaluje úplně všechno.</p>
+<p>Otevři <code>05-methods/P16_Task_ArenaReferee.java</code>. Main je hotové. Rozhodčí zatím schvaluje úplně všechno.</p>
 <p><strong>Doplň tři spolupracující metody. Clean vrátí text bez krajních mezer a velkými písmeny. Cost dostane očištěný povel: JUMP stojí 3, DUCK stojí 1, neznámý povel má cenu 0. Verdict nejprve použije clean a cost; pro neznámý povel vrátí UNKNOWN, pro nedostatek energie TIRED, jinak GO.</strong></p>
 <p>Čtení a výpis zůstanou jen v main. Verdict použije oba pomocníky, nebude jejich pravidla opisovat. Vstupní energii zkoušej od nuly výš. Přijetí zde energii neodečítá: program posuzuje jeden navržený tah.</p>
 <div class="table-wrap"><table><thead><tr><th>Move</th><th>Energy</th><th>Verdict</th></tr></thead><tbody>
@@ -52,7 +55,7 @@ Effect: Fire</code></pre>
 <details><summary>Nápověda 1: cesta hodnot</summary><p>Verdict přijme původní move, uloží výsledek clean pod novým jménem a teprve tento očištěný text předá cost. Výsledná cena potom stačí pro dvě odmítací podmínky.</p></details>
 <details><summary>Nápověda 2: pořadí odmítnutí</summary><p>Cena 0 označuje neznámý povel, nikoli tah zdarma. Nejdřív odmítni neznámý povel, potom porovnej energii s cenou. Rovnost ceny a energie je povolená.</p></details>
 <h2>Žáby potřebují směr, ne vlastní kopii výpočtu</h2>
-<p>V <code>05-methods/P17_ToadsAndFrogs.java</code> mají ropuchy číslo druhu 1 a jdou doprava; žáby číslo 2 a jdou doleva. Hrací pole je zpočátku:</p>
+<p>V <code>05-methods/P17_Task_ToadsAndFrogs.java</code> mají ropuchy číslo druhu 1 a jdou doprava; žáby číslo 2 a jdou doleva. Hrací pole je zpočátku:</p>
 <pre><code>positions:  0 1 2 3 4 5 6
 creatures:  T T T . F F F
 toads:      →
@@ -61,13 +64,13 @@ frogs:      ←</code></pre>
 <p>Obě metody jen počítají. Připravené move ověří prázdné políčko, povolený skok i okraje a provede skutečný přesun. Neupravuj pole. Pozice na obrazovce jsou pro hráče číslované 1 až 7: klávesa 5 na začátku požádá první žábu o přesun do mezery. R obnoví začátek. Kontrolu vyber v <code>05-methods/Check.java</code>.</p>
 <h2>Vrať se k příběhu nebo odměnám</h2>
 <ul>
-<li><code>03-text-input/P10_MadLibsStoryMachine.java</code>: zkontroluj, jak headline získává očištěné jméno. Pokud čištění opisuje přímo, nahraď je voláním cleanWord. Pokud už ji používá, nic neopisuj. Vysvětli cestu jména od vstupu přes pomocníka až do titulku. Stejné pravidlo má zůstat na jednom místě.</li>
-<li><code>04-decisions/P19_CooperateOrDefect.java</code>: připravené play se ptá reward dvakrát, jednou pro každého hráče. U volání s prohozenými argumenty se prohodí pohled na to, kdo spolupracuje. Předpověz vlastní odměnu i soupeřovu pro jednu spolupráci a jednu zradu, potom ověř hrou. Pravidla odměn už znáš z podmínek.</li>
+<li><code>03-text-input/P10_Task_MadLibsStoryMachine.java</code>: zkontroluj, jak headline získává očištěné jméno. Pokud čištění opisuje přímo, nahraď je voláním cleanWord. Pokud už ji používá, nic neopisuj. Vysvětli cestu jména od vstupu přes pomocníka až do titulku. Stejné pravidlo má zůstat na jednom místě.</li>
+<li><code>04-decisions/P19_Task_CooperateOrDefect.java</code>: připravené play se ptá reward dvakrát, jednou pro každého hráče. U volání s prohozenými argumenty se prohodí pohled na to, kdo spolupracuje. Předpověz vlastní odměnu i soupeřovu pro jednu spolupráci a jednu zradu, potom ověř hrou. Pravidla odměn už znáš z podmínek.</li>
 </ul>
 <p><strong>Teď umíš rozdělit pravidlo do menších metod, sledovat cestu argumentů a výsledků a ponechat vstup a výstup oddělené od výpočtů.</strong></p>
 <p>Pokračuj na <a href="../06-loops/01-while.html">opakování pomocí while</a>: naučíš program provádět známé kroky vícekrát.</p>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>MiniGolf</strong> · <code>05-methods/P18_MiniGolf.java</code><br>MiniGolf potřebuje výpočet dragVelocity i jeho zapojení v applyPull pro obě osy. Ověř vstupy 100, -25 a 0; neměň omezovač rány.</li>
+<li><strong>MiniGolf</strong> · <code>05-methods/P18_Task_MiniGolf.java</code><br>MiniGolf potřebuje výpočet dragVelocity i jeho zapojení v applyPull pro obě osy. Ověř vstupy 100, -25 a 0; neměň omezovač rány.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="04-local-values.html">← 5.4 Kam až dosáhne jméno</a><a class="next" href="../06-loops/01-while.html">6.1 Opakuj, dokud je potřeba →</a></nav>

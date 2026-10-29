@@ -3,55 +3,86 @@ import java.util.*;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-/// Chapter checks: java Check.java
-/// One game: java Check.java P05_VirtualScribbler.java
-/// Tests call compact programs through reflection in this JVM.
+/// Kontrola herních úloh této kapitoly. Krátké učebnicové úkoly spouštěj samostatně.
 class Check {
     int failed;
     int checked;
     String selected;
+    final ArrayList<String> available = new ArrayList<>();
     interface Test { void run() throws Exception; }
 
     void main(String[] args) {
         System.setProperty("java.awt.headless", "true");
-        if (args.length > 1) throw new IllegalArgumentException("Use: java Check.java [game filename]");
+        if (args.length > 1) {
+            IO.println("Zadej nejvýše jeden název herního souboru. Bez argumentu se zkontrolují všechny herní úlohy kapitoly.");
+            System.exit(2);
+        }
         selected = args.length == 0 ? "" : Path.of(args[0]).getFileName().toString().replaceFirst("\\.java$", "");
-        run("P05_VirtualScribbler", "06.05 VirtualScribbler · F11", () -> P05_VirtualScribblerTest.main(new String[0]));
-        if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " mission goals remaining.");
+        run("P05_Task_VirtualScribbler", () -> P05_Task_VirtualScribblerTest.main(new String[0]));
+        if (checked == 0) {
+            IO.println("Pro tento soubor zde není připravená herní kontrola: " + selected + ".java");
+            IO.println("Vyber jeden z těchto souborů: " + String.join(", ", available));
+            System.exit(2);
+        }
+        IO.println("Kontroly: " + checked + "; hotovo: " + (checked - failed) + "; zbývá: " + failed);
         if (failed > 0) System.exit(1);
     }
 
-    void run(String game, String label, Test test) {
+    void run(String game, Test test) {
+        available.add(game + ".java");
         if (!selected.isEmpty() && !selected.equals(game)) return;
         checked++;
         try {
             test.run();
-            IO.println("GREEN " + label);
+            IO.println("GREEN " + game + ".java");
         } catch (Throwable failure) {
             failed++;
-            IO.println("RED " + label + ": " + failure.getMessage());
+            IO.println("RED " + game + ".java");
+            String reason = failure.getMessage();
+            if (reason == null || reason.isBlank()) reason = "Kontrola nedostala očekávaný výsledek.";
+            if (!(failure instanceof AssertionError)) reason = "Program se při kontrole zastavil: " + failure.getClass().getSimpleName() + ": " + reason;
+            IO.println("  " + reason.replace("\n", "\n  "));
+            Throwable cause = failure;
+            while (cause.getCause() != null && cause.getCause() != cause) cause = cause.getCause();
+            if (cause != failure) IO.println("  " + cause.getClass().getSimpleName() + ": " + show(cause.getMessage()));
+            for (var frame : cause.getStackTrace()) {
+                if (frame.getClassName().equals(game) || frame.getClassName().startsWith(game + "$")) {
+                    IO.println("  " + "Místo v programu: " + frame.getFileName() + ":" + frame.getLineNumber());
+                    break;
+                }
+            }
         }
+    }
+
+    static String show(Object value) {
+        if (value != null && value.getClass().isArray()) {
+            int length = java.lang.reflect.Array.getLength(value);
+            var parts = new ArrayList<String>();
+            for (int i = 0; i < Math.min(length, 8); i++) parts.add(show(java.lang.reflect.Array.get(value, i)));
+            return parts + (length > 8 ? " … (" + length + " položek" + ")" : "");
+        }
+        String text = String.valueOf(value).replace("\n", "\\n").replace("\r", "\\r");
+        return text.length() <= 180 ? text : text.substring(0, 177) + "…";
     }
 }
 
 @SuppressWarnings("unchecked")
-class P05_VirtualScribblerTest {
+class P05_Task_VirtualScribblerTest {
     static int checks;
 
     static void expect(boolean correct, String message) {
         checks++;
-        if (!correct) throw new AssertionError("06.05/F11: " + message);
+        if (!correct) throw new AssertionError(message);
     }
 
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-                + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-                + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Očekáváno: " + Check.show(expected)
+                + "\n    Zjištěno: " + Check.show(actual));
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P05_VirtualScribbler");
+        var game = Reflect.create("P05_Task_VirtualScribbler");
         Reflect.call(game, "restart");
         Reflect.set(game, "drift", 9);
         Reflect.set(game, "jitter", 10);
@@ -60,30 +91,29 @@ class P05_VirtualScribblerTest {
         int width = (int) Reflect.get(game, "WIDTH");
         int height = (int) Reflect.get(game, "HEIGHT");
         expect(Math.abs((double) Reflect.get(game, "x") - width / 2) < .00001,
-                "the square returns to its starting horizontal position");
+                "signature má dokončit čtverec ve stejné vodorovné pozici, kde začal: ve středu plátna.");
         expect(Math.abs((double) Reflect.get(game, "y") - height / 2) < .00001,
-                "the square returns to its starting vertical position");
-        equal(120, Reflect.get(game, "steps"), "four thirty-step sides draw 120 pen steps");
-        equal(true, Reflect.get(game, "paused"), "the signature ends paused");
-        equal(0, Reflect.get(game, "drift"), "straight sides have no drift");
-        equal(0, Reflect.get(game, "jitter"), "repeated stamps have no random jitter");
+                "signature má dokončit čtverec ve stejné svislé pozici, kde začal: ve středu plátna.");
+        equal(120, Reflect.get(game, "steps"), "signature má provést 120 kroků pera: čtyři strany po třiceti krocích. Zkontroluj opakované kreslení stran.");
+        equal(true, Reflect.get(game, "paused"), "signature má skončit pozastaveně, aby se čtverec potom dál nepohyboval.");
+        equal(0, Reflect.get(game, "drift"), "signature má před kreslením vynulovat drift, aby všechny čtyři strany zůstaly rovné.");
+        equal(0, Reflect.get(game, "jitter"), "signature má vynulovat jitter, aby šel stejný čtverec nakreslit znovu bez náhodných změn.");
         var image = (java.awt.image.BufferedImage) Reflect.get(game, "canvas");
         int cx = width / 2;
         int cy = height / 2;
         for (int[] point : new int[][]{{cx + 33, cy}, {cx + 66, cy + 33},
                 {cx + 33, cy + 66}, {cx, cy + 33}}) {
             expect((image.getRGB(point[0], point[1]) & 0xffffff) != 0xffffff,
-                    "each of the four square sides must actually draw");
+                    "Na plátně chybí alespoň jedna strana čtverce. V signature každou stranu skutečně kresli, nejen počítej její kroky.");
         }
         int[] pixels = image.getRGB(0, 0, width, height, null, 0, width);
         Reflect.set(game, "paused", false);
         Reflect.call(game, "burst", 11);
         Reflect.call(game, "signature");
         var again = (java.awt.image.BufferedImage) Reflect.get(game, "canvas");
-        equal(pixels, again.getRGB(0, 0, width, height, null, 0, width), "a second signature resets earlier drawing and settings");
+        equal(pixels, again.getRGB(0, 0, width, height, null, 0, width), "Druhé volání signature má vytvořit stejný čtverec a nejprve odstranit předchozí kresbu i změněná nastavení.");
         Reflect.call(game, "oneShot", 1);
-        equal(121, Reflect.get(game, "steps"), "ordinary step controls still use the working drawing model");
-        System.out.println("PASS " + checks + " checks");
+        equal(121, Reflect.get(game, "steps"), "Po signature má oneShot(1) zvýšit počet kroků ze 120 na 121. Zachovej běžné ovládání pera.");
     }
 }
 
@@ -114,7 +144,7 @@ class Reflect {
                 return Class.forName(name);
             }
         } catch (ClassNotFoundException failure) {
-            throw new IllegalStateException("Cannot find compact program type: " + name, failure);
+            throw new IllegalStateException("Nelze načíst program. Ověř jeho soubor vedle Check.java: " + name, failure);
         }
     }
 
@@ -123,14 +153,14 @@ class Reflect {
         for (var constructor : type(name).getDeclaredConstructors()) {
             if (accepts(constructor.getParameterTypes(), args)) matches.add(constructor);
         }
-        var constructor = one(matches, "constructor " + name);
+        var constructor = one(matches, "vytvoření objektu " + name);
         try {
             constructor.setAccessible(true);
             return constructor.newInstance(args);
         } catch (InvocationTargetException failure) {
             throw Reflect.<RuntimeException>raise(failure.getCause());
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot construct " + name, failure);
+            throw new IllegalStateException("Nelze vytvořit objekt programu: " + name, failure);
         }
     }
 
@@ -138,7 +168,7 @@ class Reflect {
         try {
             return field(target, name).get(target instanceof Class<?> ? null : target);
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot read field " + name, failure);
+            throw new IllegalStateException("Nelze přečíst proměnnou: " + name, failure);
         }
     }
 
@@ -149,7 +179,7 @@ class Reflect {
             field.set(receiver, value);
             return field.get(receiver);
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot write field " + name, failure);
+            throw new IllegalStateException("Nelze změnit proměnnou: " + name, failure);
         }
     }
 
@@ -159,7 +189,7 @@ class Reflect {
             try {
                 var field = current.getDeclaredField(name);
                 if (target instanceof Class<?> && !Modifier.isStatic(field.getModifiers())) {
-                    throw new IllegalStateException("An instance is required for field " + name);
+                    throw new IllegalStateException("Pro tuto proměnnou je potřeba objekt: " + name);
                 }
                 field.setAccessible(true);
                 return field;
@@ -189,14 +219,14 @@ class Reflect {
                 matches.add(method);
             }
         }
-        var method = one(matches, "method " + owner.getName() + "." + name);
+        var method = one(matches, "metodu " + owner.getName() + "." + name);
         try {
             method.setAccessible(true);
             return method.invoke(target instanceof Class<?> ? null : target, args);
         } catch (InvocationTargetException failure) {
             throw Reflect.<RuntimeException>raise(failure.getCause());
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot call " + owner.getName() + "." + name, failure);
+            throw new IllegalStateException("Nelze zavolat metodu: " + owner.getName() + "." + name, failure);
         }
     }
 
@@ -233,7 +263,7 @@ class Reflect {
 
     private static <T> T one(List<T> matches, String description) {
         if (matches.size() != 1) {
-            throw new IllegalStateException((matches.isEmpty() ? "No compatible " : "Ambiguous ") + description);
+            throw new IllegalStateException((matches.isEmpty() ? "Nenalezeno odpovídající " : "Nalezeno více možností pro ") + description);
         }
         return matches.getFirst();
     }

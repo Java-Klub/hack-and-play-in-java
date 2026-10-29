@@ -9,16 +9,19 @@
 <h1>5.4 Kam až dosáhne jméno</h1>
 <p>Pomocník tvrdí, že snížil energii dronu. Po návratu ale main stále vidí původní číslo. Dvě stejná jména nemusejí znamenat jednu společnou proměnnou.</p>
 <h2>Parametr patří jednomu volání</h2>
-<p>Otevři <code>05-methods/P12_ChargeCopy.java</code>. Nejdřív předpověz obě čísla:</p>
-<pre><code class="language-java" data-source="P12_ChargeCopy.java">void main() {
+<p>Otevři <code>05-methods/P12_Example_ChargeCopy.java</code>. Nejdřív předpověz obě čísla:</p>
+<pre><code class="language-java" data-source="P12_Example_ChargeCopy.java">/// # Hotový příklad · 5.4 Kam až dosáhne jméno
+/// Lekce: 04-local-values.html
+
+void main() {
     int energy = 3;
     drain(energy);
-    IO.println(&quot;In main: &quot; + energy);
+    IO.println("In main: " + energy);
 }
 
 void drain(int energy) {
     energy = energy - 1;
-    IO.println(&quot;In drain: &quot; + energy);
+    IO.println("In drain: " + energy);
 }
 </code></pre><pre class="transcript"><code>In drain: 2
 In main: 3</code></pre>
@@ -32,7 +35,7 @@ In main: 3</code></pre>
 <p>Scope (oblast platnosti) určuje, kde lze použít dané jméno. Parametry platí v těle jejich metody. Proměnná vytvořená v main uvnitř drain dostupná není. Proměnná vytvořená uvnitř bloku if končí s tímto blokem; v jeho nadřazeném bloku ji později nepřečteš.</p>
 <p>Změň jméno parametru drain i jeho dvě použití na charge. Výstup musí zůstat stejný. Přejmenování samotného parametru bez jeho použití by nechalo neznámé jméno.</p>
 <h2>Úkol: lékárnička nic nevyléčila</h2>
-<p>Otevři <code>05-methods/P13_MedKit.java</code>. Při zdraví 4 výsledek heal vznikne, ale main ho zahodí. Metoda navíc nezabrání překročení maximálního zdraví.</p>
+<p>Otevři <code>05-methods/P13_Task_MedKit.java</code>. Při zdraví 4 výsledek heal vznikne, ale main ho zahodí. Metoda navíc nezabrání překročení maximálního zdraví.</p>
 <p><strong>Ulož vrácenou hodnotu heal zpět do health v main. Uvnitř heal přidej omezení: lékárnička přidá 3, ale výsledek nesmí přesáhnout 10. Žádné výpisy do heal nepřidávej.</strong> Vstupní zdraví zkoušej od 0 do 10.</p>
 <pre class="transcript"><code>Health: <span class="typed">4</span>
 Health after kit: 7</code></pre>
@@ -42,7 +45,7 @@ Health after kit: 7</code></pre>
 <p>Když parametr typu String přiřadíš na očištěný nebo jiný text, také tím nepřepíšeš proměnnou volajícího. Obě jména mohou původně označovat stejný text; přiřazení jiného textu jednomu z nich ale nezmění druhé. Očištěný text je potřeba vrátit a použít. Už to znáš z operace strip, která původní text neupravovala.</p>
 <p>Naše malé metody mají hodnoty uvnitř svých závorek. V připravených hrách uvidíš také stav mimo metody, sdílený jejich voláními. Není to totéž jako místní parametr; podrobně se k němu vrátíš při práci s objekty a stavem hry.</p>
 <h2>Přidej odměnu za kombinaci SOS</h2>
-<p>V <code>05-methods/P14_SOS.java</code> uprav gainedPoints. Parametr before je počet všech řad SOS před tahem, after počet všech řad po tahu. Například before 4 a after 6 znamená dvě nové řady, nikoli šest.</p>
+<p>V <code>05-methods/P14_Task_SOS.java</code> uprav gainedPoints. Parametr before je počet všech řad SOS před tahem, after počet všech řad po tahu. Například before 4 a after 6 znamená dvě nové řady, nikoli šest.</p>
 <p>Ulož si počet nových řad do lokální proměnné. Jedna nová řada dá bod; dvě nebo více dají dvojnásobek počtu nových řad. Žádná nová řada dá 0. Metoda vrací jen odměnu: nemění hrací pole, skóre ani hráče. Pro (4, 6) čekej 4; pro (4, 5) 1; pro (4, 4) 0. Kontrolu vyber v <code>05-methods/Check.java</code>.</p>
 <p><strong>Teď umíš rozlišit stejně pojmenované lokální hodnoty a vědomě převzít výsledek pomocné metody.</strong></p>
 </article>

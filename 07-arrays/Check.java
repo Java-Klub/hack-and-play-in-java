@@ -3,49 +3,80 @@ import java.util.*;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-/// Chapter checks: java Check.java
-/// One game: java Check.java P03_DotsAndBoxes.java
-/// Tests call compact programs through reflection in this JVM.
+/// Kontrola herních úloh této kapitoly. Krátké učebnicové úkoly spouštěj samostatně.
 class Check {
     int failed;
     int checked;
     String selected;
+    final ArrayList<String> available = new ArrayList<>();
     interface Test { void run() throws Exception; }
 
     void main(String[] args) {
         System.setProperty("java.awt.headless", "true");
-        if (args.length > 1) throw new IllegalArgumentException("Use: java Check.java [game filename]");
+        if (args.length > 1) {
+            IO.println("Zadej nejvýše jeden název herního souboru. Bez argumentu se zkontrolují všechny herní úlohy kapitoly.");
+            System.exit(2);
+        }
         selected = args.length == 0 ? "" : Path.of(args[0]).getFileName().toString().replaceFirst("\\.java$", "");
-        run("P03_DotsAndBoxes", "07.03 DotsAndBoxes · F16", () -> P03_DotsAndBoxesTest.main(new String[0]));
-        run("P04_PegDrop", "07.04 PegDrop · F15", () -> P04_PegDropTest.main(new String[0]));
-        run("P07_KochSnowflakeCards", "07.07 KochSnowflakeCards · F11", () -> P07_KochSnowflakeCardsTest.main(new String[0]));
-        run("P08_Jotto", "07.08 Jotto · F12", () -> P08_JottoTest.main(new String[0]));
-        run("P09_YatzyScorecard", "07.09 YatzyScorecard · F12", () -> P09_YatzyScorecardTest.main(new String[0]));
-        run("P12_Chopsticks", "07.12 Chopsticks · F08", () -> P12_ChopsticksTest.main(new String[0]));
-        run("P13_WordleStyleWordHunt", "07.13 WordleStyleWordHunt · F12", () -> P13_WordleStyleWordHuntTest.main(new String[0]));
-        run("P16_Ghost", "07.16 Ghost · F10", () -> P16_GhostTest.main(new String[0]));
-        run("P19_Bridges", "07.19 Bridges · F20", () -> P19_BridgesTest.main(new String[0]));
-        run("P20_MagnetDominoes", "07.20 MagnetDominoes · F20", () -> P20_MagnetDominoesTest.main(new String[0]));
-        if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " mission goals remaining.");
+        run("P03_Task_DotsAndBoxes", () -> P03_Task_DotsAndBoxesTest.main(new String[0]));
+        run("P04_Task_PegDrop", () -> P04_Task_PegDropTest.main(new String[0]));
+        run("P07_Task_KochSnowflakeCards", () -> P07_Task_KochSnowflakeCardsTest.main(new String[0]));
+        run("P08_Task_Jotto", () -> P08_Task_JottoTest.main(new String[0]));
+        run("P09_Task_YatzyScorecard", () -> P09_Task_YatzyScorecardTest.main(new String[0]));
+        run("P12_Task_Chopsticks", () -> P12_Task_ChopsticksTest.main(new String[0]));
+        run("P13_Task_WordleStyleWordHunt", () -> P13_Task_WordleStyleWordHuntTest.main(new String[0]));
+        run("P16_Task_Ghost", () -> P16_Task_GhostTest.main(new String[0]));
+        run("P19_Task_Bridges", () -> P19_Task_BridgesTest.main(new String[0]));
+        run("P20_Task_MagnetDominoes", () -> P20_Task_MagnetDominoesTest.main(new String[0]));
+        if (checked == 0) {
+            IO.println("Pro tento soubor zde není připravená herní kontrola: " + selected + ".java");
+            IO.println("Vyber jeden z těchto souborů: " + String.join(", ", available));
+            System.exit(2);
+        }
+        IO.println("Kontroly: " + checked + "; hotovo: " + (checked - failed) + "; zbývá: " + failed);
         if (failed > 0) System.exit(1);
     }
 
-    void run(String game, String label, Test test) {
+    void run(String game, Test test) {
+        available.add(game + ".java");
         if (!selected.isEmpty() && !selected.equals(game)) return;
         checked++;
         try {
             test.run();
-            IO.println("GREEN " + label);
+            IO.println("GREEN " + game + ".java");
         } catch (Throwable failure) {
             failed++;
-            IO.println("RED " + label + ": " + failure.getMessage());
+            IO.println("RED " + game + ".java");
+            String reason = failure.getMessage();
+            if (reason == null || reason.isBlank()) reason = "Kontrola nedostala očekávaný výsledek.";
+            if (!(failure instanceof AssertionError)) reason = "Program se při kontrole zastavil: " + failure.getClass().getSimpleName() + ": " + reason;
+            IO.println("  " + reason.replace("\n", "\n  "));
+            Throwable cause = failure;
+            while (cause.getCause() != null && cause.getCause() != cause) cause = cause.getCause();
+            if (cause != failure) IO.println("  " + cause.getClass().getSimpleName() + ": " + show(cause.getMessage()));
+            for (var frame : cause.getStackTrace()) {
+                if (frame.getClassName().equals(game) || frame.getClassName().startsWith(game + "$")) {
+                    IO.println("  " + "Místo v programu: " + frame.getFileName() + ":" + frame.getLineNumber());
+                    break;
+                }
+            }
         }
+    }
+
+    static String show(Object value) {
+        if (value != null && value.getClass().isArray()) {
+            int length = java.lang.reflect.Array.getLength(value);
+            var parts = new ArrayList<String>();
+            for (int i = 0; i < Math.min(length, 8); i++) parts.add(show(java.lang.reflect.Array.get(value, i)));
+            return parts + (length > 8 ? " … (" + length + " položek" + ")" : "");
+        }
+        String text = String.valueOf(value).replace("\n", "\\n").replace("\r", "\\r");
+        return text.length() <= 180 ? text : text.substring(0, 177) + "…";
     }
 }
 
 @SuppressWarnings("unchecked")
-class P03_DotsAndBoxesTest {
+class P03_Task_DotsAndBoxesTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -55,25 +86,24 @@ class P03_DotsAndBoxesTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Očekáváno: " + Check.show(expected)
+                + "\n    Zjištěno: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P03_DotsAndBoxes");
-        equal(new int[]{0, 2, 6, 7}, ((int[]) Reflect.call(g, "box", 0)), "07.03/F16: first box needs its four real edges");
-        equal(new int[]{1, 3, 7, 8}, ((int[]) Reflect.call(g, "box", 1)), "07.03/F16: neighbouring box shares one edge");
-        equal(new int[]{3, 5, 10, 11}, ((int[]) Reflect.call(g, "box", 3)), "07.03/F16: final box has different indices");
+        var g = Reflect.create("P03_Task_DotsAndBoxes");
+        equal(new int[]{0, 2, 6, 7}, ((int[]) Reflect.call(g, "box", 0)), "box(0) vrátilo nesprávné indexy hran prvního čtverce. Urči jeho horní, dolní, levou a pravou hranu.");
+        equal(new int[]{1, 3, 7, 8}, ((int[]) Reflect.call(g, "box", 1)), "box(1) má popsat sousední čtverec a se čtvercem 0 sdílet jen jejich společnou hranu.");
+        equal(new int[]{3, 5, 10, 11}, ((int[]) Reflect.call(g, "box", 3)), "box(3) vrátilo nesprávné hrany pravého dolního čtverce. Vycházej z čísla požadovaného čtverce.");
         Reflect.call(g, "reset");
         for (String edge : new String[]{"1", "3", "7", "8"}) {
             Reflect.call(g, "command", edge);
         }
-        expect(((int[]) Reflect.get(g, "owners"))[0] != 0, "07.03/F16: closing a real box awards it");
-        System.out.println("PASS " + checks + " checks");
+        expect(((int[]) Reflect.get(g, "owners"))[0] != 0, "Zahrání hran 1, 3, 7 a 8 má přidělit první čtverec hráči. Zachovej, aby skórování používalo čtyři hrany vrácené z box.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P04_PegDropTest {
+class P04_Task_PegDropTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -83,222 +113,216 @@ class P04_PegDropTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Očekáváno: " + Check.show(expected)
+                + "\n    Zjištěno: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P04_PegDrop");
+        var g = Reflect.create("P04_Task_PegDrop");
         Reflect.call(g, "restart");
-        equal(100, ((int) Reflect.call(g, "scoreAt", 3)), "07.04/F15: return the score of the requested bin");
-        equal(10, ((int) Reflect.call(g, "scoreAt", 7)), "07.04/F15: final bin accepted");
+        equal(100, ((int) Reflect.call(g, "scoreAt", 3)), "scoreAt(3) má vrátit 100, hodnotu této přihrádky. Přečti požadované místo ve values.");
+        equal(10, ((int) Reflect.call(g, "scoreAt", 7)), "scoreAt(7) má vrátit 10. Také poslední platná přihrádka má používat vlastní hodnotu.");
         int old = ((int) Reflect.get(g, "score"));
         Reflect.call(g, "scoreAt", 2);
-        equal(old, ((int) Reflect.get(g, "score")), "07.04/F15: score query does not award points");
+        equal(old, ((int) Reflect.get(g, "score")), "Volání scoreAt nesmí změnit celkové skóre. Přečtení hodnoty přihrádky její body ještě nepřiděluje.");
         boolean rejected = false;
         try {
             Reflect.call(g, "scoreAt", -1);
         } catch (IllegalArgumentException e) {
             rejected = true;
         }
-        expect(rejected, "07.04/F15: invalid index has an explicit contract");
-        System.out.println("PASS " + checks + " checks");
+        expect(rejected, "scoreAt(-1) má odmítnout neplatnou přihrádku. Zachovej připravenou ochrannou podmínku před čtením values.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P07_KochSnowflakeCardsTest {
+class P07_Task_KochSnowflakeCardsTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("07.07 F11: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P07_KochSnowflakeCards");
+        var game = Reflect.create("P07_Task_KochSnowflakeCards");
         var image = new BufferedImage(540, 480, BufferedImage.TYPE_INT_ARGB);
         var pen = image.createGraphics();
-        check(((int) Reflect.call(game, "snowflake", pen, 0)) == 3, "the counted loop must draw all three base sides");
+        check(((int) Reflect.call(game, "snowflake", pen, 0)) == 3, "snowflake na úrovni 0 má nakreslit a započítat všechny tři strany. Zkontroluj začátek a konec průchodu stranami.");
         boolean firstSide = false;
         for (int y = 215; y <= 221; y++) {
             for (int x = 168; x <= 172; x++) firstSide |= image.getRGB(x,y) != 0;
         }
-        check(firstSide, "the actual first edge must be painted, not merely counted");
-        check(((int) Reflect.call(game, "snowflake", pen, 1)) == 12, "three supplied four-segment edges give twelve segments");
+        check(firstSide, "Na obrázku stále chybí první strana. Zachovej v snowflake volání, které každou navštívenou hranu skutečně nakreslí.");
+        check(((int) Reflect.call(game, "snowflake", pen, 1)) == 12, "snowflake na úrovni 1 má ve třech stranách započítat 12 úseček. Zachovej připravené vytváření hrany.");
         pen.dispose();
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P08_JottoTest {
+class P08_Task_JottoTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("07.08 F12: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P08_Jotto");
+        var game = Reflect.create("P08_Task_Jotto");
         Reflect.set(game, "secret", "PLANT");
-        check(((int) Reflect.call(game, "matches", "PLANT")) == 5, "all five shared letters must accumulate");
-        check(((int) Reflect.call(game, "matches", "STONE")) == 2, "T and N are counted regardless of positions");
-        check(((int) Reflect.call(game, "matches", "BRICK")) == 0, "no shared letters leaves zero");
+        check(((int) Reflect.call(game, "matches", "PLANT")) == 5, "matches(\"PLANT\") má pro tajné PLANT vrátit 5. Započítej každé společné písmeno.");
+        check(((int) Reflect.call(game, "matches", "STONE")) == 2, "matches(\"STONE\") má pro tajné PLANT vrátit 2: T a N se shodují i na jiných pozicích.");
+        check(((int) Reflect.call(game, "matches", "BRICK")) == 0, "matches(\"BRICK\") má pro tajné PLANT vrátit 0. Za chybějící písmeno nepřidávej bod.");
         Reflect.call(game, "reset");
         Reflect.set(game, "secret", "PLANT");
         Reflect.call(game, "command", "STONE");
-        check(((java.util.List<java.lang.String>) Reflect.get(game, "history")).getFirst().contains("2 shared"), "the actual clue uses the repaired total");
-        System.out.println("PASS " + checks + " checks");
+        check(((java.util.List<java.lang.String>) Reflect.get(game, "history")).getFirst().contains("2 shared"), "Nápověda pro STONE proti PLANT má uvést 2 shared. Zachovej, aby command používalo výsledek matches.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P09_YatzyScorecardTest {
+class P09_Task_YatzyScorecardTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("07.09 F12: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P09_YatzyScorecard");
+        var game = Reflect.create("P09_Task_YatzyScorecard");
         Reflect.call(game, "reset");
         ((int[]) Reflect.get(game, "scores"))[0] = 1;
         ((int[]) Reflect.get(game, "scores"))[1] = 4;
         ((int[]) Reflect.get(game, "scores"))[2] = 9;
-        check(((int) Reflect.call(game, "total")) == 14, "filled categories must accumulate rather than replace the running sum");
+        check(((int) Reflect.call(game, "total")) == 14, "total má pro vyplněná skóre 1, 4 a 9 vrátit 14. V průběžném součtu zachovávej i předchozí kategorie.");
         Reflect.call(game, "reset");
-        check(((int) Reflect.call(game, "total")) == 0, "unfilled negative entries contribute nothing");
+        check(((int) Reflect.call(game, "total")) == 0, "Prázdná výsledková karta má mít součet 0. Vynech hodnoty -1 označující nevyplněné kategorie.");
         Reflect.set(game, "scores", new int[]{3,6,9,12,15,18,-1,-1,-1,-1,-1,-1,-1});
-        check(((int) Reflect.call(game, "total")) == 98, "upper sum 63 adds the bonus exactly once");
+        check(((int) Reflect.call(game, "total")) == 98, "Když prvních šest kategorií dává součet 63, total má vrátit 98 včetně jedné odměny 35 bodů.");
         ((int[]) Reflect.get(game, "scores"))[5] = 17;
-        check(((int) Reflect.call(game, "total")) == 62, "upper sum 62 earns no bonus");
-        System.out.println("PASS " + checks + " checks");
+        check(((int) Reflect.call(game, "total")) == 62, "Když prvních šest kategorií dává součet 62, total má vrátit 62 bez odměny.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P12_ChopsticksTest {
+class P12_Task_ChopsticksTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("07.12 F08: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P12_Chopsticks");
+        var game = Reflect.create("P12_Task_Chopsticks");
         Reflect.call(game, "reset");
         ((int[][]) Reflect.get(game, "hands"))[0][0] = 0;
-        check(!((boolean) Reflect.call(game, "handsAlive", 0, 0)), "a dead attacking hand must be rejected");
+        check(!((boolean) Reflect.call(game, "handsAlive", 0, 0)), "handsAlive má odmítnout útok rukou s nulovým počtem prstů. Před povolením úderu ověř útočící ruku.");
         ((int[][]) Reflect.get(game, "hands"))[0][0] = 1;
         ((int[][]) Reflect.get(game, "hands"))[1][1] = 0;
-        check(!((boolean) Reflect.call(game, "handsAlive", 0, 1)), "a dead target hand must be rejected");
-        check(((boolean) Reflect.call(game, "handsAlive", 1, 0)), "two living hands remain legal");
-        check(!((boolean) Reflect.call(game, "handsAlive", -1, 0)) && !((boolean) Reflect.call(game, "handsAlive", 0, 2)), "invalid indices are rejected before hand access");
+        check(!((boolean) Reflect.call(game, "handsAlive", 0, 1)), "handsAlive má odmítnout cílovou ruku s nulovým počtem prstů, i když útočící ruka žije.");
+        check(((boolean) Reflect.call(game, "handsAlive", 1, 0)), "handsAlive má povolit dvě existující ruce s kladným počtem prstů. Zachovej možnost platných útoků.");
+        check(!((boolean) Reflect.call(game, "handsAlive", -1, 0)) && !((boolean) Reflect.call(game, "handsAlive", 0, 2)), "handsAlive má odmítnout indexy rukou -1 a 2 před čtením pole hands. Existují jen vnitřní indexy 0 a 1.");
         int player = ((int) Reflect.get(game, "player"));
         try { Reflect.call(game, "command", "1 2"); } catch (IllegalArgumentException expected) { }
-        check(((int) Reflect.get(game, "player")) == player && ((int[][]) Reflect.get(game, "hands"))[1][1] == 0, "rejected input leaves actual game state untouched");
-        check(!((boolean) Reflect.call(game, "handsAlive", 2, 0)) && !((boolean) Reflect.call(game, "handsAlive", 0, -1)), "both hand ranges must be guarded at both ends");
-        System.out.println("PASS " + checks + " checks");
+        check(((int) Reflect.get(game, "player")) == player && ((int[][]) Reflect.get(game, "hands"))[1][1] == 0, "Odmítnutý úder 1 2 nesmí změnit hráče ani vyřazenou cílovou ruku. Ověř povolení před změnou hry.");
+        check(!((boolean) Reflect.call(game, "handsAlive", 2, 0)) && !((boolean) Reflect.call(game, "handsAlive", 0, -1)), "Ověř oba konce rozsahu obou rukou: handsAlive má odmítnout také vlastní index 2 a soupeřův index -1.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P13_WordleStyleWordHuntTest {
+class P13_Task_WordleStyleWordHuntTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("07.13 F12: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P13_WordleStyleWordHunt");
+        var game = Reflect.create("P13_Task_WordleStyleWordHunt");
         Reflect.set(game, "secret", "LEVEL");
         char[] marks = ".....".toCharArray();
         int[] counts = ((int[]) Reflect.call(game, "leftoverLetters", "ALLEY", marks));
-        check(counts['L'-'A'] == 2, "two unmatched L letters need an accumulated count of two");
-        check(((java.lang.String) Reflect.call(game, "grade", "ALLEY")).equals(".YYG."), "both guessed L letters receive the actual remaining matches");
-        check(((java.lang.String) Reflect.call(game, "grade", "LEVEL")).equals("GGGGG"), "exact matches stay green and consume no leftover count");
-        check(((java.lang.String) Reflect.call(game, "grade", "STONE")).equals("....Y"), "an absent letter cannot gain a false match");
-        System.out.println("PASS " + checks + " checks");
+        check(counts['L'-'A'] == 2, "Pro tajné LEVEL má leftoverLetters napočítat obě zbývající L. V počítadle stejného písmene zachovávej předchozí výskyty.");
+        check(((java.lang.String) Reflect.call(game, "grade", "ALLEY")).equals(".YYG."), "Pro tajné LEVEL má grade(\"ALLEY\") vrátit \".YYG.\". Obě písmena L mají zbývající shody.");
+        check(((java.lang.String) Reflect.call(game, "grade", "LEVEL")).equals("GGGGG"), "grade(\"LEVEL\") má pro tajné LEVEL vrátit GGGGG. Před počítáním zbývajících písmen zachovej přesné shody pozic.");
+        check(((java.lang.String) Reflect.call(game, "grade", "STONE")).equals("....Y"), "Pro tajné LEVEL má grade(\"STONE\") vrátit ....Y: jen poslední E je přítomné jinde.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P16_GhostTest {
+class P16_Task_GhostTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("07.16 F10: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P16_Ghost");
-        check(((boolean) Reflect.call(game, "possiblePrefix", "RO")), "the search must reach dictionary entries beyond the first word");
-        check(((boolean) Reflect.call(game, "possiblePrefix", "GHO")), "the first matching word may return immediately");
-        check(!((boolean) Reflect.call(game, "possiblePrefix", "XY")), "a missing prefix terminates with false");
+        var game = Reflect.create("P16_Task_Ghost");
+        check(((boolean) Reflect.call(game, "possiblePrefix", "RO")), "possiblePrefix(\"RO\") má vrátit true. Pokračuj za první slovo až k uvedeným slovům začínajícím RO.");
+        check(((boolean) Reflect.call(game, "possiblePrefix", "GHO")), "possiblePrefix(\"GHO\") má po nalezení GHOST vrátit true. Jedno odpovídající slovo stačí.");
+        check(!((boolean) Reflect.call(game, "possiblePrefix", "XY")), "possiblePrefix(\"XY\") má skončit a vrátit false, když takto nezačíná žádné slovo ve slovníku.");
         Reflect.call(game, "reset");
         Reflect.call(game, "command", "R");
-        check(((java.lang.String) Reflect.get(game, "outcome")).isEmpty() && ((int) Reflect.get(game, "player")) == 2, "the actual legal R prefix must keep the game alive");
+        check(((java.lang.String) Reflect.get(game, "outcome")).isEmpty() && ((int) Reflect.get(game, "player")) == 2, "Zadání R na začátku je platný začátek slova. Hra má pokračovat hráčem 2, nikoli vyhlásit prohru.");
         Reflect.set(game, "words", new String[0]);
-        check(!((boolean) Reflect.call(game, "possiblePrefix", "A")), "an empty dictionary terminates without access");
-        System.out.println("PASS " + checks + " checks");
+        check(!((boolean) Reflect.call(game, "possiblePrefix", "A")), "Při prázdném seznamu slov má possiblePrefix vrátit false bez pokusu číst první slovo.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P19_BridgesTest {
+class P19_Task_BridgesTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
         if (!correct) throw new AssertionError(message);
     }
     static void equal(Object expected, Object actual, String message) {
-        expect(java.util.Objects.deepEquals(expected, actual), message + " | expected=" + expected + " actual=" + actual);
+        expect(java.util.Objects.deepEquals(expected, actual), message
+                + "\n    Očekáváno: " + Check.show(expected)
+                + "\n    Zjištěno: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P19_Bridges");
+        var g = Reflect.create("P19_Task_Bridges");
         Reflect.call(g, "restart");
         Reflect.call(g, "choose", 145, 45);
-        equal(1, ((int[]) Reflect.get(g, "bridges"))[0], "07.19: a real click adds a bridge");
+        equal(1, ((int[]) Reflect.get(g, "bridges"))[0], "Kliknutí na první naznačené spojení má přidat jeden most. Zachovej dosavadní chování choose.");
         for (int n = 0; n < 6; n++) {
             Reflect.call(g, "key", java.awt.event.KeyEvent.VK_U, true);
-            equal(n % 2, ((int[]) Reflect.get(g, "bridges"))[0], "07.19: repeated U alternates both hypotheses");
+            equal(n % 2, ((int[]) Reflect.get(g, "bridges"))[0], "Každý stisk U má přepnout mezi posledními dvěma uspořádáními mostů, i při opakovaném mačkání. Zkontroluj undo.");
         }
         Reflect.call(g, "choose", 295, 45);
         Reflect.call(g, "undo");
-        equal(0, ((int[]) Reflect.get(g, "bridges"))[1], "07.19: a new real edit establishes the latest pair");
+        equal(0, ((int[]) Reflect.get(g, "bridges"))[1], "Po nové úpravě mostu má undo obnovit stav těsně před touto úpravou. Nahraď starou uloženou dvojici.");
         Reflect.call(g, "undo");
-        equal(1, ((int[]) Reflect.get(g, "bridges"))[1], "07.19: the new pair also switches back");
+        equal(1, ((int[]) Reflect.get(g, "bridges"))[1], "Další volání undo má znovu obnovit novou úpravu mostu. Zachovej obě uspořádání pro přepínání.");
         int[] saved = (int[]) Reflect.call(g, "snapshot");
         ((int[]) Reflect.get(g, "bridges"))[0] = 2;
-        equal(1, saved[0], "07.19: a saved hypothesis is independent of later edits");
+        equal(1, saved[0], "Výsledek snapshot se změnil při úpravě živých mostů. Ulož nezávislé pole počtů mostů.");
         Reflect.call(g, "restart");
         Reflect.call(g, "undo");
-        equal(new int[10], Reflect.get(g, "bridges"), "07.19: no previous choice after restart");
-        System.out.println("PASS " + checks + " checks");
+        equal(new int[10], Reflect.get(g, "bridges"), "Po restart má undo ponechat všechny počty mostů na nule. Žádná předchozí úprava k obnovení už neexistuje.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P20_MagnetDominoesTest {
+class P20_Task_MagnetDominoesTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -308,24 +332,23 @@ class P20_MagnetDominoesTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Očekáváno: " + Check.show(expected)
+                + "\n    Zjištěno: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P20_MagnetDominoes");
+        var g = Reflect.create("P20_Task_MagnetDominoes");
         Reflect.call(g, "restart");
         Reflect.call(g, "cycle", 0);
         Reflect.call(g, "undo");
-        equal(-1, ((int[]) Reflect.get(g, "state"))[0], "07.20/F20: undo restores undecided magnet");
+        equal(-1, ((int[]) Reflect.get(g, "state"))[0], "Vrácení první změny má obnovit nerozhodnutý stav domina. Zkontroluj hodnoty uložené pomocí copyState.");
         Reflect.call(g, "cycle", 0);
         Reflect.call(g, "cycle", 1);
         Reflect.call(g, "undo");
-        equal(1, ((int[]) Reflect.get(g, "state"))[0], "07.20/F20: undo keeps earlier domino change");
-        equal(-1, ((int[]) Reflect.get(g, "state"))[1], "07.20/F20: latest change reverted");
+        equal(1, ((int[]) Reflect.get(g, "state"))[0], "Undo má při vracení poslední změny zachovat dřívější změnu prvního domina.");
+        equal(-1, ((int[]) Reflect.get(g, "state"))[1], "Undo má poslední změněné domino vrátit do předchozího nerozhodnutého stavu.");
         int[] copy = ((int[]) Reflect.call(g, "copyState"));
         copy[0] = 0;
-        equal(1, ((int[]) Reflect.get(g, "state"))[0], "07.20/F20: saved state does not alias live poles");
-        System.out.println("PASS " + checks + " checks");
+        equal(1, ((int[]) Reflect.get(g, "state"))[0], "Změna pole vráceného z copyState nesmí změnit živá domina. Uložené pole musí být nezávislé.");
     }
 }
 
@@ -356,7 +379,7 @@ class Reflect {
                 return Class.forName(name);
             }
         } catch (ClassNotFoundException failure) {
-            throw new IllegalStateException("Cannot find compact program type: " + name, failure);
+            throw new IllegalStateException("Nelze načíst program. Ověř jeho soubor vedle Check.java: " + name, failure);
         }
     }
 
@@ -365,14 +388,14 @@ class Reflect {
         for (var constructor : type(name).getDeclaredConstructors()) {
             if (accepts(constructor.getParameterTypes(), args)) matches.add(constructor);
         }
-        var constructor = one(matches, "constructor " + name);
+        var constructor = one(matches, "vytvoření objektu " + name);
         try {
             constructor.setAccessible(true);
             return constructor.newInstance(args);
         } catch (InvocationTargetException failure) {
             throw Reflect.<RuntimeException>raise(failure.getCause());
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot construct " + name, failure);
+            throw new IllegalStateException("Nelze vytvořit objekt programu: " + name, failure);
         }
     }
 
@@ -380,7 +403,7 @@ class Reflect {
         try {
             return field(target, name).get(target instanceof Class<?> ? null : target);
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot read field " + name, failure);
+            throw new IllegalStateException("Nelze přečíst proměnnou: " + name, failure);
         }
     }
 
@@ -391,7 +414,7 @@ class Reflect {
             field.set(receiver, value);
             return field.get(receiver);
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot write field " + name, failure);
+            throw new IllegalStateException("Nelze změnit proměnnou: " + name, failure);
         }
     }
 
@@ -401,7 +424,7 @@ class Reflect {
             try {
                 var field = current.getDeclaredField(name);
                 if (target instanceof Class<?> && !Modifier.isStatic(field.getModifiers())) {
-                    throw new IllegalStateException("An instance is required for field " + name);
+                    throw new IllegalStateException("Pro tuto proměnnou je potřeba objekt: " + name);
                 }
                 field.setAccessible(true);
                 return field;
@@ -431,14 +454,14 @@ class Reflect {
                 matches.add(method);
             }
         }
-        var method = one(matches, "method " + owner.getName() + "." + name);
+        var method = one(matches, "metodu " + owner.getName() + "." + name);
         try {
             method.setAccessible(true);
             return method.invoke(target instanceof Class<?> ? null : target, args);
         } catch (InvocationTargetException failure) {
             throw Reflect.<RuntimeException>raise(failure.getCause());
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot call " + owner.getName() + "." + name, failure);
+            throw new IllegalStateException("Nelze zavolat metodu: " + owner.getName() + "." + name, failure);
         }
     }
 
@@ -475,7 +498,7 @@ class Reflect {
 
     private static <T> T one(List<T> matches, String description) {
         if (matches.size() != 1) {
-            throw new IllegalStateException((matches.isEmpty() ? "No compatible " : "Ambiguous ") + description);
+            throw new IllegalStateException((matches.isEmpty() ? "Nenalezeno odpovídající " : "Nalezeno více možností pro ") + description);
         }
         return matches.getFirst();
     }

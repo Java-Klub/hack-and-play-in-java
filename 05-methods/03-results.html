@@ -9,12 +9,15 @@
 <h1>5.3 Vrať výsledek volajícímu</h1>
 <p>Výpočet ceny může být užitečný v obchodě i u rozhodčího. Nemusí pokaždé něco tisknout; místo toho poskytne výsledek místu, které se zeptalo.</p>
 <h2>Výsledek lze uložit i použít dál</h2>
-<p>Otevři <code>05-methods/P06_TokenPrice.java</code>. Zadej počet lektvarů 4.</p>
-<pre><code class="language-java" data-source="P06_TokenPrice.java">void main() {
-    int count = Integer.parseInt(IO.readln(&quot;Potions: &quot;).strip());
+<p>Otevři <code>05-methods/P06_Example_TokenPrice.java</code>. Zadej počet lektvarů 4.</p>
+<pre><code class="language-java" data-source="P06_Example_TokenPrice.java">/// # Hotový příklad · 5.3 Vrať výsledek volajícímu
+/// Lekce: 03-results.html
+
+void main() {
+    int count = Integer.parseInt(IO.readln("Potions: ").strip());
     int tokens = price(count);
-    IO.println(&quot;Tokens needed: &quot; + tokens);
-    IO.println(&quot;One extra potion: &quot; + price(count + 1));
+    IO.println("Tokens needed: " + tokens);
+    IO.println("One extra potion: " + price(count + 1));
 }
 
 int price(int count) {
@@ -27,24 +30,27 @@ One extra potion: 15</code></pre>
 <p>U <code>int tokens = price(count);</code> se nejprve provede price a jeho vrácená hodnota se uloží do tokens. Při count = 4 je to 12. Ve druhém výpisu argument count + 1 poskytne 5 a nové volání vrátí 15. Price samo nic nevypíše.</p>
 <p><strong>Return není println.</strong> Println zobrazí zprávu, return předá hodnotu. Výpočet s výsledkem 12 ještě nerozhoduje, jestli se má 12 zobrazit, přičíst k jiné ceně nebo porovnat s rozpočtem. To může udělat volající.</p>
 <h2>Každá možná cesta musí poskytnout výsledek</h2>
-<p>Otevři <code>05-methods/P07_DragonLabel.java</code>. Tady je výsledkem String:</p>
-<pre><code class="language-java" data-source="P07_DragonLabel.java">void main() {
-    int strength = Integer.parseInt(IO.readln(&quot;Strength: &quot;).strip());
+<p>Otevři <code>05-methods/P07_Example_DragonLabel.java</code>. Tady je výsledkem String:</p>
+<pre><code class="language-java" data-source="P07_Example_DragonLabel.java">/// # Hotový příklad · 5.3 Vrať výsledek volajícímu
+/// Lekce: 03-results.html
+
+void main() {
+    int strength = Integer.parseInt(IO.readln("Strength: ").strip());
     String label = dragonName(strength);
-    IO.println(&quot;You found: &quot; + label);
+    IO.println("You found: " + label);
 }
 
 String dragonName(int strength) {
     if (strength &gt;= 5) {
-        return &quot;Ancient dragon&quot;;
+        return "Ancient dragon";
     }
-    return &quot;Baby dragon&quot;;
+    return "Baby dragon";
 }
 </code></pre>
 <p>Při síle 5 a vyšší se vrátí Ancient dragon; k druhému return už se nedojde. Jinak první blok neproběhne a vrátí se Baby dragon. Kdybys druhý return smazal, některé cesty by nedaly slíbený text a program by se nepřeložil.</p>
 <p>Stejně může metoda s návratovým typem boolean předat true nebo false, jak už znáš z rozhodčích her. Samotné <code>return;</code> bez hodnoty patří do metody s void. Návrat z pomocné metody neukončuje celé main: main pokračuje tam, odkud ji zavolalo.</p>
 <h2>Úkol: spočítej lup a přiděl hodnost</h2>
-<p>Otevři <code>05-methods/P08_LootScore.java</code>. Hra už čte počty mincí a drahokamů, ale výpočty vracejí náhradní odpovědi.</p>
+<p>Otevři <code>05-methods/P08_Task_LootScore.java</code>. Hra už čte počty mincí a drahokamů, ale výpočty vracejí náhradní odpovědi.</p>
 <p><strong>Doplň score tak, aby mince měla hodnotu 1 a drahokam 5. Doplň rank tak, aby za 20 bodů a více vracelo Master, jinak Rookie. Obě metody jen vracejí výsledek; čtení a výpisy zůstávají v main.</strong> Počty v tomto úkolu zkoušej od nuly výš.</p>
 <div class="table-wrap"><table><thead><tr><th>Coins</th><th>Gems</th><th>Score</th><th>Rank</th></tr></thead><tbody>
 <tr><td>2</td><td>3</td><td>17</td><td>Rookie</td></tr>
@@ -55,14 +61,14 @@ String dragonName(int strength) {
 <details><summary>Nápověda: sleduj cestu jednoho výsledku</summary><p>Výsledek score se uloží do points. Tuto hodnotu main vypíše a potom předá rank. Rank už nemá znovu počítat mince ani číst odpověď hráče.</p></details>
 <h2>Napodob stroj a zapoj kostky</h2>
 <ul>
-<li><code>05-methods/P05_NumberMachine.java</code>: vrať se ke svým pokusům. Doplň imitation tak, aby z parametru počítalo stejný výsledek jako stroj pro všechna čísla od -20 do 20. Zkus nulu i záporné číslo a porovnej pravidlo se svou předpovědí. Referenční machine neměň.</li>
-<li><code>05-methods/P09_ShutTheBox.java</code>: napiš diceTotal pro součet obou kostek a zapoj jeho výsledek do target v roll. Správná definice, kterou nikdo nepoužije, hru neopraví. Generování firstDie a secondDie je připravené. Po spuštění musí cíl souhlasit se zobrazenými kostkami.</li>
+<li><code>05-methods/P05_Task_NumberMachine.java</code>: vrať se ke svým pokusům. Doplň imitation tak, aby z parametru počítalo stejný výsledek jako stroj pro všechna čísla od -20 do 20. Zkus nulu i záporné číslo a porovnej pravidlo se svou předpovědí. Referenční machine neměň.</li>
+<li><code>05-methods/P09_Task_ShutTheBox.java</code>: napiš diceTotal pro součet obou kostek a zapoj jeho výsledek do target v roll. Správná definice, kterou nikdo nepoužije, hru neopraví. Generování firstDie a secondDie je připravené. Po spuštění musí cíl souhlasit se zobrazenými kostkami.</li>
 </ul>
 <p>Obě hry ověří Check.java ze stejné složky; vyber jejich název v Program Arguments. V NumberMachine navíc vlastní přidané compare ověř spuštěním. U ShutTheBox neměň připravené hledání povolených uzávěrů.</p>
 <p><strong>Teď umíš napsat výpočet s výsledkem, použít jej na dvou místech a rozlišit vracení hodnoty od jejího zobrazení.</strong></p>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>CannonPuzzle</strong> · <code>05-methods/P10_CannonPuzzle.java</code><br>V CannonPuzzle obnov launchSpeed: tažení 100 má dát rychlost 9, záporné tažení musí zachovat znaménko. Souřadnice děla jsou připravené.</li>
-<li><strong>BouncingBalls</strong> · <code>05-methods/P11_BouncingBalls.java</code><br>V BouncingBalls najdi společný výpočet ztráty rychlosti. Boční stěny a strop mají obracet směr beze ztráty velikosti; podlahu ponech měkčí.</li>
+<li><strong>CannonPuzzle</strong> · <code>05-methods/P10_Task_CannonPuzzle.java</code><br>V CannonPuzzle obnov launchSpeed: tažení 100 má dát rychlost 9, záporné tažení musí zachovat znaménko. Souřadnice děla jsou připravené.</li>
+<li><strong>BouncingBalls</strong> · <code>05-methods/P11_Task_BouncingBalls.java</code><br>V BouncingBalls najdi společný výpočet ztráty rychlosti. Boční stěny a strop mají obracet směr beze ztráty velikosti; podlahu ponech měkčí.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="02-parameters.html">← 5.2 Pošli metodě hodnoty</a><a class="next" href="04-local-values.html">5.4 Kam až dosáhne jméno →</a></nav>

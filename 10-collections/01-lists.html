@@ -9,38 +9,41 @@
 <h1>10.1 Batoh nemusí znát délku předem</h1>
 <p>Průzkumník cestou sbírá vybavení. Array (pole) má pevnou délku; list (seznam) může růst i ubývat a přitom zachová pořadí. Stále používáš indexy, ale prostor pro přidané prvky zajistí samotný obal.</p>
 <h2>Čitelný typ a měnitelný obal</h2>
-<pre><code class="language-java" data-source="P01_GrowingBag.java">void main() {
-    List&lt;String&gt; starting = List.of(&quot;Rope&quot;, &quot;Torch&quot;);
+<pre><code class="language-java" data-source="P01_Example_GrowingBag.java">/// # Hotový příklad · 10.1 Batoh nemusí znát délku předem
+/// Lekce: 01-lists.html
+
+void main() {
+    List&lt;String&gt; starting = List.of("Rope", "Torch");
     List&lt;String&gt; bag = new ArrayList&lt;&gt;(starting);
-    bag.add(&quot;Map&quot;);
-    bag.set(1, &quot;Lantern&quot;);
-    IO.println(&quot;First: &quot; + bag.get(0));
-    IO.println(&quot;Size: &quot; + bag.size());
-    IO.println(&quot;Bag: &quot; + bag);
-    IO.println(&quot;Starting: &quot; + starting);
+    bag.add("Map");
+    bag.set(1, "Lantern");
+    IO.println("First: " + bag.get(0));
+    IO.println("Size: " + bag.size());
+    IO.println("Bag: " + bag);
+    IO.println("Starting: " + starting);
 }
 </code></pre>
-<p>Otevři 10-collections/P01_GrowingBag.java. List&lt;String&gt; znamená seznam s prvky typu String. Lomené závorky obsahují type argument (typový argument), nikoli číselné porovnání. Java hlídá typ prvků, takže přímé přidání čísla do tohoto batohu není povolené.</p>
+<p>Otevři 10-collections/P01_Example_GrowingBag.java. List&lt;String&gt; znamená seznam s prvky typu String. Lomené závorky obsahují type argument (typový argument), nikoli číselné porovnání. Java hlídá typ prvků, takže přímé přidání čísla do tohoto batohu není povolené.</p>
 <p>List pojmenovává potřebné operace; ArrayList je připravená implementace v Javě, která prvky uchovává. Prázdné &lt;&gt; v new ArrayList&lt;&gt;(starting) dovolí Javě odvodit String z definice proměnné. Tento copy constructor (kopírovací konstruktor) vytvoří nový seznam s odkazy na původní prvky.</p>
 <p>List.of vytvoří unmodifiable list (neměnný seznam): jeho prvky nepřidávej, neodebírej ani nenahrazuj. Kopie ArrayList tyto operace dovoluje. Add přidá na konec, set nahradí existující prvek, get jej přečte. Indexy začínají 0 a zůstávají pod size(), které zde nahrazuje délku pole length.</p>
 <details><summary>Předpověz další předmět</summary><p>Po přidání Map je velikost 3. Nahrazení Torch za Lantern ji ponechá 3. Co udělá další add(&quot;Key&quot;)? Velikost bude 4 a Key poslední. Starting stále obsahuje Rope a Torch.</p></details>
 <h2>Úkol: udělej v batohu místo</h2>
-<p>Otevři 10-collections/P02_BagEditor.java. Doplň edit: odeber původní druhý předmět Torch a potom přidej dodaný předmět na konec, jen pokud není prázdný. Změň dodaný seznam; vrácení jiného nepoužitého seznamu by tento batoh nezměnilo.</p>
+<p>Otevři 10-collections/P02_Task_BagEditor.java. Doplň edit: odeber původní druhý předmět Torch a potom přidej dodaný předmět na konec, jen pokud není prázdný. Změň dodaný seznam; vrácení jiného nepoužitého seznamu by tento batoh nezměnilo.</p>
 <p>Remove s indexem, například bag.remove(1), uzavře mezeru a posune další prvky doleva. Pro Compass očekávej [Rope, Map, Compass] a velikost 3. Pro prázdnou odpověď [Rope, Map] a velikost 2. Vnitřní mezera ve Spare rope musí zůstat.</p>
 <details><summary>Nápověda 1: počítej pozice od nuly</summary><p>Druhý předmět má index 1. Odeber jej před rozhodováním, zda přidáš náhradu.</p></details>
 <details><summary>Nápověda 2: parametr sdílí seznam</summary><p>Parametr má zkopírovaný odkaz na stejný měnitelný seznam. Volání jeho operací změní tento seznam; přiřazení nového seznamu pouze do parametru by nepřesměrovalo proměnnou v main.</p></details>
 <p>Seznam zachovává i opakování. Příště zvolíš obal, jehož úkolem je pamatovat si, zda se něco již objevilo.</p>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>Flood</strong> · <code>10-collections/P03_Flood.java</code><br>Flood musí zpracovat i sousedy přidané během hledání. Oprav pokračovací podmínku spread; připravené kontroly sousedů ponech.</li>
-<li><strong>SameGame</strong> · <code>10-collections/P04_SameGame.java</code><br>SameGame opouští rozpracovanou skupinu příliš brzy. V group sleduj zpracované a nalezené buňky a dokonči celý rostoucí seznam práce.</li>
-<li><strong>DragonCurve</strong> · <code>10-collections/P05_DragonCurve.java</code><br>DragonCurve provede méně skládání, než požaduješ. Oprav jen vnější smyčku foldTurns: nula znamená žádné skládání, kladné číslo přesný počet průchodů.</li>
-<li><strong>EvilHangman</strong> · <code>10-collections/P06_EvilHangman.java</code><br>V EvilHangman spočítej velikost family postupným přičítáním. Prázdná rodina má nulu; nevracej jen pevnou odpověď nebo poslední příspěvek.</li>
-<li><strong>WordChain</strong> · <code>10-collections/P07_WordChain.java</code><br>V WordChain mají choices ponechat všechny nalezené možnosti. Sleduj, který řádek nahrazuje dřívější výsledek, a zachovej pořadí nabídky.</li>
-<li><strong>Hex</strong> · <code>10-collections/P08_Hex.java</code><br>V Hex oprav sousední směry v connected. Připravené prohledávání ponech; vytvoř spojení, které vyžaduje každý z šesti směrů.</li>
-<li><strong>SetStyleTripleHunt</strong> · <code>10-collections/P09_SetStyleTripleHunt.java</code><br>SetStyleTripleHunt potřebuje každou trojici různých karet včetně poslední. Oprav hranice tří smyček a nech triple rozhodnout o vybrané trojici.</li>
-<li><strong>Shikaku</strong> · <code>10-collections/P10_Shikaku.java</code><br>Shikaku potřebuje samostatnou kopii seznamu obdélníků pro Undo. Kopíruj členství; neměnné Box hodnoty mohou zůstat společné.</li>
-<li><strong>GapHopper</strong> · <code>10-collections/P11_GapHopper.java</code><br>GapHopper vrací recyklovanou trubku na nesprávný konec fronty. Sleduj pořadí překážek při více obězích, ne jen první obrázek.</li>
-<li><strong>FlipbookStudio</strong> · <code>10-collections/P12_FlipbookStudio.java</code><br>V FlipbookStudio dokonči undo: odeber nejnovější Edit a obnov jeho starou barvu v jeho vlastním snímku a souřadnicích. Prázdná historie vrací false.</li>
+<li><strong>Flood</strong> · <code>10-collections/P03_Task_Flood.java</code><br>Flood musí zpracovat i sousedy přidané během hledání. Oprav pokračovací podmínku spread; připravené kontroly sousedů ponech.</li>
+<li><strong>SameGame</strong> · <code>10-collections/P04_Task_SameGame.java</code><br>SameGame opouští rozpracovanou skupinu příliš brzy. V group sleduj zpracované a nalezené buňky a dokonči celý rostoucí seznam práce.</li>
+<li><strong>DragonCurve</strong> · <code>10-collections/P05_Task_DragonCurve.java</code><br>DragonCurve provede méně skládání, než požaduješ. Oprav jen vnější smyčku foldTurns: nula znamená žádné skládání, kladné číslo přesný počet průchodů.</li>
+<li><strong>EvilHangman</strong> · <code>10-collections/P06_Task_EvilHangman.java</code><br>V EvilHangman spočítej velikost family postupným přičítáním. Prázdná rodina má nulu; nevracej jen pevnou odpověď nebo poslední příspěvek.</li>
+<li><strong>WordChain</strong> · <code>10-collections/P07_Task_WordChain.java</code><br>V WordChain mají choices ponechat všechny nalezené možnosti. Sleduj, který řádek nahrazuje dřívější výsledek, a zachovej pořadí nabídky.</li>
+<li><strong>Hex</strong> · <code>10-collections/P08_Task_Hex.java</code><br>V Hex oprav sousední směry v connected. Připravené prohledávání ponech; vytvoř spojení, které vyžaduje každý z šesti směrů.</li>
+<li><strong>SetStyleTripleHunt</strong> · <code>10-collections/P09_Task_SetStyleTripleHunt.java</code><br>SetStyleTripleHunt potřebuje každou trojici různých karet včetně poslední. Oprav hranice tří smyček a nech triple rozhodnout o vybrané trojici.</li>
+<li><strong>Shikaku</strong> · <code>10-collections/P10_Task_Shikaku.java</code><br>Shikaku potřebuje samostatnou kopii seznamu obdélníků pro Undo. Kopíruj členství; neměnné Box hodnoty mohou zůstat společné.</li>
+<li><strong>GapHopper</strong> · <code>10-collections/P11_Task_GapHopper.java</code><br>GapHopper vrací recyklovanou trubku na nesprávný konec fronty. Sleduj pořadí překážek při více obězích, ne jen první obrázek.</li>
+<li><strong>FlipbookStudio</strong> · <code>10-collections/P12_Task_FlipbookStudio.java</code><br>V FlipbookStudio dokonči undo: odeber nejnovější Edit a obnov jeho starou barvu v jeho vlastním snímku a souřadnicích. Prázdná historie vrací false.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="../09-data/05-enums.html">← 9.5 Pojmenuj povolené možnosti</a><a class="next" href="02-sets.html">10.2 Pamatuj si první návštěvu →</a></nav>

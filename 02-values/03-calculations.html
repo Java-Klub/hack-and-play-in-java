@@ -48,7 +48,7 @@
 <p>Jména lze použít místo čísel: <code>energy - cost</code> počítá z jejich právě uložených hodnot.</p>
 <h2>Celá a desetinná čísla</h2>
 <p><code>int</code> uchovává celá čísla. <code>double</code> umí také desetinnou část. V kódu používáme desetinnou <strong>tečku</strong>, například <code>2.5</code>.</p>
-<p>Otevři <code>02-values/P08_Sharing.java</code>:</p>
+<p>Otevři <code>02-values/P08_Example_Sharing.java</code>:</p>
 <pre><code class="language-java">void main() {
     double share = 5 / 2.0;
     IO.println(share);
@@ -64,7 +64,7 @@
 
 <p>Obnov původní <code>2.0</code>. U dělení hlídej také dělitele: nulou v těchto příkladech nedělíme. <code>double</code> ukládá některé desetinné hodnoty přibližně; k penězům nebo přesným desetinným výpočtům se vrátíme později. Pro dnešní rychlosti a rozdělení energie nám poslouží.</p>
 <h2>Úkol: rozděl energii paprsku</h2>
-<p>Otevři <code>02-values/P09_BeamSplit.java</code>. Máš <code>double energy = 9;</code> a <code>int beams = 2;</code>.</p>
+<p>Otevři <code>02-values/P09_Task_BeamSplit.java</code>. Máš <code>double energy = 9;</code> a <code>int beams = 2;</code>.</p>
 <p><strong>Uprav výpočet <code>perBeam</code>, aby rozdělil energii rovným dílem mezi paprsky.</strong> Výstup má být <code>4.5</code>. Využij obě jména, aby se program dal použít také s jiným nastavením.</p>
 <p>Potom změň pouze energii na 10 a počet paprsků na 4. Očekávej <code>2.5</code>. <code>energy</code> je už <code>double</code>, proto výpočet s jeho hodnotou zachová desetinnou část.</p>
 <details>
@@ -88,7 +88,7 @@ Score: 5
 </details>
 
 <h2>Úkol: sestav skóre pilota</h2>
-<p>Otevři <code>02-values/P10_Scoreboard.java</code>. Pilot má na začátku skóre 10.</p>
+<p>Otevři <code>02-values/P10_Task_Scoreboard.java</code>. Pilot má na začátku skóre 10.</p>
 <p><strong>Přidej 5 bodů do <code>score</code> a nahraď dva výpisy jediným řádkem</strong>, který sestaví zprávu z <code>pilot</code>, dvojtečky s mezerou a aktuálního <code>score</code>:</p>
 <pre><code class="language-text">Nova: 15
 </code></pre>
@@ -100,13 +100,13 @@ Score: 5
 </details>
 
 <h2>Použij čísla v obrázku</h2>
-<p><code>02-values/P11_SunflowerSpiral.java</code> má připravený výpočet obrázku a jediný úhel k nalezení. Procvičíš čtení pojmenované desetinné hodnoty a její změnu. Vnitřní trigonometrické výpočty pro tuto misi psát nemusíš; popisuje je připravená část souboru.</p>
+<p><code>02-values/P11_Task_SunflowerSpiral.java</code> má připravený výpočet obrázku a jediný úhel k nalezení. Procvičíš čtení pojmenované desetinné hodnoty a její změnu. Vnitřní trigonometrické výpočty pro tuto misi psát nemusíš; popisuje je připravená část souboru.</p>
 <p><strong>Kapitolu zvládáš, když umíš napsat krátký program s vlastními hodnotami, změnit je výpočtem a vysvětlit rozdíl mezi <code>5 / 2</code> a <code>5 / 2.0</code>.</strong></p>
 <p>Teď necháš hodnoty zadávat hráče. Pokračuj na <a href="../03-text-input/01-input.html">Zeptej se hráče</a>.</p>
 <p><a href="../index.html">Zpět na obsah učebnice</a></p>
 <details><summary>Dělení dvou pojmenovaných celých čísel</summary><p>Když jsou obě hodnoty int, můžeš jednu pro výpočet převést: <code>(double) amount / parts</code>. Závorky s názvem typu představují cast (převod typu). Převádí se hodnota amount před dělením; samotná proměnná zůstane int. Pro amount 5 a parts 2 dostaneš 2.5. Zápis <code>(double) (amount / parts)</code> naproti tomu převádí až hotový celočíselný výsledek a dá 2.0.</p></details>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>Spirograph</strong> · <code>02-values/P12_Spirograph.java</code><br>Spirograph ztrácí desetinnou část poměru celočíselných poloměrů. Oprav radiusRatio a ověř i poměr menší než jedna.</li>
+<li><strong>Spirograph</strong> · <code>02-values/P12_Task_Spirograph.java</code><br>Spirograph ztrácí desetinnou část poměru celočíselných poloměrů. Oprav radiusRatio a ověř i poměr menší než jedna.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="02-change.html">← 2.2 Změň uloženou hodnotu</a><a class="next" href="../03-text-input/01-input.html">3.1 Zeptej se hráče →</a></nav>

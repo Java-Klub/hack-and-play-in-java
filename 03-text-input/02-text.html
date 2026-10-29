@@ -9,13 +9,16 @@
 <h1>3.2 Vyčisti přijatý signál</h1>
 <p>Hráč může zadat <code>  Red Fox  </code>. Mezery na krajích nepotřebujeme, mezeru mezi slovy chceme zachovat. Původní zprávu si necháme vedle upravené.</p>
 <h2>Jedna zpráva, tři hodnoty</h2>
-<p>Otevři <code>03-text-input/P03_MessageFilter.java</code>. Před spuštěním zkus odhadnout poslední dva řádky.</p>
-<pre><code class="language-java" data-source="P03_MessageFilter.java">void main() {
-    String raw = IO.readln(&quot;Signal: &quot;);
+<p>Otevři <code>03-text-input/P03_Example_MessageFilter.java</code>. Před spuštěním zkus odhadnout poslední dva řádky.</p>
+<pre><code class="language-java" data-source="P03_Example_MessageFilter.java">/// # Hotový příklad · 3.2 Vyčisti přijatý signál
+/// Lekce: 02-text.html
+
+void main() {
+    String raw = IO.readln("Signal: ");
     String clean = raw.strip();
     String loud = clean.toUpperCase(Locale.ROOT);
-    IO.println(&quot;Signal [&quot; + loud + &quot;]&quot;);
-    IO.println(&quot;Original [&quot; + raw + &quot;]&quot;);
+    IO.println("Signal [" + loud + "]");
+    IO.println("Original [" + raw + "]");
 }
 </code></pre>
 <p>Odpověz dvěma mezerami, Red Fox a dalšími dvěma mezerami. Hranaté závorky ve výpisu pomohou vidět okraje textu.</p>
@@ -31,7 +34,7 @@ Original [  Red Fox  ]</code></pre>
 <p>V <code>raw.strip()</code> vybírá tečka operaci nad textem uloženým v <code>raw</code>. Prázdné závorky říkají, že nedodáváš další vstup. V <code>clean.toUpperCase(Locale.ROOT)</code> jsou závorky vyplněné: <code>Locale.ROOT</code> je připravené nastavení pro převod písmen nezávislý na regionálním nastavení počítače. Pro tento převod ho používej takto.</p>
 <p><strong>String operation (operace s textem) poskytne výsledek. Původní text tím nepřepíše.</strong> Proto má každé volání ve vzoru výsledek přiřazený do jména. Samotné <code>raw.strip();</code> se provede, ale jeho výsledek nikde nezůstane uložený.</p>
 <h2>Úkol: oprav tiskárnu odznaků</h2>
-<p>Otevři <code>03-text-input/P04_SignalBadge.java</code>. Čištění je v kódu napsané, přesto ve výsledku zůstávají mezery.</p>
+<p>Otevři <code>03-text-input/P04_Task_SignalBadge.java</code>. Čištění je v kódu napsané, přesto ve výsledku zůstávají mezery.</p>
 <p><strong>Ponech <code>raw</code> jako původní odpověď. Ulož očištěný text do nové variable (proměnné), převeď ho na velká písmena a použij pro výpis odznaku. Přidej také výpis originálu.</strong> Pro tuto odpověď máš dostat:</p>
 <pre class="transcript"><code>Badge: <span class="typed">  nOvA  </span>
 Badge [NOVA]

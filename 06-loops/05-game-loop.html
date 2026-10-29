@@ -9,27 +9,30 @@
 <h1>6.5 Čti další tah</h1>
 <p>Jedna otázka nestačí pro hru na povely. Terminál má opakovaně přečíst řádek, zpracovat ho a ukázat výsledek. Hráč musí mít také jasný způsob, jak skončit.</p>
 <h2>Čtení uvnitř opakování</h2>
-<p>Otevři <code>06-loops/P10_EchoTerminal.java</code>. Zadej ping, potom něco jiného a nakonec q. Každou odpověď potvrď Enter.</p>
-<pre><code class="language-java" data-source="P10_EchoTerminal.java">void main() {
+<p>Otevři <code>06-loops/P10_Example_EchoTerminal.java</code>. Zadej ping, potom něco jiného a nakonec q. Každou odpověď potvrď Enter.</p>
+<pre><code class="language-java" data-source="P10_Example_EchoTerminal.java">/// # Hotový příklad · 6.5 Čti další tah
+/// Lekce: 05-game-loop.html
+
+void main() {
     while (true) {
-        String command = IO.readln(&quot;Command: &quot;);
-        if (command == null || command.equals(&quot;q&quot;)) {
+        String command = IO.readln("Command: ");
+        if (command == null || command.equals("q")) {
             break;
         }
-        if (command.equals(&quot;ping&quot;)) {
-            IO.println(&quot;pong&quot;);
+        if (command.equals("ping")) {
+            IO.println("pong");
         } else {
-            IO.println(&quot;Unknown&quot;);
+            IO.println("Unknown");
         }
     }
-    IO.println(&quot;Closed&quot;);
+    IO.println("Closed");
 }
 </code></pre>
 <p>Zápis while s true dovoluje další kolo vždy. Cestu ven poskytuje break při povelu q. Čtení je uvnitř těla: každé kolo dostane nový řádek. Čtení pouze před cyklem by stále zpracovávalo tutéž odpověď.</p>
 <p>Volání readln může vrátit null, pokud vstup skončil bez dalšího řádku. Není to text ani prázdný řádek. Nejprve testujeme <code>command == null</code>; díky short-circuit evaluation (zkrácenému vyhodnocení) se pak na null nevolá equals. Při q i při konci vstupu se opakování ukončí a vypíše se Closed.</p>
 <details><summary>Předpověď: prázdný řádek a potom q</summary><p>Prázdný řádek není konec vstupu. Nejprve dostaneš Unknown, další výzvu a po q Closed. Shoda povelů je zde přesná: PING není ping.</p></details>
 <h2>Úkol: ovladač malého dronu</h2>
-<p>Otevři <code>06-loops/P11_DroneConsole.java</code>. Smyčka i ukončení fungují, ale up a down nemění výšku. Doplň tato pravidla: up zvýší výšku o 1, down ji o 1 sníží. Výška nesmí opustit rozsah 0 až 3.</p>
+<p>Otevři <code>06-loops/P11_Task_DroneConsole.java</code>. Smyčka i ukončení fungují, ale up a down nemění výšku. Doplň tato pravidla: up zvýší výšku o 1, down ji o 1 sníží. Výška nesmí opustit rozsah 0 až 3.</p>
 <p>Po platném pohybu vypiš Altitude s novou hodnotou. Pokus za hranici vypíše Blocked a výšku nezmění. Jiný povel vypíše Unknown. Q není q a patří mezi neznámé povely; malé q skončí výpisem Landed bez další výšky. Konec vstupu ukonči stejně.</p>
 <p>Vyzkoušej up, up, down, q: výšky budou 1, 2, 1. Při down hned na začátku čekej Blocked. Čtyři up za sebou mají dát 1, 2, 3, Blocked. Jedna proměnná altitude musí uchovávat stav mezi koly.</p>
 <details><summary>Nápověda 1: odděl pravidla</summary><p>Nejdřív je připravený konec. Pak rozliš známý směr a ověř jeho hranici. Neznámý povel nesmí měnit stav.</p></details>

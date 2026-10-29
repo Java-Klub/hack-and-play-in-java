@@ -9,12 +9,15 @@
 <h1>3.4 Z odpovědi udělej číslo</h1>
 <p>Hráč zadá počet spoluhráčů. Program spočítá, kolik žetonů potřebujete. Zadaná číslice je nejprve text; před počítáním z ní potřebuješ získat číslo.</p>
 <h2>Text není počet</h2>
-<p>Otevři <code>03-text-input/P12_TicketCounter.java</code>. Každý hráč dostane tři žetony.</p>
-<pre><code class="language-java" data-source="P12_TicketCounter.java">void main() {
-    String text = IO.readln(&quot;Players: &quot;);
+<p>Otevři <code>03-text-input/P12_Example_TicketCounter.java</code>. Každý hráč dostane tři žetony.</p>
+<pre><code class="language-java" data-source="P12_Example_TicketCounter.java">/// # Hotový příklad · 3.4 Z odpovědi udělej číslo
+/// Lekce: 04-numbers.html
+
+void main() {
+    String text = IO.readln("Players: ");
     int players = Integer.parseInt(text.strip());
     int tokens = players * 3;
-    IO.println(&quot;Tokens needed: &quot; + tokens);
+    IO.println("Tokens needed: " + tokens);
 }
 </code></pre>
 <pre class="transcript"><code>Players: <span class="typed">4</span>
@@ -28,7 +31,7 @@ Tokens needed: 12</code></pre>
 </tbody></table></div>
 <p>Vnořené závorky se čtou od vnitřního výpočtu: nejdřív očištění textu, potom převod. Výsledek pod jménem <code>players</code> je číslo. Proto s ním můžeš násobit.</p>
 <h2>Úkol: oprav energetický zesilovač</h2>
-<p>Otevři <code>03-text-input/P13_PowerBoost.java</code>. Po zadání 4 stroj tvrdí, že energie je 42. Sleduj, co je skutečně uložené v <code>text</code>.</p>
+<p>Otevři <code>03-text-input/P13_Task_PowerBoost.java</code>. Po zadání 4 stroj tvrdí, že energie je 42. Sleduj, co je skutečně uložené v <code>text</code>.</p>
 <p><strong>Získej ze vstupu celé číslo a spočítej dvojnásobek původní energie plus dvě jednotky navíc. Výsledek vypiš se stávajícím popiskem.</strong> Výpočet ulož do pojmenované hodnoty před výpisem.</p>
 <pre class="transcript"><code>Energy: <span class="typed">4</span>
 Boosted energy: 10</code></pre>
@@ -36,7 +39,7 @@ Boosted energy: 10</code></pre>
 <details><summary>Nápověda 1: proč vzniklo 42</summary><p>Jakmile je vlevo u + text, další hodnota se připojuje jako text. Samotné závorky kolem textu z něj číslo neudělají. Převod musí přijít před výpočtem.</p></details>
 <details><summary>Nápověda 2: odděl tři kroky</summary><p>Ponech čtení, přidej přiřazení s převodem do int a další s číselným výpočtem. Až potom připoj hotový výsledek k popisku. Neutrální příklad převodu je <code>int count = Integer.parseInt("7");</code>.</p></details>
 <h2>Zkus slovo místo čísla</h2>
-<p>Spusť P12_TicketCounter.java a napiš <code>four</code>. V Output najdeš <code>NumberFormatException</code>: daný text nelze přečíst jako int a program se ukončí před výpočtem. Spusť jej znovu a zadej číslo. Tento příklad předpokládá zápis celého čísla, například <code>4</code> nebo <code>12</code>; desetinné <code>4.5</code> také není int.</p>
+<p>Spusť P12_Example_TicketCounter.java a napiš <code>four</code>. V Output najdeš <code>NumberFormatException</code>: daný text nelze přečíst jako int a program se ukončí před výpočtem. Spusť jej znovu a zadej číslo. Tento příklad předpokládá zápis celého čísla, například <code>4</code> nebo <code>12</code>; desetinné <code>4.5</code> také není int.</p>
 <p>Nemusíš rozumět celému chybovému výpisu. Důležité je rozlišit chybu ve zdrojáku od nepřevoditelné odpovědi při běhu. Jak takovou odpověď zachytit a dovolit opravu, si vyzkoušíš při práci s exceptions (výjimkami).</p>
 <h2>Malá vlastní výzva</h2>
 <p>Vrať se k TicketCounter. Přidej otázku na počet žetonů pro jednoho hráče. Převeď i druhou odpověď a použij ji místo pevné trojky. Se čtyřmi hráči a pěti žetony na hráče očekávej 20. Potom vyzkoušej tři hráče a dva žetony: výsledek má být 6.</p>

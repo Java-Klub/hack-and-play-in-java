@@ -3,130 +3,157 @@ import java.util.*;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-/// Chapter checks: java Check.java
-/// One game: java Check.java P06_HigherOrLower.java
-/// Tests call compact programs through reflection in this JVM.
+/// Kontrola herních úloh této kapitoly. Krátké učebnicové úkoly spouštěj samostatně.
 class Check {
     int failed;
     int checked;
     String selected;
+    final ArrayList<String> available = new ArrayList<>();
     interface Test { void run() throws Exception; }
 
     void main(String[] args) {
         System.setProperty("java.awt.headless", "true");
-        if (args.length > 1) throw new IllegalArgumentException("Use: java Check.java [game filename]");
+        if (args.length > 1) {
+            IO.println("Zadej nejvýše jeden název herního souboru. Bez argumentu se zkontrolují všechny herní úlohy kapitoly.");
+            System.exit(2);
+        }
         selected = args.length == 0 ? "" : Path.of(args[0]).getFileName().toString().replaceFirst("\\.java$", "");
-        run("P06_HigherOrLower", "02.06 HigherOrLower · F03", () -> P06_HigherOrLowerTest.main(new String[0]));
-        run("P07_SteppingFeet", "02.07 SteppingFeet · F03", () -> P07_SteppingFeetTest.main(new String[0]));
-        run("P11_SunflowerSpiral", "02.11 SunflowerSpiral · F03", () -> P11_SunflowerSpiralTest.main(new String[0]));
-        run("P12_Spirograph", "02.12 Spirograph · F04", () -> P12_SpirographTest.main(new String[0]));
-        if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " mission goals remaining.");
+        run("P06_Task_HigherOrLower", () -> P06_Task_HigherOrLowerTest.main(new String[0]));
+        run("P07_Task_SteppingFeet", () -> P07_Task_SteppingFeetTest.main(new String[0]));
+        run("P11_Task_SunflowerSpiral", () -> P11_Task_SunflowerSpiralTest.main(new String[0]));
+        run("P12_Task_Spirograph", () -> P12_Task_SpirographTest.main(new String[0]));
+        if (checked == 0) {
+            IO.println("Pro tento soubor zde není připravená herní kontrola: " + selected + ".java");
+            IO.println("Vyber jeden z těchto souborů: " + String.join(", ", available));
+            System.exit(2);
+        }
+        IO.println("Kontroly: " + checked + "; hotovo: " + (checked - failed) + "; zbývá: " + failed);
         if (failed > 0) System.exit(1);
     }
 
-    void run(String game, String label, Test test) {
+    void run(String game, Test test) {
+        available.add(game + ".java");
         if (!selected.isEmpty() && !selected.equals(game)) return;
         checked++;
         try {
             test.run();
-            IO.println("GREEN " + label);
+            IO.println("GREEN " + game + ".java");
         } catch (Throwable failure) {
             failed++;
-            IO.println("RED " + label + ": " + failure.getMessage());
+            IO.println("RED " + game + ".java");
+            String reason = failure.getMessage();
+            if (reason == null || reason.isBlank()) reason = "Kontrola nedostala očekávaný výsledek.";
+            if (!(failure instanceof AssertionError)) reason = "Program se při kontrole zastavil: " + failure.getClass().getSimpleName() + ": " + reason;
+            IO.println("  " + reason.replace("\n", "\n  "));
+            Throwable cause = failure;
+            while (cause.getCause() != null && cause.getCause() != cause) cause = cause.getCause();
+            if (cause != failure) IO.println("  " + cause.getClass().getSimpleName() + ": " + show(cause.getMessage()));
+            for (var frame : cause.getStackTrace()) {
+                if (frame.getClassName().equals(game) || frame.getClassName().startsWith(game + "$")) {
+                    IO.println("  " + "Místo v programu: " + frame.getFileName() + ":" + frame.getLineNumber());
+                    break;
+                }
+            }
         }
+    }
+
+    static String show(Object value) {
+        if (value != null && value.getClass().isArray()) {
+            int length = java.lang.reflect.Array.getLength(value);
+            var parts = new ArrayList<String>();
+            for (int i = 0; i < Math.min(length, 8); i++) parts.add(show(java.lang.reflect.Array.get(value, i)));
+            return parts + (length > 8 ? " … (" + length + " položek" + ")" : "");
+        }
+        String text = String.valueOf(value).replace("\n", "\\n").replace("\r", "\\r");
+        return text.length() <= 180 ? text : text.substring(0, 177) + "…";
     }
 }
 
 @SuppressWarnings("unchecked")
-class P06_HigherOrLowerTest {
+class P06_Task_HigherOrLowerTest {
     static int checks;
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) throw new AssertionError(reason);
     }
     public static void main(String[] args) throws Exception {
-        var p = Reflect.create("P06_HigherOrLower");
+        var p = Reflect.create("P06_Task_HigherOrLower");
         Reflect.call(p, "reset");
-        check(((int)Reflect.get(p,"target")) == 3, "The displayed and actual sprint goal must be three.");
+        check(((int)Reflect.get(p,"target")) == 3, "Cíl pro výhru zatím není 3. Najdi společné nastavení, které používá okno i pravidlo výhry.");
         Reflect.set(p,"current",2);
         Reflect.set(p,"deck",new ArrayDeque<>(List.of(3,4,5,6)));
         Reflect.call(p,"command","h");
-        check(((String)Reflect.get(p,"outcome")).isEmpty(),"One prediction is not yet the three-correct goal.");
+        check(((String)Reflect.get(p,"outcome")).isEmpty(),"Kolo skončilo už po jednom správném odhadu. Musí pokračovat až do třetího správného odhadu.");
         Reflect.call(p,"command","h");
-        check(((String)Reflect.get(p,"outcome")).isEmpty(),"Two predictions are not yet the goal.");
+        check(((String)Reflect.get(p,"outcome")).isEmpty(),"Kolo skončilo už po dvou správných odhadech. Cíl vyžaduje tři.");
         Reflect.call(p,"command","h");
-        check(((int)Reflect.get(p,"correct")) == 3 && !((String)Reflect.get(p,"outcome")).isEmpty(),"The third correct prediction ends the sprint.");
+        check(((int)Reflect.get(p,"correct")) == 3 && !((String)Reflect.get(p,"outcome")).isEmpty(),"Třetí správný odhad musí ukončit kolo se skóre 3. Zkontroluj cíl, který používá command.");
         Reflect.call(p,"reset");
-        check(((int)Reflect.get(p,"target"))==3 && ((int)Reflect.get(p,"correct"))==0,"Restart keeps the new goal and clears only the score.");
-        IO.println("PASS " + checks + " checks");
+        check(((int)Reflect.get(p,"target"))==3 && ((int)Reflect.get(p,"correct"))==0,"Nové kolo musí zachovat cíl 3 a vrátit skóre na 0. Zkontroluj reset.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P07_SteppingFeetTest {
+class P07_Task_SteppingFeetTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("02.07 F03: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P07_SteppingFeet");
+        var game = Reflect.create("P07_Task_SteppingFeet");
         Reflect.call(game, "restart");
-        check(((double) Reflect.get(game, "x")) == 80, "the later assignment must leave shared x at 80");
-        check(((boolean) Reflect.get(game, "paused")), "the prepared animation still waits for Space");
+        check(((double) Reflect.get(game, "x")) == 80, "Po dokončení startingPosition má být x rovno 80. Zkontroluj, co ukládá druhé přiřazení.");
+        check(((boolean) Reflect.get(game, "paused")), "Čerstvě spuštěný program má před pohybem čekat na Space. Zachovej počáteční pozastavení.");
         Reflect.set(game, "paused", false);
         Reflect.call(game, "step");
-        check(Math.abs(((double) Reflect.get(game, "x")) - 81.6) < 1e-8, "both supplied feet continue from the repaired shared coordinate");
-        System.out.println("PASS " + checks + " checks");
+        check(Math.abs(((double) Reflect.get(game, "x")) - 81.6) < 1e-8, "Po jednom kroku za běhu se má x posunout z 80 na 81.6. Zachovej připravený pohyb používající společnou pozici.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P11_SunflowerSpiralTest {
+class P11_Task_SunflowerSpiralTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("02.11 F03: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P11_SunflowerSpiral");
-        check(Math.abs(((double) Reflect.get(game, "defaultAngle")) - 137.5) < 1e-8, "the shared default angle must be 137.5 degrees");
+        var game = Reflect.create("P11_Task_SunflowerSpiral");
+        check(Math.abs(((double) Reflect.get(game, "defaultAngle")) - 137.5) < 1e-8, "Běžné spuštění má používat úhel 137.5 stupně. Zkontroluj společné nastavení defaultAngle.");
         double[] second = ((double[]) Reflect.call(game, "position", 2, ((double) Reflect.get(game, "defaultAngle"))));
-        check(Math.abs(second[1] - 250) > 1, "the default must spread seeds beyond a single horizontal spoke");
-        check(((java.awt.image.BufferedImage) Reflect.call(game, "render", 42, ((double) Reflect.get(game, "defaultAngle")))).getWidth() == 500, "the actual PNG renderer accepts the repaired default");
-        System.out.println("PASS " + checks + " checks");
+        check(Math.abs(second[1] - 250) > 1, "Semínka stále leží na vodorovné přímce. Zachovej, aby position používalo opravený úhel otáčení.");
+        check(((java.awt.image.BufferedImage) Reflect.call(game, "render", 42, ((double) Reflect.get(game, "defaultAngle")))).getWidth() == 500, "render má i s novým úhlem vytvořit obrázek široký 500 obrazových bodů. Zachovej připravené kreslení.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P12_SpirographTest {
+class P12_Task_SpirographTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("02.12 F04: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P12_Spirograph");
-        check(Math.abs(((double) Reflect.call(game, "radiusRatio", 120, 45)) - 5.0 / 3) < 1e-8, "75 divided by 45 must retain its fractional ratio");
-        check(((double) Reflect.call(game, "radiusRatio", 120, 60)) == 1, "an exact ratio remains exact");
-        check(((double) Reflect.call(game, "radiusRatio", 120, 80)) == 0.5, "a ratio below one must not become zero");
+        var game = Reflect.create("P12_Task_Spirograph");
+        check(Math.abs(((double) Reflect.call(game, "radiusRatio", 120, 45)) - 5.0 / 3) < 1e-8, "radiusRatio(120, 45) ztratilo desetinnou část. Poměr 75 / 45 má být přibližně 1.6667.");
+        check(((double) Reflect.call(game, "radiusRatio", 120, 60)) == 1, "radiusRatio(120, 60) má vrátit 1. Ověř výpočet také pro přesný celočíselný poměr.");
+        check(((double) Reflect.call(game, "radiusRatio", 120, 80)) == 0.5, "radiusRatio(120, 80) má vrátit 0.5, nikoli 0. Zachovej i zlomky menší než jedna.");
         Reflect.call(game, "restart");
         var p = ((java.awt.geom.Point2D.Double) Reflect.call(game, "point", 1));
-        check(Math.abs(p.x - (75 * Math.cos(1) + 65 * Math.cos(5.0 / 3))) < 1e-8, "the visible curve uses the repaired ratio");
-        System.out.println("PASS " + checks + " checks");
+        check(Math.abs(p.x - (75 * Math.cos(1) + 65 * Math.cos(5.0 / 3))) < 1e-8, "Kreslená křivka nepoužívá opravený poměr poloměrů. Zachovej propojení point s radiusRatio.");
     }
 }
 
@@ -157,7 +184,7 @@ class Reflect {
                 return Class.forName(name);
             }
         } catch (ClassNotFoundException failure) {
-            throw new IllegalStateException("Cannot find compact program type: " + name, failure);
+            throw new IllegalStateException("Nelze načíst program. Ověř jeho soubor vedle Check.java: " + name, failure);
         }
     }
 
@@ -166,14 +193,14 @@ class Reflect {
         for (var constructor : type(name).getDeclaredConstructors()) {
             if (accepts(constructor.getParameterTypes(), args)) matches.add(constructor);
         }
-        var constructor = one(matches, "constructor " + name);
+        var constructor = one(matches, "vytvoření objektu " + name);
         try {
             constructor.setAccessible(true);
             return constructor.newInstance(args);
         } catch (InvocationTargetException failure) {
             throw Reflect.<RuntimeException>raise(failure.getCause());
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot construct " + name, failure);
+            throw new IllegalStateException("Nelze vytvořit objekt programu: " + name, failure);
         }
     }
 
@@ -181,7 +208,7 @@ class Reflect {
         try {
             return field(target, name).get(target instanceof Class<?> ? null : target);
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot read field " + name, failure);
+            throw new IllegalStateException("Nelze přečíst proměnnou: " + name, failure);
         }
     }
 
@@ -192,7 +219,7 @@ class Reflect {
             field.set(receiver, value);
             return field.get(receiver);
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot write field " + name, failure);
+            throw new IllegalStateException("Nelze změnit proměnnou: " + name, failure);
         }
     }
 
@@ -202,7 +229,7 @@ class Reflect {
             try {
                 var field = current.getDeclaredField(name);
                 if (target instanceof Class<?> && !Modifier.isStatic(field.getModifiers())) {
-                    throw new IllegalStateException("An instance is required for field " + name);
+                    throw new IllegalStateException("Pro tuto proměnnou je potřeba objekt: " + name);
                 }
                 field.setAccessible(true);
                 return field;
@@ -232,14 +259,14 @@ class Reflect {
                 matches.add(method);
             }
         }
-        var method = one(matches, "method " + owner.getName() + "." + name);
+        var method = one(matches, "metodu " + owner.getName() + "." + name);
         try {
             method.setAccessible(true);
             return method.invoke(target instanceof Class<?> ? null : target, args);
         } catch (InvocationTargetException failure) {
             throw Reflect.<RuntimeException>raise(failure.getCause());
         } catch (ReflectiveOperationException failure) {
-            throw new IllegalStateException("Cannot call " + owner.getName() + "." + name, failure);
+            throw new IllegalStateException("Nelze zavolat metodu: " + owner.getName() + "." + name, failure);
         }
     }
 
@@ -276,7 +303,7 @@ class Reflect {
 
     private static <T> T one(List<T> matches, String description) {
         if (matches.size() != 1) {
-            throw new IllegalStateException((matches.isEmpty() ? "No compatible " : "Ambiguous ") + description);
+            throw new IllegalStateException((matches.isEmpty() ? "Nenalezeno odpovídající " : "Nalezeno více možností pro ") + description);
         }
         return matches.getFirst();
     }

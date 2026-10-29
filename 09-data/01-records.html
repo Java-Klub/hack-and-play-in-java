@@ -9,27 +9,30 @@
 <h1>9.1 Dej údajům společný tvar</h1>
 <p>Vesmírný balíček má jméno a hmotnost. Dvě nesouvisející proměnné mohou omylem popisovat různé balíčky. Record (datový záznam) dá dvojici společný tvar, takže štítek může programem putovat jako jedna hodnota.</p>
 <h2>Typ a jeden konkrétní balíček</h2>
-<pre><code class="language-java" data-source="P01_ParcelLabel.java">void main() {
-    Parcel parcel = new Parcel(&quot;Moon rock&quot;, 4);
-    IO.println(&quot;Item: &quot; + parcel.name());
-    IO.println(&quot;Weight: &quot; + parcel.weight());
+<pre><code class="language-java" data-source="P01_Example_ParcelLabel.java">/// # Hotový příklad · 9.1 Dej údajům společný tvar
+/// Lekce: 01-records.html
+
+void main() {
+    Parcel parcel = new Parcel("Moon rock", 4);
+    IO.println("Item: " + parcel.name());
+    IO.println("Weight: " + parcel.weight());
 }
 
 record Parcel(String name, int weight) {
 }
 </code></pre>
-<p>Otevři 09-data/P01_ParcelLabel.java a spusť jej. Record declaration (definice záznamu) popisuje nový type (typ) Parcel. Jeho components (složky) jsou name typu String a weight typu int. Prázdné složené závorky jsou správně: základní vytvoření a čtení zajistí Java.</p>
+<p>Otevři 09-data/P01_Example_ParcelLabel.java a spusť jej. Record declaration (definice záznamu) popisuje nový type (typ) Parcel. Jeho components (složky) jsou name typu String a weight typu int. Prázdné složené závorky jsou správně: základní vytvoření a čtení zajistí Java.</p>
 <p>Expression (výraz) new Parcel(&quot;Moon rock&quot;, 4) vytvoří jeden object (objekt) s těmito hodnotami složek, v pořadí definice. Parcel před jménem proměnné říká, jakou hodnotu parcel uchovává. Samotná definice záznamu žádný balíček nevytvoří ani nic nevypíše.</p>
 <p>Accessor (čtecí metoda) přečte složku: parcel.name() vrátí jméno, parcel.weight() číslo. Jsou to method calls (volání metod), proto závorky zachovej. Záznam automaticky nenabízí operaci nahrazující složku. Změněná data popíšeš vytvořením dalšího záznamu.</p>
 <details><summary>Před změnou předpověz výsledek</summary><p>Při vytvoření s &quot;Ice&quot; a 0 štítek vypíše Item: Ice a Weight: 0. Co se změní, když jen text nahradíš &quot;Hot ice&quot;? Pouze řádek Item; obě složky mají oddělené role.</p></details>
 <h2>Úkol: neztrať údaje o nákladu</h2>
-<p>Otevři 09-data/P02_CargoLabel.java. Program přečte tři odpovědi, ale vytvoří náhradní prázdný náklad. Vytvoř Cargo ze zadaných odpovědí a celkovou hmotnost vypočítej z jeho accessor (čtecích metod) count a unitWeight. Zachovej oba řádky výpisu i jejich znění.</p>
+<p>Otevři 09-data/P02_Task_CargoLabel.java. Program přečte tři odpovědi, ale vytvoří náhradní prázdný náklad. Vytvoř Cargo ze zadaných odpovědí a celkovou hmotnost vypočítej z jeho accessor (čtecích metod) count a unitWeight. Zachovej oba řádky výpisu i jejich znění.</p>
 <p>Pro Star seeds, počet 3 a hmotnost kusu 4 očekávej Star seeds: 3 pieces a Total weight: 12. Počet 0 musí dát celkem 0 i při hmotnosti kusu 8. Zadávej nezáporná celá čísla; kontrola vstupu není tento úkol.</p>
 <details><summary>Nápověda 1: sleduj hodnoty</summary><p>Přiřaď každý argument vytváření jedné složce v definici. Stejný typ neznamená, že lze počet a hmotnost zaměnit.</p></details>
 <details><summary>Nápověda 2: zkontroluj jednotky</summary><p>Hmotnost kusu patří jednomu kusu. Násobení počtem kusů dá hmotnost celého nákladu. Obě čísla čti z cargo.</p></details>
 <p>Příště vytvoříš několik objektů stejného typu a prozkoumáš, které hodnoty patří kterému z nich.</p>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>Dominosa</strong> · <code>09-data/P03_Dominosa.java</code><br>V Dominosa sjednoť pairKey pro obě pořadí stejné dvojice. Record má představovat hodnotu domina, aby obrácený duplikát neunikl kontrole.</li>
+<li><strong>Dominosa</strong> · <code>09-data/P03_Task_Dominosa.java</code><br>V Dominosa sjednoť pairKey pro obě pořadí stejné dvojice. Record má představovat hodnotu domina, aby obrácený duplikát neunikl kontrole.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="../08-grids/05-generations.html">← 8.5 Minulost čti, budoucnost zapisuj</a><a class="next" href="02-objects.html">9.2 Jeden popis, více objektů →</a></nav>

@@ -9,12 +9,15 @@
 <h1>11.1 Objekt si pamatuje změnu</h1>
 <p>Počítadlo skóre si má pamatovat každou odměnu. Záznamy ti dávaly nové snímky; nyní potřebuješ jeden objekt, jehož data se v čase mění. Class (třída) může uchovávat tento proměnlivý state (stav) a poskytovat metody, které jej aktualizují.</p>
 <h2>Pole objektu přetrvá jedno volání</h2>
-<pre><code class="language-java" data-source="P01_ScoreCounter.java">void main() {
+<pre><code class="language-java" data-source="P01_Example_ScoreCounter.java">/// # Hotový příklad · 11.1 Objekt si pamatuje změnu
+/// Lekce: 01-state.html
+
+void main() {
     Counter score = new Counter();
-    IO.println(&quot;Before: &quot; + score.points);
+    IO.println("Before: " + score.points);
     score.add(3);
     score.add(4);
-    IO.println(&quot;After: &quot; + score.points);
+    IO.println("After: " + score.points);
 }
 
 class Counter {
@@ -25,21 +28,21 @@ class Counter {
     }
 }
 </code></pre>
-<p>Otevři 11-state/P01_ScoreCounter.java. Class Counter definuje typ. Jeho field (proměnná objektu) points patří každému objektu Counter a začíná na 0. Na rozdíl od lokální proměnné uvnitř add pole po návratu metody přetrvá. Nevytváří se znovu při každé odměně.</p>
+<p>Otevři 11-state/P01_Example_ScoreCounter.java. Class Counter definuje typ. Jeho field (proměnná objektu) points patří každému objektu Counter a začíná na 0. Na rozdíl od lokální proměnné uvnitř add pole po návratu metody přetrvá. Nevytváří se znovu při každé odměně.</p>
 <p>New Counter() vytvoří instance (instanci), jeden konkrétní objekt této třídy. Protože jsme žádný constructor (konstruktor) nedefinovali, Java zde dodá konstruktor bez parametrů. Závorky Counter obsahují jeho pole a metody; jsou oddělené od okolní metody main.</p>
 <p>Score.add(3) změní points tohoto objektu z 0 na 3. Další volání přečte 3 a uloží 7. Přístup score.points čte přímo pole; nemá závorky, protože jde o přístup k datům, nikoli volání metody jako u čtecí metody záznamu.</p>
 <details><summary>Předpověz další volání</summary><p>Přidej 2 po připravených voláních a After bude 9. Co když místo toho před výpisem vytvoříš nový Counter? Tento nový objekt začíná na 0; vytvoření nepřenese původní skóre.</p></details>
 <h2>Úkol: pamatuj si nejlepší sérii</h2>
-<p>Otevři 11-state/P02_ComboMeter.java. Zásah zvýší nynější streak o jedna a aktualizuje best pouze tehdy, když jej nová série překoná. Minutí nastaví streak na 0, ale musí zachovat best. Doplň obě operace; připravenou posloupnost neměň.</p>
+<p>Otevři 11-state/P02_Task_ComboMeter.java. Zásah zvýší nynější streak o jedna a aktualizuje best pouze tehdy, když jej nová série překoná. Minutí nastaví streak na 0, ale musí zachovat best. Doplň obě operace; připravenou posloupnost neměň.</p>
 <p>Dva zásahy, minutí a jeden zásah musí vypsat Current: 1 a Best: 2. Zkus další zásah: Current bude 2 a Best zůstane 2. Třetí zásah v řadě dá oběma 3. Minutí hned na začátku ponechá obě hodnoty na 0.</p>
 <details><summary>Nápověda 1: odděl přítomnost a historii</summary><p>Nejprve aktualizuj nynější sérii. Pak ji porovnej s best. Náhradní lokální proměnná by rekord mezi voláními neuchovala.</p></details>
 <details><summary>Nápověda 2: minutí není úplné vynulování</summary><p>Končí pouze nynější série. Smazání best by ztratilo právě tu historii, kterou má objekt pamatovat.</p></details>
 <p>Příště vytvoříš dva samostatné objekty s vlastními počátečními údaji a uvidíš, který mění konkrétní volání.</p>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>Pig</strong> · <code>11-state/P03_Pig.java</code><br>V Pig dokonči dva následky hodu: jednička zahodí rozběhnutý zisk a předá tah, ostatní platné hody zisk přičtou. Neplatný hod nic nezmění.</li>
-<li><strong>MancalaKalah</strong> · <code>11-state/P04_MancalaKalah.java</code><br>V MancalaKalah oprav reset skutečného hráče na hráče jedna. Obnova kamenů a vyčištění výsledku musejí zůstat funkční.</li>
-<li><strong>SlidingTiles</strong> · <code>11-state/P05_SlidingTiles.java</code><br>SlidingTiles během míchání počítá skutečné přesuny. Po dokončení přípravy vynuluj hráčův počet tahů, ne tvorbu řešitelného rozložení.</li>
-<li><strong>MiniCrossword</strong> · <code>11-state/P06_MiniCrossword.java</code><br>MiniCrossword opakovaně přičítá starý počet odpovědí. V command odděl nové přepočítání od uložené minulosti; tři odpovědi nesmějí předčasně vyhrát.</li>
+<li><strong>Pig</strong> · <code>11-state/P03_Task_Pig.java</code><br>V Pig dokonči dva následky hodu: jednička zahodí rozběhnutý zisk a předá tah, ostatní platné hody zisk přičtou. Neplatný hod nic nezmění.</li>
+<li><strong>MancalaKalah</strong> · <code>11-state/P04_Task_MancalaKalah.java</code><br>V MancalaKalah oprav reset skutečného hráče na hráče jedna. Obnova kamenů a vyčištění výsledku musejí zůstat funkční.</li>
+<li><strong>SlidingTiles</strong> · <code>11-state/P05_Task_SlidingTiles.java</code><br>SlidingTiles během míchání počítá skutečné přesuny. Po dokončení přípravy vynuluj hráčův počet tahů, ne tvorbu řešitelného rozložení.</li>
+<li><strong>MiniCrossword</strong> · <code>11-state/P06_Task_MiniCrossword.java</code><br>MiniCrossword opakovaně přičítá starý počet odpovědí. V command odděl nové přepočítání od uložené minulosti; tři odpovědi nesmějí předčasně vyhrát.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="../10-collections/05-streams.html">← 10.5 Nech data projít filtrem</a><a class="next" href="02-instances.html">11.2 Každý robot má vlastní baterii →</a></nav>

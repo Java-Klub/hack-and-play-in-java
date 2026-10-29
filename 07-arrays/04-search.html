@@ -9,10 +9,13 @@
 <h1>7.4 Najdi místo, které vyhovuje</h1>
 <p>Nabíjecí stanice mají různou zásobu. Robot potřebuje první stanici, která poskytne dost energie. Výsledkem hledání nebude samotná energie, ale číslo použitelného místa.</p>
 <h2>Hodnota rozhoduje, index se vrací</h2>
-<p>Otevři <code>07-arrays/P14_BadgeSearch.java</code>. Zkus hledat OWL a potom FOX.</p>
-<pre><code class="language-java" data-source="P14_BadgeSearch.java">void main() {
-    String[] badges = {&quot;OWL&quot;, &quot;FOX&quot;, &quot;OWL&quot;};
-    String wanted = IO.readln(&quot;Badge: &quot;);
+<p>Otevři <code>07-arrays/P14_Example_BadgeSearch.java</code>. Zkus hledat OWL a potom FOX.</p>
+<pre><code class="language-java" data-source="P14_Example_BadgeSearch.java">/// # Hotový příklad · 7.4 Najdi místo, které vyhovuje
+/// Lekce: 04-search.html
+
+void main() {
+    String[] badges = {"OWL", "FOX", "OWL"};
+    String wanted = IO.readln("Badge: ");
     int found = -1;
     for (int index = 0; index &lt; badges.length; index++) {
         if (badges[index].equals(wanted)) {
@@ -21,9 +24,9 @@
         }
     }
     if (found == -1) {
-        IO.println(&quot;Missing&quot;);
+        IO.println("Missing");
     } else {
-        IO.println(&quot;Index: &quot; + found);
+        IO.println("Index: " + found);
     }
 }
 </code></pre>
@@ -32,14 +35,14 @@
 <p>Hranice průchodu vychází z length, takže přidání nebo odebrání odznaku nevyžaduje nové číslo v cyklu. For-each by snadno četl hodnoty, ale bez vlastního počítadla by neznal jejich místa. Tady je proto běžný for s indexem přehlednější.</p>
 <details><summary>Předpověď: prohoď oba různé odznaky</summary><p>Po změně pole na FOX, OWL, OWL bude hledání OWL vracet 1. Odpověď vychází z dat, ne z pevně napsaného přiřazení pro konkrétní jméno.</p></details>
 <h2>Úkol: první dostačující stanice</h2>
-<p>Otevři <code>07-arrays/P15_ChargerSearch.java</code>. Metoda firstFit dostává pole energií a požadavek. Její parametr má typ <code>int[]</code>, protože předáváš celou řadu hodnot. Doplň hledání prvního indexu, jehož energie je alespoň need. Pokud takové místo neexistuje, vrať -1.</p>
+<p>Otevři <code>07-arrays/P15_Task_ChargerSearch.java</code>. Metoda firstFit dostává pole energií a požadavek. Její parametr má typ <code>int[]</code>, protože předáváš celou řadu hodnot. Doplň hledání prvního indexu, jehož energie je alespoň need. Pokud takové místo neexistuje, vrať -1.</p>
 <p>Pro připravené hodnoty 0, 4, 4, 9 a need 4 čekej Station: 1. Pro 0 je odpověď 0; pro 9 odpověď 3. Pro 10 dostaneš Unavailable. V main už je zobrazení výsledku připravené, do firstFit nepřidávej čtení ani výpis.</p>
 <details><summary>Nápověda 1: první shoda stačí</summary><p>Metoda může vrátit index přímo při úspěchu. Return v pomocníkovi ukončí hledání a předá odpověď zpět do main.</p></details>
 <details><summary>Nápověda 2: neúspěch až nakonec</summary><p>Jedno nevyhovující místo neznamená, že nevyhovují všechna. Výsledek -1 patří až za dokončený průchod.</p></details>
 <p>Příště si uložíš stav pro pozdější návrat. Bude záležet, zda máš dvě nezávislé řady, nebo dvě jména pro tutéž.</p>
 <details><summary>Jak se zeptat na začátek slova</summary><p><code>word.startsWith(prefix)</code> vrací true, pokud text word začíná přesným textem prefix. Nehledá výskyt uprostřed a rozlišuje velikost písmen. <code>"ROBOT".startsWith("RO")</code> je true, ale <code>"ROBOT".startsWith("OB")</code> je false. Seznam možných slov prohledáváš ty: tato operace posuzuje jen jedno slovo.</p></details>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>Ghost</strong> · <code>07-arrays/P16_Ghost.java</code><br>V Ghost doplň while hledání ve words: při prvním startsWith vrať úspěch, jinak postupuj až na konec. Ověř R, nesmyslný prefix a prázdný slovník.</li>
+<li><strong>Ghost</strong> · <code>07-arrays/P16_Task_Ghost.java</code><br>V Ghost doplň while hledání ve words: při prvním startsWith vrať úspěch, jinak postupuj až na konec. Ověř R, nesmyslný prefix a prázdný slovník.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="03-updates.html">← 7.3 Změň skutečné místo</a><a class="next" href="05-copies.html">7.5 Vzpomínka není druhé jméno →</a></nav>

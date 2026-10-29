@@ -9,9 +9,12 @@
 <h1>6.4 Zastav na prvním nálezu</h1>
 <p>Radar prochází očíslované okamžiky. První vhodný signál mu stačí: nechce poslední signál ani počet všech signálů. To mění okamžik, kdy lze práci ukončit.</p>
 <h2>Nález a předčasný konec</h2>
-<p>Otevři <code>06-loops/P08_RadarWindow.java</code>. Limit 7 dovolí zkoušet okamžiky 1 až 7.</p>
-<pre><code class="language-java" data-source="P08_RadarWindow.java">void main() {
-    int limit = Integer.parseInt(IO.readln(&quot;Limit: &quot;).strip());
+<p>Otevři <code>06-loops/P08_Example_RadarWindow.java</code>. Limit 7 dovolí zkoušet okamžiky 1 až 7.</p>
+<pre><code class="language-java" data-source="P08_Example_RadarWindow.java">/// # Hotový příklad · 6.4 Zastav na prvním nálezu
+/// Lekce: 04-search.html
+
+void main() {
+    int limit = Integer.parseInt(IO.readln("Limit: ").strip());
     int found = -1;
     for (int moment = 1; moment &lt;= limit; moment++) {
         if (moment % 4 == 0) {
@@ -20,9 +23,9 @@
         }
     }
     if (found == -1) {
-        IO.println(&quot;None&quot;);
+        IO.println("None");
     } else {
-        IO.println(&quot;Signal: &quot; + found);
+        IO.println("Signal: " + found);
     }
 }
 </code></pre>
@@ -31,7 +34,7 @@
 <p>Pro limit 7 se vyzkouší 1, 2, 3 a 4. U čtyřky hledání skončí. Pro limit 3 neprojde žádný kandidát a found zůstane -1. Tak rozlišíš „nenalezeno“ od běžného výsledku bez zvláštního výpisu uvnitř každého kola.</p>
 <details><summary>Předpověď: limit 12 bez break</summary><p>Každý další násobek přepíše found. Na konci by tam bylo 12 místo prvního nálezu 4. Samotné přiřazení tedy hledání nezastaví.</p></details>
 <h2>Úkol: první měsíční okno</h2>
-<p>Otevři <code>06-loops/P09_MoonWindow.java</code>. Program hledá včetně obou zadaných mezí. Vhodné číslo je dělitelné třemi a zároveň liché. Zatím si pamatuje poslední vhodné číslo; změň ho, aby vrátil první.</p>
+<p>Otevři <code>06-loops/P09_Task_MoonWindow.java</code>. Program hledá včetně obou zadaných mezí. Vhodné číslo je dělitelné třemi a zároveň liché. Zatím si pamatuje poslední vhodné číslo; změň ho, aby vrátil první.</p>
 <p>Zkoušej meze od 0 do 30, start nejvýše end. Pro 3 až 15 čekej Window: 3, pro 4 až 11 Window: 9. Rozsah 3 až 3 obsahuje platný jediný prvek. Rozsah 10 až 10 nemá řešení a vypíše None.</p>
 <details><summary>Nápověda 1: nepoškoď pravidlo</summary><p>Podmínka už rozpoznává správné kandidáty. Problém je v tom, co se stane po prvním úspěšném přiřazení.</p></details>
 <details><summary>Nápověda 2: co má skončit?</summary><p>Potřebuješ opustit průchod, ale zachovat konečný výpis z main. Porovnej význam break a return.</p></details>

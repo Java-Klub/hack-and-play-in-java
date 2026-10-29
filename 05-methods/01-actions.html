@@ -9,21 +9,24 @@
 <h1>5.1 Pojmenuj vlastní krok</h1>
 <p>Dron umí rozsvítit světla a zablikat. Chceš jeho představení měnit skládáním krátkých povelů místo kopírování jejich vnitřností.</p>
 <h2>Definice čeká, volání ji spustí</h2>
-<p>Otevři <code>05-methods/P01_DroneShow.java</code>. Než program spustíš, spočítej, kolikrát se objeví FLASH.</p>
-<pre><code class="language-java" data-source="P01_DroneShow.java">void main() {
+<p>Otevři <code>05-methods/P01_Example_DroneShow.java</code>. Než program spustíš, spočítej, kolikrát se objeví FLASH.</p>
+<pre><code class="language-java" data-source="P01_Example_DroneShow.java">/// # Hotový příklad · 5.1 Pojmenuj vlastní krok
+/// Lekce: 01-actions.html
+
+void main() {
     wake();
     flash();
     flash();
-    IO.println(&quot;Show finished&quot;);
+    IO.println("Show finished");
 }
 
 void wake() {
-    IO.println(&quot;Drone awake&quot;);
-    IO.println(&quot;Lights ready&quot;);
+    IO.println("Drone awake");
+    IO.println("Lights ready");
 }
 
 void flash() {
-    IO.println(&quot;* FLASH *&quot;);
+    IO.println("* FLASH *");
 }
 </code></pre><pre class="transcript"><code>Drone awake
 Lights ready
@@ -40,7 +43,7 @@ Show finished</code></pre>
 <p>Při spuštění Java začne v main. Dojde na wake(), provede jeho dva výpisy a vrátí se na další příkaz v main. Stejně provede každé volání flash. Definice pod main se samy od sebe nespustí. Jejich pořadí v souboru neurčuje pořadí představení.</p>
 <p>Nové metody zapisuj <strong>vedle main, za jeho koncovou složenou závorkou</strong>. Nevkládej definici jedné metody do těla druhé.</p>
 <h2>Úkol: ukliď poplach, neměň jeho zvuk</h2>
-<p>Otevři <code>05-methods/P02_AlarmRemix.java</code>. Poplach funguje, ale stejná dvojice výpisů je zkopírovaná dvakrát.</p>
+<p>Otevři <code>05-methods/P02_Task_AlarmRemix.java</code>. Poplach funguje, ale stejná dvojice výpisů je zkopírovaná dvakrát.</p>
 <p><strong>Vytvoř vedle main metodu void alarm(), která vypíše Intruder! a Lights red. Obě kopie těchto dvou řádků v main nahraď voláním alarm(). Výpisy o dveřích ponech mezi nimi na původních místech.</strong></p>
 <p>Celý výstup má zůstat stejný: poplach, dveře A, poplach, dveře B. Tentokrát není cílem změna chování, ale refactoring (úprava struktury při zachování chování).</p>
 <details><summary>Nápověda: kam která závorka patří</summary><p>Main i alarm mají vlastní pár složených závorek. V main zbývají čtyři příkazy: dvě volání a dva výpisy. V alarm jsou dva výpisy.</p></details>

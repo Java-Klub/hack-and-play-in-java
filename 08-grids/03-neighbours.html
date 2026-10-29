@@ -9,12 +9,15 @@
 <h1>8.3 Ptej se okolních buněk</h1>
 <p>Senzor nepotřebuje přečíst celou mapu: zajímá ho nejbližší okolí vybraného místa. Nejdřív si ale musíš ujasnit pravidla sousedství. Počítají se i rohy? Počítá se vlastní buňka?</p>
 <h2>Malý průchod kolem středu</h2>
-<p>Otevři <code>08-grids/P10_NeighbourScan.java</code>. Jednička znamená zapnutou buňku. Vyber střed 1, 1.</p>
-<pre><code class="language-java" data-source="P10_NeighbourScan.java">void main() {
+<p>Otevři <code>08-grids/P10_Example_NeighbourScan.java</code>. Jednička znamená zapnutou buňku. Vyber střed 1, 1.</p>
+<pre><code class="language-java" data-source="P10_Example_NeighbourScan.java">/// # Hotový příklad · 8.3 Ptej se okolních buněk
+/// Lekce: 03-neighbours.html
+
+void main() {
     int[][] board = {{0, 1, 0}, {1, 1, 1}, {0, 1, 0}};
-    int x = Integer.parseInt(IO.readln(&quot;X: &quot;).strip());
-    int y = Integer.parseInt(IO.readln(&quot;Y: &quot;).strip());
-    IO.println(&quot;Neighbours: &quot; + neighbours(board, x, y));
+    int x = Integer.parseInt(IO.readln("X: ").strip());
+    int y = Integer.parseInt(IO.readln("Y: ").strip());
+    IO.println("Neighbours: " + neighbours(board, x, y));
 }
 
 int neighbours(int[][] board, int x, int y) {
@@ -42,19 +45,19 @@ boolean inside(int[][] board, int x, int y) {
 <p>Souřadnice souseda vzniknou přičtením posunu ke středu. Než je použijeme, zavoláme inside. Díky AND se čtení buňky neprovede, pokud místo leží mimo mapu. Soused za okrajem se tedy nepočítá a nepřechází na opačnou stranu.</p>
 <details><summary>Předpověď: střed a levý horní roh</summary><p>Střed má čtyři zapnuté sousedy; jeho vlastní jednička se nepočítá. Roh 0, 0 má tři: doprava, dolů a diagonálně doprava dolů.</p></details>
 <h2>Úkol: senzor vidí pouze čtyři směry</h2>
-<p>Otevři <code>08-grids/P11_CardinalSensors.java</code>. Doplň cardinal tak, aby počítalo jedničky pouze vlevo, vpravo, nad a pod místem. Diagonály a vlastní buňku nezahrnuj. Připravené isOn vrátí false i mimo mapu.</p>
+<p>Otevři <code>08-grids/P11_Task_CardinalSensors.java</code>. Doplň cardinal tak, aby počítalo jedničky pouze vlevo, vpravo, nad a pod místem. Diagonály a vlastní buňku nezahrnuj. Připravené isOn vrátí false i mimo mapu.</p>
 <p>Zadávej x a y od 0 do 2. Pro 1, 1 čekej Neighbours: 2. Pro 0, 0 je odpověď 1; pro 2, 0 je 2; pro 0, 2 je 0. Tyto případy odlišují směry, roh i prázdné okolí.</p>
 <details><summary>Nápověda 1: nakresli čtyři kandidáty</summary><p>Ke středu si napiš čtyři dvojice souřadnic. Každý kandidát mění právě jednu souřadnici o jednu.</p></details>
 <details><summary>Nápověda 2: bezpečné otázky</summary><p>Každé kladné isOn přidá jednu do výsledku. Pomocník už vyřeší okraje; jeho vnitřní pravidlo nemusíš čtyřikrát opisovat.</p></details>
 <p>Příště využiješ průchod řádky a sloupci pro vytvoření nového vzoru, nejen pro čtení hotových dat.</p>
 <details><summary>Čtyři porty v jediném čísle</summary><p>Net ukládá sever, východ, jih a západ jako příznaky s hodnotami 1, 2, 4 a 8. Číslo 5 znamená sever a jih, protože obsahuje 1 + 4. Výraz <code>1 &lt;&lt; direction</code> vytvoří masku pro směr 0 až 3. <code>(ports &amp; mask) != 0</code> potom ověří přítomnost konkrétního portu. Jediné &amp; porovnává bity čísel; dvojité &amp;&amp; spojuje boolean podmínky. Nejde o zaměnitelné zápisy.</p><p>Pro spojení ověř oba konce: protilehlý směr je <code>(direction + 2) % 4</code>. Nejdřív ověř souřadnice souseda, teprve potom čti jeho porty. Hledání celé sítě je připravené; tvůj rozhodčí posuzuje jeden místní spoj.</p></details>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>Hexapawn</strong> · <code>08-grids/P12_Hexapawn.java</code><br>V Hexapawn dej oběma armádám jejich směr a cílový řádek. GoalRow a forwardStep vracejí údaje; přesuny provádí připravená hra.</li>
-<li><strong>FourColourMap</strong> · <code>08-grids/P13_FourColourMap.java</code><br>FourColourMap má číst sousedství z map, ne z pevné tabulky hranic. Strana je sousedství, roh nikoli; dlouhá hranice stále tvoří jediný pár.</li>
-<li><strong>Minesweeper</strong> · <code>08-grids/P14_Minesweeper.java</code><br>V Minesweeper vytvoř inspekční čočku pro okolí 3×3 včetně středu. Ořízni okraje a zachovej běžné odkrývání, vlajky i průběh kola.</li>
-<li><strong>Net</strong> · <code>08-grids/P15_Net.java</code><br>V Net sestav linked: soused musí existovat a oba dotýkající se porty musejí souhlasit. Samotný prázdný dotyk nevytváří drát.</li>
-<li><strong>BlackBox</strong> · <code>08-grids/P16_BlackBox.java</code><br>BlackBox zkoumá stejnou stranu paprsku dvakrát. V trace oprav druhého bočního souseda a porovnej zrcadlově obrácené situace.</li>
-<li><strong>AntHighway</strong> · <code>08-grids/P17_AntHighway.java</code><br>V AntHighway oprav západní posun, který teď vede na východ. Otáčení, přebarvení buňky a obtékání okrajů už fungují.</li>
+<li><strong>Hexapawn</strong> · <code>08-grids/P12_Task_Hexapawn.java</code><br>V Hexapawn dej oběma armádám jejich směr a cílový řádek. GoalRow a forwardStep vracejí údaje; přesuny provádí připravená hra.</li>
+<li><strong>FourColourMap</strong> · <code>08-grids/P13_Task_FourColourMap.java</code><br>FourColourMap má číst sousedství z map, ne z pevné tabulky hranic. Strana je sousedství, roh nikoli; dlouhá hranice stále tvoří jediný pár.</li>
+<li><strong>Minesweeper</strong> · <code>08-grids/P14_Task_Minesweeper.java</code><br>V Minesweeper vytvoř inspekční čočku pro okolí 3×3 včetně středu. Ořízni okraje a zachovej běžné odkrývání, vlajky i průběh kola.</li>
+<li><strong>Net</strong> · <code>08-grids/P15_Task_Net.java</code><br>V Net sestav linked: soused musí existovat a oba dotýkající se porty musejí souhlasit. Samotný prázdný dotyk nevytváří drát.</li>
+<li><strong>BlackBox</strong> · <code>08-grids/P16_Task_BlackBox.java</code><br>BlackBox zkoumá stejnou stranu paprsku dvakrát. V trace oprav druhého bočního souseda a porovnej zrcadlově obrácené situace.</li>
+<li><strong>AntHighway</strong> · <code>08-grids/P17_Task_AntHighway.java</code><br>V AntHighway oprav západní posun, který teď vede na východ. Otáčení, přebarvení buňky a obtékání okrajů už fungují.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="02-bounds.html">← 8.2 Nejdřív zkontroluj okraj</a><a class="next" href="04-patterns.html">8.4 Vyrob vzor podle souřadnic →</a></nav>

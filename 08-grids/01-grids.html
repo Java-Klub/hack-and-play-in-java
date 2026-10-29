@@ -9,17 +9,20 @@
 <h1>8.1 Z řad vznikne mapa</h1>
 <p>Jedna řada kamenů už nestačí pro mapu. Potřebuješ řádky nad sebou a v každém několik sloupců. Místo pak určí dvojice čísel: nejdřív si vybereš řádek, potom místo uvnitř něj.</p>
 <h2>Y vybírá řádek, X sloupec</h2>
-<p>Otevři <code>08-grids/P01_ArenaCells.java</code>. Souřadnice x = 2 a y = 1 ukazují do pravého dolního rohu.</p>
-<pre><code class="language-java" data-source="P01_ArenaCells.java">void main() {
+<p>Otevři <code>08-grids/P01_Example_ArenaCells.java</code>. Souřadnice x = 2 a y = 1 ukazují do pravého dolního rohu.</p>
+<pre><code class="language-java" data-source="P01_Example_ArenaCells.java">/// # Hotový příklad · 8.1 Z řad vznikne mapa
+/// Lekce: 01-grids.html
+
+void main() {
     int[][] arena = {
         {1, 0, 2},
         {0, 3, 5}
     };
-    int x = Integer.parseInt(IO.readln(&quot;X: &quot;).strip());
-    int y = Integer.parseInt(IO.readln(&quot;Y: &quot;).strip());
-    IO.println(&quot;Value: &quot; + arena[y][x]);
-    IO.println(&quot;Rows: &quot; + arena.length);
-    IO.println(&quot;Columns: &quot; + arena[0].length);
+    int x = Integer.parseInt(IO.readln("X: ").strip());
+    int y = Integer.parseInt(IO.readln("Y: ").strip());
+    IO.println("Value: " + arena[y][x]);
+    IO.println("Rows: " + arena.length);
+    IO.println("Columns: " + arena[0].length);
 }
 </code></pre>
 <p>Typ <code>int[][]</code> znamená array of arrays (pole polí). Vnější složené závorky obsahují dvě řady; vnitřní závorky hodnoty každé z nich. První index vybere řádek a druhý jeho prvek. Výraz <code>arena[y][x]</code> se proto čte ve dvou krocích, ne jako jedno záhadné číslo místa.</p>
@@ -30,14 +33,14 @@ y=1     0   3   5</code></pre>
 <p>Souřadnice počítáme od nuly. X roste doprava, y dolů, protože tak mapu vypisujeme. Hranaté závorky v Javě neurčují vlastní geometrickou konvenci; to my jsme řádky a sloupce takto uspořádali.</p>
 <details><summary>Předpověď: x = 1, y = 0</summary><p>Vybereš první řádek a jeho druhé místo: hodnota je 0. Pro x = 1, y = 1 by to byla 3.</p></details>
 <h2>Úkol: cedulka pro vybrané místo</h2>
-<p>Otevři <code>08-grids/P02_TileMap.java</code>. Mapa má dvě řady a tři sloupce. Oprav výběr názvu místa podle souřadnic a výpis počtu sloupců. Řádky a sloupce mají různé počty, proto jejich záměna nesmí zůstat skrytá.</p>
+<p>Otevři <code>08-grids/P02_Task_TileMap.java</code>. Mapa má dvě řady a tři sloupce. Oprav výběr názvu místa podle souřadnic a výpis počtu sloupců. Řádky a sloupce mají různé počty, proto jejich záměna nesmí zůstat skrytá.</p>
 <p>Pro x = 2, y = 1 čekej Tile: camp, Rows: 2 a Columns: 3. Pro 1, 0 má být pond; pro 0, 1 tree. Zatím zadávej jen x od 0 do 2 a y od 0 do 1. Ošetření souřadnic mimo mapu bude samostatný další krok.</p>
 <details><summary>Nápověda 1: nezaměň souřadnice</summary><p>Najdi správnou řadu podle y. Teprve v ní vyber x. Stejná dohoda platí v celém tomto příkladu.</p></details>
 <details><summary>Nápověda 2: délka čeho?</summary><p>Vnější pole obsahuje řádky, nikoli jednotlivé sloupce. Počet sloupců čti z jednoho řádku.</p></details>
 <p>Příště mapu ochráníš před souřadnicemi, které žádné místo neoznačují.</p>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>MiniBattleshipHunt</strong> · <code>08-grids/P03_MiniBattleshipHunt.java</code><br>V MiniBattleshipHunt naplň board ze všech dvojic selected. První dvě patří lodi 1, zbývající tři lodi 2; použij skutečnou délku dat.</li>
-<li><strong>LoopBuilder</strong> · <code>08-grids/P04_LoopBuilder.java</code><br>V LoopBuilder převeď číslo vodorovné nebo svislé hrany na dvě čísla vrcholů mřížky 4×4. Ověř hranice obou skupin a neplatné číslo.</li>
+<li><strong>MiniBattleshipHunt</strong> · <code>08-grids/P03_Task_MiniBattleshipHunt.java</code><br>V MiniBattleshipHunt naplň board ze všech dvojic selected. První dvě patří lodi 1, zbývající tři lodi 2; použij skutečnou délku dat.</li>
+<li><strong>LoopBuilder</strong> · <code>08-grids/P04_Task_LoopBuilder.java</code><br>V LoopBuilder převeď číslo vodorovné nebo svislé hrany na dvě čísla vrcholů mřížky 4×4. Ověř hranice obou skupin a neplatné číslo.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="../07-arrays/05-copies.html">← 7.5 Vzpomínka není druhé jméno</a><a class="next" href="02-bounds.html">8.2 Nejdřív zkontroluj okraj →</a></nav>

@@ -9,12 +9,15 @@
 <h1>11.5 Stejný začátek, stejný pokus</h1>
 <p>Náhodné bludiště může vytvořit zvláštní trasu, kterou chceš někomu ukázat. Seed (počáteční semeno) dovolí zopakovat stejný pokus místo popisování zpaměti. Opakovatelnost je užitečná pro sdílení výzev i pro zkoumání nečekaného výsledku programu.</p>
 <h2>Semeno zahájí posloupnost; není každou odpovědí</h2>
-<pre><code class="language-java" data-source="P20_ReplayNumbers.java">void main() {
+<pre><code class="language-java" data-source="P20_Example_ReplayNumbers.java">/// # Hotový příklad · 11.5 Stejný začátek, stejný pokus
+/// Lekce: 05-seeds.html
+
+void main() {
     int[] first = sequence(42);
     int[] replay = sequence(42);
-    IO.println(&quot;First: &quot; + Arrays.toString(first));
-    IO.println(&quot;Replay: &quot; + Arrays.toString(replay));
-    IO.println(&quot;Same: &quot; + Arrays.equals(first, replay));
+    IO.println("First: " + Arrays.toString(first));
+    IO.println("Replay: " + Arrays.toString(replay));
+    IO.println("Same: " + Arrays.equals(first, replay));
 }
 
 int[] sequence(int seed) {
@@ -26,22 +29,22 @@ int[] sequence(int seed) {
     return values;
 }
 </code></pre>
-<p>Otevři 11-state/P20_ReplayNumbers.java. New Random(seed) zahájí generátor z určeného počátečního stavu. Konstruktor přijímá celé číslo long; naše int seed se na tento typ automaticky rozšíří bez ztráty hodnoty. Generátor nepotřebuje žádnou zvláštní hodnotu semene, aby fungoval.</p>
+<p>Otevři 11-state/P20_Example_ReplayNumbers.java. New Random(seed) zahájí generátor z určeného počátečního stavu. Konstruktor přijímá celé číslo long; naše int seed se na tento typ automaticky rozšíří bez ztráty hodnoty. Generátor nepotřebuje žádnou zvláštní hodnotu semene, aby fungoval.</p>
 <p>Jeden generátor vznikne před smyčkou. NextInt(10) dodá hodnotu od 0 do 9 a posune jeho stav. Čtyři volání proto pokračují v jedné posloupnosti. Arrays.toString zobrazí prvky; Arrays.equals ověří jejich hodnoty místo totožnosti polí.</p>
 <p>Dvojí volání sequence(42) vytvoří dva generátory se stejným začátkem i stejnými požadavky, proto oba vytvoří [0, 3, 8, 4]. Samotné semeno není celý recept: změna mezí, přidání náhodného volání nebo změna pořadí může změnit pozdější výsledky.</p>
 <details><summary>Předpověz restartovaný generátor</summary><p>Kdyby nový Random(42) vznikal před každým vzorkem, všechny čtyři hodnoty by byly 0. Proč? Každý generátor by provedl jen první požadavek ze stejného počátečního stavu. Jakou hodnotu vrátí další nextInt(10) po prvním volání při používání jednoho generátoru? 3.</p></details>
 <h2>Úkol: oprav opakovatelnou trasu dveří</h2>
-<p>Otevři 11-state/P21_ReplayDoors.java. Každá trasa má použít jeden generátor pro čtyři postupná čísla dveří od 1 do 6. Oprav jeho životnost: každá trasa začne z dodaného semene, ale jednotlivé dveře pokračují v posloupnosti této trasy. Zachovej obě volání v main.</p>
+<p>Otevři 11-state/P21_Task_ReplayDoors.java. Každá trasa má použít jeden generátor pro čtyři postupná čísla dveří od 1 do 6. Oprav jeho životnost: každá trasa začne z dodaného semene, ale jednotlivé dveře pokračují v posloupnosti této trasy. Zachovej obě volání v main.</p>
 <p>Pro semeno 42 očekávej [3, 4, 1, 3]; pro semeno 0 očekávej [1, 5, 2, 6]. Obě musejí hlásit Replay matches: true. Opakované dveře v trase jsou povolené. Jiné semeno nemusí vytvořit jiné hodnoty na každé pozici.</p>
 <details><summary>Nápověda 1: najdi restart</summary><p>Najdi místo provedení new Random. Rozhodni, zda má proběhnout jednou pro trasu, nebo jednou pro dveře.</p></details>
 <details><summary>Nápověda 2: ponech stav místní jedné trase</summary><p>Vytvoř generátor uvnitř route, ale mimo její smyčku. Sdílení jednoho generátoru mezi oběma voláními route by pokračovalo v posloupnosti místo jejího zopakování.</p></details>
 <p>Nyní umíš volit mezi neměnnými snímky dat, rostoucími kolekcemi a objekty se stavem. Příště tyto nástroje použiješ k uspořádání interaktivních programů, jejichž události nastávají v čase.</p>
 <details><summary>Další čtení online</summary><p><a href="https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/util/Random.html">Java 26 API: Random</a></p></details>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>VoronoiStainedGlass</strong> · <code>11-state/P22_VoronoiStainedGlass.java</code><br>VoronoiStainedGlass potřebuje přesně count následných nextSeed ze stejného generátoru. Zachovej pořadí i měnitelný seznam; ověř 0, 100 a odmítnuté počty.</li>
-<li><strong>MandelbrotPostcards</strong> · <code>11-state/P23_MandelbrotPostcards.java</code><br>V MandelbrotPostcards najdi všechny seedy 0–255 se shodným začátkem palety. Výsledek je seznam kandidátů v pořadí, ne slib jediné tajné odpovědi.</li>
-<li><strong>ColourFilterSecrets</strong> · <code>11-state/P24_ColourFilterSecrets.java</code><br>ColourFilterSecrets ignoruje požadovaný seed. Oprav zdroj šumu, ale zachovej kanál s maskou; stejný seed musí dát stejný obrázek.</li>
-<li><strong>TwoNoisyPictures</strong> · <code>11-state/P25_TwoNoisyPictures.java</code><br>TwoNoisyPictures stále restartuje generátor uvnitř pixelové smyčky. Vytvoř jednu reprodukovatelnou posloupnost místo opakované první náhodné hodnoty.</li>
+<li><strong>VoronoiStainedGlass</strong> · <code>11-state/P22_Task_VoronoiStainedGlass.java</code><br>VoronoiStainedGlass potřebuje přesně count následných nextSeed ze stejného generátoru. Zachovej pořadí i měnitelný seznam; ověř 0, 100 a odmítnuté počty.</li>
+<li><strong>MandelbrotPostcards</strong> · <code>11-state/P23_Task_MandelbrotPostcards.java</code><br>V MandelbrotPostcards najdi všechny seedy 0–255 se shodným začátkem palety. Výsledek je seznam kandidátů v pořadí, ne slib jediné tajné odpovědi.</li>
+<li><strong>ColourFilterSecrets</strong> · <code>11-state/P24_Task_ColourFilterSecrets.java</code><br>ColourFilterSecrets ignoruje požadovaný seed. Oprav zdroj šumu, ale zachovej kanál s maskou; stejný seed musí dát stejný obrázek.</li>
+<li><strong>TwoNoisyPictures</strong> · <code>11-state/P25_Task_TwoNoisyPictures.java</code><br>TwoNoisyPictures stále restartuje generátor uvnitř pixelové smyčky. Vytvoř jednu reprodukovatelnou posloupnost místo opakované první náhodné hodnoty.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="04-random.html">← 11.4 Náhoda navrhuje, pravidlo rozhoduje</a><a class="next" href="../12-files/01-validation.html">12.1 Rozhodni, které hodnoty dávají smysl →</a></nav>

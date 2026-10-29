@@ -9,10 +9,13 @@
 <h1>3.1 Zeptej se hráče</h1>
 <p>Robot už umí mluvit. Teď ho naučíš počkat na odpověď a použít ji ve své zprávě.</p>
 <h2>Program může čekat</h2>
-<p>Ve Favorites otevři <code>03-text-input/P01_NameTag.java</code> a spusť Run File.</p>
-<pre><code class="language-java" data-source="P01_NameTag.java">void main() {
-    String pilot = IO.readln(&quot;Pilot name: &quot;);
-    IO.println(&quot;Welcome, &quot; + pilot + &quot;!&quot;);
+<p>Ve Favorites otevři <code>03-text-input/P01_Example_NameTag.java</code> a spusť Run File.</p>
+<pre><code class="language-java" data-source="P01_Example_NameTag.java">/// # Hotový příklad · 3.1 Zeptej se hráče
+/// Lekce: 01-input.html
+
+void main() {
+    String pilot = IO.readln("Pilot name: ");
+    IO.println("Welcome, " + pilot + "!");
 }
 </code></pre>
 <p>V Output se objeví <code>Pilot name: </code>. Program teď čeká. V dolním panelu Output klikni za výzvu <code>Pilot name:</code>, napiš <code>Nova</code> a potvrď Enter. Zeleně je níže tvoje odpověď; tu nepíše program.</p>
@@ -31,7 +34,7 @@ Welcome, Nova!</code></pre>
 <p>Celá odpověď Red Fox zůstane pohromadě, včetně vnitřní mezery. Samotný Enter poskytne prázdný text, takže vznikne <code>Welcome, !</code>. Enter ukončil čtení, ale není součástí uloženého textu. Uvozovky při odpovědi nepíšeš: patří k zápisu textu v Javě, nikoli k běžnému psaní do Output.</p>
 </details>
 <h2>Úkol: robot opakuje tvoje heslo</h2>
-<p>Otevři <code>03-text-input/P02_EchoRoom.java</code>. Robot stále opakuje svoje staré <code>offline</code>.</p>
+<p>Otevři <code>03-text-input/P02_Task_EchoRoom.java</code>. Robot stále opakuje svoje staré <code>offline</code>.</p>
 <p><strong>Nahraď pevné heslo čtením odpovědi s otázkou <code>Your code: </code>. Zadanou hodnotu ponech ve <code>code</code>; připravený výpis ji má zopakovat.</strong> S odpovědí Open sesame čekej:</p>
 <pre class="transcript"><code>Your code: <span class="typed">Open sesame</span>
 Robot repeats: Open sesame</code></pre>

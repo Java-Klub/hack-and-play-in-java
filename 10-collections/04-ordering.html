@@ -9,27 +9,30 @@
 <h1>10.4 Předej pravidlo řazení</h1>
 <p>Seznam kouzel může dávat nejkratší jména první a při shodě rozhodovat podle abecedy. Samotné řazení už existuje. Tvým úkolem je popsat, které ze dvou jmen má přijít dřív, aby Java mohla tuto otázku opakovaně pokládat.</p>
 <h2>Malá funkce předaná jako hodnota</h2>
-<pre><code class="language-java" data-source="P25_ShortNamesFirst.java">void main() {
-    List&lt;String&gt; names = new ArrayList&lt;&gt;(List.of(&quot;owl&quot;, &quot;a&quot;, &quot;bear&quot;));
+<pre><code class="language-java" data-source="P25_Example_ShortNamesFirst.java">/// # Hotový příklad · 10.4 Předej pravidlo řazení
+/// Lekce: 04-ordering.html
+
+void main() {
+    List&lt;String&gt; names = new ArrayList&lt;&gt;(List.of("owl", "a", "bear"));
     Comparator&lt;String&gt; byLength = (left, right) -&gt;
         Integer.compare(left.length(), right.length());
     names.sort(byLength);
     IO.println(names);
 }
 </code></pre>
-<p>Otevři 10-collections/P25_ShortNamesFirst.java. Lambda (krátký zápis funkce) popisuje chování bez samostatné pojmenované metody. V (left, right) -&gt; expression jsou dvě jména parametry; šipka je odděluje od vypočteného výsledku. Samotný zápis lambdy ještě neporovnává konkrétní jména.</p>
+<p>Otevři 10-collections/P25_Example_ShortNamesFirst.java. Lambda (krátký zápis funkce) popisuje chování bez samostatné pojmenované metody. V (left, right) -&gt; expression jsou dvě jména parametry; šipka je odděluje od vypočteného výsledku. Samotný zápis lambdy ještě neporovnává konkrétní jména.</p>
 <p>Comparator&lt;String&gt; určuje požadované chování: přijmout dva String a vrátit int. Java odvodí typy parametrů. Sort tento comparator (porovnávač) volá mnohokrát. Záporný výsledek dává left první, kladný dává první right a nula znamená shodu podle tohoto pravidla.</p>
 <p>Integer.compare porovná dvě hodnoty int a vrátí odpovídající znaménko. Nemusíš předpokládat, že každý rozdíl bezpečně vyjádří odečítání. List.sort přeuspořádá samotný měnitelný seznam; nevrací seřazenou náhradu. Použij kopii ArrayList, nikoli neměnný seznam List.of.</p>
 <details><summary>Předpověz jedno porovnání</summary><p>Porovnání &quot;a&quot; s &quot;bear&quot; podle délky dá záporný výsledek, takže a přijde první. Porovnání &quot;owl&quot; s &quot;ant&quot; dá nulu. Upřednostní toto pravidlo samo ant? Ne; abecední rozhodování při shodě nedefinovalo.</p></details>
 <h2>Úkol: rozhodni i při stejné délce</h2>
-<p>Otevři 10-collections/P26_SpellOrder.java. Doplň compareSpells: nejprve porovnej délky; pouze při shodě porovnej celá jména podle abecedy. String.compareTo dodá záporné číslo, nulu nebo kladné číslo podle pořadí textů. Dodaná malá anglická písmena umožňují pořadí snadno prohlédnout.</p>
+<p>Otevři 10-collections/P26_Task_SpellOrder.java. Doplň compareSpells: nejprve porovnej délky; pouze při shodě porovnej celá jména podle abecedy. String.compareTo dodá záporné číslo, nulu nebo kladné číslo podle pořadí textů. Dodaná malá anglická písmena umožňují pořadí snadno prohlédnout.</p>
 <p>Očekávej [a, ant, bee, owl, eagle], potom Tie: true a Same: 0. Stejný text musí mít shodu. Připravená lambda předá oba skutečné argumenty tvé metodě: toto spojení zachovej. Nezapisuj výsledný seznam napevno ani nevracej jen odpověď pro bee a ant.</p>
 <details><summary>Nápověda 1: jedno porovnání má přednost</summary><p>Ulož porovnání délek. Nenulový výsledek už rozhoduje; nepřepisuj jej abecedním pořadím.</p></details>
 <details><summary>Nápověda 2: ověř znaménko v obou směrech</summary><p>Ant před bee potřebuje záporný výsledek; bee před ant kladný. Přesná velikost kladného čísla není důležitá.</p></details>
 <p>Příště použiješ lambdy pro výběr a proměnu prvků bez přeuspořádání původního seznamu.</p>
 <details><summary>Barva může být také klíčem</summary><p>Hry s obrázky často uchovávají barvu jako jedno číslo int z <code>getRGB()</code>. Tento klíč není pořadí jasnosti. Požadavek na menší signed RGB key znamená obyčejné porovnání celých čísel včetně záporných, nikoli porovnání světlosti. Pokud dvě barvy sdílejí četnost, rozhodni druhým kritériem až po shodě prvního. Prázdná mapa potřebuje výslovně určený výsledek.</p></details>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>PhotoRemixLab</strong> · <code>10-collections/P27_PhotoRemixLab.java</code><br>Ve PhotoRemixLab vyber nejméně častou kladnou četnost; shodu rozhodne menší signed RGB klíč. Zobrazené zvýraznění musí používat skutečně vybranou barvu.</li>
+<li><strong>PhotoRemixLab</strong> · <code>10-collections/P27_Task_PhotoRemixLab.java</code><br>Ve PhotoRemixLab vyber nejméně častou kladnou četnost; shodu rozhodne menší signed RGB klíč. Zobrazené zvýraznění musí používat skutečně vybranou barvu.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="03-maps.html">← 10.3 Každé jméno má svůj účet</a><a class="next" href="05-streams.html">10.5 Nech data projít filtrem →</a></nav>

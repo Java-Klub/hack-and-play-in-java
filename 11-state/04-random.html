@@ -9,11 +9,14 @@
 <h1>11.4 Náhoda navrhuje, pravidlo rozhoduje</h1>
 <p>Kostka dává malé bitvě nejistotu. Náhodný hod a pravidlo převádějící jej na poškození jsou dvě různé práce. Oddělení dovolí ověřit pravidlo pro každou stěnu místo čekání na šťastný testovací běh.</p>
 <h2>Požádej jeden generátor o další hodnotu</h2>
-<pre><code class="language-java" data-source="P17_DiceDamage.java">void main() {
+<pre><code class="language-java" data-source="P17_Example_DiceDamage.java">/// # Hotový příklad · 11.4 Náhoda navrhuje, pravidlo rozhoduje
+/// Lekce: 04-random.html
+
+void main() {
     Random random = new Random();
     int die = roll(random);
-    IO.println(&quot;Roll: &quot; + die);
-    IO.println(&quot;Damage: &quot; + damage(die));
+    IO.println("Roll: " + die);
+    IO.println("Damage: " + damage(die));
 }
 
 int roll(Random random) {
@@ -27,18 +30,18 @@ int damage(int die) {
     return die - 2;
 }
 </code></pre>
-<p>Otevři 11-state/P17_DiceDamage.java a spusť jej několikrát. New Random() vytvoří pseudorandom generator (generátor zdánlivě náhodných čísel): objekt tvořící posloupnost hodnot. Uchovává vnitřní stav, takže další požadavek pokračuje v posloupnosti místo opakování pevné odpovědi.</p>
+<p>Otevři 11-state/P17_Example_DiceDamage.java a spusť jej několikrát. New Random() vytvoří pseudorandom generator (generátor zdánlivě náhodných čísel): objekt tvořící posloupnost hodnot. Uchovává vnitřní stav, takže další požadavek pokračuje v posloupnosti místo opakování pevné odpovědi.</p>
 <p>NextInt(1, 7) zahrnuje dolní mez 1 a vylučuje horní mez 7: možné výsledky jsou 1 až 6. Na mezích záleží. NextInt(1, 6) by nikdy nehodilo 6. Opakované hody mohou být stejné; náhodnost neslibuje pokaždé jiný výsledek.</p>
 <p>Generátor se předává jako parametr roll. Pravidlo damage dostane jen výsledné int: stěny 1 a 2 minou, vyšší způsobí hodnotu stěny minus 2. Toto pravidlo nepotřebuje Random, vstup ani výpis, proto jej můžeš volat se záměrně vybranými argumenty.</p>
 <details><summary>Předpověz pravidlo, ne hod</summary><p>Pokud je Roll 5, Damage musí být 3. Jaké poškození patří ke 2? Nula. Ze samotné této obrazovky nemůžeš poctivě předpovědět další hod, ale můžeš předpovědět správnou reakci na libovolný daný hod.</p></details>
 <h2>Úkol: hoď skutečnou dvojicí</h2>
-<p>Otevři 11-state/P18_DoubleDice.java. Rozšiř rollPair z jedné kostky na součet dvou samostatných šestistěnných hodů. Dodaný generátor požádej dvakrát, ulož obě hodnoty stěn a vrať jejich součet. Uvnitř pomocné metody další generátor nevytvářej.</p>
+<p>Otevři 11-state/P18_Task_DoubleDice.java. Rozšiř rollPair z jedné kostky na součet dvou samostatných šestistěnných hodů. Dodaný generátor požádej dvakrát, ulož obě hodnoty stěn a vrať jejich součet. Uvnitř pomocné metody další generátor nevytvářej.</p>
 <p>Každý výsledek musí ležet od 2 do 12. Stejné stěny jsou povolené. Jediný rovnoměrný výběr od 2 do 12 je jiný pokus: u dvou kostek má 7 více kombinací než 2. Krátký běh nemusí ukázat každý možný součet.</p>
 <details><summary>Nápověda 1: počítej náhodné požadavky</summary><p>Zdvojnásobení jedné hozené stěny by dalo jen sudé součty. Dvě volání dodají dva postupné vzorky, které mohou být i stejné.</p></details>
 <details><summary>Nápověda 2: zachovej generátor</summary><p>Převezmi generátor v parametru a používej jej. Jeho životnost určuje volající; pomocná metoda si vyžádá pouze potřebné vzorky.</p></details>
 <p>Příště dáš generátoru počáteční seed (semeno), aby šlo překvapivou posloupnost přesně zopakovat a sdílet jako opakovatelnou hádanku.</p>
 <section class="game-practice"><h2>Procvič ve hře</h2><ul>
-<li><strong>ChaosGame</strong> · <code>11-state/P19_ChaosGame.java</code><br>ChaosGame nikdy nevybere poslední vrchol. Oprav meze náhodného výběru; vyzkoušej jediný vrchol i odmítnutý nulový počet.</li>
+<li><strong>ChaosGame</strong> · <code>11-state/P19_Task_ChaosGame.java</code><br>ChaosGame nikdy nevybere poslední vrchol. Oprav meze náhodného výběru; vyzkoušej jediný vrchol i odmítnutý nulový počet.</li>
 </ul><p>Zadání a ovládání najdeš také přímo ve zdrojáku. Vybranou hru ověř pomocí Check.java ve stejné složce; postup připomíná <a href="../00-setup/index.html#checks">úvodní lekce</a>.</p></section>
 </article>
 <nav class="page-nav" aria-label="Předchozí a další lekce"><a href="03-invariants.html">← 11.3 Odmítnutí nesmí poškodit stav</a><a class="next" href="05-seeds.html">11.5 Stejný začátek, stejný pokus →</a></nav>

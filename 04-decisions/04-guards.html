@@ -9,23 +9,26 @@
 <h1>4.4 Zastav neplatný tah včas</h1>
 <p>Hráč zadá cenu tahu. Energii mu chceme odečíst teprve tehdy, když je tah povolený. Odmítnutý pokus má původní energii zachovat.</p>
 <h2>Nejdřív odmítni, potom měň</h2>
-<p>Otevři <code>04-decisions/P12_EnergyTurn.java</code>. Zkus cenu 0, potom 6 a nakonec 3.</p>
-<pre><code class="language-java" data-source="P12_EnergyTurn.java">void main() {
+<p>Otevři <code>04-decisions/P12_Example_EnergyTurn.java</code>. Zkus cenu 0, potom 6 a nakonec 3.</p>
+<pre><code class="language-java" data-source="P12_Example_EnergyTurn.java">/// # Hotový příklad · 4.4 Zastav neplatný tah včas
+/// Lekce: 04-guards.html
+
+void main() {
     int energy = 5;
-    int cost = Integer.parseInt(IO.readln(&quot;Move cost: &quot;).strip());
+    int cost = Integer.parseInt(IO.readln("Move cost: ").strip());
     if (cost &lt; 1) {
-        IO.println(&quot;Cost must be positive&quot;);
-        IO.println(&quot;Energy: &quot; + energy);
+        IO.println("Cost must be positive");
+        IO.println("Energy: " + energy);
         return;
     }
     if (cost &gt; energy) {
-        IO.println(&quot;Not enough energy&quot;);
-        IO.println(&quot;Energy: &quot; + energy);
+        IO.println("Not enough energy");
+        IO.println("Energy: " + energy);
         return;
     }
     energy = energy - cost;
-    IO.println(&quot;Move accepted&quot;);
-    IO.println(&quot;Energy: &quot; + energy);
+    IO.println("Move accepted");
+    IO.println("Energy: " + energy);
 }
 </code></pre>
 <div class="table-wrap"><table><thead><tr><th>Move cost</th><th>Rozhodnutí</th><th>Energie na konci</th></tr></thead><tbody>
@@ -37,7 +40,7 @@
 <p>Takové včasné odmítnutí nazýváme guard clause (ochranná podmínka). Na začátku odstraní zakázané možnosti. Za oběma guards zbývá platný tah, takže můžeš přímo odečíst cenu.</p>
 <p>Při každém novém spuštění se energie tohoto malého programu nastaví znovu na 5. Jeden běh provádí jeden pokus.</p>
 <h2>Úkol: tah je odmítnutý, ale energie zmizela</h2>
-<p>Otevři <code>04-decisions/P13_SafeMove.java</code>. Zadej cenu 6. Program současně oznámí odmítnutí i přijetí a ukáže zápornou energii. Najdi první řádek, kde změnil uložený stav příliš brzy.</p>
+<p>Otevři <code>04-decisions/P13_Task_SafeMove.java</code>. Zadej cenu 6. Program současně oznámí odmítnutí i přijetí a ukáže zápornou energii. Najdi první řádek, kde změnil uložený stav příliš brzy.</p>
 <p><strong>Přesuň odečet za rozhodnutí. Odmítni cenu menší než 1 nebo větší než dostupná energie, vypiš Move refused a nezměněnou energii, potom ukonči main. Platný tah odečti a vypiš Move accepted se zbývající energií.</strong></p>
 <pre class="transcript"><code>Move cost: <span class="typed">6</span>
 Move refused
@@ -58,8 +61,8 @@ Energy: 5</code></pre>
 <p><code>boolean</code> před accepts říká, jaký typ výsledku dostane volající. <code>int cost</code> pojmenovává přijaté číslo. Return false skončí toto jedno volání a předá odmítnutí; celá hra může běžet dál. Podobně může akce s výsledkem int vrátit číslo nebo akce s výsledkem String vrátit zprávu.</p>
 <h2>Hlídej moře, potom zkus rádce</h2>
 <ul>
-<li><code>04-decisions/P14_SonarTreasureHunt.java</code>: v okně jsou řádky a sloupce označené 1 až 8. Připravený vstup od každého označení odečte 1 a předá akci insideSea čísla 0 až 7. Opravuješ tuto vnitřní otázku: obě čísla musejí ležet ve svém rozsahu. Tlačítka mimo mapu nesmějí spotřebovat sondu. Hlídej všechny čtyři okraje včetně krajních platných políček.</li>
-<li><code>04-decisions/P15_Nim.java</code>: hra už běží proti botovi. Sleduj jeho tahy a doplň svého rádce. Má jen doporučit počet kamenů, zatímco skutečný tah a střídání hráčů ponechá připravené hře. Pro prázdnou hromádku vrať 0. Tady využiješ také dřívější zbytek po dělení a čtení cizího kódu.</li>
+<li><code>04-decisions/P14_Task_SonarTreasureHunt.java</code>: v okně jsou řádky a sloupce označené 1 až 8. Připravený vstup od každého označení odečte 1 a předá akci insideSea čísla 0 až 7. Opravuješ tuto vnitřní otázku: obě čísla musejí ležet ve svém rozsahu. Tlačítka mimo mapu nesmějí spotřebovat sondu. Hlídej všechny čtyři okraje včetně krajních platných políček.</li>
+<li><code>04-decisions/P15_Task_Nim.java</code>: hra už běží proti botovi. Sleduj jeho tahy a doplň svého rádce. Má jen doporučit počet kamenů, zatímco skutečný tah a střídání hráčů ponechá připravené hře. Pro prázdnou hromádku vrať 0. Tady využiješ také dřívější zbytek po dělení a čtení cizího kódu.</li>
 </ul>
 <p>Pro ověření otevři Check.java ze stejné složky jako daná hra. U Nim si navíc všimni, zda dotaz na radu opravdu nechal aktuální hromádku beze změny.</p>
 <p><strong>Teď umíš odmítnout neplatnou akci před změnou hodnot a rozlišit konec main od vrácení verdiktu jedné připravené akce.</strong></p>
