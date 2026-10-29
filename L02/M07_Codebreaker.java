@@ -1,21 +1,13 @@
 /// # L02.07 · Codebreaker
 ///
-/// Prolom čtyřmístný kód pomocí stop, které odlišují správnou číslici na správném místě od číslice
-/// umístěné jinam. Po známém cvičném kódu spusť nové kolo s ukrytým náhodným kódem.
+/// **Tvoje mise · Zaveď cheat kód:** Přidej univerzální servisní kód: 1111 vyhraje proti každému
+/// tajnému kódu. Běžné správné odhady musí dál vyhrávat a ostatní chybné selhávat. Nenahrazuj tajný
+/// kód, neobcházej ověření čtyř číslic a neměň vodítka. Cheat musí fungovat i po restartu.
 ///
-/// **Tvoje mise · Odemkni nesprávné odmítnutí:** Zadání cvičného kódu dá čtyři přesné číslice, ale žádnou
-/// výhru. Oprav matchesCode tak,
-/// aby přijímalo stejný text i ze samostatných String value (řetězcových hodnot).
+/// Výchozí program funguje podle původních pravidel. Kontrola už očekává tvůj nový cíl.
 ///
-/// **Dnes trénuješ:** Boolean decision (logické rozhodnutí) a rovnost textu: boolean znamená true nebo
-/// false. U textu se porovnání znaků liší od otázky, zda dvě jména ukazují na tentýž uložený String
-/// object (objekt řetězce).
-///
-/// Spusť program a zadej 1234 pro prozkoumání chybné cvičné výhry; po opravě zadej r a
-/// vyzkoušej nově ukrytý kód.
-boolean matchesCode(String guess) {
-    return secret.equals(guess);
-}
+/// Známé zahájení je 1234. Pomocí r vyber nový tajný kód a potom zkus 1111. Musí jít o skutečně
+/// přijatý vítězný odhad, nikoli jen vypsanou zprávu o výhře.
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F06">
 /// Boolean expression (logický výraz) dává `true` nebo `false`. `&&` vyžaduje obě condition
@@ -40,49 +32,36 @@ boolean matchesCode(String guess) {
 /// Nyní předpověz enter pro věk dvanáct s platnou vstupenkou.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
-///
-/// - `boolean` — Výsledek je rozhodnutí ano/ne: true pro shodu a jinak false.
-/// - `matchesCode(String guess)` — Připravená volající část se tohoto pravidla ptá na celý hádaný text.
-/// - `secret` — Uložený cílový kód tohoto kola.
-/// - `guess` — Text přijatý pro tento pokus, ne nutně tentýž uložený object (objekt) jako secret.
-/// - `==` — U String object (objektů řetězců) se ptá na identity (totožnost), nikoli stejné znaky; liší
-///   se to od číselné rovnosti.
-/// - `return` — Předej rozhodnutí zpět do submit, kde určuje výhru kola.
-///
-/// ### Co už obstarává připravená část
-///
-/// submit ověří čtyři číslice, spočítá přesné a jinak umístěné shody a požádá matchesCode o rozhodnutí
-/// výhry. První secret je 1234 pro zkoumání; reset pro další kola vytváří náhodné kódy.
+// <editor-fold defaultstate="expanded" desc="Průzkum a pokus">
+/// Sleduj cestu napsaného odhadu k yes/no rozhodnutí o výhře. Validation (ověření vstupu), vodítka a
+/// výhra jsou oddělené otázky. Spoj dva oprávněné způsoby výhry bez přijetí všech vstupů. Neutrální
+/// příklad: dveře se otevřou pro běžnou propustku OR servisní propustku. String equals porovnává
+/// znaky i u samostatně vytvořených String. Kterou otázku má cheat změnit?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
-/// Dvě oddělené papírové cedulky mohou obě nést OPEN. Shoda písmen je jiná otázka než totožnost
-/// cedulky. Pro String se equals ptá na znaky; == se ptá na object identity (totožnost objektu).
-/// Napsaná odpověď je nově přijatý text, takže její správnost nesmí záviset na sdílení stejného
-/// uloženého objektu.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · oblast hledání">
+/// Od zápisu příznaku výhry postupuj zpět; ověření číslic ponech.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · konkrétní cesta">
+/// submit se ptá matchesCode na výhru. Tento výpočet potřebuje dvě alternativy.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná úprava · prozrazuje postup">
+/// Vrať secret.equals(guess) || "1111".equals(guess). Existující submit dál ověřuje a započítává
+/// odhad.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
-/// Po opravě rozhodčího změň známý tréninkový secret (tajný kód) na jiný čtyřciferný kód a nech
-/// kamaráda odhalit jej z vodítek. Počet číslic zachovej. Zkus opakované číslice a sleduj, zda mění
-/// strategii hádání.
+/// Vymysli jiný servisní kód a vysvětli, proč stále musí dodržet přijímanou abecedu vstupu.
+/// Kamarádovi dej jen běžná pravidla hry a nech jej zadní vrátka odhalit z upraveného source
+/// (zdrojáku).
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Dvě samostatné String value (řetězcové hodnoty) mohou obsahovat stejný text.
-// </editor-fold>
+// <editor-fold defaultstate="collapsed" desc="Program · prozkoumej podle potřeby">
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Použij operaci porovnání obsahu String (řetězců).
-// </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Vrať secret.equals(guess).
-// </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 String secret = "1234";
 int attempts;
 boolean won;
@@ -135,6 +114,10 @@ int[] score(String guess) {
     return new int[] {exact, elsewhere};
 }
 
+boolean matchesCode(String guess) {
+    return secret.equals(guess) || "1111".equals(guess);
+}
+
 boolean submit(String guess) {
     if (over() || !guess.matches("[1-6]{4}")) {
         return false;
@@ -179,8 +162,6 @@ void main() {
         }
     }
 }
-
-/// Připravené vstupní body: main, reset.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">

@@ -6,35 +6,23 @@ import javax.imageio.ImageIO;
 
 /// # L11.10 · SecretPNGPostcard
 ///
-/// Pošli tajnou pohlednici, jejíž viditelný obrázek mnoho neprozradí. Program skryje tvůj text v datech
-/// PNG bodů a pokusí se jej přečíst z uložené kartičky.
+/// Nosič zpráv už funguje. Dej mu skutečný obrázek: použij vlastní PNG místo kresby znovu vytvářené
+/// uvnitř programu.
 ///
-/// **Tvoje mise:** Implementuj save jako zápis pohlednice: vytvoř nadřazené složky, otevři požadovaný
-/// output stream (výstupní proud) a zapiš render(seed, option) jako PNG do něj. Použij
-/// try-with-resources a ohlas chybějící PNG writer (zapisovač). Potom napiš vlastní zprávu a otevři
-/// ji při dalším spuštění.
+/// **Tvoje mise:** Použij data/cover.png jako skutečný obrázkový vstup nové tajné pohlednice. Načti
+/// jej, schovej zadanou zprávu a zapiš zvlášť data/postcard.png bez změny obálky. Pozdější Enter má
+/// otevřít uloženou kartu beze změny. Výměna obálky ovlivní další nově napsanou kartu, ne automaticky
+/// starou.
 ///
-/// **Dnes trénuješ:** Implementuješ skutečnou file boundary (souborovou hranici): otevři vybraný
-/// prostředek, předej skutečný obsah a spolehlivě jej zavři. Výsledek má přetrvat jedno volání
-/// metody.
+/// **Zkoumání:** Prozkoumej uchovaná vstupní data a vytvoř nástroj obrázek → pohlednice.
 ///
-/// Napiš novou tajnou zprávu, nebo stiskni Enter pro otevření data/postcard.png beze změny. Při
-/// prvním spuštění Enter vytvoří Pixel moon. Další spuštění čte uchovanou kartu; /q skončí.
-void save(Path path, long seed, double option) throws Exception {
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    try (var output = Files.newOutputStream(path)) {
-        if (!ImageIO.write(render(seed, option), "png", output)) {
-            throw new IOException("PNG writer missing.");
-        }
-    }
-}
+/// První běh vytvoří ukázkovou obálku. Na vypsanou cestu obálky vlož jiné PNG, napiš novou zprávu a
+/// porovnej kartu. Enter otevírá existující kartu; /q skončí.
 
 // <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
-/// ### Udělej z toho vlastní věc
-///
-/// Pošli skutečnou místní pohlednici: napiš krátkou hádanku, program zavři a nech kamaráda otevřít
-/// uloženou kartu bez nové zprávy. Potom změň jen viditelné pozadí v render a ověř, že starší uložená
-/// karta stále odhalí původní text.
+/// Do obálky navrhni obrazovou hádanku a do dvou karet vlož dvě různé zprávy. Před dekódováním
+/// porovnej běžný obraz, potom zjisti, které spodní bity pixelů se změnily. Oba původní obrázky
+/// zachovej.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F32">
@@ -60,35 +48,43 @@ void save(Path path, long seed, double option) throws Exception {
 /// Předpověz: pokud file změníš na `Path.of("cards", "one.txt")`, kam se poznámka zapíše?
 // </editor-fold>
 
-// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
-/// ### Tvoje zpráva přežije další spuštění
+// <editor-fold defaultstate="expanded" desc="Deník průzkumníka · vyložený příklad">
+/// ### Sleduj bajty přes dvě různé souborové role
 ///
-/// ImageIO.write(image, "png", output) vrací true, najde-li PNG encoder (zapisovač); zakódované bajty
-/// posílá do předaného proudu. Neutrálním příkladem je malá malovaná ikona na obálce sešitu: vytvoř
-/// složku, otevři cover.png v try-with-resources a proud předej ImageIO.write. Po bloku může soubor
-/// číst jiný program. Předpověz, co zůstane, pokud proud otevřeš, ale volání write vynecháš.
+/// Input path (vstupní cesta) označuje čtená data, output path (výstupní cesta) vytvářená data. Změna
+/// objektu v paměti nepřepíše vstupní soubor, dokud do něj výslovně nezapíšeš. Vstup ověř před
+/// otevřením cíle, aby nečitelný vstup nesmazal užitečný výstup.
 ///
-/// render pomocí encode už schovává současnou message do pixelů. Řešíš persistence (uchování), ne
-/// bitový algoritmus. readMessage otevře skutečné PNG a vyjme uložený text. main zapisuje jen při
-/// nové zprávě nebo chybějící kartě. Enter při dalším spuštění otevře existující pohlednici beze
-/// změny, i v novém herním objektu. Soubor tak nese zprávu mezi spuštěními, ne pouze mezi sousedními
-/// voláními metod.
+/// ```java
+/// String original = Files.readString(Path.of("draft.txt"));
+/// String edited = original.toUpperCase(Locale.ROOT);
+/// Files.writeString(Path.of("poster.txt"), edited);
+/// ```
+///
+/// Obsahuje-li draft.txt Nova, dostane poster.txt NOVA a draft.txt zůstane Nova. Předpověz další běh
+/// po změně vstupu na Orbit. Obrázky mají obdobnou hranici: ImageIO.read dekóduje obraz, transformace
+/// vytvoří výsledek a ImageIO.write jej zakóduje. PNG encoder (zapisovač) zachová spodní bity
+/// používané zdejším formátem zprávy. Otevření existující karty je čtení; vytvoření nové je
+/// samostatná volba.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Připravené render vrací zakódovanou pohlednici. Save zajišťuje jen její trvalý cíl.
+/// Najdi místo setkání nové zprávy s pozadím. Porovnej tuto cestu s otevřením už uložené karty.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Vytvoř složku a potom použij newOutputStream(path) v try-with-resources.
+/// main vede nové karty přes postcardFromCover. Jeho současné tělo stále volá starý zápis
+/// generovaného pozadí; encode už umí schovat text do předaného obrázku.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Zavolej ImageIO.write(render(seed, option), "png", output), zkontroluj boolean result (výsledek) a
-/// jako cíl zachovej skutečný proud.
+/// Načti a ověř cover přes ImageIO, zakóduj obrázek i text před otevřením výstupu a zapiš PNG do
+/// jiného cíle. Cover zachovej a odmítni jeho použití jako vlastního cíle.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+// <editor-fold defaultstate="expanded" desc="Program k prozkoumání">
+
+
 String readMessage(Path path) throws IOException {
     try (var input = Files.newInputStream(path)) {
         var image = ImageIO.read(input);
@@ -154,7 +150,7 @@ String decode(BufferedImage image) {
 }
 
 /// Připravená tvorba obrazu: generování a kreslení zůstávají viditelné v tomto file (souboru).
-BufferedImage render(long seed, double option) {
+BufferedImage background(long seed) {
     var image = new BufferedImage(400, 240, BufferedImage.TYPE_INT_RGB);
     var random = new Random(seed);
     for (int y = 0; y < 240; y++) {
@@ -162,8 +158,10 @@ BufferedImage render(long seed, double option) {
             image.setRGB(x, y, Color.HSBtoRGB(x / 400.0F, 0.5F, 0.6F + random.nextFloat() * 0.4F));
         }
     }
-    return encode(image, message);
+    return image;
 }
+
+
 
 
 
@@ -191,25 +189,45 @@ void showImages(String title, String[] captions, java.awt.image.BufferedImage[] 
 }
 
 
+void postcardFromCover(Path cover, Path destination, String text) throws Exception {
+    if (Files.exists(destination) && Files.isSameFile(cover, destination)) {
+        throw new IllegalArgumentException("Cover and postcard must be different files.");
+    }
+    BufferedImage original;
+    try (var input = Files.newInputStream(cover)) {
+        original = ImageIO.read(input);
+        if (original == null) throw new IOException("Cover is not a readable image.");
+    }
+    BufferedImage postcard = encode(original, text);
+    Files.createDirectories(destination.toAbsolutePath().getParent());
+    try (var output = Files.newOutputStream(destination)) {
+        if (!ImageIO.write(postcard, "png", output)) throw new IOException("PNG writer missing.");
+    }
+}
+
 void main() {
+    Path cover = Path.of("data", "cover.png");
     Path card = Path.of("data", "postcard.png");
     try {
+        if (!Files.exists(cover)) {
+            Files.createDirectories(cover.toAbsolutePath().getParent());
+            if (!ImageIO.write(background(42), "png", cover.toFile())) throw new IOException("PNG writer missing.");
+        }
+        IO.println("Artwork input: " + cover.toAbsolutePath());
         String text = IO.readln("New secret message, Enter opens the saved postcard, /q to quit: ");
         if (text == null || text.strip().equalsIgnoreCase("/q")) return;
         if (!text.isEmpty() || !Files.exists(card)) {
-            message = text.isEmpty() ? "Pixel moon" : text;
-            save(card, 42, 1);
+            String chosen = text.isEmpty() ? "Pixel moon" : text;
+            postcardFromCover(cover, card, chosen);
         }
         String recovered = readMessage(card);
-        if (!text.isEmpty() && !recovered.equals(text)) {
-            throw new IOException("The saved postcard does not contain the new message.");
-        }
+        if (!text.isEmpty() && !recovered.equals(text)) throw new IOException("The saved message differs from the new text.");
         var image = ImageIO.read(card.toFile());
         if (image == null) throw new IOException("The postcard is not a readable PNG.");
         IO.println("Recovered from " + card.toAbsolutePath() + ": " + recovered);
         showImages("Secret PNG Postcard", new String[]{recovered}, new BufferedImage[]{image});
     } catch (Exception failure) {
-        IO.println("Cannot open the saved postcard: " + failure.getMessage());
+        IO.println("Cannot open the postcard: " + failure.getMessage());
     }
 }
 // </editor-fold>

@@ -3,29 +3,32 @@
 /// Odhaluj skryté slovo po písmenech, než šest chybných tipů ukončí kolo. Opakované písmeno může odkrýt
 /// několik míst zároveň, takže každá nápověda může změnit tvůj další tip.
 ///
-/// **Tvoje mise:** Zobrazení slova je prázdné. Sestav mask průchodem while: každý znak bude odhalené
-/// písmeno, pokud je v tried, jinak podtržítko. Každou pozici navštiv právě jednou; prázdné slovo
-/// nevyžaduje žádné čtení.
 ///
-/// **Dnes trénuješ:** While loop (smyčka s podmínkou): před každým průchodem ověř podmínku, udělej část
-/// práce a posuň se ke konci. U šestipísmenného slova jsou platné index (pozice) 0 až 5; následující
-/// index už musí smyčku zastavit.
+/// **Tvoje mise:** Uprav /hint na chytřejšího coach (poradce): doporučí první dosud skrytou samohlásku
+/// ve slově zleva. Když žádná nezbývá, doporučí první jiné skryté písmeno; když je vše odhaleno, nic
+/// nedoporučí. Dotaz nesmí odhalit písmeno, spotřebovat tip ani změnit kolo. Běžná hra už funguje.
 ///
-/// Cvičné slovo je BANANA. Zadej A: nehotová maska zůstane prázdná místo šesti pozic. Tvůj průchod má
-/// vrátit _A_A_A.
-String mask() {
-    String result = "";
+/// **Dnes se učíš:** While loop (smyčka while) při hledání: pokračuj, dokud se může objevit lepší
+/// kandidát, a pamatuj si náhradní možnost.
+///
+/// Zkus /hint před prvním tipem, potom A a dvakrát /hint. Porovnej doporučení s Tried a Misses; rada
+/// není odehraný tip.
+String hintLetter() {
+    String fallback = "";
     int index = 0;
     while (index < word.length()) {
         String letter = word.substring(index, index + 1);
-        if (tried.contains(letter)) {
-            result += letter;
-        } else {
-            result += "_";
+        if (!tried.contains(letter)) {
+            if ("AEIOU".contains(letter)) {
+                return letter;
+            }
+            if (fallback.isEmpty()) {
+                fallback = letter;
+            }
         }
         index++;
     }
-    return result;
+    return fallback;
 }
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F10">
@@ -54,39 +57,52 @@ String mask() {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
-/// result začíná prázdný; index označuje další znak. Opakovanou část sestav před return.
+/// Query (dotaz) může číst tajná data bez odehrání tahu. Odděl tři otázky: co je skryto, kterému
+/// skrytému písmenu dáš přednost a co se změní po skutečném tipu.
 ///
-/// | word | tried | požadovaná maska |
-/// | --- | --- | --- |
-/// | STAR | AS | S_A_ |
-/// | A | prázdný | _ |
-/// | prázdný | libovolný | prázdná |
+/// Pro jiné slovo METER s tried E zůstávají skryté M, T, R. Skrytá samohláska už není, náhradní možnost
+/// je tedy M. Předpověz radu před tipem E. `substring(i, i + 1)` čte jeden znak jako String (řetězec);
+/// `contains` se ptá na jeho přítomnost. Prázdný řetězec znamená žádné doporučení.
 ///
-/// Pro STAR přečte index nula S a připojí S; index jedna přečte T a připojí _. Posun index změní další
-/// čtený znak. `word.substring(index, index + 1)` dodá jeden znak jako text; `tried.contains(letter)`
-/// zjišťuje předchozí tip. Předpověz masku pro BEE s tried E. Připravené zpracování tipů a konce hry
-/// používá tvůj výsledek.
+/// Najdi cestu od příkazu /hint k vypsanému textu. Zpracování skutečného tipu a funkční zobrazení slova
+/// zachovej.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Před smyčkou nakresli jednu výstupní pozici pro každý vstupní znak.
+/// Která část pouze odpovídá a která mění Tried nebo Misses?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Každý průchod čte, vybere odhalené písmeno či podtržítko, připojí je a posune index.
+/// Sleduj /hint do hintLetter. Současný průchod končí u prvního skrytého písmene, takže neobjeví
+/// pozdější samohlásku.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Opakuj, dokud je index menší než word.length(); připojuj k result a posuň index jednou za průchod.
+/// Zapamatuj první skryté písmeno jako náhradu, pokračuj v hledání AEIOU a náhradu vrať až po
+/// neúspěšném průchodu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
-/// Vytvoř coach mode (nápovědní režim), který před hádáním odhalí tebou zvolenou skupinu znaků,
-/// například samohlásky. Použij stejný průchod slovem. Ukaž spolužákovi dvě masky a nech ho odhalit tvé
-/// pravidlo.
+/// Dej spolužákovi dva poradce s jinými oblíbenými skupinami písmen. Ze tří dotazů má odhalit jejich
+/// preference bez čtení kódu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+String mask() {
+    String result = "";
+    int index = 0;
+    while (index < word.length()) {
+        String letter = word.substring(index, index + 1);
+        if (tried.contains(letter)) {
+            result += letter;
+        } else {
+            result += "_";
+        }
+        index++;
+    }
+    return result;
+}
+
 String[] words = {"LEVEL", "ROBOT", "GALAXY", "JAVA", "PIXEL", "PUZZLE", "PLANET", "BANANA"};
 String word = "BANANA";
 String tried = "";
@@ -122,7 +138,7 @@ void main() {
     IO.println("Training word: BANANA. /r chooses a random word.");
     IO.println("HANGMAN: reveal the word before six wrong letters.");
     IO.println("Repeated letters cost nothing. Every letter accepts either case.");
-    IO.println("/r chooses a new word; /q quits.");
+    IO.println("/hint suggests a letter without playing it; /r chooses a new word; /q quits.");
     boolean showState = true;
     while (true) {
         if (showState) {
@@ -132,7 +148,7 @@ void main() {
             }
             showState = false;
         }
-        String input = IO.readln(over() ? "Enter or /r: new round; /q: quit: " : "Guess A-Z, /r restart, /q quit: ");
+        String input = IO.readln(over() ? "Enter or /r: new round; /q: quit: " : "Guess A-Z, /hint advice, /r restart, /q quit: ");
         if (input == null || input.trim().equalsIgnoreCase("/q")) {
             return;
         }
@@ -140,6 +156,11 @@ void main() {
         if ((input.equalsIgnoreCase("/r") || (over() && input.isBlank()))) {
             reset();
             showState = true;
+            continue;
+        }
+        if (input.equalsIgnoreCase("/hint")) {
+            String suggestion = hintLetter();
+            IO.println(suggestion.isEmpty() ? "No hidden letters remain." : "Coach suggests " + suggestion);
             continue;
         }
         if (over()) {

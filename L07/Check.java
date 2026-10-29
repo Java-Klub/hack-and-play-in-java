@@ -28,7 +28,7 @@ class Check {
         run("M11_TiltTray", "L07.11 TiltTray · F25", () -> M11_TiltTrayTest.main(new String[0]));
         run("M12_PlatformDash", "L07.12 PlatformDash · F25", () -> M12_PlatformDashTest.main(new String[0]));
         if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " still need repair.");
+        IO.println(checked + " missions; " + failed + " mission goals remaining.");
         if (failed > 0) System.exit(1);
     }
 
@@ -104,25 +104,27 @@ class M03_TrailDuelTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
-        if (!correct) {
-            throw new AssertionError(message);
-        }
+        if (!correct) throw new AssertionError(message);
     }
     static void equal(Object expected, Object actual, String message) {
-        expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+        expect(java.util.Objects.deepEquals(expected, actual), message + " | expected=" + expected + " actual=" + actual);
     }
     public static void main(String[] args) throws Exception {
         var g = Reflect.create("M03_TrailDuel");
-        equal(Reflect.create("M03_TrailDuel$Direction", 0, -1), Reflect.call(g, "directionFor", java.awt.event.KeyEvent.VK_W), "L07.03/F09: W maps to upward movement");
-        equal(Reflect.create("M03_TrailDuel$Direction", 0, -1), Reflect.call(g, "directionFor", java.awt.event.KeyEvent.VK_UP), "L07.03/F09: both players share direction values");
-        equal(Reflect.create("M03_TrailDuel$Direction", -1, 0), Reflect.call(g, "directionFor", java.awt.event.KeyEvent.VK_LEFT), "L07.03/F09: left direction");
-        equal(null, Reflect.call(g, "directionFor", java.awt.event.KeyEvent.VK_F1), "L07.03/F09: unrelated key has no direction");
+        int[][] keys = {{java.awt.event.KeyEvent.VK_W, java.awt.event.KeyEvent.VK_UP}, {java.awt.event.KeyEvent.VK_D, java.awt.event.KeyEvent.VK_RIGHT}, {java.awt.event.KeyEvent.VK_S, java.awt.event.KeyEvent.VK_DOWN}, {java.awt.event.KeyEvent.VK_A, java.awt.event.KeyEvent.VK_LEFT}};
+        int[][] directions = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+        for (int i = 0; i < keys.length; i++) {
+            for (int key : keys[i]) {
+                Object d = Reflect.call(g, "directionFor", key);
+                expect(d != null && (int) Reflect.call(d, "dx") == directions[i][0] && (int) Reflect.call(d, "dy") == directions[i][1], "L07.03: both layouts turn their requested direction clockwise");
+            }
+        }
+        expect(Reflect.call(g, "directionFor", java.awt.event.KeyEvent.VK_SPACE) == null, "L07.03: unrelated keys do not steer");
         Reflect.call(g, "restart");
         Reflect.call(g, "key", java.awt.event.KeyEvent.VK_W, true);
-        Reflect.call(g, "step");
-        equal(9, ((int) Reflect.get(g, "ay")), "L07.03/F09: actual cyan trail turns up");
+        Reflect.call(g, "restart");
+        Reflect.call(g, "key", java.awt.event.KeyEvent.VK_D, true);
+        expect((int) Reflect.get(g, "anx") == 0 && (int) Reflect.get(g, "any") == 1, "L07.03: real input uses the hacked direction");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -253,31 +255,38 @@ class M08_MiniInvadersTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
-        if (!correct) {
-            throw new AssertionError(message);
-        }
+        if (!correct) throw new AssertionError(message);
     }
     static void equal(Object expected, Object actual, String message) {
-        expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+        expect(java.util.Objects.deepEquals(expected, actual), message + " | expected=" + expected + " actual=" + actual);
     }
     public static void main(String[] args) throws Exception {
         var g = Reflect.create("M08_MiniInvaders");
         Reflect.call(g, "restart");
-        Reflect.set(g, "speedX", 0);
-        Reflect.set(g, "bulletActive", true);
-        Reflect.set(g, "bulletX", ((double) Reflect.get(g, "formationX")) + 10);
-        Reflect.set(g, "bulletY", ((double) Reflect.get(g, "formationY")) + 17);
+        Reflect.set(g, "speedX", 0.0);
+        Reflect.set(g, "fire", true);
         Reflect.call(g, "step");
-        expect(!((boolean) Reflect.get(g, "bulletActive")), "L07.08/F25: a hitting bullet is consumed");
-        equal(1, ((int) Reflect.get(g, "score")), "L07.08/F25: one bullet awards exactly one hit");
-        equal(14, ((int) Reflect.call(g, "countAliens")), "L07.08/F25: one alien removed");
+        Reflect.set(g, "fire", false);
+        Reflect.set(g, "bulletX", (double) Reflect.get(g, "formationX") + 10);
+        Reflect.set(g, "bulletY", (double) Reflect.get(g, "formationY") + 2 * 34 + 17);
         Reflect.call(g, "step");
-        equal(14, ((int) Reflect.call(g, "countAliens")), "L07.08/F25: consumed bullet cannot hit another row");
-        int savedScore = (int) Reflect.get(g, "score");
+        equal(1, Reflect.get(g, "score"), "L07.08: first real hit scores once");
+        expect((boolean) Reflect.get(g, "bulletActive"), "L07.08: piercing pulse survives its first alien");
+        Reflect.call(g, "hitAlien", 2, 0);
+        equal(1, Reflect.get(g, "score"), "L07.08: an already removed alien cannot score again");
+        Reflect.set(g, "bulletY", (double) Reflect.get(g, "formationY") + 34 + 17);
+        Reflect.call(g, "step");
+        equal(2, Reflect.get(g, "score"), "L07.08: the same pulse reaches a second alien");
+        expect(!(boolean) Reflect.get(g, "bulletActive"), "L07.08: the two-hit pulse ends after its second hit");
+        Reflect.call(g, "hitAlien", 0, 0);
+        equal(2, Reflect.get(g, "score"), "L07.08: no third score from a spent pulse");
+        Reflect.set(g, "fire", true); Reflect.call(g, "step"); Reflect.set(g, "fire", false);
+        Reflect.call(g, "hitAlien", 0, 0);
+        expect((boolean) Reflect.get(g, "bulletActive") && (int) Reflect.get(g, "score") == 3, "L07.08: a newly fired pulse receives a fresh allowance");
         Reflect.call(g, "hitAlien", 0, 1);
-        equal(savedScore, (int) Reflect.get(g, "score"), "an already consumed shot cannot score through the hit action");
+        expect(!(boolean) Reflect.get(g, "bulletActive") && (int) Reflect.get(g, "score") == 4, "L07.08: that new allowance is also finite");
+        Reflect.call(g, "restart");
+        expect(!(boolean) Reflect.get(g, "bulletActive") && (int) Reflect.get(g, "score") == 0 && (int) Reflect.call(g, "countAliens") == 15, "L07.08: restart resets the battle");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -318,31 +327,33 @@ class M10_SoftLandingTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
-        if (!correct) {
-            throw new AssertionError(message);
-        }
+        if (!correct) throw new AssertionError(message);
     }
     static void equal(Object expected, Object actual, String message) {
-        expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+        expect(java.util.Objects.deepEquals(expected, actual), message + " | expected=" + expected + " actual=" + actual);
     }
     public static void main(String[] args) throws Exception {
         var g = Reflect.create("M10_SoftLanding");
-        Reflect.call(g, "restart");
-        Reflect.set(g, "state", "FLYING");
+        Reflect.call(g, "restart"); Reflect.call(g, "begin");
         Reflect.set(g, "fuel", 0);
         Reflect.set(g, "up", true);
         Reflect.call(g, "step");
-        equal(0, ((int) Reflect.get(g, "fuel")), "L07.10/F25: fuel never becomes negative");
-        expect(Math.abs(((double) Reflect.get(g, "velocityY"))-.04)<1e-9, "L07.10/F25: empty tank gives no thrust");
-        Reflect.call(g, "restart");
-        Reflect.set(g, "state", "FLYING");
-        Reflect.set(g, "left", ((boolean) Reflect.set(g, "right", ((boolean) Reflect.set(g, "up", true)))));
+        expect(Math.abs((double) Reflect.get(g, "velocityY") + 0.05) < 1e-9, "L07.10: empty training tank still brakes against gravity");
+        equal(0, Reflect.get(g, "fuel"), "L07.10: training leaves the counter unchanged at zero");
+        Reflect.call(g, "restart"); Reflect.call(g, "begin");
+        Reflect.set(g, "left", true); Reflect.set(g, "right", true); Reflect.set(g, "up", true);
         Reflect.call(g, "step");
-        equal(239, ((int) Reflect.get(g, "fuel")), "L07.10/F25: combined controls consume one unit per tick");
-        Reflect.call(g, "restart");
-        expect(!((boolean) Reflect.get(g, "left")) && !((boolean) Reflect.get(g, "right")) && !((boolean) Reflect.get(g, "up")), "L07.10/F25: restart releases controls");
+        equal(240, Reflect.get(g, "fuel"), "L07.10: combined thrust does not spend training fuel");
+        expect(Math.abs((double) Reflect.get(g, "velocityX") - 1.2) < 1e-9 && Math.abs((double) Reflect.get(g, "velocityY") + 0.05) < 1e-9, "L07.10: opposing engines cancel while vertical thrust works");
+        Reflect.call(g, "restart"); Reflect.call(g, "begin");
+        Reflect.call(g, "step");
+        expect(Math.abs((double) Reflect.get(g, "velocityY") - 0.04) < 1e-9, "L07.10: no key means gravity only");
+        Reflect.set(g, "state", "CRASH");
+        double y = (double) Reflect.get(g, "y");
+        Reflect.set(g, "up", true); Reflect.call(g, "step");
+        equal(y, Reflect.get(g, "y"), "L07.10: a crash remains terminal");
+        Reflect.call(g, "restart"); Reflect.call(g, "begin");
+        expect(!(boolean) Reflect.get(g, "left") && !(boolean) Reflect.get(g, "right") && !(boolean) Reflect.get(g, "up"), "L07.10: restart releases thrust");
         System.out.println("PASS " + checks + " checks");
     }
 }

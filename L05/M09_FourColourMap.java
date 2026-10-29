@@ -2,23 +2,41 @@
 ///
 /// Vybarvi malou mapu tak, aby sousední oblasti neměly stejnou barvu. Vzdálené oblasti se shodovat mohou.
 ///
-/// **Tvoje mise:** Prázdná kontrola hranic hlásí nulu, i když sousedé sdílejí barvu. Sestav průchod
-/// adjacent: hranici započti, jen pokud oba konce mají stejnou nenulovou barvu. Počítej hranice, nikoli
-/// regiony, a obarvení neměň.
 ///
-/// **Dnes trénuješ:** Traversal and search (průchod a hledání): procházej vztahy mezi oblastmi, nejen
-/// oblasti samotné. Každá hranice určuje dvě barvy k porovnání.
+/// **Tvoje mise:** Nech rozhodčího barev vycházet přímo z nakreslené mapy. Změna obdélníkových řádků
+/// A–E musí změnit sousedství bez ruční opravy druhého seznamu hranic. Pouhý dotyk rohem se nepočítá.
+/// Konfliktní dvojici regionů započti jen jednou bez ohledu na délku hranice a při zkoumání neměň
+/// hráčovy barvy.
 ///
-/// A začíná barvou 1. Zadej B 1 a potom C 1: nyní kolidují tři společné hranice, ale nehotová kontrola
-/// stále hlásí nulu.
-int conflicts() {
-    int n = 0;
-    for (int[] edge : adjacent) {
-        if (colours[edge[0]] != 0 && colours[edge[0]] == colours[edge[1]]) {
-            n++;
+/// **Dnes se učíš:** Traversal (průchod) může odhalit vztahy ze sousedních datových pozic místo důvěry
+/// ve zdvojený ruční seznam.
+///
+/// Zkus obarvit původní mapu. Potom nahraď jen data řádků za {"AABCCDEE"} a porovnej nakreslené sousedy
+/// s hlášenými konflikty.
+boolean touches(int first, int second) {
+    if (first == second) {
+        return false;
+    }
+    char a = (char) ('A' + first);
+    char b = (char) ('A' + second);
+    for (int row = 0; row < map.length; row++) {
+        for (int column = 0; column < map[row].length(); column++) {
+            char here = map[row].charAt(column);
+            if (column + 1 < map[row].length()) {
+                char right = map[row].charAt(column + 1);
+                if ((here == a && right == b) || (here == b && right == a)) {
+                    return true;
+                }
+            }
+            if (row + 1 < map.length) {
+                char below = map[row + 1].charAt(column);
+                if ((here == a && below == b) || (here == b && below == a)) {
+                    return true;
+                }
+            }
         }
     }
-    return n;
+    return false;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F17">
@@ -46,41 +64,48 @@ int conflicts() {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
-/// Každá položka adjacent je dvojice indexů regionů. colours[edge[0]] a colours[edge[1]] čtou dva konce
-/// hranice. Nula znamená neobarveno.
+/// Opakovaný dotyk je stále jediný vztah dvou regionů. Procházení buněk a počítání konfliktních dvojic
+/// jsou proto dva odlišné traversal (průchody).
 ///
-/// | barvy A,B,C | AB | AC | BC | součet |
-/// | --- | --- | --- | --- | --- |
-/// | 1,0,0 | 0 | 0 | 0 | 0 |
-/// | 1,1,0 | 1 | 0 | 0 | 1 |
-/// | 1,1,1 | 1 | 1 | 1 | 3 |
-///
-/// Další hranice dotýkající se neobarveného regionu nepřispívají. Vytvoř n jednou, navštiv každý pár a
-/// při kolizi jej zvětši. Předpověz případ stejně obarvených vzdálených regionů bez společné hranice.
-/// Připravené solved spojuje tuto kontrolu s obarvením všech regionů.
+/// V jiné mapě AB / BA sdílí A a B čtyři buněčné hrany, ale tvoří jedinou sousední dvojici. V AB / CD
+/// se A a D potkají jen rohem a nejsou sousedé. Předpověz vztahy v AA / BB. String (řetězec) řádku
+/// nabízí charAt(column); další řádek či sloupec musí existovat před čtením. Skutečné mapy používají
+/// pouze A–E.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Čti jednu edge (hranu) jako dva indexy regionů, nikoli barvu.
+/// Porovnej geografii vypsanou display s informací, kterou čte rozhodčí.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Před započítáním porovnej barvy a vyluč značku neobarveného regionu.
+/// conflicts se nyní ptá touches na každou dvojici. touches stále používá pevnou tabulku hranic, takže
+/// změnu mapy nezpozoruje.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Procházej adjacent po jedné hraně, zvětši n při stejných nenulových barvách konců a nakonec n vrať.
+/// Procházej každou buňku a existujícího souseda vpravo/dole. U požadované dvojice přijmi obě pořadí
+/// písmen a vrať true při prvním hranovém dotyku. false vrať až po průchodu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
-/// Přidej do adjacent dosud chybějící hranici a najdi obarvení, které dříve fungovalo a nyní selže.
-/// Změněnou mapu sám obarvi a vyzvi spolužáka k použití méně barev. Protipříkladem určete, která nová
-/// hranice způsobila rozdíl.
+/// Navrhni mapu s dlouhou hranicí a úzkým průchodem. Dej ji spolužákovi s obarvením chybným v jediné
+/// dvojici. Najde jeho rozhodčí stejný konflikt i po přesunutí průchodu?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+int conflicts() {
+    int total = 0;
+    for (int first = 0; first < colours.length; first++) {
+        for (int second = first + 1; second < colours.length; second++) {
+            if (colours[first] != 0 && colours[first] == colours[second] && touches(first, second)) {
+                total++;
+            }
+        }
+    }
+    return total;
+}
+
 String[] map = {"AABB", "ACCB", "DDEE"};
-int[][] adjacent = {{0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 4}, {2, 3}, {2, 4}, {3, 4}};
 int[] colours;
 String outcome;
 

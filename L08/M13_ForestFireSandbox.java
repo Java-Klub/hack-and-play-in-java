@@ -7,106 +7,22 @@ import javax.swing.Timer;
 
 /// # L08.13 · ForestFireSandbox
 ///
-/// Zasaď stromy, vysekej průsek a zapal jeden konec lesa. Prozkoumej, jak se modelová požární fronta šíří
-/// po jednotlivých sousedstvích.
+/// Sandbox už šíří modelový oheň ke čtyřem sousedním stromům. Změň svět na záměrně jednosměrný východní
+/// vítr, navrhni protipožární pás a ověř předpověď.
 ///
-/// **Tvoje mise:** Oheň může během jediného kroku přeskočit přes mnoho stromů a staré plameny nezmizí.
-/// Oprav nextForest(), aby všechna políčka vycházela ze stejného předchozího lesa.
+/// **Tvoje mise:** V novém modelu strom vzplane jen tehdy, když cell (buňka) bezprostředně západně od
+/// něj hořela v minulé generation (generaci). Starý oheň zhasne, prázdná cell zůstane prázdná.
+/// Nepropojuj protější okraje, neměň starý les a nešiř dvakrát během tick (kroku). Šíření na sever,
+/// jih, západ i diagonal (úhlopříčně) se zastaví. Zachovej kreslení a Step/Run.
 ///
-/// **Dnes trénuješ:** Simultaneous updates (současné aktualizace): vytvoř úplnou novou mřížku z nezměněné
-/// staré. Nově zapálené stromy musí s vlastním šířením počkat na další generaci.
+/// **Dnes trénuješ:** Porovnej dvě hypotézy neighbourhood (okolí) při zachování stejné staré generation
+/// (generace). Nové pravidlo větru mění čtená fakta, nikoli okamžik zveřejnění nových.
 ///
-/// Spusť program, vyber Fire a kliknutím zapal strom, potom přes Step sleduj pohyb fronty, než
-/// vyzkoušíš Run/Pause.
-int[][] nextForest(int[][] before) {
-    int[][] next = new int[40][60];
-    int[][] offsets = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-    for (int y = 0; y < 40; y++) {
-        for (int x = 0; x < 60; x++) {
-            if (before[y][x] != 1) {
-                continue;
-            }
-            next[y][x] = 1;
-            for (var d : offsets) {
-                int nx = x + d[0], ny = y + d[1];
-                if (nx >= 0 && nx < 60 && ny >= 0 && ny < 40 && before[ny][nx] == 2) {
-                    next[y][x] = 2;
-                }
-            }
-        }
-    }
-    return next;
-}
+/// Pomocí Erase udělej místo, Tree nakresli krátkou vodorovnou řadu a Fire zapal její střed. Step
+/// pozastaví a provede jeden krok. Výchozí svět šíří oheň oběma směry; po zásahu hoří jen
+/// východní/pravá polovina po jedné cell (buňce).
 
-// <editor-fold defaultstate="collapsed" desc="Připomenutí · F26">
-/// ### Generation (generace) sdílí stejnou minulost
-///
-/// Simultaneous update (současná aktualizace) znamená, že každá nová cell (buňka) čte stejný minulý
-/// svět. Při přepisování starých cell za pochodu by další column (sloupec) viděl budoucnost, kterou
-/// soused neviděl.
-///
-/// Zkus malé pravidlo: cell se rozsvítí, jestliže předtím svítila ona nebo její levý neighbour
-/// (soused). Za levým okrajem je zhasnuto. Ze starého `[true,false,false]` musí vzniknout
-/// `[true,true,false]`.
-///
-/// ```java
-/// boolean[] old = {true, false, false};
-/// boolean[] next = new boolean[old.length];
-/// for (int x = 0; x < old.length; x++) {
-///     next[x] = old[x] || (x > 0 && old[x - 1]);
-/// }
-/// ```
-///
-/// Proč ne tři true? Třetí cell čte old[1], tedy false, nikoli právě zapsané next[1]. Old zůstává
-/// nedotčené, takže obrácené pořadí průchodu dá stejný výsledek. Hotové next zveřejni až po výpočtu
-/// celé generation.
-///
-/// Nakresli OLD nad NEXT a šipky od čtených cell k zapisované cell. Předpověz druhou generation.
-/// Two-dimensional grid (dvourozměrná mřížka) potřebuje stejný princip včetně samostatných
-/// zapisovatelných row (řádků).
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
-///
-/// - `int[][] next = before` — Nová a stará mřížka nyní sdílejí úložiště, což porušuje současný krok.
-/// - `int[][] offsets` — Vypisuje čtyři hlavní směrové sousedy a záměrně vynechává diagonály.
-/// - `before[y][x] != 1` — Do této větve šíření vstupují jen původní stromová políčka.
-/// - `before[ny][nx] == 2` — Testuje oheň v předchozí generaci, nikoli oheň právě vytvořený v next.
-///
-/// ### Co už obstarává připravená část
-///
-/// edit() poskytuje nástroje Tree, Fire a Erase; step() jednou zveřejní výsledek nextForest(). Tlačítka a
-/// timer (časovač), který se při zavření zastaví, řeší běh; jde o hračku šíření, ne předpověď požáru.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
-/// ### Použij model právě zde
-///
-/// State (stavy) jsou 0=empty, 1=tree, 2=fire. V jedné generation (generaci) strom hoří jen vedle
-/// starého fire ve čtyřech přímých směrech; staré fire přejde na empty a empty zůstane. Trace (průchod)
-/// pro `[2,1,1]` bez jiných stromů dává po tick (kroku) `[0,2,1]`, nikoli celou hořící řadu. Ověříš tak
-/// zhasnutí i zpožděné šíření.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Zápis do before dovolí novému ohni okamžitě zapálit další strom podle pořadí průchodu.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Nová nulová matice také přirozeně nechá starý oheň zaniknout.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Vytvoř novou next matici 40 × 60; čti jen before a next zveřejni až po výpočtu všech polí.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
-/// Navrhni protipožární pás, zapal jeden konec a předpověz zastavení ohně. Potom na stejném lese
-/// vyzkoušej jasně odlišný model s osmi neighbour (sousedy).
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+// <editor-fold defaultstate="expanded" desc="Program · prozkoumej pravidla">
 int[][] cells = new int[40][60];
 boolean running;
 int brush = 1;
@@ -129,6 +45,18 @@ boolean edit(int x, int y, int value) {
     }
     cells[y][x] = value;
     return true;
+}
+
+int[][] nextForest(int[][] before) {
+    int[][] next = new int[40][60];
+    for (int y = 0; y < 40; y++) {
+        for (int x = 0; x < 60; x++) {
+            if (before[y][x] == 1) {
+                next[y][x] = x > 0 && before[y][x - 1] == 2 ? 2 : 1;
+            }
+        }
+    }
+    return next;
 }
 
 void step() {
@@ -216,6 +144,70 @@ void main() {
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
+
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F26">
+/// ### Generation (generace) sdílí stejnou minulost
+///
+/// Simultaneous update (současná aktualizace) znamená, že každá nová cell (buňka) čte stejný minulý
+/// svět. Při přepisování starých cell za pochodu by další column (sloupec) viděl budoucnost, kterou
+/// soused neviděl.
+///
+/// Zkus malé pravidlo: cell se rozsvítí, jestliže předtím svítila ona nebo její levý neighbour
+/// (soused). Za levým okrajem je zhasnuto. Ze starého `[true,false,false]` musí vzniknout
+/// `[true,true,false]`.
+///
+/// ```java
+/// boolean[] old = {true, false, false};
+/// boolean[] next = new boolean[old.length];
+/// for (int x = 0; x < old.length; x++) {
+///     next[x] = old[x] || (x > 0 && old[x - 1]);
+/// }
+/// ```
+///
+/// Proč ne tři true? Třetí cell čte old[1], tedy false, nikoli právě zapsané next[1]. Old zůstává
+/// nedotčené, takže obrácené pořadí průchodu dá stejný výsledek. Hotové next zveřejni až po výpočtu
+/// celé generation.
+///
+/// Nakresli OLD nad NEXT a šipky od čtených cell k zapisované cell. Předpověz druhou generation.
+/// Two-dimensional grid (dvourozměrná mřížka) potřebuje stejný princip včetně samostatných
+/// zapisovatelných row (řádků).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ### Pozoruj a sleduj tok
+///
+/// Nakresli OLD nad NEXT a před spuštěním předpověz malou řadu. Strom čte starého neighbour (souseda),
+/// od kterého může přijít oheň: pohyb východně znamená čtení západního souseda. Nepleť směr pohybu se
+/// směrem čtení. Kreslení i štětce fungují; použij je k řízenému pokusu místo opakované změny náhodného
+/// lesa.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Pokus a opakování">
+/// Umísti oheň se stromy ze všech čtyř stran a stiskni Step. Vzplane jen východní strom a starý oheň
+/// zhasne. Druhý východní strom musí počkat na další Step. Přeruš řadu prázdnou cell (buňkou) a
+/// předpověz zastavení.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Pro OLD [tree, fire, tree, tree] nakresli další řadu. Strom za čerstvým ohněm musí počkat.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Omez hledání na výpočet generation (generace), který volá Step. Zachovej jeho nový grid (mřížku);
+/// změň důkaz od neighbour (souseda) pro strom.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Najdi nextForest. Pro strom na (x,y) čti jen old[y][x-1], pokud x>0. Zachovej přechod starého ohně i
+/// prázdna na empty a vrať samostatně vytvořený next grid (příští mřížku).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Vymysli severovýchodní vítr se dvěma výslovnými příchozími neighbour (sousedy). Stejnou nakreslenou
+/// scénou jej odliš od obou dřívějších modelů.
+// </editor-fold>
+
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
 /// ## Neznámý zápis?

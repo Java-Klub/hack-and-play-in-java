@@ -31,7 +31,7 @@ class Check {
         run("M12_WordChain", "L04.12 WordChain · F12", () -> M12_WordChainTest.main(new String[0]));
         run("M13_YatzyScorecard", "L04.13 YatzyScorecard · F12", () -> M13_YatzyScorecardTest.main(new String[0]));
         if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " still need repair.");
+        IO.println(checked + " missions; " + failed + " mission goals remaining.");
         if (failed > 0) System.exit(1);
     }
 
@@ -52,23 +52,35 @@ class Check {
 class M01_HangmanTest {
     static int checks;
 
-    static void check(boolean okay, String reason) {
+    static void expect(boolean correct, String message) {
         checks++;
-        if (!okay) {
-            throw new AssertionError("L04.01 F10: " + reason);
-        }
+        if (!correct) throw new AssertionError("L04.01/F10: " + message);
+    }
+
+    static void equal(Object expected, Object actual, String message) {
+        expect(java.util.Objects.deepEquals(expected, actual), message
+                + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
+                + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
     }
 
     public static void main(String[] args) throws Exception {
         var game = Reflect.create("M01_Hangman");
+        String[][] samples = {{"BANANA", "", "A"}, {"BANANA", "A", "B"}, {"IDEA", "", "I"}, {"AUDIO", "A", "U"},
+                {"BYE", "Y", "E"}, {"RHYTHM", "H", "R"}, {"METER", "E", "M"},
+                {"EYE", "E", "Y"}, {"ALPHA", "ALPH", ""}, {"", "", ""}};
+        for (String[] sample : samples) {
+            Reflect.set(game, "word", sample[0]);
+            Reflect.set(game, "tried", sample[1]);
+            Reflect.set(game, "misses", 3);
+            equal(sample[2], Reflect.call(game, "hintLetter"), "advice for " + Arrays.toString(sample));
+            equal(sample[2], Reflect.call(game, "hintLetter"), "repeated advice is stable");
+            equal(sample[0], Reflect.get(game, "word"), "advice preserves the secret");
+            equal(sample[1], Reflect.get(game, "tried"), "advice is not a guess");
+            equal(3, Reflect.get(game, "misses"), "advice costs no miss");
+        }
         Reflect.set(game, "word", "BANANA");
         Reflect.set(game, "tried", "A");
-        check(((java.lang.String) Reflect.call(game, "mask")).equals("_A_A_A"), "the while loop must include the last letter");
-        Reflect.set(game, "word", "A");
-        Reflect.set(game, "tried", "");
-        check(((java.lang.String) Reflect.call(game, "mask")).equals("_"), "a one-letter word runs once");
-        Reflect.set(game, "word", "");
-        check(((java.lang.String) Reflect.call(game, "mask")).isEmpty(), "an empty word runs zero times without indexing it");
+        equal("_A_A_A", Reflect.call(game, "mask"), "ordinary word display remains available");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -153,21 +165,57 @@ class M04_SameGameTest {
 class M05_WordSearchTest {
     static int checks;
 
-    static void check(boolean okay, String reason) {
+    static void expect(boolean correct, String message) {
         checks++;
-        if (!okay) {
-            throw new AssertionError("L04.05 F11: " + reason);
-        }
+        if (!correct) throw new AssertionError("L04.05/F11: " + message);
+    }
+
+    static void equal(Object expected, Object actual, String message) {
+        expect(java.util.Objects.deepEquals(expected, actual), message
+                + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
+                + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
     }
 
     public static void main(String[] args) throws Exception {
         var game = Reflect.create("M05_WordSearch");
-        check(((java.lang.String) Reflect.call(game, "read", 0, 0, 0, 2)).equals("CAT"), "the counted loop must include the final selected cell");
-        check(((java.lang.String) Reflect.call(game, "read", 0, 2, 0, 0)).equals("TAC"), "the same range must work in reverse");
-        check(((java.lang.String) Reflect.call(game, "read", 2, 0, 2, 4)).equals("TIGER"), "five selected cells produce five letters");
+        for (String[] sample : new String[][]{{"TAC", "CAT"}, {"GOD", "DOG"}, {"REGIT", "TIGER"},
+                {"CAT", "CAT"}, {"CAX", "CAX"}, {"", ""}}) {
+            equal(sample[1], Reflect.call(game, "targetName", sample[0]), "target identity for " + sample[0]);
+        }
+        equal("TAC", Reflect.call(game, "read", 0, 2, 0, 0), "the raw path still preserves selection order");
         Reflect.call(game, "reset");
-        Reflect.call(game, "command", "1 1 1 3");
-        check(((java.util.Set<java.lang.String>) Reflect.get(game, "found")).contains("CAT"), "the actual word selection uses the complete loop result");
+        Reflect.call(game, "command", "1 3 1 1");
+        equal(Set.of("CAT"), Reflect.get(game, "found"), "reverse selection finds the canonical target");
+        boolean rejected = false;
+        try {
+            Reflect.call(game, "command", "1 1 1 3");
+        } catch (IllegalArgumentException expected) {
+            rejected = true;
+        }
+        expect(rejected, "the same word cannot be found again in its other direction");
+        equal(Set.of("CAT"), Reflect.get(game, "found"), "a duplicate changes no finds");
+        Reflect.call(game, "command", "2 4 2 2");
+        Reflect.call(game, "command", "3 5 3 1");
+        equal(Set.of("CAT", "DOG", "TIGER"), Reflect.get(game, "found"), "all reverse targets are playable");
+        equal("All words found!", Reflect.get(game, "outcome"), "real round ends after three distinct finds");
+        Reflect.call(game, "reset");
+        rejected = false;
+        try {
+            Reflect.call(game, "command", "4 1 4 3");
+        } catch (IllegalArgumentException expected) {
+            rejected = true;
+        }
+        expect(rejected, "reversing does not make an unrelated path a target");
+        for (String invalid : new String[]{"1 1 2 3", "0 1 1 3", "1 1 1 1"}) {
+            rejected = false;
+            try {
+                Reflect.call(game, "command", invalid);
+            } catch (IllegalArgumentException expected) {
+                rejected = true;
+            }
+            expect(rejected, "straight in-bounds multi-cell selection is still required: " + invalid);
+            equal(Set.of(), Reflect.get(game, "found"), "invalid selections do not invent a find");
+        }
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -176,35 +224,50 @@ class M05_WordSearchTest {
 class M06_VirtualScribblerTest {
     static int checks;
 
-    static void check(boolean okay, String reason) {
+    static void expect(boolean correct, String message) {
         checks++;
-        if (!okay) {
-            throw new AssertionError("L04.06 F11: " + reason);
-        }
+        if (!correct) throw new AssertionError("L04.06/F11: " + message);
+    }
+
+    static void equal(Object expected, Object actual, String message) {
+        expect(java.util.Objects.deepEquals(expected, actual), message
+                + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
+                + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
     }
 
     public static void main(String[] args) throws Exception {
         var game = Reflect.create("M06_VirtualScribbler");
         Reflect.call(game, "restart");
+        Reflect.set(game, "drift", 9);
+        Reflect.set(game, "jitter", 10);
+        Reflect.set(game, "x", 7.0);
+        Reflect.call(game, "signature");
+        int width = (int) Reflect.get(game, "WIDTH");
+        int height = (int) Reflect.get(game, "HEIGHT");
+        expect(Math.abs((double) Reflect.get(game, "x") - width / 2) < .00001,
+                "the square returns to its starting horizontal position");
+        expect(Math.abs((double) Reflect.get(game, "y") - height / 2) < .00001,
+                "the square returns to its starting vertical position");
+        equal(24, Reflect.get(game, "steps"), "four six-step sides draw 24 pen steps");
+        equal(true, Reflect.get(game, "paused"), "the signature ends paused");
+        equal(0, Reflect.get(game, "drift"), "straight sides have no drift");
+        equal(0, Reflect.get(game, "jitter"), "repeated stamps have no random jitter");
+        var image = (java.awt.image.BufferedImage) Reflect.get(game, "canvas");
+        int cx = width / 2;
+        int cy = height / 2;
+        for (int[] point : new int[][]{{cx + 6, cy}, {cx + 13, cy + 6},
+                {cx + 6, cy + 13}, {cx, cy + 6}}) {
+            expect((image.getRGB(point[0], point[1]) & 0xffffff) != 0xffffff,
+                    "each of the four square sides must actually draw");
+        }
+        int[] pixels = image.getRGB(0, 0, width, height, null, 0, width);
         Reflect.set(game, "paused", false);
-        Reflect.call(game, "burst", 1);
-        check(((int) Reflect.get(game, "steps")) == 1, "a one-step burst must execute once");
-        Reflect.call(game, "burst", 0);
-        check(((int) Reflect.get(game, "steps")) == 1, "a zero-step burst must execute zero times");
-        Reflect.call(game, "burst", 4);
-        check(((int) Reflect.get(game, "steps")) == 5, "a four-step burst adds exactly four pen moves");
-        Reflect.set(game, "paused", true);
-        Reflect.call(game, "burst", 4);
-        check(((int) Reflect.get(game, "steps")) == 5, "the supplied pause rule remains active");
-        Reflect.call(game, "restart");
+        Reflect.call(game, "burst", 11);
+        Reflect.call(game, "signature");
+        var again = (java.awt.image.BufferedImage) Reflect.get(game, "canvas");
+        equal(pixels, again.getRGB(0, 0, width, height, null, 0, width), "a second signature resets earlier drawing and settings");
         Reflect.call(game, "oneShot", 1);
-        check(((int) Reflect.get(game, "steps")) == 1 && ((boolean) Reflect.get(game, "paused")), "one-shot 1 makes exactly one visible step and stays paused");
-        Reflect.call(game, "oneShot", 12);
-        check(((int) Reflect.get(game, "steps")) == 13 && ((boolean) Reflect.get(game, "paused")), "one-shot 12 adds twelve steps without starting continuous motion");
-        Reflect.set(game, "paused", false);
-        Reflect.call(game, "burst", -1);
-        Reflect.call(game, "burst", 61);
-        check(((int) Reflect.get(game, "steps")) == 13, "rejected burst counts leave the canvas unchanged");
+        equal(25, Reflect.get(game, "steps"), "ordinary step controls still use the working drawing model");
         System.out.println("PASS " + checks + " checks");
     }
 }

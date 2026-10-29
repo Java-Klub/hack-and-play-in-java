@@ -3,20 +3,30 @@
 /// Dotlač bednu na cíl ve stísněném skladišti. Plánuj dopředu, protože bednu můžeš tlačit, ale
 /// nepřitáhneš ji zpět.
 ///
-/// **Tvoje mise:** Nehotový dotaz na podlahu odmítá každý pohyb. Sestav read-only query (neměnící
-/// dotaz): před čtením buňky odmítni souřadnice mimo terrain, pak přijmi každý vnitřní znak kromě zdi
-/// '#'. Cíl '.' je také podlaha; hráče ani bednu neposouvej.
 ///
-/// **Dnes trénuješ:** Pure contracts (smlouvy čistých dotazů): dotaz slibuje odpověď pro dané vstupy bez
-/// změny hry. Přesně určuj, které souřadnice představují průchozí podlahu.
+/// **Tvoje mise:** Nech ? vypsat přesně platné okamžité tahy W/A/S/D bez pohybu hráče nebo bedny.
+/// Tlačení je platné jen s volnou podlahou za bednou; zeď, hranice mapy, diagonála ani dokončené kolo
+/// nejsou platný tah. Opakované dotazy musí vše zachovat. Jde o radar jediného tahu, nikoli slib, že
+/// hádanka zůstane řešitelná.
 ///
-/// Zadej A pro volnou buňku vlevo od počátečního hráče. Nehotový dotaz ji odmítne stejně jako zeď; tvá
-/// odpověď musí tyto situace rozlišit před provedením pohybu.
-boolean floor(int px, int py) {
-    if (py < 0 || py >= terrain.length || px < 0 || px >= terrain[py].length()) {
+/// **Dnes se učíš:** Query (dotaz) a command (příkaz) se mohou shodovat na platnosti, ale jen příkaz
+/// mění stav. Kontroluj vedlejší účinky přijatých i odmítnutých kandidátů.
+///
+/// Zadej dvakrát ?, potom dvakrát d a znovu ?. Porovnej radu s pokusem o třetí d a sleduj, zda samotný
+/// dotaz mění vypsaný sklad.
+boolean canMove(int dx, int dy) {
+    if (!outcome.isEmpty() || Math.abs(dx) + Math.abs(dy) != 1) {
         return false;
     }
-    return terrain[py].charAt(px) != '#';
+    int nx = x + dx;
+    int ny = y + dy;
+    if (!floor(nx, ny)) {
+        return false;
+    }
+    if (nx == bx && ny == by) {
+        return floor(bx + dx, by + dy);
+    }
+    return true;
 }
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F15">
@@ -40,51 +50,43 @@ boolean floor(int px, int py) {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
-/// px je vodorovná souřadnice; py vybírá řádek mapy. Odmítnutí rozsahu musí přijít před vyhodnocením
-/// terrain[py] či charAt(px).
+/// Příští políčko hráče a příští políčko bedny jsou dva různí kandidáti. Prozkoumej terrain (terén)
+/// před změnou kterékoli polohy.
 ///
-/// | navržené px,py | údaj mapy | odpověď |
-/// | --- | --- | --- |
-/// | 0,2 | zeď # | false |
-/// | 1,2 | volné místo | true |
-/// | 5,2 | cíl . | true |
-/// | 7,2 | za řádkem | false |
-///
-/// Znak na platné pozici dodá druhé rozhodnutí. floor odpovídá na otázku; command zvlášť pohybuje
-/// hráčem a případně bednou. Dvě stejná volání floor musejí dát stejnou odpověď se zachováním všech
-/// pozic. Před čtením předpověz záporné py.
+/// V jiné chodbě @ $ # nestačí vstoupit na bednu: za ní je zeď, takže tlačení není platné. U @ $ . je
+/// platné. Plánovací dotaz má dát stejnou odpověď dvakrát bez provedení a vracení tahu. Před dotazem
+/// zachyť hráče, bednu i outcome (výsledek). Předpověz dotaz směrem od bedny a dotaz na okraj mapy.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
-/// ### Čtení jednoho map character (znaku mapy)
-///
-/// Řádek terrain je String. `row.charAt(index)` čte jeden char na pozici od nuly; například
-/// `"map".charAt(1)` přečte prostřední character (znak). Char literal (přímo zapsaný znak) má
-/// jednoduché uvozovky, na rozdíl od String literal (textové hodnoty). Zde `#` označuje zeď. Před
-/// čtením řádku a znaku zachovej existující bounds (meze). Předpověz odpověď pro vnitřní zeď a
-/// vysvětli, proč dvojí dotaz nesmí pohnout hráčem či bednou.
-// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Odliš neexistující buňku od existující buňky se zdí.
+/// Porovnej cestu radaru se skutečným tahem. Najdi kandidáta s odlišným verdiktem.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Při špatných souřadnicích vrať false před čtením terrain; potom zkontroluj jediný znak.
+/// Větev ? volá canMove pro čtyři směry. canMove zatím kontroluje jen podlahu příštího políčka hráče;
+/// command navíc ověřuje cíl tlačené bedny.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Ochraň rozsahy řádku a sloupce a vrať, zda se znak liší od #. Pozice nepřiřazuj.
+/// Odmítni nekardinální krok a dokončené kolo, odmítni chybějící podlahu a cíl za bednou zkoumej jen
+/// při vstupu na ni. Vrať odpověď bez přiřazování poloh.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
-/// Navrhni sklad s jedním lákavým posunutím, které bednu uvězní, a jednou cestou k cíli. Zachovej
-/// rozměry mapy a před výměnou vyřeš vlastní návrh. Pomocí floor vysvětli obě cesty, aniž by pouhé
-/// zkoumání posouvalo hráče.
+/// Přidej druhého poradce varujícího před zatlačením bedny do rohu bez cíle. Varování odděl od okamžité
+/// platnosti a navrhni jeden platný, ale prohraný tah dokazující rozdíl.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
-String[] terrain = {"#######", "#     #", "#    .#", "#     #", "#######"};
+boolean floor(int px, int py) {
+    if (py < 0 || py >= terrain.length || px < 0 || px >= terrain[py].length()) {
+        return false;
+    }
+    return terrain[py].charAt(px) != '#';
+}
+
+String[] terrain = {"#######", "#    .#", "#     #", "#     #", "#######"};
 int x;
 int y;
 int bx;
@@ -139,7 +141,7 @@ void main() {
     reset();
     IO.println("Sokoban");
     IO.println("Push the crate $ onto the goal dot. You can push, but cannot pull; restart if you trap the crate.");
-    IO.println("W/A/S/D move. @ player, $ crate, . goal, * crate on goal. Push only. /r restarts; /q quits.");
+    IO.println("W/A/S/D move; ? asks the move radar. @ player, $ crate, . goal, * crate on goal. Push only. /r restarts; /q quits.");
     IO.println("Example: d moves right; pressing Enter submits the command. Use /r to reset a stuck attempt.");
     display();
     while (true) {
@@ -161,6 +163,15 @@ void main() {
             IO.println("That round is over. Press Enter to play again, or /q to quit.");
             continue;
         }
+        if (input.equals("?")) {
+            String advice = "";
+            if (canMove(0, -1)) advice += "W ";
+            if (canMove(-1, 0)) advice += "A ";
+            if (canMove(0, 1)) advice += "S ";
+            if (canMove(1, 0)) advice += "D ";
+            IO.println("Immediate moves: " + (advice.isEmpty() ? "none" : advice.strip()));
+            continue;
+        }
         try {
             command(input);
             display();
@@ -168,7 +179,7 @@ void main() {
                 IO.println(outcome);
             }
         } catch (IllegalArgumentException invalid) {
-            IO.println("Invalid move. " + "W/A/S/D move. @ player, $ crate, . goal, * crate on goal. Push only. /r restarts; /q quits.");
+            IO.println("Invalid move. " + "W/A/S/D move; ? asks the move radar. @ player, $ crate, . goal, * crate on goal. Push only. /r restarts; /q quits.");
         }
     }
 }

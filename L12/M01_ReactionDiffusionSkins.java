@@ -5,32 +5,23 @@ import java.awt.image.BufferedImage;
 
 /// # L12.01 · ReactionDiffusionSkins
 ///
-/// Nech dvě virtuální látky šířit se a reagovat, až vzniknou skvrny či pruhy. Drobné místní pravidlo
-/// změní celou kůži tvora, kterého si pod ní představíš.
+/// Simulace kůže už běží. Staň se návrhářem pokusu: měň jediný místní recept a ověř, zda vysvětlení
+/// odpovídá vzoru, který skutečně vznikne.
 ///
-/// **Tvoje mise:** Napiš makeChemistry a jeho výsledek zapoj do chemistry. Vrať Chemistry lambda
-/// (implementaci pravidla) počítající a × b² z argumentů, ne z pevné buňky. reactionAt je nyní
-/// připravený adapter (propojovací metoda): dál předává každou buňku zapojené roli.
+/// **Tvoje mise:** Sestav férový pokus se třemi kůžemi: použij stejný seed i počet kroků pro reakce
+/// a×b², poloviční reakci a nulovou reakci. Měň jen vybranou chemistry role (chemickou roli); znovu
+/// použij stejnou difuzi i kreslení. Vrať tři obrazy v tomto pořadí a nakonec obnov původní roli
+/// volajícího, i když pokus selže.
 ///
-/// **Dnes trénuješ:** Napíšeš implementation (implementaci) malého interface (rozhraní) a zapojíš ji
-/// do běžícího programu. Výpočet odděl od vstupu, aktualizace a kreslení.
+/// **Zkoumání:** Prozkoumej composition výměnou jediné role za stejných podmínek.
 ///
-/// Spusť program a porovnej obrázek před opravou a po ní.
-Chemistry makeChemistry() {
-    return (a, b) -> {
-        double activated = a * b;
-        return activated * b;
-    };
-}
-
-Chemistry chemistry = makeChemistry();
+/// Okno porovnává Standard, Half reaction a No reaction ze stejného počátku. Ve starter (výchozí
+/// verzi) se opakuje jeden recept. Po zapojení tvého experimentálního nástroje porovnej všechny tři
+/// bez změny seed.
 
 // <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
-/// ### Udělej z toho vlastní věc
-///
-/// Vymysli kůži tvora změnou jen své Chemistry implementation (implementace pravidla). Zkus poloviční
-/// sílu reakce a porovnej stejný seed i počet kroků. Neslibuj konkrétní zvířecí vzor: pojmenuj
-/// výsledek, který skutečně vidíš, a uchovej jeho recept.
+/// Po třech řízených srovnáních vymysli čtvrtý recept. Změň jen místní reakci a pozorovaný vzor
+/// pojmenuj podle vlastního tvora. Zachovej seed i délku pokusu, aby jej někdo jiný zopakoval.
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F34">
@@ -59,47 +50,54 @@ Chemistry chemistry = makeChemistry();
 /// vstupu?
 // </editor-fold>
 
-// <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
-/// ### Implementuj role (roli), potom ji zapoj
+// <editor-fold defaultstate="expanded" desc="Deník průzkumníka · vyložený příklad">
+/// ### Změň jedinou příčinu; vypůjčené nastavení vrať
 ///
-/// Interface Chemistry slibuje reaction(double a, double b). Lambda se dvěma argumenty a výsledkem
-/// double může tento slib splnit. Factory (vytvářecí metoda) makeChemistry vrátí implementaci; field
-/// (uložená hodnota) chemistry ji vybere pro simulaci. Potřebuješ obě práce. Správné, ale nepoužité
-/// pravidlo obrázek nezmění.
-///
-/// Neutrální příklad:
+/// Interface field (uložená role) vybírá výpočet. Výměna implementace se liší od přepsání volajícího
+/// i od změny počátečních dat. Controlled comparison (řízené porovnání) potřebuje stejné vstupy a
+/// jasné pořadí výsledků.
 ///
 /// ```java
-/// interface Price { double forCount(int n); }
-/// Price makePrice() {
-///     return n -> {
-///         double subtotal = n * 3.0;
-///         return subtotal + 2;
-///     };
+/// var before = rule;
+/// try {
+///     rule = alternative;
+///     runExperiment();
+/// } finally {
+///     rule = before;
 /// }
 /// ```
 ///
-/// Uložené pravidlo `Price price = makePrice()` vrací pro price.forCount(3) číslo 11. Předpověz
-/// výsledek pro 5 a vysvětli, kdy tělo lambda běží.
-///
-/// Zadaná reakce této kůže pro a = 0.5 a b = 0.4 dává 0.08. reactionAt čte a[y][x] a b[y][x]; step
-/// použije výsledek do nových mřížek příštího stavu. Chemistry samo žádnou mřížku měnit nesmí.
+/// Tento nezávislý vzor obnoví rule při dokončení i výjimce z runExperiment. Předpověz, kterou roli
+/// použije pozdější volání, když pokus selže před return. Finally je slib úklidu, ne catch skrývající
+/// chybu. Hotový obraz zachyť před dalším během. V závěru pojmenuj pozorovaný tvar místo slibu, že
+/// každé nastavení vytvoří určitou zvířecí kůži.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Argumenty lambda jsou koncentrace současné buňky, ne souřadnice.
+/// Sleduj zobrazený obraz zpět k vybranému výpočtu a najdi místo obnovující vstupní mřížky při novém
+/// kreslení.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Factory má vrátit pravidlo násobící a dvakrát hodnotou b. Pravidlo jen počítá.
+/// compareSkins nyní opakuje render bez změny chemistry. Interface Chemistry dodává jen reakci;
+/// render obnoví seed a posune difuzi.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Chemistry inicializuj pomocí makeChemistry(), ne druhou nesouvisející lambda. reactionAt dál
-/// předává do tohoto field.
+/// Uchovej původní Chemistry, postupně zapoj tři receptové lambda a vykresli stejné vstupy. Původní
+/// roli obnov ve finally. Step ani jeho mřížky neměň.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+// <editor-fold defaultstate="expanded" desc="Program k prozkoumání">
+Chemistry makeChemistry() {
+    return (a, b) -> {
+        double activated = a * b;
+        return activated * b;
+    };
+}
+
+Chemistry chemistry = makeChemistry();
+
 double reactionAt(int x, int y) {
     return chemistry.reaction(a[y][x], b[y][x]);
 }
@@ -203,11 +201,26 @@ void showImages(String title, String[] captions, java.awt.image.BufferedImage[] 
 }
 
 
+BufferedImage[] compareSkins(long seed, int steps) {
+    Chemistry before = chemistry;
+    try {
+        chemistry = makeChemistry();
+        BufferedImage standard = render(seed, steps);
+        chemistry = (a, b) -> 0.5 * a * b * b;
+        BufferedImage half = render(seed, steps);
+        chemistry = (a, b) -> 0;
+        BufferedImage none = render(seed, steps);
+        return new BufferedImage[]{standard, half, none};
+    } finally {
+        chemistry = before;
+    }
+}
+
 void main() {
     try {
-        showImages("Reaction Diffusion Skins", new String[]{"Result"}, new java.awt.image.BufferedImage[]{render(42, 1200)});
+        showImages("Skin Experiments", new String[]{"Standard", "Half reaction", "No reaction"}, compareSkins(42, 1200));
     } catch (Exception failure) {
-        IO.println("Cannot draw this result; check the editable rule: " + failure);
+        IO.println("Cannot run the experiment: " + failure.getMessage());
     }
 }
 // </editor-fold>

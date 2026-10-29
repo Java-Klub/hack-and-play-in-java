@@ -7,49 +7,18 @@ import javax.swing.Timer;
 
 /// # L10.09 · Pong
 ///
-/// Vyzvi kamaráda na hru s pálkami do pěti bodů. Míček se má pohybovat při rozehrané výměně a zastavit,
-/// jakmile je znám vítěz.
+/// Souboj dvou lidí už funguje. Proměň ho v tréninkového partnera, kterého lze porazit, a hledej
+/// situace, kdy jednoduchý soupeř překvapí.
 ///
-/// **Tvoje mise:** Hra se dál pohybuje i po určení vítěze, protože zastavovací podmínka neodpovídá
-/// žádnému běžnému state (stavu) hry. Oprav povolení aktualizace včetně hranice dokončeného zápasu.
+/// **Tvoje mise:** Zařiď, aby B přepínalo pravou pálku mezi člověkem a botem. Bot sleduje současný
+/// míček, jde k němu rychlostí 3 pixely za tick a stojí, je-li míček do 8 pixelů od středu pálky.
+/// Člověku zůstává rychlost 5 pixelů. Předpověz, zda pomalejší bot vždy prohraje, a hrou svou
+/// hypotézu prověř.
 ///
-/// **Dnes trénuješ:** Tick (časový krok) závisí na lifecycle state (stavu životního cyklu) hry. Značka
-/// winner rozhoduje, zda krok smí posunout pálky a míček; kreslení má zůstat možné i po konci hry.
+/// **Zkoumání:** Vyslov hypotézu o jednoduchém soupeři, potom jej vytvoř a zapoj.
 ///
-/// Po spuštění programu stiskni Space nebo klikni pro start; levou pálku ovládej W/S a pravou
-/// Up/Down. První s pěti body vyhrává; R obnoví začátek a čeká na další start.
-void step() {
-    if (winner != 0) return;
-    leftY = clampPaddle(leftY + (leftDown ? 5 : 0) - (leftUp ? 5 : 0));
-    rightY = clampPaddle(rightY + (rightDown ? 5 : 0) - (rightUp ? 5 : 0));
-    ballX += velocityX;
-    ballY += velocityY;
-    if (ballY < RADIUS) {
-        ballY = RADIUS;
-        velocityY = Math.abs(velocityY);
-    }
-    if (ballY > HEIGHT - RADIUS) {
-        ballY = HEIGHT - RADIUS;
-        velocityY = -Math.abs(velocityY);
-    }
-    if (velocityX < 0 && ballX - RADIUS <= 36 && ballX + RADIUS >= 24
-            && ballY + RADIUS >= leftY && ballY - RADIUS <= leftY + PADDLE) {
-        bounce(1, leftY);
-    }
-    if (velocityX > 0 && ballX + RADIUS >= WIDTH - 36 && ballX - RADIUS <= WIDTH - 24
-            && ballY + RADIUS >= rightY && ballY - RADIUS <= rightY + PADDLE) {
-        bounce(-1, rightY);
-    }
-    if (ballX < -RADIUS) {
-        rightScore++;
-        serve(-1);
-    } else if (ballX > WIDTH + RADIUS) {
-        leftScore++;
-        serve(1);
-    }
-    if (leftScore >= 5) winner = 1;
-    if (rightScore >= 5) winner = 2;
-}
+/// Space nebo kliknutí spustí hru. W/S řídí levou pálku, Up/Down lidskou pravou. B volí soupeře, R
+/// obnovuje kolo. Vyhrává první s pěti body.
 
 // <editor-fold defaultstate="collapsed" desc="Tvoje další verze · volitelné">
 /// ### Udělej z toho vlastní věc
@@ -85,33 +54,74 @@ void step() {
 /// Předpověz: co od počátečního stavu udělá pořadí press, tick, press, tick?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
+// <editor-fold defaultstate="expanded" desc="Deník průzkumníka · vyložený příklad">
+/// ### Tick (krok) může použít pravidlo místo klávesy
 ///
-/// - `winner == -1` — Žádný běžný state (stav) zde nepoužívá -1: nula znamená neurčeného vítěze, jedna či
-///   dvě určuje vítěze.
-/// - `return;` — Předčasně opustí celý update (aktualizaci), takže vše pod ním přeskočí.
-/// - `leftScore >= 5` — Počet bodů alespoň pět ukončí zápas vítězstvím levého hráče.
+/// Input event (vstupní událost) zaznamená volbu; tick použije současnou volbu při pohybu model. Bot
+/// může rozhodnutí vypočítat na stejné hranici a nemusí předstírat stisky kláves.
 ///
-/// ### Co už obstarává připravená část
+/// ```java
+/// int direction(double target, double centre) {
+///     if (Math.abs(target - centre) <= 2) return 0;
+///     return target > centre ? 1 : -1;
+/// }
+/// ```
 ///
-/// Připravená kontrola srážek odráží míček od stěn a pálek; serve po bodu zahájí novou výměnu. Keyboard
-/// flag (příznaky kláves) posouvají pálky; restart obnoví skóre i značku neurčeného vítěze.
+/// Tento nezávislý příklad vrací 0 pro target 11 a centre 10, ale +1 pro target 15. Předpověz target
+/// 6. Klidový interval brání cukání poblíž cíle. Direction (směr) násob rychlostí až při změně pozice
+/// a výsledek omez na platný rozsah. Policy (pravidlo) rozhoduje, tick pohybuje. Finished-game guard
+/// (ochrana hotové hry) musí zůstat před pohybem člověka i bota.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Winner má hodnoty 0, 1 a 2.
+/// Hledej změnu rightY, ne kreslení pálky. Porovnej obě pálky při jednom kroku.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Stop guard (podmínka zastavení) patří před pálky, míč i skóre.
+/// botDirection může vrátit -1, 0 nebo +1. Dostává výšku míčku a horní okraj pálky; přičtení poloviny
+/// PADDLE dá střed.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Dokončený tick (časový krok) nezmění ani pálku s drženou klávesou.
+/// Při bot true použij botDirection s rychlostí 3; jinak zachovej pravé klávesy s rychlostí 5. Nech
+/// clampPaddle, ochranu vítěze a reset.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+// <editor-fold defaultstate="expanded" desc="Program k prozkoumání">
+void step() {
+    if (winner != 0) return;
+    leftY = clampPaddle(leftY + (leftDown ? 5 : 0) - (leftUp ? 5 : 0));
+    int direction = bot ? botDirection(ballY, rightY) : (rightDown ? 1 : 0) - (rightUp ? 1 : 0);
+    rightY = clampPaddle(rightY + direction * (bot ? 3 : 5));
+    ballX += velocityX;
+    ballY += velocityY;
+    if (ballY < RADIUS) {
+        ballY = RADIUS;
+        velocityY = Math.abs(velocityY);
+    }
+    if (ballY > HEIGHT - RADIUS) {
+        ballY = HEIGHT - RADIUS;
+        velocityY = -Math.abs(velocityY);
+    }
+    if (velocityX < 0 && ballX - RADIUS <= 36 && ballX + RADIUS >= 24
+            && ballY + RADIUS >= leftY && ballY - RADIUS <= leftY + PADDLE) {
+        bounce(1, leftY);
+    }
+    if (velocityX > 0 && ballX + RADIUS >= WIDTH - 36 && ballX - RADIUS <= WIDTH - 24
+            && ballY + RADIUS >= rightY && ballY - RADIUS <= rightY + PADDLE) {
+        bounce(-1, rightY);
+    }
+    if (ballX < -RADIUS) {
+        rightScore++;
+        serve(-1);
+    } else if (ballX > WIDTH + RADIUS) {
+        leftScore++;
+        serve(1);
+    }
+    if (leftScore >= 5) winner = 1;
+    if (rightScore >= 5) winner = 2;
+}
+
 final int WIDTH = 640, HEIGHT = 400, PADDLE = 80, RADIUS = 7;
 double leftY, rightY, ballX, ballY, velocityX, velocityY;
 int leftScore, rightScore, winner;
@@ -121,6 +131,7 @@ boolean leftUp, leftDown, rightUp, rightDown;
 void restart() {
     leftY = rightY = (HEIGHT - PADDLE) / 2.0;
     leftScore = rightScore = winner = 0;
+    bot = false;
     clearKeys();
     serve(1);
 }
@@ -162,7 +173,8 @@ void draw(Graphics g) {
     g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 28));
     g.drawString(leftScore + "    " + rightScore, WIDTH / 2 - 42, 38);
     g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14));
-    g.drawString("Left: W / S     Right: Up / Down     First to 5     R: restart", 98, HEIGHT - 12);
+    g.drawString("W/S: left    Up/Down: human right    B: opponent    R: restart", 32, HEIGHT - 24);
+    g.drawString(bot ? "Opponent: Bot (3 px/tick)" : "Opponent: Human (5 px/tick)", 32, HEIGHT - 8);
     if (winner != 0) {
         g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 28));
         g.drawString((winner == 1 ? "LEFT" : "RIGHT") + " WINS!  Press R", 150, HEIGHT / 2);
@@ -194,6 +206,7 @@ void showWindow() {
                 case KeyEvent.VK_S -> leftDown = pressed;
                 case KeyEvent.VK_UP -> rightUp = pressed;
                 case KeyEvent.VK_DOWN -> rightDown = pressed;
+                case KeyEvent.VK_B -> { if (pressed) toggleBot(); }
                 case KeyEvent.VK_R -> { if (pressed) { restart(); launched[0] = false; } }
             }
         }
@@ -225,6 +238,19 @@ void showWindow() {
     frame.setVisible(true);
     panel.requestFocusInWindow();
     timer.start();
+}
+
+boolean bot;
+
+void toggleBot() {
+    bot = !bot;
+    rightUp = rightDown = false;
+}
+
+int botDirection(double targetY, double paddleTop) {
+    double difference = targetY - (paddleTop + PADDLE / 2.0);
+    if (Math.abs(difference) <= 8) return 0;
+    return difference > 0 ? 1 : -1;
 }
 
 void main() {

@@ -1,32 +1,14 @@
 /// # L03.07 · Hanoi
 ///
-/// Přesuň tři disky z tyčky A na tyčku C, vždy pouze horní disk. Vymysli pořadí bez většího disku na
-/// menším a zjisti, jak blízko se dostaneš sedmi tahům.
+/// **Tvoje mise · Najdi nejkratší zakázanou sekvenci:** Pravidla věže už fungují. Najdi nejkratší
+/// dvoupokusovou demonstraci: první tah je platný; druhý zkouší položit větší kotouč na menší a
+/// odmítne se bez změny věže. Tyto dva příkazy ulož jako programovou demonstraci. Cílem není povolit
+/// zakázaný tah změnou ochrany.
 ///
-/// **Tvoje mise · Vynucuj pravidlo věže:** Věž přijímá větší disk na menším a odmítá některá neškodná
-/// položení. Oprav odmítající
-/// comparison (porovnání) v move před změnou kterékoli hromádky.
+/// Výchozí program funguje podle původních pravidel. Kontrola už očekává tvůj nový cíl.
 ///
-/// **Dnes trénuješ:** Ochrana před zakázaným stavem: popiš špatnou situaci v condition (podmínce) a vrať
-/// se bez provedení tahu. Prázdný cíl posuzuj odděleně od cíle s horním diskem.
-///
-/// Spusť program, zadej A B a potom znovu A B pro prohlédnutí zakázaného většího disku na
-/// menším; r obnoví původní věž.
-boolean move(int from, int to) {
-    if (won() || from < 0 || from > 2 || to < 0 || to > 2 || from == to || sizes[from] == 0) {
-        return false;
-    }
-    int disc = pegs[from][sizes[from] - 1];
-    if (sizes[to] > 0 && pegs[to][sizes[to] - 1] < disc) {
-        return false;
-    }
-    sizes[from]--;
-    pegs[from][sizes[from]] = 0;
-    pegs[to][sizes[to]] = disc;
-    sizes[to]++;
-    moves++;
-    return true;
-}
+/// Pátrej pomocí A B a dalších dvojic kolíků; r restartuje. D přehraje uložené příkazy na nové věži a
+/// vypíše moved/rejected. Počáteční demonstrace obsahuje jen jeden platný tah.
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F08">
 /// Guard (ochranná podmínka) odmítne požadavek před chráněnou prací. Nejdřív přečti odmítané případy
@@ -52,52 +34,55 @@ boolean move(int from, int to) {
 /// předpověz slot nula.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
-///
-/// - `won()` — Zeptej se připravené kontroly výhry, zda už hra skončila.
-/// - `sizes[from] == 0` — Odmítni prázdnou zdrojovou tyčku před pokusem přečíst její horní disk.
-/// - `&&` — Druhá část se ověřuje pouze při platné první části, takže u prázdného cíle nedojde ke čtení
-///   horního disku.
-/// - `pegs[to][sizes[to] - 1]` — Připravené úložiště uchovává horní disk tyčky na místě její současné
-///   velikosti minus jedna.
-/// - `> disc` — Toto se nyní ptá, zda je horní disk cíle větší než přesouvaný disk; rozmysli, zda právě
-///   to je zakázaná situace.
-/// - `return false;` — Odmítni před pozdějšími zápisy odebírajícími nebo vkládajícími disk.
-/// - `moves++;` — Započítej jeden přijatý tah po úpravě obou hromádek.
-///
-/// ### Co už obstarává připravená část
-///
-/// Pozdější část move už přesouvá jediný horní disk a upravuje velikost obou hromádek. reset obnoví
-/// hádanku tří disků; main vypisuje horní disk napravo a převádí písmena tyček na index (indexy)
-/// připraveného úložiště.
+// <editor-fold defaultstate="expanded" desc="Průzkum a pokus">
+/// Užitečný negativní příklad dojde ke skutečně zakázané situaci. Neexistující kolík je také
+/// neplatný, ale pravidlo velikosti neprokáže. Nejdřív hraj ručně a potom přehraj důkaz. Z guard
+/// (ochranné podmínky) vysvětli, proč jeden pokus projde a druhý skončí před zápisy. String může nést
+/// dva příkazy pomocí \n; připravené přehrávání převede data na tahy. Nový loop (cyklus) psát
+/// nemusíš.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
-/// Menší číslo kotouče znamená menší kotouč. Prázdný cíl nemá horní kotouč k porovnání. Operátor &&
-/// může přeskočit čtení vršku při sizes[to] rovném nule. Odmítnutý tah vrátí výsledek před změnou
-/// věží. Předpověz kotouč 3 na kotouč 1 a potom 1 na 3; který případ je zakázaný?
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · oblast hledání">
+/// Může být první tah zakázaný velikostí, jsou-li oba ostatní kolíky prázdné? Co se změní po přesunu
+/// nejmenšího kotouče?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · konkrétní cesta">
+/// D čte String vrácený z demonstration(). Každý řádek je jeden běžný příkaz. Guard (ochranu)
+/// zachovej.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná úprava · prozrazuje postup">
+/// Jedním platným příkladem je A B a potom A B. Konec řádku v uvozovkách zapiš pomocí \n.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
-/// Po zprovoznění sedmitahového řešení záměrně obrať pravidlo velikostí jako samostatnou variantu.
-/// Které tahy přestanou fungovat a dává původní cíl stále smysl? Vrať pravidlo a napiš vlastní
-/// sedmitahový návod pro kamaráda bez improvizování.
+/// Najdi jinou stejně krátkou demonstraci a potom delší, která ukáže stejnou ochranu. Požádej
+/// spolužáka, aby vyřadil zbytečné tahy a zachoval zakázanou situaci.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Čísla disků jsou velikosti: 1 je menší než 2.
-// </editor-fold>
+// <editor-fold defaultstate="collapsed" desc="Program · prozkoumej podle potřeby">
+String demonstration() {
+    return "A B\nA B";
+}
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Prázdný cíl musí přeskočit čtení svého horního disku.
-// </editor-fold>
+boolean move(int from, int to) {
+    if (won() || from < 0 || from > 2 || to < 0 || to > 2 || from == to || sizes[from] == 0) {
+        return false;
+    }
+    int disc = pegs[from][sizes[from] - 1];
+    if (sizes[to] > 0 && pegs[to][sizes[to] - 1] < disc) {
+        return false;
+    }
+    sizes[from]--;
+    pegs[from][sizes[from]] = 0;
+    pegs[to][sizes[to]] = disc;
+    sizes[to]++;
+    moves++;
+    return true;
+}
 
-// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Uvnitř ochrany neprázdného cíle odmítni targetTop < disc.
-// </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 int[][] pegs = {{3, 2, 1}, {0, 0, 0}, {0, 0, 0}};
 int[] sizes = {3, 0, 0};
 int moves;
@@ -122,7 +107,7 @@ boolean won() {
 void main() {
     IO.println("HANOI: move all three discs from A to C.");
     IO.println("Move only the top disc, never a larger disc onto a smaller one.");
-    IO.println("The top disc is the rightmost number on each peg.");
+    IO.println("The top disc is the rightmost number on each peg. D: replay your demonstration from a fresh tower.");
     boolean showState = true;
     while (true) {
         if (showState) {
@@ -145,6 +130,18 @@ void main() {
             showState = true;
             continue;
         }
+        if (input.equals("D") || input.equals("/D")) {
+            reset();
+            int attempt = 0;
+            for (String line : demonstration().lines().toList()) {
+                String[] pair = line.strip().toUpperCase(Locale.ROOT).split("\\s+");
+                boolean accepted = pair.length == 2 && pair[0].length() == 1 && pair[1].length() == 1
+                    && move(pair[0].charAt(0) - 'A', pair[1].charAt(0) - 'A');
+                IO.println("Demo " + (++attempt) + ": " + line + " -> " + (accepted ? "moved" : "rejected"));
+            }
+            showState = true;
+            continue;
+        }
         if (won()) {
             IO.println("Round finished. Press Enter or /r for a new round; /q quits.");
             continue;
@@ -158,8 +155,6 @@ void main() {
         }
     }
 }
-
-/// Připravené vstupní body: main, reset.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">

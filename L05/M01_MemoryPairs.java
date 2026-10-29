@@ -6,20 +6,24 @@ import java.awt.GridLayout;
 
 /// # L05.01 · MemoryPairs
 ///
-/// Otoč dvě karty a zapamatuj si, kde se skrývají jejich dvojice. Hra není fér, když různé karty ukazují
-/// stejný obrázek.
+/// Otáčej dvojice a pamatuj si, kde se skrývají jejich partneři. X-ray (rentgen) může pomoci
+/// začátečníkovi; rozhodnutí, co přesně odhalí, ale mění obtížnost hry.
 ///
-/// **Tvoje mise:** Žádná vybraná karta neodhalí líc. Sestav visible(index): vrať kartu na dané pozici,
-/// pokud je matched, first nebo second; jinak vrať skrytou značku nula. Různé pozice musí číst své
-/// vlastní hodnoty.
+/// **Tvoje mise:** Z vševědoucího X-ray (rentgenu) udělej hledání partnera. Při vybrané první kartě
+/// odhalí jen karty se stejnou hodnotou vedle běžně viditelných karet. Bez výběru neodhalí nic navíc.
+/// Vypnutí nebo další platně zahraná karta pomoc skryje. Nesmí samo označit pár, přidat pokus ani
+/// změnit balíček.
 ///
-/// **Dnes trénuješ:** Arrays (pole): související pole popisují stejné očíslované pozice. Přečti
-/// požadovanou pozici a zachovej pravidlo, které rozhoduje o jejím odkrytí.
+/// **Dnes se učíš:** Array lookup (čtení pole) převede vybranou pozici na hodnotu. Porovnání pozic je
+/// něco jiného než porovnání jejich uložených hodnot.
 ///
-/// Klikni na zakrytou kartu. Nehotové zobrazení ji stále skrývá, přestože už jde o první vybranou
-/// pozici. Nejdřív sestav pravidlo odhalení a potom zkoušej paměť.
+/// Vyber jednu kartu a zapni X-ray. Všimni si úniku skrytých hodnot. Vypni ho a v novém kole jej zkus
+/// ještě před výběrem karty.
 int visible(int index) {
     if (matched[index] || index == first || index == second) {
+        return cards[index];
+    }
+    if (xray && first >= 0 && cards[index] == cards[first]) {
         return cards[index];
     }
     return 0;
@@ -44,36 +48,32 @@ int visible(int index) {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
-/// Parallel arrays (související pole) používají stejné číslo pozice: cards[index] je líc,
-/// matched[index] říká, zda už byla nalezena dvojice. first a second ukládají právě vybrané pozice.
+/// View (zobrazení) může prozradit informaci bez změny pravidel párování. Sleduj zvlášť klik na kartu a
+/// X-ray: který volá play a který jen obnovuje popisky?
 ///
-/// | cards | first | žádaný index | matched zde | odpověď |
-/// | --- | --- | --- | --- | --- |
-/// | 2, 5, 2, 5 | 1 | 0 | false | 0 |
-/// | 2, 5, 2, 5 | 1 | 1 | false | 5 |
-/// | 2, 5, 2, 5 | 1 | 2 | true | 2 |
-///
-/// Jedním rozhodnutím odliš veřejné líce od skrytých. Při odhalení musí žádaný index vybrat oba
-/// související údaje. Předpověz poslední pozici při second 3. Dvojice a tahy obstarává připravený kód;
-/// visible pouze odpovídá, co lze ukázat.
+/// U jiných cards [7, 3, 7, 5] obsahuje vybraná pozice 2 hodnotu 7; partner je tedy na pozici 0. Pozice
+/// 2 a hodnota 7 nejsou zaměnitelné. Předpověz partnera při výběru pozice 1. Žádný výběr označuje -1;
+/// tento marker (značku) nelze použít jako index (pořadové číslo) pole. Zachovej běžné odhalování
+/// vybraných a spárovaných karet.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Vypiš tři nezávislé důvody pro viditelnou kartu.
+/// Sleduj tlačítko k pravidlu zobrazení hodnoty, nikoli ke změně karet.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Platí-li některý důvod, čti cards na žádaném indexu; jinak ponech nulu.
+/// visible už řeší běžnou viditelnost. Větev xray nyní odhalí každé cards[index]; first je vybraná
+/// pozice.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Spoj matched[index], first a second pomocí OR a vrať vybranou kartu nebo skrytou značku.
+/// Odhalení navíc povol jen při platném first a shodě cards[index] s cards[first]. Zachovej běžnou
+/// viditelnost i skrytou nulu.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
-/// Vytvoř beacon card (orientační kartu): jedna zvolená pozice zůstane viditelná i před výběrem. Přidej
-/// tuto podmínku k odhalování a zvol místo, které pomůže začátečníkovi bez odkrytí všech dvojic.
-/// Vysvětli, které karty zůstávají soukromé.
+/// Navrhni jinou férovou pomoc, třeba odhalení jediného partnera po dvou chybných pokusech. Vysvětli,
+/// co prozradí a co musí zachovat.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
@@ -81,6 +81,7 @@ int[] cards = new int[12];
 boolean[] matched = new boolean[12];
 int first = -1;
 int second = -1;
+boolean xray;
 int attempts;
 int pairs;
 JButton[] buttons = new JButton[12];
@@ -100,6 +101,7 @@ void reset(long seed) {
     matched = new boolean[12];
     first = -1;
     second = -1;
+    xray = false;
     attempts = 0;
     pairs = 0;
 }
@@ -109,6 +111,7 @@ boolean play(int index) {
     if (index < 0 || index >= cards.length || matched[index] || index == first || index == second || pairs == 6) {
         return false;
     }
+    xray = false;
     if (second != -1) {
         first = -1;
         second = -1;
@@ -140,7 +143,7 @@ void refresh() {
     String guidance = pairs == 6 ? "All pairs found!" : second != -1
             ? "Not a match: click another covered card." : first != -1
             ? "Choose a second card." : "Find matching pairs.";
-    status.setText("<html>" + guidance + "<br>Pairs: " + pairs + "/6. Attempts: " + attempts + "</html>");
+    status.setText("<html>" + guidance + "<br>X-ray: " + (xray ? "on" : "off") + ". Pairs: " + pairs + "/6. Attempts: " + attempts + "</html>");
 }
 
 /// show(): Dodané pozdější téma: Swing callbacks tlačítek volají model a obnovují jeho zobrazení.
@@ -165,7 +168,15 @@ void show() {
     });
     frame.add(status, BorderLayout.NORTH);
     frame.add(grid, BorderLayout.CENTER);
-    frame.add(restart, BorderLayout.SOUTH);
+    var peek = new JButton("X-ray on / off");
+    peek.addActionListener(event -> {
+        xray = !xray;
+        refresh();
+    });
+    var actions = new JPanel();
+    actions.add(peek);
+    actions.add(restart);
+    frame.add(actions, BorderLayout.SOUTH);
     refresh();
     frame.setSize(470, 350);
     frame.setLocationByPlatform(true);

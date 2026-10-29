@@ -9,24 +9,15 @@ import javax.swing.Timer;
 
 /// # L02.03 · BouncingBalls
 ///
-/// Vhoď do místnosti několik barevných míčků a sleduj, jak jejich pohyb mění gravitace a odrazy od
-/// stěn. Porovnávej jemné a prudké hody.
+/// **Tvoje mise · Hackni fyziku stěn:** Vytvoř dokonale pružné boční stěny a strop: při odrazu se
+/// zachová celá velikost příchozí rychlosti v daném směru a směr se obrátí. Najdi jejich společný
+/// výpočet ztráty rychlosti. Podlahu s vlastním tlumením, gravitaci i házení myší zachovej.
 ///
-/// **Tvoje mise · Sestav odraz:** Sestav bounceSpeed ve dvou krocích: najdi trojnásobek dodané velikosti a potom
-/// vrať čtvrtinu mezivýsledku. Pro 8 i -8 musí vyjít velikost 6; nula zůstává nulou. Zde nevybírej
-/// směr.
+/// Výchozí program funguje podle původních pravidel. Kontrola už očekává tvůj nový cíl.
 ///
-/// **Dnes trénuješ:** Desetinná arithmetic (aritmetika): seskupení může provést celočíselné dělení před
-/// násobením. Porovnej celočíselný a desetinný poměr a potom předpověz zachovanou rychlost míčku
-/// přilétajícího rychlostí 4.
-///
-/// Spusť program, tažením do strany hoď míček na stěnu a sleduj odraz; Space místnost pozastaví
-/// a R ji vyprázdní.
-double bounceSpeed(double speed) {
-    double magnitude = Math.abs(speed);
-    double retained = magnitude * 3;
-    return retained / 4;
-}
+/// Hoď míč stranou ke stěně; Space pozastaví a R vyprázdní místnost. Porovnej pohyb před úpravou a po
+/// ní. Obrázek ukazuje pohyb, nikoli číselné rychlosti; Check porovná přesné hodnoty při srážkách
+/// odděleně od gravitace mezi nimi.
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F04">
 /// Arithmetic (aritmetika) používá operand type (typy operandů) v okamžiku provedení operace. Jsou-li
@@ -51,40 +42,37 @@ double bounceSpeed(double speed) {
 /// Nyní předpověz všechny tři výsledky, pokud pages obsahuje devítku.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Sleduj tři pojmenované hodnoty
-///
-/// `speed` je příchozí hodnota se znaménkem. `magnitude` znaménko odstraní. `retained` pojmenuje
-/// mezivýsledek, který sestavíš. Vrať konečnou ponechanou velikost; neměň speed ani míč. Připravená
-/// obsluha stěn použije výsledek se správným znaménkem.
+// <editor-fold defaultstate="expanded" desc="Průzkum a pokus">
+/// Jeden výpočet odpovídá na velikost zbývající rychlosti a jeho callers (volající) vybírají směr.
+/// Sleduj srážku a odděl tyto role. Strop tento výpočet sdílí s bočními stěnami; podlaha má vlastní
+/// pravidlo. Math.abs vrací nezápornou velikost: Math.abs(-6) i Math.abs(6) dává 6. Polovina
+/// velikosti 8 je 4. Předpověz podíl ponechaný pružnou stěnou. Připravené srážky už řeší polohy a
+/// znaménka.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
-/// Odděl velikost a znaménko. Math.abs(-8) je 8; ponechaná polovina má velikost 4. Připravená levá a
-/// pravá stěna samy zvolí znaménko odchozí rychlosti. Local variable (místní proměnná) může
-/// pojmenovat mezivýpočet, abys jej mohl předpovědět před vrácením výsledku. Jakou velikost zachová
-/// čtvrtina z 12?
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · oblast hledání">
+/// Větve stěn prohledej kvůli jejich společnému výpočtu.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · konkrétní cesta">
+/// Obě se ptají bounceSpeed na velikost; jejich assignment (přiřazení) vybírají znaménko.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná úprava · prozrazuje postup">
+/// Z bounceSpeed vrať Math.abs(speed), aby se velikost neztrácela. Volající zachovej.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
-/// Změnou ponechaného podílu vytvoř téměř pružnou a velmi měkkou místnost. Porovnej stejný boční hod.
-/// Směr nech na připraveném kódu stěn: experiment mění ztrátu rychlosti, nikoli stranu, kam se míč
-/// odrazí.
+/// Vytvoř záměrně měkkou místnost a potom vrať pružné pravidlo. Pro stejnou příchozí hodnotu
+/// vysvětli, která číselná změna předpovídá jiný odraz.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// magnitude už uchovává nezápornou velikost rychlosti.
-// </editor-fold>
+// <editor-fold defaultstate="collapsed" desc="Program · prozkoumej podle potřeby">
+double bounceSpeed(double speed) {
+    return Math.abs(speed);
+}
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Násobení a následné dělení musí zachovat desetinnou část.
-// </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Do retained ulož magnitude * 3 a vrať retained / 4.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 final int WIDTH = 640, HEIGHT = 440;
 
 record Ball(double x, double y, double vx, double vy, Color colour) {
@@ -254,8 +242,6 @@ void main() {
     restart();
     SwingUtilities.invokeLater(this::showWindow);
 }
-
-/// Připravené vstupní body: main, restart, draw, showWindow.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">

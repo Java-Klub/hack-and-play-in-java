@@ -5,18 +5,14 @@ import java.awt.image.BufferedImage;
 
 /// # L01.08 · SunflowerSpiral
 ///
-/// Vypěstuj slunečnicové uspořádání z tisíce barevných bodů. Malá změna úhlu mezi body může proměnit
-/// spirálu v několik ramen.
+/// **Tvoje mise · Vystopuj recept obrázku:** Fungující obrázek používá mezi semínky půlotáčku. Najdi,
+/// kde jeho spouštěcí recept vybírá úhel, a nastav běžné spuštění na 137.5 stupně. Souřadnicový
+/// vzorec zachovej. Potom sleduj předání vybrané hodnoty do kreslení a do souřadnic jednoho semínka.
 ///
-/// **Tvoje mise · Nalaď obrazový nástroj:** Výchozí obrázek se smrskne do dvou ramen. Oprav defaultAngle
-/// tak, aby běžné spuštění
-/// používalo 137.5 stupně a rozložilo semínka do spirály.
+/// Výchozí program funguje podle původních pravidel. Kontrola už očekává tvůj nový cíl.
 ///
-/// **Dnes trénuješ:** Named numeric value (pojmenovaná číselná hodnota): srozumitelné jméno spojuje
-/// jediný zvolený úhel s pozdějším obrázkem. double dokáže uložit i část stupně, například polovinu.
-///
-/// Spusť program: obrázek se ihned objeví v Java okně.
-double defaultAngle = 137.5;
+/// Spusť obrázek; po úpravě zavři okno a spusť znovu. Porovnej výchozí dva paprsky s novou
+/// rozptýlenou květinou.
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F03">
 /// Variable (proměnná) pojmenuje uloženou hodnotu. Type (typ) popisuje přípustné hodnoty: `int`
@@ -40,52 +36,36 @@ double defaultAngle = 137.5;
 /// Nyní předpověz konečné charge, pokud počáteční přiřazení použije šest místo čtyř.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
-///
-/// - `double` — Numeric type (číselný typ), který uchová desetinnou část i celé hodnoty jako 180.
-/// - `defaultAngle` — Jméno úhlu používaného při běžném spuštění s výchozími hodnotami.
-/// - `=` — Dej této pojmenované hodnotě výchozí číslo z pravé strany.
-/// - `180` — Současný úhel otočí bod o polovinu kruhu, takže další body střídají směry.
-/// - `;` — Declaration (zavedení hodnoty) zde končí; pozdější kreslicí část čte uložený úhel.
-///
-/// ### Co už obstarává připravená část
-///
-/// position vypočítá polohu každého bodu, render je obarví a připravené okno ukáže výsledek přímo.
-/// main předá tvou výchozí hodnotu připravené matematice; vzorec spirály nemusíš přepisovat.
+// <editor-fold defaultstate="expanded" desc="Průzkum a pokus">
+/// Sleduj hodnoty místo učení vzorce nazpaměť. Začni u main a sleduj call (volání), které žádá
+/// obrázek. Jméno může předat zvolené číslo několika method (metodám). Neutrální příklad:
+/// `show(size)` dodá současnou hodnotu size, nikoli slovo "size". Fractional literal (desetinný
+/// literál) používá tečku. Před úpravou předpověz, zda se úhel volí jednou při spuštění, nebo zvlášť
+/// zapisuje pro každý bod.
 // </editor-fold>
 
-// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
-/// Program vytvoří obrázek v paměti a zobrazí jej přímo v Javě. Zvolený úhel je ve stupních; Java
-/// zapisuje desetinná čísla tečkou. Po změně defaultAngle znovu spusť soubor, aby se nová hodnota
-/// načetla. Kontrola hry kontroluje chování, nikoli zastaralý obrázek v dřívějším okně.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · oblast hledání">
+/// Najdi žádost o obrázek, nikoli výpočty sinu a kosinu.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
-/// Double literal (desetinný literál) používá tečku: 12.5. Čárka v Java source (zdrojovém kódu) není
-/// jiný desetinný oddělovač. Jméno defaultAngle uchovává jednu hodnotu, kterou čtou pozice mnoha
-/// bodů. Malá číselná změna může mít velký vizuální účinek, protože se promítne do mnoha bodů.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · konkrétní cesta">
+/// showPicture předává pojmenovaný úhel do render. Sleduj toto jméno k jeho initialization
+/// (počátečnímu přiřazení).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná úprava · prozrazuje postup">
+/// Field (pole objektu) defaultAngle začíná na 180. Toto jediné přiřazení změň na 137.5.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
-/// Po obnovení 137.5 zkus úhly 120, 137 a 137.6. Před každým spuštěním tipni paprsky nebo rozptýlený
-/// vzor. Jeden obrázek vyber jako mimozemskou květinu a kamarádovi předej jeho úhel jako recept;
-/// obrázek předem neukazuj.
+/// Zkus tři blízké hodnoty a kamarádovi dej číselný recept bez obrázku. Nech jej předpovědět paprsky
+/// nebo spirálu.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Současné otočení o 180 stupňů střídá pouze dva směry.
-// </editor-fold>
+// <editor-fold defaultstate="collapsed" desc="Program · prozkoumej podle potřeby">
+double defaultAngle = 137.5;
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Desetinný oddělovač v Javě je tečka.
-// </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Nastav double defaultAngle = 137.5; a znovu spusť program pro nový obrázek.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 double[] position(int index, double degrees) {
     double angle = Math.toRadians(degrees) * index;
     double radius = 7 * Math.sqrt(index);
@@ -134,8 +114,6 @@ void showPicture() {
 void main() {
     showPicture();
 }
-
-/// Připravené vstupní body: main, render.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">

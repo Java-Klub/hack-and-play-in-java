@@ -1,18 +1,13 @@
 /// # L01.06 · HigherOrLower
 ///
-/// Hádej, zda bude příští karta vyšší nebo nižší, a snaž se udržet sérii, než ji ukončí chybný odhad.
-/// Stejné karty ti dají další šanci bez trestu.
+/// **Tvoje mise · Najdi společné nastavení:** Z desetibodové vytrvalostní hry udělej sprint na tři
+/// správné odhady. Najdi nastavení, které řídí zobrazený cíl i výhru. Restart musí nový cíl zachovat;
+/// aktuální skóre nenahrazuj pevnou hodnotou.
 ///
-/// **Tvoje mise · Nastav společnou výzvu:** Automat slaví už po jediném správném odhadu. Oprav sdílený
-/// target tak, aby displej
-/// skóre i pravidlo výhry popisovaly kolo s deseti správnými odhady.
+/// Výchozí program funguje podle původních pravidel. Kontrola už očekává tvůj nový cíl.
 ///
-/// **Dnes trénuješ:** Named value (pojmenovaná hodnota): target uchovává jediný údaj, který může číst
-/// několik částí. Změna jedné initialization (inicializace) má udržet soulad vypsaného a skutečného cíle.
-///
-/// Spusť program, prohlédni Current card a klikni Higher pro vyšší nebo Lower pro nižší příští
-/// kartu. Výsledek i cíl zůstanou vidět; New round obnoví kolo.
-int target = 10;
+/// Přečti cíl v Java okně. Higher/Lower volí odhad a New round začíná znovu. Po úpravě ulož, zavři a
+/// znovu spusť program, aby obě místa používala nový source (zdrojový kód).
 
 // <editor-fold defaultstate="expanded" desc="Nová dovednost · F03">
 /// Variable (proměnná) pojmenuje uloženou hodnotu. Type (typ) popisuje přípustné hodnoty: `int`
@@ -36,54 +31,34 @@ int target = 10;
 /// Nyní předpověz konečné charge, pokud počáteční přiřazení použije šest místo čtyř.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
-///
-/// - `int` — Uložená hodnota je celé číslo vhodné pro počítání správných odhadů.
-/// - `target` — Anglické jméno označuje sdílený cíl; liší se od correct, skóre měnícího se během hry.
-/// - `=` — Ulož hodnotu vpravo pod jménem vlevo.
-/// - `1` — Současný numeric literal (doslovný zápis čísla) je jedna, což vysvětluje příliš krátké kolo.
-/// - `;` — Ukonči declaration (zavedení jména) a jeho initialization (výchozí přiřazení).
-///
-/// ### Co už obstarává připravená část
-///
-/// reset sestaví a zamíchá balíček. command provede odhad a čte target při rozhodnutí o výhře;
-/// Připravené okno čte stejný target pro popisek skóre. main poskytuje tlačítka a restart.
+// <editor-fold defaultstate="expanded" desc="Průzkum a pokus">
+/// Odděl zvolený cíl od měnícího se skóre. Variable (proměnnou) může číst několik akcí. Nejdřív
+/// hledej, kde okno popisuje úspěch, potom kde o něm hra rozhoduje. Jaký uložený údaj čtou obě místa?
+/// Balíček a odhady zachovej. Neutrální příklad: dvě cedule čtoucí `int limit = 4;` uvidí stejný
+/// limit; změna samotného vypsaného nápisu pravidlo nezmění.
 // </editor-fold>
 
-// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
-/// Defaultní main poskytuje karty a tlačítka přímo v Javě. Vyšší karta má větší hodnotu; Jack
-/// je 11, Queen 12, King 13 a Ace 14. Shodná karta nepočítá správný tip ani neprohrává. Cíl i
-/// počet správných tipů čtou stejný target. Po změně target ulož soubor, zavři staré okno a
-/// znovu spusť program; New round samo upravenou Javu nenačte.
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · oblast hledání">
+/// Hledej mezi uloženými herními hodnotami před stavbou okna.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Průchod hodnotami · zkus předpovědět">
-/// V `int lives = 3;` označuje int celočíselný type (typ), lives je vybrané jméno, = uloží hodnotu a
-/// ; ukončí statement (příkaz). Čtení lives jinde poskytne uloženou hodnotu; nekopíruje declaration
-/// (deklaraci). Zde je target jediný sdílený údaj. Co by se stalo, kdyby displej používal deset a
-/// ukončovací pravidlo tři?
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · konkrétní cesta">
+/// Najdi porovnání ukončující úspěšné kolo a sleduj jméno na jeho pravé straně.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná úprava · prozrazuje postup">
+/// Sdílený field (pole objektu) je target. Počáteční hodnotu nastav na 3; correct a reset ponech.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Tvoje vlastní verze · dobrovolně">
-/// Po zprovoznění desetibodové hry zvol krátký sprint pro kamaráda a delší vytrvalostní hru pro sebe.
-/// Měň jen target a ověř soulad zobrazeného cíle a ukončení. Je delší kolo napínavější, nebo jen
-/// přísnější?
+/// Připrav dvěma hráčům sprint a vytrvalostní verzi a porovnej četnost dokončení kola. Vysvětli, proč
+/// změna samotného skóre nepředstavuje nový cíl.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Najdi jedinou initialization (inicializaci) target nahoře.
-// </editor-fold>
+// <editor-fold defaultstate="collapsed" desc="Program · prozkoumej podle potřeby">
+int target = 3;
 
-// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Připravený displej i porovnání výhry už čtou target.
-// </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Změň int target = 1; na int target = 10;
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
 ArrayDeque<Integer> deck;
 int current;
 int correct;
@@ -185,8 +160,6 @@ void require(boolean valid) {
         throw new IllegalArgumentException("Invalid move or command.");
     }
 }
-
-/// Připravené vstupní body: main, reset, command.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">

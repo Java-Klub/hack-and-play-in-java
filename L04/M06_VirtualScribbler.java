@@ -13,21 +13,27 @@ import javax.swing.Timer;
 /// Nech neposedné pero rozvíjet kresbu po plátně a potom řiď jeho tah a roztěkanost. Zastav
 /// zajímavý vzor a prohlédni si ho před vyčištěním plátna pro další pokus.
 ///
-/// **Tvoje mise:** Akce burst nyní neposune pero ani jednou. Sestav for, který pro platné count 0–60
-/// zavolá step přesně countkrát. Zachovej připravené odmítnutí a pravidlo pauzy uvnitř step.
 ///
-/// **Dnes trénuješ:** Počítané opakování: vyber rozsah for podle počtu průchodů. Pro count rovné jedné
-/// musí tělo běžet jednou; pro nulu se nesmí provést vůbec.
+/// **Tvoje mise:** Změň Signature na opakovatelný čtvercový podpis: začni uprostřed, projeď čtyři rovné
+/// stejně dlouhé strany po šesti krocích pera a skonči pozastavený v počátku. Počítadlo ukáže 24.
+/// Dřívější drift (zatáčení), jitter (náhodné odchylky), poloha ani kresba podpis neovlivní. Kreslení i
+/// krokovací tlačítka už fungují.
 ///
-/// Klikni na 1 step a potom 12 steps. Tlačítka jednorázové dávky pozastaví automatické kreslení, takže
-/// lze porovnat viditelné Steps. Nehotový burst je ponechá na nule.
-void burst(int count) {
-    if (count < 0 || count > 60) {
-        return;
+/// **Dnes se učíš:** For loop (smyčka for) může opakovat malý program složený z více akcí. Call
+/// (volání) mění stav, ze kterého vyjde další akce.
+///
+/// Klikni na Signature, potom prozkoumej pero pomocí Space a šipek. Klikni znovu na Signature: současný
+/// recept dá novou přímku místo čtverce.
+void signature() {
+    restart();
+    drift = 0;
+    jitter = 0;
+    paused = false;
+    for (int side = 0; side < 4; side++) {
+        burst(6);
+        angle += Math.PI / 2;
     }
-    for (int i = 0; i < count; i++) {
-        step();
-    }
+    paused = true;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Připomenutí · F11">
@@ -53,44 +59,50 @@ void burst(int count) {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Jak číst tento kód">
-/// Guard (vstupní ochrana) už odmítá count mimo 0–60. Tvůj loop (smyčka) patří za něj; jeden průchod
-/// znamená jedno volání step.
+/// Opakovaná kresba je program, nikoli obrázkový soubor. Vypiš akce jedné strany a změnu potřebnou před
+/// další stranou; potom rozděl, co patří dovnitř opakování a co mimo něj.
 ///
-/// | count | potřebná volání | příklad hodnot počítadla |
-/// | --- | --- | --- |
-/// | 0 | 0 | žádná |
-/// | 1 | 1 | 0 |
-/// | 4 | 4 | 0, 1, 2, 3 |
-///
-/// Vol začátek, pokračování a posun společně. Poslední hodnota počítadla není počet průchodů. Před
-/// tlačítkem předpověz count 12. step obstarává plátno, náhodu a pauzu. oneShot dočasně povolí
-/// kreslení, zavolá tvůj burst a nechá automatické kreslení pozastavené; timer (časovač) používá tentýž
-/// burst pro plynulou hru.
+/// U jiného receptu se třemi částmi po dvou krocích postupuje počítadlo 0 → 2 → 4 → 6. Otočení mění
+/// směr, ale samo nekreslí krok. Předpověz počet pro pět takových částí. Sleduj skutečné tlačítko
+/// Signature k jeho akci a porovnej ji s krokovacími tlačítky.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Pro tuto hru">
-/// Před porovnáním počtů kreslení pozastav. Každé jednorázové tlačítko skončí s pauzou, i když běželo
-/// plynulé kreslení. Viditelné Steps jsou důkaz; fyziku pera měnit nemusíš.
+// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
+/// Pero ujede 2.2 pixelu za krok. angle měří směr v radians (radiánech): 0 doprava, Math.PI / 2 dolů,
+/// Math.PI doleva a 3 * Math.PI / 2 nahoru. Přičtení Math.PI / 2 znamená čtvrtotáčku. Nulové drift a
+/// jitter zachovají zvolený směr. paused true brání kreslení; restart vyčistí plátno a vystředí pero.
+/// Jde o existující hodnoty model (modelu), nikoli nové kreslicí API.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Před for napiš potřebné počty volání pro nulu, jedničku a čtyřku.
+/// Odděl přípravu, opakovanou stranu a závěrečné pozastavení. Které akce mají nastat jen jednou?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Každý průchod má provést jen step(); posun patří do záhlaví smyčky.
+/// Signature volá signature. burst kreslí požadovaný počet kroků; angle určuje směr, drift a jitter jej
+/// před krokem mění.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Počítadlo od nuly pod count dá count průchodů. Původní guard nech před smyčkou.
+/// Jednou resetuj, odstraň drift a jitter, čtyřikrát opakuj šest kroků a čtvrtotáčku, nakonec pozastav.
+/// Kreslení strany musí být povoleno.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Vlastní varianta">
-/// Navrhni pulzní rytmus: střídavé průchody zavolají step jednou a dvakrát. Před kreslením napiš stopu
-/// dávky se čtyřmi průchody. Rytmus pojmenuj a porovnej s původním jedním voláním na průchod.
+/// Vymysli druhý podpis se dvěma různými opakovanými motivy. Pojmenuj ho, před kreslením odvoď počet
+/// kroků a nech spolužáka rekonstruovat recept z kresby.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+void burst(int count) {
+    if (count < 0 || count > 60) {
+        return;
+    }
+    for (int i = 0; i < count; i++) {
+        step();
+    }
+}
+
 final int WIDTH = 640, HEIGHT = 450;
 
 BufferedImage canvas;
@@ -214,6 +226,14 @@ void showWindow() {
     var controls = new JPanel(new BorderLayout());
     controls.add(help, BorderLayout.NORTH);
     var buttons = new JPanel();
+    var stamp = new JButton("Signature");
+    stamp.setFocusable(false);
+    stamp.addActionListener(e -> {
+        signature();
+        panel.repaint();
+        panel.requestFocusInWindow();
+    });
+    buttons.add(stamp);
     for (int count : new int[]{1, 12}) {
         var button = new JButton(count == 1 ? "1 step" : "12 steps");
         button.setFocusable(false);

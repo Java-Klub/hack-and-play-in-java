@@ -7,80 +7,21 @@ import javax.swing.Timer;
 
 /// # L07.08 · MiniInvaders
 ///
-/// Dej lodi funkční zásah a vyčisti sestupující formaci mimozemšťanů. Jeden výstřel získá jeden zásah:
-/// míření a načasování tak mají smysl.
+/// Loď už bojuje poctivě: jedna střela zničí jednoho mimozemšťana. Uprav zbraň na řízený průrazný výboj
+/// pro dva cíle; nesmí se změnit v nekonečný vrtací laser.
 ///
-/// **Tvoje mise:** Vytvoř chybějící akci hitAlien(row, column). Živá střela při zásahu živého
-/// mimozemšťana odstraní cíl, spotřebuje střelu a přidá právě jeden bod. Pokud už je některý neaktivní,
-/// nic neměň. Připravený collision loop (opakování kontroly zásahu) dodává platné coordinates
-/// (souřadnice) a tuto akci volá při hraní.
+/// **Tvoje mise:** Každý nový výstřel musí přežít první odlišný zásah a skončit po druhém. Každý
+/// mimozemšťan boduje jednou; spotřebovaná střela neboduje a nový výstřel má čerstvou zásobu dvou
+/// zásahů. Zachovej pohyb, míření, konec a restart. Nejdřív sleduj běžnou jednorázovou životnost a
+/// potom najdi vznik i konec střely.
 ///
-/// **Dnes trénuješ:** Vytvoř celou akci, která zachová invariant (trvale platné pravidlo) napříč
-/// souvisejícími field (sdílenými proměnnými).
+/// **Dnes trénuješ:** Nahraď jeden invariant (trvale platné pravidlo) jiným: výboj má omezenou zásobu
+/// zásahů a její spotřeba musí odpovídat životnosti střely.
 ///
-/// Spusť program, řiď šipkami vlevo a vpravo a drž mezerník pro další střelu vždy po skončení
-/// předchozí.
-void hitAlien(int row, int column) {
-    if (!bulletActive || !aliens[row][column]) return;
-    aliens[row][column] = false;
-    bulletActive = false;
-    score++;
-}
+/// Řiď Left/Right a střílej Space; R začíná znovu. Miř do svislého sloupce. Před úpravou výstřel skončí
+/// na prvním mimozemšťanovi; potom sleduj, jak stejná střela odstraní druhého a zmizí.
 
-// <editor-fold defaultstate="collapsed" desc="Připomenutí · F25">
-/// ### Invariant (trvale platné pravidlo) přežije akci
-///
-/// Invariant je slib o platném state (stavu). Platí před tahem i po něm, ne až na konci hry. Představ
-/// si přesun svítících kamínků mezi nádobami:
-///
-/// ```java
-/// int violet = 6;
-/// int gold = 2;
-/// int amount = 3;
-/// if (amount >= 0 && amount <= violet) {
-///     violet -= amount;
-///     gold += amount;
-/// }
-/// IO.println(violet + gold);
-/// ```
-///
-/// Trace (průchod): z `(6, 2)` vznikne `(3, 5)`, součet ve výpisu zůstane 8. Oba assignment
-/// (přiřazovací příkazy) patří k jedné přijaté akci. Změna jediné nádoby by kamínky tiše vytvářela nebo
-/// mazala. Požadavek 9 neprojde guard (vstupní podmínkou) a nezmění ani jednu nádobu.
-///
-/// Nejdřív napiš slib: součet zůstává stejný, zásoba neklesá pod nulu nebo tvar nezůstane ve zdi. Potom
-/// vyjmenuj všechny field (sdílené proměnné), které musí akce změnit společně. Předpověz obě nádoby pro
-/// amount 0 a 7. Ve vlastní variantě smíš vymyslet jiná pravidla; musíš ale říct, jaký invariant pro ně
-/// platí.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst tuto část
-///
-/// `bulletActive` určuje, zda střela ještě existuje. `aliens[row][column]` určuje, zda existuje cíl.
-/// Jeden přijatý zásah musí změnit oba údaje i score (počet bodů) společně. Připravené step() obstará
-/// pohyb, míření, výstřel i konec. Jeho `break hit` ukončí hledání v tomto tick (kroku), nikoli
-/// životnost střely.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Které tři údaje se při přijatém zásahu mění společně?
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Pokud střela nebo cíl už neexistuje, vrať se před změnami.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Ověř oba živé state (stavy), odstraň cíl, spotřebuj střelu a jednou zvyš score (počet bodů).
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
-/// Navrhni záměrnou průraznou střelu se zásobou dvou zásahů. Nejdřív napiš nové pravidlo: jediná střela
-/// smí bodovat nejvýše na dvou různých mimozemšťanech.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+// <editor-fold defaultstate="expanded" desc="Program · prozkoumej pravidla">
 void step() {
     if (!state.equals("PLAY")) {
         return;
@@ -88,6 +29,7 @@ void step() {
     shipX = Math.max(16, Math.min(WIDTH - 16, shipX + (right ? 5 : 0) - (left ? 5 : 0)));
     if (fire && !bulletActive) {
         bulletActive = true;
+        hitsLeft = 2;
         bulletX = shipX;
         bulletY = SHIP_Y - 14;
     }
@@ -140,11 +82,20 @@ void step() {
     }
 }
 
+void hitAlien(int row, int column) {
+    if (!bulletActive || hitsLeft <= 0 || !aliens[row][column]) return;
+    aliens[row][column] = false;
+    score++;
+    hitsLeft--;
+    if (hitsLeft == 0) bulletActive = false;
+}
+
 final int WIDTH = 600, HEIGHT = 420, SHIP_Y = 388;
 final boolean[][] aliens = new boolean[3][5];
 double shipX, formationX, formationY, speedX, bulletX, bulletY;
 boolean left, right, fire, bulletActive;
 int score;
+int hitsLeft;
 String state;
 
 void clearKeys() {
@@ -162,6 +113,7 @@ void restart() {
     speedX = 1.2;
     bulletActive = false;
     score = 0;
+    hitsLeft = 0;
     state = "PLAY";
     clearKeys();
 }
@@ -287,6 +239,71 @@ void main() {
     SwingUtilities.invokeLater(this::showWindow);
 }
 // </editor-fold>
+
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F25">
+/// ### Invariant (trvale platné pravidlo) přežije akci
+///
+/// Invariant je slib o platném state (stavu). Platí před tahem i po něm, ne až na konci hry. Představ
+/// si přesun svítících kamínků mezi nádobami:
+///
+/// ```java
+/// int violet = 6;
+/// int gold = 2;
+/// int amount = 3;
+/// if (amount >= 0 && amount <= violet) {
+///     violet -= amount;
+///     gold += amount;
+/// }
+/// IO.println(violet + gold);
+/// ```
+///
+/// Trace (průchod): z `(6, 2)` vznikne `(3, 5)`, součet ve výpisu zůstane 8. Oba assignment
+/// (přiřazovací příkazy) patří k jedné přijaté akci. Změna jediné nádoby by kamínky tiše vytvářela nebo
+/// mazala. Požadavek 9 neprojde guard (vstupní podmínkou) a nezmění ani jednu nádobu.
+///
+/// Nejdřív napiš slib: součet zůstává stejný, zásoba neklesá pod nulu nebo tvar nezůstane ve zdi. Potom
+/// vyjmenuj všechny field (sdílené proměnné), které musí akce změnit společně. Předpověz obě nádoby pro
+/// amount 0 a 7. Ve vlastní variantě smíš vymyslet jiná pravidla; musíš ale říct, jaký invariant pro ně
+/// platí.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ### Pozoruj a sleduj tok
+///
+/// Ber projectile (střelu) jako krátký příběh: vznik, pohyb, přijatý dotyk a konec. Score (body) vzniká
+/// ze skutečného dotyku, nikoli z tick (kroku časovače). Odstraněný cíl už znovu zasáhnout nejde.
+/// Nejdřív najdi tyto události podle účinku a rozhodni, který state (údaj o stavu) má patřit aktuální
+/// střele. Counter (počítadlo) vyjádří omezenou zásobu bez změny geometrie formace.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Pokus a opakování">
+/// Pro srovnání před a po použij stejný sloupec. Zapiš, zda střela přežije jeden zásah, dva zásahy a
+/// minutí. Ověř jeden bod za odstraněný cíl a to, že restart nepřenese napůl spotřebovanou střelu do
+/// další bitvy.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Jediný nesmrtelný boolean (údaj ano/ne) nevyjádří právě dva dotyky. Popiš zásobu před každým
+/// přijatým zásahem i po něm.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Najdi vznik střely ze vstupu a akci při dotyku mimozemšťana. Čerstvá zásoba patří ke vzniku,
+/// spotřeba k dotyku.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Střela vzniká ve step a dotyk zpracovává hitAlien. Přidej counter (počítadlo) pro aktuální střelu,
+/// při výstřelu jej obnov, ubírej jen za živý cíl a při nule střelu ukonči. Restart tento state (stav)
+/// vynuluje.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Navrhni třízásahový náboj vykoupený dlouhou pauzou před dalším výstřelem. Rozhodni, jak hráč uvidí
+/// cenu této výhody místo pouhého zesílení zbraně.
+// </editor-fold>
+
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
 /// ## Neznámý zápis?

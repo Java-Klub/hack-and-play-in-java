@@ -8,91 +8,20 @@ import java.util.Arrays;
 
 /// # L08.07 · Bridges
 ///
-/// Propoj ostrovy jednoduchými nebo dvojitými mosty, dokud nebudou souhlasit počty. Vyzkoušej riskantní
-/// spojení a vrať ho zpět pro porovnání.
+/// Mostní hádanka má funkční jednorázový návrat. Změň jej na obousměrnou časovou lupu: opakovaně
+/// porovnávej poslední dvě podoby, než se rozhodneš pro trasu.
 ///
-/// **Tvoje mise:** Vrácení tahu obnoví stejné, už změněné pole mostů, takže se nic nevrátí. Oprav
-/// snapshot(), aby uchovalo počty mostů před úpravou.
+/// **Tvoje mise:** Po skutečné změně mostu musí každé U střídat podobu před a po změně, libovolně
+/// dlouho. Každý snapshot (snímek) zůstává nezávislý na dalších úpravách. Nová úprava vytvoří novou
+/// dvojici; R dvojici smaže a U potom nic nedělá. Zachovej pravidla hádanky i počty mostů.
 ///
-/// **Dnes trénuješ:** Copies and aliasing (kopie a sdílené odkazy): vrácení dalšího odkazu na pole
-/// nekopíruje jeho hodnoty. Uložený snapshot (snímek) musí přežít pozdější zápisy do pracovního stavu.
+/// **Dnes trénuješ:** Pomocí samostatných array copies (kopií polí) vyměňuj dvě hypotézy. Uložit starou
+/// hodnotu před nahrazením není totéž jako držet další alias (jméno stejného měnitelného pole).
 ///
-/// Spusť program, kliknutím na slabě vyznačené spojení změň počet mostů a klávesou U zkus tuto
-/// úpravu vrátit.
-int[] snapshot() {
-    return bridges.clone();
-}
+/// Klikni na jeden slabý spoj a několikrát stiskni U. Výchozí hra jej vrátí jednou; nová časová lupa
+/// při každém stisku střídá oba obrázky. R začíná znovu.
 
-// <editor-fold defaultstate="expanded" desc="Nová dovednost · F20">
-/// ### Druhé jméno není uložená minulost
-///
-/// Array variable (proměnná s polem) drží reference (odkaz) na array (pole). Assignment (přiřazení)
-/// kopíruje reference, takže dvě jména mohou dosáhnout na stejné měnitelné cell (prvky).
-///
-/// ```java
-/// int[] live = {1, 2};
-/// int[] shared = live;
-/// int[] saved = live.clone();
-/// live[0] = 7;
-/// IO.println(shared[0] + " / " + saved[0]);
-/// ```
-///
-/// Vypíše se `7 / 1`: shared sleduje změnu, saved má samostatné array. `clone()` kopíruje cell jediného
-/// array. U `int[][]` tyto cell obsahují reference na row (řádky). Kopie vnějšího array tedy stále
-/// sdílí row; potřebuješ také kopie row, mají-li jejich hodnoty přežít změny.
-///
-/// ```text
-/// shared ──→ [7,2] ←── live
-/// saved  ──→ [1,2]
-/// ```
-///
-/// Undo (návrat změny) potřebuje minulý state (stav), proto snapshot (snímek) vzniká před úpravou.
-/// Kopie po úpravě správně uloží nesprávný okamžik. Předpověz, co uvidí tři jména, když poslední
-/// assignment nahradíš `saved[0] = 9`. U List (seznamu) neměnných record (datových záznamů) stačí
-/// kopírovat členství: jednotlivým record nejdou přepsat components (složky).
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst právě tyto řádky
-///
-/// - `int[]` — Počty mostů jsou obyčejné hodnoty int v jednom array (poli), bez měnitelných vnořených
-///   řádků.
-/// - `snapshot()` — Volající očekává uložený stav modelu, nikoli nový viditelný herní tah.
-/// - `return bridges` — Vrací reference (odkaz) na současné pole; obě jména by viděla pozdější zápisy.
-///
-/// ### Co už obstarává připravená část
-///
-/// choose() před skutečnou změnou hrany ukládá snapshot (snímek). undo() ho jednou obnoví; crossing()
-/// poskytuje geometrii mostů a won() kontroluje počty i souvislost, takže tyto algoritmy zůstávají
-/// připravené.
-// </editor-fold>
-
-// <editor-fold defaultstate="expanded" desc="Pro tuto hru">
-/// ### Použij model právě zde
-///
-/// `snapshot()` se volá před změnou mostu. `int[] alias = bridges` sdílí živé array (pole); `clone()`
-/// vytvoří samostatné int cell (prvky). U neutrálního `{2,0}` po kopii a přepsání živého prvku na 1
-/// zůstane v kopii 2. Předpověz návrat po dvou změnách stejného mostu.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Přiřazení bridges jiné variable kopíruje referenci, nikoli buňky.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Jednorozměrná int[] obsahuje hodnoty; stačí jeden clone.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Vrať bridges.clone(); dodaná undo() potom obnoví nezávislý stav.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
-/// Vytvoř malou sestavu ostrovů se dvěma lákavými spoji; pomocí undo (návratu změny) vyzkoušej oba a
-/// vysvětli, který uvězní zbývající počty mostů.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+// <editor-fold defaultstate="expanded" desc="Program · prozkoumej pravidla">
 final int WIDTH = 470, HEIGHT = 420;
 
 Point[] islands = {new Point(0, 0), new Point(2, 0), new Point(4, 0), new Point(0, 2), new Point(4, 2), new Point(0, 4), new Point(2, 4), new Point(4, 4)};
@@ -154,6 +83,10 @@ boolean won() {
         }
     }
     return true;
+}
+
+int[] snapshot() {
+    return bridges.clone();
 }
 
 void choose(int x, int y) {
@@ -272,14 +205,79 @@ void main() {
 
 int[] previousBridges;
 
-/// undo(): Obnovuje právě jeden uložený snapshot modelu a spotřebuje možnost vrácení.
+/// undo(): Přepne zobrazenou podobu, pokud je dostupný dřívější model (stav hry).
 void undo() {
     if (previousBridges != null) {
+        int[] current = snapshot();
         bridges = previousBridges;
-        previousBridges = null;
+        previousBridges = current;
     }
 }
 // </editor-fold>
+
+
+// <editor-fold defaultstate="expanded" desc="Nová dovednost · F20">
+/// ### Druhé jméno není uložená minulost
+///
+/// Array variable (proměnná s polem) drží reference (odkaz) na array (pole). Assignment (přiřazení)
+/// kopíruje reference, takže dvě jména mohou dosáhnout na stejné měnitelné cell (prvky).
+///
+/// ```java
+/// int[] live = {1, 2};
+/// int[] shared = live;
+/// int[] saved = live.clone();
+/// live[0] = 7;
+/// IO.println(shared[0] + " / " + saved[0]);
+/// ```
+///
+/// Vypíše se `7 / 1`: shared sleduje změnu, saved má samostatné array. `clone()` kopíruje cell jediného
+/// array. U `int[][]` tyto cell obsahují reference na row (řádky). Kopie vnějšího array tedy stále
+/// sdílí row; potřebuješ také kopie row, mají-li jejich hodnoty přežít změny.
+///
+/// ```text
+/// shared ──→ [7,2] ←── live
+/// saved  ──→ [1,2]
+/// ```
+///
+/// Undo (návrat změny) potřebuje minulý state (stav), proto snapshot (snímek) vzniká před úpravou.
+/// Kopie po úpravě správně uloží nesprávný okamžik. Předpověz, co uvidí tři jména, když poslední
+/// assignment nahradíš `saved[0] = 9`. U List (seznamu) neměnných record (datových záznamů) stačí
+/// kopírovat členství: jednotlivým record nejdou přepsat components (složky).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ### Pozoruj a sleduj tok
+///
+/// Dvojice před/po potřebuje dvě samostatná array (pole). Představ si výměnu dvou papírových náčrtů:
+/// pokud jeden zahodíš dřív, než si jej uchováš, zpět jej nevyměníš. Sleduj, kdy klik ukládá dřívější
+/// plochu a kdy key (klávesa) žádá uloženou. Geometrii i kontrolu výhry do pokusu netahej.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Pokus a opakování">
+/// Přidej jeden most a odpočítej šest U: obrázky se musí střídat bez mizení nebo přibývání mostů. Při
+/// jedné podobě uprav jiný spoj a porovnej novou dvojici. Po restartu stiskni U: stará hádanka se nesmí
+/// vrátit.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Napiš A → B → A → B pro opakované U. Která podoba musí přežít první návrat?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Klik už ukládá samostatný snapshot (snímek). Prozkoumej cestu obnovy od key (klávesy) a okamžik, kdy
+/// zahazuje dřívější state (stav).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Najdi undo a previousBridges. Před obnovou předchozího array (pole) ulož nový snapshot aktuálních
+/// bridges; uložená aktuální podoba bude příští previous, místo jeho smazání.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Pomocí časové lupy porovnej dva lákavé spoje ve vlastní malé sestavě ostrovů. Vysvětli, která podoba
+/// ostrov uvězní a proč.
+// </editor-fold>
+
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
 /// ## Neznámý zápis?

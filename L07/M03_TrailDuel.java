@@ -7,81 +7,20 @@ import javax.swing.Timer;
 
 /// # L07.03 · TrailDuel
 ///
-/// Podělte se o klávesnici a veďte dvě svítící stopy, dokud někomu nedojde bezpečné místo. Chyba řízení
-/// za tebou nechá trvalou zeď.
+/// Obyčejný souboj stop funguje. Proklej oběma jezdcům ovládání čtvrtotáčkou a nauč se řídit takto
+/// upravený automat.
 ///
-/// **Tvoje mise:** Vytvoř directionFor(): W/Up znamená (0,-1), S/Down (0,1), A/Left (-1,0), D/Right
-/// (1,0). Pro jiné key (klávesy) vrať null. Oba jezdci nyní ignorují řízení.
+/// **Tvoje mise:** Otoč každý požadovaný směr po hodinách: Up/W posílá doprava, Right/D dolů, Down/S
+/// doleva a Left/A nahoru. Zachovej oba hráče, ignorování ostatních key (kláves) i zákaz okamžité
+/// otočky. Nejdřív ověř normální řízení a potom najdi, kde se key mění na směr.
 ///
-/// **Dnes trénuješ:** Vytvoř výběr výsledku ze zadaných case (větví); sleduj selector (vybíranou
-/// hodnotu) a return value (výsledek) odděleně od připravených herních změn.
+/// **Dnes trénuješ:** Sleduj value (hodnotu) od vstupu přes switch expression (výraz s výběrem). Měň
+/// překlad vstupu, nikoli svět kolizí.
 ///
-/// Spusť program a hrajte společně na jedné klávesnici, první člověk řídí pomocí W, A, S, D a
-/// druhý šipkami.
-Direction directionFor(int code) {
-    return switch (code) {
-        case KeyEvent.VK_W, KeyEvent.VK_UP -> new Direction(0, -1);
-        case KeyEvent.VK_S, KeyEvent.VK_DOWN -> new Direction(0, 1);
-        case KeyEvent.VK_A, KeyEvent.VK_LEFT -> new Direction(-1, 0);
-        case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> new Direction(1, 0);
-        default -> null;
-    };
-}
+/// Hrajte pomocí WASD a šipek; R začíná znovu. Před úpravou zkus Up z počáteční pozice. Po zásahu
+/// použij Right/D pro první zatočení dolů a porovnej předpověď se stopou.
 
-// <editor-fold defaultstate="collapsed" desc="Připomenutí · F09">
-/// ### Switch expression (výraz s výběrem) vybírá hodnotu
-///
-/// Expression (výraz) má hodnotu. Switch expression přečte selector (vybíranou hodnotu) a zvolí
-/// výsledek za odpovídající šipkou. `return` jej předá volajícímu. Nejdřív přečti tento malý výběr
-/// zvuku:
-///
-/// ```java
-/// String sound(int taps) {
-///     return switch (taps) {
-///         case 0 -> "silence";
-///         case 1, 2 -> "tap";
-///         default -> "drum";
-///     };
-/// }
-/// ```
-///
-/// Trace (průchod) pro `sound(2)`: selector je 2, společný case (větev) zahrnuje 2, výsledkem tedy je
-/// `"tap"`. Další case se neprovádí. Pro 7 neodpovídá žádný uvedený case, takže `default` dá `"drum"`.
-/// Semicolon (středník) uzavírá celý switch expression. Výsledky musí odpovídat return type (typu
-/// výsledku) uvedenému u method (metody).
-///
-/// Switch může stejně vybrat boolean, číslo nebo record (datový záznam). Sám automaticky nemění field
-/// (sdílenou proměnnou): vrátit navržený směr a uložit směr jsou dvě různé akce. Předpověz `sound(0)` a
-/// `sound(-1)` a najdi příslušný case.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
-/// ## Jak číst tuto část
-///
-/// `KeyEvent.VK_...` jsou JDK jména číselných key (kláves). Dvě key u jednoho case (větve) sdílí
-/// výsledek. `new Direction(dx, dy)` vytvoří připravený record (datový záznam) se dvěma components
-/// (složkami). Záporné y míří na obrazovce nahoru. Key handler (obsluha kláves) ignoruje null a zvlášť
-/// brání okamžité otočce.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
-/// Napiš čtyři změny coordinates (souřadnic) na malý kompas.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
-/// Spoj každou WASD key (klávesu) s odpovídající šipkou.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
-/// Pro každou dvojici vrať Direction a v default null; zde neměň trail grid (mřížku stop).
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
-/// Otoč jednomu hráči ovládání o čtvrt otáčky a handicap oznam. Dokážete domluvit spravedlivý začátek
-/// souboje?
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Hotové části hry · prozkoumej podle zájmu">
+// <editor-fold defaultstate="expanded" desc="Program · prozkoumej pravidla">
 final int WIDTH = 600, HEIGHT = 430;
 
 int[][] trail;
@@ -109,6 +48,16 @@ boolean blocked(int x, int y) {
 }
 
 /// turn(): Připraví vybranému hráči nejvýše jednu změnu směru bez obrácení.
+Direction directionFor(int code) {
+    return switch (code) {
+        case KeyEvent.VK_W, KeyEvent.VK_UP -> new Direction(1, 0);
+        case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> new Direction(0, 1);
+        case KeyEvent.VK_S, KeyEvent.VK_DOWN -> new Direction(-1, 0);
+        case KeyEvent.VK_A, KeyEvent.VK_LEFT -> new Direction(0, -1);
+        default -> null;
+    };
+}
+
 void turn(boolean first, int dx, int dy) {
     if (result != 0) {
         return;
@@ -239,6 +188,69 @@ void main() {
 record Direction(int dx, int dy) {
 }
 // </editor-fold>
+
+
+// <editor-fold defaultstate="collapsed" desc="Připomenutí · F09">
+/// ### Switch expression (výraz s výběrem) vybírá hodnotu
+///
+/// Expression (výraz) má hodnotu. Switch expression přečte selector (vybíranou hodnotu) a zvolí
+/// výsledek za odpovídající šipkou. `return` jej předá volajícímu. Nejdřív přečti tento malý výběr
+/// zvuku:
+///
+/// ```java
+/// String sound(int taps) {
+///     return switch (taps) {
+///         case 0 -> "silence";
+///         case 1, 2 -> "tap";
+///         default -> "drum";
+///     };
+/// }
+/// ```
+///
+/// Trace (průchod) pro `sound(2)`: selector je 2, společný case (větev) zahrnuje 2, výsledkem tedy je
+/// `"tap"`. Další case se neprovádí. Pro 7 neodpovídá žádný uvedený case, takže `default` dá `"drum"`.
+/// Semicolon (středník) uzavírá celý switch expression. Výsledky musí odpovídat return type (typu
+/// výsledku) uvedenému u method (metody).
+///
+/// Switch může stejně vybrat boolean, číslo nebo record (datový záznam). Sám automaticky nemění field
+/// (sdílenou proměnnou): vrátit navržený směr a uložit směr jsou dvě různé akce. Předpověz `sound(0)` a
+/// `sound(-1)` a najdi příslušný case.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Jak číst tento kód">
+/// ### Pozoruj a sleduj tok
+///
+/// Jde o tři různé otázky: která key (klávesa) přišla, jaký směr žádá a zda je nyní bezpečný. Sleduj
+/// jen první dvě. Record (datový záznam) může nést dvojici změn coordinates (souřadnic); pravidlo
+/// pohybu později rozhodne o přijetí. Screen y (svislá souřadnice obrazovky) roste dolů. Před hledáním
+/// nakresli čtyři šipky a otoč nákres na papíře.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Pokus a opakování">
+/// Zapiš běžnou úvodní zatáčku. Otoč papírový kompas, udělej jednu úpravu a po R zopakuj stejnou key
+/// (klávesu). Vyzkoušej oba způsoby řízení i nesouvisející key. Zdánlivě ignorovaný tah odliš od
+/// samostatného reversal guard (zákazu otočky).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 1 · první vodítko">
+/// Předpověz požadovaný výsledek každé šipky bez zdí. Stejná key (klávesa) musí stále patřit stejnému
+/// hráči.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Nápověda 2 · bližší pohled">
+/// Omez hledání na překlad vstupu: hledej čtyři společné key case (větve kláves), nikoli kreslení nebo
+/// array (pole) stop.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Možná oprava · prozrazuje postup">
+/// Najdi directionFor. Jeho switch vrací Direction record (datové záznamy). Otoč čtyři vracené dvojice;
+/// turn, vlastnictví key a default (záložní výsledek) zachovej.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Vlastní varianta · dobrovolně">
+/// Proklej řízení jen jednomu jezdci. Domluvte handicap a porovnejte dvě kola s prohozenými rolemi.
+// </editor-fold>
+
 
 // <editor-fold defaultstate="collapsed" desc="Malá mapa Javy · volitelné">
 /// ## Neznámý zápis?
