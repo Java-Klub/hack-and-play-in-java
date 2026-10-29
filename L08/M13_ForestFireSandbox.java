@@ -39,26 +39,29 @@ int[][] nextForest(int[][] before) {
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F26">
-/// ### Simultaneous updates: read one moment, build another
+/// ### One generation uses one shared past
 ///
-/// A simultaneous step gives every calculation the same old data. Write results into separate storage
-/// and publish that storage after finishing the whole pass. Otherwise an earlier write can silently
-/// become a later input, making traversal order part of the rule.
+/// A simultaneous update means every new cell reads the same old world. If you overwrite the old cells
+/// as you go, the next column may see a future that its neighbour never saw.
+///
+/// Consider a toy line: a cell turns on when it or its left neighbour was on. The left edge has an off
+/// neighbour. For old `[true,false,false]`, the next row must be `[true,true,false]`.
 ///
 /// ```java
-/// int[] tones = {2, 5, 9};
-/// int[] shifted = new int[tones.length];
-/// for (int i = 0; i < tones.length; i++) {
-///     shifted[i] = tones[(i + 1) % tones.length];
+/// boolean[] old = {true, false, false};
+/// boolean[] next = new boolean[old.length];
+/// for (int x = 0; x < old.length; x++) {
+///     next[x] = old[x] || (x > 0 && old[x - 1]);
 /// }
 /// ```
 ///
-/// The result is `[5,9,2]`; tones stays `[2,5,9]` because every read uses it unchanged. Would
-/// visiting the indices in reverse order change the result? The new array starts with zero values, so
-/// every required output must be deliberately computed. A copied snapshot and a new output buffer
-/// serve different roles.
+/// Why not three true cells? The third cell reads old[1], which is false, not the newly written
+/// next[1]. Old remains untouched, so visiting columns in reverse would give the same result. Publish
+/// the complete next row only after computing it.
 ///
-/// Here `% tones.length` wraps the index after the last element back to zero.
+/// Draw OLD above NEXT, with arrows from the cells read to the cell written. Predict the second
+/// generation. A two-dimensional world follows the same principle, with separate writable rows as well
+/// as a separate outer array.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
@@ -78,13 +81,12 @@ int[][] nextForest(int[][] before) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="For this game">
-/// ### Decide every output cell's next meaning
+/// ### Apply the model here
 ///
-/// This toy uses zero for empty, one for a tree and two for fire. A new int grid begins empty because
-/// its cells start at zero. The transition contract is: old empty cells stay empty; old fire
-/// disappears; an old tree stays a tree unless an old cardinal neighbour was burning. New fire can
-/// influence only the following generation. Draw a three-tree line with fire at one end and predict
-/// two separate steps. Which data must remain unchanged while the first step is being computed?
+/// States are 0=empty, 1=tree, 2=fire. For one generation, a tree burns only beside an old cardinal
+/// fire; old fire becomes empty and empty remains empty. Trace `[2,1,1]` away from other trees: one
+/// tick gives `[0,2,1]`, not a whole burning row. Use this prediction to check both clearing and
+/// delayed spreading.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -98,6 +100,11 @@ int[][] nextForest(int[][] before) {
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Allocate a fresh 40×60 next matrix; read only before and publish next once after every cell is
 /// computed.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Design a firebreak, ignite one end, and predict the stopped front. Then try an explicitly different
+/// eight-neighbour model on exactly the same forest.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

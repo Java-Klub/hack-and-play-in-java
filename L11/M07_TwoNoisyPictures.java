@@ -42,6 +42,14 @@ BufferedImage[] shares(BufferedImage secret, long seed) {
     return images;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Create a two-part invitation: put a short symbol in the secret mask and let a friend choose the
+/// seed. Compare two different seed pairs: only matching shares should make the intended overlay.
+/// Explain why the plain secret need not change with the seed.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Recall · F27">
 /// ### Seeded randomness: repeat an experiment
 ///

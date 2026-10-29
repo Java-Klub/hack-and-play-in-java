@@ -10,20 +10,26 @@ import java.awt.geom.Line2D;
 /// Untangle a web by dragging numbered nodes until its edges stop crossing. The circles and their
 /// connecting lines must agree about where each node really is.
 ///
-/// **Your mission:** A node’s circle swaps x and y while its label and edges use the proper position.
-/// Repair the drawing coordinates without moving the puzzle itself.
+/// **Your mission:** Create the missing node renderer. Draw a dark filled circle of radius 13 centred
+/// at point, then a white label at (point.x - 4, point.y + 4). Use the supplied Graphics2D; do not
+/// move point or alter the graph.
 ///
-/// **Today you learn:** Rendering turns model coordinates into visible marks. A circle’s top-left corner
-/// is offset from its centre, but x must still mean horizontal and y vertical.
+/// **Today you learn:** Implement rendering or coordinate conversion as an explicit sequence. Read
+/// the model, translate its values and draw or return a new point without advancing time.
 ///
 /// Run the program, then drag numbered nodes to uncross the web, or press R to scramble it
 /// again.
 void drawNode(Graphics2D g, Point point, int label) {
-    g.setColor(new Color(35, 55, 90));
-    g.fillOval(point.y - 13, point.x - 13, 26, 26);
-    g.setColor(Color.WHITE);
-    g.drawString("" + label, point.x - 4, point.y + 4);
+    // Draw the node and its label here. Read point; do not change it.
 }
+
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Give each node a personality: draw a square, ring or tiny face while keeping its centre and label
+/// readable. Try the same scrambled web with a friend; can the new marks improve finding the dragged
+/// node without changing the puzzle?
+// </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Learn · F29">
 /// ### Rendering: translate state into pixels
@@ -46,30 +52,30 @@ void drawNode(Graphics2D g, Point point, int label) {
 /// Predict: if only tileY becomes 4, which screen coordinate changes, and by how much?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// ### A drawing command has state too
 ///
-/// - `point.x` — The model’s horizontal coordinate; it should agree with edge endpoints.
-/// - `point.y` — The vertical coordinate, increasing downward on this screen.
-/// - `g.fillOval(point.y - 13, point.x - 13, 26, 26)` — fillOval expects left, top, width and height;
-///   subtracting 13 centres a 26-pixel circle.
+/// Graphics2D remembers its current colour. `g.setColor(Color.RED); g.fillRect(10, 20, 8, 6);` paints
+/// a red rectangle whose upper-left corner is (10, 20). Changing the colour afterwards does not
+/// recolour that rectangle. Predict the colour of a second rectangle if no further setColor is
+/// called.
 ///
-/// ### What the prepared part already does
-///
-/// Dragging changes the real Point values; the supplied crossing check evaluates edges between those
-/// points. drawNode only paints one node, so its repair should not change layout or game rules.
+/// fillOval similarly takes left, top, width and height, not centre and radius. A circle of radius 5
+/// centred at (30, 40) therefore starts at (25, 35) and is 10 by 10. drawString positions the start
+/// of a text baseline. `"" + label` converts the number into text. The prepared draw loop calls
+/// drawNode for every point; dragging changes points elsewhere, painting only reads them.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// fillOval takes the top-left corner, not the centre.
+/// Choose the fill colour before drawing the circle and the text colour before drawing the label.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Subtract the radius from x and y independently.
+/// Convert centre/radius into the upper-left corner and a diameter.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Use an asymmetric point such as (120,70), not a diagonal point that hides swapped axes.
+/// Use setColor, fillOval, setColor, drawString in that order; both drawing positions read point.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

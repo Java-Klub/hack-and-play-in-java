@@ -8,88 +8,74 @@ import java.awt.image.BufferedImage;
 /// Make a maze postcard with a new layout from each seed. Its width changes how much twisting corridor
 /// fits on the page.
 ///
-/// **Your mission:** A typo produces a tiny two-column maze instead of the promised default 20. Repair
-/// malformed-text handling while keeping the numeric 2–50 limit.
+/// **Your mission:** Build readColumns(text): accept integers 2–50 inclusive, plus case-insensitive
+/// aliases tiny=6 and wide=40 after stripping whitespace. Malformed text falls back to 20; readable
+/// out-of-range integers are rejected. The unfinished selector currently ignores every requested size
+/// and alias.
 ///
-/// **Today you learn:** Input recovery should have a precise contract: malformed text gets a deliberate
-/// default, while a parsed value still has to pass its bounds. A specific catch keeps these cases
-/// separate.
+/// **Today you learn:** Build a deliberate input boundary: distinguish conversion, validation and
+/// committing a live setting.
 ///
-/// Run the program, then enter a column count 2–50 or try oops; read Chosen value and inspect
-/// the Java picture. Close it and run the program again for another input.
+/// Run the program and enter tiny, wide, or a number 2–50; try oops for the fallback. Read Chosen
+/// value, inspect the picture, then close it and rerun to compare.
 int readColumns(String text) {
-    try {
-        int columns = Integer.parseInt(text.strip());
-        if (columns < 2 || columns > 50) throw new IllegalArgumentException("Columns: 2..50.");
-        return columns;
-    } catch (NumberFormatException invalid) {
-        return 2;
-    }
+    return 20;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F31">
-/// ### Parse, validate, then commit
+/// ### Text conversion and valid values are different questions
 ///
-/// Parsing converts text; validation checks whether the resulting number is allowed. These can fail
-/// differently.
+/// A number field starts as text. Conversion can fail because no number was written; validation can
+/// reject a perfectly readable number. Decide the two policies separately.
 ///
 /// ```java
-/// int readCopies(String text) {
+/// int readZoom(String text) {
 ///     try {
-///         int n = Integer.parseInt(text.strip());
-///         if (n < 1 || n > 5) {
-///             throw new IllegalArgumentException("Copies: 1..5");
-///         }
-///         return n;
-///     } catch (NumberFormatException invalid) {
-///         return 3;
+///         int zoom = Integer.parseInt(text.strip());
+///         if (zoom < 1 || zoom > 4) throw new IllegalArgumentException("Zoom: 1..4");
+///         return zoom;
+///     } catch (NumberFormatException typo) {
+///         return 2;
 ///     }
 /// }
 /// ```
 ///
-/// `readCopies(" 2 ")` returns `2`: conversion and validation succeed. `"oops"` fails during
-/// conversion and reaches `catch`, returning `3`. A numeric `"8"` converts successfully, then throws
-/// a different exception; this narrow catch does not handle it. `return` ends the method; `throw`
-/// leaves the normal path. Change stored game state only after validation succeeds.
+/// Trace `" 3 "`: strip removes surrounding whitespace, parseInt produces 3, bounds accept it. `"oops"`
+/// cannot convert, so catch returns 2. `"7"` converts successfully but fails validation; the explicitly
+/// thrown IllegalArgumentException leaves this method. Catching only NumberFormatException keeps those
+/// paths distinct.
 ///
-/// Predict the path for `"five"`, `"5"` and `"0"`.
+/// For a decimal, use Double.parseDouble; also consider NaN and infinity, which are readable but not
+/// finite numbers. For an interactive setting, parse into a local candidate before changing the stored
+/// field. Predict the path for `"0"`, `"two"` and `"4"`. Which inputs should preserve the previous live
+/// setting?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Read this part
 ///
-/// - `int columns` — Stores a whole number of maze columns; fractional input cannot become this integer.
-/// - `columns < 2 || columns > 50` — Either comparison can reject a parsed but unusable maze size.
-/// - `catch (NumberFormatException invalid)` — Selects the recovery path for malformed number text.
-/// - `return 2;` — This value currently becomes the maze width after a typo.
-///
-/// ### What the prepared part already does
-///
-/// main sends the typed columns to readColumns. The supplied stack-based generator builds bounded
-/// passages and render presents their walls directly in Java.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="For this game">
-/// ### A number can parse and still be rejected
-///
-/// For readColumns, `" 8 "` converts to 8 and returns normally. `"eight"` fails conversion and
-/// reaches the NumberFormatException catch. `"1"` converts to 1, then the explicit bounds check
-/// throws IllegalArgumentException, which is not handled by that specific catch. Trace `"2"` and
-/// `"50"` to confirm both endpoints are allowed. Then predict whether `"51"` and `"fifty"` follow the
-/// same path. The maze generator should receive either an accepted numeric width or the documented
-/// malformed-text default, not an arbitrary tiny width.
+/// Handle the named aliases before numeric parsing, or they would look like typos. equalsIgnoreCase
+/// compares text while ignoring letter case. Then apply the same conversion/validation split as a
+/// numeric-only field. A true numeric -1 must not become a default maze. The picture is generated from
+/// the returned column count.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// The fallback handles a conversion failure, not every invalid value.
+/// Recognise intentional words before deciding that nonnumeric text is malformed.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Keep the inclusive range guard outside the NumberFormatException case.
+/// Both aliases should ignore surrounding whitespace and letter case.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// main passes this result into the real generate call through render.
+/// Return the two named sizes first; then parse, validate 2–50, and catch only format failure for
+/// fallback 20.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Invent a third named postcard size, such as snake for a long narrow maze. State its numeric meaning
+/// and compare the actual path on your new shape.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

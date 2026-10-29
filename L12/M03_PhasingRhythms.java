@@ -6,18 +6,32 @@
 /// Layer two short rhythms that run at slightly different intervals. Their changing alignment creates new
 /// accents even though neither individual pattern changes.
 ///
-/// **Your mission:** Only the first voice reaches the mix. Restore a two-voice result at the same
-/// requested time without rewriting either voice’s sound.
+/// **Your mission:** Create makeVoice(beat, gain): its returned Voice must produce gain × tap(time,
+/// beat). Install two voices using (0.12, 1) and (0.13, 0.7). Keep the supplied mix combining both
+/// roles; change no playback code.
 ///
-/// **Today you learn:** Composition combines small roles through their shared interface. Both Voice
-/// values answer a time-to-sample question; the mixer combines their answers rather than knowing how each
-/// rhythm works.
+/// **Today you learn:** Author an implementation of a small interface and install it in the running
+/// program. Keep its calculation separate from input, updates and drawing.
 ///
 /// Run the program, then compare Play two voices with Play one voice in Java; listen for
 /// changing overlap, use Stop and replay after repairing mix.
-double mix(double time) {
-    return 0.17 * first.sample(time);
+Voice makeVoice(double beat, double gain) {
+    if (!Double.isFinite(beat) || beat <= 0 || !Double.isFinite(gain) || gain < 0 || gain > 1) {
+        throw new IllegalArgumentException("Positive beat; gain 0..1.");
+    }
+    return time -> 0;
 }
+
+Voice first = time -> 0;
+Voice second = time -> 0;
+
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Compose a miniature duet: choose the two beat intervals and gains, then alter the boolean rhythm
+/// for a recognisable repeated phrase. Compare a near-unison duet with equal intervals. Stop before
+/// changing it and replay from the beginning for a fair comparison.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F34">
 /// ### Interface: ask a role to do its job
@@ -45,33 +59,51 @@ double mix(double time) {
 /// award three times the input?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// ### Construct voices; keep the mixer ignorant of their recipes
 ///
-/// - `mix(double time)` — The caller asks for one combined sample at this particular instant.
-/// - `first.sample(time)` — Calls the installed first voice with the caller’s time.
-/// - `0.17 *` — Applies the output gain; consider which contributing voices should share it.
+/// Voice promises sample(time). makeVoice captures beat and gain, while time arrives later for every
+/// audio sample. The supplied tap calculates an individual rhythm. Your implementation applies gain
+/// to that result; it must not advance a shared clock or call playback.
 ///
-/// ### What the prepared part already does
+/// A neutral example:
 ///
-/// signal asks mix for each sample; first and second provide the two beat intervals. The only
-/// playback choices compare the current two-role mix with one voice, making the missing role
-/// audible.
+/// ```java
+/// DoubleUnaryOperator scale(double factor) {
+///     return x -> {
+///         double result = x * factor;
+///         return result;
+///     };
+/// }
+/// ```
+///
+/// The JDK DoubleUnaryOperator role maps one double to another. This factory creates scale(0.5),
+/// which maps 0.8 to 0.4. Predict the output for -0.6. A captured factor describes a particular rule,
+/// not a changing global input.
+///
+/// Here gain 0 gives silence; gain 1 preserves tap exactly. mix asks both stored Voice values at the
+/// same time and combines them at a safe level. Creating a factory but leaving first/second as silent
+/// lambdas keeps the game silent. Wire both, then compare equal beat intervals with the specified
+/// slight mismatch.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Voice describes a time-to-sample role.
+/// Delegate rhythm generation to tap(time, beat), then scale its result.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Do not call only the first field or use two different times.
+/// Return the lambda from makeVoice; do not call it during factory creation.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Keep the gain outside the sum so both replaceable voices get the same treatment.
+/// Replace both silent field initialisers with factory calls using the specified beat/gain pairs.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+double mix(double time) {
+    return 0.17 * (first.sample(time) + second.sample(time));
+}
+
 final int RATE = 22050;
 
 
@@ -100,8 +132,7 @@ double[] signal(double seconds) {
 }
 
 interface Voice { double sample(double time); }
-Voice first = time -> tap(time, 0.12);
-Voice second = time -> tap(time, 0.13);
+
 
 volatile javax.sound.sampled.SourceDataLine playingLine;
 volatile int playbackVersion;

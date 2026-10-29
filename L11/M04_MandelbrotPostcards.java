@@ -8,29 +8,28 @@ import java.awt.image.BufferedImage;
 /// Send a postcard from the edge of the Mandelbrot set, where changing scale reveals new detail. Seeds
 /// should give the same landscape different, repeatable colour moods.
 ///
-/// **Your mission:** Every seed produces the same palette because colour randomness always starts at
-/// zero. Restore the requested seed without changing the fractal calculation.
+/// **Your mission:** Create palette: build 16 bright colours with one Random created from seed. Each
+/// colour uses the next random integer hue from 0 through 359, divided by 360.0, with saturation 0.8
+/// and brightness 1. Return the array for the supplied fractal renderer.
 ///
-/// **Today you learn:** A seeded Random gives a repeatable sequence rather than a unique sequence every
-/// run. Here one drawn hue controls the palette: equal seeds should agree and different seeds should be
-/// able to differ.
+/// **Today you learn:** Create one seeded random generator and consume a reproducible sequence while
+/// constructing a complete palette.
 ///
-/// Run the program, then type a seed or press Enter for 42; inspect the Java picture, then
-/// close it and repeat the same seed or try 43 to compare.
-BufferedImage render(long seed, double span) {
-    if (!Double.isFinite(span) || span <= 1.0E-5 || span > 6 || !Double.isFinite(centerX + centerY)) {
-        throw new IllegalArgumentException("Span must be 0.00001..6.");
-    }
-    var image = new BufferedImage(480, 360, BufferedImage.TYPE_INT_RGB);
-    float hue = new Random(0).nextFloat();
-    for (int y = 0; y < 360; y++) {
-        for (int x = 0; x < 480; x++) {
-            int n = escape(centerX + (x / 479.0 - 0.5) * span, centerY + (y / 359.0 - 0.5) * span * 0.75);
-            image.setRGB(x, y, n == 160 ? 0 : Color.HSBtoRGB(hue + n / 55.0F, 0.8F, 1));
-        }
-    }
-    return image;
+/// Run the program, then choose a palette seed and horizontal span, or press Enter for 42 and
+/// 3.2. Close the picture before rerunning. The same seed repeats the palette; span changes the view.
+int[] palette(long seed) {
+    int[] colours = new int[16];
+    // Create one seeded generator and fill every colour slot.
+    return colours;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Curate a two-card exhibition: choose a palette seed and a span for the whole set, then choose
+/// another span and centre near an edge. Record all four numbers, not just the seed. A palette
+/// changes colour; span and centre change which landscape is visible.
+// </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Learn · F27">
 /// ### Seeded randomness: repeat an experiment
@@ -55,33 +54,50 @@ BufferedImage render(long seed, double span) {
 /// Predict: which integers can `nextInt(3)` return, and can it return 3?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// ### Reproducibility is a sequence, not one nearly equal draw
 ///
-/// - `long seed` — The caller’s requested starting point for reproducible colour choices.
-/// - `new Random(0)` — Creates the same random sequence every time, ignoring the method’s seed parameter.
-/// - `nextFloat()` — Draws one hue offset from the chosen generator.
-/// - `n == 160 ? 0 :` — Keeps interior points black and colours the escaping points.
+/// Create one generator before filling the array. Each nextInt(360) advances it and returns 0..359.
+/// Recreating Random(seed) inside the loop would repeat its first hue in every slot. A neutral
+/// example: `var r = new Random(7); int a = r.nextInt(6); int b = r.nextInt(6);` makes two draws;
+/// another generator seeded 7 repeats the pair. It need not make a and b different. Predict what
+/// happens when only the second generator is seeded 8.
 ///
-/// ### What the prepared part already does
-///
-/// main reads one seed and calls render. The supplied escape calculation chooses the picture shape;
-/// the editable seeded colour rule determines its palette.
+/// HSBtoRGB converts hue, saturation and brightness into the packed colour expected by setRGB. The
+/// supplied renderer selects a palette slot from a point's escape count and keeps interior points
+/// black. The seed colours the landscape; it does not move it. span is the visible horizontal width
+/// and centreX/centreY locate its centre. Those are the controls for investigating a smaller region.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// The method already receives seed.
+/// Make the Random once, then traverse all 16 slots.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// A hard-coded seed makes every palette identical.
+/// Use nextInt(360); divide by a fractional 360 before converting HSB to RGB.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Create the palette Random from the parameter, once per render.
+/// Store one HSBtoRGB result per slot and return the completed array. The renderer already calls
+/// palette.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+BufferedImage render(long seed, double span) {
+    if (!Double.isFinite(span) || span <= 1.0E-5 || span > 6 || !Double.isFinite(centerX + centerY)) {
+        throw new IllegalArgumentException("Span must be 0.00001..6.");
+    }
+    var image = new BufferedImage(480, 360, BufferedImage.TYPE_INT_RGB);
+    int[] colours = palette(seed);
+    for (int y = 0; y < 360; y++) {
+        for (int x = 0; x < 480; x++) {
+            int n = escape(centerX + (x / 479.0 - 0.5) * span, centerY + (y / 359.0 - 0.5) * span * 0.75);
+            image.setRGB(x, y, n == 160 ? 0 : colours[n % colours.length]);
+        }
+    }
+    return image;
+}
+
 int escape(double x, double y) {
     double a = 0;
     double b = 0;
@@ -123,13 +139,18 @@ void showImages(String title, String[] captions, java.awt.image.BufferedImage[] 
 
 
 void main() {
-    String input = IO.readln("Seed (blank 42, q quits): ");
-    if (input == null || input.strip().equalsIgnoreCase("q")) return;
     try {
-        long seed = input.isBlank() ? 42 : Long.parseLong(input.strip());
-        showImages("Mandelbrot Postcards", new String[]{"Seed " + seed}, new java.awt.image.BufferedImage[]{render(seed, 3.2)});
-    } catch (IllegalArgumentException failure) {
-        IO.println("Use a whole-number seed: " + failure.getMessage());
+        String seedText = IO.readln("Palette seed [42], /q to quit: ");
+        if (seedText == null || seedText.strip().equalsIgnoreCase("/q")) return;
+        String spanText = IO.readln("Horizontal span [3.2], smaller means a closer view, /q to quit: ");
+        if (spanText == null || spanText.strip().equalsIgnoreCase("/q")) return;
+        long seed = seedText.isBlank() ? 42 : Long.parseLong(seedText.strip());
+        double span = spanText.isBlank() ? 3.2 : Double.parseDouble(spanText.strip());
+        var image = render(seed, span);
+        IO.println("Centre: " + centerX + ", " + centerY + "; span: " + span + "; palette seed: " + seed);
+        showImages("Mandelbrot Postcards", new String[]{"Seed " + seed + ", span " + span}, new BufferedImage[]{image});
+    } catch (Exception failure) {
+        IO.println("Cannot draw this view: " + failure.getMessage());
     }
 }
 // </editor-fold>

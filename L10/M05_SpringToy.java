@@ -48,6 +48,14 @@ void draw(Graphics2D g) {
     g.drawString(String.format("Stiffness %.3f   Damping %.3f   %s", stiffness, damping, paused ? "Paused" : "Moving"), 15, 25);
 }
 
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Build a sleepy spring and a nervous spring by choosing two stiffness/damping pairs. Add a visual
+/// mark that depends on the current speed, such as a larger halo at high speed. Painting must still
+/// leave every model value unchanged.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Recall · F29">
 /// ### Rendering: translate state into pixels
 ///

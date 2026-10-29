@@ -26,6 +26,14 @@ void saveSorted(Path path, BufferedImage input, int threshold) throws IOExceptio
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Make a glitch triptych: use three thresholds with the same input and save three deliberately named
+/// PNG files. Predict which threshold will leave the most untouched pixels, then compare the actual
+/// images without changing the input between trials.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Recall · F32">
 /// ### Files: a destination and a resource lifetime
 ///

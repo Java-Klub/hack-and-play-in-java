@@ -3,22 +3,16 @@
 /// Trap your opponent’s discs between your own to flip them. A player may pass only when there is truly
 /// nowhere to play.
 ///
-/// **Your mission:** The opening position wrongly permits a pass because most rows are never searched.
-/// Repair hasMove(int who) to consider the whole board.
+/// **Your mission:** The unfinished search allows a pass even when a capture exists. Build
+/// hasMove(who): examine the whole six-by-six board and return true at the first cell whose captures
+/// result is nonempty. Return false only after every candidate fails.
 ///
 /// **Today you learn:** Traversal and search: examine candidate positions until a legal move is found.
 /// Only a fully unsuccessful search can justify returning false.
 ///
-/// Run the program, type 3 2 for an opening move and press Enter, then let the next player
+/// Type 3 2 for an opening move and press Enter, then let the next player
 /// choose a legal row and column.
 boolean hasMove(int who) {
-    for (int r = 0; r < 1; r++) {
-        for (int c = 0; c < 6; c++) {
-            if (!captures(r, c, who).isEmpty()) {
-                return true;
-            }
-        }
-    }
     return false;
 }
 
@@ -45,32 +39,38 @@ boolean hasMove(int who) {
 /// empty array?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// A board search visits pairs of indices: for each row, try every column. The prepared
+/// captures(r,c,who) already answers which discs a candidate would flip and changes nothing.
 ///
-/// - `for (int r = 0; r < 1; r++)` — The current outer loop selects which rows are searched; its bound
-///   matters.
-/// - `for (int c = 0; c < 6; c++)` — The inner loop visits columns within the current row.
-/// - `!captures(r, c, who).isEmpty()` — The capture result is not empty, so this player has a legal
-///   placement here.
-/// - `return false` — Says that no candidate succeeded; its placement after the loops is significant.
+/// | candidates examined | capture found? | next action |
+/// | --- | --- | --- |
+/// | first cell | no | next column |
+/// | end of a row | no | first column of next row |
+/// | any later cell | yes | return true now |
+/// | all 36 cells | no | return false |
 ///
-/// ### What the prepared part already does
-///
-/// captures() already walks all eight directions and returns the discs a placement would flip. command()
-/// uses hasMove() to judge a pass; you need not rewrite disc capture or turn handling.
+/// Finding a legal move is enough; this query need not choose the best move or play it. Predict the
+/// number of candidates needed if only the last cell works. Prepared turn handling uses your answer to
+/// permit passing or end the round.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// The outer loop currently visits one row.
+/// Choose one counter for row and another for column.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// A successful search returns true immediately; an unsuccessful one must finish every row.
+/// The inner loop tests captures for the current pair; success returns immediately.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Use all board rows and columns, then return false after both loops.
+/// Use two ranges 0..5, return true for a nonempty capture list, and keep final false after both loops.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Invent a weighted final score that values corners more than ordinary squares. Keep legal moves
+/// unchanged. Build one board where disc count and your weighted score disagree about the leader; ask a
+/// partner to choose a move under each scoring rule.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

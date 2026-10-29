@@ -3,20 +3,18 @@
 /// Play hangman against a computer that has not committed to one secret word. After each guess it keeps
 /// the largest group of words compatible with its next clue, so every revealed letter costs it options.
 ///
-/// **Your mission:** The computer counts every nonempty group as one word and gives away useful choices.
-/// Repair familySize so its total remembers every word counted during earlier passes.
+/// **Your mission:** The unfinished counter returns zero for every family, so the adversary cannot
+/// compare its choices. Build a loop that adds one contribution per word and returns the accumulated
+/// total. An empty family must remain zero.
 ///
 /// **Today you learn:** Accumulation: initialize a running total once before a loop, then update it using
 /// its previous value. A family containing three words needs three contributions, not three replacements
 /// with the same number.
 ///
-/// Run the program and guess E to see the chosen clue, then run the checks to compare a
+/// Guess E to see the chosen clue, then run the checks to compare a
 /// three-word family with a one-word family.
 int familySize(List<String> family) {
     int total = 0;
-    for (int i = 0; i < family.size(); i++) {
-        total = 1;
-    }
     return total;
 }
 
@@ -42,34 +40,38 @@ int familySize(List<String> family) {
 /// Now predict receipt when the supplied list contains only `"rice"`.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// family is the prepared list of compatible words. total starts once before the scan and remembers
+/// earlier contributions.
 ///
-/// - `int total = 0;` — Start with no counted words before the first pass.
-/// - `for (int i = 0; i < family.size(); i++)` — Visit each family member once; size() is the number of
-///   words in the supplied group.
-/// - `total = 1;` — Assignment replaces the old total with one, so earlier passes currently leave no
-///   lasting contribution.
-/// - `return total;` — After all passes, return the accumulated group size for comparison with other
-///   groups.
+/// | family visited so far | total |
+/// | --- | --- |
+/// | none | 0 |
+/// | ALLY | 1 |
+/// | ALLY, COOL | 2 |
+/// | ALLY, COOL, GOOD | 3 |
 ///
-/// ### What the prepared part already does
-///
-/// command groups compatible words by the clue they would reveal and calls familySize to compare those
-/// groups. The supplied selection rule resolves ties by alphabetical clue order, preserves earlier clues
-/// and counts misses. display and main supply guesses, restart and quit.
+/// For an indexed for loop, family.size() tells how many positions exist. Each pass must update the old
+/// total rather than replace it with one. Predict a one-word and a zero-word family. command groups
+/// words by the clue they reveal and calls this counter to choose the largest family.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// total = 1 replaces the previous count.
+/// Trace the total before the first word and after each of three words.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The accumulator must remember earlier members.
+/// Initialize once outside the loop; change the stored total inside it.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Use total += 1, leaving total = 0 before the loop.
+/// Visit every family position and increment total once per visit; return after the loop.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Create a pool of four four-letter words that makes one letter a bad guess but another letter split
+/// the pool evenly. Predict the chosen mask for both guesses. Exchange pools and try to expose the
+/// other pair’s strategy with one carefully chosen letter.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

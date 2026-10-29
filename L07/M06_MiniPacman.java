@@ -12,11 +12,12 @@ import javax.swing.Timer;
 /// Collect every dot while a ghost chases you through the maze. Reaching the last dot and meeting the
 /// ghost can happen in the same step.
 ///
-/// **Your mission:** The game announces a win when the last-dot move is also a capture. Repair
-/// afterContact() to honour capture priority and return one consistent round state.
+/// **Your mission:** Build afterContact(): capture returns CAUGHT even on the last dot; otherwise zero
+/// remaining dots returns WON, and every other situation returns PLAY. The unfinished transition
+/// currently keeps every round alive.
 ///
-/// **Today you learn:** Enum states: PLAY, CAUGHT, and WON are mutually exclusive outcomes. When several
-/// conditions hold together, the transition rule must choose which state wins.
+/// **Today you learn:** Describe one state transition with an explicit priority when conditions
+/// overlap.
 ///
 /// Run the program and press an arrow key to start moving through the maze, steering toward
 /// dots while avoiding the ghost.
@@ -25,72 +26,56 @@ enum RoundState {
 }
 
 RoundState afterContact(boolean caught, int dotsLeft) {
-    if (dotsLeft == 0) {
-        return RoundState.WON;
-    }
-    if (caught) {
-        return RoundState.CAUGHT;
-    }
     return RoundState.PLAY;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F21">
-/// ### Enum: one of the named choices
+/// ### Give a state a name
 ///
-/// An enum defines a finite set of values of one type. The type name and dot qualify a particular
-/// value. Unlike arbitrary text, a misspelled enum value is a compiler error. A variable holds one
-/// choice at a time; comparing enum values with `==` is appropriate.
+/// An enum declares a closed set of names. A variable of that type holds one name at a time, so an
+/// object cannot be both OPEN and LOCKED in the same variable.
 ///
 /// ```java
-/// enum Voice {
-///     WHISPER, SING, SHOUT
+/// enum Door { LOCKED, OPEN }
+/// Door afterKey(Door before, boolean hasKey) {
+///     if (before == Door.LOCKED && hasKey) return Door.OPEN;
+///     return before;
 /// }
-///
-/// Voice voice = Voice.SING;
-/// IO.println(voice == Voice.SHOUT);
 /// ```
 ///
-/// The declaration belongs beside methods; the statements can be read inside a method. The comparison
-/// prints false because SING and SHOUT are distinct values. Predict it after assigning SHOUT. Can
-/// this single variable simultaneously claim SING and SHOUT? Explain what contradictory combinations
-/// separate booleans might allow.
+/// Trace `afterKey(Door.LOCKED, true)`: both parts of `&&` are true, so OPEN is returned. With no key,
+/// the original LOCKED is returned. Notice that calling this method alone does not store the result.
+/// The caller can choose `door = afterKey(door, hasKey)` when a transition is meant to happen.
+///
+/// Draw a two-circle diagram, LOCKED → OPEN, with “key” on the arrow. Ask what should happen to an
+/// already open door. Predict the return value for OPEN with a key, and explain which return is
+/// reached. In a game, state priorities are rules you must state explicitly, not properties supplied by
+/// enum.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Read this part
 ///
-/// - `enum RoundState` — Names the three possible conditions of one round.
-/// - `dotsLeft == 0` — A comparison tests whether the last dot has gone; it does not describe ghost
-///   contact.
-/// - `return RoundState.WON` — Returns one named state immediately, so later branches will not run.
-/// - `if (caught)` — Checks the independent capture fact supplied by step().
-///
-/// ### What the prepared part already does
-///
-/// step() moves the player, collects a dot, and checks ghost contact before asking afterContact().
-/// moveGhost() already chooses legal neighbours, and drawing uses the returned RoundState.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="For this game">
-/// ### One event can satisfy two conditions
-///
-/// Enum values make the final result exclusive, but conditions can still overlap. The stated contract
-/// gives capture priority over collecting the last dot. Predict the result for caught with no dots,
-/// uncaught with no dots, and uncaught with some dots. These are distinct input situations, not three
-/// states to assign in sequence. Explain which earlier return prevents a later condition from
-/// replacing the intended result.
+/// RoundState lists three mutually exclusive outcomes. `caught` and `dotsLeft` are supplied facts for
+/// the same step, not separate rounds. Evaluate the priority first. The caller stores the returned
+/// state and the prepared timer stops advancing a finished round.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Named terminal states cannot be combined into contradictory flags.
+/// List the outcomes for caught/not caught crossed with zero/nonzero dots.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The collision and final dot can occur in the same step.
+/// The simultaneous capture-and-last-dot case decides the order of your conditions.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Check caught before dotsLeft==0, then return PLAY as the remaining case.
+/// Return CAUGHT for capture first, WON for no dots next, and PLAY otherwise.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Make a clearly labelled alternate ending where the last dot wins a tie. Compare the two endings on
+/// the same last-dot capture and explain which feels fairer.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

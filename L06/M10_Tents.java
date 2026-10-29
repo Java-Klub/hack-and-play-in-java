@@ -17,7 +17,7 @@ import java.util.Arrays;
 /// **Today you learn:** Writing functional checks: select examples that distinguish implementations which
 /// agree on the obvious case. Asymmetrical coordinates make a swapped-axis bug observable.
 ///
-/// Run the program and click an empty cell beside a tree to pitch a tent, then run the checks
+/// Click an empty cell beside a tree to pitch a tent, then run the checks
 /// to see whether your map examples catch the cheats.
 record TreeExample(int x, int y, boolean expected) {
 }
@@ -88,6 +88,12 @@ TreeExample[] learnerChecks() {
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Include a later tree and an outside coordinate; every expected value must still agree with the
 /// real map.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Build a counterfeit treeAt that agrees with your examples but lies about one other cell. Exchange
+/// only the callable rule with a partner, who must discover a new example that exposes it. Restore the
+/// real rule afterwards and explain which blind spot the extra example removed.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
@@ -271,7 +277,8 @@ void main() {
 void verifyExamples() {
     for (var e : learnerChecks()) {
         if (treeAt(e.x(), e.y()) != e.expected()) {
-            throw new IllegalStateException("Tree example has wrong expected result");
+            throw new IllegalStateException("Cell x=" + e.x() + ", y=" + e.y()
+                    + ": expected tree=" + e.expected() + ", actual=" + treeAt(e.x(), e.y()));
         }
     }
 }

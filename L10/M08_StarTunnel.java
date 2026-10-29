@@ -27,6 +27,14 @@ Point2D.Double project(Star star, double depth) {
     return new Point2D.Double(centreX + star.x * 260 / z, centreY + star.y * 260 / z);
 }
 
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Turn the flight into rain or a snowstorm by changing how projected stars are drawn, while
+/// preserving project as the same coordinate contract. Compare a dot and a short trail at equal
+/// speed; which feels faster?
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Recall · F29">
 /// ### Rendering: translate state into pixels
 ///

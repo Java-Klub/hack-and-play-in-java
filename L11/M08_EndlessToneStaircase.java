@@ -8,31 +8,31 @@ import java.io.ByteArrayInputStream;
 
 /// # L11.08 · EndlessToneStaircase
 ///
-/// Make a tone staircase that seems to keep climbing by blending octave layers. Compare its finite sound
-/// with a plain rising tone and listen for where the illusion takes over.
+/// Make a finite tone staircase from overlapping octave layers. Listen for whether the repeated climb
+/// seems to hide its return; the impression depends on the listener and playback.
 ///
-/// **Your mission:** The WAV is written in the working directory even when you request a nested
-/// destination. Preserve the complete chosen path through the final write operation.
+/// **Your mission:** Build the WAV destination boundary in write. Prepare its parent directory, open
+/// the destination output stream and the supplied audio(signal) stream with try-with-resources, and
+/// encode WAVE into that destination. Do not shorten the Path or write to a substitute buffer.
 ///
-/// **Today you learn:** A Path carries both directories and filename. Keeping only its last name changes
-/// the destination; preparing parent directories does not fix a later write to another location.
+/// **Today you learn:** Implement a real file boundary: open the chosen resource, route actual
+/// contents through it and close it reliably. The artifact must survive beyond a method call.
 ///
 /// The program writes exports/shepard.wav through write and loads that exact WAV for Java
 /// Play/Stop. A wrong destination produces a clear terminal output failure; no substitute file
 /// is played.
 void write(Path path, double[] signal) throws Exception {
-    byte[] pcm = new byte[signal.length * 2];
-    for (int i = 0; i < signal.length; i++) {
-        int value = (int)(Math.max(-0.8, Math.min(0.8, signal[i])) * 32767);
-        pcm[i * 2] = (byte)value;
-        pcm[i * 2 + 1] = (byte)(value >> 8);
-    }
-    Files.createDirectories(path.toAbsolutePath().getParent());
-    var format = new AudioFormat(RATE, 16, 1, true, false);
-    try (var stream = new AudioInputStream(new ByteArrayInputStream(pcm), format, signal.length)) {
-        AudioSystem.write(stream, AudioFileFormat.Type.WAVE, Path.of(path.getFileName().toString()).toFile());
-    }
+    // Prepare the directory, open both resources and write the WAV here.
 }
+
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Produce two short sound postcards with different octave-layer counts. Give them distinct
+/// filenames, then reopen and listen to the saved WAV files on a later run. Which layer count hides
+/// the apparent reset best? This is a listening judgement, not a claim that every ear hears an
+/// endless rise.
+// </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Learn · F32">
 /// ### Files: a destination and a resource lifetime
@@ -57,34 +57,46 @@ void write(Path path, double[] signal) throws Exception {
 /// Predict: if file becomes `Path.of("cards", "one.txt")`, where is the note written?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// ### A durable sound postcard
 ///
-/// - `path.toAbsolutePath().getParent()` — Finds the full destination’s parent directory so it can be
-///   created.
-/// - `path.getFileName()` — Extracts only the last name and discards the requested directory.
-/// - `try (var stream =` — Closes the owned audio stream when the block finishes, even if writing fails.
-/// - `AudioSystem.write` — Encodes the supplied samples as a WAV at the destination it receives.
+/// A Path names a destination; an OutputStream receives its bytes. For a neutral text example, `try
+/// (var out = Files.newOutputStream(Path.of("note.txt"))) { out.write(new byte[]{65, 66}); }` writes
+/// the two UTF-8 bytes for AB, then closes the stream even on failure. Predict which bytes a later
+/// write must replace to save CD instead. Opening a stream alone does not encode a WAV header.
 ///
-/// ### What the prepared part already does
-///
-/// signal builds one finite layered tone. main writes it to exports/shepard.wav using write,
-/// verifies that same requested WAV, then offers Java Play/Stop for those actual file bytes.
+/// Here audio(signal) supplies the sample format and readable PCM bytes. AudioSystem.write(input,
+/// WAVE, output) adds the WAV container. Two resource declarations are separated by a semicolon and
+/// both are closed automatically. createDirectories permits an existing directory. main reopens
+/// exactly exports/shepard.wav and offers Play/Stop. The saved container is the thing being tested
+/// and heard.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// getFileName deliberately discards the parent path.
+/// Reuse audio(signal); sample conversion is supplied, destination ownership is yours.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The original Path already points to the chosen destination.
+/// Use the complete path for newOutputStream, after creating its absolute parent.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Use that Path in AudioSystem.write; retain createDirectories and try-with-resources.
+/// Put output and input in one try-with-resources and call the three-argument AudioSystem.write with
+/// WAVE and output.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+AudioInputStream audio(double[] signal) {
+    byte[] pcm = new byte[signal.length * 2];
+    for (int i = 0; i < signal.length; i++) {
+        int value = (int)(Math.max(-0.8, Math.min(0.8, signal[i])) * 32767);
+        pcm[i * 2] = (byte)value;
+        pcm[i * 2 + 1] = (byte)(value >> 8);
+    }
+    var format = new AudioFormat(RATE, 16, 1, true, false);
+    return new AudioInputStream(new ByteArrayInputStream(pcm), format, signal.length);
+}
+
 final int RATE = 22050;
 
 /// Prepared bounded loops build the audio samples.

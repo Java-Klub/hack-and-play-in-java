@@ -25,25 +25,27 @@ Holder holderAfterSwap(boolean swap) {
 }
 
 // <editor-fold defaultstate="expanded" desc="Learn · F21">
-/// ### Enum: one of the named choices
+/// ### Give a state a name
 ///
-/// An enum defines a finite set of values of one type. The type name and dot qualify a particular
-/// value. Unlike arbitrary text, a misspelled enum value is a compiler error. A variable holds one
-/// choice at a time; comparing enum values with `==` is appropriate.
+/// An enum declares a closed set of names. A variable of that type holds one name at a time, so an
+/// object cannot be both OPEN and LOCKED in the same variable.
 ///
 /// ```java
-/// enum Voice {
-///     WHISPER, SING, SHOUT
+/// enum Door { LOCKED, OPEN }
+/// Door afterKey(Door before, boolean hasKey) {
+///     if (before == Door.LOCKED && hasKey) return Door.OPEN;
+///     return before;
 /// }
-///
-/// Voice voice = Voice.SING;
-/// IO.println(voice == Voice.SHOUT);
 /// ```
 ///
-/// The declaration belongs beside methods; the statements can be read inside a method. The comparison
-/// prints false because SING and SHOUT are distinct values. Predict it after assigning SHOUT. Can
-/// this single variable simultaneously claim SING and SHOUT? Explain what contradictory combinations
-/// separate booleans might allow.
+/// Trace `afterKey(Door.LOCKED, true)`: both parts of `&&` are true, so OPEN is returned. With no key,
+/// the original LOCKED is returned. Notice that calling this method alone does not store the result.
+/// The caller can choose `door = afterKey(door, hasKey)` when a transition is meant to happen.
+///
+/// Draw a two-circle diagram, LOCKED → OPEN, with “key” on the arrow. Ask what should happen to an
+/// already open door. Predict the return value for OPEN with a key, and explain which return is
+/// reached. In a game, state priorities are rules you must state explicitly, not properties supplied by
+/// enum.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
@@ -71,6 +73,11 @@ Holder holderAfterSwap(boolean swap) {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Player one holds the prize exactly when prizeA != swap.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Invent a public rule for placing the carrot, such as alternating its starting box. Does bluffing
+/// still work when the opponent knows that rule?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

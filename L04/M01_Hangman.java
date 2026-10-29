@@ -3,28 +3,19 @@
 /// Reveal a hidden word one letter at a time before six wrong guesses end the round. Repeated letters can
 /// uncover several places at once, so each clue can change your next guess.
 ///
-/// **Your mission:** The display loses the final character of every word. Repair the while boundary in
-/// mask so each character produces exactly one letter or underscore, without stopping the index from
-/// advancing.
+/// **Your mission:** The word display is empty. Build mask with a while scan: each character becomes
+/// its revealed letter if tried contains it, otherwise an underscore. Visit every position exactly
+/// once; an empty word needs no lookup.
 ///
 /// **Today you learn:** While loops: test a condition before each pass, do one piece of work, then move
 /// towards the end. For a six-letter word the valid character indices are 0 through 5; the next index
 /// must stop the loop.
 ///
-/// Run the program and type A for the training word BANANA; compare the displayed _A_A_ with
-/// the six places the word needs.
+/// The training word is BANANA. Enter A: the unfinished mask stays empty instead of showing six places.
+/// Your scan must produce _A_A_A.
 String mask() {
     String result = "";
     int index = 0;
-    while (index < word.length() - 1) {
-        String letter = word.substring(index, index + 1);
-        if (tried.contains(letter)) {
-            result += letter;
-        } else {
-            result += "_";
-        }
-        index++;
-    }
     return result;
 }
 
@@ -52,39 +43,38 @@ String mask() {
 /// Now predict the trace if energy starts at four.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// `result` starts empty; `index` names the next character. Build the repeated part before return.
 ///
-/// - `String result = "";` — Start an empty text result once, before collecting the word’s characters.
-/// - `int index = 0;` — The first character has index zero; index names the position currently being
-///   processed.
-/// - `while (index < word.length() - 1)` — Repeat while this comparison is true. length() gives the
-///   character count; distinguish that count from the final valid index.
-/// - `word.substring(index, index + 1)` — Read one character as text: include the first position and stop
-///   before the second.
-/// - `result += "_";` — Append one underscore to the text already collected instead of replacing the
-///   whole result.
-/// - `index++;` — Increase the position by one after each pass. Without progress, the same character
-///   could be visited forever.
-/// - `return result;` — After the loop ends, send the completed display text back to the caller.
+/// | word | tried | required mask |
+/// | --- | --- | --- |
+/// | STAR | AS | S_A_ |
+/// | A | empty | _ |
+/// | empty | any | empty |
 ///
-/// ### What the prepared part already does
-///
-/// The supplied branch chooses a revealed letter or an underscore at one position. guess checks letters
-/// and counts misses; main prints mask, handles the six-miss ending and accepts /r or /q. mask itself
-/// never asks the player for input.
+/// For STAR, index zero reads S and appends S; index one reads T and appends _. Advancing index changes
+/// which character is read next. `word.substring(index, index + 1)` supplies one character as text;
+/// `tried.contains(letter)` asks whether it has been guessed. Predict the mask for word BEE with tried
+/// E. The supplied guess handling and win/loss rules use your returned mask.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// A word of length six has indices 0 through 5.
+/// Draw one output place per input character before writing the loop.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Test the current condition when index is five.
+/// Each pass reads, chooses a revealed letter or underscore, appends it, and advances index.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Continue while index < word.length(); index++ supplies progress.
+/// Repeat while index is smaller than word.length(); append to result and increment index once per
+/// pass.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Make a coach mode that reveals a character group you choose, such as vowels, before any guess. Use
+/// the same word scan; decide which group is helpful without revealing everything. Show a friend two
+/// masks and ask them to infer your rule.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

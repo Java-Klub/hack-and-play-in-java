@@ -21,6 +21,14 @@ int chooseVertex(Random random, int count) {
     return random.nextInt(Math.max(1, count - 1));
 }
 
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Invent a new forbidden move: after choosing a vertex, do not allow its clockwise neighbour next.
+/// Work out the legal candidate list before calling chooseVertex. Compare the new gaps with the
+/// original picture using the same seed.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Recall · F27">
 /// ### Seeded randomness: repeat an experiment
 ///

@@ -1,10 +1,12 @@
-/// # L02.06 · MadLibsStoryMachine
+/// # L02.05 · MadLibsStoryMachine
 ///
 /// Give the machine a name, a creature, a place and an object, then read the absurd story it builds from
 /// them. Multiword answers can make the result much stranger than single words.
 ///
-/// **Your mission:** Spaces accidentally typed around an answer leak into the story. Repair cleanWord so
-/// the outside spaces disappear while a phrase such as Red Fox stays complete.
+/// **Your mission · Write a story title:** Clean outside spaces in cleanWord without damaging phrases.
+/// Then implement
+/// headline: for name "  Red Fox  " it must return exactly "Report from Red Fox:". The program will
+/// print your title before its story; another name must produce another title.
 ///
 /// **Today you learn:** Whole-line text: reading a phrase is different from reading only its first word.
 /// Work on the returned String while preserving the spaces that belong inside the phrase.
@@ -15,7 +17,11 @@ String cleanWord(String word) {
     return word;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Recall · F05">
+String headline(String name) {
+    return "Report:";
+}
+
+// <editor-fold defaultstate="expanded" desc="Learn · F05">
 /// `IO.readln` receives a whole line, including internal spaces. String operations return text rather
 /// than changing the original String. Keep the returned result when you need it.
 ///
@@ -37,31 +43,37 @@ String cleanWord(String word) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Cleanup and authorship
 ///
-/// - `String cleanWord(String word)` — One String enters as word and a cleaned String should leave as the
-///   result.
-/// - `word` — A local name for this answer; it may contain several words and spaces.
-/// - `return word;` — The current body returns the received text unchanged, including its outside spaces.
-/// - `{` — The matching braces enclose the small text-cleaning rule; the prompts remain elsewhere.
-///
-/// ### What the prepared part already does
-///
-/// main asks for four complete lines. story calls cleanWord for each answer, checks usable lengths and
-/// inserts the cleaned phrases into the prepared story. You are editing the phrase cleanup, not the
-/// story’s input machinery.
+/// cleanWord receives one full phrase and returns its cleaned text. headline receives a name, calls
+/// that cleanup and returns a joined title. Prefix, name and colon are three text pieces. main
+/// already prints the returned headline, then story cleans the four phrases and builds the supplied
+/// story. Your title must use its parameter so a second user is not still called Red Fox.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// String + joins text. `"Pilot " + "Ada" + "!"` gives `"Pilot Ada!"`; spaces outside quotes do not
+/// add spaces to the message. In headline, call cleanWord with the received name, then join the
+/// cleaned result with the fixed prefix and colon. A returned title becomes visible because main
+/// prints it.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// Rewrite the three prepared story sentences while keeping all four supplied phrases useful. Make a
+/// news report, a detective ending or a ridiculous advert. Ask a friend for the four inputs without
+/// revealing your new template first.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Do not split at spaces: a name may contain several words.
+/// A title needs the cleaned name, not a fixed copy of the example name.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// String.strip returns a cleaned copy.
+/// Use the result of cleanWord and join text with +.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Use return word.strip();
+/// cleanWord returns word.strip(). In headline return "Report from " + cleanWord(name) + ":".
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
@@ -95,6 +107,7 @@ void main() {
             }
             words[i++] = input;
         }
+        IO.println(headline(words[0]));
         IO.print(story(words[0], words[1], words[2], words[3]));
         while (true) {
             String input = IO.readln("Enter or /r: new story; /q: quit: ");

@@ -8,7 +8,8 @@ import java.awt.image.BufferedImage;
 /// Generate a symmetric pixel monster and explore how one colour changes its expression. The
 /// transparent background makes its blocky shape stand out.
 ///
-/// **Your mission:** The monster has lost its bright eyes. Repair the one shared eyeColour so both eye
+/// **Your mission · Restore a monster face:** The monster has lost its bright eyes. Repair the one shared
+/// eyeColour so both eye
 /// blocks become white without editing each eye separately.
 ///
 /// **Today you learn:** One named value, several readers: both eyes receive the same stored colour. A
@@ -62,6 +63,19 @@ int eyeColour = Color.BLACK.getRGB();
 /// The picture always uses seed 42, allowing a direct comparison of the eyes before and after an
 /// edit. Color supplies named colours such as BLACK, WHITE, RED and YELLOW; getRGB() returns their
 /// pixel encoding. You change one shared colour, not two eye positions.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// A name may be read more than once. Imagine `int badge = 7;` used on two doors: changing badge once
+/// changes the number both doors will read. Here the two eye positions read eyeColour; changing only
+/// one painted eye elsewhere would break that shared rule. getRGB supplies the numeric encoding; you
+/// do not need to memorise it.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// Give the same monster a friendly and a threatening expression by changing eyeColour to two
+/// available Color names. Keep seed 42 so the body stays comparable. Ask a friend to choose an
+/// expression before you reveal which colour you changed.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">

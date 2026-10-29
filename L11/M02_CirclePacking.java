@@ -20,6 +20,14 @@ boolean claimCentre(Set<Centre> seen, int x, int y) {
     return seen.contains(new Centre(x, y));
 }
 
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Make a dotted constellation: admit candidate centres only inside a simple silhouette, such as two
+/// overlapping circles. Keep claimCentre responsible for uniqueness, not the silhouette. Compare
+/// empty space and crowded space in your resulting poster.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Recall · F23">
 /// ### Set: membership without duplicates
 ///

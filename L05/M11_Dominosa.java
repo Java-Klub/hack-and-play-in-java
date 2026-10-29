@@ -9,7 +9,7 @@
 /// **Today you learn:** Records: equal component values give equal record values. Choose a consistent
 /// representation before using a Domino as a uniqueness key.
 ///
-/// Run the program and type 1 1 1 2 to pair the first two adjacent cells, then continue with
+/// Type 1 1 1 2 to pair the first two adjacent cells, then continue with
 /// other neighbouring cells.
 record Domino(int low, int high) {
 }
@@ -76,6 +76,12 @@ Domino pairKey(int a, int b) {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Construct Domino(min(x,y), max(x,y)); the supplied Set then rejects repeats.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Invent a directional-domino variant where 1→2 and 2→1 are different pieces. State the changed
+/// identity rule before changing pairKey. Construct one board fragment whose duplicate judgement
+/// changes and explain why the old normalization is now unsuitable.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

@@ -64,17 +64,17 @@ class M01_MinesweeperTest {
         var g = Reflect.create("M01_Minesweeper");
         Reflect.set(g, "mines", new boolean[6][6]);
         ((boolean[][]) Reflect.get(g, "mines"))[0][0] = true;
-        equal(1, ((int) Reflect.call(g, "adjacent", 1, 1)), "I043/F18: diagonal mine is a neighbour");
-        equal(0, ((int) Reflect.call(g, "adjacent", 0, 0)), "I043/F18: centre does not count itself");
+        equal(1, ((int) Reflect.call(g, "adjacent", 1, 1)), "L08.01/F18: diagonal mine is a neighbour");
+        equal(0, ((int) Reflect.call(g, "adjacent", 0, 0)), "L08.01/F18: centre does not count itself");
         ((boolean[][]) Reflect.get(g, "mines"))[0][1] = ((boolean[][]) Reflect.get(g, "mines"))[1][0] = ((boolean[][]) Reflect.get(g, "mines"))[1][1] = true;
-        equal(3, ((int) Reflect.call(g, "adjacent", 0, 0)), "I043/F18: clipped corner has three neighbours");
+        equal(3, ((int) Reflect.call(g, "adjacent", 0, 0)), "L08.01/F18: clipped corner has three neighbours");
         Reflect.set(g, "mines", new boolean[6][6]);
         for (int r = 1; r <= 3; r++) {
             for (int c = 1; c <= 3; c++) {
                 ((boolean[][]) Reflect.get(g, "mines"))[r][c] = true;
             }
         }
-        equal(8, ((int) Reflect.call(g, "adjacent", 2, 2)), "I043/F18: all eight surrounding cells counted");
+        equal(8, ((int) Reflect.call(g, "adjacent", 2, 2)), "L08.01/F18: all eight surrounding cells counted");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -97,12 +97,12 @@ class M02_NetTest {
         var g = Reflect.create("M02_Net");
         Reflect.set(g, "tiles", new int[4][4]);
         ((int[][]) Reflect.get(g, "tiles"))[0][0] = 2;
-        expect(!((boolean[][]) Reflect.call(g, "connected"))[0][1], "I058/F18: neighbour needs a reciprocal connector");
+        expect(!((boolean[][]) Reflect.call(g, "connected"))[0][1], "L08.02/F18: neighbour needs a reciprocal connector");
         ((int[][]) Reflect.get(g, "tiles"))[0][1] = 8;
-        expect(((boolean[][]) Reflect.call(g, "connected"))[0][1], "I058/F18: right-left ports form a connection");
-        expect(!((boolean[][]) Reflect.call(g, "connected"))[1][1], "I058/F18: diagonal tile is not automatically connected");
+        expect(((boolean[][]) Reflect.call(g, "connected"))[0][1], "L08.02/F18: right-left ports form a connection");
+        expect(!((boolean[][]) Reflect.call(g, "connected"))[1][1], "L08.02/F18: diagonal tile is not automatically connected");
         Reflect.call(g, "solvedBoard");
-        expect(((boolean) Reflect.call(g, "won")), "I058/F18: authored pipe tree remains valid");
+        expect(((boolean) Reflect.call(g, "won")), "L08.02/F18: authored pipe tree remains valid");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -126,20 +126,20 @@ class M03_BlackBoxTest {
         Reflect.call(g, "reset");
         boolean[][] box = new boolean[4][4];
         box[1][1] = true;
-        equal("W1", ((java.lang.String) Reflect.call(g, "trace", box, "N1")), "I084/F18: a right-side diagonal ball deflects the ray left");
+        equal("W1", ((java.lang.String) Reflect.call(g, "trace", box, "N1")), "L08.03/F18: a right-side diagonal ball deflects the ray left");
         box = new boolean[4][4];
-        equal("S1", ((java.lang.String) Reflect.call(g, "trace", box, "N1")), "I084/F18: empty corridor crosses straight");
+        equal("S1", ((java.lang.String) Reflect.call(g, "trace", box, "N1")), "L08.03/F18: empty corridor crosses straight");
         box[0][0] = true;
-        equal("HIT", ((java.lang.String) Reflect.call(g, "trace", box, "N1")), "I084/F18: direct hit retains priority");
-        equal("REFLECT", ((java.lang.String) Reflect.call(g, "trace", box, "N2")), "I084/F18: entry-edge diagonal reflects");
+        equal("HIT", ((java.lang.String) Reflect.call(g, "trace", box, "N1")), "L08.03/F18: direct hit retains priority");
+        equal("REFLECT", ((java.lang.String) Reflect.call(g, "trace", box, "N2")), "L08.03/F18: entry-edge diagonal reflects");
         Reflect.call(g, "command", "mark 1 1");
         Reflect.call(g, "command", "mark 1 2");
         Reflect.call(g, "command", "check");
-        expect(((java.lang.String) Reflect.get(g, "message")).contains("disagree"), "I084/F18: incorrect guesses give a current disagreement");
+        expect(((java.lang.String) Reflect.get(g, "message")).contains("disagree"), "L08.03/F18: incorrect guesses give a current disagreement");
         Reflect.call(g, "command", "ray N1");
-        equal("Probe recorded", ((java.lang.String) Reflect.get(g, "message")), "I084/F18: a new probe replaces the earlier failed-check event");
+        equal("Probe recorded", ((java.lang.String) Reflect.get(g, "message")), "L08.03/F18: a new probe replaces the earlier failed-check event");
         Reflect.call(g, "command", "mark 1 1");
-        equal("Guess removed", ((java.lang.String) Reflect.get(g, "message")), "I084/F18: a changed guess reports its own event");
+        equal("Guess removed", ((java.lang.String) Reflect.get(g, "message")), "L08.03/F18: a changed guess reports its own event");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -162,13 +162,13 @@ class M04_LightUpTest {
         var g = Reflect.create("M04_LightUp");
         Reflect.call(g, "reset");
         ((boolean[][]) Reflect.get(g, "bulbs"))[0][2] = true;
-        equal(1, ((int) Reflect.call(g, "visible", 0, 0)), "I086/F18: light travels beyond the immediate neighbour");
+        equal(1, ((int) Reflect.call(g, "visible", 0, 0)), "L08.04/F18: light travels beyond the immediate neighbour");
         Reflect.set(g, "bulbs", new boolean[3][3]);
         ((boolean[][]) Reflect.get(g, "bulbs"))[1][2] = true;
-        equal(0, ((int) Reflect.call(g, "visible", 1, 0)), "I086/F18: numbered wall blocks a ray");
+        equal(0, ((int) Reflect.call(g, "visible", 1, 0)), "L08.04/F18: numbered wall blocks a ray");
         Reflect.set(g, "bulbs", new boolean[3][3]);
         ((boolean[][]) Reflect.get(g, "bulbs"))[2][2] = true;
-        equal(0, ((int) Reflect.call(g, "visible", 0, 0)), "I086/F18: diagonal bulb is not visible");
+        equal(0, ((int) Reflect.call(g, "visible", 0, 0)), "L08.04/F18: diagonal bulb is not visible");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -189,14 +189,19 @@ class M05_LoopBuilderTest {
     }
     public static void main(String[] args) throws Exception {
         var g = Reflect.create("M05_LoopBuilder");
-        equal(new int[]{0, 4}, ((int[]) Reflect.call(g, "vertices", 12)), "I088/F18: vertical edge joins the next vertex row");
-        equal(new int[]{11, 15}, ((int[]) Reflect.call(g, "vertices", 23)), "I088/F18: final vertical edge stays in its column");
-        equal(new int[]{14, 15}, ((int[]) Reflect.call(g, "vertices", 11)), "I088/F18: horizontal edge joins adjacent columns");
+        equal(new int[]{0, 4}, ((int[]) Reflect.call(g, "vertices", 12)), "L08.05/F18: vertical edge joins the next vertex row");
+        equal(new int[]{11, 15}, ((int[]) Reflect.call(g, "vertices", 23)), "L08.05/F18: final vertical edge stays in its column");
+        equal(new int[]{14, 15}, ((int[]) Reflect.call(g, "vertices", 11)), "L08.05/F18: horizontal edge joins adjacent columns");
         Reflect.call(g, "reset");
         for (int n : new int[]{0, 1, 2, 9, 10, 11, 12, 15, 16, 19, 20, 23}) {
             ((boolean[]) Reflect.get(g, "edges"))[n] = true;
         }
-        expect(((boolean) Reflect.call(g, "oneLoop")), "I088/F18: perimeter edges form one real loop");
+        expect(((boolean) Reflect.call(g, "oneLoop")), "L08.05/F18: perimeter edges form one real loop");
+        equal(new int[]{0, 1}, Reflect.call(g, "vertices", 0), "first horizontal edge");
+        equal(new int[]{14, 15}, Reflect.call(g, "vertices", 11), "last horizontal edge");
+        boolean rejected = false;
+        try { Reflect.call(g, "vertices", 24); } catch (IllegalArgumentException invalid) { rejected = true; }
+        expect(rejected, "outside edge index is rejected");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -222,16 +227,16 @@ class M06_AntHighwayTest {
         Reflect.set(g, "y", 0);
         Reflect.set(g, "direction", 2);
         Reflect.call(g, "step");
-        equal(80, ((int) Reflect.get(g, "x")), "I124/F18: west neighbour wraps to the final column");
-        equal(0, ((int) Reflect.get(g, "y")), "I124/F18: horizontal step does not change row");
+        equal(80, ((int) Reflect.get(g, "x")), "L08.06/F18: west neighbour wraps to the final column");
+        equal(0, ((int) Reflect.get(g, "y")), "L08.06/F18: horizontal step does not change row");
         Reflect.call(g, "reset");
         Reflect.set(g, "x", 0);
         Reflect.set(g, "y", 0);
         Reflect.set(g, "direction", 1);
         ((boolean[][]) Reflect.get(g, "black"))[0][0] = true;
         Reflect.call(g, "step");
-        equal(60, ((int) Reflect.get(g, "y")), "I124/F18: north neighbour wraps to final row");
-        expect(!((boolean[][]) Reflect.get(g, "black"))[0][0] && ((long) Reflect.get(g, "steps")) == 1, "I124/F18: old tile flipped exactly once");
+        equal(60, ((int) Reflect.get(g, "y")), "L08.06/F18: north neighbour wraps to final row");
+        expect(!((boolean[][]) Reflect.get(g, "black"))[0][0] && ((long) Reflect.get(g, "steps")) == 1, "L08.06/F18: old tile flipped exactly once");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -254,16 +259,16 @@ class M07_BridgesTest {
         var g = Reflect.create("M07_Bridges");
         Reflect.call(g, "restart");
         Reflect.call(g, "choose", 140, 45);
-        equal(1, ((int[]) Reflect.get(g, "bridges"))[0], "I090/F20: edge changed");
+        equal(1, ((int[]) Reflect.get(g, "bridges"))[0], "L08.07/F20: edge changed");
         Reflect.call(g, "undo");
-        equal(0, ((int[]) Reflect.get(g, "bridges"))[0], "I090/F20: undo needs an independent previous array");
+        equal(0, ((int[]) Reflect.get(g, "bridges"))[0], "L08.07/F20: undo needs an independent previous array");
         int[] copy = ((int[]) Reflect.call(g, "snapshot"));
         copy[0] = 2;
-        equal(0, ((int[]) Reflect.get(g, "bridges"))[0], "I090/F20: changing snapshot cannot alter live network");
+        equal(0, ((int[]) Reflect.get(g, "bridges"))[0], "L08.07/F20: changing snapshot cannot alter live network");
         Reflect.call(g, "choose", 140, 45);
         Reflect.call(g, "choose", 140, 45);
         Reflect.call(g, "undo");
-        equal(1, ((int[]) Reflect.get(g, "bridges"))[0], "I090/F20: undo restores exactly the preceding state");
+        equal(1, ((int[]) Reflect.get(g, "bridges"))[0], "L08.07/F20: undo restores exactly the preceding state");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -287,15 +292,15 @@ class M08_MagnetDominoesTest {
         Reflect.call(g, "restart");
         Reflect.call(g, "cycle", 0);
         Reflect.call(g, "undo");
-        equal(-1, ((int[]) Reflect.get(g, "state"))[0], "I092/F20: undo restores undecided magnet");
+        equal(-1, ((int[]) Reflect.get(g, "state"))[0], "L08.08/F20: undo restores undecided magnet");
         Reflect.call(g, "cycle", 0);
         Reflect.call(g, "cycle", 1);
         Reflect.call(g, "undo");
-        equal(1, ((int[]) Reflect.get(g, "state"))[0], "I092/F20: undo keeps earlier domino change");
-        equal(-1, ((int[]) Reflect.get(g, "state"))[1], "I092/F20: latest change reverted");
+        equal(1, ((int[]) Reflect.get(g, "state"))[0], "L08.08/F20: undo keeps earlier domino change");
+        equal(-1, ((int[]) Reflect.get(g, "state"))[1], "L08.08/F20: latest change reverted");
         int[] copy = ((int[]) Reflect.call(g, "copyState"));
         copy[0] = 0;
-        equal(1, ((int[]) Reflect.get(g, "state"))[0], "I092/F20: saved state does not alias live poles");
+        equal(1, ((int[]) Reflect.get(g, "state"))[0], "L08.08/F20: saved state does not alias live poles");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -317,21 +322,21 @@ class M09_ShikakuTest {
     public static void main(String[] args) throws Exception {
         var g = Reflect.create("M09_Shikaku");
         Reflect.call(g, "restart");
-        expect(((boolean) Reflect.call(g, "add", 0, 0, 1, 2)), "I094/F20: valid rectangle added");
+        expect(((boolean) Reflect.call(g, "add", 0, 0, 1, 2)), "L08.09/F20: valid rectangle added");
         Reflect.set(g, "startX", 2);
         Reflect.set(g, "message", "Rejected: earlier drag");
         Reflect.call(g, "undo");
-        equal(0, ((java.util.ArrayList<Object>) Reflect.get(g, "boxes")).size(), "I094/F20: undo restores an independent list");
-        equal("Previous layout restored", ((java.lang.String) Reflect.get(g, "message")), "I094/F20: undo feedback describes the restored board");
-        equal(-1, ((int) Reflect.get(g, "startX")), "I094/F20: undo leaves no unfinished drag outline");
+        equal(0, ((java.util.ArrayList<Object>) Reflect.get(g, "boxes")).size(), "L08.09/F20: undo restores an independent list");
+        equal("Previous layout restored", ((java.lang.String) Reflect.get(g, "message")), "L08.09/F20: undo feedback describes the restored board");
+        equal(-1, ((int) Reflect.get(g, "startX")), "L08.09/F20: undo leaves no unfinished drag outline");
         Reflect.call(g, "add", 0, 0, 1, 2);
         Reflect.call(g, "remove", 0, 0);
         Reflect.call(g, "undo");
-        equal(1, ((java.util.ArrayList<Object>) Reflect.get(g, "boxes")).size(), "I094/F20: removed rectangle can be restored");
+        equal(1, ((java.util.ArrayList<Object>) Reflect.get(g, "boxes")).size(), "L08.09/F20: removed rectangle can be restored");
         var copy = ((java.util.ArrayList<Object>) Reflect.call(g, "snapshot"));
         copy.clear();
-        equal(1, ((java.util.ArrayList<Object>) Reflect.get(g, "boxes")).size(), "I094/F20: list edits are not shared");
-        expect(copy != ((java.util.ArrayList<Object>) Reflect.get(g, "boxes")), "I094/F20: snapshot is a distinct mutable collection");
+        equal(1, ((java.util.ArrayList<Object>) Reflect.get(g, "boxes")).size(), "L08.09/F20: list edits are not shared");
+        expect(copy != ((java.util.ArrayList<Object>) Reflect.get(g, "boxes")), "L08.09/F20: snapshot is a distinct mutable collection");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -355,26 +360,26 @@ class M10_SlantTest {
         Reflect.call(g, "reset");
         Reflect.call(g, "command", "1 1 /");
         Reflect.call(g, "command", "undo");
-        equal('.', ((char[][]) Reflect.get(g, "cells"))[0][0], "I085/F20: undo needs independent row arrays");
+        equal('.', ((char[][]) Reflect.get(g, "cells"))[0][0], "L08.10/F20: undo needs independent row arrays");
         Reflect.call(g, "command", "1 1 /");
         Reflect.call(g, "command", "2 2 /");
         Reflect.call(g, "command", "undo");
-        equal('/', ((char[][]) Reflect.get(g, "cells"))[0][0], "I085/F20: older diagonal retained");
-        equal('.', ((char[][]) Reflect.get(g, "cells"))[1][1], "I085/F20: latest diagonal reverted");
+        equal('/', ((char[][]) Reflect.get(g, "cells"))[0][0], "L08.10/F20: older diagonal retained");
+        equal('.', ((char[][]) Reflect.get(g, "cells"))[1][1], "L08.10/F20: latest diagonal reverted");
         char[][] copy = ((char[][]) Reflect.call(g, "snapshot"));
         copy[0][0] = '.';
-        equal('/', ((char[][]) Reflect.get(g, "cells"))[0][0], "I085/F20: snapshot edits cannot change current board");
+        equal('/', ((char[][]) Reflect.get(g, "cells"))[0][0], "L08.10/F20: snapshot edits cannot change current board");
         Reflect.call(g, "reset");
         for (int r = 1; r <= 3; r++) {
             for (int c = 1; c <= 3; c++) {
                 Reflect.call(g, "command", r + " " + c + " /");
             }
         }
-        expect(((boolean) Reflect.call(g, "solved")) && !((java.lang.String) Reflect.get(g, "outcome")).isEmpty(), "I085/F20: authored all-slash board completes");
+        expect(((boolean) Reflect.call(g, "solved")) && !((java.lang.String) Reflect.get(g, "outcome")).isEmpty(), "L08.10/F20: authored all-slash board completes");
         Reflect.call(g, "command", "undo");
-        expect(!((boolean) Reflect.call(g, "solved")) && ((java.lang.String) Reflect.get(g, "outcome")).isEmpty(), "I085/F20: undo after completion restores an unfinished round");
+        expect(!((boolean) Reflect.call(g, "solved")) && ((java.lang.String) Reflect.get(g, "outcome")).isEmpty(), "L08.10/F20: undo after completion restores an unfinished round");
         Reflect.call(g, "command", "3 3 /");
-        expect(((boolean) Reflect.call(g, "solved")) && !((java.lang.String) Reflect.get(g, "outcome")).isEmpty(), "I085/F20: restored round can be completed again");
+        expect(((boolean) Reflect.call(g, "solved")) && !((java.lang.String) Reflect.get(g, "outcome")).isEmpty(), "L08.10/F20: restored round can be completed again");
         StringBuilder input = new StringBuilder();
         for (int r = 1; r <= 3; r++) {
             for (int c = 1; c <= 3; c++) {
@@ -395,7 +400,7 @@ class M10_SlantTest {
         }
         String output = captured.toString(java.nio.charset.StandardCharsets.UTF_8);
         int last = output.lastIndexOf("Cell diagonals");
-        expect(last >= 0 && output.substring(last).contains("3 [/, /, .]"), "I085/F20: real finished input loop permits undo");
+        expect(last >= 0 && output.substring(last).contains("3 [/, /, .]"), "L08.10/F20: real finished input loop permits undo");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -418,13 +423,13 @@ class M11_BinaryBalanceTest {
         var g = Reflect.create("M11_BinaryBalance");
         Reflect.call(g, "restart");
         Reflect.call(g, "cycle", 1, 0);
-        equal(0, ((int[][]) Reflect.get(g, "givens"))[0][1], "I091/F20: playing must not rewrite the fixed clue template");
+        equal(0, ((int[][]) Reflect.get(g, "givens"))[0][1], "L08.11/F20: playing must not rewrite the fixed clue template");
         Reflect.call(g, "restart");
-        equal(0, ((int[][]) Reflect.get(g, "cells"))[0][1], "I091/F20: reset restores originally empty cell");
+        equal(0, ((int[][]) Reflect.get(g, "cells"))[0][1], "L08.11/F20: reset restores originally empty cell");
         int[][] copy = ((int[][]) Reflect.call(g, "copyBoard", (Object) ((int[][]) Reflect.get(g, "givens"))));
         copy[2][1] = 2;
-        equal(0, ((int[][]) Reflect.get(g, "givens"))[2][1], "I091/F20: every inner row is independent");
-        equal(1, copy[0][0], "I091/F20: copying retains given values");
+        equal(0, ((int[][]) Reflect.get(g, "givens"))[2][1], "L08.11/F20: every inner row is independent");
+        equal(1, copy[0][0], "L08.11/F20: copying retains given values");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -445,12 +450,12 @@ class M12_RuleGardenTest {
     }
     public static void main(String[] args) throws Exception {
         var g = Reflect.create("M12_RuleGarden");
-        equal(java.util.List.of("...#...", "..#.#..", ".#...#."), ((java.util.List<java.lang.String>) Reflect.call(g, "grow", 90, 7, 3)), "I123/F26: each row reads only the previous generation");
+        equal(java.util.List.of("...#...", "..#.#..", ".#...#."), ((java.util.List<java.lang.String>) Reflect.call(g, "grow", 90, 7, 3)), "L08.12/F26: each row reads only the previous generation");
         boolean[] before = {false, true, false, false, false};
         boolean[] saved = before.clone();
         Reflect.call(g, "nextRow", before, 90);
-        equal(saved, before, "I123/F26: computing next row does not overwrite its input");
-        equal(java.util.List.of(".#.", "#.#", "..."), ((java.util.List<java.lang.String>) Reflect.call(g, "grow", 90, 3, 3)), "I123/F26: outside cells stay off");
+        equal(saved, before, "L08.12/F26: computing next row does not overwrite its input");
+        equal(java.util.List.of(".#.", "#.#", "..."), ((java.util.List<java.lang.String>) Reflect.call(g, "grow", 90, 3, 3)), "L08.12/F26: outside cells stay off");
         var random = new java.util.Random(3);
         for (int sample = 0; sample < 10; sample++) {
             boolean[] row = new boolean[13];
@@ -469,7 +474,7 @@ class M12_RuleGardenTest {
                 }
                 reverseOracle[c] = ((rule>>pattern)&1) != 0;
             }
-            equal(reverseOracle, ((boolean[]) Reflect.call(g, "nextRow", row, rule)), "I123/F26: traversal order does not affect a generation");
+            equal(reverseOracle, ((boolean[]) Reflect.call(g, "nextRow", row, rule)), "L08.12/F26: traversal order does not affect a generation");
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -498,18 +503,18 @@ class M13_ForestFireSandboxTest {
         }
         ((int[][]) Reflect.get(g, "cells"))[21][11] = 1;
         Reflect.call(g, "step");
-        equal(1, ((int[][]) Reflect.get(g, "cells"))[20][12], "I125/F26: fire advances one neighbour, not across the row in one tick");
-        equal(0, ((int[][]) Reflect.get(g, "cells"))[20][10], "I125/F26: old burning tree becomes empty");
-        equal(2, ((int[][]) Reflect.get(g, "cells"))[20][11], "I125/F26: adjacent old tree ignites");
-        equal(1, ((int[][]) Reflect.get(g, "cells"))[21][11], "I125/F26: newly burning tree cannot ignite another during the same tick");
+        equal(1, ((int[][]) Reflect.get(g, "cells"))[20][12], "L08.13/F26: fire advances one neighbour, not across the row in one tick");
+        equal(0, ((int[][]) Reflect.get(g, "cells"))[20][10], "L08.13/F26: old burning tree becomes empty");
+        equal(2, ((int[][]) Reflect.get(g, "cells"))[20][11], "L08.13/F26: adjacent old tree ignites");
+        equal(1, ((int[][]) Reflect.get(g, "cells"))[21][11], "L08.13/F26: newly burning tree cannot ignite another during the same tick");
         Reflect.call(g, "step");
-        equal(2, ((int[][]) Reflect.get(g, "cells"))[20][12], "I125/F26: next tick advances the front");
+        equal(2, ((int[][]) Reflect.get(g, "cells"))[20][12], "L08.13/F26: next tick advances the front");
         int[][] old = new int[40][60];
         old[0][0] = 2;
         old[0][1] = 1;
         int[][] copy = java.util.Arrays.stream(old).map(int[]::clone).toArray(int[][]::new);
         Reflect.call(g, "nextForest", (Object) old);
-        equal(copy, old, "I125/F26: source forest remains unchanged");
+        equal(copy, old, "L08.13/F26: source forest remains unchanged");
         var random = new java.util.Random(7);
         int[][] forest = new int[40][60];
         for (var row : forest) {
@@ -531,7 +536,7 @@ class M13_ForestFireSandboxTest {
                 }
             }
         }
-        equal(expected, ((int[][]) Reflect.call(g, "nextForest", (Object) forest)), "I125/F26: reversing both traversals leaves simultaneous update unchanged");
+        equal(expected, ((int[][]) Reflect.call(g, "nextForest", (Object) forest)), "L08.13/F26: reversing both traversals leaves simultaneous update unchanged");
         System.out.println("PASS " + checks + " checks");
     }
 }

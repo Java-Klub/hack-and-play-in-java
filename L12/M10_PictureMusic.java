@@ -21,6 +21,14 @@ double pitchFrequency(int row, int shift) {
     return 220 * Math.pow(2, (11 - row) / 12.0);
 }
 
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Compose a tiny melody by authoring the black cells in demo. Let a friend listen before seeing the
+/// picture. Then change transposeShift by one octave and explain why the time pattern stays the same
+/// even though the tune sounds higher.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Recall · F36">
 /// ### Transfer: keep the old promise while adding a choice
 ///

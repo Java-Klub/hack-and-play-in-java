@@ -3,7 +3,8 @@
 /// Break a four-digit code using clues that distinguish the right digit in the right place from a digit
 /// placed elsewhere. After the known training code, restart to try a hidden random code.
 ///
-/// **Your mission:** Entering the training code gives four exact digits but no win. Repair matchesCode so
+/// **Your mission · Unlock a false rejection:** Entering the training code gives four exact digits but no
+/// win. Repair matchesCode so
 /// equal text is accepted even when it came from separate String values.
 ///
 /// **Today you learn:** Boolean decisions and text equality: boolean means true or false. For text,
@@ -54,6 +55,19 @@ boolean matchesCode(String guess) {
 ///
 /// submit validates the four digits, computes exact/elsewhere clues and asks matchesCode for the win
 /// decision. The first secret is 1234 for investigation; reset generates random codes for later rounds.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// Two separate paper labels can both say OPEN. Asking whether their letters agree differs from
+/// asking whether they are the very same label. For String, equals asks about letters; == asks about
+/// object identity. A typed answer is newly received text, so a correct answer must not depend on
+/// sharing the very same stored object.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// After the judge works, change the known training secret to another four-digit code and let a
+/// friend discover it from the exact/misplaced clues. Keep the number of digits unchanged. Try a code
+/// with repeated digits and see whether guessing strategy changes.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">

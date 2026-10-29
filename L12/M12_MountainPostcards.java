@@ -8,18 +8,65 @@ import java.awt.image.BufferedImage;
 /// Generate a mountain silhouette and compare it with its reflected twin. Mirroring should change which
 /// peaks stand on the left without inventing a different mountain.
 ///
-/// **Your mission:** The mirror option makes an unchanged copy of the ridge. Build a reversed result
-/// while preserving the original height array and the old unmirrored mode.
+/// **Your mission:** Refactor a working picture. render currently reverses a ridge inline; extract
+/// that responsibility into reverseRidge, then replace the inline block with a call to your helper.
+/// Keep the original unmirrored option, do not mutate the input, and preserve the picture’s
+/// behaviour.
 ///
-/// **Today you learn:** A pure transformation can produce a new arrangement without mutating its input.
-/// Extracting ridge reversal gives the new option one responsibility and keeps generation independent
-/// from presentation.
+/// **Today you learn:** Extract an operation from existing working code, give it a contract, and
+/// connect the original caller to it. Preserve behaviour while changing responsibility.
 ///
-/// Run the program, then compare New rule with Original rule from the same seed; after the
-/// repair they should show the intended difference. Close the window before replaying.
+/// Inspect New rule and Original rule before changing the code. After extracting the helper, rerun
+/// the same seed: both views must preserve their earlier appearance. The helper check starts RED even
+/// though the inline picture already works.
 double[] reverseRidge(double[] heights) {
+    // Extract the reversal responsibility from render into this method.
     return heights.clone();
 }
+
+BufferedImage render(long seed, double roughness) {
+    if (!Double.isFinite(roughness) || roughness < 0.2 || roughness > 0.9) {
+        throw new IllegalArgumentException("Roughness: 0.2..0.9.");
+    }
+    var image = new BufferedImage(640, 400, BufferedImage.TYPE_INT_RGB);
+    var g = image.createGraphics();
+    var random = new Random(seed);
+    try {
+        for (int y = 0; y < 400; y++) {
+            g.setColor(new Color(255 - y / 4, 120 - y / 6, 120 + y / 4));
+            g.drawLine(0, y, 640, y);
+        }
+        for (int layer = 0; layer < 5; layer++) {
+            var heights = ridge(random, roughness);
+            if (mirrored) {
+                double[] reversed = new double[heights.length];
+                for (int i = 0; i < heights.length; i++) {
+                    reversed[i] = heights[heights.length - 1 - i];
+                }
+                heights = reversed;
+            }
+            var polygon = new Polygon();
+            polygon.addPoint(0, 400);
+            for (int x = 0; x < 257; x++) {
+                polygon.addPoint(x * 640 / 256, Math.max(20, Math.min(390, 170 + layer * 38 + (int)heights[x])));
+            }
+            polygon.addPoint(640, 400);
+            g.setColor(new Color(100 - layer * 18, 95 - layer * 15, 135 - layer * 20));
+            g.fillPolygon(polygon);
+        }
+    } finally {
+        g.dispose();
+    }
+    return image;
+}
+
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Design a mountain logo by combining the original ridge and its reversed copy in one image, with
+/// different colours. Choose whether they should meet at the centre or overlap. Generation must still
+/// receive the original untouched ridge values.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F36">
 /// ### Transfer: keep the old promise while adding a choice
@@ -44,31 +91,35 @@ double[] reverseRidge(double[] heights) {
 /// symbol changes?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// ### Refactoring changes responsibilities while keeping results
 ///
-/// - `double[] heights` — An ordered array of ridge heights, from one side of the picture to the other.
-/// - `heights.clone()` — Creates an independent array but keeps every value at its original index.
-/// - `return` — Supplies the result array to the renderer; it need not be the input object.
+/// The starting picture already mirrors correctly. Its inline reversal is useful behaviour, not a bug
+/// to erase. Give that operation a reusable contract: return a fresh reversed array and leave the
+/// input alone. Then let render request the operation by name instead of repeating its
+/// implementation. The picture should not suddenly look different after this refactoring.
 ///
-/// ### What the prepared part already does
+/// Neutral example: [5, 9, 1, 7] becomes [7, 1, 9, 5]. Index i in the result reads index length - 1 -
+/// i in the original. Predict the result for [8] and for an empty array. An empty loop has no
+/// accesses. clone alone makes an independent copy but preserves order.
 ///
-/// ridge generates five layers; render optionally applies the required reverseRidge transformation.
-/// main compares new and original rules from the same seed, without additional generation or export
-/// controls.
+/// The checks exercise the helper's results and independence, and the real renderer's two options.
+/// They do not inspect your source to enforce a particular call. In your self-review, find the sole
+/// reversal implementation and show the call from render: keeping two correct copies would pass some
+/// behaviour checks but miss the refactoring goal.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// The last source value belongs at result index zero.
+/// Keep the working inline reversal as your reference while building the helper.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Map destination i to source length-1-i.
+/// A returned array must be new. Move the reversal loop into reverseRidge and return its result.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Explain why reversing data belongs in a separate value transform rather than inside random ridge
-/// generation.
+/// Replace the whole mirrored inline block with a call to reverseRidge. Compare both pictures before
+/// and after.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
@@ -86,36 +137,7 @@ double[] ridge(Random random, double roughness) {
     return heights;
 }
 
-/// Supplied image creation: generation and drawing remain visible in this file.
-BufferedImage render(long seed, double roughness) {
-    if (!Double.isFinite(roughness) || roughness < 0.2 || roughness > 0.9) {
-        throw new IllegalArgumentException("Roughness: 0.2..0.9.");
-    }
-    var image = new BufferedImage(640, 400, BufferedImage.TYPE_INT_RGB);
-    var g = image.createGraphics();
-    var random = new Random(seed);
-    try {
-        for (int y = 0; y < 400; y++) {
-            g.setColor(new Color(255 - y / 4, 120 - y / 6, 120 + y / 4));
-            g.drawLine(0, y, 640, y);
-        }
-        for (int layer = 0; layer < 5; layer++) {
-            var heights = ridge(random, roughness);
-            if (mirrored) heights = reverseRidge(heights);
-            var polygon = new Polygon();
-            polygon.addPoint(0, 400);
-            for (int x = 0; x < 257; x++) {
-                polygon.addPoint(x * 640 / 256, Math.max(20, Math.min(390, 170 + layer * 38 + (int)heights[x])));
-            }
-            polygon.addPoint(640, 400);
-            g.setColor(new Color(100 - layer * 18, 95 - layer * 15, 135 - layer * 20));
-            g.fillPolygon(polygon);
-        }
-    } finally {
-        g.dispose();
-    }
-    return image;
-}
+
 
 
 boolean mirrored = true;

@@ -40,6 +40,14 @@ void step() {
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Create a two-colour orbit signature: colour outward travel differently from inward travel using
+/// the old and new distance from the centre. Search for one launch that crosses its earlier path many
+/// times without leaving the canvas.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Recall · F30">
 /// ### Input requests; a tick advances time
 ///

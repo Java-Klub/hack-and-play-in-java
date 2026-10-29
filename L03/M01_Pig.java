@@ -1,10 +1,12 @@
-/// # L03.02 · Pig
+/// # L03.01 · Pig
 ///
 /// Two players race to bank 50 points. Each extra roll can increase the current turn’s reward, but
 /// rolling one loses those unbanked points and passes the die.
 ///
-/// **Your mission:** The starter swaps the effects of one and six. Repair which branch roll selects
-/// without changing the prepared effects of the two branches.
+/// **Your mission · Rebuild a risky turn:** The die is rolling but neither branch updates the turn.
+/// Complete roll: a 1
+/// clears turnTotal and switches player; 2..6 add die to turnTotal and keep the player. Preserve the
+/// supplied invalid-die and finished-game guard.
 ///
 /// **Today you learn:** Branch effects: an if/else can choose between changing several values and
 /// changing just one. Trace the turn total and player separately for a losing roll and a scoring roll.
@@ -15,16 +17,15 @@ boolean roll(int die) {
     if (winner != -1 || die < 1 || die > 6) {
         return false;
     }
-    if (die == 6) {
-        turnTotal = 0;
-        player = 1 - player;
+    if (die == 1) {
+        // Losing branch: complete both effects.
     } else {
-        turnTotal += die;
+        // Scoring branch: keep the same player.
     }
     return true;
 }
 
-// <editor-fold defaultstate="collapsed" desc="Recall · F07">
+// <editor-fold defaultstate="expanded" desc="Learn · F07">
 /// An `if` asks a boolean question. Its body runs only when that question is true. An `else if` asks
 /// another question only after earlier ones failed; the final `else` covers everything remaining.
 ///
@@ -51,34 +52,37 @@ boolean roll(int die) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## One choice, several effects
 ///
-/// - `boolean roll(int die)` — Receive one die value and return whether the roll was accepted.
-/// - `winner != -1 || die < 1 || die > 6` — A supplied guard rejects an already finished round or an
-///   impossible die value; != means not equal and || joins alternatives.
-/// - `if (die == 6)` — This currently decides which valid die face selects the turn-loss branch.
-/// - `turnTotal = 0;` — Replace the unbanked total with zero.
-/// - `player = 1 - player;` — Switch between player indices zero and one.
-/// - `turnTotal += die;` — Add the die to the previous total instead of replacing that total.
-/// - `return true;` — Report that the valid roll has been processed.
-///
-/// ### What the prepared part already does
-///
-/// bank stores the current turn’s points and checks the race to 50. main rolls a random die and calls
-/// roll, then prints the state and handles the next command. The unfinished turn’s points and the banked
-/// scores remain separate.
+/// The first guard is supplied: it rejects impossible dice and an already finished game. Your if
+/// chooses between losing and scoring. Assignment changes stored game values; return true reports
+/// that the roll was accepted. The dice generator and bank action remain prepared. winner uses -1 for
+/// an unfinished game; do not replace that convention.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// Suppose player is 0 and turnTotal is 9. Losing the turn needs two changes: total becomes zero and
+/// player becomes 1. A scoring roll of four makes the total 13 and leaves player at 0. The expression
+/// 1 - player switches 0 and 1. A branch may contain several assignments; running only half its
+/// effects leaves inconsistent game state.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// Agree on a house rule before playing: perhaps a different die face loses the unbanked turn. Change
+/// that rule deliberately and test both its losing and scoring branch. Compare whether players bank
+/// earlier. The standard check continues to expect that one is the losing face.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Trace die = 1 through the current condition.
+/// List the values that change for a losing turn and for a scoring turn.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The two branch bodies are ready; their selecting condition is wrong.
+/// Use 1 - player only in the losing branch.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// The if comparison must be die == 1.
+/// For die == 1 assign turnTotal = 0 and player = 1 - player; otherwise add die to turnTotal.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

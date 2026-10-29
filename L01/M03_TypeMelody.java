@@ -8,16 +8,17 @@ import javax.sound.sampled.AudioSystem;
 /// Turn a short written message into a tiny melody. Each letter gets a note, while other characters leave
 /// a quiet time slot, so different messages have different rhythms.
 ///
-/// **Your mission:** The first message contains four silent slots. Change the message supplied by
+/// **Your mission · Decode a musical message:** Two digits interrupt the opening message. Change the
+/// message supplied by
 /// defaultMessage so the opening melody spells JAVA.
 ///
 /// **Today you learn:** Text literals: double quotes make their contents text data. For example, a quoted
 /// digit stays a character in the message; it does not become a calculation.
 ///
 /// Run the program to open the Java player showing the message. Press Play / Replay; digits are
-/// silent rests, so the starter 1234 should be silent. Stop ends playback.
+/// silent rests: J4V4 alternates sound and silence. Stop ends playback.
 String defaultMessage() {
-    return "1234";
+    return "J4V4";
 }
 
 // <editor-fold defaultstate="expanded" desc="Learn · F02">
@@ -49,7 +50,7 @@ String defaultMessage() {
 ///   what message should be used?
 /// - `{` — The braces enclose the statements that answer that question.
 /// - `return` — Give the following value back to the code that asked for the message.
-/// - `"1234"` — The quotes are Java notation; the four characters inside become the actual message.
+/// - `"J4V4"` — The quotes are Java notation; the four characters inside become the actual message.
 /// - `;` — End this return statement here.
 ///
 /// ### What the prepared part already does
@@ -64,6 +65,18 @@ String defaultMessage() {
 /// actual message. The starter digits are rests, not an audio failure. After editing
 /// defaultMessage, save, close the window and run the program again. The new window loads the
 /// edited message; Play / Replay repeats the current window's message.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// A String literal is the text between double quotes. In `"A7"`, A makes a note and 7 leaves a rest;
+/// there are two time slots. In `"A 7"` there are three. The quotes mark the boundary in the source
+/// and do not become notes. Before listening, count the sounds and rests in your new message.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// After the JAVA check, write a short musical signature for a friend. Keep some digits or spaces as
+/// rests. Compare JAVA, J A V A and your own message: which sounds recognisable? The original check
+/// still asks for JAVA; your signature is a separate experiment.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -176,7 +189,7 @@ void showPlayer() {
         var frame = new javax.swing.JFrame("Type Melody");
         var description = new javax.swing.JLabel("<html>Message: <b>" + message.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
             + "</b><br>Letters A-Z make notes. Digits and other characters are silent rests.<br>"
-            + (allRests ? "This message is all rests: 1234 has four silent slots.<br>" : "This message contains notes. Press Play to listen.<br>")
+            + (allRests ? "This message contains only rests. Use letters A-Z for notes.<br>" : "This message contains notes. Press Play to listen.<br>")
             + "Edit defaultMessage, save, close this window and run the play command again.</html>");
         var status = new javax.swing.JLabel("Click Play to hear this message. Stop ends playback.");
         var buttons = new javax.swing.JPanel();

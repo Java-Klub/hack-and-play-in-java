@@ -10,71 +10,67 @@ import javax.swing.Timer;
 /// Share one keyboard and steer two glowing trails until someone runs out of safe space. A steering
 /// mistake leaves a permanent wall behind you.
 ///
-/// **Your mission:** The up controls send a trail downward. Repair directionFor() while preserving both
-/// keyboard layouts and the handling of unrelated keys.
+/// **Your mission:** Build directionFor(): W/Up means (0,-1), S/Down (0,1), A/Left (-1,0), and D/Right
+/// (1,0). Return null for unrelated keys. Both riders currently ignore all steering.
 ///
-/// **Today you learn:** Switch expressions: several input cases can share one returned value. A Direction
-/// groups the horizontal and vertical changes for that key.
+/// **Today you learn:** Build a value selector from stated cases; trace its selector and returned value
+/// separately from the supplied game state changes.
 ///
 /// Run the program and play together on one keyboard, with one person steering using W, A, S, D
 /// and the other using the arrow keys.
 Direction directionFor(int code) {
-    return switch (code) {
-        case KeyEvent.VK_W, KeyEvent.VK_UP -> new Direction(0, 1);
-        case KeyEvent.VK_S, KeyEvent.VK_DOWN -> new Direction(0, 1);
-        case KeyEvent.VK_A, KeyEvent.VK_LEFT -> new Direction(-1, 0);
-        case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> new Direction(1, 0);
-        default -> null;
-    };
+    return null;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F09">
-/// ### Switch: choose one value
+/// ### A switch chooses a value
 ///
-/// A switch expression selects a result from its selector. Each arrow case handles a matching value;
-/// it does not continue into the next case. `default` handles remaining values. The closing semicolon
-/// belongs to the surrounding assignment or return statement.
+/// An expression has a value. A switch expression reads one selector and chooses the value after the
+/// matching arrow. `return` then hands that value to the caller. Read this small sound selector before
+/// touching the game:
 ///
 /// ```java
-/// String weather = "mist";
-/// String colour = switch (weather) {
-///     case "mist" -> "silver";
-///     case "sun" -> "gold";
-///     default -> "indigo";
-/// };
-/// IO.println(colour);
+/// String sound(int taps) {
+///     return switch (taps) {
+///         case 0 -> "silence";
+///         case 1, 2 -> "tap";
+///         default -> "drum";
+///     };
+/// }
 /// ```
 ///
-/// The mist case selects `silver`. Predict the output for `"sun"`, then for `"snow"`. The selector is
-/// compared with case labels; the text after the arrow is the result. Changing one special case
-/// should leave the fallback's meaning intact.
+/// Trace `sound(2)`: the selector is 2, the grouped case includes 2, so the result is `"tap"`. No other
+/// case runs. For 7, no listed case matches, so `default` provides `"drum"`. The semicolon closes the
+/// whole switch expression. The returned values must fit the method's declared return type.
+///
+/// A switch can select a boolean, number, or record just as it selects a String here. It does not
+/// automatically change a field: returning a proposed direction and storing that direction are separate
+/// actions. Predict `sound(0)` and `sound(-1)`, and point to the case each uses.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Read this part
 ///
-/// - `case KeyEvent.VK_W, KeyEvent.VK_UP` — Two key codes share one case instead of duplicating their
-///   rule.
-/// - `new Direction(0, 1)` — Constructs horizontal/vertical offsets; screen y increases downward.
-/// - `default -> null` — An unrelated key produces no direction request.
-/// - `return switch (code)` — Turns a key code into one value consumed by the existing input handler.
-///
-/// ### What the prepared part already does
-///
-/// key() sends the returned Direction to turn(), which prevents reversals and queues one turn. step()
-/// checks both players against the same trail board before extending either trail.
+/// `KeyEvent.VK_...` are JDK integer names for keys. Group two keys after one case to share a result.
+/// `new Direction(dx, dy)` creates the prepared two-component record. Negative y points up on this
+/// screen. The key handler ignores null and separately prevents instant reversal.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Screen y grows downward, so up has dy=-1.
+/// Write the four coordinate changes on a small compass.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Grouped case labels can return the same record for two keys.
+/// Pair WASD with its matching arrow key instead of duplicating the whole rule.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Return Direction(0,-1) for W and Up; default remains null for non-direction keys.
+/// Return a Direction for each grouped pair and null in default; do not change the trail grid here.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Rotate one player’s controls by a quarter turn and announce the handicap. Can two players still
+/// coordinate a fair starting duel?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

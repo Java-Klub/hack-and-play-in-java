@@ -9,22 +9,27 @@ import javax.swing.*;
 /// Tour a small board with a chess knight, landing on each square at most once. A legal move should
 /// arrive at the square you clicked, not its reflection across the diagonal.
 ///
-/// **Your mission:** Move commands swap their carried coordinates. Repair the command routing while
-/// preserving rejected positions, the knight rule and Restart.
+/// **Your mission:** Build apply as the complete command dispatcher. A Move inside the 5-by-5 board
+/// must call move with its carried column and row; an outside Move returns false. Restart must
+/// restore the board and yield true. Let move own knight legality and visited cells.
 ///
-/// **Today you learn:** A sealed family describes the allowed command alternatives. Record patterns
-/// unpack a Move’s components; an exhaustive switch chooses its rule and a guard separates usable
-/// coordinates from rejected ones.
+/// **Today you learn:** Build a complete record-pattern dispatcher. Match the alternative, unpack its
+/// own components and preserve the boundary between routing and each supplied algorithm.
 ///
 /// Run the program, then click a green knight move such as zero-based column 1, row 2 from the
 /// start, and press R to restart the tour.
 boolean apply(Command command) {
-    return switch (command) {
-        case Move(var xx, var yy) when xx >= 0 && yy >= 0 && xx < 5 && yy < 5 -> move(yy, xx);
-        case Move(var xx, var yy) -> false;
-        case Restart() -> { restart(); yield true; }
-    };
+    // Build the exhaustive command switch here.
+    return false;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Design a different rider: change the legal-move predicate to a camel that moves three squares
+/// along one axis and one along the other. Keep Move/Restart dispatch unchanged. Can you visit as
+/// many distinct cells on the same board?
+// </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Learn · F35">
 /// ### Record patterns: choose a shape and unpack its data
@@ -50,20 +55,21 @@ boolean apply(Command command) {
 /// Predict: which case handles `new Stars(0)`, and what text does `new Name("Nova")` produce?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// ### Pattern matching is routing, not a second game engine
 ///
-/// - `case Move(var xx, var yy)` — Unpacks the record in component order and names its two carried
-///   coordinates.
-/// - `when xx >= 0` — Starts a guard that refines this Move case before its action runs.
-/// - `move(yy, xx)` — Forwards the matched values in reversed order; both orders may accidentally be
-///   legal knight moves.
-/// - `yield true` — Returns a value from the block belonging to this switch expression.
+/// A Move record stores (x, y) in declaration order. The names inside the pattern receive those
+/// components in that order; spelling them xx and yy does not change the order. A guard after when
+/// filters a matched alternative. An exhaustive switch still needs a case for Move values whose guard
+/// fails.
 ///
-/// ### What the prepared part already does
+/// Neutral example: `case Label(var text) when !text.isBlank() -> text.length(); case Label(var text)
+/// -> 0;` returns 3 for Label("cat") and 0 for Label(""). Predict Label("  "). A block case may
+/// perform an action and then use yield to supply its switch result.
 ///
-/// The mouse handler constructs Move and the R key constructs Restart. apply routes them; the supplied
-/// move routine checks knight distance and visited squares, while drawing highlights legal choices.
+/// Here apply owns dispatch and board bounds; move owns knight jumps and revisits. From (0,0),
+/// Move(1,2) lands in column 1, row 2; Move(2,1) is a different legal landing. Restart has no
+/// components but still has its own pattern.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="For this game">
@@ -78,16 +84,16 @@ boolean apply(Command command) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Read the Move record declaration: the first component is x and the second is y. The pattern names
-/// receive values in that order.
+/// List every Command alternative before writing their effects.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Move(1,2) must arrive at x=1,y=2 even though the swapped knight move is also legal.
+/// Move needs an in-bounds guarded case and a remaining rejected case. Forward x before y.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Keep every closed alternative handled; a bad coordinate returns false before moving.
+/// Use a switch expression with two Move cases and a Restart block that calls restart and yields
+/// true.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

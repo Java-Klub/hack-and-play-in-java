@@ -63,22 +63,33 @@ String trace(boolean[][] grid, String entry) {
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F18">
-/// ### Grids: choose the row before the column
+/// ### Coordinates describe neighbours
 ///
-/// In an array of rows, the first index selects a row and the second selects a position within it.
-/// Rows can have different lengths. A neighbour is a displacement from a cell, not another absolute
-/// position. Define the permitted directions before checking whether a candidate exists.
+/// A grid stores rows first: `board[y][x]`. Increasing x goes right; increasing y goes down on our
+/// screens. A neighbour is the current coordinate plus a small offset.
 ///
-/// ```java
-/// int[][] mosaic = {{3, 6, 9}, {2, 4, 8}};
-/// int row = 0;
-/// int column = 1;
-/// IO.println(mosaic[row][column + 1]);
+/// ```text
+///           (0,-1)
+/// (-1,0)    HERE    (1,0)
+///           (0,1)
 /// ```
 ///
-/// The output is nine: row zero and column two select that element. Moving down changes row; moving
-/// right changes column. From the top-right cell, which of those two moves stays inside? For a
-/// diagonal both coordinates change; bounds must be checked before accessing the candidate.
+/// ```java
+/// int[][] board = {{2, 5, 8}, {1, 4, 7}};
+/// int x = 1, y = 0;
+/// int nx = x + 0, ny = y + 1;
+/// if (ny >= 0 && ny < board.length && nx >= 0 && nx < board[ny].length) {
+///     IO.println(board[ny][nx]);
+/// }
+/// ```
+///
+/// The move goes from 5 to 4; the printed value is 4. Bounds are checked before indexing, because an
+/// array has no cell outside its edges. A diagonal changes both coordinates. A corridor repeats the
+/// same offset; a neighbourhood tries several offsets. These are different algorithms using the same
+/// coordinate model.
+///
+/// Predict the result of offset `(-1,0)` from the same start. Which offset leaves this board? Mark the
+/// start and destination on paper before combining directions in a loop.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
@@ -116,6 +127,11 @@ String trace(boolean[][] grid, String entry) {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Keep left at (nx-dy,ny+dx); right must use (nx+dy,ny-dx).
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Choose a new hidden-ball arrangement, then let a partner locate it using rays. Predict one tricky
+/// deflection before firing that ray.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

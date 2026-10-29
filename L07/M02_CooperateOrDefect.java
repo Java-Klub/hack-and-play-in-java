@@ -8,82 +8,71 @@ import java.awt.BorderLayout;
 /// Privately promise cooperation or choose betrayal, then reveal both decisions. Five short rounds make a
 /// good excuse to argue about trust.
 ///
-/// **Your mission:** Two cooperating players receive the wrong reward. Repair reward() without disturbing
-/// the outcomes of the other paired choices.
+/// **Your mission:** Build reward() for all four paired choices: mutual cooperation gives 3,
+/// cooperating against betrayal gives 0, betraying cooperation gives 5, and mutual betrayal gives 1.
+/// Encode the two choices and select a payoff with switch; the empty payoff rule currently gives
+/// everyone zero.
 ///
-/// **Today you learn:** Switch expressions: encode two yes/no choices into one small case number, then
-/// return the corresponding payoff. Read each case from one player’s viewpoint.
+/// **Today you learn:** Build a value selector from stated cases; trace its selector and returned value
+/// separately from the supplied game state changes.
 ///
 /// Run the program, click Private choices for next round, and pass the computer between the two
 /// private choice dialogs before revealing both decisions.
 int reward(boolean cooperate, boolean otherCooperates) {
-    int choice = (cooperate ? 2 : 0) + (otherCooperates ? 1 : 0);
-    return switch (choice) {
-        case 3 -> 0;
-        case 2 -> 0;
-        case 1 -> 5;
-        default -> 1;
-    };
+    return 0;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F09">
-/// ### Switch: choose one value
+/// ### A switch chooses a value
 ///
-/// A switch expression selects a result from its selector. Each arrow case handles a matching value;
-/// it does not continue into the next case. `default` handles remaining values. The closing semicolon
-/// belongs to the surrounding assignment or return statement.
+/// An expression has a value. A switch expression reads one selector and chooses the value after the
+/// matching arrow. `return` then hands that value to the caller. Read this small sound selector before
+/// touching the game:
 ///
 /// ```java
-/// String weather = "mist";
-/// String colour = switch (weather) {
-///     case "mist" -> "silver";
-///     case "sun" -> "gold";
-///     default -> "indigo";
-/// };
-/// IO.println(colour);
+/// String sound(int taps) {
+///     return switch (taps) {
+///         case 0 -> "silence";
+///         case 1, 2 -> "tap";
+///         default -> "drum";
+///     };
+/// }
 /// ```
 ///
-/// The mist case selects `silver`. Predict the output for `"sun"`, then for `"snow"`. The selector is
-/// compared with case labels; the text after the arrow is the result. Changing one special case
-/// should leave the fallback's meaning intact.
+/// Trace `sound(2)`: the selector is 2, the grouped case includes 2, so the result is `"tap"`. No other
+/// case runs. For 7, no listed case matches, so `default` provides `"drum"`. The semicolon closes the
+/// whole switch expression. The returned values must fit the method's declared return type.
+///
+/// A switch can select a boolean, number, or record just as it selects a String here. It does not
+/// automatically change a field: returning a proposed direction and storing that direction are separate
+/// actions. Predict `sound(0)` and `sound(-1)`, and point to the case each uses.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Read this part
 ///
-/// - `cooperate ? 2 : 0` — Encodes this player’s choice as one contribution to the case number.
-/// - `otherCooperates ? 1 : 0` — Uses a different weight for the other player, keeping the four pairs
-///   distinct.
-/// - `case 3 -> 0` — A case maps one encoded pair to this player’s reward; this result needs
-///   investigation.
-/// - `default -> 1` — The remaining encoded pair has its own fallback reward.
-///
-/// ### What the prepared part already does
-///
-/// The private dialogs collect choices separately. play() calls reward() from both viewpoints, updates
-/// totals, and reveals the round summary; you only repair the shared scoring table.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="For this game">
-/// ### The selector is not the reward
-///
-/// The two boolean choices contribute separate amounts to a case number. Write the four input pairs
-/// and calculate their selector numbers before assigning any reward. The game's displayed contract
-/// gives each cooperator three points when both cooperate, one each when both defect, and five versus
-/// zero when only one defects. `reward` returns the viewpoint of its first argument; the caller also
-/// asks from the other viewpoint. Predict both calls for one mixed-choice round.
+/// The first boolean describes the player whose reward is being computed. The second describes the
+/// opponent. Two booleans have four combinations. A ternary expression can contribute 2 for the first
+/// choice and 1 for the second, giving distinct selectors 0–3. The prepared reveal calls reward once
+/// from each player’s viewpoint.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// choice uses two bits: your cooperation contributes 2, the other player contributes 1.
+/// Draw the four pairs before assigning any numbers.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// List the four possible sums 0,1,2,3 before editing.
+/// Give the two choices different place values so no pair collides with another.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// The branch for 3 means both cooperated and must return 3.
+/// Encode true/false choices with weights 2 and 1, then map each resulting case to the advertised
+/// reward.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Create a second payoff table in which mutual cooperation is more valuable than a lone betrayal.
+/// Agree on the table first and compare five rounds of behaviour.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

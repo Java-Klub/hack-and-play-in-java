@@ -8,90 +8,73 @@ import java.awt.image.BufferedImage;
 /// Grow a branching tree by changing one angle. A small turn can transform a narrow twig into a sprawling
 /// canopy worth saving as a postcard.
 ///
-/// **Your mission:** Mistyped angle text quietly selects 10 instead of the promised default 28. Repair
-/// that fallback while still rejecting numeric values outside the allowed range.
+/// **Your mission:** Build readAngle(text): strip whitespace, parse a double, accept finite values
+/// 10–70 inclusive, use 28 only for malformed number text, and reject readable but invalid numbers. The
+/// unfinished parser currently ignores every requested tree shape.
 ///
-/// **Today you learn:** Parsing turns text into a number and can fail before range checking begins. Catch
-/// the specific text-conversion failure; an out-of-range number is a different problem.
+/// **Today you learn:** Build a deliberate input boundary: distinguish conversion, validation and
+/// committing a live setting.
 ///
 /// Run the program, then enter an angle 10–70 or try oops; read Chosen value and inspect the
 /// Java picture. Close it and run the program again for another input.
 double readAngle(String text) {
-    try {
-        double value = Double.parseDouble(text.strip());
-        if (!Double.isFinite(value) || value < 10 || value > 70) throw new IllegalArgumentException("angle: 10..70.");
-        return value;
-    } catch (NumberFormatException invalid) {
-        return 10;
-    }
+    return 28;
 }
 
 // <editor-fold defaultstate="expanded" desc="Learn · F31">
-/// ### Parse, validate, then commit
+/// ### Text conversion and valid values are different questions
 ///
-/// Parsing converts text; validation checks whether the resulting number is allowed. These can fail
-/// differently.
+/// A number field starts as text. Conversion can fail because no number was written; validation can
+/// reject a perfectly readable number. Decide the two policies separately.
 ///
 /// ```java
-/// int readCopies(String text) {
+/// int readZoom(String text) {
 ///     try {
-///         int n = Integer.parseInt(text.strip());
-///         if (n < 1 || n > 5) {
-///             throw new IllegalArgumentException("Copies: 1..5");
-///         }
-///         return n;
-///     } catch (NumberFormatException invalid) {
-///         return 3;
+///         int zoom = Integer.parseInt(text.strip());
+///         if (zoom < 1 || zoom > 4) throw new IllegalArgumentException("Zoom: 1..4");
+///         return zoom;
+///     } catch (NumberFormatException typo) {
+///         return 2;
 ///     }
 /// }
 /// ```
 ///
-/// `readCopies(" 2 ")` returns `2`: conversion and validation succeed. `"oops"` fails during
-/// conversion and reaches `catch`, returning `3`. A numeric `"8"` converts successfully, then throws
-/// a different exception; this narrow catch does not handle it. `return` ends the method; `throw`
-/// leaves the normal path. Change stored game state only after validation succeeds.
+/// Trace `" 3 "`: strip removes surrounding whitespace, parseInt produces 3, bounds accept it. `"oops"`
+/// cannot convert, so catch returns 2. `"7"` converts successfully but fails validation; the explicitly
+/// thrown IllegalArgumentException leaves this method. Catching only NumberFormatException keeps those
+/// paths distinct.
 ///
-/// Predict the path for `"five"`, `"5"` and `"0"`.
+/// For a decimal, use Double.parseDouble; also consider NaN and infinity, which are readable but not
+/// finite numbers. For an interactive setting, parse into a local candidate before changing the stored
+/// field. Predict the path for `"0"`, `"two"` and `"4"`. Which inputs should preserve the previous live
+/// setting?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Read this part
 ///
-/// - `Double.parseDouble(text.strip())` — Removes outer whitespace, then attempts a decimal-number
-///   conversion.
-/// - `!Double.isFinite(value)` — Rejects NaN and infinities, which are not usable branching angles.
-/// - `catch (NumberFormatException invalid)` — Handles malformed numeric text, rather than every possible
-///   programming error.
-/// - `return 10;` — The current fallback determines the visible tree after a typing mistake.
-///
-/// ### What the prepared part already does
-///
-/// main sends the one typed angle to readAngle, then render draws the bounded branch pattern. A
-/// valid value gives a Java picture; malformed text and a numeric range violation are separate
-/// cases.
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="For this game">
-/// ### Trace three different paths
-///
-/// For readAngle, `" 24 "` is stripped, converted and returned as 24. `"oops"` cannot be converted
-/// and enters the NumberFormatException catch; inspect its current result and compare it with the
-/// advertised default. `"90"` converts successfully but fails the range guard. Its
-/// IllegalArgumentException is not this catch's NumberFormatException, so it reaches the caller. NaN
-/// and infinity are also numeric special values, rejected by isFinite. Predict which lines run for
-/// `"70"` and `"9"`; do not treat every failure as a reason to replace the input with a default.
+/// Double.parseDouble can read decimal angles as well as NaN and Infinity; Double.isFinite rejects the
+/// latter two. NumberFormatException means conversion failed, not that a successfully read value was
+/// within bounds. The main prompt reports your chosen value before rendering the tree. EOF cancels;
+/// blank chooses the documented default.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Strip surrounding whitespace before parsing.
+/// Separate malformed text from readable but unacceptable numbers.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Catch NumberFormatException, not every programming error.
+/// A finite test and both inclusive bounds belong before returning the number.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// The fallback is 28; range guards remain separate from that fallback.
+/// Catch only NumberFormatException for fallback 28; throw IllegalArgumentException for nonfinite or
+/// out-of-range parsed values.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Give the two branches different turn angles and compare a windswept tree with a symmetric one. Keep
+/// one chosen trunk and depth so the asymmetry is visible.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

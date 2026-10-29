@@ -8,17 +8,27 @@ import java.awt.image.BufferedImage;
 /// Let two virtual chemicals spread and react until spots or stripes emerge. A tiny local recipe can
 /// change the whole skin of the creature you imagine wearing it.
 ///
-/// **Your mission:** The reaction is always zero, so the selected chemistry never affects the pattern.
-/// Reconnect the replaceable rule to the current cell’s real values.
+/// **Your mission:** Author makeChemistry and install its result in chemistry. Return a Chemistry
+/// lambda implementing a × b², using its arguments rather than fixed grid cells. reactionAt is now a
+/// supplied adapter: keep it forwarding each cell to the installed role.
 ///
-/// **Today you learn:** A small interface can name one replaceable calculation. reactionAt should ask the
-/// installed Chemistry role about this cell, so a different implementation changes chemistry without
-/// replacing diffusion.
+/// **Today you learn:** Author an implementation of a small interface and install it in the running
+/// program. Keep its calculation separate from input, updates and drawing.
 ///
 /// Run the program and compare the picture before and after your repair.
-double reactionAt(int x, int y) {
-    return 0;
+Chemistry makeChemistry() {
+    return (a, b) -> 0;
 }
+
+Chemistry chemistry = (a, b) -> 0;
+
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Invent a creature skin by changing only your Chemistry implementation. Try halving its reaction
+/// strength, then compare equal seeds and equal step counts. Do not promise a particular animal
+/// pattern: name the pattern you actually see and keep its recipe.
+// </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Learn · F34">
 /// ### Interface: ask a role to do its job
@@ -46,32 +56,52 @@ double reactionAt(int x, int y) {
 /// award three times the input?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// ### Implement a role, then install it
 ///
-/// - `double` — The returned reaction is a decimal quantity, not a yes/no decision.
-/// - `reactionAt(int x, int y)` — The caller identifies which cell’s current chemical values are needed.
-/// - `return 0;` — Ignores the cell and installed rule, reporting no reaction everywhere.
+/// interface Chemistry promises reaction(double a, double b). A lambda with two arguments and a
+/// double result can fulfil that promise. The factory makeChemistry returns the implementation; the
+/// chemistry field stores the selected implementation. You must do both jobs. Creating an unused
+/// correct rule does not change the picture.
 ///
-/// ### What the prepared part already does
+/// Neutral example:
 ///
-/// reset creates concentration grids; step asks reactionAt for the local reaction before writing
-/// the next grids. render performs one bounded run and shows the resulting skin in Java.
+/// ```java
+/// interface Price { double forCount(int n); }
+/// Price makePrice() {
+///     return n -> {
+///         double subtotal = n * 3.0;
+///         return subtotal + 2;
+///     };
+/// }
+/// ```
+///
+/// A stored rule `Price price = makePrice()` returns 11 for price.forCount(3). Predict the result for
+/// count 5 and explain when the lambda body runs.
+///
+/// For this skin's specified reaction, a = 0.5 and b = 0.4 give 0.08. reactionAt reads a[y][x] and
+/// b[y][x]; step applies the result to fresh next-state grids. The chemistry rule must not update
+/// either grid itself.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Chemistry names a two-value calculation role.
+/// The lambda arguments are the concentrations for the current cell, not coordinates.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Read a[y][x] and b[y][x], then pass both to the field’s reaction method.
+/// Make the factory return a rule that multiplies a by b twice. The rule should only calculate.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Do not hard-code one formula; the caller must also work when chemistry is replaced.
+/// Initialise chemistry with makeChemistry(), not a second unrelated lambda. Keep reactionAt
+/// forwarding to that field.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+double reactionAt(int x, int y) {
+    return chemistry.reaction(a[y][x], b[y][x]);
+}
+
 final int SIZE = 64;
 double[][] a;
 double[][] b;
@@ -145,7 +175,7 @@ BufferedImage render(long seed, double option) {
 
 
 interface Chemistry { double reaction(double a, double b); }
-Chemistry chemistry = (a, b) -> a * b * b;
+
 
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;

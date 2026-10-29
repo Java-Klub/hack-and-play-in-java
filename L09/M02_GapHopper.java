@@ -28,25 +28,28 @@ void recyclePipes() {
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F22">
-/// ### List: a sequence you can change
+/// ### A List gives changing things an order
 ///
-/// A `List<String>` holds text in order. `new ArrayList<>()` makes a mutable list: its contents can
-/// change without replacing the list itself.
+/// An array has a fixed number of slots. A mutable List can grow or shrink while keeping an order.
+/// `List<T>` describes access to elements of type T; `ArrayList<T>` is a JDK implementation you can
+/// change.
 ///
 /// ```java
-/// List<String> snacks = new ArrayList<>();
-/// snacks.add("apple");
-/// snacks.add("nuts");
-/// IO.println(snacks.get(0));
-/// IO.println(snacks.size());
+/// List<String> trail = new ArrayList<>();
+/// trail.add("north");
+/// trail.add("east");
+/// String latest = trail.removeLast();
+/// IO.println(trail + " / " + latest);
 /// ```
 ///
-/// The output is `apple`, then `2`. `add(value)` appends one item; `get(index)` reads without
-/// removing it. Indexes start at zero. `isEmpty()` checks for no items. `removeLast()` removes and
-/// returns the final item; call it only on a nonempty list. A list made directly by `List.of(...)`
-/// cannot be changed, but `new ArrayList<>(List.of(...))` can.
+/// The result is `[north] / east`. Add appends at the end; removeLast both removes and returns the last
+/// element. Check isEmpty before removing from an empty list. A queue removes at the front and appends
+/// at the back; an undo stack removes the latest item instead. The intended order determines which end
+/// to use.
 ///
-/// Predict: after `snacks.removeLast()`, what are its size and first item?
+/// `List.of("north", "east")` supplies an unmodifiable list: reading works, adding does not. `new
+/// ArrayList<>(existing)` creates a mutable list with the existing membership. Predict the list after
+/// adding `"south"` to trail. If two changes are undone, which should disappear first?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
@@ -75,6 +78,11 @@ void recyclePipes() {
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Removal and append must preserve a two-obstacle order; do not mutate the list during the earlier
 /// for-each.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Make newGap() alternate high and low openings and try flying a deliberate rhythm. Keep recycled
+/// pipes in left-to-right order.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

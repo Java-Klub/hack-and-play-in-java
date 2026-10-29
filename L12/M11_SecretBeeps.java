@@ -39,6 +39,14 @@ List<Integer> units(String text, int wordGap) {
     return result;
 }
 
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Create an audible initials puzzle: choose a short message your partner might recognise and tune
+/// the word gap for human listening. Then make the dot duration slower while preserving every
+/// duration ratio. Your new timing may deliberately differ from the original checks.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Recall · F36">
 /// ### Transfer: keep the old promise while adding a choice
 ///

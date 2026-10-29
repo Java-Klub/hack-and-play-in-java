@@ -62,6 +62,14 @@ void step() {
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Author a brick mosaic by choosing which entries of bricks begin true. Make a pattern with at least
+/// one deliberate gap and update the win target to the number you actually placed. Can a friend clear
+/// your design?
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Recall · F30">
 /// ### Input requests; a tick advances time
 ///

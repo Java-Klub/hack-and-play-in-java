@@ -10,7 +10,8 @@ import javax.swing.Timer;
 /// Aim a cannon at the orange target and watch a shot curve under gravity. Each attempt gives you a
 /// visible way to compare direction and launch power.
 ///
-/// **Your mission:** The starter drops the shot at the muzzle because its calculated speed is zero.
+/// **Your mission · Wake the cannon:** The starter drops the shot at the muzzle because its calculated
+/// speed is zero.
 /// Repair launchSpeed so a drag of 100 gives speed 9 and an upward drag keeps its negative sign.
 ///
 /// **Today you learn:** Arithmetic and numeric types: intermediate calculations matter. For example,
@@ -22,6 +23,22 @@ import javax.swing.Timer;
 double launchSpeed(double drag) {
     return drag * (9 / 100);
 }
+
+// <editor-fold defaultstate="expanded" desc="Follow the values · predict a case">
+/// A complete call has a route:
+///
+/// ```java
+/// double half(double amount) {
+///     return amount / 2;
+/// }
+/// double piece = half(9);
+/// ```
+///
+/// The caller supplies argument 9. During this call parameter amount holds 9.0. The expression
+/// produces 4.5; return sends it back and piece stores it. A declaration describes the input; a call
+/// supplies its value. Return does not print. Predict half(-6), then follow launchSpeed(100) using
+/// the same four steps.
+// </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Learn · F04">
 /// Arithmetic uses the operand types at the moment an operation runs. When both operands of `/` are
@@ -62,6 +79,12 @@ double launchSpeed(double drag) {
 ///
 /// aim limits the direction and drag length. launch calls your calculation for both velocities, step adds
 /// gravity and detects hits, and the remaining window code supplies the mouse and timer.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// After repairing the conversion, try two existing aim directions with the same pull length. Predict
+/// which shot rises higher. Then deliberately change only the scale and see whether your first
+/// prediction about direction still holds.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">

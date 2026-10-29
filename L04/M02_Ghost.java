@@ -3,23 +3,18 @@
 /// Build a word fragment together, adding one letter each turn. Completing a dictionary word of at least
 /// four letters, or leaving no possible continuation, makes the current player lose.
 ///
-/// **Your mission:** R is a legal opening for ROBOT, ROBIN and ROCK, but the game rejects it. Repair
-/// possiblePrefix so the search can reach every dictionary word and still stop when the answer is known.
+/// **Your mission:** R should begin ROBOT, ROBIN or ROCK, but the unfinished search rejects every
+/// prefix. Build a while search over words: return true at the first startsWith match, otherwise
+/// advance and return false only after the dictionary ends.
 ///
 /// **Today you learn:** While search: examine one candidate at a time and advance the index after a
 /// failed match. There are two normal endings: return true when a word fits, or reach the dictionary’s
 /// end and return false.
 ///
-/// Run the program, read the printed dictionary and type R; the starter wrongly declares a dead
+/// Read the printed dictionary and type R; the starter wrongly declares a dead
 /// prefix despite the listed R words.
 boolean possiblePrefix(String candidate) {
     int index = 0;
-    while (index < words.length && index < 1) {
-        if (words[index].startsWith(candidate)) {
-            return true;
-        }
-        index++;
-    }
     return false;
 }
 
@@ -47,37 +42,38 @@ boolean possiblePrefix(String candidate) {
 /// Now predict the trace if energy starts at four.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// A search has two exits: a successful early return and an unsuccessful end. index begins at zero;
+/// words.length counts candidates.
 ///
-/// - `int index = 0;` — Begin at the first dictionary entry. This initialization happens only once for
-///   the whole search.
-/// - `while (index < words.length && index < 1)` — Both comparisons must be true. The first checks the
-///   dictionary boundary; the extra comparison currently restricts the search further.
-/// - `words[index].startsWith(candidate)` — Ask whether the word at this position begins with the whole
-///   received fragment.
-/// - `return true;` — A matching word is enough to finish the method immediately; no further words are
-///   needed.
-/// - `index++;` — Move to the next dictionary entry after a word fails the prefix test.
-/// - `return false;` — This answer is reached after the loop finishes without finding any continuation.
+/// | dictionary | candidate | visits | result |
+/// | --- | --- | --- | --- |
+/// | CAT, ROBOT | RO | CAT then ROBOT | true |
+/// | CAT, ROBOT | XY | both words | false |
+/// | empty | RO | none | false |
 ///
-/// ### What the prepared part already does
-///
-/// words is the supplied public dictionary, printed before play. command appends a letter, calls
-/// possiblePrefix, checks completed words and switches turns. display and main supply the text interface,
-/// restart and quit handling.
+/// `words[index].startsWith(candidate)` asks one word, not the whole dictionary. An unsuccessful pass
+/// must increase index. A successful return leaves immediately; it need not scan later words. Predict
+/// which entries are visited for candidate C. The prepared command validates the player's letter and
+/// applies the returned answer.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// index < 1 stops after a single dictionary entry.
+/// Trace RO against two words with the match second.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The bound should follow words.length, with index++ on each unsuccessful pass.
+/// Put the single-word check inside a while guarded by the current index.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Remove the extra index < 1 restriction; keep the length check.
+/// Return true on a match; advance after a miss; keep the final false outside the loop.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Replace the dictionary with five words of at least four letters. Give two words a long shared prefix
+/// and make one tempting prefix a dead end. Exchange dictionaries: can the other player explain a safe
+/// opening and your trap before playing?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

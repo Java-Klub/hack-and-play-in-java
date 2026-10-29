@@ -27,26 +27,29 @@ boolean[] nextRow(boolean[] current, int rule) {
 }
 
 // <editor-fold defaultstate="expanded" desc="Learn · F26">
-/// ### Simultaneous updates: read one moment, build another
+/// ### One generation uses one shared past
 ///
-/// A simultaneous step gives every calculation the same old data. Write results into separate storage
-/// and publish that storage after finishing the whole pass. Otherwise an earlier write can silently
-/// become a later input, making traversal order part of the rule.
+/// A simultaneous update means every new cell reads the same old world. If you overwrite the old cells
+/// as you go, the next column may see a future that its neighbour never saw.
+///
+/// Consider a toy line: a cell turns on when it or its left neighbour was on. The left edge has an off
+/// neighbour. For old `[true,false,false]`, the next row must be `[true,true,false]`.
 ///
 /// ```java
-/// int[] tones = {2, 5, 9};
-/// int[] shifted = new int[tones.length];
-/// for (int i = 0; i < tones.length; i++) {
-///     shifted[i] = tones[(i + 1) % tones.length];
+/// boolean[] old = {true, false, false};
+/// boolean[] next = new boolean[old.length];
+/// for (int x = 0; x < old.length; x++) {
+///     next[x] = old[x] || (x > 0 && old[x - 1]);
 /// }
 /// ```
 ///
-/// The result is `[5,9,2]`; tones stays `[2,5,9]` because every read uses it unchanged. Would
-/// visiting the indices in reverse order change the result? The new array starts with zero values, so
-/// every required output must be deliberately computed. A copied snapshot and a new output buffer
-/// serve different roles.
+/// Why not three true cells? The third cell reads old[1], which is false, not the newly written
+/// next[1]. Old remains untouched, so visiting columns in reverse would give the same result. Publish
+/// the complete next row only after computing it.
 ///
-/// Here `% tones.length` wraps the index after the last element back to zero.
+/// Draw OLD above NEXT, with arrows from the cells read to the cell written. Predict the second
+/// generation. A two-dimensional world follows the same principle, with separate writable rows as well
+/// as a separate outer array.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
@@ -65,6 +68,13 @@ boolean[] nextRow(boolean[] current, int rule) {
 /// each finished generation and then uses nextRow() for the next one; outside cells stay off.
 // </editor-fold>
 
+// <editor-fold defaultstate="collapsed" desc="For this game">
+/// The prepared code encodes left/centre/right as weights 4/2/1: lit-left and lit-right with a dark
+/// centre gives pattern 5. `(rule >> pattern) & 1` reads that pattern’s rule bit. Those rule
+/// calculations stay supplied; your task is to keep old and next separate. Trace three adjacent columns
+/// using the same unchanged current row.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
 /// next=current makes two names for one array; an early write changes a later cell’s input.
 // </editor-fold>
@@ -77,6 +87,11 @@ boolean[] nextRow(boolean[] current, int rule) {
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Allocate new boolean[current.length]; keep every pattern read on current and return next after the
 /// loop.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Start with two lit cells instead of one and compare rules 30 and 90. Predict where the two growing
+/// patterns first meet before printing them.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

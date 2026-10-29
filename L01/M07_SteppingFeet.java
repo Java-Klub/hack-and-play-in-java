@@ -10,7 +10,8 @@ import javax.swing.Timer;
 /// Two rectangles move together over a striped background, yet may appear to step at different speeds.
 /// Remove the stripes or show the shared marker to challenge that impression.
 ///
-/// **Your mission:** Both feet start outside the visible room. Repair the later assignment in
+/// **Your mission · Predict a moving value:** Both feet start outside the visible room. Repair the later
+/// assignment in
 /// startingPosition so the shared x starts at 80, after its first value of 20.
 ///
 /// **Today you learn:** Assignment over time: a later assignment replaces the old stored value. The two
@@ -65,12 +66,22 @@ void startingPosition() {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="For this game">
-/// The second assignment must express a relative change: take the current x and increase it by 60.
-/// Keep the first assignment intact. With its present starting value of 20, the result is 80; if the
-/// starting value changed, the second calculation should follow it rather than use an unrelated fixed
-/// answer. Read the right-hand expression using the old x, then store the result. This is why
-/// assignment can mention the same name on both sides. The prepared x is shared by both feet, so
-/// there is only one position to repair.
+/// A fixed assignment and a calculation using the old x can both leave x at 80. Both satisfy this
+/// mission. A later experiment with another starting value distinguishes them. Java evaluates the
+/// right-hand side before storing the new value; both feet then read the same x.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// Trace `int score = 2; score = score + 5; score = 1;` in order. The stored values are 2, then 7,
+/// then 1. The last assignment does not remember the earlier sum. A drawing reads the value when it
+/// runs, not a history of all earlier assignments. What final value would remain without the third
+/// statement?
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// Compare two versions: set x directly to 80, or add 60 to its previous value. First run each with
+/// the initial x = 20; then change that first assignment to 40. Predict both final positions before
+/// running. Which version keeps a fixed destination and which keeps a fixed shift?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">

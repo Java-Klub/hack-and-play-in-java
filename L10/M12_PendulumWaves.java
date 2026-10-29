@@ -24,6 +24,14 @@ void step() {
     }
 }
 
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Become the choreographer: change the period progression so neighbouring pendulums form two
+/// families instead of one smooth row. Predict when a repeated pattern might appear, then compare the
+/// moving wave with your prediction.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Recall · F30">
 /// ### Input requests; a tick advances time
 ///

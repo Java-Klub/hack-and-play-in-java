@@ -56,11 +56,11 @@ class M01_TinyStepSequencerTest {
     static final String[] CASES = {
         "Two toggles restore the same active-note Set.",
         "A new note appears exactly once.",
-        "Invalid cells preserve membership; an empty Set exports silence."
+        "Invalid cells preserve membership; an empty Set produces silent samples."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I102: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L11.01: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -106,7 +106,7 @@ class M01_TinyStepSequencerTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I102: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION L11.01: Unexpected failure while checking the active rule.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -122,7 +122,7 @@ class M02_CirclePackingTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I111: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L11.02: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -168,7 +168,7 @@ class M02_CirclePackingTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I111: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION L11.02: Unexpected failure while checking the active rule.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -184,7 +184,7 @@ class M03_WireframeCubeTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I122: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L11.03: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -230,7 +230,7 @@ class M03_WireframeCubeTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I122: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION L11.03: Unexpected failure while checking the active rule.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -246,7 +246,7 @@ class M04_MandelbrotPostcardsTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I104: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L11.04: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -283,12 +283,27 @@ class M04_MandelbrotPostcardsTest {
     public static void main(String[] args) throws Exception {
         try {
             var p = Reflect.create("M04_MandelbrotPostcards");
+            int[] colours = (int[]) Reflect.call(p, "palette", 42L);
+            check(colours.length == 16 && Arrays.equals(colours, (int[]) Reflect.call(p, "palette", 42L)), 1, Arrays.toString(colours));
+            check(!Arrays.equals(colours, (int[]) Reflect.call(p, "palette", 43L)), 0, "different palettes");
+            var expectedRandom = new Random(42);
+            for (int i = 0; i < colours.length; i++) {
+                int expected = java.awt.Color.HSBtoRGB(expectedRandom.nextInt(360) / 360.0F, 0.8F, 1);
+                check(colours[i] == expected, 0, "palette slot " + i + ": " + colours[i]);
+            }
             var a=((java.awt.image.BufferedImage) Reflect.call(p, "render", 42, 3.2));var b=((java.awt.image.BufferedImage) Reflect.call(p, "render", 43, 3.2));check(hash(a)!=hash(b),0,hash(a));
+            int changed = 0;
+            for (int y = 0; y < a.getHeight(); y++) {
+                for (int x = 0; x < a.getWidth(); x++) {
+                    if (a.getRGB(x, y) != b.getRGB(x, y)) changed++;
+                }
+            }
+            check(changed > 10000, 0, "visibly changed pixels: " + changed);
             check(hash(a)==hash(((java.awt.image.BufferedImage) Reflect.call(p, "render", 42, 3.2))),1,hash(a));check(((int) Reflect.call(p, "escape", 0, 0))==160&&((int) Reflect.call(p, "escape", 3, 3))<160,2,((int) Reflect.call(p, "escape", 3, 3)));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I104: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION L11.04: Unexpected failure while checking the active rule.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -304,7 +319,7 @@ class M05_ChaosGameTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I105: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L11.05: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -348,7 +363,7 @@ class M05_ChaosGameTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I105: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION L11.05: Unexpected failure while checking the active rule.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -364,7 +379,7 @@ class M06_ColourFilterSecretsTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I116: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L11.06: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -406,7 +421,7 @@ class M06_ColourFilterSecretsTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I116: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION L11.06: Unexpected failure while checking the active rule.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -422,7 +437,7 @@ class M07_TwoNoisyPicturesTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I118: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L11.07: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -464,7 +479,7 @@ class M07_TwoNoisyPicturesTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I118: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION L11.07: Unexpected failure while checking the active rule.", failure);
         }
         System.out.println("PASS " + checks + " checks");
     }
@@ -480,7 +495,7 @@ class M08_EndlessToneStaircaseTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I103: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L11.08: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -534,7 +549,7 @@ class M08_EndlessToneStaircaseTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I103: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION L11.08: Unexpected failure while checking the active rule.", failure);
         } finally {
             if (absent) Files.deleteIfExists(misplaced);
             try (var paths = Files.walk(root)) {
@@ -557,7 +572,7 @@ class M09_PixelSortingGlitchTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I115: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L11.09: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -611,7 +626,7 @@ class M09_PixelSortingGlitchTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I115: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION L11.09: Unexpected failure while checking the active rule.", failure);
         } finally {
             try (var paths = Files.walk(root)) {
                 for (Path path : paths.sorted(java.util.Comparator.reverseOrder()).toList()) {
@@ -633,7 +648,7 @@ class M10_SecretPNGPostcardTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I117: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L11.10: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -674,9 +689,16 @@ class M10_SecretPNGPostcardTest {
             Path file = root.resolve("nested/secret.png");
             Reflect.set(p, "message", "Pixel π");
             Reflect.call(p, "save", file, 42, 1);
+            check(Files.isRegularFile(file), 0, "requested postcard file: " + file);
             check(((java.lang.String) Reflect.call(p, "readMessage", file)).equals("Pixel π"), 0, ((java.lang.String) Reflect.call(p, "readMessage", file)));
+            var fresh = Reflect.create("M10_SecretPNGPostcard");
+            check(((String) Reflect.call(fresh, "readMessage", file)).equals("Pixel π"), 0, "message survives a new instance");
+            byte[] stored = Files.readAllBytes(file);
+            Reflect.call(fresh, "readMessage", file);
+            check(Arrays.equals(stored, Files.readAllBytes(file)), 1, "reading preserves the card");
             Reflect.set(p, "message", "");
             Reflect.call(p, "save", file, 42, 1);
+            check(Files.isRegularFile(file), 0, "requested postcard file: " + file);
             check(((java.lang.String) Reflect.call(p, "readMessage", file)).isEmpty(), 1, ((java.lang.String) Reflect.call(p, "readMessage", file)));
             Path text = root.resolve("plain.txt");
             Files.writeString(text, "not a PNG");
@@ -685,7 +707,7 @@ class M10_SecretPNGPostcardTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I117: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION L11.10: Unexpected failure while checking the active rule.", failure);
         } finally {
             try (var paths = Files.walk(root)) {
                 for (Path path : paths.sorted(java.util.Comparator.reverseOrder()).toList()) {
@@ -701,13 +723,13 @@ class M10_SecretPNGPostcardTest {
 class M11_MirrorCylinderPictureTest {
     static int checks;
     static final String[] CASES = {
-        "The requested nested file contains nonempty bytes.",
-        "The actual saved PNG has the expected image dimensions.",
-        "An invalid parent path reports IOException."
+        "The chosen file supplies its stripped first line.",
+        "UTF-8 contents are preserved and the caption affects the real image.",
+        "Missing files and invalid first lines report an I/O failure."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I119: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L11.11: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -745,18 +767,27 @@ class M11_MirrorCylinderPictureTest {
         Path root = Files.createTempDirectory("mirror-check-");
         try {
             var p = Reflect.create("M11_MirrorCylinderPicture");
-            Path file = root.resolve("nested/mirror.png");
-            Reflect.call(p, "save", file, 42, 125);
-            check(Files.exists(file) && Files.size(file) > 0, 0, Files.size(file));
-            var image = ImageIO.read(file.toFile());
-            check(image != null && image.getWidth() == 900 && image.getHeight() == 800, 1, image == null ? null : image.getWidth());
-            Path blocked = root.resolve("blocked");
-            Files.writeString(blocked, "x");
-            ioFailure(() -> Reflect.call(p, "save", blocked.resolve("x.png"), 42, 125), 2);
+            Path file = root.resolve("nested/word.txt");
+            Files.createDirectories(file.getParent());
+            Files.writeString(file, "  MOON  \nignored second line\n");
+            check(((String) Reflect.call(p, "readCaption", file)).equals("MOON"), 0, Reflect.call(p, "readCaption", file));
+            Files.writeString(file, "π!\n");
+            check(((String) Reflect.call(p, "readCaption", file)).equals("π!"), 1, Reflect.call(p, "readCaption", file));
+            Files.writeString(file, "");
+            ioFailure(() -> Reflect.call(p, "readCaption", file), 2);
+            Files.writeString(file, "   \nMOON");
+            ioFailure(() -> Reflect.call(p, "readCaption", file), 2);
+            Files.writeString(file, "ABCDEFGHI");
+            ioFailure(() -> Reflect.call(p, "readCaption", file), 2);
+            ioFailure(() -> Reflect.call(p, "readCaption", root.resolve("missing.txt")), 2);
+            Reflect.set(p, "caption", "JAVA");
+            var first = (BufferedImage) Reflect.call(p, "render", 42L, 125.0);
+            Reflect.set(p, "caption", "MOON");
+            check(hash(first) != hash((BufferedImage) Reflect.call(p, "render", 42L, 125.0)), 1, "caption affects artwork");
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I119: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION L11.11: Unexpected failure while checking the active rule.", failure);
         } finally {
             try (var paths = Files.walk(root)) {
                 for (Path path : paths.sorted(java.util.Comparator.reverseOrder()).toList()) {
@@ -778,7 +809,7 @@ class M12_MagicEyeStripTest {
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION I120: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError("MISSION L11.12: " + CASES[example] + " | actual=" + actual);
     }
     static void reject(Runnable action, int example) {
         try {
@@ -833,7 +864,7 @@ class M12_MagicEyeStripTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION I120: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("MISSION L11.12: Read the file contents before parsing its number; actual failure=" + failure.getClass().getSimpleName(), failure);
         } finally {
             try (var paths = Files.walk(root)) {
                 for (Path path : paths.sorted(java.util.Comparator.reverseOrder()).toList()) {

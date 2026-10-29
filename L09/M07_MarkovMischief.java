@@ -30,25 +30,27 @@ Map<String, List<String>> train(String text) {
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F24">
-/// ### Map: look up a value by its key
+/// ### A Map remembers a value for each key
 ///
-/// A `Map<String, Integer>` associates text keys with integer values. Each key has at most one stored
-/// value.
+/// A List remembers positions. A Map remembers an association: each key leads to one current value.
+/// Here a colour name leads to a count.
 ///
 /// ```java
-/// Map<String, Integer> badges = new HashMap<>();
-/// badges.put("moon", 4);
-/// IO.println(badges.getOrDefault("moon", 0));
-/// IO.println(badges.getOrDefault("sun", 0));
+/// Map<String, Integer> marbles = new HashMap<>();
+/// marbles.put("blue", 2);
+/// int before = marbles.getOrDefault("blue", 0);
+/// marbles.put("blue", before + 1);
+/// IO.println(marbles.getOrDefault("gold", 0));
 /// ```
 ///
-/// The output is `4`, then `0`. `getOrDefault(key, fallback)` reads an existing value, or returns the
-/// fallback when the key is absent. This lookup does not insert anything. `put(key, value)` stores a
-/// value and replaces any previous value for that key; it does not add numbers automatically. Use
-/// `containsKey(key)` when you need to distinguish absence explicitly. These examples do not store
-/// null values.
+/// Blue now has count 3; the printed gold count is 0. `getOrDefault(key, fallback)` reads the fallback
+/// for an absent key without inserting it. `put` replaces that key's old value: it does not add
+/// automatically. Other keys remain unchanged.
 ///
-/// Predict: after `badges.put("moon", 9)`, what will the same two lookups return?
+/// Use `containsKey` when absence itself matters. Use `entrySet()` to visit key/value pairs: each entry
+/// provides `getKey()` and `getValue()`. A Map does not promise that the first entry is the largest;
+/// compare values explicitly when choosing a winner. Predict blue after another identical update. Then
+/// predict what `getOrDefault("gold", 9)` returns and whether gold is now stored.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
@@ -68,17 +70,12 @@ Map<String, List<String>> train(String text) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="For this game">
-/// ### A map can point to a mutable list
+/// ### Apply the model here
 ///
-/// `Map<String, List<String>>` maps each word to a list of possible next words. `containsKey(key)`
-/// asks whether a key exists. `get(key)` reads its stored list, or returns null when absent; calling
-/// add on null fails. Reading an existing list does not copy it. For a separate example, if key
-/// `gate` stores `[hall]`, appending `yard` to the list obtained by get makes the stored list `[hall,
-/// yard]` too.
-///
-/// In train, repeated words must retain earlier successors. Predict the entries after `moon cat moon
-/// dog`. Explain when a list needs creating and when an existing list must survive. Repeated
-/// successors are allowed: their repeated occurrences affect later random choices.
+/// Each Map value is itself a mutable List of followers. For `sun cat sun dog`, sun must retain both
+/// cat and dog. Repeating cat is meaningful: the prepared generator chooses an entry, so duplicate
+/// followers affect probability. `containsKey(word)` asks whether that word already owns a List; create
+/// a new List only for a first encounter.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -91,6 +88,11 @@ Map<String, List<String>> train(String text) {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Guard the initial put with containsKey; keep every later add, including duplicate followers.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Write a tiny corpus with several different followers after the same word. Repeat one follower on
+/// purpose and listen to the resulting rhythm of the generated nonsense.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

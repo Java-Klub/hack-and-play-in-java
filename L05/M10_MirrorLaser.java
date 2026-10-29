@@ -17,7 +17,7 @@ import java.util.HashSet;
 /// **Today you learn:** Records: bundle related values into one readable state. Moving creates a new ray
 /// value while the original position and direction remain available.
 ///
-/// Run the program, click a mirror to rotate it, and press Space to trace the beam through your
+/// Click a mirror to rotate it, and press Space to trace the beam through your
 /// arrangement.
 record RayState(int x, int y, int dx, int dy) {
     RayState advance() {
@@ -80,6 +80,12 @@ record RayState(int x, int y, int dx, int dy) {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Pass x+dx, y+dy, dx, dy to the RayState constructor in that order.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Author a two-turn mirror route in the prepared board data. Before firing, write the first three
+/// RayState values, including both coordinates and direction. Give a partner the states with one
+/// missing component and ask them to reconstruct it.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

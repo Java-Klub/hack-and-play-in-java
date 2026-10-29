@@ -3,8 +3,10 @@
 /// Roll two dice and close open numbered boxes whose sum matches their total. Try to leave a useful
 /// selection for later rolls and close every box before no legal choice remains.
 ///
-/// **Your mission:** The target includes only the first die, although both faces are printed. Repair
-/// diceTotal so both received die values contribute.
+/// **Your mission · Author and wire a dice rule:** Write diceTotal so it returns the sum of both dice.
+/// Then repair its connection
+/// in roll: assign the result of diceTotal(firstDie, secondDie) to target. Both the calculation alone
+/// and the actual rolled target must work.
 ///
 /// **Today you learn:** Reusable calculation: two parameters let one method work for any pair of dice.
 /// For example, calls with 1 and 1 or with 6 and 6 should follow the same rule without copying its body.
@@ -12,7 +14,16 @@
 /// Run the program, compare the two printed Dice values with the rolled target, then type
 /// distinct open numbers that should add up to that target.
 int diceTotal(int first, int second) {
-    return first;
+    return 0;
+}
+
+void roll() {
+    firstDie = random.nextInt(1, 7);
+    secondDie = random.nextInt(1, 7);
+    target = firstDie;
+    if (!possible()) {
+        outcome = "No legal closure. Final open sum: " + sum();
+    }
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F13">
@@ -41,31 +52,37 @@ int diceTotal(int first, int second) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## From the dice to the target
 ///
-/// - `int diceTotal(int first, int second)` — The method returns a whole number and receives two
-///   separately named whole numbers.
-/// - `first` — The first die argument supplied to this call.
-/// - `second` — The second die argument, available even though the incomplete body ignores it.
-/// - `,` — Separate the two parameter declarations; it does not combine their values.
-/// - `return first;` — This currently sends back only one input instead of a result using both.
-///
-/// ### What the prepared part already does
-///
-/// roll generates and prints two actual dice, then calls diceTotal. possible checks whether open boxes
-/// can meet the target, command closes selected boxes, and display shows the remaining choices.
+/// diceTotal receives first and second, local parameter names for this one calculation. roll stores
+/// two generated faces in firstDie and secondDie. Those are the arguments to your method. Assigning
+/// only firstDie bypasses your new rule. possible is a supplied question that tests whether open
+/// boxes can match the resulting target; leave its search unchanged.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// Defining a correct method is not enough if the game never calls it. diceTotal(2, 5) must calculate
+/// from both arguments, and roll must assign that returned value to target. The two random.nextInt
+/// calls are prepared dice generators. Keep them, replace only how their two results become the
+/// target. Predict both equal and unequal dice.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// Create a house-rule variant with a bonus for doubles. Put the rule in diceTotal and keep roll
+/// calling it. Predict the smallest and largest target your variant can produce; check whether every
+/// target can still be met using the remaining boxes.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Use different values such as 2 and 5 to expose the ignored parameter.
+/// There are two separate jobs: define a calculation and use it.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Both parameters belong to this particular call.
+/// A call takes actual arguments in parentheses; the returned result can be assigned.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Return first + second.
+/// Return first + second; then set target = diceTotal(firstDie, secondDie) in roll.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
@@ -109,14 +126,7 @@ boolean possible() {
     return false;
 }
 
-void roll() {
-    firstDie = random.nextInt(1, 7);
-    secondDie = random.nextInt(1, 7);
-    target = diceTotal(firstDie, secondDie);
-    if (!possible()) {
-        outcome = "No legal closure. Final open sum: " + sum();
-    }
-}
+
 
 void command(String input) {
     require(outcome.isEmpty());

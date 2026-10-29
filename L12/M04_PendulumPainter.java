@@ -10,18 +10,28 @@ import javax.swing.Timer;
 /// Let a pendulum draw its own luminous trail. Change length and gravity to discover how the same
 /// starting swing produces different motion.
 ///
-/// **Your mission:** The pendulum receives zero acceleration and stays still. Restore the installed
-/// acceleration rule using the current angle and length, not fixed starting values.
+/// **Your mission:** Implement makeAcceleration and install its result in acceleration. Its role
+/// receives angle and length and returns -gravity × sin(angle) / length, using the current gravity
+/// field. The supplied accelerationNow adapter and step integration stay unchanged.
 ///
-/// **Today you learn:** An interface can isolate one physical rule from the surrounding simulation.
-/// accelerationNow connects current state to that rule, allowing an alternative rule without rewriting
-/// integration or drawing.
+/// **Today you learn:** Author an implementation of a small interface and install it in the running
+/// program. Keep its calculation separate from input, updates and drawing.
 ///
 /// Run the program, then adjust Length and Gravity to explore the pendulum trace; Pause/Run
 /// controls motion and Reset clears and restarts it.
-double accelerationNow() {
-    return 0;
+Acceleration makeAcceleration() {
+    return (angle, length) -> 0;
 }
+
+Acceleration acceleration = (angle, length) -> 0;
+
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Create an alien pendulum by replacing the sine restoring rule with a gentle linear rule near the
+/// centre. Compare equal initial angle, length and gravity. Label it as a new simulation rule rather
+/// than a more accurate physical model.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F34">
 /// ### Interface: ask a role to do its job
@@ -49,33 +59,42 @@ double accelerationNow() {
 /// award three times the input?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// ### Pass changing state; read the chosen setting
 ///
-/// - `double` — Angular acceleration is returned as a decimal value.
-/// - `accelerationNow()` — Has no parameters, so it must obtain current state from this model’s fields.
-/// - `return 0;` — Currently reports no acceleration even when gravity, angle or length changes.
+/// Acceleration names at(angle, length). The interface isolates the physical rule from the
+/// integrator: your implementation returns a number, while step changes velocity, angle and the
+/// trail. The mathematical contract is supplied; deriving pendulum physics is not this task. Math.sin
+/// takes radians.
 ///
-/// ### What the prepared part already does
+/// Worked example with gravity 200: at angle π/2, sin is 1, so a length of 100 gives -2. At angle 0
+/// the result is zero. Predict the result at angle -π/2, length 100. Longer length reduces the
+/// magnitude.
 ///
-/// step obtains the current acceleration through accelerationNow and paints the bob trace. Length
-/// and Gravity are the experiment inputs; Pause/Run controls motion and Reset clears and restarts
-/// it.
+/// The lambda's angle and length come from each call. gravity is this object's field and should be
+/// read when the role runs, so moving the Gravity slider affects the existing rule. Computing and
+/// capturing a single acceleration during setup would freeze the starting state. Install the returned
+/// role instead of leaving a silent substitute in the field.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// The role needs the current values, not the initial constants.
+/// Use the role parameters for angle and length; read the current gravity field.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The default implementation captures the gravity slider’s field.
+/// Return a calculation, not a call to step. Math.sin(angle) supplies the sine.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Call the interface field once; leave 0.03 and damping inside the supplied step.
+/// Build the restoring force term, divide by the requested length, then initialise acceleration from
+/// the factory.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+double accelerationNow() {
+    return acceleration.at(angle, length);
+}
+
 double angle = 0.9;
 double velocity;
 double length = 180;
@@ -174,7 +193,7 @@ void showWindow() {
 }
 
 interface Acceleration { double at(double angle, double length); }
-Acceleration acceleration = (a, len) -> -gravity / len * Math.sin(a);
+
 
 void main() {
 /// Restore the starting game state.

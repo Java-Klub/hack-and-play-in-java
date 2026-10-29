@@ -3,26 +3,20 @@
 /// Build a dice scorecard by deciding which dice to reroll and which category to spend. Each category can
 /// be filled only once, so taking points now may give up a better opportunity later.
 ///
-/// **Your mission:** After several categories are banked, the displayed total forgets earlier scores.
-/// Repair the main sum in total so all filled categories contribute, unfilled entries are skipped and the
-/// supplied upper-section bonus remains intact.
+/// **Your mission:** The score audit is unfinished and always reports zero. Build the loop body: add
+/// every nonnegative filled score to sum, and add filled categories 0–5 to upper as well. Keep unfilled
+/// -1 entries out; the supplied return awards the upper bonus.
 ///
 /// **Today you learn:** Running sum: preserve the previous total and incorporate each accepted score. Two
 /// separate accumulators are needed here because sum counts every category, while upper counts only the
 /// first six for a later bonus decision.
 ///
-/// Run the program, enter bank 13, then bank another open category showing nonzero points and
-/// compare the printed total with both filled scores.
+/// Bank category 13, then compare its nonzero score with Total. The missing audit still reports zero;
+/// your two running sums must account for the stored card.
 int total() {
     int sum = 0;
     int upper = 0;
     for (int i = 0; i < 13; i++) {
-        if (scores[i] >= 0) {
-            sum = scores[i];
-            if (i < 6) {
-                upper += scores[i];
-            }
-        }
     }
     return sum + (upper >= 63 ? 35 : 0);
 }
@@ -49,39 +43,37 @@ int total() {
 /// Now predict receipt when the supplied list contains only `"rice"`.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// The supplied for visits all 13 entries. An entry of -1 means unused, not a negative earned score.
+/// sum counts every filled category; upper counts only the first six.
 ///
-/// - `int sum = 0;` — Start the overall sum once before scanning the scorecard.
-/// - `int upper = 0;` — Keep a separate running sum for the six upper categories; do not confuse it with
-///   the overall sum.
-/// - `for (int i = 0; i < 13; i++)` — Visit all thirteen category positions once, from zero through
-///   twelve.
-/// - `scores[i] >= 0` — A nonnegative value is a filled category, including a deliberate zero; -1 means
-///   it is still open.
-/// - `sum = scores[i];` — The current assignment overwrites the running sum with one category’s score.
-/// - `upper += scores[i];` — This supplied accumulation preserves earlier upper-category points before
-///   incorporating the current score.
-/// - `upper >= 63 ? 35 : 0` — The prepared short choice yields a bonus of 35 when upper reaches 63,
-///   otherwise zero; the bonus is added once after the loop.
+/// | category index | score | new sum | new upper |
+/// | --- | --- | --- | --- |
+/// | 0 | 3 | 3 | 3 |
+/// | 1 | -1 | 3 | 3 |
+/// | 12 | 8 | 11 | 3 |
 ///
-/// ### What the prepared part already does
-///
-/// value already calculates the thirteen category scores from the five dice. command handles
-/// rerolls and fills a chosen category only once; display shows each available score and calls
-/// total. The supplied rules add a 35-point bonus when the first six categories reach 63.
+/// The same accepted entry may contribute to both totals. The final expression adds 35 only when upper
+/// reaches 63. Predict sum and upper after adding a score of 6 in category 2. Keep these counters
+/// local: reading total twice must not award points twice.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// sum = scores[i] replaces the total on every filled category.
+/// Separate the unused-entry decision from the upper-section decision.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// sum must retain earlier scores; upper already accumulates correctly.
+/// Every accepted score contributes to sum; only some of those scores contribute to upper.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Use sum += scores[i].
+/// Inside the loop, guard score >= 0, accumulate sum, then conditionally accumulate upper when i < 6.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Design a house bonus for filling a chosen number of categories, independent of the existing upper
+/// bonus. Add a filled-category accumulator, choose the threshold and reward, and compare two
+/// scorecards just below and exactly at that threshold.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

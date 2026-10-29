@@ -36,6 +36,8 @@ Start here, then work towards mazes, arcade games, generative pictures and sound
 
 The guide lives **inside the code**: short explanations, worked examples and hints that open one at a time. Explore the supplied game parts when curious. Once downloaded, the programs and checks work offline using JDK libraries.
 
+Switch roles as you play: rescue a broken game, build its referee, close a cheating loophole, write a rule or create a puzzle for a friend. Worked explanations follow concrete values; hints and repair outlines stay separate.
+
 ## Start playing
 
 1. Have **JDK 26 or newer** ready. Download your language branch above and open the Java files in your editor or IDE.
@@ -56,3 +58,27 @@ The starter's first failed check is an intentional clue; `PASS` means the checke
 Games live directly in `L01` through `L12`, in numbered order. Each level has its own `Check.java`. Already inside `L01`? Use `java Check.java` for the level or `java Check.java M01_CafeWallLab.java` for one mission. Keep check files unchanged while solving missions. No project build setup is needed.
 
 Designed for curious beginners, coding clubs and guided workshops. Choose extra games whenever an idea needs another round.
+
+**After completing a mission, make your own version.** Each program offers a specific follow-up experiment. Its check still expects the precise original mission, so a deliberate rule change may show RED even when your new version works correctly.
+
+<details>
+<summary>A suggested route: choose games, practise new ideas</summary>
+
+A level is not one meeting, and all 143 programs are not a compulsory checklist. This selection crosses the core skills; other games offer another theme or more practice. ProgramMirror is a more abstract detour, Nim adds strategy, and Flood and SameGame also use a queue.
+
+| Level | Starting selection |
+| --- | --- |
+| L01 | [CafeWallLab](L01/M01_CafeWallLab.java) → [TypeMelody](L01/M03_TypeMelody.java) → [HigherOrLower](L01/M06_HigherOrLower.java) |
+| L02 | [CannonPuzzle](L02/M01_CannonPuzzle.java) → [MadLibsStoryMachine](L02/M05_MadLibsStoryMachine.java) → [Codebreaker](L02/M07_Codebreaker.java) → [PokerDice](L02/M08_PokerDice.java) |
+| L03 | [Pig](L03/M01_Pig.java) → [TicTacToe](L03/M04_TicTacToe.java) → [SOS](L03/M09_SOS.java) → [ShutTheBox](L03/M10_ShutTheBox.java) |
+| L04 | [Hangman](L04/M01_Hangman.java) → [VirtualScribbler](L04/M06_VirtualScribbler.java) → [YatzyScorecard](L04/M13_YatzyScorecard.java) |
+| L05 | [MemoryPairs](L05/M01_MemoryPairs.java) → [Nonogram](L05/M08_Nonogram.java) → [MirrorLaser](L05/M10_MirrorLaser.java) |
+| L06 | [SlidingTiles](L06/M03_SlidingTiles.java) → [Sokoban](L06/M05_Sokoban.java) → [LightsOut](L06/M09_LightsOut.java) |
+| L07 | [CooperateOrDefect](L07/M02_CooperateOrDefect.java) → [TargetPop](L07/M05_TargetPop.java) → [MiniInvaders](L07/M08_MiniInvaders.java) |
+| L08 | [Minesweeper](L08/M01_Minesweeper.java) → [Bridges](L08/M07_Bridges.java) → [ForestFireSandbox](L08/M13_ForestFireSandbox.java) |
+| L09 | [FlipbookStudio](L09/M03_FlipbookStudio.java) → [MarkovMischief](L09/M07_MarkovMischief.java) → [FractalTreeGarden](L09/M09_FractalTreeGarden.java) |
+| L10 | [AsteroidDrift](L10/M01_AsteroidDrift.java) → [Untangle](L10/M04_Untangle.java) → [Pong](L10/M09_Pong.java) |
+| L11 | [TinyStepSequencer](L11/M01_TinyStepSequencer.java) → [MandelbrotPostcards](L11/M04_MandelbrotPostcards.java) → [SecretPNGPostcard](L11/M10_SecretPNGPostcard.java) |
+| L12 | [ReactionDiffusionSkins](L12/M01_ReactionDiffusionSkins.java) → [KnightTour](L12/M05_KnightTour.java) → [MountainPostcards](L12/M12_MountainPostcards.java) |
+
+</details>

@@ -23,25 +23,32 @@ ArrayList<Box> snapshot() {
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F20">
-/// ### References: another name or another object?
+/// ### A second name is not a saved past
 ///
-/// An array variable stores a reference. Assignment can give two names access to one array; writing
-/// through either name affects that shared object. Calling `clone()` on a one-dimensional int array
-/// creates another array with copied values. The original and copy can then change independently.
+/// An array variable holds a reference to an array. Assignment copies that reference, so two names can
+/// still reach the same mutable cells.
 ///
 /// ```java
-/// int[] wave = {4, 1};
-/// int[] shared = wave;
-/// int[] saved = wave.clone();
-/// wave[1] = 7;
-/// IO.println(shared[1]);
-/// IO.println(saved[1]);
+/// int[] live = {1, 2};
+/// int[] shared = live;
+/// int[] saved = live.clone();
+/// live[0] = 7;
+/// IO.println(shared[0] + " / " + saved[0]);
 /// ```
 ///
-/// The output is seven, then one: shared sees the write, saved retains its copied value. After
-/// `saved[0] = 8`, predict `wave[0]` and `saved[0]`. `clone()` copies one layer: for a grid, its
-/// elements are row references, so copying the outside still shares rows. Ask which objects remain
-/// shared, not merely whether a new outer object exists.
+/// This prints `7 / 1`: shared follows the change; saved owns a separate array. `clone()` copies one
+/// array's cells. For `int[][]`, those cells contain references to rows. Cloning only the outside
+/// therefore still shares rows; copy the rows as well when their contents must survive later edits.
+///
+/// ```text
+/// shared ──→ [7,2] ←── live
+/// saved  ──→ [1,2]
+/// ```
+///
+/// Undo needs the old state, so take its snapshot before the live edit. Copying after the edit
+/// faithfully saves the wrong moment. Predict what happens if the last assignment is instead `saved[0]
+/// = 9`. Which of the three names sees 9? For a list of immutable records, copying membership is
+/// enough: the records themselves cannot have their components reassigned.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
@@ -58,24 +65,12 @@ ArrayList<Box> snapshot() {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="For this game">
-/// ### A mutable list needs a new container
+/// ### Apply the model here
 ///
-/// ArrayList stores an ordered, changeable group of elements. `<String>` below names the element
-/// type; `<>` lets the constructor infer it. The constructor accepting another collection copies its
-/// membership into a new mutable list.
-///
-/// ```java
-/// var draft = new ArrayList<String>();
-/// draft.add("swirl");
-/// var kept = new ArrayList<>(draft);
-/// draft.clear();
-/// IO.println(kept.size());
-/// ```
-///
-/// The output is one: `add` appended a value, `clear` emptied only draft, and `size` counts kept's
-/// elements. Predict adding another draft element. In this game Box contains only fixed int
-/// components, so sharing Box values is safe while sharing the changeable list is not. Undo needs a
-/// mutable container because later drawing can add or remove rectangles.
+/// For this supplied List task, `new ArrayList<>(existing)` copies list membership into a separate
+/// mutable container. A Box record is immutable, so two lists may safely refer to the same Box.
+/// Example: copying a two-box list and clearing the live list leaves two boxes in the saved list. You
+/// are preserving which rectangles exist, not making new rectangle geometry.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -88,6 +83,11 @@ ArrayList<Box> snapshot() {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Return new ArrayList<>(boxes) so membership changes are independent.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Draw a rectangle partition of your own and put one area clue inside each rectangle. Can a partner
+/// find a different valid partition?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

@@ -5,66 +5,71 @@ import java.awt.image.BufferedImage;
 
 /// # L09.08 · DungeonBlueprints
 ///
-/// Generate a dungeon blueprint and discover which rooms fit before corridors join them. Its legend
-/// should tell you how many small and large rooms actually survived placement.
+/// Design the mix of rooms in a dungeon. Admit a limited number of small refuges and large chambers,
+/// then let corridors connect the rooms that your policy accepted.
 ///
-/// **Your mission:** Each accepted room resets its category count to one. Repair the legend’s totals
-/// without counting rejected placement attempts.
+/// **Your mission:** Build admitRoom(room): area up to and including 42 is SMALL with a quota of three;
+/// larger rooms are LARGE with a quota of two. Accept and count a room only while its category has room
+/// left. Refusal returns false without changing counts. The generator calls you after geometric checks,
+/// so these Map quotas control which rooms actually appear.
 ///
-/// **Today you learn:** A Map groups many individual rooms under shared category keys. Classification
-/// chooses the key; accumulation updates that key’s total without erasing earlier rooms.
+/// **Today you learn:** Use stored key/value relationships to make a real picture or generation
+/// decision, not just a caption.
 ///
-/// Run the program and compare the picture before and after your repair.
-void countRoom(Room room) {
-    String kind = room.width() * room.height() <= 42 ? "SMALL" : "LARGE";
-    roomCounts.put(kind, 1);
+/// Run the program: the unfinished admission rule leaves the blueprint empty. After completing
+/// admitRoom, inspect the accepted rooms, connecting corridors and category quotas.
+boolean admitRoom(Room room) {
+    return false;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F24">
-/// ### Map: look up a value by its key
+/// ### A Map remembers a value for each key
 ///
-/// A `Map<String, Integer>` associates text keys with integer values. Each key has at most one stored
-/// value.
+/// A List remembers positions. A Map remembers an association: each key leads to one current value.
+/// Here a colour name leads to a count.
 ///
 /// ```java
-/// Map<String, Integer> badges = new HashMap<>();
-/// badges.put("moon", 4);
-/// IO.println(badges.getOrDefault("moon", 0));
-/// IO.println(badges.getOrDefault("sun", 0));
+/// Map<String, Integer> marbles = new HashMap<>();
+/// marbles.put("blue", 2);
+/// int before = marbles.getOrDefault("blue", 0);
+/// marbles.put("blue", before + 1);
+/// IO.println(marbles.getOrDefault("gold", 0));
 /// ```
 ///
-/// The output is `4`, then `0`. `getOrDefault(key, fallback)` reads an existing value, or returns the
-/// fallback when the key is absent. This lookup does not insert anything. `put(key, value)` stores a
-/// value and replaces any previous value for that key; it does not add numbers automatically. Use
-/// `containsKey(key)` when you need to distinguish absence explicitly. These examples do not store
-/// null values.
+/// Blue now has count 3; the printed gold count is 0. `getOrDefault(key, fallback)` reads the fallback
+/// for an absent key without inserting it. `put` replaces that key's old value: it does not add
+/// automatically. Other keys remain unchanged.
 ///
-/// Predict: after `badges.put("moon", 9)`, what will the same two lookups return?
+/// Use `containsKey` when absence itself matters. Use `entrySet()` to visit key/value pairs: each entry
+/// provides `getKey()` and `getValue()`. A Map does not promise that the first entry is the largest;
+/// compare values explicitly when choosing a winner. Predict blue after another identical update. Then
+/// predict what `getOrDefault("gold", 9)` returns and whether gold is now stored.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Read this part
 ///
-/// - `room.width() * room.height()` — Reads record components and multiplies them to obtain room area.
-/// - `<= 42 ? "SMALL" : "LARGE"` — Chooses one category string; area 42 belongs to SMALL.
-/// - `roomCounts.put(kind, 1)` — Stores one under the chosen key even if several rooms share it.
-///
-/// ### What the prepared part already does
-///
-/// generate proposes bounded rooms, asks countRoom to remember accepted sizes, and joins the rooms
-/// by corridors. render draws the map and its SMALL/LARGE totals directly in Java.
+/// Room is a record: width() and height() read its components. Multiply them for area. Map keys are the
+/// shared category names, not individual rooms. getOrDefault gives zero before the first accepted room.
+/// A refused placement must not use up a quota. Prepared generate() handles overlap and bounded
+/// attempts, then joins accepted rooms with corridors.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// The area boundary includes exactly 42.
+/// Classify area before reading that category’s count.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Different room objects can have the same kind key.
+/// Compare used with the matching limit before changing the Map.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Use the old count or zero, then add one.
+/// Return false at a full quota; otherwise store used+1 for the category and return true.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Design a dungeon policy with one giant boss chamber and several small refuges. Change the area
+/// threshold and quotas, then inspect how the same placement attempts tell a different story.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
@@ -87,9 +92,8 @@ boolean[][] generate(long seed, int requested) {
         for (var other : rooms) {
             fits &= !room.overlaps(other);
         }
-        if (fits) {
+        if (fits && admitRoom(room)) {
             rooms.add(room);
-            countRoom(room);
         }
     }
     boolean[][] floor = new boolean[34][50];
@@ -136,7 +140,7 @@ BufferedImage render(long seed, double option) {
             }
         }
         g.setColor(Color.WHITE);
-        g.drawString("SMALL " + roomCounts.getOrDefault("SMALL", 0) + " / LARGE " + roomCounts.getOrDefault("LARGE", 0), 8, 14);
+        g.drawString("SMALL " + roomCounts.getOrDefault("SMALL", 0) + "/3 | LARGE " + roomCounts.getOrDefault("LARGE", 0) + "/2", 8, 14);
     } finally {
         g.dispose();
     }

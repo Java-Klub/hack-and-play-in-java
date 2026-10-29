@@ -3,7 +3,8 @@
 /// Make a large arcade sign out of small printed # characters. The handmade alphabet lets you turn a
 /// short message into five rows of pixel lettering.
 ///
-/// **Your mission:** The sign currently prints only blank space. Repair the message from bannerMessage so
+/// **Your mission · Restore an arcade sign:** The sign currently prints only blank space. Repair the
+/// message from bannerMessage so
 /// the default sign reads JAVA CLUB!.
 ///
 /// **Today you learn:** Literals and output: the chosen text determines what another action prints.
@@ -59,6 +60,19 @@ String bannerMessage() {
 /// Keep the output's fixed-width lettering visible by widening the panel. The supplied font
 /// supports only the listed letters, `!` and spaces, so arbitrary text may be rejected. A comment
 /// describing a new sign cannot change the message returned by bannerMessage.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// Text can be present even when you cannot see a letter. `"   "` stores three spaces; `""` stores no
+/// characters. The banner looks up a five-row shape for each supported letter. The question for this
+/// task is which data to send, not how to draw all five rows. Predict whether adding a space changes
+/// the printed width.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// Make an absurd club sign using the available letters A B C J L U V, spaces and !. Try CLUB JAVA!
+/// or a repeated alarm. Change the existing drawing character from # to another single character and
+/// decide which sign remains readable.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">

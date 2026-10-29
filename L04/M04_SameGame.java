@@ -10,7 +10,7 @@
 /// **Today you learn:** While until no work remains: the pending queue and the collected result answer
 /// different questions. Finding one cell does not mean there are no more cells waiting to be explored.
 ///
-/// Run the program and look for two same-colour blocks that share an edge despite the early “No
+/// Look for two same-colour blocks that share an edge despite the early “No
 /// groups remain” message; after your repair, enter the row and column of a block in that
 /// group.
 List<int[]> group(int row, int col) {
@@ -103,6 +103,12 @@ List<int[]> group(int row, int col) {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// The while condition should be only !queue.isEmpty().
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Author a five-by-five starting board with two tempting first groups. Find a clearing sequence before
+/// giving the board to a partner; keep your solution secret. Compare the score of a greedy large first
+/// group with your planned route.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

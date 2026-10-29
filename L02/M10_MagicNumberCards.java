@@ -3,7 +3,8 @@
 /// Think of a number between 0 and 63 and tell the program which of six number cards contains it. The
 /// machine combines your yes/no answers to reveal your chosen number.
 ///
-/// **Your mission:** The trick treats typed yes answers as no. Repair yesAnswer so both y and Y are
+/// **Your mission · Repair a mind-reading trick:** The trick treats typed yes answers as no. Repair
+/// yesAnswer so both y and Y are
 /// recognized by their text, while n stays false.
 ///
 /// **Today you learn:** Boolean text comparison: a decision can come from text rather than arithmetic.
@@ -54,6 +55,19 @@ boolean yesAnswer(String input) {
 /// card constructs the six displayed cards and reveal combines their prepared number values. main
 /// validates y/n and asks yesAnswer which response to store. You do not need to unpack the binary-card
 /// mathematics for this repair.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// For this task the decision is about letter content and case. y and Y mean the same answer, while n
+/// must remain different. equalsIgnoreCase compares those contents without changing the input String.
+/// Predict the answer for a newly typed uppercase Y; it must work regardless of where the text is
+/// stored.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// Perform the trick for a friend who chooses the number privately. After it works, deliberately lie
+/// on exactly one card and compare the error with that card’s first number. Can your friend explain
+/// the changed result from the card rather than guessing magic?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">

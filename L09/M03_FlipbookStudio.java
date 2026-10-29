@@ -11,69 +11,68 @@ import javax.swing.Timer;
 /// Draw several tiny animation frames, then watch them flip into motion. Undo should let you experiment
 /// boldly and peel back the latest mark first.
 ///
-/// **Your mission:** Undo currently restores the oldest edit rather than the newest. Repair which
-/// recorded change is removed, including an empty history.
+/// **Your mission:** Build undo(): return false for an empty history; otherwise remove the newest Edit,
+/// restore its oldColour in that edit’s own frame/y/x, and return true. Painting works, but the
+/// unfinished undo cannot recover any mark.
 ///
-/// **Today you learn:** A mutable List can act as a stack: changes enter in time order and are undone in
-/// reverse time order. Each Edit stores enough old data to restore one pixel.
+/// **Today you learn:** Build an ordered, mutable collection operation and make its accepted and empty
+/// cases precise.
 ///
 /// Run the program, then paint two different cells and press Z to undo the latest one;
 /// right-click erases, 1–4 switches frames, Space plays the animation and R restarts.
 boolean undo() {
-    if (history.isEmpty()) return false;
-    Edit edit = history.removeFirst();
-    frames[edit.frame()][edit.y()][edit.x()] = edit.oldColour();
-    return true;
+    return false;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F22">
-/// ### List: a sequence you can change
+/// ### A List gives changing things an order
 ///
-/// A `List<String>` holds text in order. `new ArrayList<>()` makes a mutable list: its contents can
-/// change without replacing the list itself.
+/// An array has a fixed number of slots. A mutable List can grow or shrink while keeping an order.
+/// `List<T>` describes access to elements of type T; `ArrayList<T>` is a JDK implementation you can
+/// change.
 ///
 /// ```java
-/// List<String> snacks = new ArrayList<>();
-/// snacks.add("apple");
-/// snacks.add("nuts");
-/// IO.println(snacks.get(0));
-/// IO.println(snacks.size());
+/// List<String> trail = new ArrayList<>();
+/// trail.add("north");
+/// trail.add("east");
+/// String latest = trail.removeLast();
+/// IO.println(trail + " / " + latest);
 /// ```
 ///
-/// The output is `apple`, then `2`. `add(value)` appends one item; `get(index)` reads without
-/// removing it. Indexes start at zero. `isEmpty()` checks for no items. `removeLast()` removes and
-/// returns the final item; call it only on a nonempty list. A list made directly by `List.of(...)`
-/// cannot be changed, but `new ArrayList<>(List.of(...))` can.
+/// The result is `[north] / east`. Add appends at the end; removeLast both removes and returns the last
+/// element. Check isEmpty before removing from an empty list. A queue removes at the front and appends
+/// at the back; an undo stack removes the latest item instead. The intended order determines which end
+/// to use.
 ///
-/// Predict: after `snacks.removeLast()`, what are its size and first item?
+/// `List.of("north", "east")` supplies an unmodifiable list: reading works, adding does not. `new
+/// ArrayList<>(existing)` creates a mutable list with the existing membership. Predict the list after
+/// adding `"south"` to trail. If two changes are undone, which should disappear first?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Read this part
 ///
-/// - `history.isEmpty()` — Checks whether there is any edit to undo before removing one.
-/// - `history.removeFirst()` — Returns and removes the earliest stored Edit; ask whether Undo should use
-///   that end.
-/// - `edit.frame()` — Reads a record component that identifies the frame to restore.
-/// - `frames[edit.frame()][edit.y()][edit.x()]` — Finds a frame, then a row, then the pixel within that
-///   row.
-///
-/// ### What the prepared part already does
-///
-/// paintCell records each change for undo; draw shows the chosen frame and animation preview.
-/// Left/right mouse draws/erases, 1–4 selects a frame, Space plays and R restarts.
+/// Each Edit is an immutable record of frame, x, y and oldColour. Accessors have parentheses:
+/// `edit.frame()` reads a component. The current frame may differ from the edited frame. History
+/// already receives edits in time order; undo must consume the opposite end without deleting older
+/// changes.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Successive edits go to the end of history.
+/// Which end contains the last action? What should an empty stack mean?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Undo needs the last element and must remove that same element.
+/// The restored coordinates must come from the removed Edit, not the currently selected frame.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Restore the recorded frame/x/y/colour, not the currently selected frame.
+/// Guard empty, removeLast, write oldColour into frames[frame][y][x], and report success.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Draw a four-frame creature walk using the existing frame keys. Make one foot stay fixed between two
+/// frames and use undo to compare that illusion with a sliding foot.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

@@ -64,13 +64,13 @@ class M01_MemoryPairsTest {
         Reflect.call(g, "reset", 12);
         Reflect.set(g, "cards", new int[]{1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6});
         Reflect.set(g, "first", 4);
-        equal(5, ((int) Reflect.call(g, "visible", 4)), "I033/F16: reveal the chosen slot, not card zero");
-        equal(0, ((int) Reflect.call(g, "visible", 3)), "I033/F16: covered card remains hidden");
+        equal(5, ((int) Reflect.call(g, "visible", 4)), "L05.01/F16: reveal the chosen slot, not card zero");
+        equal(0, ((int) Reflect.call(g, "visible", 3)), "L05.01/F16: covered card remains hidden");
         Reflect.set(g, "second", 8);
-        equal(3, ((int) Reflect.call(g, "visible", 8)), "I033/F16: second chosen slot visible");
+        equal(3, ((int) Reflect.call(g, "visible", 8)), "L05.01/F16: second chosen slot visible");
         Reflect.set(g, "first", ((int) Reflect.set(g, "second", -1)));
         ((boolean[]) Reflect.get(g, "matched"))[11] = true;
-        equal(6, ((int) Reflect.call(g, "visible", 11)), "I033/F16: last matched card stays visible");
+        equal(6, ((int) Reflect.call(g, "visible", 11)), "L05.01/F16: last matched card stays visible");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -99,11 +99,11 @@ class M02_MiniBattleshipHuntTest {
                     counts[cell]++;
                 }
             }
-            equal(3, counts[2], "I041/F16: every layout has all three cells of ship two");
-            equal(2, counts[1], "I041/F16: ship one occupies two cells");
+            equal(3, counts[2], "L05.02/F16: every layout has all three cells of ship two");
+            equal(2, counts[1], "L05.02/F16: ship one occupies two cells");
         }
         Reflect.call(g, "layout", 0);
-        equal(2, ((int[][]) Reflect.get(g, "board"))[3][4], "I041/F16: last coordinate is not omitted");
+        equal(2, ((int[][]) Reflect.get(g, "board"))[3][4], "L05.02/F16: last coordinate is not omitted");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -124,14 +124,14 @@ class M03_DotsAndBoxesTest {
     }
     public static void main(String[] args) throws Exception {
         var g = Reflect.create("M03_DotsAndBoxes");
-        equal(new int[]{0, 2, 6, 7}, ((int[]) Reflect.call(g, "box", 0)), "I007/F16: first box needs its four real edges");
-        equal(new int[]{1, 3, 7, 8}, ((int[]) Reflect.call(g, "box", 1)), "I007/F16: neighbouring box shares one edge");
-        equal(new int[]{3, 5, 10, 11}, ((int[]) Reflect.call(g, "box", 3)), "I007/F16: final box has different indices");
+        equal(new int[]{0, 2, 6, 7}, ((int[]) Reflect.call(g, "box", 0)), "L05.03/F16: first box needs its four real edges");
+        equal(new int[]{1, 3, 7, 8}, ((int[]) Reflect.call(g, "box", 1)), "L05.03/F16: neighbouring box shares one edge");
+        equal(new int[]{3, 5, 10, 11}, ((int[]) Reflect.call(g, "box", 3)), "L05.03/F16: final box has different indices");
         Reflect.call(g, "reset");
         for (String edge : new String[]{"1", "3", "7", "8"}) {
             Reflect.call(g, "command", edge);
         }
-        expect(((int[]) Reflect.get(g, "owners"))[0] != 0, "I007/F16: closing a real box awards it");
+        expect(((int[]) Reflect.get(g, "owners"))[0] != 0, "L05.03/F16: closing a real box awards it");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -157,19 +157,19 @@ class M04_QuartoTest {
         for (int n = 0; n < 4; n++) {
             ((int[]) Reflect.get(g, "board"))[diagonal[n]] = n;
         }
-        expect(((boolean) Reflect.call(g, "won")), "I011/F16: the main diagonal must be searched");
+        expect(((boolean) Reflect.call(g, "won")), "L05.04/F16: the main diagonal must be searched");
         Reflect.call(g, "reset");
         for (int n = 0; n < 4; n++) {
             ((int[]) Reflect.get(g, "board"))[1 + n * 4] = n;
         }
-        expect(((boolean) Reflect.call(g, "won")), "I011/F16: a full column can win");
+        expect(((boolean) Reflect.call(g, "won")), "L05.04/F16: a full column can win");
         Reflect.call(g, "reset");
         for (int n = 0; n < 4; n++) {
             ((int[]) Reflect.get(g, "board"))[n] = n;
         }
-        expect(((boolean) Reflect.call(g, "won")), "I011/F16: existing row wins remain");
+        expect(((boolean) Reflect.call(g, "won")), "L05.04/F16: existing row wins remain");
         Reflect.call(g, "reset");
-        expect(!((boolean) Reflect.call(g, "won")), "I011/F16: empty slots cannot form a line");
+        expect(!((boolean) Reflect.call(g, "won")), "L05.04/F16: empty slots cannot form a line");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -191,13 +191,13 @@ class M05_ReversiTest {
     public static void main(String[] args) throws Exception {
         var g = Reflect.create("M05_Reversi");
         Reflect.call(g, "reset");
-        expect(((boolean) Reflect.call(g, "hasMove", 1)), "I004/F17: search must find a move outside the top row");
+        expect(((boolean) Reflect.call(g, "hasMove", 1)), "L05.05/F17: search must find a move outside the top row");
         Reflect.set(g, "board", new int[6][6]);
         ((int[][]) Reflect.get(g, "board"))[5][4] = 2;
         ((int[][]) Reflect.get(g, "board"))[5][5] = 1;
-        expect(((boolean) Reflect.call(g, "hasMove", 1)), "I004/F17: legal move in the final row is not skipped");
+        expect(((boolean) Reflect.call(g, "hasMove", 1)), "L05.05/F17: legal move in the final row is not skipped");
         Reflect.set(g, "board", new int[6][6]);
-        expect(!((boolean) Reflect.call(g, "hasMove", 1)), "I004/F17: empty board has no bracketed captures");
+        expect(!((boolean) Reflect.call(g, "hasMove", 1)), "L05.05/F17: empty board has no bracketed captures");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -222,15 +222,15 @@ class M06_HexTest {
         for (int r = 0; r < 5; r++) {
             ((int[][]) Reflect.get(g, "board"))[r][4 - r] = 1;
         }
-        expect(((boolean) Reflect.call(g, "connected", 1)), "I006/F17: hex diagonal is a connected path");
+        expect(((boolean) Reflect.call(g, "connected", 1)), "L05.06/F17: hex diagonal is a connected path");
         ((int[][]) Reflect.get(g, "board"))[2][2] = 0;
-        expect(!((boolean) Reflect.call(g, "connected", 1)), "I006/F17: gap breaks the path");
+        expect(!((boolean) Reflect.call(g, "connected", 1)), "L05.06/F17: gap breaks the path");
         Reflect.call(g, "reset");
         for (int c = 0; c < 5; c++) {
             ((int[][]) Reflect.get(g, "board"))[2][c] = 2;
         }
-        expect(((boolean) Reflect.call(g, "connected", 2)), "I006/F17: player two connects left to right");
-        expect(!((boolean) Reflect.call(g, "connected", 1)), "I006/F17: opposing pieces are not traversed");
+        expect(((boolean) Reflect.call(g, "connected", 2)), "L05.06/F17: player two connects left to right");
+        expect(!((boolean) Reflect.call(g, "connected", 1)), "L05.06/F17: opposing pieces are not traversed");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -252,12 +252,12 @@ class M07_SetStyleTripleHuntTest {
     public static void main(String[] args) throws Exception {
         var g = Reflect.create("M07_SetStyleTripleHunt");
         Reflect.set(g, "table", new java.util.ArrayList<>(java.util.List.of(0, 1, 2)));
-        expect(((boolean) Reflect.call(g, "hasSet")), "I036/F17: the last card can complete the only triple");
+        expect(((boolean) Reflect.call(g, "hasSet")), "L05.07/F17: the last card can complete the only triple");
         Reflect.set(g, "table", new java.util.ArrayList<>(java.util.List.of(0, 1, 3)));
-        expect(!((boolean) Reflect.call(g, "hasSet")), "I036/F17: near miss is not a triple");
+        expect(!((boolean) Reflect.call(g, "hasSet")), "L05.07/F17: near miss is not a triple");
         Reflect.set(g, "table", new java.util.ArrayList<>(java.util.List.of(0, 1)));
-        expect(!((boolean) Reflect.call(g, "hasSet")), "I036/F17: fewer than three cards cannot work");
-        expect(((boolean) Reflect.call(g, "triple", 0, 1, 2)), "I036/F17: supplied attribute rule still used");
+        expect(!((boolean) Reflect.call(g, "hasSet")), "L05.07/F17: fewer than three cards cannot work");
+        expect(((boolean) Reflect.call(g, "triple", 0, 1, 2)), "L05.07/F17: supplied attribute rule still used");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -278,10 +278,10 @@ class M08_NonogramTest {
     }
     public static void main(String[] args) throws Exception {
         var g = Reflect.create("M08_Nonogram");
-        equal(new int[]{3}, ((int[]) Reflect.call(g, "runs", new int[]{0, 1, 1, 1})), "I059/F17: flush the run at the end of the array");
-        equal(new int[]{2, 1}, ((int[]) Reflect.call(g, "runs", new int[]{1, 1, 0, 1})), "I059/F17: separate groups remain separate");
-        equal(new int[]{}, ((int[]) Reflect.call(g, "runs", new int[]{0, 0, 0})), "I059/F17: blank line has no runs");
-        equal(new int[]{1}, ((int[]) Reflect.call(g, "runs", new int[]{1})), "I059/F17: single-cell run");
+        equal(new int[]{3}, ((int[]) Reflect.call(g, "runs", new int[]{0, 1, 1, 1})), "L05.08/F17: flush the run at the end of the array");
+        equal(new int[]{2, 1}, ((int[]) Reflect.call(g, "runs", new int[]{1, 1, 0, 1})), "L05.08/F17: separate groups remain separate");
+        equal(new int[]{}, ((int[]) Reflect.call(g, "runs", new int[]{0, 0, 0})), "L05.08/F17: blank line has no runs");
+        equal(new int[]{1}, ((int[]) Reflect.call(g, "runs", new int[]{1})), "L05.08/F17: single-cell run");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -304,13 +304,13 @@ class M09_FourColourMapTest {
         var g = Reflect.create("M09_FourColourMap");
         Reflect.call(g, "reset");
         Reflect.set(g, "colours", new int[]{1, 2, 3, 4, 4});
-        equal(1, ((int) Reflect.call(g, "conflicts")), "I087/F17: conflict on the last adjacency must count");
+        equal(1, ((int) Reflect.call(g, "conflicts")), "L05.09/F17: conflict on the last adjacency must count");
         Reflect.set(g, "colours", new int[]{1, 2, 3, 4, 1});
-        equal(0, ((int) Reflect.call(g, "conflicts")), "I087/F17: non-adjacent equal colours allowed");
+        equal(0, ((int) Reflect.call(g, "conflicts")), "L05.09/F17: non-adjacent equal colours allowed");
         Reflect.set(g, "colours", new int[]{1, 1, 1, 0, 0});
-        equal(3, ((int) Reflect.call(g, "conflicts")), "I087/F17: count every coloured conflicting edge");
+        equal(3, ((int) Reflect.call(g, "conflicts")), "L05.09/F17: count every coloured conflicting edge");
         Reflect.call(g, "reset");
-        equal(0, ((int) Reflect.call(g, "conflicts")), "I087/F17: uncoloured regions are not conflicts");
+        equal(0, ((int) Reflect.call(g, "conflicts")), "L05.09/F17: uncoloured regions are not conflicts");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -333,15 +333,15 @@ class M10_MirrorLaserTest {
         var g = Reflect.create("M10_MirrorLaser");
         var r = Reflect.create("M10_MirrorLaser$RayState", 1, 2, 1, 0);
         var next = Reflect.call(r, "advance");
-        equal(Reflect.create("M10_MirrorLaser$RayState", 2, 2, 1, 0), next, "I057/F19: record update follows its named direction");
-        equal(1, ((int) Reflect.call(r, "x")), "I057/F19: advancing leaves original record unchanged");
-        equal(Reflect.create("M10_MirrorLaser$RayState", 1, 1, 0, -1), Reflect.call(Reflect.create("M10_MirrorLaser$RayState", 1, 2, 0, -1), "advance"), "I057/F19: vertical update");
+        equal(Reflect.create("M10_MirrorLaser$RayState", 2, 2, 1, 0), next, "L05.10/F19: record update follows its named direction");
+        equal(1, ((int) Reflect.call(r, "x")), "L05.10/F19: advancing leaves original record unchanged");
+        equal(Reflect.create("M10_MirrorLaser$RayState", 1, 1, 0, -1), Reflect.call(Reflect.create("M10_MirrorLaser$RayState", 1, 2, 0, -1), "advance"), "L05.10/F19: vertical update");
         Reflect.call(g, "restart");
         ((int[][]) Reflect.get(g, "mirrors"))[2][2] = 1;
         ((int[][]) Reflect.get(g, "mirrors"))[0][2] = 1;
         ((int[][]) Reflect.get(g, "mirrors"))[0][5] = 2;
         Reflect.call(g, "trace");
-        equal("Target reached!", ((java.lang.String) Reflect.get(g, "result")), "I057/F19: real beam follows the authored route");
+        equal("Target reached!", ((java.lang.String) Reflect.get(g, "result")), "L05.10/F19: real beam follows the authored route");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -363,11 +363,11 @@ class M11_DominosaTest {
     public static void main(String[] args) throws Exception {
         var g = Reflect.create("M11_Dominosa");
         Reflect.call(g, "reset");
-        equal(Reflect.call(g, "pairKey", 2, 3), Reflect.call(g, "pairKey", 3, 2), "I083/F19: reversed endpoints describe the same domino value");
-        equal(Reflect.create("M11_Dominosa$Domino", 0, 1), Reflect.call(g, "pairKey", 2, 3), "I083/F19: record stores ordered endpoint values");
-        expect(!((boolean) Reflect.call(Reflect.call(g, "pairKey", 0, 1), "equals", Reflect.call(g, "pairKey", 2, 3))), "I083/F19: different unordered pairs stay distinct");
+        equal(Reflect.call(g, "pairKey", 2, 3), Reflect.call(g, "pairKey", 3, 2), "L05.11/F19: reversed endpoints describe the same domino value");
+        equal(Reflect.create("M11_Dominosa$Domino", 0, 1), Reflect.call(g, "pairKey", 2, 3), "L05.11/F19: record stores ordered endpoint values");
+        expect(!((boolean) Reflect.call(Reflect.call(g, "pairKey", 0, 1), "equals", Reflect.call(g, "pairKey", 2, 3))), "L05.11/F19: different unordered pairs stay distinct");
         Reflect.call(g, "command", "1 3 1 4");
-        expect(((java.util.Set<Object>) Reflect.get(g, "used")).contains(Reflect.create("M11_Dominosa$Domino", 0, 1)), "I083/F19: game tracks the record value");
+        expect(((java.util.Set<Object>) Reflect.get(g, "used")).contains(Reflect.create("M11_Dominosa$Domino", 0, 1)), "L05.11/F19: game tracks the record value");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -390,19 +390,19 @@ class M12_InequalityLatinTest {
         var g = Reflect.create("M12_InequalityLatin");
         var rule = Reflect.create("M12_InequalityLatin$Rule", 1, 0);
         int[][] values = {{4, 1, 3, 2}};
-        expect(((boolean) Reflect.call(rule, "satisfiedBy", (Object) values)), "I093/F19: record coordinates identify the left and right cells");
+        expect(((boolean) Reflect.call(rule, "satisfiedBy", (Object) values)), "L05.12/F19: record coordinates identify the left and right cells");
         values[0][1] = 3;
-        expect(!((boolean) Reflect.call(rule, "satisfiedBy", (Object) values)), "I093/F19: equality does not satisfy strict inequality");
+        expect(!((boolean) Reflect.call(rule, "satisfiedBy", (Object) values)), "L05.12/F19: equality does not satisfy strict inequality");
         int[][] other = {{4, 1, 3, 2}, {1, 4, 2, 3}};
-        expect(!((boolean) Reflect.call(Reflect.create("M12_InequalityLatin$Rule", 0, 0), "satisfiedBy", (Object) other)), "I093/F19: changed x reads a different pair");
-        expect(((boolean) Reflect.call(Reflect.create("M12_InequalityLatin$Rule", 0, 1), "satisfiedBy", (Object) other)), "I093/F19: changed y reads a different row");
-        expect(!((boolean) Reflect.call(Reflect.create("M12_InequalityLatin$Rule", 1, 1), "satisfiedBy", (Object) other)), "I093/F19: record row and column cannot be ignored");
-        expect(((boolean) Reflect.call(Reflect.create("M12_InequalityLatin$Rule", 2, 1), "satisfiedBy", (Object) other)), "I093/F19: rightmost pair can satisfy the rule");
+        expect(!((boolean) Reflect.call(Reflect.create("M12_InequalityLatin$Rule", 0, 0), "satisfiedBy", (Object) other)), "L05.12/F19: changed x reads a different pair");
+        expect(((boolean) Reflect.call(Reflect.create("M12_InequalityLatin$Rule", 0, 1), "satisfiedBy", (Object) other)), "L05.12/F19: changed y reads a different row");
+        expect(!((boolean) Reflect.call(Reflect.create("M12_InequalityLatin$Rule", 1, 1), "satisfiedBy", (Object) other)), "L05.12/F19: record row and column cannot be ignored");
+        expect(((boolean) Reflect.call(Reflect.create("M12_InequalityLatin$Rule", 2, 1), "satisfiedBy", (Object) other)), "L05.12/F19: rightmost pair can satisfy the rule");
         Reflect.call(g, "restart");
         Reflect.set(g, "cells", new int[][]{{1, 2, 3, 4}, {2, 3, 4, 1}, {3, 4, 1, 2}, {4, 1, 2, 3}});
-        expect(((boolean) Reflect.call(g, "won")), "I093/F19: authored Latin square obeys all Rule records");
+        expect(((boolean) Reflect.call(g, "won")), "L05.12/F19: authored Latin square obeys all Rule records");
         Reflect.set(g, "rules", ((Object[]) Reflect.array("M12_InequalityLatin$Rule", Reflect.create("M12_InequalityLatin$Rule", 0, 3))));
-        expect(!((boolean) Reflect.call(g, "won")), "I093/F19: a valid Latin square can violate its actual Rule coordinates");
+        expect(!((boolean) Reflect.call(g, "won")), "L05.12/F19: a valid Latin square can violate its actual Rule coordinates");
         System.out.println("PASS " + checks + " checks");
     }
 }

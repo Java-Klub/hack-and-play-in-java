@@ -3,16 +3,23 @@
 /// Play tic-tac-toe with a friend by choosing numbered empty squares. Try to make a line of three while
 /// blocking the other player’s line.
 ///
-/// **Your mission:** The bottom-right empty square is wrongly rejected. Repair the opening guard in play
-/// so every legal cell is accepted and invalid moves leave the board and turn untouched.
+/// **Your mission · Build a move gatekeeper:** All squares are locked. Implement mayPlay as the referee:
+/// reject a finished
+/// game, cell numbers outside 1..9 and occupied squares. A legal empty square returns true. Keep the
+/// prepared play effects; a rejected move must change neither board nor turn.
 ///
 /// **Today you learn:** Guard clauses: return early when an action is forbidden, before any state
 /// changes. Test the last legal cell, a repeated cell and a number just outside the range.
 ///
 /// Run the program, choose cell 9 and then try it again; compare an accepted empty square with
 /// a rejected occupied square.
+boolean mayPlay(int cell) {
+    return false;
+}
+
+// <editor-fold defaultstate="collapsed" desc="Applying an accepted move · prepared">
 boolean play(int cell) {
-    if (winner != '.' || cell < 1 || cell >= 9 || board[cell - 1] != '.') {
+    if (!mayPlay(cell)) {
         return false;
     }
     board[cell - 1] = player;
@@ -26,6 +33,7 @@ boolean play(int cell) {
     }
     return true;
 }
+// </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="Learn · F08">
 /// A guard rejects a request before protected work happens. Read the rejected cases first, then ask
@@ -52,35 +60,39 @@ boolean play(int cell) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Permission before effects
 ///
-/// - `||` — Reject if any one of the joined bad situations is true; evaluation stops once a true
-///   rejection is found.
-/// - `cell >= 9` — The current upper test rejects nine itself as well as larger numbers.
-/// - `board[cell - 1]` — Read one slot in the supplied board: human cell numbers start at one, while
-///   slots start at zero.
-/// - `'.'` — Single quotes hold one character; a dot is the prepared marker for an empty square.
-/// - `return false;` — Finish this call as rejected before the protected board write.
-/// - `board[cell - 1] = player;` — The protected action writes the current player’s mark into the
-///   accepted square.
-/// - `moves++;` — Increase the accepted-move count by one; a rejected attempt must never reach this line.
-///
-/// ### What the prepared part already does
-///
-/// The later body detects lines, draws and the next player. hasLine checks the supplied board; main
-/// prints numbered cells and reads moves. You repair the gate before these already prepared effects.
+/// mayPlay returns a boolean and does not place a mark. winner is '.' while the round continues;
+/// board stores '.' for an empty square. Player-facing cells 1..9 become array indices 0..8 through
+/// cell - 1. play already uses your decision, then places the mark, counts it, checks a line and
+/// switches player. Today you author the permission rule, not those later effects.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// Guard in stages. First reject a finished game or a number outside 1..9; only then may cell - 1
+/// index the array. Next reject an occupied square. True is permission, not the move itself: play
+/// performs the supplied effects only after mayPlay returns true. Predict whether cell 10 ever
+/// reaches the board lookup in a correct version.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// Replace X and O with your own two single-character player marks. Keep '.' for empty cells and 'D'
+/// for a draw. Change the initial player, reset and the player-switch rule consistently, then play a
+/// full round with a friend. Try an occupied square and a winning line again: custom marks must not
+/// bypass your referee.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// The last legal input is nine, not eight.
+/// Separate whether a square exists from whether it is empty.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The range guard must run before board[cell - 1].
+/// Return false before indexing when cell is outside 1..9.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Reject cell > 9 rather than cell >= 9.
+/// Reject winner != '.' or an invalid range first; then reject board[cell - 1] != '.'; otherwise
+/// return true.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

@@ -3,23 +3,28 @@
 /// Send a puzzle postcard in one of three toy ciphers and decode it again. Changing the cipher card
 /// should change the transformation while keeping spaces and punctuation recognisable.
 ///
-/// **Your mission:** The Vigenere alternative is routed to an unchanged Caesar result. Make it use its
-/// own carried key and decoding choice while retaining the other cipher alternatives.
+/// **Your mission:** Build the whole typed dispatcher in transform. Caesar forwards its shift as text
+/// to applyText with mode caesar; Substitution forwards its alphabet with mode substitution; Vigenere
+/// forwards its keyword with mode vigenere. All three must preserve the caller’s decode flag.
 ///
-/// **Today you learn:** Record patterns give each closed alternative its own named data. The switch
-/// should forward that matched data to the correct supplied algorithm, rather than treating every card as
-/// the same operation.
+/// **Today you learn:** Build a complete record-pattern dispatcher. Match the alternative, unpack its
+/// own components and preserve the boundary between routing and each supplied algorithm.
 ///
 /// Run the program, then press Enter for vigenere and ORANGE, then type ATTACK AT DAWN!; read
 /// the selected cipher and compare Result with your original message: the Vigenere branch
 /// should change its letters.
 String transform(String text, Cipher cipher, boolean decode) {
-    return switch (cipher) {
-        case Caesar(var shift) -> applyText(text, "caesar", Integer.toString(shift), decode);
-        case Substitution(var alphabet) -> applyText(text, "substitution", alphabet, decode);
-        case Vigenere(var keyword) -> applyText(text, "caesar", "0", decode);
-    };
+    // Select the typed card and forward its own data to applyText.
+    return text;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Add a fourth toy cipher card that reverses text. Introduce its record, add it to permits, route
+/// its switch case and expose it in chooseCipher. Before running, predict which exhaustive switch
+/// will complain if you forget the new alternative.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F35">
 /// ### Record patterns: choose a shape and unpack its data
@@ -45,18 +50,23 @@ String transform(String text, Cipher cipher, boolean decode) {
 /// Predict: which case handles `new Stars(0)`, and what text does `new Name("Nova")` produce?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// ### A card's type chooses a route; its components supply data
 ///
-/// - `return switch (cipher)` — Computes the method result from exactly one matched cipher alternative.
-/// - `case Vigenere(var keyword)` — Extracts the keyword stored in this particular Vigenere record.
-/// - `"caesar", "0"` — Currently selects a different algorithm with a fixed zero shift.
-/// - `decode` — Carries the caller’s choice of forward or reverse transformation.
+/// The sealed Cipher family contains three records. They do not all carry the same kind of value:
+/// Caesar has an int, while the others carry String. Integer.toString converts the shift for the
+/// existing text-based algorithm. The switch must use a matched component, not a field left over from
+/// another card.
 ///
-/// ### What the prepared part already does
+/// Neutral example: a Shipping family might contain Pickup(String desk) and Delivery(String address).
+/// `case Pickup(var desk) -> "Collect at " + desk;` yields "Collect at Blue" for Pickup("Blue").
+/// Delivery needs its own case. Predict what changes when a Pickup carries "Red" instead; the rule
+/// should not hard-code Blue.
 ///
-/// chooseCipher creates the selected typed alternative; transform passes its record components to
-/// applyText. The single console flow prints the selected cipher and encoded message.
+/// Here applyText owns letter arithmetic and key validation. transform owns only the
+/// type-to-algorithm adapter. With decode false a card encodes, and the same card with decode true
+/// must recover the text. Test a nondefault key and punctuation; identity output for a zero shift
+/// alone proves little.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="For this game">
@@ -71,15 +81,17 @@ String transform(String text, Cipher cipher, boolean decode) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// The matched keyword belongs to this Vigenere value.
+/// Match all three record types and name each component locally.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Use that component, rather than a fixed key or another cipher mode.
+/// The mode strings are caesar, substitution and vigenere; only the Caesar int needs conversion to
+/// String.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// applyText already handles letter case, punctuation, key validation and reverse transformation.
+/// Return an exhaustive switch expression whose cases forward text, the matching mode and key, and
+/// unchanged decode.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

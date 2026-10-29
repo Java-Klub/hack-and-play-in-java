@@ -8,7 +8,8 @@ import java.awt.image.BufferedImage;
 /// Grow a sunflower-like arrangement from a thousand coloured dots. Small changes in the angle between
 /// dots can turn a spiral into a few spokes.
 ///
-/// **Your mission:** The default picture collapses into two spokes. Repair defaultAngle so the ordinary
+/// **Your mission · Tune a visual instrument:** The default picture collapses into two spokes. Repair
+/// defaultAngle so the ordinary
 /// run uses 137.5 degrees and spreads the seeds into a spiral.
 ///
 /// **Today you learn:** Named numeric values: a descriptive name connects one chosen angle to the later
@@ -60,6 +61,19 @@ double defaultAngle = 180;
 /// degrees; Java writes fractional numbers with a decimal point. Rerun the file after changing
 /// defaultAngle so the new value is loaded. The mission checks verify behaviour, not an old
 /// picture left in an earlier window.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// A double literal uses a decimal point: 12.5. A comma is not an alternative decimal separator in
+/// Java source. The name defaultAngle stores one value that many dot positions read. A small
+/// numerical change can have a large visual effect because that same change is repeated across many
+/// dots.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// After restoring 137.5, try angles 120, 137 and 137.6. Before each run predict spokes or a
+/// spread-out pattern. Pick one image as an alien flower and give your friend its angle as a recipe,
+/// without showing the picture first.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">

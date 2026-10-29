@@ -63,10 +63,11 @@ class M01_CrazyEightsSimpleMauMauTest {
         var g = Reflect.create("M01_CrazyEightsSimpleMauMau");
         Reflect.set(g, "top", 0);
         Reflect.set(g, "suit", 0);
-        expect(((boolean) Reflect.call(g, "legal", 20)), "I035/F09: an eight is wild even in a different suit");
-        expect(((boolean) Reflect.call(g, "legal", 13)), "I035/F09: matching rank accepted");
-        expect(((boolean) Reflect.call(g, "legal", 5)), "I035/F09: matching suit accepted");
-        expect(!((boolean) Reflect.call(g, "legal", 15)), "I035/F09: unrelated non-wild card rejected");
+        expect(((boolean) Reflect.call(g, "legal", 20)), "L07.01/F09: an eight is wild even in a different suit");
+        expect(((boolean) Reflect.call(g, "legal", 13)), "L07.01/F09: matching rank accepted");
+        expect(((boolean) Reflect.call(g, "legal", 5)), "L07.01/F09: matching suit accepted");
+        expect(!((boolean) Reflect.call(g, "legal", 15)), "L07.01/F09: unrelated non-wild card rejected");
+        expect(!(boolean) Reflect.call(g, "legal", -1) && !(boolean) Reflect.call(g, "legal", 52), "invalid deck positions are rejected");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -87,13 +88,13 @@ class M02_CooperateOrDefectTest {
     }
     public static void main(String[] args) throws Exception {
         var g = Reflect.create("M02_CooperateOrDefect");
-        equal(3, ((int) Reflect.call(g, "reward", true, true)), "I044/F09: mutual cooperation rewards both");
-        equal(0, ((int) Reflect.call(g, "reward", true, false)), "I044/F09: betrayed cooperator earns zero");
-        equal(5, ((int) Reflect.call(g, "reward", false, true)), "I044/F09: lone defector earns five");
-        equal(1, ((int) Reflect.call(g, "reward", false, false)), "I044/F09: mutual defection earns one");
+        equal(3, ((int) Reflect.call(g, "reward", true, true)), "L07.02/F09: mutual cooperation rewards both");
+        equal(0, ((int) Reflect.call(g, "reward", true, false)), "L07.02/F09: betrayed cooperator earns zero");
+        equal(5, ((int) Reflect.call(g, "reward", false, true)), "L07.02/F09: lone defector earns five");
+        equal(1, ((int) Reflect.call(g, "reward", false, false)), "L07.02/F09: mutual defection earns one");
         Reflect.call(g, "reset");
         Reflect.call(g, "play", true, false);
-        equal(new int[]{0, 5}, ((int[]) Reflect.get(g, "scores")), "I044/F09: both players use the same viewpoint rule");
+        equal(new int[]{0, 5}, ((int[]) Reflect.get(g, "scores")), "L07.02/F09: both players use the same viewpoint rule");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -114,14 +115,14 @@ class M03_TrailDuelTest {
     }
     public static void main(String[] args) throws Exception {
         var g = Reflect.create("M03_TrailDuel");
-        equal(Reflect.create("M03_TrailDuel$Direction", 0, -1), Reflect.call(g, "directionFor", java.awt.event.KeyEvent.VK_W), "I061/F09: W maps to upward movement");
-        equal(Reflect.create("M03_TrailDuel$Direction", 0, -1), Reflect.call(g, "directionFor", java.awt.event.KeyEvent.VK_UP), "I061/F09: both players share direction values");
-        equal(Reflect.create("M03_TrailDuel$Direction", -1, 0), Reflect.call(g, "directionFor", java.awt.event.KeyEvent.VK_LEFT), "I061/F09: left direction");
-        equal(null, Reflect.call(g, "directionFor", java.awt.event.KeyEvent.VK_F1), "I061/F09: unrelated key has no direction");
+        equal(Reflect.create("M03_TrailDuel$Direction", 0, -1), Reflect.call(g, "directionFor", java.awt.event.KeyEvent.VK_W), "L07.03/F09: W maps to upward movement");
+        equal(Reflect.create("M03_TrailDuel$Direction", 0, -1), Reflect.call(g, "directionFor", java.awt.event.KeyEvent.VK_UP), "L07.03/F09: both players share direction values");
+        equal(Reflect.create("M03_TrailDuel$Direction", -1, 0), Reflect.call(g, "directionFor", java.awt.event.KeyEvent.VK_LEFT), "L07.03/F09: left direction");
+        equal(null, Reflect.call(g, "directionFor", java.awt.event.KeyEvent.VK_F1), "L07.03/F09: unrelated key has no direction");
         Reflect.call(g, "restart");
         Reflect.call(g, "key", java.awt.event.KeyEvent.VK_W, true);
         Reflect.call(g, "step");
-        equal(9, ((int) Reflect.get(g, "ay")), "I061/F09: actual cyan trail turns up");
+        equal(9, ((int) Reflect.get(g, "ay")), "L07.03/F09: actual cyan trail turns up");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -143,13 +144,13 @@ class M04_CarrotInABoxTest {
     public static void main(String[] args) throws Exception {
         var g = Reflect.create("M04_CarrotInABox");
         Reflect.set(g, "prizeA", true);
-        equal(Reflect.get(Reflect.type("M04_CarrotInABox$Holder"), "PLAYER_TWO"), Reflect.call(g, "holderAfterSwap", true), "I045/F21: swapping changes the named holder");
-        equal(Reflect.get(Reflect.type("M04_CarrotInABox$Holder"), "PLAYER_ONE"), Reflect.call(g, "holderAfterSwap", false), "I045/F21: keeping leaves prize with player one");
+        equal(Reflect.get(Reflect.type("M04_CarrotInABox$Holder"), "PLAYER_TWO"), Reflect.call(g, "holderAfterSwap", true), "L07.04/F21: swapping changes the named holder");
+        equal(Reflect.get(Reflect.type("M04_CarrotInABox$Holder"), "PLAYER_ONE"), Reflect.call(g, "holderAfterSwap", false), "L07.04/F21: keeping leaves prize with player one");
         Reflect.set(g, "prizeA", false);
-        equal(Reflect.get(Reflect.type("M04_CarrotInABox$Holder"), "PLAYER_ONE"), Reflect.call(g, "holderAfterSwap", true), "I045/F21: opposite starting box also swaps");
+        equal(Reflect.get(Reflect.type("M04_CarrotInABox$Holder"), "PLAYER_ONE"), Reflect.call(g, "holderAfterSwap", true), "L07.04/F21: opposite starting box also swaps");
         Reflect.set(g, "outcome", "");
         Reflect.call(g, "choose", false);
-        expect(((java.lang.String) Reflect.get(g, "outcome")).contains("Player 2"), "I045/F21: actual reveal uses the enum result");
+        expect(((java.lang.String) Reflect.get(g, "outcome")).contains("Player 2"), "L07.04/F21: actual reveal uses the enum result");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -172,16 +173,16 @@ class M05_TargetPopTest {
         var g = Reflect.create("M05_TargetPop");
         Reflect.call(g, "restart");
         Reflect.call(g, "tick", 999);
-        equal(Reflect.get(Reflect.type("M05_TargetPop$Phase"), "READY"), Reflect.get(g, "phase"), "I060/F21: idle game does not expire");
+        equal(Reflect.get(Reflect.type("M05_TargetPop$Phase"), "READY"), Reflect.get(g, "phase"), "L07.05/F21: idle game does not expire");
         Reflect.call(g, "click", ((int) Reflect.get(g, "targetX")), ((int) Reflect.get(g, "targetY")), 1000);
-        equal(Reflect.get(Reflect.type("M05_TargetPop$Phase"), "RUNNING"), Reflect.get(g, "phase"), "I060/F21: first click starts round");
+        equal(Reflect.get(Reflect.type("M05_TargetPop$Phase"), "RUNNING"), Reflect.get(g, "phase"), "L07.05/F21: first click starts round");
         Reflect.call(g, "tick", ((long) Reflect.get(g, "deadline")));
-        equal(Reflect.get(Reflect.type("M05_TargetPop$Phase"), "FINISHED"), Reflect.get(g, "phase"), "I060/F21: exact deadline finishes instead of resetting");
+        equal(Reflect.get(Reflect.type("M05_TargetPop$Phase"), "FINISHED"), Reflect.get(g, "phase"), "L07.05/F21: exact deadline finishes instead of resetting");
         int hits = ((int) Reflect.get(g, "hits"));
         Reflect.call(g, "click", ((int) Reflect.get(g, "targetX")), ((int) Reflect.get(g, "targetY")), ((long) Reflect.get(g, "deadline")) + 1);
-        equal(hits, ((int) Reflect.get(g, "hits")), "I060/F21: finished round rejects late clicks");
+        equal(hits, ((int) Reflect.get(g, "hits")), "L07.05/F21: finished round rejects late clicks");
         Reflect.call(g, "restart");
-        equal(Reflect.get(Reflect.type("M05_TargetPop$Phase"), "READY"), Reflect.get(g, "phase"), "I060/F21: explicit restart returns to ready");
+        equal(Reflect.get(Reflect.type("M05_TargetPop$Phase"), "READY"), Reflect.get(g, "phase"), "L07.05/F21: explicit restart returns to ready");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -202,9 +203,9 @@ class M06_MiniPacmanTest {
     }
     public static void main(String[] args) throws Exception {
         var g = Reflect.create("M06_MiniPacman");
-        equal(Reflect.get(Reflect.type("M06_MiniPacman$RoundState"), "CAUGHT"), Reflect.call(g, "afterContact", true, 0), "I049/F21: capture has priority over the last pellet");
-        equal(Reflect.get(Reflect.type("M06_MiniPacman$RoundState"), "WON"), Reflect.call(g, "afterContact", false, 0), "I049/F21: empty safe maze wins");
-        equal(Reflect.get(Reflect.type("M06_MiniPacman$RoundState"), "PLAY"), Reflect.call(g, "afterContact", false, 1), "I049/F21: unfinished round keeps playing");
+        equal(Reflect.get(Reflect.type("M06_MiniPacman$RoundState"), "CAUGHT"), Reflect.call(g, "afterContact", true, 0), "L07.06/F21: capture has priority over the last pellet");
+        equal(Reflect.get(Reflect.type("M06_MiniPacman$RoundState"), "WON"), Reflect.call(g, "afterContact", false, 0), "L07.06/F21: empty safe maze wins");
+        equal(Reflect.get(Reflect.type("M06_MiniPacman$RoundState"), "PLAY"), Reflect.call(g, "afterContact", false, 1), "L07.06/F21: unfinished round keeps playing");
         Reflect.call(g, "restart");
         Reflect.set(g, "playerX", 1);
         Reflect.set(g, "playerY", 1);
@@ -214,7 +215,7 @@ class M06_MiniPacmanTest {
         ((boolean[][]) Reflect.get(g, "pellets"))[1][2] = true;
         Reflect.call(g, "direction", 1, 0);
         Reflect.call(g, "step");
-        equal(Reflect.get(Reflect.type("M06_MiniPacman$RoundState"), "CAUGHT"), Reflect.get(g, "state"), "I049/F21: real step uses terminal-state priority");
+        equal(Reflect.get(Reflect.type("M06_MiniPacman$RoundState"), "CAUGHT"), Reflect.get(g, "state"), "L07.06/F21: real step uses terminal-state priority");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -238,11 +239,11 @@ class M07_GoFishTest {
         Reflect.set(g, "hands", java.util.List.of(new java.util.ArrayList<>(java.util.List.of(7, 7, 7, 7)), new java.util.ArrayList<>()));
         Reflect.set(g, "books", new int[2]);
         Reflect.call(g, "collect", 0);
-        equal(0, ((java.util.List<java.util.List<java.lang.Integer>>) Reflect.get(g, "hands")).get(0).size(), "I034/F25: booking four cards removes exactly four");
-        equal(1, ((int[]) Reflect.get(g, "books"))[0], "I034/F25: one complete rank awards one book");
-        equal(4, ((java.util.List<java.util.List<java.lang.Integer>>) Reflect.get(g, "hands")).get(0).size() + 4 * ((int[]) Reflect.get(g, "books"))[0], "I034/F25: card-plus-book value conserved");
+        equal(0, ((java.util.List<java.util.List<java.lang.Integer>>) Reflect.get(g, "hands")).get(0).size(), "L07.07/F25: booking four cards removes exactly four");
+        equal(1, ((int[]) Reflect.get(g, "books"))[0], "L07.07/F25: one complete rank awards one book");
+        equal(4, ((java.util.List<java.util.List<java.lang.Integer>>) Reflect.get(g, "hands")).get(0).size() + 4 * ((int[]) Reflect.get(g, "books"))[0], "L07.07/F25: card-plus-book value conserved");
         Reflect.call(g, "collect", 0);
-        equal(1, ((int[]) Reflect.get(g, "books"))[0], "I034/F25: collecting again cannot duplicate the book");
+        equal(1, ((int[]) Reflect.get(g, "books"))[0], "L07.07/F25: collecting again cannot duplicate the book");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -269,11 +270,14 @@ class M08_MiniInvadersTest {
         Reflect.set(g, "bulletX", ((double) Reflect.get(g, "formationX")) + 10);
         Reflect.set(g, "bulletY", ((double) Reflect.get(g, "formationY")) + 17);
         Reflect.call(g, "step");
-        expect(!((boolean) Reflect.get(g, "bulletActive")), "I050/F25: a hitting bullet is consumed");
-        equal(1, ((int) Reflect.get(g, "score")), "I050/F25: one bullet awards exactly one hit");
-        equal(14, ((int) Reflect.call(g, "countAliens")), "I050/F25: one alien removed");
+        expect(!((boolean) Reflect.get(g, "bulletActive")), "L07.08/F25: a hitting bullet is consumed");
+        equal(1, ((int) Reflect.get(g, "score")), "L07.08/F25: one bullet awards exactly one hit");
+        equal(14, ((int) Reflect.call(g, "countAliens")), "L07.08/F25: one alien removed");
         Reflect.call(g, "step");
-        equal(14, ((int) Reflect.call(g, "countAliens")), "I050/F25: consumed bullet cannot hit another row");
+        equal(14, ((int) Reflect.call(g, "countAliens")), "L07.08/F25: consumed bullet cannot hit another row");
+        int savedScore = (int) Reflect.get(g, "score");
+        Reflect.call(g, "hitAlien", 0, 1);
+        equal(savedScore, (int) Reflect.get(g, "score"), "an already consumed shot cannot score through the hit action");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -296,15 +300,15 @@ class M09_CrossingRushTest {
         var g = Reflect.create("M09_CrossingRush");
         Reflect.call(g, "restart");
         Reflect.call(g, "hop", -1000, 0);
-        equal(12, ((int) Reflect.get(g, "x")), "I062/F25: whole player remains inside left boundary");
+        equal(12, ((int) Reflect.get(g, "x")), "L07.09/F25: whole player remains inside left boundary");
         Reflect.call(g, "hop", 1000, 0);
-        equal(588, ((int) Reflect.get(g, "x")), "I062/F25: whole player remains inside right boundary");
+        equal(588, ((int) Reflect.get(g, "x")), "L07.09/F25: whole player remains inside right boundary");
         ((java.util.ArrayList<Object>) Reflect.get(g, "cars")).clear();
         Reflect.call(g, "hop", 0, -500);
-        expect(((boolean) Reflect.get(g, "won")), "I062/F25: legitimate top goal still wins");
+        expect(((boolean) Reflect.get(g, "won")), "L07.09/F25: legitimate top goal still wins");
         int x = ((int) Reflect.get(g, "x"));
         Reflect.call(g, "hop", -30, 0);
-        equal(x, ((int) Reflect.get(g, "x")), "I062/F25: terminal round does not keep moving");
+        equal(x, ((int) Reflect.get(g, "x")), "L07.09/F25: terminal round does not keep moving");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -330,15 +334,15 @@ class M10_SoftLandingTest {
         Reflect.set(g, "fuel", 0);
         Reflect.set(g, "up", true);
         Reflect.call(g, "step");
-        equal(0, ((int) Reflect.get(g, "fuel")), "I064/F25: fuel never becomes negative");
-        expect(Math.abs(((double) Reflect.get(g, "velocityY"))-.04)<1e-9, "I064/F25: empty tank gives no thrust");
+        equal(0, ((int) Reflect.get(g, "fuel")), "L07.10/F25: fuel never becomes negative");
+        expect(Math.abs(((double) Reflect.get(g, "velocityY"))-.04)<1e-9, "L07.10/F25: empty tank gives no thrust");
         Reflect.call(g, "restart");
         Reflect.set(g, "state", "FLYING");
         Reflect.set(g, "left", ((boolean) Reflect.set(g, "right", ((boolean) Reflect.set(g, "up", true)))));
         Reflect.call(g, "step");
-        equal(239, ((int) Reflect.get(g, "fuel")), "I064/F25: combined controls consume one unit per tick");
+        equal(239, ((int) Reflect.get(g, "fuel")), "L07.10/F25: combined controls consume one unit per tick");
         Reflect.call(g, "restart");
-        expect(!((boolean) Reflect.get(g, "left")) && !((boolean) Reflect.get(g, "right")) && !((boolean) Reflect.get(g, "up")), "I064/F25: restart releases controls");
+        expect(!((boolean) Reflect.get(g, "left")) && !((boolean) Reflect.get(g, "right")) && !((boolean) Reflect.get(g, "up")), "L07.10/F25: restart releases controls");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -366,20 +370,20 @@ class M11_TiltTrayTest {
         Reflect.set(g, "vx", 3);
         Reflect.set(g, "vy", 0);
         Reflect.call(g, "step");
-        equal(170.0, ((double) Reflect.get(g, "x")), "I067/F25: collision separates the ball outside obstacle");
-        expect(((double) Reflect.get(g, "vx")) < 0 && !((boolean) Reflect.call(g, "hit", ((java.awt.Rectangle[]) Reflect.get(g, "obstacles"))[0])), "I067/F25: reflected ball is not left penetrating");
+        equal(170.0, ((double) Reflect.get(g, "x")), "L07.11/F25: collision separates the ball outside obstacle");
+        expect(((double) Reflect.get(g, "vx")) < 0 && !((boolean) Reflect.call(g, "hit", ((java.awt.Rectangle[]) Reflect.get(g, "obstacles"))[0])), "L07.11/F25: reflected ball is not left penetrating");
         Reflect.call(g, "clearKeys");
         for (int n = 0; n < 100; n++) {
             Reflect.call(g, "step");
         }
-        expect(Double.isFinite(((double) Reflect.get(g, "x"))) && Double.isFinite(((double) Reflect.get(g, "y"))), "I067/F25: later updates remain finite");
+        expect(Double.isFinite(((double) Reflect.get(g, "x"))) && Double.isFinite(((double) Reflect.get(g, "y"))), "L07.11/F25: later updates remain finite");
         Reflect.call(g, "restart");
         Reflect.set(g, "started", true);
         Reflect.set(g, "x", 530);
         Reflect.set(g, "y", 345);
         Reflect.set(g, "vx", ((double) Reflect.set(g, "vy", 0)));
         Reflect.call(g, "step");
-        expect(((boolean) Reflect.get(g, "won")), "I067/F25: slow target entry still works");
+        expect(((boolean) Reflect.get(g, "won")), "L07.11/F25: slow target entry still works");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -406,13 +410,13 @@ class M12_PlatformDashTest {
         Reflect.set(g, "y", 285);
         Reflect.set(g, "vy", -4);
         Reflect.call(g, "step");
-        expect(!((boolean) Reflect.get(g, "grounded")) && ((double) Reflect.get(g, "y")) < 285, "I063/F25: rising from below cannot snap onto platform top");
+        expect(!((boolean) Reflect.get(g, "grounded")) && ((double) Reflect.get(g, "y")) < 285, "L07.12/F25: rising from below cannot snap onto platform top");
         Reflect.set(g, "x", 240);
         Reflect.set(g, "y", 240);
         Reflect.set(g, "vy", 12);
         Reflect.call(g, "step");
-        equal(252.0, ((double) Reflect.get(g, "y")), "I063/F25: descending top crossing still lands");
-        expect(((boolean) Reflect.get(g, "grounded")) && ((double) Reflect.get(g, "vy")) == 0, "I063/F25: valid landing rests on top");
+        equal(252.0, ((double) Reflect.get(g, "y")), "L07.12/F25: descending top crossing still lands");
+        expect(((boolean) Reflect.get(g, "grounded")) && ((double) Reflect.get(g, "vy")) == 0, "L07.12/F25: valid landing rests on top");
         Reflect.call(g, "restart");
         ((boolean[]) Reflect.get(g, "held"))[java.awt.event.KeyEvent.VK_RIGHT] = true;
         Reflect.call(g, "jump");
@@ -422,7 +426,7 @@ class M12_PlatformDashTest {
                 Reflect.call(g, "jump");
             }
         }
-        expect(((boolean) Reflect.get(g, "won")) && ((int) Reflect.get(g, "falls")) == 0, "I063/F25: original two-jump course remains playable");
+        expect(((boolean) Reflect.get(g, "won")) && ((int) Reflect.get(g, "falls")) == 0, "L07.12/F25: original two-jump course remains playable");
         System.out.println("PASS " + checks + " checks");
     }
 }

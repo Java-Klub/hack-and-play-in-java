@@ -14,17 +14,28 @@ import javax.swing.Timer;
 /// Paint a night sky with fireworks that bloom wherever you click. Each burst should remember the place
 /// you chose, not a fixed point on the canvas.
 ///
-/// **Your mission:** Clicking produces no burst because the returned action ignores both coordinates.
-/// Make the deferred action affect the real firework model.
+/// **Your mission:** Build a paired-firework callback: one click must launch a burst at (x, y) and
+/// another at (WIDTH - x, y). Write the callback body; creating it must launch nothing. Keep burst
+/// responsible for the particle physics.
 ///
-/// **Today you learn:** A two-argument callback carries click coordinates into a later action. Creating
-/// the callback must leave particles alone; invoking it must use that particular click once.
+/// **Today you learn:** Build a callback body that runs only when the input event invokes it; local
+/// calculations can adapt event data before changing the model.
 ///
 /// Run the program, then click the canvas to launch fireworks; Space pauses the motion and R
 /// clears and restarts the sky.
 java.util.function.BiConsumer<Integer, Integer> burstAction() {
-    return (x, y) -> {};
+    return (x, y) -> {
+        // Build the two delayed calls here.
+    };
 }
+
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Turn the paired fireworks into a signature: make three bursts forming a triangle around each
+/// click. Draw their planned centres on paper first. Leave burst in charge of particles; let your
+/// callback arrange the three calls.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F28">
 /// ### Callback: give an action for later
@@ -46,30 +57,31 @@ java.util.function.BiConsumer<Integer, Integer> burstAction() {
 /// Predict: what prints if the last line becomes two consecutive calls to `cheer.run()`?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// ### One event, a short sequence of actions
 ///
-/// - `BiConsumer<Integer, Integer>` — A JDK action role accepting two integer values and returning no
-///   value.
-/// - `(x, y)` — These lambda parameters will receive coordinates when the action runs.
-/// - `-> {}` — The arrow introduces the action body, which is currently empty.
+/// The event supplies x and y only when accept is called. In a 600-wide canvas, x = 100 has its
+/// reflected partner at 500; both share y. With x = 300 the two centres coincide: the contract still
+/// asks for two bursts. A lambda body in braces can contain several statements, in order. Its closing
+/// brace is followed by the semicolon ending return.
 ///
-/// ### What the prepared part already does
-///
-/// press calls the actual burstAction callback with the clicked position. step advances finite
-/// particles and draw shows their trails; Space pauses and R clears and restarts.
+/// A neutral example: `Runnable knock = () -> { IO.println("Knock"); IO.println("Who?"); };` creates
+/// a silent action. `knock.run()` prints Knock and then Who?. Predict the order if you call it twice.
+/// Here press forwards the click to burstCallback; burst creates 60 particles per call and resumes
+/// motion. Two calls therefore create 120 particles, without duplicating their physics.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// BiConsumer accepts two values later.
+/// Creation and execution are different moments; keep all model changes inside the lambda.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Forward the values in x/y order; do not invoke burst while creating the callback.
+/// Keep the clicked y in both calls. Reflection across the middle changes only x.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// The supplied burst method already adds sixty particles and starts motion.
+/// Return a two-argument lambda with two calls to burst, first at the click and then at its reflected
+/// centre.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

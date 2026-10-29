@@ -9,8 +9,10 @@ import javax.swing.*;
 /// Three cut-out black discs can make you see a white triangle that was never drawn. Rotate one disc and
 /// watch the suggested triangle disappear.
 ///
-/// **Your mission:** The discs currently look solid because one drawing action hides another. Repair
-/// paintDisc so each disc keeps its white bite.
+/// **Your mission · Reconstruct two actions:** The three discs are missing. Rebuild paintDisc using the
+/// supplied darkDisc(g, i)
+/// and whiteBite(g, i) actions, once each. The result must be a black disc with its white bite still
+/// visible.
 ///
 /// **Today you learn:** Sequence and layers: when paintDisc is called, its two calls run in their written
 /// order. Predict which colour is left on top. The definition itself waits until the supplied drawing
@@ -21,8 +23,7 @@ import javax.swing.*;
 ///
 /// Lines starting with `///` are your guide; they do not run as Java instructions.
 void paintDisc(Graphics2D g, int i) {
-    whiteBite(g, i);
-    darkDisc(g, i);
+    // Rebuild this disc with the two supplied drawing actions.
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F01">
@@ -68,16 +69,29 @@ void paintDisc(Graphics2D g, int i) {
 /// contain the shapes, while rotate and the remaining code handle turning and clicks.
 // </editor-fold>
 
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// A method can call other methods. The drawing code chooses disc i and supplies pen g; paintDisc
+/// must pass those same two inputs onward. Imagine stamping a black circle and then covering a wedge
+/// with white paper. The reverse order covers the white paper. Neither call needs a new pen or a new
+/// disc number.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// Use clicks to rotate the discs until the triangle disappears. Set up one convincing triangle and
+/// one broken illusion for a friend. Which disc makes the biggest difference? Change the existing
+/// colours only after you have compared both arrangements.
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Find the two ready-made drawing actions.
+/// Both ready-made actions need the same g and i.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The white shape must be the last layer.
+/// The last action determines which colour stays on top.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Call darkDisc(g, i) before whiteBite(g, i).
+/// Call darkDisc(g, i); first, then whiteBite(g, i);.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

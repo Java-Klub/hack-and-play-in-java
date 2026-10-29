@@ -3,7 +3,8 @@
 /// Guess whether the next card will be higher or lower and try to build a streak before one wrong
 /// prediction ends it. Equal cards give you another chance without a penalty.
 ///
-/// **Your mission:** The cabinet celebrates after just one correct guess. Repair the shared target so
+/// **Your mission · Set a shared challenge:** The cabinet celebrates after just one correct guess. Repair
+/// the shared target so
 /// both the score display and the winning rule describe a ten-correct round.
 ///
 /// **Today you learn:** Named values: target stores one fact that several parts can read. Changing one
@@ -57,6 +58,19 @@ int target = 1;
 /// and Ace 14. An equal card does not count a correct guess or lose. Both the target display
 /// and win rule read the same target. After changing target, save, close the old window and run
 /// the program again; New round does not reload edited Java.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// In `int lives = 3;`, int names a whole-number type, lives is your chosen name, = stores the value,
+/// and ; ends the statement. Reading lives elsewhere gives that stored value; it does not copy the
+/// declaration. Our target is one shared fact. Predict what would go wrong if the display used ten
+/// while the finish rule used three.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// After the ten-point round works, choose a sprint target for a friend and a longer survival target
+/// for yourself. Change only target, then check that both the displayed goal and finish agree.
+/// Discuss whether a longer round is more exciting or merely more punishing.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">

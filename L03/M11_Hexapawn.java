@@ -3,8 +3,10 @@
 /// Command three pawns on a tiny board and try to reach the far side or leave the opponent unable to
 /// move. Pawns move forward and capture diagonally, so even a few squares allow traps.
 ///
-/// **Your mission:** Both players have been assigned the same goal row. Repair goalRow so the result
-/// depends on which player is asking.
+/// **Your mission · Give both armies their orders:** Neither army has complete orders. Implement goalRow
+/// and forwardStep for both
+/// players: player 1 moves -1 towards row 0, player 2 moves +1 towards row 2. The prepared move rules
+/// will ask your methods; return answers without changing the board.
 ///
 /// **Today you learn:** Methods, parameters and results: one named calculation can answer different
 /// calls. goalRow(1) and goalRow(2) supply different who values to the same body; the returned row goes
@@ -13,6 +15,10 @@
 /// Run the program and enter 3 1 2 1; 1 2 2 1; 3 3 2 3; 2 1 3 1 as four separate moves to bring
 /// player 2 to the bottom.
 int goalRow(int who) {
+    return 0;
+}
+
+int forwardStep(int who) {
     return 0;
 }
 
@@ -42,32 +48,37 @@ int goalRow(int who) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Two reusable questions
 ///
-/// - `int goalRow(int who)` — The first int describes the returned whole number; int who describes the
-///   received player number.
-/// - `who` — A parameter: a local name for the argument supplied by this call, not a fixed choice of
-///   player.
-/// - `return 0;` — The incomplete body returns the same row for every input.
-/// - `{` — The body inside the matching braces is reused each time the method is called.
-///
-/// ### What the prepared part already does
-///
-/// legal and canMove already implement pawn movement. command calls goalRow with the current player and
-/// checks whether the destination reached that row; display and main supply the board and turn-by-turn
-/// input.
+/// goalRow and forwardStep each receive a player number and return an int. legal uses forwardStep to
+/// check direction; canMove uses the same question while looking for any legal move; command uses
+/// goalRow to recognise promotion. Reusing a named rule keeps those callers in agreement. The
+/// supplied board uses zero-based rows and columns.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// Two questions describe each army: which way is forward and which row wins? Player 1 starts at
+/// internal row 2, travels by -1 and aims for 0. Player 2 starts at 0, travels by +1 and aims for 2.
+/// The same who argument must produce consistent answers in both methods. Neither method moves a
+/// pawn.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// Create a tiny tactical position by changing the existing reset board, with both players still
+/// present. Give a friend one move that wins and one tempting move that loses. Keep the normal
+/// directions first; only then try reversing both armies and their goal rows together.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Compare two calls: goalRow(1) and goalRow(2).
+/// Write down the direction and goal for each who before coding.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The return value must depend on the call’s parameter, not a fixed global player.
+/// Each method uses the same player parameter but answers a different question.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// If who == 1 return 0; otherwise return 2.
+/// For who == 1 return goal 0 and step -1; for player 2 return goal 2 and step 1.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
@@ -85,7 +96,7 @@ boolean legal(int r, int c, int nr, int nc, int who) {
     if (r < 0 || r > 2 || c < 0 || c > 2 || nr < 0 || nr > 2 || nc < 0 || nc > 2) {
         return false;
     }
-    int direction = who == 1 ? -1 : 1;
+    int direction = forwardStep(who);
     return board[r][c] == who && nr == r + direction && (nc == c && board[nr][nc] == 0 || Math.abs(nc - c) == 1 && board[nr][nc] == 3 - who);
 }
 
@@ -93,7 +104,7 @@ boolean canMove(int who) {
     for (int r = 0; r < 3; r++) {
         for (int c = 0; c < 3; c++) {
             for (int nc = 0; nc < 3; nc++) {
-                if (legal(r, c, r + (who == 1 ? -1 : 1), nc, who)) {
+                if (legal(r, c, r + forwardStep(who), nc, who)) {
                     return true;
                 }
             }

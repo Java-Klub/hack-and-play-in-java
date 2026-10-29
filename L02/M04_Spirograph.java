@@ -12,7 +12,8 @@ import java.awt.image.BufferedImage;
 /// Draw closed, looping curves inspired by a pen carried around inside a larger circle. Change the inner
 /// radius and pen distance to collect very different patterns.
 ///
-/// **Your mission:** The curve calculation rounds away part of the radius ratio. Repair radiusRatio so
+/// **Your mission · Recover lost precision:** The curve calculation rounds away part of the radius ratio.
+/// Repair radiusRatio so
 /// integer radii can still give fractional ratios, including a result smaller than one.
 ///
 /// **Today you learn:** Type of an expression: Java evaluates the division before returning it. A double
@@ -73,6 +74,18 @@ double radiusRatio(int outer, int innerRadius) {
 /// while `(double) (seats / rows)` gives only 1.0 because the fraction was already discarded. The
 /// cast does not change the parameter declaration. Now predict those two expressions for five seats
 /// and two rows, then decide where a conversion belongs in your own calculation.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// For radiusRatio(120, 80), the numerator is 40. Dividing the integer 40 by integer 80 first
+/// produces zero. Converting that zero later keeps zero. Converting a value before division permits
+/// 0.5. Trace the same stages for radiusRatio(180, 80); check which value must keep its fraction.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// Use the existing arrow controls to find a curve resembling a flower and another resembling a knot.
+/// Record just the two displayed settings as recipes for a friend. Explain why an integer-only ratio
+/// made some settings unexpectedly similar.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">

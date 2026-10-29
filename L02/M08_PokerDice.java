@@ -3,8 +3,10 @@
 /// Roll five dice, keep promising values and reroll selected positions before banking the hand. Five
 /// rounds let you compare safe small rewards with a chase for stronger combinations.
 ///
-/// **Your mission:** The training hand 2,2,2,3,4 is incorrectly rewarded as a full house. Repair
-/// fullHouse so both the triple and the pair are required.
+/// **Your mission · Build a fair referee:** The full-house referee has no working rule. Complete the
+/// triple and pair
+/// decisions, then combine them so only a triple together with a pair wins this category. A lone
+/// triple keeps its smaller ordinary reward.
 ///
 /// **Today you learn:** Combining boolean conditions: OR accepts either part, while AND requires both.
 /// Work out the two truth values separately for a triple without a pair before combining them.
@@ -13,7 +15,9 @@
 /// hand, keep the three twos, select dice 4 and 5 and press Reroll selected. Bank points keeps
 /// the score and prepares the next round; Scoring help explains the hands.
 boolean fullHouse(int largestGroup, int pairs) {
-    return largestGroup == 3 || pairs == 1;
+    boolean triple = false;
+    boolean pair = false;
+    return triple || pair;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F06">
@@ -40,33 +44,36 @@ boolean fullHouse(int largestGroup, int pairs) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Two facts and one judgement
 ///
-/// - `boolean fullHouse(int largestGroup, int pairs)` — The rule receives two counted facts and returns
-///   one classification decision.
-/// - `largestGroup == 3` — Test whether the largest equal-die group contains three dice; == compares
-///   these numbers.
-/// - `pairs == 1` — Test whether exactly one pair was found.
-/// - `||` — Logical OR: true when at least one side is true, including cases where the other side is
-///   false.
-/// - `return` — Return the combined true/false result to the points calculation.
-///
-/// ### What the prepared part already does
-///
-/// points already counts dice groups and asks fullHouse about this category. reset supplies the known
-/// training hand; later deal calls roll random hands, and command handles rerolls and banking.
+/// largestGroup and pairs are supplied counts, not dice to roll. Fill two boolean expressions, one
+/// for each fact. A boolean name can appear inside another boolean expression. return combines their
+/// answers; points already gives 35 for this category and 20 for an ordinary triple. Changing the
+/// referee changes real scoring.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// Separate the two facts before combining them. A hand 4,4,4,2,6 has a triple but no pair: true and
+/// false. A hand 4,4,4,2,2 has both: true and true. A boolean local name stores one such answer.
+/// Predict the two answers for 4,4,2,2,6 before choosing how to combine them.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// After the standard full-house rule works, design a deliberately different house rule and explain
+/// it before playing with a friend. For example, choose a different reward in points rather than
+/// accidentally calling every triple a full house. Compare how the rule changes reroll choices.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Write down whether each half is true for three-kind without a pair.
+/// Compute the two facts independently from largestGroup and pairs.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// OR accepts either half; this rule needs both.
+/// Test true/false, false/true and true/true before choosing the joining operator.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Join the two comparisons with &&.
+/// triple is largestGroup == 3; pair is pairs == 1; return triple && pair.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

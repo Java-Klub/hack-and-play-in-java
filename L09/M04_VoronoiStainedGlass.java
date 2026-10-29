@@ -9,72 +9,76 @@ import java.util.List;
 /// Scatter coloured seeds and let every point of the picture join its nearest one. Different seeds turn
 /// the same space into new stained-glass windows.
 ///
-/// **Your mission:** Generating the first seed fails because the chosen collection cannot grow. Provide a
-/// list suitable for building the requested seed collection.
+/// **Your mission:** Build seedList(random,count): accept counts 0–100, reject other counts, and return
+/// a mutable List containing exactly that many successive nextSeed(random) results. Keep their
+/// generation order. The empty builder currently leaves the glass without colour seeds.
 ///
-/// **Today you learn:** List describes ordered access, but not every List permits mutation. This method
-/// builds its result incrementally, so its chosen implementation must accept add.
+/// **Today you learn:** Build an ordered, mutable collection operation and make its accepted and empty
+/// cases precise.
 ///
-/// The program tries to build the picture. If seedList refuses to add a seed, read terminal
-/// output. The repaired program opens the coloured picture.
+/// Run the program: an empty seed builder cannot form the glass. After completing seedList, the same
+/// run opens a coloured stained-glass picture.
 List<Seed> seedList(Random random, int count) {
-    if (count < 0 || count > 100) throw new IllegalArgumentException("Seeds: 0..100.");
-    List<Seed> seeds = List.of();
-    for (int i = 0; i < count; i++) {
-        seeds.add(new Seed(random.nextInt(400), random.nextInt(300), Color.HSBtoRGB(random.nextFloat(), 0.65F, 1)));
-    }
-    return seeds;
+    return List.of();
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F22">
-/// ### List: a sequence you can change
+/// ### A List gives changing things an order
 ///
-/// A `List<String>` holds text in order. `new ArrayList<>()` makes a mutable list: its contents can
-/// change without replacing the list itself.
+/// An array has a fixed number of slots. A mutable List can grow or shrink while keeping an order.
+/// `List<T>` describes access to elements of type T; `ArrayList<T>` is a JDK implementation you can
+/// change.
 ///
 /// ```java
-/// List<String> snacks = new ArrayList<>();
-/// snacks.add("apple");
-/// snacks.add("nuts");
-/// IO.println(snacks.get(0));
-/// IO.println(snacks.size());
+/// List<String> trail = new ArrayList<>();
+/// trail.add("north");
+/// trail.add("east");
+/// String latest = trail.removeLast();
+/// IO.println(trail + " / " + latest);
 /// ```
 ///
-/// The output is `apple`, then `2`. `add(value)` appends one item; `get(index)` reads without
-/// removing it. Indexes start at zero. `isEmpty()` checks for no items. `removeLast()` removes and
-/// returns the final item; call it only on a nonempty list. A list made directly by `List.of(...)`
-/// cannot be changed, but `new ArrayList<>(List.of(...))` can.
+/// The result is `[north] / east`. Add appends at the end; removeLast both removes and returns the last
+/// element. Check isEmpty before removing from an empty list. A queue removes at the front and appends
+/// at the back; an undo stack removes the latest item instead. The intended order determines which end
+/// to use.
 ///
-/// Predict: after `snacks.removeLast()`, what are its size and first item?
+/// `List.of("north", "east")` supplies an unmodifiable list: reading works, adding does not. `new
+/// ArrayList<>(existing)` creates a mutable list with the existing membership. Predict the list after
+/// adding `"south"` to trail. If two changes are undone, which should disappear first?
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Read this part
 ///
-/// - `List<Seed>` — The element type promises that each stored value is a Seed.
-/// - `List.of()` — An empty immutable list: empty describes its size, immutable its inability to change.
-/// - `seeds.add` — Adds one generated value to the collection being built.
-/// - `random.nextInt(400)` — Chooses a legal x coordinate from zero through 399.
-///
-/// ### What the prepared part already does
-///
-/// render asks seedList for the centres and assigns each picture point to its nearest centre;
-/// showImages presents the memory image in Java.
+/// `nextSeed(random)` is a small prepared method visible below: it chooses an x, y and colour using the
+/// JDK Random object. Call it once per requested seed. List<Seed> names the element type; new
+/// ArrayList<Seed>() supplies a growable container. The supplied renderer assigns each pixel to its
+/// nearest Seed; it needs a nonempty list for the displayed picture.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// List.of makes a fixed unmodifiable result.
+/// Decide the count contract before entering the generation loop.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Choose a mutable implementation while retaining the List<Seed> role.
+/// Start with an empty growable List and append one prepared Seed per iteration.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Append inside the counted loop; an empty loop must return an empty mutable list.
+/// Reject outside 0–100, repeat count times calling nextSeed and add, then return the built list,
+/// including an empty one for zero.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Replace random seed placement with a few deliberate Seed records forming an emblem. Let the
+/// nearest-seed rule turn your points into a designed stained-glass picture.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
+Seed nextSeed(Random random) {
+    return new Seed(random.nextInt(400), random.nextInt(300), Color.HSBtoRGB(random.nextFloat(), 0.65F, 1));
+}
+
 record Seed(int x, int y, int colour) {}
 
 int nearest(List<Seed> seeds, int x, int y) {

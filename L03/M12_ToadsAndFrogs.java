@@ -10,8 +10,11 @@ import java.util.Arrays;
 /// Swap two groups of creatures across a single gap. Toads travel right, frogs travel left, and a jump
 /// may cross one opponent, so one careless step can block the whole puzzle.
 ///
-/// **Your mission:** The frogs have copied the toads’ direction. Repair direction so its result depends
-/// on the received piece rather than always pointing right.
+/// **Your mission · Compose a movement rule:** Write two connected rules. direction returns +1 for toad 1
+/// and -1 for frog 2.
+/// destination must call that rule and calculate origin plus the signed distance. The prepared move
+/// asks it for both a one-cell step and a two-cell jump; do not move any creature inside these
+/// calculations.
 ///
 /// **Today you learn:** Return a useful value: the direction rule describes a step without moving
 /// anything itself. The caller can use the returned direction for both a single step and a longer jump.
@@ -20,6 +23,10 @@ import java.util.Arrays;
 /// the starting arrangement.
 int direction(int piece) {
     return 1;
+}
+
+int destination(int origin, int distance, int piece) {
+    return -1;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F13">
@@ -48,32 +55,38 @@ int direction(int piece) {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## A small chain you own
 ///
-/// - `int direction(int piece)` — Receive a piece kind as a whole number and return a signed whole-number
-///   direction.
-/// - `piece` — A parameter naming this call’s creature kind: 1 for a toad and 2 for a frog.
-/// - `return 1;` — The current fixed result means one position to the right, regardless of the received
-///   kind.
-/// - `{` — The shared body can choose a different result for each parameter value; the supplied movement
-///   stays elsewhere.
-///
-/// ### What the prepared part already does
-///
-/// move asks direction for its signed step, then checks the gap, board bounds and any jumped opponent.
-/// won checks the group swap; draw and the supplied input code let you select a creature.
+/// move → destination → direction → signed offset → candidate square. The comma separates three
+/// parameter roles; argument order must match them. destination does not know the board and can be
+/// tried with any origin. The supplied move handles empty squares, jumping over opponents, board
+/// limits and actual writes. A returned candidate outside the board is rejected there.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// A helper can call another helper. destination receives an origin, an unsigned distance and a piece
+/// kind. direction answers only the sign; multiplying that sign by distance gives a signed offset,
+/// which is added to origin. For an unrelated walker at 5 going left by 2, the result is 3. The
+/// returned number is only a candidate; move checks whether landing there is legal.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// After solving the standard swap, change only the initial creature arrangement in restart to make a
+/// shorter puzzle using the same seven cells. Give it to a friend with a claimed move limit. Check
+/// that your own puzzle really has a solution before setting the challenge.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// The result is a direction, not a new board position.
+/// Keep piece kind, distance and current position as three different facts.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// The caller adds this result to the selected position.
+/// Use the returned direction as a multiplier, then add the signed offset to origin.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// If piece == 1 return 1; otherwise return -1.
+/// direction returns 1 or -1. In destination use int step = direction(piece); then return origin +
+/// distance * step;.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
@@ -90,7 +103,10 @@ boolean move(int index) {
     if (index < 0 || index >= 7 || cells[index] == 0 || won()) {
         return false;
     }
-    int piece = cells[index], d = direction(piece), step = index + d, jump = index + 2 * d, destination = -1;
+    int piece = cells[index];
+    int step = destination(index, 1, piece);
+    int jump = destination(index, 2, piece);
+    int destination = -1;
     if (step >= 0 && step < 7 && cells[step] == 0) {
         destination = step;
     }

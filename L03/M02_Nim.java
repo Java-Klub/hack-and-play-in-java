@@ -1,9 +1,10 @@
-/// # L03.01 · Nim
+/// # L03.02 · Nim
 ///
 /// Take one, two or three stones from a shared pile and try to take the last one before the bot does.
 /// Watch how leaving a particular pile size changes the bot’s next choice.
 ///
-/// **Your mission:** The bot takes one even when another legal choice is useful. Repair the two paths in
+/// **Your mission · Teach a bot a strategy:** The bot takes one even when another legal choice is useful.
+/// Repair the two paths in
 /// botMove while keeping the empty-pile case safe.
 ///
 /// **Today you learn:** If/else branching: one condition chooses which result is returned. Compare piles
@@ -23,7 +24,7 @@ int botMove() {
     }
 }
 
-// <editor-fold defaultstate="expanded" desc="Learn · F07">
+// <editor-fold defaultstate="collapsed" desc="Recall · F07">
 /// An `if` asks a boolean question. Its body runs only when that question is true. An `else if` asks
 /// another question only after earlier ones failed; the final `else` covers everything remaining.
 ///
@@ -78,6 +79,19 @@ int botMove() {
 /// exact positive multiple, no move guarantees a win against perfect replies; this bot uses the legal
 /// fallback of one. An empty pile has no move. Translate that rule into the two existing branches
 /// without removing stones inside botMove.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// The strategy is a choice, not a move performed inside botMove. With seven stones, removing three
+/// leaves four. With eight stones, this bot uses the legal fallback one. An if selects a result; the
+/// supplied take applies it later. Trace zero separately because there is no legal move to return. If
+/// the strategy feels like a second puzzle, begin with Pig first.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// After the remainder strategy works, replace it with a deliberate weaker strategy such as always
+/// taking one legal stone. Compare both bots by playing the same opening. Explain which pile sizes
+/// expose the weaker strategy, then challenge a friend to beat the original bot.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">

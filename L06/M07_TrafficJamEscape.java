@@ -9,7 +9,7 @@
 /// **Today you learn:** Pure contracts: separate asking whether a move fits from actually making the
 /// move. Repeated or unsuccessful probes must leave the board unchanged.
 ///
-/// Run the program and request a car move by entering B 2, then use a car letter and signed
+/// Request a car move by entering B 2, then use a car letter and signed
 /// step count to clear A’s exit.
 boolean fits(int car, int x, int y) {
     xs[car] = x;
@@ -77,6 +77,12 @@ boolean fits(int car, int x, int y) {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Delete the assignments to xs[car] and ys[car] from fits(); keep collision checks.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Add a hint command that reports whether one chosen car can move to two candidate positions. Call
+/// fits for both probes before committing any move. Give a partner a blocked and an open candidate and
+/// show that asking the hint leaves every car exactly where it was.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

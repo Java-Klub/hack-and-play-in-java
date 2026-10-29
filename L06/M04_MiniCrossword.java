@@ -9,7 +9,7 @@
 /// **Today you learn:** Scope and state lifetime: a count describing one scan needs a fresh lifetime for
 /// that scan. Distinguish this temporary total from the solved clues stored between commands.
 ///
-/// Run the program and enter 1 CAT and press Enter for your first answer, then read the
+/// Enter 1 CAT and press Enter for your first answer, then read the
 /// remaining numbered clues.
 void command(String input) {
     require(outcome.isEmpty());
@@ -81,6 +81,12 @@ void command(String input) {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Declare int count = 0 inside command() just before its traversal; remove the field.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Author a three-by-three letter square. Update all three across answers and all three down answers
+/// together, with clues of your own. Give a partner the clues only, then verify that repeated correct
+/// answers do not count the same clue twice.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

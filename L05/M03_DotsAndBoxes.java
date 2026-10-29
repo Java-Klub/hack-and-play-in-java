@@ -8,7 +8,7 @@
 /// **Today you learn:** Arrays: an int[] can describe a group of board positions. Translate one box
 /// number into the edge indices its caller needs.
 ///
-/// Run the program, then take turns typing an unclaimed edge number from 1 to 12 and pressing
+/// Then take turns typing an unclaimed edge number from 1 to 12 and pressing
 /// Enter.
 int[] box(int n) {
     return new int[]{0, 1, 6, 7};
@@ -66,6 +66,12 @@ int[] box(int n) {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Return top, bottom, left and right in one new int[].
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Make one box a three-point treasure while ordinary boxes stay worth one. Create a boxPoints(int box)
+/// calculation and use it where a closed box awards points. Design a move that closes two boxes and
+/// predict the combined reward.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

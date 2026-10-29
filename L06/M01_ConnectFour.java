@@ -3,20 +3,19 @@
 /// Drop discs into columns and race a friend to connect four. A replay should give you a fresh board and
 /// a fresh round.
 ///
-/// **Your mission:** Restart clears the discs but keeps the old move count, which can spoil a later draw.
-/// Repair the counter reset inside reset().
+/// **Your mission:** The board clears, but the round still remembers its old turn, winner and move
+/// count. Reconstruct reset’s field assignments: first player X, no winner '.', and zero moves. Do not
+/// create replacement locals; keep the supplied board clearing.
 ///
 /// **Today you learn:** Scope and state lifetime: a new local variable can hide a longer-lived field with
 /// the same name. Identify which moves belongs to the whole round.
 ///
-/// Run the program, type 4 and press Enter to drop a disc in the middle column, then alternate
-/// column choices with a friend.
+/// Enter 4, then r. The board is empty again, but Moves and the next player expose the unfinished
+/// reset. A fresh round must show zero and start with X.
 void reset() {
     for (char[] row : board) {
         Arrays.fill(row, '.');
     }
-    player = 'X';
-    winner = '.';
     int moves = 0;
 }
 
@@ -41,31 +40,38 @@ void reset() {
 /// value should survive several calls, and which value belongs to only one temporary calculation?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// A field survives calls; a new local inside reset does not replace it. The board clearing is
+/// supplied. Complete the three round facts that other methods read.
 ///
-/// - `void reset()` — A method that changes existing game state and returns no value.
-/// - `Arrays.fill(row, '.')` — The supplied call clears every cell in this board row.
-/// - `int moves = 0` — Declares a local variable; the declaration affects which moves name is being
-///   reset.
-/// - `player = 'X'` — Assignment to the existing player field, without declaring another variable.
+/// | moment | moves field | player field | winner field |
+/// | --- | --- | --- | --- |
+/// | an unfinished old round | 41 | O | . |
+/// | after reset | 0 | X | . |
+/// | first new disc | 1 | O | . |
 ///
-/// ### What the prepared part already does
-///
-/// drop() places a disc in the lowest free cell and updates the shared move count. The input loop handles
-/// r and calls reset(); board clearing and win detection are already present.
+/// If the old 41 survives, one new disc reaches 42 and can falsely announce a draw. A local
+/// `int moves = 0` hides rather than resets the field. player and winner also belong to the round.
+/// Predict a restart after a completed X win. display now shows Moves so the same contract can be
+/// inspected while playing.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Find the field declared outside reset().
+/// List the round facts that must be identical after every reset, regardless of the old round.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// int moves inside a method creates a different local variable.
+/// Compare a declaration with a type to an assignment naming an existing field.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Assign moves = 0 without redeclaring its type.
+/// After clearing the rows, assign player X, winner dot and moves zero to the existing fields.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Add a best-of-three match score that survives a round reset. Decide which fields belong to the round
+/// and which to the match, then add a separate match reset. Demonstrate a completed round followed by
+/// replay without losing the match score.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
@@ -133,6 +139,7 @@ boolean drop(int column) {
 /// display(): Prints the current board and a completed round's result.
 void display() {
     IO.println("1 2 3 4 5 6 7");
+    IO.println("Moves: " + moves);
     for (char[] row : board) {
         String line = "";
         for (char mark : row) {

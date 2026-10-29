@@ -10,23 +10,28 @@ import javax.swing.Timer;
 /// Rotate a wire cube and watch a flat drawing suggest depth. Its edge counter should describe the shape,
 /// even if an input list names an edge twice in opposite directions.
 ///
-/// **Your mission:** The same undirected edge counts twice when its endpoints are reversed. Make
-/// equivalent endpoint pairs become one distinct edge while rejecting invalid pairs.
+/// **Your mission:** Build uniqueEdges from an empty set. Traverse every candidate pair, skip
+/// out-of-range endpoints and self-edges, put the smaller endpoint first, and insert the normalised
+/// Edge. Return the distinct edges in their first-seen order.
 ///
-/// **Today you learn:** A Set removes equal values, not values that merely look equivalent to us. Give an
-/// undirected edge one consistent representation so record equality can recognise reversed input.
+/// **Today you learn:** Use Set membership, equality and insertion deliberately while implementing
+/// the whole operation, not just its final condition.
 ///
 /// Run the program, then use Pause/Run to stop the rotating cube, read Distinct edges and
 /// choose Reset angle to restore the view.
 Set<Edge> uniqueEdges(int[][] candidates) {
     Set<Edge> result = new LinkedHashSet<>();
-    for (int[] pair : candidates) {
-        int a = pair[0], b = pair[1];
-        if (a < 0 || b < 0 || a >= 8 || b >= 8 || a == b) continue;
-        result.add(new Edge(a, b));
-    }
+    // Traverse, validate, normalise and insert the candidates here.
     return result;
 }
+
+// <editor-fold defaultstate="collapsed" desc="Your next version · optional">
+/// ### Make it yours
+///
+/// Give the cube a secret diagonal signature by adding candidate edges, including some deliberately
+/// reversed duplicates. Predict the distinct edge count on paper and check it in the window before
+/// changing the rotation.
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F23">
 /// ### Set: membership without duplicates
@@ -51,32 +56,31 @@ Set<Edge> uniqueEdges(int[][] candidates) {
 /// `contains("moon")`?
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+// <editor-fold defaultstate="expanded" desc="Read this code">
+/// ### Equality needs a shared representation
 ///
-/// - `new LinkedHashSet<>()` — A mutable set that keeps the first insertion order while removing equal
-///   values.
-/// - `a == b` — Rejects a self-edge before it enters the collection.
-/// - `new Edge(a, b)` — Record equality distinguishes Edge(1,0) from Edge(0,1) unless their
-///   representation is normalised.
+/// Imagine an undirected road between towns 2 and 5. (2, 5) and (5, 2) describe the same road, but
+/// two record values with those component orders are not equal. Choose the convention smaller-first:
+/// both become (2, 5). A Set can now remove the duplicate using ordinary record equality. Predict the
+/// distinct roads in [(4,1), (1,4), (4,6)].
 ///
-/// ### What the prepared part already does
-///
-/// The supplied vertex rotation and projection draw every returned edge. The scene deliberately includes
-/// a reversed duplicate, so the Distinct edges caption exposes the problem; window controls only change
-/// the view.
+/// Math.min(a,b) and Math.max(a,b) return the smaller and larger endpoint. LinkedHashSet keeps
+/// insertion order, unlike a promise to sort numerically. The prepared cube has eight vertices,
+/// indexed 0..7. uniqueEdges owns input validity and normalisation; the rotation and drawing code
+/// merely use the returned edges. An invalid pair contributes nothing and must not prevent later
+/// valid pairs from being read.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// Edge(0,1) and Edge(1,0) are unequal until you choose one representation.
+/// First build the traversal and validation. An empty input should return an empty set.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// Use min/max to make a canonical record value.
+/// Make one canonical Edge for each accepted pair, using its smaller and larger endpoints.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// The Set then removes both repeated and reversed copies without a second search loop.
+/// Insert normalised Edge values into the LinkedHashSet and return that set after the loop.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

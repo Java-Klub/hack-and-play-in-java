@@ -21,8 +21,8 @@ class Check {
         run("M02_MiniGolf", "L02.02 MiniGolf · F04", () -> M02_MiniGolfTest.main(new String[0]));
         run("M03_BouncingBalls", "L02.03 BouncingBalls · F04", () -> M03_BouncingBallsTest.main(new String[0]));
         run("M04_Spirograph", "L02.04 Spirograph · F04", () -> M04_SpirographTest.main(new String[0]));
-        run("M05_AnagramRounds", "L02.05 AnagramRounds · F05", () -> M05_AnagramRoundsTest.main(new String[0]));
-        run("M06_MadLibsStoryMachine", "L02.06 MadLibsStoryMachine · F05", () -> M06_MadLibsStoryMachineTest.main(new String[0]));
+        run("M05_MadLibsStoryMachine", "L02.05 MadLibsStoryMachine · F05", () -> M05_MadLibsStoryMachineTest.main(new String[0]));
+        run("M06_AnagramRounds", "L02.06 AnagramRounds · F05", () -> M06_AnagramRoundsTest.main(new String[0]));
         run("M07_Codebreaker", "L02.07 Codebreaker · F06", () -> M07_CodebreakerTest.main(new String[0]));
         run("M08_PokerDice", "L02.08 PokerDice · F06", () -> M08_PokerDiceTest.main(new String[0]));
         run("M09_SonarTreasureHunt", "L02.09 SonarTreasureHunt · F06", () -> M09_SonarTreasureHuntTest.main(new String[0]));
@@ -52,7 +52,7 @@ class M01_CannonPuzzleTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I065 F04: " + reason);
+            throw new AssertionError("L02.01 F04: " + reason);
         }
     }
 
@@ -74,7 +74,7 @@ class M02_MiniGolfTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I066 F04: " + reason);
+            throw new AssertionError("L02.02 F04: " + reason);
         }
     }
 
@@ -87,6 +87,8 @@ class M02_MiniGolfTest {
         Reflect.call(game, "begin", 90, 110);
         Reflect.call(game, "shoot", -10, 110);
         check(Math.abs(((double) Reflect.get(game, "vx")) - 8) < 1e-8 && ((int) Reflect.get(game, "strokes")) == 1, "the actual putt uses the repaired scale");
+        Reflect.call(game, "applyPull", 25.0, -50.0);
+        check(Math.abs(((double) Reflect.get(game, "vx")) - 2) < 1e-8 && Math.abs(((double) Reflect.get(game, "vy")) + 4) < 1e-8, "the shot must use each signed pull on its own axis");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -98,7 +100,7 @@ class M03_BouncingBallsTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I069 F04: " + reason);
+            throw new AssertionError("L02.03 F04: " + reason);
         }
     }
 
@@ -122,7 +124,7 @@ class M04_SpirographTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I075 F04: " + reason);
+            throw new AssertionError("L02.04 F04: " + reason);
         }
     }
 
@@ -139,18 +141,18 @@ class M04_SpirographTest {
 }
 
 @SuppressWarnings("unchecked")
-class M05_AnagramRoundsTest {
+class M06_AnagramRoundsTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I029 F05: " + reason);
+            throw new AssertionError("L02.06 F05: " + reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("M05_AnagramRounds");
+        var game = Reflect.create("M06_AnagramRounds");
         check(((java.lang.String) Reflect.call(game, "normalize", "  silent  ")).equals("SILENT"), "a whole lower-case answer must become the accepted upper-case word");
         check(((java.lang.String) Reflect.call(game, "normalize", "LiStEn")).equals("LISTEN"), "mixed case is normalized");
         Reflect.call(game, "reset");
@@ -161,22 +163,24 @@ class M05_AnagramRoundsTest {
 }
 
 @SuppressWarnings("unchecked")
-class M06_MadLibsStoryMachineTest {
+class M05_MadLibsStoryMachineTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I129 F05: " + reason);
+            throw new AssertionError("L02.05 F05: " + reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("M06_MadLibsStoryMachine");
+        var game = Reflect.create("M05_MadLibsStoryMachine");
         check(((java.lang.String) Reflect.call(game, "cleanWord", "  Red Fox  ")).equals("Red Fox"), "edge spaces must disappear while a multiword name stays whole");
         check(((java.lang.String) Reflect.call(game, "cleanWord", "New   Moon")).equals("New   Moon"), "internal spacing is not silently rewritten");
         String story = ((java.lang.String) Reflect.call(game, "story", "  Red Fox  ", " robot ", " Moon Base ", " spoon "));
         check(story.startsWith("Red Fox hired a robot to guard Moon Base."), "the actual story uses cleaned full inputs");
+        check(((String) Reflect.call(game, "headline", "  Red Fox  ")).equals("Report from Red Fox:"), "the title must use the cleaned name");
+        check(((String) Reflect.call(game, "headline", "Ada")).equals("Report from Ada:"), "another name needs its own title");
         System.out.println("PASS " + checks + " checks");
     }
 }
@@ -188,7 +192,7 @@ class M07_CodebreakerTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I020 F06: " + reason);
+            throw new AssertionError("L02.07 F06: " + reason);
         }
     }
 
@@ -211,7 +215,7 @@ class M08_PokerDiceTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I039 F06: " + reason);
+            throw new AssertionError("L02.08 F06: " + reason);
         }
     }
 
@@ -235,7 +239,7 @@ class M09_SonarTreasureHuntTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I042 F06: " + reason);
+            throw new AssertionError("L02.09 F06: " + reason);
         }
     }
 
@@ -256,7 +260,7 @@ class M10_MagicNumberCardsTest {
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("I135 F06: " + reason);
+            throw new AssertionError("L02.10 F06: " + reason);
         }
     }
 

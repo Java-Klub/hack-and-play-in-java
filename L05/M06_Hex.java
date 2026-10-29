@@ -9,7 +9,7 @@
 /// **Today you learn:** Traversal and search: a path search depends on which neighbouring positions it is
 /// allowed to visit. Here the candidate graph is a hex board.
 ///
-/// Run the program and take the upper-left hex by entering 1 1, then alternate row-and-column
+/// Take the upper-left hex by entering 1 1, then alternate row-and-column
 /// choices with a friend.
 boolean connected(int who) {
     boolean[][] seen = new boolean[5][5];
@@ -97,6 +97,12 @@ boolean connected(int who) {
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
 /// Add those two directions; keep seen[][] and the queue logic unchanged.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Invent one portal offset in the directions data, such as a two-row jump. Make a board that connects
+/// only with your portal rule and a second board that remains disconnected. Exchange them without
+/// saying which one is the witness.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

@@ -5,65 +5,72 @@ import java.awt.image.BufferedImage;
 
 /// # L09.06 · TruchetTileLab
 ///
-/// Arrange curved tiles into a winding pattern where small local choices create long loops. Keep a
-/// truthful score of the two tile orientations as the picture grows.
+/// Steer a winding tile pattern while it grows. Keep one orientation from running too far ahead, so a
+/// Map becomes a drawing rule rather than only a score caption.
 ///
-/// **Your mission:** The orientation caption reports one for a tile kind however often it occurs. Repair
-/// the accumulated counts while preserving the generated pattern.
+/// **Your mission:** Build chooseOrientation(preferred). Accept only LEFT or RIGHT. Usually return the
+/// preferred orientation, but if its current count already leads the other by at least two, choose the
+/// other. Increment only the chosen count and return that choice. Invalid text must throw without
+/// changing the Map. Your decision steers the real arcs as the pattern grows.
 ///
-/// **Today you learn:** A Map can keep a separate tally for each named category. Updating one orientation
-/// must retain its previous count and leave the other category untouched.
+/// **Today you learn:** Use stored key/value relationships to make a real picture or generation
+/// decision, not just a caption.
 ///
-/// Run the program and compare the picture before and after your repair.
-void countOrientation(String orientation) {
-    orientationCounts.put(orientation, 1);
+/// Run the program and inspect the curved pattern and LEFT/RIGHT counts. After the repair, both counts
+/// account for the tiles and the steering policy changes the actual curves.
+String chooseOrientation(String preferred) {
+    return preferred;
 }
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F24">
-/// ### Map: look up a value by its key
+/// ### A Map remembers a value for each key
 ///
-/// A `Map<String, Integer>` associates text keys with integer values. Each key has at most one stored
-/// value.
+/// A List remembers positions. A Map remembers an association: each key leads to one current value.
+/// Here a colour name leads to a count.
 ///
 /// ```java
-/// Map<String, Integer> badges = new HashMap<>();
-/// badges.put("moon", 4);
-/// IO.println(badges.getOrDefault("moon", 0));
-/// IO.println(badges.getOrDefault("sun", 0));
+/// Map<String, Integer> marbles = new HashMap<>();
+/// marbles.put("blue", 2);
+/// int before = marbles.getOrDefault("blue", 0);
+/// marbles.put("blue", before + 1);
+/// IO.println(marbles.getOrDefault("gold", 0));
 /// ```
 ///
-/// The output is `4`, then `0`. `getOrDefault(key, fallback)` reads an existing value, or returns the
-/// fallback when the key is absent. This lookup does not insert anything. `put(key, value)` stores a
-/// value and replaces any previous value for that key; it does not add numbers automatically. Use
-/// `containsKey(key)` when you need to distinguish absence explicitly. These examples do not store
-/// null values.
+/// Blue now has count 3; the printed gold count is 0. `getOrDefault(key, fallback)` reads the fallback
+/// for an absent key without inserting it. `put` replaces that key's old value: it does not add
+/// automatically. Other keys remain unchanged.
 ///
-/// Predict: after `badges.put("moon", 9)`, what will the same two lookups return?
+/// Use `containsKey` when absence itself matters. Use `entrySet()` to visit key/value pairs: each entry
+/// provides `getKey()` and `getValue()`. A Map does not promise that the first entry is the largest;
+/// compare values explicitly when choosing a winner. Predict blue after another identical update. Then
+/// predict what `getOrDefault("gold", 9)` returns and whether gold is now stored.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Read this code">
-/// ## Read these particular lines
+/// ## Read this part
 ///
-/// - `String orientation` — The category name is the key, not a screen coordinate.
-/// - `orientationCounts.put` — Writes the value for one orientation and replaces its previous value.
-/// - `orientation, 1` — A fixed one loses all earlier occurrences of that category.
-///
-/// ### What the prepared part already does
-///
-/// render chooses tile orientations and calls countOrientation for each tile. Both the curved
-/// picture and its LEFT/RIGHT caption use those real counts.
+/// Absent keys start with count 0 via getOrDefault. The lead is preferredCount - otherCount before
+/// adding this tile. Two LEFT choices from an empty Map are allowed; the third LEFT request must become
+/// RIGHT. The renderer draws the returned choice and resets the Map for a new picture. Never increment
+/// a requested orientation that you did not choose.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
-/// LEFT and RIGHT are separate keys.
+/// Read both counts before changing either.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 2 · a closer look">
-/// A missing key means zero previous tiles.
+/// Name the other orientation and decide whether the requested side is already two ahead.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Store previous count plus one, not a constant one.
+/// Reject unknown names, choose using the old difference, increment the chosen key with getOrDefault,
+/// and return it.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own variant · optional">
+/// Change the permitted lead to four, or deliberately favour LEFT. Compare the resulting loops using
+/// the same random seed, so only your steering rule changes.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
@@ -86,12 +93,11 @@ BufferedImage render(long seed, double option) {
             for (int col = 0; col < count; col++) {
                 int x = col * size;
                 int y = row * size;
-                if (random.nextBoolean()) {
-                    countOrientation("LEFT");
+                String orientation = chooseOrientation(random.nextBoolean() ? "LEFT" : "RIGHT");
+                if (orientation.equals("LEFT")) {
                     g.drawArc(x - size / 2, y - size / 2, size, size, 270, 90);
                     g.drawArc(x + size / 2, y + size / 2, size, size, 90, 90);
                 } else {
-                    countOrientation("RIGHT");
                     g.drawArc(x + size / 2, y - size / 2, size, size, 180, 90);
                     g.drawArc(x - size / 2, y + size / 2, size, size, 0, 90);
                 }

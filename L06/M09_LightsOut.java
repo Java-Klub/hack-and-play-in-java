@@ -16,7 +16,7 @@ import java.awt.Color;
 /// **Today you learn:** Writing functional checks: choose inputs and expected results that could disprove
 /// a broken rule. The learner’s work is the examples, not a replacement flip() algorithm.
 ///
-/// Run the program and click cells to try extinguishing every light, then run the checks to see
+/// Click cells to try extinguishing every light, then run the checks to see
 /// which wrong rule your examples still miss.
 record CrossExample(int row, int column, int expected) {
 }
@@ -67,7 +67,7 @@ CrossExample[] learnerChecks() {
 /// failed to reject.
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="For this game">
+// <editor-fold defaultstate="expanded" desc="For this game">
 /// ### Derive the expectation before constructing the check
 ///
 /// Use a different toy to practise: on a three-row, two-column panel, a press lights itself and the
@@ -100,6 +100,12 @@ CrossExample[] learnerChecks() {
 /// Try a corner, counting the clicked cell and only its existing cardinal neighbours. Construct its
 /// CrossExample from your own coordinates and count, then derive a different boundary case that the
 /// corner alone cannot replace.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Make it yours">
+/// Invent a new click shape, such as centre plus diagonal neighbours. Describe it on paper, predict a
+/// centre, edge and corner click, then adapt flip and your examples together. Exchange the written rule
+/// and ask a partner to supply one extra counterexample.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">
@@ -228,7 +234,8 @@ void verifyExamples() {
                 }
             }
             if (count != example.expected()) {
-                throw new IllegalStateException("Cross example has wrong expected result");
+                throw new IllegalStateException("Click row " + example.row() + ", column " + example.column()
+                    + ": expected " + example.expected() + " lit cells, actual " + count);
             }
         }
     } finally {

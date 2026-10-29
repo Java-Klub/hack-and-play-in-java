@@ -9,7 +9,8 @@ import javax.swing.*;
 /// Build a wall of black and white tiles that can make perfectly straight mortar lines look tilted.
 /// Change the offset and compare your impression with a red ruler.
 ///
-/// **Your mission:** The wall is covered by a grey layer. Repair the order of the two actions in
+/// **Your mission · Rescue the picture:** The wall is covered by a grey layer. Repair the order of the
+/// two actions in
 /// paintWall so the tiles remain visible.
 ///
 /// **Today you learn:** Sequence: inside paintWall, statements run from top to bottom when the action is
@@ -83,6 +84,19 @@ void paintWall(Graphics2D g) {
 /// Lines beginning /// are words for you; Java does not execute them. The supplied main below starts the
 /// program and opens the window. When the window needs a picture, draw calls your paintWall action.
 /// paintBackground and paintTiles contain the ready-made painting; key handles the controls.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Follow the values · predict a case">
+/// A call is an instruction to perform an action now. If `announce();` prints one line, two
+/// consecutive calls print two lines. Java does not combine them into one action. In this picture the
+/// shared pen g reaches both actions, but each call finishes before the next starts. Predict the
+/// visible top layer when you reverse the calls; then check the window.
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Your own version · optional">
+/// Make the illusion strongest for a friend using only the existing offset and mortar controls. Ask
+/// whether the lines are tilted before revealing the red ruler. Then change the background colour in
+/// paintBackground and compare the same setting.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
