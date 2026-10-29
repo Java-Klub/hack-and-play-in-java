@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 /// Kontrola celého levelu: `java Check.java`
 /// Jedna hra: `java Check.java M01_AsteroidDrift.java`
 /// Kontroly volají testovací metody přímo v této JVM.
+/// Hry zůstávají compact sources; následující kontroly k nim přistupují pomocí reflection.
 class Check {
     int failed;
     int checked;
@@ -51,6 +52,7 @@ class Check {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M01_AsteroidDriftTest {
     static int checks;
     static final String[] CASES = {
@@ -96,12 +98,12 @@ class M01_AsteroidDriftTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M01_AsteroidDrift();
-            p.restart();var action=p.firingAction();check(p.shots.isEmpty(),0,p.shots.size());
-            action.run();check(p.shots.size()==1&&p.cooldown==10,1,p.shots.size());
-            action.run();check(p.shots.size()==1,2,p.shots.size());
-            p.restart();p.key(java.awt.event.KeyEvent.VK_SPACE,true);p.step();check(p.shots.size()==1,1,p.shots.size());
-            p.lost=true;p.cooldown=0;p.firingAction().run();check(p.shots.size()==1,2,p.shots.size());
+            var p = Reflect.create("M01_AsteroidDrift");
+            Reflect.call(p, "restart");var action=((java.lang.Runnable) Reflect.call(p, "firingAction"));check(((java.util.ArrayList<Object>) Reflect.get(p, "shots")).isEmpty(),0,((java.util.ArrayList<Object>) Reflect.get(p, "shots")).size());
+            action.run();check(((java.util.ArrayList<Object>) Reflect.get(p, "shots")).size()==1&&((int) Reflect.get(p, "cooldown"))==10,1,((java.util.ArrayList<Object>) Reflect.get(p, "shots")).size());
+            action.run();check(((java.util.ArrayList<Object>) Reflect.get(p, "shots")).size()==1,2,((java.util.ArrayList<Object>) Reflect.get(p, "shots")).size());
+            Reflect.call(p, "restart");Reflect.call(p, "key", java.awt.event.KeyEvent.VK_SPACE, true);Reflect.call(p, "step");check(((java.util.ArrayList<Object>) Reflect.get(p, "shots")).size()==1,1,((java.util.ArrayList<Object>) Reflect.get(p, "shots")).size());
+            Reflect.set(p, "lost", true);Reflect.set(p, "cooldown", 0);((java.lang.Runnable) Reflect.call(p, "firingAction")).run();check(((java.util.ArrayList<Object>) Reflect.get(p, "shots")).size()==1,2,((java.util.ArrayList<Object>) Reflect.get(p, "shots")).size());
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -111,6 +113,7 @@ class M01_AsteroidDriftTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M02_FireworkPainterTest {
     static int checks;
     static final String[] CASES = {
@@ -156,12 +159,12 @@ class M02_FireworkPainterTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M02_FireworkPainter();
-            p.restart();var action=p.burstAction();check(p.particles.isEmpty(),0,p.particles.size());
-            action.accept(43,91);check(p.particles.size()==60&&!p.paused,1,p.particles.size());
-            check(p.particles.getFirst().x()==43&&p.particles.getFirst().y()==91,1,p.particles.getFirst());
-            p.press(120,80,1);check(p.particles.size()==120&&p.particles.getLast().x()==120,2,p.particles.size());
-            p.restart();check(p.particles.isEmpty(),2,p.particles.size());
+            var p = Reflect.create("M02_FireworkPainter");
+            Reflect.call(p, "restart");var action=((java.util.function.BiConsumer<java.lang.Integer, java.lang.Integer>) Reflect.call(p, "burstAction"));check(((java.util.ArrayList<Object>) Reflect.get(p, "particles")).isEmpty(),0,((java.util.ArrayList<Object>) Reflect.get(p, "particles")).size());
+            action.accept(43,91);check(((java.util.ArrayList<Object>) Reflect.get(p, "particles")).size()==60&&!((boolean) Reflect.get(p, "paused")),1,((java.util.ArrayList<Object>) Reflect.get(p, "particles")).size());
+            check(((double) Reflect.call(((java.util.ArrayList<Object>) Reflect.get(p, "particles")).getFirst(), "x"))==43&&((double) Reflect.call(((java.util.ArrayList<Object>) Reflect.get(p, "particles")).getFirst(), "y"))==91,1,((java.util.ArrayList<Object>) Reflect.get(p, "particles")).getFirst());
+            Reflect.call(p, "press", 120, 80, 1);check(((java.util.ArrayList<Object>) Reflect.get(p, "particles")).size()==120&&((double) Reflect.call(((java.util.ArrayList<Object>) Reflect.get(p, "particles")).getLast(), "x"))==120,2,((java.util.ArrayList<Object>) Reflect.get(p, "particles")).size());
+            Reflect.call(p, "restart");check(((java.util.ArrayList<Object>) Reflect.get(p, "particles")).isEmpty(),2,((java.util.ArrayList<Object>) Reflect.get(p, "particles")).size());
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -171,6 +174,7 @@ class M02_FireworkPainterTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M03_ShadowPlaygroundTest {
     static int checks;
     static final String[] CASES = {
@@ -216,11 +220,11 @@ class M03_ShadowPlaygroundTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M03_ShadowPlayground();
-            p.restart();var action=p.lightAction();check(p.lightX==100&&p.lightY==80,0,p.lightX);
-            action.accept(43,91);check(p.lightX==43&&p.lightY==91,1,p.lightX+","+p.lightY);
-            action.accept(-20,999);check(p.lightX==0&&p.lightY==p.HEIGHT,2,p.lightX+","+p.lightY);
-            p.press(140,70,1);p.drag(160,90);check(p.lightX==160&&p.lightY==90,1,p.lightX+","+p.lightY);
+            var p = Reflect.create("M03_ShadowPlayground");
+            Reflect.call(p, "restart");var action=((java.util.function.BiConsumer<java.lang.Integer, java.lang.Integer>) Reflect.call(p, "lightAction"));check(((double) Reflect.get(p, "lightX"))==100&&((double) Reflect.get(p, "lightY"))==80,0,((double) Reflect.get(p, "lightX")));
+            action.accept(43,91);check(((double) Reflect.get(p, "lightX"))==43&&((double) Reflect.get(p, "lightY"))==91,1,((double) Reflect.get(p, "lightX"))+","+((double) Reflect.get(p, "lightY")));
+            action.accept(-20,999);check(((double) Reflect.get(p, "lightX"))==0&&((double) Reflect.get(p, "lightY"))==((int) Reflect.get(p, "HEIGHT")),2,((double) Reflect.get(p, "lightX"))+","+((double) Reflect.get(p, "lightY")));
+            Reflect.call(p, "press", 140, 70, 1);Reflect.call(p, "drag", 160, 90);check(((double) Reflect.get(p, "lightX"))==160&&((double) Reflect.get(p, "lightY"))==90,1,((double) Reflect.get(p, "lightX"))+","+((double) Reflect.get(p, "lightY")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -230,6 +234,7 @@ class M03_ShadowPlaygroundTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M04_UntangleTest {
     static int checks;
     static final String[] CASES = {
@@ -275,13 +280,13 @@ class M04_UntangleTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M04_Untangle();
-            p.restart();var point=new Point(120,70);var image=draw(g->p.drawNode(g,point,3),600,420);
+            var p = Reflect.create("M04_Untangle");
+            Reflect.call(p, "restart");var point=new Point(120,70);var image=draw(g->Reflect.call(p, "drawNode", g, point, 3),600,420);
             check((image.getRGB(128,70)&0xFFFFFF)==0x23375A,0,Integer.toHexString(image.getRGB(128,70)));
             check(point.equals(new Point(120,70)),1,point);
-            p.points[0]=new Point(80,90);var scene=draw(p::draw,600,420);
+            ((java.awt.Point[]) Reflect.get(p, "points"))[0]=new Point(80,90);var scene=draw(((java.util.function.Consumer<java.awt.Graphics2D>) ((value0) -> { Reflect.call(p, "draw", value0); })),600,420);
             check((scene.getRGB(88,90)&0xFFFFFF)==0x23375A,2,Integer.toHexString(scene.getRGB(88,90)));
-            var copy=p.points[0].getLocation();draw(p::draw,600,420);check(p.points[0].equals(copy),1,p.points[0]);
+            var copy=((java.awt.Point[]) Reflect.get(p, "points"))[0].getLocation();draw(((java.util.function.Consumer<java.awt.Graphics2D>) ((value0) -> { Reflect.call(p, "draw", value0); })),600,420);check(((java.awt.Point[]) Reflect.get(p, "points"))[0].equals(copy),1,((java.awt.Point[]) Reflect.get(p, "points"))[0]);
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -291,6 +296,7 @@ class M04_UntangleTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M05_SpringToyTest {
     static int checks;
     static final String[] CASES = {
@@ -336,13 +342,13 @@ class M05_SpringToyTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M05_SpringToy();
-            p.restart();p.paused=false;double x=p.x,y=p.y,vx=p.vx,vy=p.vy;
-            var first=draw(p::draw,p.WIDTH,p.HEIGHT);
-            check(p.x==x&&p.y==y&&p.vx==vx&&p.vy==vy,0,p.y);
-            check(p.trail.isEmpty(),1,p.trail.size());
-            var second=draw(p::draw,p.WIDTH,p.HEIGHT);check(hash(first)==hash(second),1,hash(second));
-            p.step();check(p.y!=y&&!p.trail.isEmpty(),2,p.y);
+            var p = Reflect.create("M05_SpringToy");
+            Reflect.call(p, "restart");Reflect.set(p, "paused", false);double x=((double) Reflect.get(p, "x")),y=((double) Reflect.get(p, "y")),vx=((double) Reflect.get(p, "vx")),vy=((double) Reflect.get(p, "vy"));
+            var first=draw(((java.util.function.Consumer<java.awt.Graphics2D>) ((value0) -> { Reflect.call(p, "draw", value0); })),((int) Reflect.get(p, "WIDTH")),((int) Reflect.get(p, "HEIGHT")));
+            check(((double) Reflect.get(p, "x"))==x&&((double) Reflect.get(p, "y"))==y&&((double) Reflect.get(p, "vx"))==vx&&((double) Reflect.get(p, "vy"))==vy,0,((double) Reflect.get(p, "y")));
+            check(((java.util.ArrayList<java.awt.geom.Point2D.Double>) Reflect.get(p, "trail")).isEmpty(),1,((java.util.ArrayList<java.awt.geom.Point2D.Double>) Reflect.get(p, "trail")).size());
+            var second=draw(((java.util.function.Consumer<java.awt.Graphics2D>) ((value0) -> { Reflect.call(p, "draw", value0); })),((int) Reflect.get(p, "WIDTH")),((int) Reflect.get(p, "HEIGHT")));check(hash(first)==hash(second),1,hash(second));
+            Reflect.call(p, "step");check(((double) Reflect.get(p, "y"))!=y&&!((java.util.ArrayList<java.awt.geom.Point2D.Double>) Reflect.get(p, "trail")).isEmpty(),2,((double) Reflect.get(p, "y")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -352,6 +358,7 @@ class M05_SpringToyTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M06_MirrorArtTest {
     static int checks;
     static final String[] CASES = {
@@ -397,8 +404,8 @@ class M06_MirrorArtTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M06_MirrorArt();
-            p.restart();var c=p.transform(320,220,0,false);check(c.distance(320,220)<1e-9,0,c);p.axes=4;var q=p.transform(350,220,1,false);check(q.distance(320,250)<1e-9,1,q);var r=p.transform(320,250,0,true);check(r.distance(320,190)<1e-9,1,r);long before=hash(p.canvas);p.stroke(350,220,360,230);check(hash(p.canvas)!=before,2,hash(p.canvas));
+            var p = Reflect.create("M06_MirrorArt");
+            Reflect.call(p, "restart");var c=((java.awt.geom.Point2D.Double) Reflect.call(p, "transform", 320, 220, 0, false));check(c.distance(320,220)<1e-9,0,c);Reflect.set(p, "axes", 4);var q=((java.awt.geom.Point2D.Double) Reflect.call(p, "transform", 350, 220, 1, false));check(q.distance(320,250)<1e-9,1,q);var r=((java.awt.geom.Point2D.Double) Reflect.call(p, "transform", 320, 250, 0, true));check(r.distance(320,190)<1e-9,1,r);long before=hash(((java.awt.image.BufferedImage) Reflect.get(p, "canvas")));Reflect.call(p, "stroke", 350, 220, 360, 230);check(hash(((java.awt.image.BufferedImage) Reflect.get(p, "canvas")))!=before,2,hash(((java.awt.image.BufferedImage) Reflect.get(p, "canvas"))));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -408,6 +415,7 @@ class M06_MirrorArtTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M07_MoireTest {
     static int checks;
     static final String[] CASES = {
@@ -453,8 +461,8 @@ class M07_MoireTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M07_Moire();
-            p.restart();var c=p.gridPoint(0,0,0);check(c.distance(320,220)<1e-9,0,c);var q=p.gridPoint(1,0,Math.PI/2);check(q.distance(320,242)<1e-8,1,q);double old=p.angle;var a=draw(p::draw,p.WIDTH,p.HEIGHT);var b=draw(p::draw,p.WIDTH,p.HEIGHT);check(p.angle==old&&hash(a)==hash(b),2,p.angle);
+            var p = Reflect.create("M07_Moire");
+            Reflect.call(p, "restart");var c=((java.awt.geom.Point2D.Double) Reflect.call(p, "gridPoint", 0, 0, 0));check(c.distance(320,220)<1e-9,0,c);var q=((java.awt.geom.Point2D.Double) Reflect.call(p, "gridPoint", 1, 0, Math.PI/2));check(q.distance(320,242)<1e-8,1,q);double old=((double) Reflect.get(p, "angle"));var a=draw(((java.util.function.Consumer<java.awt.Graphics2D>) ((value0) -> { Reflect.call(p, "draw", value0); })),((int) Reflect.get(p, "WIDTH")),((int) Reflect.get(p, "HEIGHT")));var b=draw(((java.util.function.Consumer<java.awt.Graphics2D>) ((value0) -> { Reflect.call(p, "draw", value0); })),((int) Reflect.get(p, "WIDTH")),((int) Reflect.get(p, "HEIGHT")));check(((double) Reflect.get(p, "angle"))==old&&hash(a)==hash(b),2,((double) Reflect.get(p, "angle")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -464,6 +472,7 @@ class M07_MoireTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M08_StarTunnelTest {
     static int checks;
     static final String[] CASES = {
@@ -509,8 +518,8 @@ class M08_StarTunnelTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M08_StarTunnel();
-            p.restart();var star=new M08_StarTunnel.Star(10,20,100);var q=p.project(star,100);check(q.distance(p.centreX+26,p.centreY+52)<1e-9,0,q);var near=p.project(star,0);check(near.distance(p.centreX+520,p.centreY+1040)<1e-9,1,near);var before=List.copyOf(p.stars);draw(p::draw,p.WIDTH,p.HEIGHT);check(p.stars.equals(before),2,p.stars.size());
+            var p = Reflect.create("M08_StarTunnel");
+            Reflect.call(p, "restart");var star=Reflect.create("M08_StarTunnel$Star", 10, 20, 100);var q=((java.awt.geom.Point2D.Double) Reflect.call(p, "project", star, 100));check(q.distance(((double) Reflect.get(p, "centreX"))+26,((double) Reflect.get(p, "centreY"))+52)<1e-9,0,q);var near=((java.awt.geom.Point2D.Double) Reflect.call(p, "project", star, 0));check(near.distance(((double) Reflect.get(p, "centreX"))+520,((double) Reflect.get(p, "centreY"))+1040)<1e-9,1,near);var before=List.copyOf(((java.util.ArrayList<Object>) Reflect.get(p, "stars")));draw(((java.util.function.Consumer<java.awt.Graphics2D>) ((value0) -> { Reflect.call(p, "draw", value0); })),((int) Reflect.get(p, "WIDTH")),((int) Reflect.get(p, "HEIGHT")));check(((java.util.ArrayList<Object>) Reflect.get(p, "stars")).equals(before),2,((java.util.ArrayList<Object>) Reflect.get(p, "stars")).size());
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -520,6 +529,7 @@ class M08_StarTunnelTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M09_PongTest {
     static int checks;
     static final String[] CASES = {
@@ -565,8 +575,8 @@ class M09_PongTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M09_Pong();
-            p.restart();double x=p.ballX,y=p.ballY;p.step();check(p.ballX==x+4&&p.ballY==y+2.5,0,p.ballX);p.winner=1;x=p.ballX;y=p.ballY;p.leftDown=true;p.step();check(p.ballX==x&&p.ballY==y&&p.leftY==160,1,p.ballX);p.clearKeys();check(!p.leftDown&&!p.leftUp&&!p.rightUp&&!p.rightDown,2,p.leftDown);p.restart();check(p.winner==0&&p.leftScore==0&&p.rightScore==0,2,p.winner);
+            var p = Reflect.create("M09_Pong");
+            Reflect.call(p, "restart");double x=((double) Reflect.get(p, "ballX")),y=((double) Reflect.get(p, "ballY"));Reflect.call(p, "step");check(((double) Reflect.get(p, "ballX"))==x+4&&((double) Reflect.get(p, "ballY"))==y+2.5,0,((double) Reflect.get(p, "ballX")));Reflect.set(p, "winner", 1);x=((double) Reflect.get(p, "ballX"));y=((double) Reflect.get(p, "ballY"));Reflect.set(p, "leftDown", true);Reflect.call(p, "step");check(((double) Reflect.get(p, "ballX"))==x&&((double) Reflect.get(p, "ballY"))==y&&((double) Reflect.get(p, "leftY"))==160,1,((double) Reflect.get(p, "ballX")));Reflect.call(p, "clearKeys");check(!((boolean) Reflect.get(p, "leftDown"))&&!((boolean) Reflect.get(p, "leftUp"))&&!((boolean) Reflect.get(p, "rightUp"))&&!((boolean) Reflect.get(p, "rightDown")),2,((boolean) Reflect.get(p, "leftDown")));Reflect.call(p, "restart");check(((int) Reflect.get(p, "winner"))==0&&((int) Reflect.get(p, "leftScore"))==0&&((int) Reflect.get(p, "rightScore"))==0,2,((int) Reflect.get(p, "winner")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -576,6 +586,7 @@ class M09_PongTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M10_BreakoutTest {
     static int checks;
     static final String[] CASES = {
@@ -621,8 +632,8 @@ class M10_BreakoutTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M10_Breakout();
-            p.restart();double x=p.ballX,y=p.ballY;p.step();check(Math.abs(p.ballX-x-3.2)<1e-9&&Math.abs(p.ballY-y+3.5)<1e-9,0,p.ballX);p.state="GAME OVER";x=p.ballX;y=p.ballY;p.step();check(p.ballX==x&&p.ballY==y&&p.lives==3,1,p.ballY);p.state="YOU WIN";p.step();check(p.ballX==x&&p.ballY==y,1,p.ballX);p.restart();check(p.state.equals("PLAY")&&p.lives==3&&p.score==0,2,p.state);
+            var p = Reflect.create("M10_Breakout");
+            Reflect.call(p, "restart");double x=((double) Reflect.get(p, "ballX")),y=((double) Reflect.get(p, "ballY"));Reflect.call(p, "step");check(Math.abs(((double) Reflect.get(p, "ballX"))-x-3.2)<1e-9&&Math.abs(((double) Reflect.get(p, "ballY"))-y+3.5)<1e-9,0,((double) Reflect.get(p, "ballX")));Reflect.set(p, "state", "GAME OVER");x=((double) Reflect.get(p, "ballX"));y=((double) Reflect.get(p, "ballY"));Reflect.call(p, "step");check(((double) Reflect.get(p, "ballX"))==x&&((double) Reflect.get(p, "ballY"))==y&&((int) Reflect.get(p, "lives"))==3,1,((double) Reflect.get(p, "ballY")));Reflect.set(p, "state", "YOU WIN");Reflect.call(p, "step");check(((double) Reflect.get(p, "ballX"))==x&&((double) Reflect.get(p, "ballY"))==y,1,((double) Reflect.get(p, "ballX")));Reflect.call(p, "restart");check(((java.lang.String) Reflect.get(p, "state")).equals("PLAY")&&((int) Reflect.get(p, "lives"))==3&&((int) Reflect.get(p, "score"))==0,2,((java.lang.String) Reflect.get(p, "state")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -632,6 +643,7 @@ class M10_BreakoutTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M11_OrbitPainterTest {
     static int checks;
     static final String[] CASES = {
@@ -677,8 +689,8 @@ class M11_OrbitPainterTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M11_OrbitPainter();
-            p.restart();double x=p.x,y=p.y;p.step();check(p.x==x&&p.y==y&&p.ticks==0,0,p.ticks);p.paused=false;p.step();check(p.ticks==1&&(p.x!=x||p.y!=y),1,p.ticks);p.paused=true;x=p.x;y=p.y;long ink=hash(p.canvas);p.step();check(p.x==x&&p.y==y&&hash(p.canvas)==ink,0,p.ticks);p.restart();check(p.paused&&p.ticks==0&&p.x==440,2,p.x);
+            var p = Reflect.create("M11_OrbitPainter");
+            Reflect.call(p, "restart");double x=((double) Reflect.get(p, "x")),y=((double) Reflect.get(p, "y"));Reflect.call(p, "step");check(((double) Reflect.get(p, "x"))==x&&((double) Reflect.get(p, "y"))==y&&((int) Reflect.get(p, "ticks"))==0,0,((int) Reflect.get(p, "ticks")));Reflect.set(p, "paused", false);Reflect.call(p, "step");check(((int) Reflect.get(p, "ticks"))==1&&(((double) Reflect.get(p, "x"))!=x||((double) Reflect.get(p, "y"))!=y),1,((int) Reflect.get(p, "ticks")));Reflect.set(p, "paused", true);x=((double) Reflect.get(p, "x"));y=((double) Reflect.get(p, "y"));long ink=hash(((java.awt.image.BufferedImage) Reflect.get(p, "canvas")));Reflect.call(p, "step");check(((double) Reflect.get(p, "x"))==x&&((double) Reflect.get(p, "y"))==y&&hash(((java.awt.image.BufferedImage) Reflect.get(p, "canvas")))==ink,0,((int) Reflect.get(p, "ticks")));Reflect.call(p, "restart");check(((boolean) Reflect.get(p, "paused"))&&((int) Reflect.get(p, "ticks"))==0&&((double) Reflect.get(p, "x"))==440,2,((double) Reflect.get(p, "x")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -688,6 +700,7 @@ class M11_OrbitPainterTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M12_PendulumWavesTest {
     static int checks;
     static final String[] CASES = {
@@ -733,8 +746,8 @@ class M12_PendulumWavesTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M12_PendulumWaves();
-            p.restart();p.step();check(p.time==0,0,p.time);p.paused=false;p.speed=2;p.step();check(Math.abs(p.time-.04)<1e-12,1,p.time);p.adjust(100);check(p.speed==2,2,p.speed);p.adjust(-100);check(p.speed==.25,2,p.speed);p.restart();check(p.time==0&&p.paused&&p.speed==1,2,p.time);
+            var p = Reflect.create("M12_PendulumWaves");
+            Reflect.call(p, "restart");Reflect.call(p, "step");check(((double) Reflect.get(p, "time"))==0,0,((double) Reflect.get(p, "time")));Reflect.set(p, "paused", false);Reflect.set(p, "speed", 2);Reflect.call(p, "step");check(Math.abs(((double) Reflect.get(p, "time"))-.04)<1e-12,1,((double) Reflect.get(p, "time")));Reflect.call(p, "adjust", 100);check(((double) Reflect.get(p, "speed"))==2,2,((double) Reflect.get(p, "speed")));Reflect.call(p, "adjust", -100);check(((double) Reflect.get(p, "speed"))==.25,2,((double) Reflect.get(p, "speed")));Reflect.call(p, "restart");check(((double) Reflect.get(p, "time"))==0&&((boolean) Reflect.get(p, "paused"))&&((double) Reflect.get(p, "speed"))==1,2,((double) Reflect.get(p, "time")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -744,6 +757,7 @@ class M12_PendulumWavesTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M13_RippleTankTest {
     static int checks;
     static final String[] CASES = {
@@ -789,8 +803,8 @@ class M13_RippleTankTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M13_RippleTank();
-            p.restart();p.tap(20,10);check(!p.paused&&p.height[10][20]==60,0,p.height[10][20]);p.step();check(p.previous[10][20]==60&&Math.abs(p.height[10][21]-29.76)<1e-9,1,p.height[10][21]);p.restart();p.tap(0,0);check(p.paused&&p.energy()==0,2,p.energy());p.tap(20,10);p.paused=true;double energy=p.energy();p.step();check(p.energy()==energy,2,p.energy());
+            var p = Reflect.create("M13_RippleTank");
+            Reflect.call(p, "restart");Reflect.call(p, "tap", 20, 10);check(!((boolean) Reflect.get(p, "paused"))&&((double[][]) Reflect.get(p, "height"))[10][20]==60,0,((double[][]) Reflect.get(p, "height"))[10][20]);Reflect.call(p, "step");check(((double[][]) Reflect.get(p, "previous"))[10][20]==60&&Math.abs(((double[][]) Reflect.get(p, "height"))[10][21]-29.76)<1e-9,1,((double[][]) Reflect.get(p, "height"))[10][21]);Reflect.call(p, "restart");Reflect.call(p, "tap", 0, 0);check(((boolean) Reflect.get(p, "paused"))&&((double) Reflect.call(p, "energy"))==0,2,((double) Reflect.call(p, "energy")));Reflect.call(p, "tap", 20, 10);Reflect.set(p, "paused", true);double energy=((double) Reflect.call(p, "energy"));Reflect.call(p, "step");check(((double) Reflect.call(p, "energy"))==energy,2,((double) Reflect.call(p, "energy")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -800,6 +814,7 @@ class M13_RippleTankTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M14_SnakeTest {
     static int checks;
     static final String[] CASES = {
@@ -845,13 +860,171 @@ class M14_SnakeTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M14_Snake();
-            p.restart();var head=p.body.getFirst();int dx=p.dx,dy=p.dy;p.turn(0,-1);check(p.dx==dx&&p.dy==dy&&p.body.getFirst().equals(head),0,p.body.getFirst());p.turn(-1,0);p.step();check(p.body.getFirst().equals(new M14_Snake.Cell(head.x(),head.y()-1)),1,p.body.getFirst());p.lost=true;var stopped=List.copyOf(p.body);p.step();check(p.body.equals(stopped),2,p.body);p.restart();check(!p.lost&&p.score==0,2,p.score);
+            var p = Reflect.create("M14_Snake");
+            Reflect.call(p, "restart");var head=((java.util.List<Object>) Reflect.get(p, "body")).getFirst();int dx=((int) Reflect.get(p, "dx")),dy=((int) Reflect.get(p, "dy"));Reflect.call(p, "turn", 0, -1);check(((int) Reflect.get(p, "dx"))==dx&&((int) Reflect.get(p, "dy"))==dy&&((boolean) Reflect.call(((java.util.List<Object>) Reflect.get(p, "body")).getFirst(), "equals", head)),0,((java.util.List<Object>) Reflect.get(p, "body")).getFirst());Reflect.call(p, "turn", -1, 0);Reflect.call(p, "step");check(((boolean) Reflect.call(((java.util.List<Object>) Reflect.get(p, "body")).getFirst(), "equals", Reflect.create("M14_Snake$Cell", ((int) Reflect.call(head, "x")), ((int) Reflect.call(head, "y"))-1))),1,((java.util.List<Object>) Reflect.get(p, "body")).getFirst());Reflect.set(p, "lost", true);var stopped=List.copyOf(((java.util.List<Object>) Reflect.get(p, "body")));Reflect.call(p, "step");check(((java.util.List<Object>) Reflect.get(p, "body")).equals(stopped),2,((java.util.List<Object>) Reflect.get(p, "body")));Reflect.call(p, "restart");check(!((boolean) Reflect.get(p, "lost"))&&((int) Reflect.get(p, "score"))==0,2,((int) Reflect.get(p, "score")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
             throw new AssertionError("MISSION I046: Neočekávané selhání při kontrole aktivního pravidla.", failure);
         }
         System.out.println("PASS " + checks + " checks");
+    }
+}
+
+// Připravený přístup ke compact programům. Testy používají běžné assertions, pole a JDK collections.
+class Reflect {
+    static Class<?> type(String name) {
+        return switch (name) {
+            case "boolean" -> boolean.class;
+            case "byte" -> byte.class;
+            case "short" -> short.class;
+            case "char" -> char.class;
+            case "int" -> int.class;
+            case "long" -> long.class;
+            case "float" -> float.class;
+            case "double" -> double.class;
+            case "void" -> void.class;
+            default -> load(name);
+        };
+    }
+
+    private static Class<?> load(String name) {
+        try {
+            try {
+                return Class.forName(name);
+            } catch (ClassNotFoundException missing) {
+                int nested = name.indexOf('$');
+                if (nested < 0) throw missing;
+                Class.forName(name.substring(0, nested));
+                return Class.forName(name);
+            }
+        } catch (ClassNotFoundException failure) {
+            throw new IllegalStateException("Cannot find compact program type: " + name, failure);
+        }
+    }
+
+    static Object create(String name, Object... args) {
+        var matches = new ArrayList<Constructor<?>>();
+        for (var constructor : type(name).getDeclaredConstructors()) {
+            if (accepts(constructor.getParameterTypes(), args)) matches.add(constructor);
+        }
+        var constructor = one(matches, "constructor " + name);
+        try {
+            constructor.setAccessible(true);
+            return constructor.newInstance(args);
+        } catch (InvocationTargetException failure) {
+            throw Reflect.<RuntimeException>raise(failure.getCause());
+        } catch (ReflectiveOperationException failure) {
+            throw new IllegalStateException("Cannot construct " + name, failure);
+        }
+    }
+
+    static Object get(Object target, String name) {
+        try {
+            return field(target, name).get(target instanceof Class<?> ? null : target);
+        } catch (ReflectiveOperationException failure) {
+            throw new IllegalStateException("Cannot read field " + name, failure);
+        }
+    }
+
+    static Object set(Object target, String name, Object value) {
+        try {
+            var field = field(target, name);
+            Object receiver = target instanceof Class<?> ? null : target;
+            field.set(receiver, value);
+            return field.get(receiver);
+        } catch (ReflectiveOperationException failure) {
+            throw new IllegalStateException("Cannot write field " + name, failure);
+        }
+    }
+
+    private static Field field(Object target, String name) throws NoSuchFieldException {
+        Class<?> owner = target instanceof Class<?> type ? type : target.getClass();
+        for (var current = owner; current != null; current = current.getSuperclass()) {
+            try {
+                var field = current.getDeclaredField(name);
+                if (target instanceof Class<?> && !Modifier.isStatic(field.getModifiers())) {
+                    throw new IllegalStateException("An instance is required for field " + name);
+                }
+                field.setAccessible(true);
+                return field;
+            } catch (NoSuchFieldException missing) {
+                // Continue with inherited fields.
+            }
+        }
+        throw new NoSuchFieldException(owner.getName() + "." + name);
+    }
+
+    static Object call(Object target, String name, Object... args) {
+        Class<?> owner = target instanceof Class<?> type ? type : target.getClass();
+        var methods = new LinkedHashMap<String, Method>();
+        for (var current = owner; current != null; current = current.getSuperclass()) {
+            for (var method : current.getDeclaredMethods()) {
+                methods.putIfAbsent(method.getName() + Arrays.toString(method.getParameterTypes()), method);
+            }
+        }
+        for (var method : owner.getMethods()) {
+            methods.putIfAbsent(method.getName() + Arrays.toString(method.getParameterTypes()), method);
+        }
+        var matches = new ArrayList<Method>();
+        for (var method : methods.values()) {
+            if (!method.isBridge() && !method.isSynthetic()
+                    && method.getName().equals(name) && accepts(method.getParameterTypes(), args)
+                    && (!(target instanceof Class<?>) || Modifier.isStatic(method.getModifiers()))) {
+                matches.add(method);
+            }
+        }
+        var method = one(matches, "method " + owner.getName() + "." + name);
+        try {
+            method.setAccessible(true);
+            return method.invoke(target instanceof Class<?> ? null : target, args);
+        } catch (InvocationTargetException failure) {
+            throw Reflect.<RuntimeException>raise(failure.getCause());
+        } catch (ReflectiveOperationException failure) {
+            throw new IllegalStateException("Cannot call " + owner.getName() + "." + name, failure);
+        }
+    }
+
+    static Object array(String component, Object... values) {
+        Object result = Array.newInstance(type(component), values.length);
+        for (int index = 0; index < values.length; index++) Array.set(result, index, values[index]);
+        return result;
+    }
+
+    private static boolean accepts(Class<?>[] parameters, Object[] args) {
+        if (parameters.length != args.length) return false;
+        for (int index = 0; index < parameters.length; index++) {
+            Class<?> to = parameters[index];
+            Object value = args[index];
+            if (value == null) {
+                if (to.isPrimitive()) return false;
+            } else if (to.isPrimitive()) {
+                String targets = switch (value) {
+                    case Boolean ignored -> "boolean";
+                    case Byte ignored -> "byte short int long float double";
+                    case Short ignored -> "short int long float double";
+                    case Character ignored -> "char int long float double";
+                    case Integer ignored -> "int long float double";
+                    case Long ignored -> "long float double";
+                    case Float ignored -> "float double";
+                    case Double ignored -> "double";
+                    default -> "";
+                };
+                if (!Arrays.asList(targets.split(" ")).contains(to.getName())) return false;
+            } else if (!to.isInstance(value)) return false;
+        }
+        return true;
+    }
+
+    private static <T> T one(List<T> matches, String description) {
+        if (matches.size() != 1) {
+            throw new IllegalStateException((matches.isEmpty() ? "No compatible " : "Ambiguous ") + description);
+        }
+        return matches.getFirst();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Throwable> RuntimeException raise(Throwable failure) throws T {
+        throw (T) failure;
     }
 }

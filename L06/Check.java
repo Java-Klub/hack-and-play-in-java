@@ -4,6 +4,7 @@ import module java.base;
 /// Kontrola celého levelu: `java Check.java`
 /// Jedna hra: `java Check.java M01_ConnectFour.java`
 /// Kontroly volají testovací metody přímo v této JVM.
+/// Hry zůstávají compact sources; následující kontroly k nim přistupují pomocí reflection.
 class Check {
     int failed;
     int checked;
@@ -44,6 +45,7 @@ class Check {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M01_ConnectFourTest {
     static int checks;
     static void expect(boolean correct, String message) {
@@ -58,20 +60,21 @@ class M01_ConnectFourTest {
         + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
     }
     public static void main(String[] args) throws Exception {
-        var g = new M01_ConnectFour();
-        g.reset();
-        g.drop(1);
-        g.drop(2);
-        equal(2, g.moves, "I003/F14: setup played two moves");
-        g.reset();
-        equal(0, g.moves, "I003/F14: reset must clear the round field, not a shadow local");
-        equal('X', g.player, "I003/F14: first player restored");
-        equal('.', g.winner, "I003/F14: winner cleared");
-        expect(g.drop(7) && g.moves == 1, "I003/F14: next round starts counting at one");
+        var g = Reflect.create("M01_ConnectFour");
+        Reflect.call(g, "reset");
+        Reflect.call(g, "drop", 1);
+        Reflect.call(g, "drop", 2);
+        equal(2, ((int) Reflect.get(g, "moves")), "I003/F14: setup played two moves");
+        Reflect.call(g, "reset");
+        equal(0, ((int) Reflect.get(g, "moves")), "I003/F14: reset must clear the round field, not a shadow local");
+        equal('X', ((char) Reflect.get(g, "player")), "I003/F14: first player restored");
+        equal('.', ((char) Reflect.get(g, "winner")), "I003/F14: winner cleared");
+        expect(((boolean) Reflect.call(g, "drop", 7)) && ((int) Reflect.get(g, "moves")) == 1, "I003/F14: next round starts counting at one");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M02_MancalaKalahTest {
     static int checks;
     static void expect(boolean correct, String message) {
@@ -86,20 +89,21 @@ class M02_MancalaKalahTest {
         + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
     }
     public static void main(String[] args) throws Exception {
-        var g = new M02_MancalaKalah();
-        g.reset();
-        g.player = 1;
-        g.pits[6] = 20;
-        g.reset();
-        equal(0, g.player, "I012/F14: restart resets the shared active-player field");
-        equal(0, g.pits[6], "I012/F14: stores belong to the old round");
-        equal(24, g.side(0), "I012/F14: six pits regain four stones");
-        g.command("3");
-        equal(0, g.player, "I012/F14: finishing in own store grants another turn");
+        var g = Reflect.create("M02_MancalaKalah");
+        Reflect.call(g, "reset");
+        Reflect.set(g, "player", 1);
+        ((int[]) Reflect.get(g, "pits"))[6] = 20;
+        Reflect.call(g, "reset");
+        equal(0, ((int) Reflect.get(g, "player")), "I012/F14: restart resets the shared active-player field");
+        equal(0, ((int[]) Reflect.get(g, "pits"))[6], "I012/F14: stores belong to the old round");
+        equal(24, ((int) Reflect.call(g, "side", 0)), "I012/F14: six pits regain four stones");
+        Reflect.call(g, "command", "3");
+        equal(0, ((int) Reflect.get(g, "player")), "I012/F14: finishing in own store grants another turn");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M03_SlidingTilesTest {
     static int checks;
     static void expect(boolean correct, String message) {
@@ -114,27 +118,28 @@ class M03_SlidingTilesTest {
         + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
     }
     public static void main(String[] args) throws Exception {
-        var g = new M03_SlidingTiles();
-        g.moves = 17;
-        g.reset(42);
-        equal(0, g.moves, "I016/F14: new puzzle clears previous move counter");
-        int[] sorted = g.tiles.clone();
+        var g = Reflect.create("M03_SlidingTiles");
+        Reflect.set(g, "moves", 17);
+        Reflect.call(g, "reset", 42);
+        equal(0, ((int) Reflect.get(g, "moves")), "I016/F14: new puzzle clears previous move counter");
+        int[] sorted = ((int[]) Reflect.get(g, "tiles")).clone();
         java.util.Arrays.sort(sorted);
         equal(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8}, sorted, "I016/F14: shuffle keeps all tile values");
         int chosen = -1;
         for (int n = 0; n < 9; n++) {
-            if (g.canMove(n)) {
+            if (((boolean) Reflect.call(g, "canMove", n))) {
                 chosen = n;
                 break;
             }
         }
-        expect(g.play(chosen) && g.moves == 1, "I016/F14: first slide is move one");
-        g.reset(42);
-        equal(0, g.moves, "I016/F14: repeated restart remains independent");
+        expect(((boolean) Reflect.call(g, "play", chosen)) && ((int) Reflect.get(g, "moves")) == 1, "I016/F14: first slide is move one");
+        Reflect.call(g, "reset", 42);
+        equal(0, ((int) Reflect.get(g, "moves")), "I016/F14: repeated restart remains independent");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M04_MiniCrosswordTest {
     static int checks;
     static void expect(boolean correct, String message) {
@@ -149,24 +154,25 @@ class M04_MiniCrosswordTest {
         + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
     }
     public static void main(String[] args) throws Exception {
-        var g = new M04_MiniCrossword();
-        g.reset();
-        g.command("1 CAT");
-        g.command("2 ARE");
-        g.command("3 TEN");
-        expect(g.outcome.isEmpty(), "I030/F14: recount is local to each command, not accumulated across calls");
-        g.command("4 CAT");
-        g.command("5 ARE");
-        g.command("6 TEN");
-        expect(!g.outcome.isEmpty(), "I030/F14: all six clues finish crossword");
-        g.reset();
-        g.command("1 CAT");
-        g.command("erase 1");
-        expect(!g.solved[0] && g.outcome.isEmpty(), "I030/F14: erasing updates the next recount");
+        var g = Reflect.create("M04_MiniCrossword");
+        Reflect.call(g, "reset");
+        Reflect.call(g, "command", "1 CAT");
+        Reflect.call(g, "command", "2 ARE");
+        Reflect.call(g, "command", "3 TEN");
+        expect(((java.lang.String) Reflect.get(g, "outcome")).isEmpty(), "I030/F14: recount is local to each command, not accumulated across calls");
+        Reflect.call(g, "command", "4 CAT");
+        Reflect.call(g, "command", "5 ARE");
+        Reflect.call(g, "command", "6 TEN");
+        expect(!((java.lang.String) Reflect.get(g, "outcome")).isEmpty(), "I030/F14: all six clues finish crossword");
+        Reflect.call(g, "reset");
+        Reflect.call(g, "command", "1 CAT");
+        Reflect.call(g, "command", "erase 1");
+        expect(!((boolean[]) Reflect.get(g, "solved"))[0] && ((java.lang.String) Reflect.get(g, "outcome")).isEmpty(), "I030/F14: erasing updates the next recount");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M05_SokobanTest {
     static int checks;
     static void expect(boolean correct, String message) {
@@ -181,18 +187,19 @@ class M05_SokobanTest {
         + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
     }
     public static void main(String[] args) throws Exception {
-        var g = new M05_Sokoban();
-        g.reset();
-        expect(!g.floor(0, 2), "I017/F15: wall is not walkable floor");
-        expect(g.floor(4, 2), "I017/F15: open cell accepted");
-        expect(!g.floor(-1, 2) && !g.floor(2, 5), "I017/F15: outside coordinates rejected");
-        int x = g.x, y = g.y, bx = g.bx, by = g.by;
-        g.floor(3, 3);
-        expect(g.x == x && g.y == y && g.bx == bx && g.by == by, "I017/F15: asking about floor must not move anything");
+        var g = Reflect.create("M05_Sokoban");
+        Reflect.call(g, "reset");
+        expect(!((boolean) Reflect.call(g, "floor", 0, 2)), "I017/F15: wall is not walkable floor");
+        expect(((boolean) Reflect.call(g, "floor", 4, 2)), "I017/F15: open cell accepted");
+        expect(!((boolean) Reflect.call(g, "floor", -1, 2)) && !((boolean) Reflect.call(g, "floor", 2, 5)), "I017/F15: outside coordinates rejected");
+        int x = ((int) Reflect.get(g, "x")), y = ((int) Reflect.get(g, "y")), bx = ((int) Reflect.get(g, "bx")), by = ((int) Reflect.get(g, "by"));
+        Reflect.call(g, "floor", 3, 3);
+        expect(((int) Reflect.get(g, "x")) == x && ((int) Reflect.get(g, "y")) == y && ((int) Reflect.get(g, "bx")) == bx && ((int) Reflect.get(g, "by")) == by, "I017/F15: asking about floor must not move anything");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M06_PegDropTest {
     static int checks;
     static void expect(boolean correct, String message) {
@@ -207,16 +214,16 @@ class M06_PegDropTest {
         + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
     }
     public static void main(String[] args) throws Exception {
-        var g = new M06_PegDrop();
-        g.restart();
-        equal(100, g.scoreAt(3), "I081/F15: return the score of the requested bin");
-        equal(10, g.scoreAt(7), "I081/F15: final bin accepted");
-        int old = g.score;
-        g.scoreAt(2);
-        equal(old, g.score, "I081/F15: score query does not award points");
+        var g = Reflect.create("M06_PegDrop");
+        Reflect.call(g, "restart");
+        equal(100, ((int) Reflect.call(g, "scoreAt", 3)), "I081/F15: return the score of the requested bin");
+        equal(10, ((int) Reflect.call(g, "scoreAt", 7)), "I081/F15: final bin accepted");
+        int old = ((int) Reflect.get(g, "score"));
+        Reflect.call(g, "scoreAt", 2);
+        equal(old, ((int) Reflect.get(g, "score")), "I081/F15: score query does not award points");
         boolean rejected = false;
         try {
-            g.scoreAt(-1);
+            Reflect.call(g, "scoreAt", -1);
         } catch (IllegalArgumentException e) {
             rejected = true;
         }
@@ -225,6 +232,7 @@ class M06_PegDropTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M07_TrafficJamEscapeTest {
     static int checks;
     static void expect(boolean correct, String message) {
@@ -239,18 +247,19 @@ class M07_TrafficJamEscapeTest {
         + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
     }
     public static void main(String[] args) throws Exception {
-        var g = new M07_TrafficJamEscape();
-        g.reset();
-        int[] oldX = g.xs.clone(), oldY = g.ys.clone();
-        expect(!g.fits(0, 1, 2), "I019/F15: blocker detected");
-        equal(oldX, g.xs, "I019/F15: failed placement probe must not move the car");
-        equal(oldY, g.ys, "I019/F15: query preserves every y position");
-        expect(g.fits(1, 2, 3), "I019/F15: legal downward position accepted");
-        equal(oldY, g.ys, "I019/F15: successful query is pure too");
+        var g = Reflect.create("M07_TrafficJamEscape");
+        Reflect.call(g, "reset");
+        int[] oldX = ((int[]) Reflect.get(g, "xs")).clone(), oldY = ((int[]) Reflect.get(g, "ys")).clone();
+        expect(!((boolean) Reflect.call(g, "fits", 0, 1, 2)), "I019/F15: blocker detected");
+        equal(oldX, ((int[]) Reflect.get(g, "xs")), "I019/F15: failed placement probe must not move the car");
+        equal(oldY, ((int[]) Reflect.get(g, "ys")), "I019/F15: query preserves every y position");
+        expect(((boolean) Reflect.call(g, "fits", 1, 2, 3)), "I019/F15: legal downward position accepted");
+        equal(oldY, ((int[]) Reflect.get(g, "ys")), "I019/F15: successful query is pure too");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M08_FallingBlocksTest {
     static int checks;
     static void expect(boolean correct, String message) {
@@ -265,19 +274,20 @@ class M08_FallingBlocksTest {
         + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
     }
     public static void main(String[] args) throws Exception {
-        var g = new M08_FallingBlocks();
-        g.restart();
-        int oldX = g.px, oldY = g.py;
-        expect(g.fits(g.piece, 6, 5), "I054/F15: free trial position fits");
-        expect(g.px == oldX && g.py == oldY, "I054/F15: fit query must not teleport the falling piece");
-        expect(!g.fits(g.piece, -1, 0), "I054/F15: out-of-bounds trial rejected");
-        expect(g.px == oldX && g.py == oldY, "I054/F15: rejected query is also pure");
-        g.board[5][6] = 1;
-        expect(!g.fits(g.piece, 6, 5), "I054/F15: occupied cells block placement");
+        var g = Reflect.create("M08_FallingBlocks");
+        Reflect.call(g, "restart");
+        int oldX = ((int) Reflect.get(g, "px")), oldY = ((int) Reflect.get(g, "py"));
+        expect(((boolean) Reflect.call(g, "fits", ((int[][]) Reflect.get(g, "piece")), 6, 5)), "I054/F15: free trial position fits");
+        expect(((int) Reflect.get(g, "px")) == oldX && ((int) Reflect.get(g, "py")) == oldY, "I054/F15: fit query must not teleport the falling piece");
+        expect(!((boolean) Reflect.call(g, "fits", ((int[][]) Reflect.get(g, "piece")), -1, 0)), "I054/F15: out-of-bounds trial rejected");
+        expect(((int) Reflect.get(g, "px")) == oldX && ((int) Reflect.get(g, "py")) == oldY, "I054/F15: rejected query is also pure");
+        ((int[][]) Reflect.get(g, "board"))[5][6] = 1;
+        expect(!((boolean) Reflect.call(g, "fits", ((int[][]) Reflect.get(g, "piece")), 6, 5)), "I054/F15: occupied cells block placement");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M09_LightsOutTest {
     static int checks;
     static void expect(boolean correct, String message) {
@@ -292,45 +302,46 @@ class M09_LightsOutTest {
         + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
     }
     public static void main(String[] args) throws Exception {
-        var g = new M09_LightsOut();
-        var cases = g.learnerChecks();
+        var g = Reflect.create("M09_LightsOut");
+        var cases = ((Object[]) Reflect.call(g, "learnerChecks"));
         for (var example : cases) {
-            expect(example.row() >= 0 && example.row()<5 && example.column() >= 0 && example.column()<5,
+            expect(((int) Reflect.call(example, "row")) >= 0 && ((int) Reflect.call(example, "row"))<5 && ((int) Reflect.call(example, "column")) >= 0 && ((int) Reflect.call(example, "column"))<5,
             "I014/F33: examples must use actual game cells 0..4");
-            g.lights = new boolean[5][5];
-            g.flip(example.row(), example.column());
+            Reflect.set(g, "lights", new boolean[5][5]);
+            Reflect.call(g, "flip", ((int) Reflect.call(example, "row")), ((int) Reflect.call(example, "column")));
             int lit = 0;
-            for (var row : g.lights) {
+            for (var row : ((boolean[][]) Reflect.get(g, "lights"))) {
                 for (boolean on : row) {
                     if (on) {
                         lit++;
                     }
                 }
             }
-            equal(example.expected(), lit, "I014/F33: your expectation must accept the real flip rule");
+            equal(((int) Reflect.call(example, "expected")), lit, "I014/F33: your expectation must accept the real flip rule");
         }
         String[] names = {"always-five", "centre-only", "missing-centre", "edge-has-five"};
         for (int mutant = 0; mutant < 4; mutant++) {
             boolean rejected = false;
             for (var e : cases) {
-                int correct = 1 + (e.row()>0 ? 1 : 0) + (e.row()<4 ? 1 : 0) + (e.column()>0 ? 1 : 0) + (e.column()<4 ? 1 : 0);
+                int correct = 1 + (((int) Reflect.call(e, "row"))>0 ? 1 : 0) + (((int) Reflect.call(e, "row"))<4 ? 1 : 0) + (((int) Reflect.call(e, "column"))>0 ? 1 : 0) + (((int) Reflect.call(e, "column"))<4 ? 1 : 0);
                 int wrong = switch (mutant) {
                     case 0 -> 5;
                     case 1 -> 1;
                     case 2 -> correct - 1;
-                    default -> (e.row() == 0 || e.row() == 4) && (e.column() == 0 || e.column() == 4) ? 3 : 5;
+                    default -> (((int) Reflect.call(e, "row")) == 0 || ((int) Reflect.call(e, "row")) == 4) && (((int) Reflect.call(e, "column")) == 0 || ((int) Reflect.call(e, "column")) == 4) ? 3 : 5;
                 };
-                if (wrong != e.expected()) {
+                if (wrong != ((int) Reflect.call(e, "expected"))) {
                     rejected = true;
                 }
             }
             expect(rejected, "I014/F33: your examples did not reject " + names[mutant]);
         }
-        g.verifyExamples();
+        Reflect.call(g, "verifyExamples");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M10_TentsTest {
     static int checks;
     static void expect(boolean correct, String message) {
@@ -345,11 +356,11 @@ class M10_TentsTest {
         + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
     }
     public static void main(String[] args) throws Exception {
-        var g = new M10_Tents();
-        g.restart();
-        var cases = g.learnerChecks();
+        var g = Reflect.create("M10_Tents");
+        Reflect.call(g, "restart");
+        var cases = ((Object[]) Reflect.call(g, "learnerChecks"));
         for (var e : cases) {
-            equal(e.expected(), g.treeAt(e.x(), e.y()), "I089/F33: expectations must accept actual tree positions");
+            equal(((boolean) Reflect.call(e, "expected")), ((boolean) Reflect.call(g, "treeAt", ((int) Reflect.call(e, "x")), ((int) Reflect.call(e, "y")))), "I089/F33: expectations must accept actual tree positions");
         }
         String[] names = {"only-first-tree", "swapped-coordinates", "every-cell-is-a-tree"};
         for (int mutant = 0; mutant < 3; mutant++) {
@@ -357,11 +368,11 @@ class M10_TentsTest {
             for (var e : cases) {
                 boolean wrong = false;
                 if (mutant == 0) {
-                    wrong = e.x() == g.trees[0].x && e.y() == g.trees[0].y;
+                    wrong = ((int) Reflect.call(e, "x")) == ((java.awt.Point[]) Reflect.get(g, "trees"))[0].x && ((int) Reflect.call(e, "y")) == ((java.awt.Point[]) Reflect.get(g, "trees"))[0].y;
                 }
                 if (mutant == 1) {
-                    for (var tree : g.trees) {
-                        if (e.x() == tree.y && e.y() == tree.x) {
+                    for (var tree : ((java.awt.Point[]) Reflect.get(g, "trees"))) {
+                        if (((int) Reflect.call(e, "x")) == tree.y && ((int) Reflect.call(e, "y")) == tree.x) {
                             wrong = true;
                         }
                     }
@@ -369,17 +380,18 @@ class M10_TentsTest {
                 if (mutant == 2) {
                     wrong = true;
                 }
-                if (wrong != e.expected()) {
+                if (wrong != ((boolean) Reflect.call(e, "expected"))) {
                     rejected = true;
                 }
             }
             expect(rejected, "I089/F33: your examples did not reject " + names[mutant]);
         }
-        g.verifyExamples();
+        Reflect.call(g, "verifyExamples");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M11_PegSolitaireTest {
     static int checks;
     static void expect(boolean correct, String message) {
@@ -394,35 +406,36 @@ class M11_PegSolitaireTest {
         + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
     }
     public static void main(String[] args) throws Exception {
-        var g = new M11_PegSolitaire();
-        g.reset();
-        var cases = g.learnerChecks();
+        var g = Reflect.create("M11_PegSolitaire");
+        Reflect.call(g, "reset");
+        var cases = ((Object[]) Reflect.call(g, "learnerChecks"));
         for (var e : cases) {
-            equal(e.expected(), g.legal(e.row(), e.column(), e.toRow(), e.toColumn()), "I015/F33: expectations must accept actual legal()");
+            equal(((boolean) Reflect.call(e, "expected")), ((boolean) Reflect.call(g, "legal", ((int) Reflect.call(e, "row")), ((int) Reflect.call(e, "column")), ((int) Reflect.call(e, "toRow")), ((int) Reflect.call(e, "toColumn")))), "I015/F33: expectations must accept actual legal()");
         }
         String[] names = {"missing-middle-peg", "allows-diagonal", "always-legal"};
         for (int mutant = 0; mutant < 3; mutant++) {
             boolean rejected = false;
             for (var e : cases) {
-                int r = e.row(), c = e.column(), nr = e.toRow(), nc = e.toColumn();
+                int r = ((int) Reflect.call(e, "row")), c = ((int) Reflect.call(e, "column")), nr = ((int) Reflect.call(e, "toRow")), nc = ((int) Reflect.call(e, "toColumn"));
                 boolean inside = r >= 0 && c >= 0 && nr >= 0 && nc >= 0 && r < 5 && c < 5 && nr < 5 && nc < 5;
-                boolean base = inside && Math.abs(nr - r) + Math.abs(nc - c) == 2 && g.board[r][c] == 1 && g.board[nr][nc] == 0;
+                boolean base = inside && Math.abs(nr - r) + Math.abs(nc - c) == 2 && ((int[][]) Reflect.get(g, "board"))[r][c] == 1 && ((int[][]) Reflect.get(g, "board"))[nr][nc] == 0;
                 boolean wrong = switch (mutant) {
                     case 0 -> base && (r == nr || c == nc);
-                    case 1 -> base && g.board[(r + nr) / 2][(c + nc) / 2] == 1;
+                    case 1 -> base && ((int[][]) Reflect.get(g, "board"))[(r + nr) / 2][(c + nc) / 2] == 1;
                     default -> true;
                 };
-                if (wrong != e.expected()) {
+                if (wrong != ((boolean) Reflect.call(e, "expected"))) {
                     rejected = true;
                 }
             }
             expect(rejected, "I015/F33: your examples did not reject " + names[mutant]);
         }
-        g.verifyExamples();
+        Reflect.call(g, "verifyExamples");
         System.out.println("PASS " + checks + " checks");
     }
 }
 
+@SuppressWarnings("unchecked")
 class M12_Merge2048Test {
     static int checks;
     static void expect(boolean correct, String message) {
@@ -437,22 +450,22 @@ class M12_Merge2048Test {
         + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
     }
     public static void main(String[] args) throws Exception {
-        var g = new M12_Merge2048();
-        var cases = g.learnerChecks();
+        var g = Reflect.create("M12_Merge2048");
+        var cases = ((Object[]) Reflect.call(g, "learnerChecks"));
         for (var e : cases) {
-            expect(e.input().length == 4 && e.expected().length == 4 && e.score() >= 0, "I018/F33: examples use four-cell rows and nonnegative scores");
-            for (int value : e.input()) {
+            expect(((int[]) Reflect.call(e, "input")).length == 4 && ((int[]) Reflect.call(e, "expected")).length == 4 && ((int) Reflect.call(e, "score")) >= 0, "I018/F33: examples use four-cell rows and nonnegative scores");
+            for (int value : ((int[]) Reflect.call(e, "input"))) {
                 expect(value == 0 || value >= 2 && value <= 2048 && (value&(value - 1)) == 0, "I018/F33: example inputs must be legal 2048 tile values");
             }
-            g.score = 0;
-            equal(e.expected(), g.merge(e.input().clone()), "I018/F33: real merge output");
-            equal(e.score(), g.score, "I018/F33: real merge score");
+            Reflect.set(g, "score", 0);
+            equal(((int[]) Reflect.call(e, "expected")), ((int[]) Reflect.call(g, "merge", ((int[]) Reflect.call(e, "input")).clone())), "I018/F33: real merge output");
+            equal(((int) Reflect.call(e, "score")), ((int) Reflect.get(g, "score")), "I018/F33: real merge score");
         }
         String[] names = {"never-merge", "does-not-compress-before-merge", "chain-merges-new-tile", "drops-score", "only-first-merge"};
         for (int mutant = 0; mutant < 5; mutant++) {
             boolean rejected = false;
             for (var e : cases) {
-                int[] values = mutant == 1 ? e.input().clone() : java.util.Arrays.stream(e.input()).filter(n -> n != 0).toArray();
+                int[] values = mutant == 1 ? ((int[]) Reflect.call(e, "input")).clone() : java.util.Arrays.stream(((int[]) Reflect.call(e, "input"))).filter(n -> n != 0).toArray();
                 int[] out = new int[4];
                 int at = 0, points = 0;
                 for (int n = 0; n < values.length; n++) {
@@ -477,13 +490,171 @@ class M12_Merge2048Test {
                 if (mutant == 3) {
                     points = 0;
                 }
-                if (!java.util.Arrays.equals(out, e.expected()) || points != e.score()) {
+                if (!java.util.Arrays.equals(out, ((int[]) Reflect.call(e, "expected"))) || points != ((int) Reflect.call(e, "score"))) {
                     rejected = true;
                 }
             }
             expect(rejected, "I018/F33: your examples did not reject " + names[mutant]);
         }
-        g.verifyExamples();
+        Reflect.call(g, "verifyExamples");
         System.out.println("PASS " + checks + " checks");
+    }
+}
+
+// Připravený přístup ke compact programům. Testy používají běžné assertions, pole a JDK collections.
+class Reflect {
+    static Class<?> type(String name) {
+        return switch (name) {
+            case "boolean" -> boolean.class;
+            case "byte" -> byte.class;
+            case "short" -> short.class;
+            case "char" -> char.class;
+            case "int" -> int.class;
+            case "long" -> long.class;
+            case "float" -> float.class;
+            case "double" -> double.class;
+            case "void" -> void.class;
+            default -> load(name);
+        };
+    }
+
+    private static Class<?> load(String name) {
+        try {
+            try {
+                return Class.forName(name);
+            } catch (ClassNotFoundException missing) {
+                int nested = name.indexOf('$');
+                if (nested < 0) throw missing;
+                Class.forName(name.substring(0, nested));
+                return Class.forName(name);
+            }
+        } catch (ClassNotFoundException failure) {
+            throw new IllegalStateException("Cannot find compact program type: " + name, failure);
+        }
+    }
+
+    static Object create(String name, Object... args) {
+        var matches = new ArrayList<Constructor<?>>();
+        for (var constructor : type(name).getDeclaredConstructors()) {
+            if (accepts(constructor.getParameterTypes(), args)) matches.add(constructor);
+        }
+        var constructor = one(matches, "constructor " + name);
+        try {
+            constructor.setAccessible(true);
+            return constructor.newInstance(args);
+        } catch (InvocationTargetException failure) {
+            throw Reflect.<RuntimeException>raise(failure.getCause());
+        } catch (ReflectiveOperationException failure) {
+            throw new IllegalStateException("Cannot construct " + name, failure);
+        }
+    }
+
+    static Object get(Object target, String name) {
+        try {
+            return field(target, name).get(target instanceof Class<?> ? null : target);
+        } catch (ReflectiveOperationException failure) {
+            throw new IllegalStateException("Cannot read field " + name, failure);
+        }
+    }
+
+    static Object set(Object target, String name, Object value) {
+        try {
+            var field = field(target, name);
+            Object receiver = target instanceof Class<?> ? null : target;
+            field.set(receiver, value);
+            return field.get(receiver);
+        } catch (ReflectiveOperationException failure) {
+            throw new IllegalStateException("Cannot write field " + name, failure);
+        }
+    }
+
+    private static Field field(Object target, String name) throws NoSuchFieldException {
+        Class<?> owner = target instanceof Class<?> type ? type : target.getClass();
+        for (var current = owner; current != null; current = current.getSuperclass()) {
+            try {
+                var field = current.getDeclaredField(name);
+                if (target instanceof Class<?> && !Modifier.isStatic(field.getModifiers())) {
+                    throw new IllegalStateException("An instance is required for field " + name);
+                }
+                field.setAccessible(true);
+                return field;
+            } catch (NoSuchFieldException missing) {
+                // Continue with inherited fields.
+            }
+        }
+        throw new NoSuchFieldException(owner.getName() + "." + name);
+    }
+
+    static Object call(Object target, String name, Object... args) {
+        Class<?> owner = target instanceof Class<?> type ? type : target.getClass();
+        var methods = new LinkedHashMap<String, Method>();
+        for (var current = owner; current != null; current = current.getSuperclass()) {
+            for (var method : current.getDeclaredMethods()) {
+                methods.putIfAbsent(method.getName() + Arrays.toString(method.getParameterTypes()), method);
+            }
+        }
+        for (var method : owner.getMethods()) {
+            methods.putIfAbsent(method.getName() + Arrays.toString(method.getParameterTypes()), method);
+        }
+        var matches = new ArrayList<Method>();
+        for (var method : methods.values()) {
+            if (!method.isBridge() && !method.isSynthetic()
+                    && method.getName().equals(name) && accepts(method.getParameterTypes(), args)
+                    && (!(target instanceof Class<?>) || Modifier.isStatic(method.getModifiers()))) {
+                matches.add(method);
+            }
+        }
+        var method = one(matches, "method " + owner.getName() + "." + name);
+        try {
+            method.setAccessible(true);
+            return method.invoke(target instanceof Class<?> ? null : target, args);
+        } catch (InvocationTargetException failure) {
+            throw Reflect.<RuntimeException>raise(failure.getCause());
+        } catch (ReflectiveOperationException failure) {
+            throw new IllegalStateException("Cannot call " + owner.getName() + "." + name, failure);
+        }
+    }
+
+    static Object array(String component, Object... values) {
+        Object result = Array.newInstance(type(component), values.length);
+        for (int index = 0; index < values.length; index++) Array.set(result, index, values[index]);
+        return result;
+    }
+
+    private static boolean accepts(Class<?>[] parameters, Object[] args) {
+        if (parameters.length != args.length) return false;
+        for (int index = 0; index < parameters.length; index++) {
+            Class<?> to = parameters[index];
+            Object value = args[index];
+            if (value == null) {
+                if (to.isPrimitive()) return false;
+            } else if (to.isPrimitive()) {
+                String targets = switch (value) {
+                    case Boolean ignored -> "boolean";
+                    case Byte ignored -> "byte short int long float double";
+                    case Short ignored -> "short int long float double";
+                    case Character ignored -> "char int long float double";
+                    case Integer ignored -> "int long float double";
+                    case Long ignored -> "long float double";
+                    case Float ignored -> "float double";
+                    case Double ignored -> "double";
+                    default -> "";
+                };
+                if (!Arrays.asList(targets.split(" ")).contains(to.getName())) return false;
+            } else if (!to.isInstance(value)) return false;
+        }
+        return true;
+    }
+
+    private static <T> T one(List<T> matches, String description) {
+        if (matches.size() != 1) {
+            throw new IllegalStateException((matches.isEmpty() ? "No compatible " : "Ambiguous ") + description);
+        }
+        return matches.getFirst();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Throwable> RuntimeException raise(Throwable failure) throws T {
+        throw (T) failure;
     }
 }
