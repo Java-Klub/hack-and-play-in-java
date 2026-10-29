@@ -9,21 +9,24 @@
 <h1>6.1 Repeat while needed</h1>
 <p>A drone has an empty battery. Each charging step adds two units and prints the new level. Instead of copying the same step several times, describe when it should keep going.</p>
 <h2>A question before every round</h2>
-<p>Open <code>06-loops/P01_DroneCharge.java</code>. First predict how many lines it will print.</p>
-<pre><code class="language-java" data-source="P01_DroneCharge.java">void main() {
+<p>Open <code>06-loops/P01_Example_DroneCharge.java</code>. First predict how many lines it will print.</p>
+<pre><code class="language-java" data-source="P01_Example_DroneCharge.java">/// # Worked example · 6.1 Repeat while needed
+/// Lesson: 01-while.html
+
+void main() {
     int energy = 0;
     while (energy &lt; 6) {
         energy = energy + 2;
-        IO.println(&quot;Energy: &quot; + energy);
+        IO.println("Energy: " + energy);
     }
-    IO.println(&quot;Ready&quot;);
+    IO.println("Ready");
 }
 </code></pre>
 <p>A while loop repeats the body between its braces while the condition in parentheses is true. It asks the question before the first round and after every completed round. With energy 0, the first test passes: the value becomes 2 and is printed. The next rounds produce 4 and 6. Now 6 is no longer less than 6, so execution continues after the loop.</p>
 <p>The assignment inside the body changes the value that the next test will read. Without it, energy would stay at zero and create an infinite loop. If this happens during an experiment, stop the running program with the Stop button in Output. The condition does not advance the value by itself.</p>
 <details><summary>Prediction: what if you start at 6?</summary><p>The body never runs. You see only Ready. While does not promise at least one round: it asks first.</p></details>
 <h2>Task: the countdown voice speaks only once</h2>
-<p>Open <code>06-loops/P02_LaunchCount.java</code>. For input 3, it currently says only 3 and Launch. Replace the single step with repetition: print every positive number from the starting value down to 1. Once the countdown is over, print Launch exactly once.</p>
+<p>Open <code>06-loops/P02_Task_LaunchCount.java</code>. For input 3, it currently says only 3 and Launch. Replace the single step with repetition: print every positive number from the starting value down to 1. Once the countdown is over, print Launch exactly once.</p>
 <p>Try starting values from 0 to 9. For 3, you need the lines 3, 2, 1, Launch. For 1, print 1, Launch. For 0, print only Launch; do not include zero in the countdown. Keep the Start prompt unchanged.</p>
 <details><summary>Hint 1: what repeats?</summary><p>Printing the current number and reducing it belong in the same body. The final Launch should not repeat.</p></details>
 <details><summary>Hint 2: follow the last round</summary><p>After printing 1, the value must become zero. The next test rejects it. Write down the values before the test and after the change.</p></details>

@@ -9,9 +9,12 @@
 <h1>6.4 Stop at the first match</h1>
 <p>A radar scans numbered moments. The first suitable signal is enough: it does not want the last signal or a count of every signal. This changes when the work can end.</p>
 <h2>A match and an early exit</h2>
-<p>Open <code>06-loops/P08_RadarWindow.java</code>. A limit of 7 allows moments 1 through 7.</p>
-<pre><code class="language-java" data-source="P08_RadarWindow.java">void main() {
-    int limit = Integer.parseInt(IO.readln(&quot;Limit: &quot;).strip());
+<p>Open <code>06-loops/P08_Example_RadarWindow.java</code>. A limit of 7 allows moments 1 through 7.</p>
+<pre><code class="language-java" data-source="P08_Example_RadarWindow.java">/// # Worked example · 6.4 Stop at the first match
+/// Lesson: 04-search.html
+
+void main() {
+    int limit = Integer.parseInt(IO.readln("Limit: ").strip());
     int found = -1;
     for (int moment = 1; moment &lt;= limit; moment++) {
         if (moment % 4 == 0) {
@@ -20,9 +23,9 @@
         }
     }
     if (found == -1) {
-        IO.println(&quot;None&quot;);
+        IO.println("None");
     } else {
-        IO.println(&quot;Signal: &quot; + found);
+        IO.println("Signal: " + found);
     }
 }
 </code></pre>
@@ -31,7 +34,7 @@
 <p>For limit 7, the program tries 1, 2, 3 and 4. At four, the search ends. For limit 3, no candidate passes, and found remains -1. This lets you distinguish “not found” from a normal result without printing a special message inside every round.</p>
 <details><summary>Prediction: limit 12 without break</summary><p>Each later multiple overwrites found. It would end at 12 rather than the first match, 4. Assignment alone does not stop a search.</p></details>
 <h2>Task: the first moon window</h2>
-<p>Open <code>06-loops/P09_MoonWindow.java</code>. The search includes both entered endpoints. A suitable number is divisible by three and also odd. It currently remembers the last suitable number; change it to return the first.</p>
+<p>Open <code>06-loops/P09_Task_MoonWindow.java</code>. The search includes both entered endpoints. A suitable number is divisible by three and also odd. It currently remembers the last suitable number; change it to return the first.</p>
 <p>Try endpoints from 0 to 30, with start no greater than end. For 3 through 15, expect Window: 3; for 4 through 11, expect Window: 9. The range 3 through 3 contains one valid element. The range 10 through 10 has no solution and prints None.</p>
 <details><summary>Hint 1: keep the rule intact</summary><p>The condition already recognises the correct candidates. The problem is what happens after the first successful assignment.</p></details>
 <details><summary>Hint 2: what should end?</summary><p>You need to leave the traversal while keeping the final output in main. Compare the meanings of break and return.</p></details>

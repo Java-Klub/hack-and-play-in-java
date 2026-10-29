@@ -9,21 +9,24 @@
 <h1>5.1 Give your own step a name</h1>
 <p>A drone can turn on its lights and flash them. You want to change its show by combining short commands instead of copying the instructions inside them.</p>
 <h2>A definition waits; a call starts it</h2>
-<p>Open <code>05-methods/P01_DroneShow.java</code>. Before running the program, count how many times FLASH will appear.</p>
-<pre><code class="language-java" data-source="P01_DroneShow.java">void main() {
+<p>Open <code>05-methods/P01_Example_DroneShow.java</code>. Before running the program, count how many times FLASH will appear.</p>
+<pre><code class="language-java" data-source="P01_Example_DroneShow.java">/// # Worked example · 5.1 Give your own step a name
+/// Lesson: 01-actions.html
+
+void main() {
     wake();
     flash();
     flash();
-    IO.println(&quot;Show finished&quot;);
+    IO.println("Show finished");
 }
 
 void wake() {
-    IO.println(&quot;Drone awake&quot;);
-    IO.println(&quot;Lights ready&quot;);
+    IO.println("Drone awake");
+    IO.println("Lights ready");
 }
 
 void flash() {
-    IO.println(&quot;* FLASH *&quot;);
+    IO.println("* FLASH *");
 }
 </code></pre><pre class="transcript"><code>Drone awake
 Lights ready
@@ -40,7 +43,7 @@ Show finished</code></pre>
 <p>When the program starts, Java begins in main. It reaches wake(), runs its two print statements, and returns to the next statement in main. It runs each call to flash in the same way. The definitions below main do not run by themselves. Their order in the file does not determine the order of the show.</p>
 <p>Write new methods <strong>alongside main, after its closing brace</strong>. Do not put one method definition inside another method's body.</p>
 <h2>Task: tidy up the alarm without changing its sound</h2>
-<p>Open <code>05-methods/P02_AlarmRemix.java</code>. The alarm works, but the same pair of print statements has been copied twice.</p>
+<p>Open <code>05-methods/P02_Task_AlarmRemix.java</code>. The alarm works, but the same pair of print statements has been copied twice.</p>
 <p><strong>Create a method void alarm() alongside main that prints Intruder! and Lights red. Replace both copies of these two lines in main with a call to alarm(). Keep the door messages between them in their original places.</strong></p>
 <p>The full output should stay the same: alarm, door A, alarm, door B. This time, the goal is refactoring: changing the structure while keeping the same behaviour.</p>
 <details><summary>Hint: which braces go where?</summary><p>The methods main and alarm each have their own pair of braces. Four statements remain in main: two calls and two print statements. The body of alarm contains two print statements.</p></details>

@@ -9,12 +9,15 @@
 <h1>11.1 An object remembers a change</h1>
 <p>A score counter should remember every award. Records gave you new snapshots; now you need one object whose data changes over time. A class can hold that changing state and provide methods that update it.</p>
 <h2>A field lasts beyond one call</h2>
-<pre><code class="language-java" data-source="P01_ScoreCounter.java">void main() {
+<pre><code class="language-java" data-source="P01_Example_ScoreCounter.java">/// # Worked example · 11.1 An object remembers a change
+/// Lesson: 01-state.html
+
+void main() {
     Counter score = new Counter();
-    IO.println(&quot;Before: &quot; + score.points);
+    IO.println("Before: " + score.points);
     score.add(3);
     score.add(4);
-    IO.println(&quot;After: &quot; + score.points);
+    IO.println("After: " + score.points);
 }
 
 class Counter {
@@ -25,21 +28,21 @@ class Counter {
     }
 }
 </code></pre>
-<p>Open 11-state/P01_ScoreCounter.java. Class Counter declares a type. Its field points belongs to each Counter object and starts at 0. Unlike a local variable inside add, the field remains after that method returns. It is not recreated for every award.</p>
+<p>Open 11-state/P01_Example_ScoreCounter.java. Class Counter declares a type. Its field points belongs to each Counter object and starts at 0. Unlike a local variable inside add, the field remains after that method returns. It is not recreated for every award.</p>
 <p>New Counter() constructs an instance, one concrete object of that class. Because we have not declared a constructor, Java supplies a parameterless one here. Counter’s braces contain its fields and methods; they are separate from the surrounding main method.</p>
 <p>Score.add(3) changes that object’s points from 0 to 3. The next call reads 3 and stores 7. Access score.points reads the field directly; no parentheses are used because this is data access, not a method call such as a record accessor.</p>
 <details><summary>Predict one more call</summary><p>Add 2 after the prepared calls and After becomes 9. What if you instead construct a new Counter before printing? That new object starts at 0; constructing it does not transfer the old score.</p></details>
 <h2>Task: remember the best combo</h2>
-<p>Open 11-state/P02_ComboMeter.java. A hit increases the current streak by one and updates best only when the new streak beats it. A miss resets streak to 0 but must preserve best. Complete both operations; do not change the prepared sequence.</p>
+<p>Open 11-state/P02_Task_ComboMeter.java. A hit increases the current streak by one and updates best only when the new streak beats it. A miss resets streak to 0 but must preserve best. Complete both operations; do not change the prepared sequence.</p>
 <p>Two hits, a miss and one hit must print Current: 1 and Best: 2. Try another hit: Current becomes 2 and Best stays 2. A third consecutive hit makes both 3. A miss at the beginning leaves both at 0.</p>
 <details><summary>Hint 1: separate current and history</summary><p>Update the current streak first. Then compare it with best. A local replacement variable would not preserve the record between calls.</p></details>
 <details><summary>Hint 2: a miss is not a full reset</summary><p>Only the current streak ends. Erasing best would lose the very history this object is meant to remember.</p></details>
 <p>Next, create two independent counters with their own initial data and see which object each call changes.</p>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>Pig</strong> · <code>11-state/P03_Pig.java</code><br>Complete both roll effects in Pig: one loses the current turn total and passes play; other valid rolls add points. An invalid die changes nothing.</li>
-<li><strong>MancalaKalah</strong> · <code>11-state/P04_MancalaKalah.java</code><br>Repair MancalaKalah&#x27;s reset of the actual player to player one. Restoring stones and clearing the result must continue working.</li>
-<li><strong>SlidingTiles</strong> · <code>11-state/P05_SlidingTiles.java</code><br>SlidingTiles counts real moves during shuffling. Reset the player&#x27;s move count after setup, without changing the creation of solvable boards.</li>
-<li><strong>MiniCrossword</strong> · <code>11-state/P06_MiniCrossword.java</code><br>MiniCrossword repeatedly adds an old answer count. In command separate a fresh recount from stored history; three answers must not win prematurely.</li>
+<li><strong>Pig</strong> · <code>11-state/P03_Task_Pig.java</code><br>Complete both roll effects in Pig: one loses the current turn total and passes play; other valid rolls add points. An invalid die changes nothing.</li>
+<li><strong>MancalaKalah</strong> · <code>11-state/P04_Task_MancalaKalah.java</code><br>Repair MancalaKalah&#x27;s reset of the actual player to player one. Restoring stones and clearing the result must continue working.</li>
+<li><strong>SlidingTiles</strong> · <code>11-state/P05_Task_SlidingTiles.java</code><br>SlidingTiles counts real moves during shuffling. Reset the player&#x27;s move count after setup, without changing the creation of solvable boards.</li>
+<li><strong>MiniCrossword</strong> · <code>11-state/P06_Task_MiniCrossword.java</code><br>MiniCrossword repeatedly adds an old answer count. In command separate a fresh recount from stored history; three answers must not win prematurely.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="../10-collections/05-streams.html">← 10.5 Send data through a filter</a><a class="next" href="02-instances.html">11.2 Each robot has its own battery →</a></nav>

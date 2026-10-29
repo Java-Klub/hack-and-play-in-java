@@ -9,12 +9,15 @@
 <h1>11.3 Rejection must preserve state</h1>
 <p>A diver cannot spend air that is not in the tank. Returning false after subtracting too much would be too late: the tank would already contain an impossible value. A reliable object checks a proposed change before committing it.</p>
 <h2>A promise that survives every operation</h2>
-<pre><code class="language-java" data-source="P10_AirTank.java">void main() {
+<pre><code class="language-java" data-source="P10_Example_AirTank.java">/// # Worked example · 11.3 Rejection must preserve state
+/// Lesson: 03-invariants.html
+
+void main() {
     Tank tank = new Tank();
-    IO.println(&quot;Use 3: &quot; + tank.use(3));
-    IO.println(&quot;Air: &quot; + tank.air());
-    IO.println(&quot;Use 4: &quot; + tank.use(4));
-    IO.println(&quot;Air: &quot; + tank.air());
+    IO.println("Use 3: " + tank.use(3));
+    IO.println("Air: " + tank.air());
+    IO.println("Use 4: " + tank.use(4));
+    IO.println("Air: " + tank.air());
 }
 
 class Tank {
@@ -33,22 +36,22 @@ class Tank {
     }
 }
 </code></pre>
-<p>Open 11-state/P10_AirTank.java. An invariant is a condition that must remain true whenever an operation finishes. This tank starts with air 5 and promises never to go below 0. Every accepted use must be positive and no greater than the available air.</p>
+<p>Open 11-state/P10_Example_AirTank.java. An invariant is a condition that must remain true whenever an operation finishes. This tank starts with air 5 and promises never to go below 0. Every accepted use must be positive and no greater than the available air.</p>
 <p>Private marks air as an internal implementation detail rather than a public field for unrelated code. Our caller reads it through air() and requests changes through use. Keep that boundary: changing fields directly would bypass the rules those methods implement.</p>
 <p>Use first checks the whole request. An invalid amount returns false before the assignment. A valid amount is subtracted once and returns true. Trace the calls: 3 leaves 2; the rejected 4 leaves exactly the same 2, not 0 and not -2.</p>
 <details><summary>Predict a boundary request</summary><p>Using exactly 2 at that point succeeds and leaves 0. What about using 0? It is rejected here because the rule explicitly requires a positive amount. Different rules are possible, but caller and implementation must agree.</p></details>
 <h2>Task: protect both ends of the fuel gauge</h2>
-<p>Open 11-state/P11_FuelTank.java. Fuel starts at 5 and must remain between 0 and capacity 10. Refill accepts only a positive amount that fits. Travel accepts only a positive cost that is available. Reject other requests with false and no fuel change.</p>
+<p>Open 11-state/P11_Task_FuelTank.java. Fuel starts at 5 and must remain between 0 and capacity 10. Refill accepts only a positive amount that fits. Travel accepts only a positive cost that is available. Reject other requests with false and no fuel change.</p>
 <p>Refill 3 then travel 4 must give true, fuel 8, true, fuel 4. Refill 6 then travel 0 must reject both and keep 5. Refill 5 then travel 10 reaches 0 legally. Negative requests must also fail without mutation.</p>
 <details><summary>Hint 1: validate before writing</summary><p>Guard each assignment. A rejected operation must preserve the old value rather than clamp it to a boundary afterwards.</p></details>
 <details><summary>Hint 2: measure free space safely</summary><p>Compare the refill amount with 10 - fuel. This also rejects a huge positive int without overflowing while trying to add it first.</p></details>
 <p>Next, let chance propose outcomes while keeping the rules that interpret those outcomes separate and testable.</p>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>MemoryPairs</strong> · <code>11-state/P12_MemoryPairs.java</code><br>Turn MemoryPairs&#x27; all-seeing X-ray into a partner finder for the selected card. Extra visibility must not change the deck, matches or attempts.</li>
-<li><strong>Sokoban</strong> · <code>11-state/P13_Sokoban.java</code><br>Build Sokoban&#x27;s one-move radar for W/A/S/D. Check the space behind a crate and game completion; repeated queries must not move anything.</li>
-<li><strong>TrafficJamEscape</strong> · <code>11-state/P14_TrafficJamEscape.java</code><br>TrafficJamEscape must not move a car merely by calling fits. Separate testing a candidate from committing it and compare state around a rejected query.</li>
-<li><strong>FallingBlocks</strong> · <code>11-state/P15_FallingBlocks.java</code><br>Remove actual position changes from FallingBlocks&#x27; fits query. Verify that checking the same position twice neither moves the piece nor changes the answer.</li>
-<li><strong>GoFish</strong> · <code>11-state/P16_GoFish.java</code><br>GoFish leaves one extra card after collecting a book. Repair collect and first write down how total card count must be conserved.</li>
+<li><strong>MemoryPairs</strong> · <code>11-state/P12_Task_MemoryPairs.java</code><br>Turn MemoryPairs&#x27; all-seeing X-ray into a partner finder for the selected card. Extra visibility must not change the deck, matches or attempts.</li>
+<li><strong>Sokoban</strong> · <code>11-state/P13_Task_Sokoban.java</code><br>Build Sokoban&#x27;s one-move radar for W/A/S/D. Check the space behind a crate and game completion; repeated queries must not move anything.</li>
+<li><strong>TrafficJamEscape</strong> · <code>11-state/P14_Task_TrafficJamEscape.java</code><br>TrafficJamEscape must not move a car merely by calling fits. Separate testing a candidate from committing it and compare state around a rejected query.</li>
+<li><strong>FallingBlocks</strong> · <code>11-state/P15_Task_FallingBlocks.java</code><br>Remove actual position changes from FallingBlocks&#x27; fits query. Verify that checking the same position twice neither moves the piece nor changes the answer.</li>
+<li><strong>GoFish</strong> · <code>11-state/P16_Task_GoFish.java</code><br>GoFish leaves one extra card after collecting a book. Repair collect and first write down how total card count must be conserved.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="02-instances.html">← 11.2 Each robot has its own battery</a><a class="next" href="04-random.html">11.4 Chance proposes, a rule decides →</a></nav>

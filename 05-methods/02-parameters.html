@@ -9,14 +9,17 @@
 <h1>5.2 Send values to a method</h1>
 <p>Every place on a map has its own name and position. One method can prepare all the labels if you give it the right values on each call.</p>
 <h2>Names for roles and actual values</h2>
-<p>Open <code>05-methods/P03_MapLabels.java</code>. Predict both lines.</p>
-<pre><code class="language-java" data-source="P03_MapLabels.java">void main() {
-    mark(&quot;Portal&quot;, 2);
-    mark(&quot;Dragon&quot;, 7);
+<p>Open <code>05-methods/P03_Example_MapLabels.java</code>. Predict both lines.</p>
+<pre><code class="language-java" data-source="P03_Example_MapLabels.java">/// # Worked example · 5.2 Send values to a method
+/// Lesson: 02-parameters.html
+
+void main() {
+    mark("Portal", 2);
+    mark("Dragon", 7);
 }
 
 void mark(String name, int position) {
-    IO.println(name + &quot; at &quot; + position);
+    IO.println(name + " at " + position);
 }
 </code></pre><pre class="transcript"><code>Portal at 2
 Dragon at 7</code></pre>
@@ -28,7 +31,7 @@ Dragon at 7</code></pre>
 <p>A comma separates the roles and the values being passed. Their <strong>order, number and types</strong> must match. A parameter's name does not look up any information by itself. On the next call, it receives new values.</p>
 <p>An argument can also be a variable or a calculation: <code>mark("Exit", 2 + 3);</code> passes position 5. In the definition, you write a type and a name; in a call, you write only the values or expressions that provide them.</p>
 <h2>Task: the portals take passengers the wrong way</h2>
-<p>Open <code>05-methods/P04_PortalRoutes.java</code>. Enter Moon for Start and Mars for Finish. Instead of a journey there and back, you see Mars → Mars twice.</p>
+<p>Open <code>05-methods/P04_Task_PortalRoutes.java</code>. Enter Moon for Start and Mars for Finish. Instead of a journey there and back, you see Mars → Mars twice.</p>
 <p><strong>Fix the first call so that it goes from start to finish. The second should go back. Inside route, fix the print statement to use both parameters in their correct roles.</strong> Do not hard-code the planet names in the output.</p>
 <pre class="transcript"><code>Start: <span class="typed">Moon</span>
 Finish: <span class="typed">Mars</span>
@@ -37,7 +40,7 @@ Mars -&gt; Moon</code></pre>
 <p>Also try Red Planet and Club Base. Do the full names and the correct direction stay intact? Both arguments have the type String, so the compiler cannot detect that you have swapped them: you are responsible for what the roles mean.</p>
 <details><summary>Hint: put the values in a small table</summary><p>For each call, write down the value received by from and the value received by to. Their order is set by the call, not by whether an argument has the same name as a parameter.</p></details>
 <h2>Ask the number machine a question</h2>
-<p>Open <code>05-methods/P05_NumberMachine.java</code>. Run it and watch the pairs of results. In main, add another call to compare with a number of your own that helps reveal the machine's rule. For now, keep the reference machine folded and leave imitation alone.</p>
+<p>Open <code>05-methods/P05_Task_NumberMachine.java</code>. Run it and watch the pairs of results. In main, add another call to compare with a number of your own that helps reveal the machine's rule. For now, keep the reference machine folded and leave imitation alone.</p>
 <p>The method compare has a parameter named number, so <code>compare(-3);</code> prepares one experiment with negative three. You do not need to change its body for each new input. Write down your prediction and the actual result; in the next lesson, you will build your own imitation.</p>
 <p><strong>You can now tell a parameter from an argument and work out which values a method receives in a particular call.</strong></p>
 </article>

@@ -9,38 +9,41 @@
 <h1>10.1 A bag need not know its size ahead of time</h1>
 <p>Your explorer collects equipment along the way. An array has a fixed length; a list can grow or shrink while preserving order. You still use indices, but the container takes care of finding room for added elements.</p>
 <h2>A readable type and a changeable container</h2>
-<pre><code class="language-java" data-source="P01_GrowingBag.java">void main() {
-    List&lt;String&gt; starting = List.of(&quot;Rope&quot;, &quot;Torch&quot;);
+<pre><code class="language-java" data-source="P01_Example_GrowingBag.java">/// # Worked example · 10.1 A bag need not know its size ahead of time
+/// Lesson: 01-lists.html
+
+void main() {
+    List&lt;String&gt; starting = List.of("Rope", "Torch");
     List&lt;String&gt; bag = new ArrayList&lt;&gt;(starting);
-    bag.add(&quot;Map&quot;);
-    bag.set(1, &quot;Lantern&quot;);
-    IO.println(&quot;First: &quot; + bag.get(0));
-    IO.println(&quot;Size: &quot; + bag.size());
-    IO.println(&quot;Bag: &quot; + bag);
-    IO.println(&quot;Starting: &quot; + starting);
+    bag.add("Map");
+    bag.set(1, "Lantern");
+    IO.println("First: " + bag.get(0));
+    IO.println("Size: " + bag.size());
+    IO.println("Bag: " + bag);
+    IO.println("Starting: " + starting);
 }
 </code></pre>
-<p>Open 10-collections/P01_GrowingBag.java. List&lt;String&gt; means a list whose elements are Strings. The angle brackets contain a type argument, not a numeric comparison. Java checks the element type, so adding a number directly to this bag is not allowed.</p>
+<p>Open 10-collections/P01_Example_GrowingBag.java. List&lt;String&gt; means a list whose elements are Strings. The angle brackets contain a type argument, not a numeric comparison. Java checks the element type, so adding a number directly to this bag is not allowed.</p>
 <p>List names the operations you need; ArrayList is a prepared Java implementation that stores the elements. The empty &lt;&gt; in new ArrayList&lt;&gt;(starting) lets Java infer String from the declaration. This copy constructor creates a new list containing the original element references.</p>
 <p>List.of creates an unmodifiable list: do not add, remove or replace its elements. The ArrayList copy permits those operations. Add appends; set replaces an existing element; get reads it. Indices start at 0 and stay below size(), which replaces an array’s length here.</p>
 <details><summary>Predict an extra item</summary><p>After adding Map the size is 3. Replacing Torch with Lantern keeps size 3. What would one more add(&quot;Key&quot;) do? Size becomes 4, with Key last. Starting still contains Rope and Torch.</p></details>
 <h2>Task: make room in the bag</h2>
-<p>Open 10-collections/P02_BagEditor.java. Complete edit: remove the original second item, Torch, then append the supplied item only if it is not empty. Modify the supplied list; returning another list without using it would not change this bag.</p>
+<p>Open 10-collections/P02_Task_BagEditor.java. Complete edit: remove the original second item, Torch, then append the supplied item only if it is not empty. Modify the supplied list; returning another list without using it would not change this bag.</p>
 <p>Remove with an index, for example bag.remove(1), closes that gap and shifts following elements left. With Compass expect [Rope, Map, Compass] and size 3. With an empty answer expect [Rope, Map] and size 2. Internal spaces in Spare rope must remain.</p>
 <details><summary>Hint 1: count positions from zero</summary><p>The second item has index 1. Remove it before deciding whether to add a replacement.</p></details>
 <details><summary>Hint 2: the parameter shares the list</summary><p>The parameter holds a copied reference to the same mutable list. Calling its operations changes that list; assigning a new list only to the parameter would not redirect main’s variable.</p></details>
 <p>A list keeps duplicates. Next, choose a container whose job is remembering whether something has already appeared.</p>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>Flood</strong> · <code>10-collections/P03_Flood.java</code><br>Flood must also process neighbours added during the search. Repair spread&#x27;s continuation condition and retain the supplied neighbour checks.</li>
-<li><strong>SameGame</strong> · <code>10-collections/P04_SameGame.java</code><br>SameGame abandons a group too early. In group track processed and discovered cells and finish the entire growing work list.</li>
-<li><strong>DragonCurve</strong> · <code>10-collections/P05_DragonCurve.java</code><br>DragonCurve makes fewer folds than requested. Repair only foldTurns&#x27; outer loop: zero means no folding; a positive number means exactly that many passes.</li>
-<li><strong>EvilHangman</strong> · <code>10-collections/P06_EvilHangman.java</code><br>Count EvilHangman&#x27;s family by accumulating contributions. An empty family has size zero; do not return a fixed answer or just the last contribution.</li>
-<li><strong>WordChain</strong> · <code>10-collections/P07_WordChain.java</code><br>WordChain&#x27;s choices should retain every discovered option. Find the line that replaces earlier results and preserve the menu order.</li>
-<li><strong>Hex</strong> · <code>10-collections/P08_Hex.java</code><br>Repair Hex&#x27;s neighbour directions inside connected. Keep the supplied search; construct connections that require each of the six directions.</li>
-<li><strong>SetStyleTripleHunt</strong> · <code>10-collections/P09_SetStyleTripleHunt.java</code><br>SetStyleTripleHunt needs every triple of distinct cards, including the last card. Repair the three loop bounds and leave triple to judge each selection.</li>
-<li><strong>Shikaku</strong> · <code>10-collections/P10_Shikaku.java</code><br>Shikaku needs a separate rectangle-list copy for Undo. Copy membership; immutable Box values can stay shared.</li>
-<li><strong>GapHopper</strong> · <code>10-collections/P11_GapHopper.java</code><br>GapHopper returns a recycled pipe to the wrong queue end. Follow obstacle order across several cycles rather than just the first picture.</li>
-<li><strong>FlipbookStudio</strong> · <code>10-collections/P12_FlipbookStudio.java</code><br>Complete FlipbookStudio&#x27;s undo: remove the latest Edit and restore its old colour in its own frame and coordinates. An empty history returns false.</li>
+<li><strong>Flood</strong> · <code>10-collections/P03_Task_Flood.java</code><br>Flood must also process neighbours added during the search. Repair spread&#x27;s continuation condition and retain the supplied neighbour checks.</li>
+<li><strong>SameGame</strong> · <code>10-collections/P04_Task_SameGame.java</code><br>SameGame abandons a group too early. In group track processed and discovered cells and finish the entire growing work list.</li>
+<li><strong>DragonCurve</strong> · <code>10-collections/P05_Task_DragonCurve.java</code><br>DragonCurve makes fewer folds than requested. Repair only foldTurns&#x27; outer loop: zero means no folding; a positive number means exactly that many passes.</li>
+<li><strong>EvilHangman</strong> · <code>10-collections/P06_Task_EvilHangman.java</code><br>Count EvilHangman&#x27;s family by accumulating contributions. An empty family has size zero; do not return a fixed answer or just the last contribution.</li>
+<li><strong>WordChain</strong> · <code>10-collections/P07_Task_WordChain.java</code><br>WordChain&#x27;s choices should retain every discovered option. Find the line that replaces earlier results and preserve the menu order.</li>
+<li><strong>Hex</strong> · <code>10-collections/P08_Task_Hex.java</code><br>Repair Hex&#x27;s neighbour directions inside connected. Keep the supplied search; construct connections that require each of the six directions.</li>
+<li><strong>SetStyleTripleHunt</strong> · <code>10-collections/P09_Task_SetStyleTripleHunt.java</code><br>SetStyleTripleHunt needs every triple of distinct cards, including the last card. Repair the three loop bounds and leave triple to judge each selection.</li>
+<li><strong>Shikaku</strong> · <code>10-collections/P10_Task_Shikaku.java</code><br>Shikaku needs a separate rectangle-list copy for Undo. Copy membership; immutable Box values can stay shared.</li>
+<li><strong>GapHopper</strong> · <code>10-collections/P11_Task_GapHopper.java</code><br>GapHopper returns a recycled pipe to the wrong queue end. Follow obstacle order across several cycles rather than just the first picture.</li>
+<li><strong>FlipbookStudio</strong> · <code>10-collections/P12_Task_FlipbookStudio.java</code><br>Complete FlipbookStudio&#x27;s undo: remove the latest Edit and restore its old colour in its own frame and coordinates. An empty history returns false.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="../09-data/05-enums.html">← 9.5 Name the allowed choices</a><a class="next" href="02-sets.html">10.2 Remember a first visit →</a></nav>

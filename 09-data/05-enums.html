@@ -9,7 +9,10 @@
 <h1>9.5 Name the allowed choices</h1>
 <p>A beacon has a few meaningful modes. Using 0, 1 and 2 would make every reader remember their meanings; accepting arbitrary text would allow misspellings. An enum creates a type whose ordinary values are the named choices you declare.</p>
 <h2>A complete choice without a spare branch</h2>
-<pre><code class="language-java" data-source="P12_BeaconModes.java">void main() {
+<pre><code class="language-java" data-source="P12_Example_BeaconModes.java">/// # Worked example · 9.5 Name the allowed choices
+/// Lesson: 05-enums.html
+
+void main() {
     IO.println(signal(Mode.CALM));
     IO.println(signal(Mode.ALERT));
     IO.println(signal(Mode.ASLEEP));
@@ -17,9 +20,9 @@
 
 String signal(Mode mode) {
     return switch (mode) {
-        case CALM -&gt; &quot;Blue&quot;;
-        case ALERT -&gt; &quot;Red&quot;;
-        case ASLEEP -&gt; &quot;Dark&quot;;
+        case CALM -&gt; "Blue";
+        case ALERT -&gt; "Red";
+        case ASLEEP -&gt; "Dark";
     };
 }
 
@@ -27,21 +30,21 @@ enum Mode {
     CALM, ALERT, ASLEEP
 }
 </code></pre>
-<p>Open 09-data/P12_BeaconModes.java. Enum Mode declares three constants. Mode.ALERT selects one value; it is not text in quotes. The parameter type Mode restricts signal to this family of choices, rather than an unrelated int or String.</p>
+<p>Open 09-data/P12_Example_BeaconModes.java. Enum Mode declares three constants. Mode.ALERT selects one value; it is not text in quotes. The parameter type Mode restricts signal to this family of choices, rather than an unrelated int or String.</p>
 <p>Inside switch, the case names belong to the selected enum, so write CALM rather than a quoted word. This switch lists all three declared possibilities. Java can therefore see that it is exhaustive and does not need a default branch here.</p>
 <p>Adding another mode later makes this calculation incomplete until you decide its result. That is useful feedback: the type helps you find rules that need updating. Enum values may be compared with ==, since each named constant is one fixed value.</p>
 <details><summary>Predict the selected result</summary><p>Signal with Mode.ASLEEP returns Dark, not the name ASLEEP. What would printing Mode.ASLEEP itself display? ASLEEP. A choice and the result calculated from that choice are different values.</p></details>
 <h2>Task: make the compass move</h2>
-<p>Open 09-data/P13_CompassStep.java. Complete step: NORTH subtracts 1 from y, EAST adds 1 to x, SOUTH adds 1 to y and WEST subtracts 1 from x. Return a new Point; preserve the other coordinate and the original position.</p>
+<p>Open 09-data/P13_Task_CompassStep.java. Complete step: NORTH subtracts 1 from y, EAST adds 1 to x, SOUTH adds 1 to y and WEST subtracts 1 from x. Return a new Point; preserve the other coordinate and the original position.</p>
 <p>Direction.values() supplies an array of all enum constants in declaration order. The prepared enhanced for loop tries every direction. From 2,3 expect NORTH: 2,2; EAST: 3,3; SOUTH: 2,4; WEST: 1,3. Also try start 0,0: negative coordinates remain allowed.</p>
 <details><summary>Hint 1: keep the two roles separate</summary><p>The enum selects a rule. The Point supplies current coordinates. Do not replace all starting positions with one memorized destination.</p></details>
 <details><summary>Hint 2: return a value for every direction</summary><p>Use a switch expression with all four constants. Each branch constructs the result for that direction.</p></details>
 <p>You can now describe one piece of game data. Next, store a changing number of those pieces without choosing an array length in advance.</p>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>TrailDuel</strong> · <code>09-data/P14_TrailDuel.java</code><br>Rotate TrailDuel&#x27;s key-to-Direction mapping by a quarter turn. Preserve both players, unrelated keys and the ban on instant reversal.</li>
-<li><strong>CarrotInABox</strong> · <code>09-data/P15_CarrotInABox.java</code><br>CarrotInABox must return the Holder implied by keeping or swapping the boxes. Do more than change a caption: the revealed carrot must agree.</li>
-<li><strong>TargetPop</strong> · <code>09-data/P16_TargetPop.java</code><br>TargetPop forgets round completion at the deadline. Repair afterTime so the final score remains until an intentional restart; include the exact time boundary.</li>
-<li><strong>MiniPacman</strong> · <code>09-data/P17_MiniPacman.java</code><br>Complete MiniPacman&#x27;s afterContact: capture takes priority even on the last dot; otherwise zero dots wins. All other cases continue.</li>
+<li><strong>TrailDuel</strong> · <code>09-data/P14_Task_TrailDuel.java</code><br>Rotate TrailDuel&#x27;s key-to-Direction mapping by a quarter turn. Preserve both players, unrelated keys and the ban on instant reversal.</li>
+<li><strong>CarrotInABox</strong> · <code>09-data/P15_Task_CarrotInABox.java</code><br>CarrotInABox must return the Holder implied by keeping or swapping the boxes. Do more than change a caption: the revealed carrot must agree.</li>
+<li><strong>TargetPop</strong> · <code>09-data/P16_Task_TargetPop.java</code><br>TargetPop forgets round completion at the deadline. Repair afterTime so the final score remains until an intentional restart; include the exact time boundary.</li>
+<li><strong>MiniPacman</strong> · <code>09-data/P17_Task_MiniPacman.java</code><br>Complete MiniPacman&#x27;s afterContact: capture takes priority even on the last dot; otherwise zero dots wins. All other cases continue.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="04-data-methods.html">← 9.4 Data can know their operations</a><a class="next" href="../10-collections/01-lists.html">10.1 A bag need not know its size ahead of time →</a></nav>

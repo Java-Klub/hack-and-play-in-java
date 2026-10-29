@@ -9,13 +9,16 @@
 <h1>6.2 Give the counter its own place</h1>
 <p>Beacons along a track are numbered from zero. You need to visit each one exactly once and stop after the last. The counter for this traversal has three parts that are useful to see together.</p>
 <h2>Start, test, step</h2>
-<p>Open <code>06-loops/P03_BeaconWalk.java</code>. Enter a count of 3.</p>
-<pre><code class="language-java" data-source="P03_BeaconWalk.java">void main() {
-    int count = Integer.parseInt(IO.readln(&quot;Count: &quot;).strip());
+<p>Open <code>06-loops/P03_Example_BeaconWalk.java</code>. Enter a count of 3.</p>
+<pre><code class="language-java" data-source="P03_Example_BeaconWalk.java">/// # Worked example · 6.2 Give the counter its own place
+/// Lesson: 02-for.html
+
+void main() {
+    int count = Integer.parseInt(IO.readln("Count: ").strip());
     for (int index = 0; index &lt; count; index++) {
-        IO.println(&quot;Beacon &quot; + index);
+        IO.println("Beacon " + index);
     }
-    IO.println(&quot;Done&quot;);
+    IO.println("Done");
 }
 </code></pre>
 <p>A for loop starts by creating the local variable index. Its middle part tests whether to continue. Its final part advances the counter after each completed body. Two semicolons in the header separate these three parts; they are not three statements inside the body.</p>
@@ -23,13 +26,13 @@
 <p>A counter created in the header belongs only to that loop. You cannot use it after the closing brace. The count can be zero: the body is skipped, and the program still prints Done. Use counts from 0 to 8 for these experiments.</p>
 <details><summary>Prediction: count is 1</summary><p>There is just one line, Beacon 0, followed by Done. The first test reads index 0; one is added only after printing.</p></details>
 <h2>Task: descend from the tower</h2>
-<p>Open <code>06-loops/P04_TowerDescent.java</code>. The program knows the height you entered but announces only the top floor. Use for to print every floor from that height down to 1, followed by Ground. Give each floor its own line.</p>
+<p>Open <code>06-loops/P04_Task_TowerDescent.java</code>. The program knows the height you entered but announces only the top floor. Use for to print every floor from that height down to 1, followed by Ground. Give each floor its own line.</p>
 <p>For height 3, expect Floor 3, Floor 2, Floor 1, Ground. For 1, print only Floor 1 and Ground. For 0, no floor is visited. Try whole-number heights from 0 to 8. Do not copy lines by hand for a particular input.</p>
 <details><summary>Hint 1: the counter's direction</summary><p>This time, the start is not zero. After each visit, you need a lower number rather than a higher one.</p></details>
 <details><summary>Hint 2: include the last floor</summary><p>One still belongs in the body; zero does not. The notation <code>floor--</code> subtracts one after the body finishes.</p></details>
 <p>So far, the counter only controls the order of visits. Next, you will add another variable that remembers a sum or a count of things found between rounds.</p>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>VirtualScribbler</strong> · <code>06-loops/P05_VirtualScribbler.java</code><br>Build VirtualScribbler&#x27;s Signature from four equal sides of thirty steps. Reset the starting state and stop afterwards; the counter should show 120.</li>
+<li><strong>VirtualScribbler</strong> · <code>06-loops/P05_Task_VirtualScribbler.java</code><br>Build VirtualScribbler&#x27;s Signature from four equal sides of thirty steps. Reset the starting state and stop afterwards; the counter should show 120.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="01-while.html">← 6.1 Repeat while needed</a><a class="next" href="03-accumulators.html">6.3 Remember what has passed →</a></nav>

@@ -9,16 +9,19 @@
 <h1>4.5 Choose a value with switch</h1>
 <p>A spell book takes a word and chooses an effect. You can give a few exact options their results in a clear, compact form.</p>
 <h2>One input, one chosen value</h2>
-<p>Open <code>04-decisions/P16_SpellBook.java</code>.</p>
-<pre><code class="language-java" data-source="P16_SpellBook.java">void main() {
-    String spell = IO.readln(&quot;Spell: &quot;).strip().toLowerCase(Locale.ROOT);
+<p>Open <code>04-decisions/P16_Example_SpellBook.java</code>.</p>
+<pre><code class="language-java" data-source="P16_Example_SpellBook.java">/// # Worked example · 4.5 Choose a value with switch
+/// Lesson: 05-switch.html
+
+void main() {
+    String spell = IO.readln("Spell: ").strip().toLowerCase(Locale.ROOT);
     String effect = switch (spell) {
-        case &quot;red&quot;, &quot;r&quot; -&gt; &quot;Fire&quot;;
-        case &quot;blue&quot;, &quot;b&quot; -&gt; &quot;Ice&quot;;
-        case &quot;green&quot;, &quot;g&quot; -&gt; &quot;Vines&quot;;
-        default -&gt; &quot;Fizzle&quot;;
+        case "red", "r" -&gt; "Fire";
+        case "blue", "b" -&gt; "Ice";
+        case "green", "g" -&gt; "Vines";
+        default -&gt; "Fizzle";
     };
-    IO.println(&quot;Effect: &quot; + effect);
+    IO.println("Effect: " + effect);
 }
 </code></pre><pre class="transcript"><code>Spell: <span class="typed"> B </span>
 Effect: Ice</code></pre>
@@ -32,7 +35,7 @@ Effect: Ice</code></pre>
 <p>We call this a switch expression because it has a value. Only the chosen option runs. The semicolon after <code>}</code> ends the whole assignment. Then println prints the stored effect.</p>
 <p>If conditions can check ranges and several different questions. This switch selects by the exact value of one input. All results chosen here are text, so they can be stored in a String.</p>
 <h2>Task: fix the broken radio</h2>
-<p>Open <code>04-decisions/P17_RepairRadio.java</code>. It rejects a known command but translates an unknown one as Move.</p>
+<p>Open <code>04-decisions/P17_Task_RepairRadio.java</code>. It rejects a known command but translates an unknown one as Move.</p>
 <p><strong>Change the switch so that, after the supplied cleaning and letter conversion, it chooses these results. Group the short and long forms in one case.</strong></p>
 <div class="table-wrap"><table><thead><tr><th>Entered command</th><th>Action</th></tr></thead><tbody>
 <tr><td>go or g</td><td>Move</td></tr>
@@ -45,8 +48,11 @@ Effect: Ice</code></pre>
 Action: Scan</code></pre>
 <details><summary>Hint</summary><p>The result is chosen after the arrow. The print call then only joins this finished text to the label. Remember to fix default too, so that unknown commands do not get an ordinary action.</p></details>
 <h2>How to distinguish four combinations</h2>
-<p>In a game with two choices, giving each combination a different number can help. Open <code>04-decisions/P18_ControlPanel.java</code>:</p>
-<pre><code class="language-java" data-source="P18_ControlPanel.java">void main() {
+<p>In a game with two choices, giving each combination a different number can help. Open <code>04-decisions/P18_Example_ControlPanel.java</code>:</p>
+<pre><code class="language-java" data-source="P18_Example_ControlPanel.java">/// # Worked example · 4.5 Choose a value with switch
+/// Lesson: 05-switch.html
+
+void main() {
     boolean lights = true;
     boolean music = false;
     int mode = 0;
@@ -56,7 +62,7 @@ Action: Scan</code></pre>
     if (music) {
         mode = mode + 2;
     }
-    IO.println(&quot;Mode: &quot; + mode);
+    IO.println("Mode: " + mode);
 }
 </code></pre>
 <p>By changing the two initial boolean values, you can try all four modes:</p>
@@ -69,8 +75,8 @@ Action: Scan</code></pre>
 <p>There are two separate if statements: when both choices are on, both contributions should be added. To choose a result from this mode, you can then use a switch with options 0, 1, 2 and 3. For numbers too, add default for the remaining values. The compiler cannot infer from this calculation that no other number can occur; the expression must provide a result for every possible int value.</p>
 <h2>Choose a reward or allow a card</h2>
 <ul>
-<li><code>04-decisions/P19_CooperateOrDefect.java</code>: each player privately chooses cooperation or betrayal. The supplied reward action receives two boolean values and should return one numeric reward. Distinguish the four combinations and use switch to choose a reward according to the task's rules. The neutral ControlPanel example shows how to create a numeric key; do not confuse that key with the rewards it selects.</li>
-<li><code>04-decisions/P20_CrazyEightsSimpleMauMau.java</code>: first reject a card code outside 0 to 51. The supplied rank(card) gives a value from 2 to 14; card / 13 gives the suit. An eight is always allowed; other cards must match the rank of top or the chosen suit. Use switch for the special value and combine two reasons for acceptance in the ordinary result. You only need to change the legal judge; dealing is supplied.</li>
+<li><code>04-decisions/P19_Task_CooperateOrDefect.java</code>: each player privately chooses cooperation or betrayal. The supplied reward action receives two boolean values and should return one numeric reward. Distinguish the four combinations and use switch to choose a reward according to the task's rules. The neutral ControlPanel example shows how to create a numeric key; do not confuse that key with the rewards it selects.</li>
+<li><code>04-decisions/P20_Task_CrazyEightsSimpleMauMau.java</code>: first reject a card code outside 0 to 51. The supplied rank(card) gives a value from 2 to 14; card / 13 gives the suit. An eight is always allowed; other cards must match the rank of top or the chosen suit. Use switch for the special value and combine two reasons for acceptance in the ordinary result. You only need to change the legal judge; dealing is supplied.</li>
 </ul>
 <p>Both tasks are checked by <code>04-decisions/Check.java</code>; select the program you are working on in Program Arguments. The same if or switch can change the behaviour of many parts of a game when they all ask one shared judge.</p>
 <p><strong>You can now choose a result by an exact value and combine that choice with conditions and safe refusal.</strong></p>

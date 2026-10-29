@@ -9,14 +9,17 @@
 <h1>4.1 Ask a question in code</h1>
 <p>The door needs three units of energy. Until now, you have calculated how much would remain. Now you will answer a question: is there enough in the first place?</p>
 <h2>An answer of true or false</h2>
-<p>Open <code>04-decisions/P01_DoorQuestion.java</code>. Enter energy 3 and the pass MOON.</p>
-<pre><code class="language-java" data-source="P01_DoorQuestion.java">void main() {
-    int energy = Integer.parseInt(IO.readln(&quot;Energy: &quot;).strip());
-    String pass = IO.readln(&quot;Pass: &quot;);
+<p>Open <code>04-decisions/P01_Example_DoorQuestion.java</code>. Enter energy 3 and the pass MOON.</p>
+<pre><code class="language-java" data-source="P01_Example_DoorQuestion.java">/// # Worked example · 4.1 Ask a question in code
+/// Lesson: 01-questions.html
+
+void main() {
+    int energy = Integer.parseInt(IO.readln("Energy: ").strip());
+    String pass = IO.readln("Pass: ");
     boolean enough = energy &gt;= 3;
-    boolean recognised = pass.equals(&quot;MOON&quot;);
-    IO.println(&quot;Enough energy: &quot; + enough);
-    IO.println(&quot;Recognised pass: &quot; + recognised);
+    boolean recognised = pass.equals("MOON");
+    IO.println("Enough energy: " + enough);
+    IO.println("Recognised pass: " + recognised);
 }
 </code></pre><pre class="transcript"><code>Energy: <span class="typed">3</span>
 Pass: <span class="typed">MOON</span>
@@ -36,7 +39,7 @@ Recognised pass: true</code></pre>
 <p><code>pass.equals("MOON")</code> gives true when pass contains exactly MOON. Lowercase <code>moon</code> gives false: letter case matters. To compare without distinguishing uppercase and lowercase, use <code>equalsIgnoreCase</code>, as in <code>pass.equalsIgnoreCase("MOON")</code>.</p>
 <p>For a String, the <code>==</code> operator asks whether it is the very same stored object. Answers containing the same text may therefore fail that comparison. Use equals or equalsIgnoreCase to compare text contents. You will return to objects in more detail when working with your own data.</p>
 <h2>Task: fix the unfair gate</h2>
-<p>Open <code>04-decisions/P02_FairGate.java</code>. The gate wrongly rejects exactly three energy units and uses the wrong text comparison.</p>
+<p>Open <code>04-decisions/P02_Task_FairGate.java</code>. The gate wrongly rejects exactly three energy units and uses the wrong text comparison.</p>
 <p><strong>Fix both boolean questions: three or more energy units are enough, and the pass MOON is recognised regardless of letter case.</strong> Keep the two separate print calls.</p>
 <div class="table-wrap"><table><thead><tr><th>Energy</th><th>Pass</th><th>Enough energy</th><th>Recognised pass</th></tr></thead><tbody>
 <tr><td>3</td><td>moon</td><td>true</td><td>true</td></tr>
@@ -45,12 +48,12 @@ Recognised pass: true</code></pre>
 </tbody></table></div>
 <details><summary>Hint</summary><p>Equality belongs in the energy rule. For text, look for an operation that compares contents and deliberately ignores letter case. Do not replace the entered answer with fixed text.</p></details>
 <h2>Fix a magic trick</h2>
-<p>Open <code>04-decisions/P03_MagicNumberCards.java</code>. Think of a number and answer which cards contain it. The supplied yesAnswer action must treat lowercase and uppercase y as agreement and n as disagreement. The <code>boolean</code> before its name says that it returns a true/false answer. The expression after return is the part to change.</p>
-<p>For the number 5, answer <code>y, n, y, n, n, n</code> in order. Check that Y works too. Select this game's check in <code>04-decisions/Check.java</code> using Program Arguments <code>P03_MagicNumberCards.java</code>.</p>
+<p>Open <code>04-decisions/P03_Task_MagicNumberCards.java</code>. Think of a number and answer which cards contain it. The supplied yesAnswer action must treat lowercase and uppercase y as agreement and n as disagreement. The <code>boolean</code> before its name says that it returns a true/false answer. The expression after return is the part to change.</p>
+<p>For the number 5, answer <code>y, n, y, n, n, n</code> in order. Check that Y works too. Select this game's check in <code>04-decisions/Check.java</code> using Program Arguments <code>P03_Task_MagicNumberCards.java</code>.</p>
 <p><strong>You can now store a comparison's result and distinguish numeric equality from comparing text contents.</strong></p>
 <details><summary>What does the question mark in the club door mean?</summary><p>ClubDoor selects its message with the shorthand <code>condition ? first : second</code>. This is a conditional expression: true selects the first value, otherwise the second. <code>IO.println(ready ? "Go" : "Wait");</code> therefore prints Go when ready is true. Today you are following the data supplied to the condition, leaving this supplied selection in place.</p></details>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>ClubDoor</strong> · <code>04-decisions/P04_ClubDoor.java</code><br>ClubDoor hides its accepted pass in the code. Follow the argument to mayEnter and change the badge data, not the acceptance rule.</li>
+<li><strong>ClubDoor</strong> · <code>04-decisions/P04_Task_ClubDoor.java</code><br>ClubDoor hides its accepted pass in the code. Follow the argument to mayEnter and change the badge data, not the acceptance rule.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="../03-text-input/04-numbers.html">← 3.4 Turn an answer into a number</a><a class="next" href="02-branches.html">4.2 Choose what happens →</a></nav>

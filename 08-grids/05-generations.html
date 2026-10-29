@@ -9,13 +9,16 @@
 <h1>8.5 Read the past; write the future</h1>
 <p>A light map changes in separate steps. Every cell should react to the same past. If you used an already updated cell to calculate its neighbour, part of the map would get a head start.</p>
 <h2>Two states instead of overwriting as you read</h2>
-<p>Open <code>08-grids/P23_SignalShift.java</code>. Look at both rows before and after the shift.</p>
-<pre><code class="language-java" data-source="P23_SignalShift.java">void main() {
+<p>Open <code>08-grids/P23_Example_SignalShift.java</code>. Look at both rows before and after the shift.</p>
+<pre><code class="language-java" data-source="P23_Example_SignalShift.java">/// # Worked example · 8.5 Read the past; write the future
+/// Lesson: 05-generations.html
+
+void main() {
     boolean[][] old = {{true, false, false, false}, {false, true, false, false}};
     boolean[][] next = shiftRight(old);
-    IO.println(&quot;Old&quot;);
+    IO.println("Old");
     show(old);
-    IO.println(&quot;Next&quot;);
+    IO.println("Next");
     show(next);
 }
 
@@ -39,17 +42,17 @@ void show(boolean[][] board) {
 <p>The rule never overwrites old. The main method can therefore still display the original rows after the calculation. Two different arrays separate reading the past from writing the future. This is called double buffering. A new name alone would not be enough, as you know from array copying.</p>
 <details><summary>Prediction: shift the result again</summary><p>The first row becomes [false, false, true, false], and the second [false, false, false, true]. Pass the previous result into the next call. The original array still remains unchanged.</p></details>
 <h2>Task: light spreads one step at a time</h2>
-<p>Open <code>08-grids/P24_LightBloom.java</code>. Initially, only the centre of the three-row map is on. Complete spread: in the next state, a cell is on if it is on now or has at least one active neighbour to the left, right, above or below. A diagonal is not enough.</p>
+<p>Open <code>08-grids/P24_Task_LightBloom.java</code>. Initially, only the centre of the three-row map is on. Complete spread: in the next state, a cell is on if it is on now or has at least one active neighbour to the left, right, above or below. A diagonal is not enough.</p>
 <p>Return a new array without changing the original. The main method performs the entered number of steps and shows both Start and After. For 0, only the centre remains. After 1, five true cells form a cross and the corners are false. After 2, all nine places are on. Try 0 to 3 steps.</p>
 <p>The supplied isOn safely returns false outside the map. Use it for neighbours and the cell itself. This rule does not count neighbours as in the previous lesson: one true answer is enough. Combine the questions using OR.</p>
 <details><summary>Hint 1: separate input from output</summary><p>Create a new boolean array with matching dimensions. Ask every question about now, and make every assignment into the new array.</p></details>
 <details><summary>Hint 2: check for a head start</summary><p>If a corner is on after the first step, the calculation used information that was too new or included a diagonal. If Start changed, you are overwriting the past.</p></details>
 <p>You can now choose a different cell rule for another world while keeping the same safe way of calculating its next steps.</p>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>Slant</strong> · <code>08-grids/P25_Slant.java</code><br>Repair Slant&#x27;s snapshot including row copies. Restoration must work even after a winning move; a separate outer array is insufficient.</li>
-<li><strong>BinaryBalance</strong> · <code>08-grids/P26_BinaryBalance.java</code><br>BinaryBalance shares answer rows with fixed clues. In copyBoard separate both levels so entering an answer cannot create a new locked clue.</li>
-<li><strong>RuleGarden</strong> · <code>08-grids/P27_RuleGarden.java</code><br>Compute every cell of RuleGarden&#x27;s nextRow from the same old generation. Compare with updating the row from left to right.</li>
-<li><strong>ForestFireSandbox</strong> · <code>08-grids/P28_ForestFireSandbox.java</code><br>ForestFireSandbox should spread fire only from the previous generation&#x27;s west neighbour. Old fire dies; prevent wrapping and double spread within a tick.</li>
+<li><strong>Slant</strong> · <code>08-grids/P25_Task_Slant.java</code><br>Repair Slant&#x27;s snapshot including row copies. Restoration must work even after a winning move; a separate outer array is insufficient.</li>
+<li><strong>BinaryBalance</strong> · <code>08-grids/P26_Task_BinaryBalance.java</code><br>BinaryBalance shares answer rows with fixed clues. In copyBoard separate both levels so entering an answer cannot create a new locked clue.</li>
+<li><strong>RuleGarden</strong> · <code>08-grids/P27_Task_RuleGarden.java</code><br>Compute every cell of RuleGarden&#x27;s nextRow from the same old generation. Compare with updating the row from left to right.</li>
+<li><strong>ForestFireSandbox</strong> · <code>08-grids/P28_Task_ForestFireSandbox.java</code><br>ForestFireSandbox should spread fire only from the previous generation&#x27;s west neighbour. Old fire dies; prevent wrapping and double spread within a tick.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="04-patterns.html">← 8.4 Make a pattern from coordinates</a><a class="next" href="../09-data/01-records.html">9.1 Give related data a shape →</a></nav>

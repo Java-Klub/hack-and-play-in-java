@@ -7,79 +7,109 @@ import java.io.*;
 import java.awt.Point;
 import javax.imageio.ImageIO;
 
-/// Chapter checks: java Check.java
-/// One game: java Check.java P03_Pig.java
-/// Tests call compact programs through reflection in this JVM.
+/// Game task checks for this chapter. Run short textbook tasks directly.
 class Check {
     int failed;
     int checked;
     String selected;
+    final ArrayList<String> available = new ArrayList<>();
     interface Test { void run() throws Exception; }
 
     void main(String[] args) {
         System.setProperty("java.awt.headless", "true");
-        if (args.length > 1) throw new IllegalArgumentException("Use: java Check.java [game filename]");
+        if (args.length > 1) {
+            IO.println("Supply at most one game filename. With no argument, all game tasks in this chapter are checked.");
+            System.exit(2);
+        }
         selected = args.length == 0 ? "" : Path.of(args[0]).getFileName().toString().replaceFirst("\\.java$", "");
-        run("P03_Pig", "11.03 Pig · F07", () -> P03_PigTest.main(new String[0]));
-        run("P04_MancalaKalah", "11.04 MancalaKalah · F14", () -> P04_MancalaKalahTest.main(new String[0]));
-        run("P05_SlidingTiles", "11.05 SlidingTiles · F14", () -> P05_SlidingTilesTest.main(new String[0]));
-        run("P06_MiniCrossword", "11.06 MiniCrossword · F14", () -> P06_MiniCrosswordTest.main(new String[0]));
-        run("P09_ConnectFour", "11.09 ConnectFour · F14", () -> P09_ConnectFourTest.main(new String[0]));
-        run("P12_MemoryPairs", "11.12 MemoryPairs · F16", () -> P12_MemoryPairsTest.main(new String[0]));
-        run("P13_Sokoban", "11.13 Sokoban · F15", () -> P13_SokobanTest.main(new String[0]));
-        run("P14_TrafficJamEscape", "11.14 TrafficJamEscape · F15", () -> P14_TrafficJamEscapeTest.main(new String[0]));
-        run("P15_FallingBlocks", "11.15 FallingBlocks · F15", () -> P15_FallingBlocksTest.main(new String[0]));
-        run("P16_GoFish", "11.16 GoFish · F25", () -> P16_GoFishTest.main(new String[0]));
-        run("P19_ChaosGame", "11.19 ChaosGame · F27", () -> P19_ChaosGameTest.main(new String[0]));
-        run("P22_VoronoiStainedGlass", "11.22 VoronoiStainedGlass · F22", () -> P22_VoronoiStainedGlassTest.main(new String[0]));
-        run("P23_MandelbrotPostcards", "11.23 MandelbrotPostcards · F27", () -> P23_MandelbrotPostcardsTest.main(new String[0]));
-        run("P24_ColourFilterSecrets", "11.24 ColourFilterSecrets · F27", () -> P24_ColourFilterSecretsTest.main(new String[0]));
-        run("P25_TwoNoisyPictures", "11.25 TwoNoisyPictures · F27", () -> P25_TwoNoisyPicturesTest.main(new String[0]));
-        if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " mission goals remaining.");
+        run("P03_Task_Pig", () -> P03_Task_PigTest.main(new String[0]));
+        run("P04_Task_MancalaKalah", () -> P04_Task_MancalaKalahTest.main(new String[0]));
+        run("P05_Task_SlidingTiles", () -> P05_Task_SlidingTilesTest.main(new String[0]));
+        run("P06_Task_MiniCrossword", () -> P06_Task_MiniCrosswordTest.main(new String[0]));
+        run("P09_Task_ConnectFour", () -> P09_Task_ConnectFourTest.main(new String[0]));
+        run("P12_Task_MemoryPairs", () -> P12_Task_MemoryPairsTest.main(new String[0]));
+        run("P13_Task_Sokoban", () -> P13_Task_SokobanTest.main(new String[0]));
+        run("P14_Task_TrafficJamEscape", () -> P14_Task_TrafficJamEscapeTest.main(new String[0]));
+        run("P15_Task_FallingBlocks", () -> P15_Task_FallingBlocksTest.main(new String[0]));
+        run("P16_Task_GoFish", () -> P16_Task_GoFishTest.main(new String[0]));
+        run("P19_Task_ChaosGame", () -> P19_Task_ChaosGameTest.main(new String[0]));
+        run("P22_Task_VoronoiStainedGlass", () -> P22_Task_VoronoiStainedGlassTest.main(new String[0]));
+        run("P23_Task_MandelbrotPostcards", () -> P23_Task_MandelbrotPostcardsTest.main(new String[0]));
+        run("P24_Task_ColourFilterSecrets", () -> P24_Task_ColourFilterSecretsTest.main(new String[0]));
+        run("P25_Task_TwoNoisyPictures", () -> P25_Task_TwoNoisyPicturesTest.main(new String[0]));
+        if (checked == 0) {
+            IO.println("No game check is prepared here for this file: " + selected + ".java");
+            IO.println("Choose one of these files: " + String.join(", ", available));
+            System.exit(2);
+        }
+        IO.println("Checked: " + checked + "; complete: " + (checked - failed) + "; remaining: " + failed);
         if (failed > 0) System.exit(1);
     }
 
-    void run(String game, String label, Test test) {
+    void run(String game, Test test) {
+        available.add(game + ".java");
         if (!selected.isEmpty() && !selected.equals(game)) return;
         checked++;
         try {
             test.run();
-            IO.println("GREEN " + label);
+            IO.println("GREEN " + game + ".java");
         } catch (Throwable failure) {
             failed++;
-            IO.println("RED " + label + ": " + failure.getMessage());
+            IO.println("RED " + game + ".java");
+            String reason = failure.getMessage();
+            if (reason == null || reason.isBlank()) reason = "The check did not get the expected result.";
+            if (!(failure instanceof AssertionError)) reason = "The program stopped during the check: " + failure.getClass().getSimpleName() + ": " + reason;
+            IO.println("  " + reason.replace("\n", "\n  "));
+            Throwable cause = failure;
+            while (cause.getCause() != null && cause.getCause() != cause) cause = cause.getCause();
+            if (cause != failure) IO.println("  " + cause.getClass().getSimpleName() + ": " + show(cause.getMessage()));
+            for (var frame : cause.getStackTrace()) {
+                if (frame.getClassName().equals(game) || frame.getClassName().startsWith(game + "$")) {
+                    IO.println("  " + "Location in the program: " + frame.getFileName() + ":" + frame.getLineNumber());
+                    break;
+                }
+            }
         }
+    }
+
+    static String show(Object value) {
+        if (value != null && value.getClass().isArray()) {
+            int length = java.lang.reflect.Array.getLength(value);
+            var parts = new ArrayList<String>();
+            for (int i = 0; i < Math.min(length, 8); i++) parts.add(show(java.lang.reflect.Array.get(value, i)));
+            return parts + (length > 8 ? " … (" + length + " items" + ")" : "");
+        }
+        String text = String.valueOf(value).replace("\n", "\\n").replace("\r", "\\r");
+        return text.length() <= 180 ? text : text.substring(0, 177) + "…";
     }
 }
 
 @SuppressWarnings("unchecked")
-class P03_PigTest {
+class P03_Task_PigTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("11.03 F07: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P03_Pig");
+        var game = Reflect.create("P03_Task_Pig");
         Reflect.call(game, "reset");
         Reflect.set(game, "turnTotal", 9);
         Reflect.call(game, "roll", 1);
-        check(((int) Reflect.get(game, "turnTotal")) == 0 && ((int) Reflect.get(game, "player")) == 1, "rolling one must lose the turn and pass the die");
+        check(((int) Reflect.get(game, "turnTotal")) == 0 && ((int) Reflect.get(game, "player")) == 1, "roll(1) must discard the current turn total and pass the die to the other player.");
         Reflect.call(game, "reset");
         Reflect.call(game, "roll", 6);
-        check(((int) Reflect.get(game, "turnTotal")) == 6 && ((int) Reflect.get(game, "player")) == 0, "six adds points and keeps the turn");
-        check(!((boolean) Reflect.call(game, "roll", 0)) && ((int) Reflect.get(game, "turnTotal")) == 6, "the supplied invalid-die guard remains intact");
-        System.out.println("PASS " + checks + " checks");
+        check(((int) Reflect.get(game, "turnTotal")) == 6 && ((int) Reflect.get(game, "player")) == 0, "roll(6) must add six to the turn total without passing play.");
+        check(!((boolean) Reflect.call(game, "roll", 0)) && ((int) Reflect.get(game, "turnTotal")) == 6, "roll(0) must reject the invalid die without changing the accumulated six points.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P04_MancalaKalahTest {
+class P04_Task_MancalaKalahTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -89,26 +119,25 @@ class P04_MancalaKalahTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P04_MancalaKalah");
+        var g = Reflect.create("P04_Task_MancalaKalah");
         Reflect.call(g, "reset");
         Reflect.set(g, "player", 1);
         ((int[]) Reflect.get(g, "pits"))[6] = 20;
         Reflect.call(g, "reset");
-        equal(0, ((int) Reflect.get(g, "player")), "11.04/F14: restart resets the shared active-player field");
-        equal(0, ((int[]) Reflect.get(g, "pits"))[6], "11.04/F14: stores belong to the old round");
-        equal(24, ((int) Reflect.call(g, "side", 0)), "11.04/F14: six pits regain four stones");
+        equal(0, ((int) Reflect.get(g, "player")), "reset must make player 1 start again, even if player 2 had the last turn.");
+        equal(0, ((int[]) Reflect.get(g, "pits"))[6], "reset must empty the old scoring stores; their points belong to the previous round.");
+        equal(24, ((int) Reflect.call(g, "side", 0)), "reset must restore four stones to each of player 1's six small pits, 24 in total.");
         Reflect.call(g, "command", "3");
-        equal(0, ((int) Reflect.get(g, "player")), "11.04/F14: finishing in own store grants another turn");
-        System.out.println("PASS " + checks + " checks");
+        equal(0, ((int) Reflect.get(g, "player")), "A move ending in the player's own store must still grant that player another turn.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P05_SlidingTilesTest {
+class P05_Task_SlidingTilesTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -118,17 +147,17 @@ class P05_SlidingTilesTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P05_SlidingTiles");
+        var g = Reflect.create("P05_Task_SlidingTiles");
         Reflect.set(g, "moves", 17);
         Reflect.call(g, "reset", 42);
-        equal(0, ((int) Reflect.get(g, "moves")), "11.05/F14: new puzzle clears previous move counter");
+        equal(0, ((int) Reflect.get(g, "moves")), "After creating and shuffling a new puzzle, reset must leave the player's move count at 0.");
         int[] sorted = ((int[]) Reflect.get(g, "tiles")).clone();
         java.util.Arrays.sort(sorted);
-        equal(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8}, sorted, "11.05/F14: shuffle keeps all tile values");
+        equal(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8}, sorted, "Shuffling must preserve every tile value 0–8 exactly once, including the empty tile.");
         int chosen = -1;
         for (int n = 0; n < 9; n++) {
             if (((boolean) Reflect.call(g, "canMove", n))) {
@@ -136,15 +165,14 @@ class P05_SlidingTilesTest {
                 break;
             }
         }
-        expect(((boolean) Reflect.call(g, "play", chosen)) && ((int) Reflect.get(g, "moves")) == 1, "11.05/F14: first slide is move one");
+        expect(((boolean) Reflect.call(g, "play", chosen)) && ((int) Reflect.get(g, "moves")) == 1, "The first legal slide after setup must increase the move count from 0 to 1.");
         Reflect.call(g, "reset", 42);
-        equal(0, ((int) Reflect.get(g, "moves")), "11.05/F14: repeated restart remains independent");
-        System.out.println("PASS " + checks + " checks");
+        equal(0, ((int) Reflect.get(g, "moves")), "Every new reset must clear the move count again, including moves made during its own shuffle.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P06_MiniCrosswordTest {
+class P06_Task_MiniCrosswordTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -154,143 +182,140 @@ class P06_MiniCrosswordTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P06_MiniCrossword");
+        var g = Reflect.create("P06_Task_MiniCrossword");
         Reflect.call(g, "reset");
         Reflect.call(g, "command", "1 CAT");
         Reflect.call(g, "command", "2 ARE");
         Reflect.call(g, "command", "3 TEN");
-        expect(((java.lang.String) Reflect.get(g, "outcome")).isEmpty(), "11.06/F14: recount is local to each command, not accumulated across calls");
+        expect(((java.lang.String) Reflect.get(g, "outcome")).isEmpty(), "Filling only three clues must not finish the six-clue crossword. command must recount current answers rather than accumulate old counts.");
         Reflect.call(g, "command", "4 CAT");
         Reflect.call(g, "command", "5 ARE");
         Reflect.call(g, "command", "6 TEN");
-        expect(!((java.lang.String) Reflect.get(g, "outcome")).isEmpty(), "11.06/F14: all six clues finish crossword");
+        expect(!((java.lang.String) Reflect.get(g, "outcome")).isEmpty(), "Filling all six correct answers must finish the crossword.");
         Reflect.call(g, "reset");
         Reflect.call(g, "command", "1 CAT");
         Reflect.call(g, "command", "erase 1");
-        expect(!((boolean[]) Reflect.get(g, "solved"))[0] && ((java.lang.String) Reflect.get(g, "outcome")).isEmpty(), "11.06/F14: erasing updates the next recount");
-        System.out.println("PASS " + checks + " checks");
+        expect(!((boolean[]) Reflect.get(g, "solved"))[0] && ((java.lang.String) Reflect.get(g, "outcome")).isEmpty(), "Erasing the first answer must clear its solved flag and leave the crossword unfinished.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P09_ConnectFourTest {
+class P09_Task_ConnectFourTest {
     static int checks;
 
     static void expect(boolean correct, String message) {
         checks++;
-        if (!correct) throw new AssertionError("11.09/F14: " + message);
+        if (!correct) throw new AssertionError(message);
     }
 
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-                + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-                + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P09_ConnectFour");
+        var game = Reflect.create("P09_Task_ConnectFour");
         char expectedOpener = 'X';
         for (int length : new int[]{0, 1, 4, 2, 0}) {
             Reflect.call(game, "reset");
-            equal(expectedOpener, Reflect.get(game, "player"), "opener alternates regardless of previous round length");
-            equal(0, Reflect.get(game, "moves"), "a rematch resets move count");
-            equal('.', Reflect.get(game, "winner"), "a rematch clears any winner");
+            equal(expectedOpener, Reflect.get(game, "player"), "Round starters must alternate X, O, X, O regardless of how many moves the previous round lasted.");
+            equal(0, Reflect.get(game, "moves"), "Starting a rematch must reset moves to 0.");
+            equal('.', Reflect.get(game, "winner"), "Starting a rematch must clear the previous winner.");
             for (char[] row : (char[][]) Reflect.get(game, "board")) {
-                for (char cell : row) equal('.', cell, "a rematch clears every old disc");
+                for (char cell : row) equal('.', cell, "Starting a rematch must remove every disc left on the old board.");
             }
             for (int n = 0; n < length; n++) {
-                expect((boolean) Reflect.call(game, "drop", n + 1), "ordinary valid drops remain playable");
+                expect((boolean) Reflect.call(game, "drop", n + 1), "Legal drops must remain accepted while the opening-player schedule is changed.");
             }
             expectedOpener = expectedOpener == 'X' ? 'O' : 'X';
         }
         Reflect.call(game, "reset");
-        equal(expectedOpener, Reflect.get(game, "player"), "next round keeps the opener schedule");
+        equal(expectedOpener, Reflect.get(game, "player"), "The next reset must follow the alternating starter schedule, not copy the player left on turn.");
         for (int column : new int[]{1, 2, 1, 2, 1, 2, 1}) Reflect.call(game, "drop", column);
-        equal(expectedOpener, Reflect.get(game, "winner"), "normal four-in-a-row still wins");
+        equal(expectedOpener, Reflect.get(game, "winner"), "The scheduled starter must still be able to win by forming four in a row.");
         Reflect.call(game, "reset");
         char next = expectedOpener == 'X' ? 'O' : 'X';
-        equal(next, Reflect.get(game, "player"), "a completed win does not break alternation");
-        expect(!((boolean) Reflect.call(game, "drop", 0)), "invalid input is rejected");
-        equal(next, Reflect.get(game, "player"), "invalid input does not advance any turn");
+        equal(next, Reflect.get(game, "player"), "After a completed win, the rematch must start with the other scheduled opener.");
+        expect(!((boolean) Reflect.call(game, "drop", 0)), "drop(0) must reject the invalid column. Player-facing columns start at 1.");
+        equal(next, Reflect.get(game, "player"), "Rejecting column 0 must preserve the player whose turn is scheduled next.");
         Reflect.call(game, "drop", 7);
-        equal(next, ((char[][]) Reflect.get(game, "board"))[5][6], "the first real disc belongs to the scheduled opener");
-        System.out.println("PASS " + checks + " checks");
+        equal(next, ((char[][]) Reflect.get(game, "board"))[5][6], "The first disc of the new round must belong to its scheduled opener, including in the last column.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P12_MemoryPairsTest {
+class P12_Task_MemoryPairsTest {
     static int checks;
 
     static void expect(boolean correct, String message) {
         checks++;
-        if (!correct) throw new AssertionError("11.12/F16: " + message);
+        if (!correct) throw new AssertionError(message);
     }
 
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-                + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-                + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P12_MemoryPairs");
+        var game = Reflect.create("P12_Task_MemoryPairs");
         Reflect.call(game, "reset", 12L);
         int[] cards = {4, 2, 6, 3, 1, 5, 3, 6, 2, 5, 4, 1};
         Reflect.set(game, "cards", cards.clone());
         Reflect.set(game, "xray", true);
-        equal(0, Reflect.call(game, "visible", 0), "x-ray without a selected card must not expose the deck");
+        equal(0, Reflect.call(game, "visible", 0), "With X-ray on but no selected card, visible must not expose unrelated hidden cards.");
         Reflect.call(game, "play", 4);
-        equal(false, Reflect.get(game, "xray"), "a valid play clears the extra view");
+        equal(false, Reflect.get(game, "xray"), "An accepted card selection must turn off the previous extra X-ray view.");
         Reflect.set(game, "xray", true);
-        equal(1, Reflect.call(game, "visible", 11), "the selected card's partner is revealed");
-        equal(0, Reflect.call(game, "visible", 0), "unrelated cards stay private");
-        equal(1, Reflect.call(game, "visible", 4), "the selected card remains visible");
+        equal(1, Reflect.call(game, "visible", 11), "With card index 4 selected, X-ray must reveal its matching partner at index 11.");
+        equal(0, Reflect.call(game, "visible", 0), "X-ray must keep cards with a different value hidden.");
+        equal(1, Reflect.call(game, "visible", 4), "The selected card itself must remain visible while X-ray shows its partner.");
         Reflect.set(game, "first", 2);
-        equal(6, Reflect.call(game, "visible", 7), "a different selected value locates a different partner");
-        equal(0, Reflect.call(game, "visible", 11), "the previous value receives no special privilege");
-        equal(cards, Reflect.get(game, "cards"), "view queries never rearrange cards");
-        equal(0, Reflect.get(game, "attempts"), "view queries spend no attempts");
-        equal(0, Reflect.get(game, "pairs"), "view queries award no pairs");
-        equal(new boolean[12], Reflect.get(game, "matched"), "view queries never mark hidden cards as matched");
-        equal(2, Reflect.get(game, "first"), "queries preserve the selected position");
-        expect(!((boolean) Reflect.call(game, "play", -1)), "an invalid card is rejected");
-        equal(true, Reflect.get(game, "xray"), "a rejected click does not turn the view off");
+        equal(6, Reflect.call(game, "visible", 7), "Selecting the card with value 6 must reveal that value's partner, not a fixed favourite card.");
+        equal(0, Reflect.call(game, "visible", 11), "After selecting a different value, the previous value's partner must be hidden again.");
+        equal(cards, Reflect.get(game, "cards"), "Calling visible must preserve the order and values of all cards.");
+        equal(0, Reflect.get(game, "attempts"), "Calling visible must not spend an attempt.");
+        equal(0, Reflect.get(game, "pairs"), "Calling visible must not award a matched pair.");
+        equal(new boolean[12], Reflect.get(game, "matched"), "Calling visible must not mark hidden cards as matched.");
+        equal(2, Reflect.get(game, "first"), "Calling visible must preserve the first selected card's index.");
+        expect(!((boolean) Reflect.call(game, "play", -1)), "play(-1) must reject the invalid card index.");
+        equal(true, Reflect.get(game, "xray"), "A rejected card selection must preserve the current X-ray setting.");
         Reflect.set(game, "xray", false);
-        equal(0, Reflect.call(game, "visible", 7), "turning x-ray off hides its extra reveal");
+        equal(0, Reflect.call(game, "visible", 7), "Turning X-ray off must hide a partner shown only by that extra view.");
         ((boolean[]) Reflect.get(game, "matched"))[0] = true;
-        equal(4, Reflect.call(game, "visible", 0), "matched cards remain visible without x-ray");
+        equal(4, Reflect.call(game, "visible", 0), "Matched cards must remain visible even when X-ray is off.");
         Reflect.set(game, "second", 8);
-        equal(2, Reflect.call(game, "visible", 8), "ordinary second selection remains visible");
+        equal(2, Reflect.call(game, "visible", 8), "The ordinary second selected card must remain visible without X-ray.");
         Reflect.call(game, "reset", 99L);
-        equal(false, Reflect.get(game, "xray"), "new cards do not retain a previous x-ray");
-        System.out.println("PASS " + checks + " checks");
+        equal(false, Reflect.get(game, "xray"), "Starting a new deck must turn off the previous round's X-ray setting.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P13_SokobanTest {
+class P13_Task_SokobanTest {
     static int checks;
 
     static void expect(boolean correct, String message) {
         checks++;
-        if (!correct) throw new AssertionError("11.13/F15: " + message);
+        if (!correct) throw new AssertionError(message);
     }
 
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-                + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-                + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P13_Sokoban");
+        var game = Reflect.create("P13_Task_Sokoban");
         Reflect.call(game, "reset");
-        expect((boolean) Reflect.call(game, "canMove", 1, 0), "a crate with free floor beyond can be pushed");
+        expect((boolean) Reflect.call(game, "canMove", 1, 0), "canMove(1, 0) must accept pushing the crate right when the cell beyond it is free.");
         Reflect.call(game, "command", "d");
         Reflect.call(game, "command", "d");
         int x = (int) Reflect.get(game, "x");
@@ -299,29 +324,28 @@ class P13_SokobanTest {
         int by = (int) Reflect.get(game, "by");
         String outcome = (String) Reflect.get(game, "outcome");
         String[] terrain = ((String[]) Reflect.get(game, "terrain")).clone();
-        expect(!((boolean) Reflect.call(game, "canMove", 1, 0)), "the radar rejects a crate pushed into the right wall");
-        expect(!((boolean) Reflect.call(game, "canMove", 1, 0)), "repeated queries are equally safe");
-        expect((boolean) Reflect.call(game, "canMove", -1, 0), "walking away from the crate remains legal");
-        expect(!((boolean) Reflect.call(game, "canMove", 1, 1)), "diagonal candidates are not moves");
-        expect(!((boolean) Reflect.call(game, "canMove", 0, 0)), "standing still is not a move");
-        expect(!((boolean) Reflect.call(game, "canMove", 2, 0)), "a two-cell leap is not a move");
-        equal(x, Reflect.get(game, "x"), "queries preserve player x");
-        equal(y, Reflect.get(game, "y"), "queries preserve player y");
-        equal(bx, Reflect.get(game, "bx"), "queries preserve crate x");
-        equal(by, Reflect.get(game, "by"), "queries preserve crate y");
-        equal(outcome, Reflect.get(game, "outcome"), "queries preserve the outcome");
-        equal(terrain, Reflect.get(game, "terrain"), "queries preserve the map");
+        expect(!((boolean) Reflect.call(game, "canMove", 1, 0)), "canMove(1, 0) must reject pushing the crate into the right wall. Check the cell beyond the crate.");
+        expect(!((boolean) Reflect.call(game, "canMove", 1, 0)), "Repeating the same blocked canMove query must still return false without changing the position.");
+        expect((boolean) Reflect.call(game, "canMove", -1, 0), "canMove(-1, 0) must still allow walking left away from the crate when the cell is free.");
+        expect(!((boolean) Reflect.call(game, "canMove", 1, 1)), "canMove(1, 1) must reject a diagonal move; only one cardinal step is allowed.");
+        expect(!((boolean) Reflect.call(game, "canMove", 0, 0)), "canMove(0, 0) must reject standing still as a proposed move.");
+        expect(!((boolean) Reflect.call(game, "canMove", 2, 0)), "canMove(2, 0) must reject a two-cell leap.");
+        equal(x, Reflect.get(game, "x"), "Asking canMove must preserve the player's x coordinate.");
+        equal(y, Reflect.get(game, "y"), "Asking canMove must preserve the player's y coordinate.");
+        equal(bx, Reflect.get(game, "bx"), "Asking canMove must preserve the crate's x coordinate.");
+        equal(by, Reflect.get(game, "by"), "Asking canMove must preserve the crate's y coordinate.");
+        equal(outcome, Reflect.get(game, "outcome"), "Asking canMove must preserve the round's result message.");
+        equal(terrain, Reflect.get(game, "terrain"), "Asking canMove must preserve every terrain row.");
         Reflect.set(game, "x", 1);
         Reflect.set(game, "y", 1);
-        expect(!((boolean) Reflect.call(game, "canMove", 0, -1)), "a wall blocks the radar");
+        expect(!((boolean) Reflect.call(game, "canMove", 0, -1)), "canMove(0, -1) must reject walking into the wall above the player.");
         Reflect.set(game, "outcome", "finished");
-        expect(!((boolean) Reflect.call(game, "canMove", 1, 0)), "a finished round offers no move");
-        System.out.println("PASS " + checks + " checks");
+        expect(!((boolean) Reflect.call(game, "canMove", 1, 0)), "After the round is complete, canMove must reject further moves even if space is free.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P14_TrafficJamEscapeTest {
+class P14_Task_TrafficJamEscapeTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -331,24 +355,23 @@ class P14_TrafficJamEscapeTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P14_TrafficJamEscape");
+        var g = Reflect.create("P14_Task_TrafficJamEscape");
         Reflect.call(g, "reset");
         int[] oldX = ((int[]) Reflect.get(g, "xs")).clone(), oldY = ((int[]) Reflect.get(g, "ys")).clone();
-        expect(!((boolean) Reflect.call(g, "fits", 0, 1, 2)), "11.14/F15: blocker detected");
-        equal(oldX, ((int[]) Reflect.get(g, "xs")), "11.14/F15: failed placement probe must not move the car");
-        equal(oldY, ((int[]) Reflect.get(g, "ys")), "11.14/F15: query preserves every y position");
-        expect(((boolean) Reflect.call(g, "fits", 1, 2, 3)), "11.14/F15: legal downward position accepted");
-        equal(oldY, ((int[]) Reflect.get(g, "ys")), "11.14/F15: successful query is pure too");
-        System.out.println("PASS " + checks + " checks");
+        expect(!((boolean) Reflect.call(g, "fits", 0, 1, 2)), "fits(0, 1, 2) must reject the proposed position because another car blocks it.");
+        equal(oldX, ((int[]) Reflect.get(g, "xs")), "A rejected fits query must preserve every car's x coordinate.");
+        equal(oldY, ((int[]) Reflect.get(g, "ys")), "A fits query must preserve every car's y coordinate.");
+        expect(((boolean) Reflect.call(g, "fits", 1, 2, 3)), "fits(1, 2, 3) must accept the supplied free downward position.");
+        equal(oldY, ((int[]) Reflect.get(g, "ys")), "Even an accepted fits query must leave the cars at their original y coordinates.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P15_FallingBlocksTest {
+class P15_Task_FallingBlocksTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -358,25 +381,24 @@ class P15_FallingBlocksTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P15_FallingBlocks");
+        var g = Reflect.create("P15_Task_FallingBlocks");
         Reflect.call(g, "restart");
         int oldX = ((int) Reflect.get(g, "px")), oldY = ((int) Reflect.get(g, "py"));
-        expect(((boolean) Reflect.call(g, "fits", ((int[][]) Reflect.get(g, "piece")), 6, 5)), "11.15/F15: free trial position fits");
-        expect(((int) Reflect.get(g, "px")) == oldX && ((int) Reflect.get(g, "py")) == oldY, "11.15/F15: fit query must not teleport the falling piece");
-        expect(!((boolean) Reflect.call(g, "fits", ((int[][]) Reflect.get(g, "piece")), -1, 0)), "11.15/F15: out-of-bounds trial rejected");
-        expect(((int) Reflect.get(g, "px")) == oldX && ((int) Reflect.get(g, "py")) == oldY, "11.15/F15: rejected query is also pure");
+        expect(((boolean) Reflect.call(g, "fits", ((int[][]) Reflect.get(g, "piece")), 6, 5)), "fits must accept the current piece at the free trial position (6, 5).");
+        expect(((int) Reflect.get(g, "px")) == oldX && ((int) Reflect.get(g, "py")) == oldY, "Asking fits about (6, 5) must not move the actual falling piece there.");
+        expect(!((boolean) Reflect.call(g, "fits", ((int[][]) Reflect.get(g, "piece")), -1, 0)), "fits must reject the trial position (-1, 0) outside the board.");
+        expect(((int) Reflect.get(g, "px")) == oldX && ((int) Reflect.get(g, "py")) == oldY, "Rejecting a fits query must preserve the falling piece's actual x and y.");
         ((int[][]) Reflect.get(g, "board"))[5][6] = 1;
-        expect(!((boolean) Reflect.call(g, "fits", ((int[][]) Reflect.get(g, "piece")), 6, 5)), "11.15/F15: occupied cells block placement");
-        System.out.println("PASS " + checks + " checks");
+        expect(!((boolean) Reflect.call(g, "fits", ((int[][]) Reflect.get(g, "piece")), 6, 5)), "fits must reject the trial position when one of its cells is already occupied.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P16_GoFishTest {
+class P16_Task_GoFishTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -386,34 +408,33 @@ class P16_GoFishTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P16_GoFish");
+        var g = Reflect.create("P16_Task_GoFish");
         Reflect.set(g, "hands", java.util.List.of(new java.util.ArrayList<>(java.util.List.of(7, 7, 7, 7)), new java.util.ArrayList<>()));
         Reflect.set(g, "books", new int[2]);
         Reflect.call(g, "collect", 0);
-        equal(0, ((java.util.List<java.util.List<java.lang.Integer>>) Reflect.get(g, "hands")).get(0).size(), "11.16/F25: booking four cards removes exactly four");
-        equal(1, ((int[]) Reflect.get(g, "books"))[0], "11.16/F25: one complete rank awards one book");
-        equal(4, ((java.util.List<java.util.List<java.lang.Integer>>) Reflect.get(g, "hands")).get(0).size() + 4 * ((int[]) Reflect.get(g, "books"))[0], "11.16/F25: card-plus-book value conserved");
+        equal(0, ((java.util.List<java.util.List<java.lang.Integer>>) Reflect.get(g, "hands")).get(0).size(), "collect must remove all four cards of a completed rank from the hand, leaving no spare card.");
+        equal(1, ((int[]) Reflect.get(g, "books"))[0], "Collecting one complete rank must award exactly one book.");
+        equal(4, ((java.util.List<java.util.List<java.lang.Integer>>) Reflect.get(g, "hands")).get(0).size() + 4 * ((int[]) Reflect.get(g, "books"))[0], "After collection, cards left in hand plus four per awarded book must still account for the original four cards.");
         Reflect.call(g, "collect", 0);
-        equal(1, ((int[]) Reflect.get(g, "books"))[0], "11.16/F25: collecting again cannot duplicate the book");
-        System.out.println("PASS " + checks + " checks");
+        equal(1, ((int[]) Reflect.get(g, "books"))[0], "Calling collect again without new cards must not award the same book twice.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P19_ChaosGameTest {
+class P19_Task_ChaosGameTest {
     static int checks;
     static final String[] CASES = {
-        "All three legal vertices are reachable.",
-        "A fixed seed reproduces the index sequence.",
-        "A single candidate is zero and an empty range is rejected."
+        "chooseVertex with count 3 must be able to select each index 0, 1 and 2, including the last vertex.",
+        "Equal seeds and equal chooseVertex calls must reproduce the same index sequence.",
+        "chooseVertex with one candidate must return 0; count 0 must be rejected."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 11.19: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -422,7 +443,7 @@ class P19_ChaosGameTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -432,7 +453,7 @@ class P19_ChaosGameTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -449,7 +470,7 @@ class P19_ChaosGameTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P19_ChaosGame");
+            var p = Reflect.create("P19_Task_ChaosGame");
             var random=new Random(42);Set<Integer> chosen=new HashSet<>();for(int n=0;n<200;n++)chosen.add(((int) Reflect.call(p, "chooseVertex", random, 3)));
             check(chosen.equals(Set.of(0,1,2)),0,chosen);
             var a=new Random(17);var b=new Random(17);for(int n=0;n<20;n++)check(((int) Reflect.call(p, "chooseVertex", a, 3))==((int) Reflect.call(p, "chooseVertex", b, 3)),1,n);
@@ -457,23 +478,22 @@ class P19_ChaosGameTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 11.19: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P22_VoronoiStainedGlassTest {
+class P22_Task_VoronoiStainedGlassTest {
     static int checks;
     static final String[] CASES = {
-        "Three seeds are appended in legal coordinate ranges.",
-        "The returned List supports removal.",
-        "Zero is empty and negative counts are rejected."
+        "seedList must return the requested number of successive nextSeed results in generation order, with coordinates inside the picture.",
+        "seedList must return a mutable list: removing one seed must be allowed.",
+        "seedList must accept counts 0–100, including an empty result for 0, and reject counts outside that range."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 11.22: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -482,7 +502,7 @@ class P22_VoronoiStainedGlassTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -492,7 +512,7 @@ class P22_VoronoiStainedGlassTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -509,7 +529,7 @@ class P22_VoronoiStainedGlassTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P22_VoronoiStainedGlass");
+            var p = Reflect.create("P22_Task_VoronoiStainedGlass");
             var seeds=((java.util.List<Object>) Reflect.call(p, "seedList", new Random(42), 3));
             check(seeds.size()==3,0,seeds.size());
             var first=seeds.getFirst();check(((int) Reflect.call(first, "x"))>=0&&((int) Reflect.call(first, "x"))<400&&((int) Reflect.call(first, "y"))>=0&&((int) Reflect.call(first, "y"))<300,0,first);
@@ -525,23 +545,22 @@ class P22_VoronoiStainedGlassTest {
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 11.22: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P23_MandelbrotPostcardsTest {
+class P23_Task_MandelbrotPostcardsTest {
     static int checks;
     static final String[] CASES = {
-        "The tool finds every matching seed in the inclusive 0..255 range.",
-        "Prefixes, no match and input preservation behave correctly.",
-        "The normal seeded palette and fractal generation remain reproducible."
+        "matchingSeeds must return every matching seed from 0 through 255 in increasing order, not just the first match.",
+        "matchingSeeds must compare the whole supplied prefix, preserve that input and return an empty list when no palette matches.",
+        "Keep the existing seeded palette recipe and fractal calculation: replaying the same inputs must produce the same picture."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 11.23: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -550,7 +569,7 @@ class P23_MandelbrotPostcardsTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -560,7 +579,7 @@ class P23_MandelbrotPostcardsTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -576,7 +595,7 @@ class P23_MandelbrotPostcardsTest {
         return image;
     }
     public static void main(String[] args) throws Exception {
-        var p = Reflect.create("P23_MandelbrotPostcards");
+        var p = Reflect.create("P23_Task_MandelbrotPostcards");
         int[] palette = (int[]) Reflect.call(p, "palette", 7L);
         int[] sample = Arrays.copyOf(palette, 4);
         int[] before = sample.clone();
@@ -600,21 +619,20 @@ class P23_MandelbrotPostcardsTest {
         var a = (BufferedImage) Reflect.call(p, "render", 42L, 3.2);
         check(hash(a) == hash((BufferedImage) Reflect.call(p, "render", 42L, 3.2)), 2, "repeatable picture");
         check((int) Reflect.call(p, "escape", 0.0, 0.0) == 160, 2, "fractal geometry");
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P24_ColourFilterSecretsTest {
+class P24_Task_ColourFilterSecretsTest {
     static int checks;
     static final String[] CASES = {
-        "Changing seed changes camouflage.",
-        "Equal seeds reproduce all hidden pixels.",
-        "The recovered message is independent of the noise seed."
+        "hide must produce different camouflage for the tested seeds 42 and 43. Use the requested seed rather than a fixed one.",
+        "Calling hide again with the same mask and seed must reproduce every pixel.",
+        "reveal must recover the same hidden message from both noise seeds. Changing camouflage must preserve the message channel."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 11.24: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -623,7 +641,7 @@ class P24_ColourFilterSecretsTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -633,7 +651,7 @@ class P24_ColourFilterSecretsTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -650,29 +668,28 @@ class P24_ColourFilterSecretsTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P24_ColourFilterSecrets");
+            var p = Reflect.create("P24_Task_ColourFilterSecrets");
             var mask=((java.awt.image.BufferedImage) Reflect.call(p, "mask", "HI"));var a=((java.awt.image.BufferedImage) Reflect.call(p, "hide", mask, 42));var b=((java.awt.image.BufferedImage) Reflect.call(p, "hide", mask, 43));check(hash(a)!=hash(b),0,hash(a));
             check(hash(a)==hash(((java.awt.image.BufferedImage) Reflect.call(p, "hide", mask, 42))),1,hash(a));check(hash(((java.awt.image.BufferedImage) Reflect.call(p, "reveal", a)))==hash(((java.awt.image.BufferedImage) Reflect.call(p, "reveal", b))),2,hash(((java.awt.image.BufferedImage) Reflect.call(p, "reveal", a))));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 11.24: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P25_TwoNoisyPicturesTest {
+class P25_Task_TwoNoisyPicturesTest {
     static int checks;
     static final String[] CASES = {
-        "Neighbouring blank tiles use varied dot patterns.",
-        "Equal seeds repeat and different seeds vary the first share.",
-        "Each share tile still has exactly two black dots."
+        "Across blank tiles, shares must use varied dot patterns instead of repeating one shuffle everywhere.",
+        "Repeating seed 42 must reproduce the first share, while the tested seed 43 must change it.",
+        "Every small tile in each share must still contain exactly two black dots."
     };
     static void check(boolean okay, int example, Object actual) {
         checks++;
-        if (!okay) throw new AssertionError("MISSION 11.25: " + CASES[example] + " | actual=" + actual);
+        if (!okay) throw new AssertionError(CASES[example] + "\n    Case / result: " + Check.show(actual));
     }
     static void reject(Runnable action, int example) {
         try {
@@ -681,7 +698,7 @@ class P25_TwoNoisyPicturesTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     interface IOAction { void run() throws Exception; }
     static void ioFailure(IOAction action, int example) throws Exception {
@@ -691,7 +708,7 @@ class P25_TwoNoisyPicturesTest {
             check(true, example, expected.getClass().getSimpleName());
             return;
         }
-        check(false, example, "accepted");
+        check(false, example, "the input was accepted");
     }
     static long hash(BufferedImage image) {
         long result = 1;
@@ -708,15 +725,14 @@ class P25_TwoNoisyPicturesTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = Reflect.create("P25_TwoNoisyPictures");
+            var p = Reflect.create("P25_Task_TwoNoisyPictures");
             var mask=new BufferedImage(20,1,BufferedImage.TYPE_INT_RGB);var a=((java.awt.image.BufferedImage[]) Reflect.call(p, "shares", mask, 42));var patterns=new HashSet<Integer>();for(int cell=0;cell<20;cell++){int bits=0;for(int k=0;k<4;k++)if((a[0].getRGB(cell*2+k%2,k/2)&0xFFFFFF)==0)bits|=1<<k;patterns.add(bits);}check(patterns.size()>1,0,patterns);
             check(hash(a[0])==hash(((java.awt.image.BufferedImage[]) Reflect.call(p, "shares", mask, 42))[0]),1,hash(a[0]));check(hash(a[0])!=hash(((java.awt.image.BufferedImage[]) Reflect.call(p, "shares", mask, 43))[0]),1,hash(a[0]));for(int cell=0;cell<20;cell++){int black=0;for(int k=0;k<4;k++)if((a[0].getRGB(cell*2+k%2,k/2)&0xFFFFFF)==0)black++;check(black==2,2,black);}
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
-            throw new AssertionError("MISSION 11.25: Unexpected failure while checking the active rule.", failure);
+            throw new AssertionError("The program stopped while this rule was being checked. See the exception details below.", failure);
         }
-        System.out.println("PASS " + checks + " checks");
     }
 }
 

@@ -9,16 +9,19 @@
 <h1>7.1 Give values numbered places</h1>
 <p>Three lockers contain different numbers of gems. You could use three separate names, but selecting one using a number from the player would become awkward. An array puts values of the same type into a numbered sequence.</p>
 <h2>The first place is number zero</h2>
-<p>Open <code>07-arrays/P01_GemSlots.java</code>. Predict the contents of slot 2 before running it.</p>
-<pre><code class="language-java" data-source="P01_GemSlots.java">void main() {
+<p>Open <code>07-arrays/P01_Example_GemSlots.java</code>. Predict the contents of slot 2 before running it.</p>
+<pre><code class="language-java" data-source="P01_Example_GemSlots.java">/// # Worked example · 7.1 Give values numbered places
+/// Lesson: 01-arrays.html
+
+void main() {
     int[] gems = {3, 0, 5};
-    int slot = Integer.parseInt(IO.readln(&quot;Slot: &quot;).strip());
+    int slot = Integer.parseInt(IO.readln("Slot: ").strip());
     if (slot &lt; 0 || slot &gt;= gems.length) {
-        IO.println(&quot;Invalid slot&quot;);
+        IO.println("Invalid slot");
     } else {
-        IO.println(&quot;Gems: &quot; + gems[slot]);
+        IO.println("Gems: " + gems[slot]);
     }
-    IO.println(&quot;Slots: &quot; + gems.length);
+    IO.println("Slots: " + gems.length);
 }
 </code></pre>
 <p>The notation <code>int[]</code> means an array of whole numbers. The values inside the braces create three elements in the given order. The expression <code>gems[slot]</code> reads one element; the number inside the square brackets is its index.</p>
@@ -26,14 +29,14 @@
 <p>The program checks the bounds first and reads the element afterwards. Neither -1 nor an index equal to the length identifies a valid place. Java does not allow access outside an array; here, a clear message prevents that attempt. Square brackets do not invent a new place when needed.</p>
 <details><summary>Prediction: slot 1 and slot 3</summary><p>Slot 1 contains 0, and the program also reports three slots. Slot 3 is invalid: it prints Invalid slot and Slots: 3.</p></details>
 <h2>Task: where does the selected portal lead?</h2>
-<p>Open <code>07-arrays/P02_PortalCodes.java</code>. The array contains SUN, MOON and STAR. The supplied bounds check works, but every valid selection reports the first portal. Fix the read so it uses the player's chosen slot.</p>
+<p>Open <code>07-arrays/P02_Task_PortalCodes.java</code>. The array contains SUN, MOON and STAR. The supplied bounds check works, but every valid selection reports the first portal. Fix the read so it uses the player's chosen slot.</p>
 <p>For 0, expect Portal: SUN; for 1, Portal: MOON; and for 2, Portal: STAR. Inputs -1 and 3 must both give No portal. Do not select text using a separate condition for each index; the array already holds the necessary data.</p>
 <details><summary>Hint 1: separate the place from its contents</summary><p>The variable slot is a place number. The variable destination should receive the text stored at that place.</p></details>
 <details><summary>Hint 2: extend the data</summary><p>After fixing it, you can add a fourth text, COMET, to the array. Its length and bounds check should adapt without any special branches.</p></details>
 <p>Next, you will visit every place automatically. You will not need to know the exact number of values in advance or name each one separately.</p>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>DotsAndBoxes</strong> · <code>07-arrays/P03_DotsAndBoxes.java</code><br>DotsAndBoxes needs the correct four edges for each box number. In box distinguish top, bottom and side indices instead of always returning the first four.</li>
-<li><strong>PegDrop</strong> · <code>07-arrays/P04_PegDrop.java</code><br>In PegDrop make scoreAt return the selected bin&#x27;s own value. A query must not award points; test the first and last index.</li>
+<li><strong>DotsAndBoxes</strong> · <code>07-arrays/P03_Task_DotsAndBoxes.java</code><br>DotsAndBoxes needs the correct four edges for each box number. In box distinguish top, bottom and side indices instead of always returning the first four.</li>
+<li><strong>PegDrop</strong> · <code>07-arrays/P04_Task_PegDrop.java</code><br>In PegDrop make scoreAt return the selected bin&#x27;s own value. A query must not award points; test the first and last index.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="../06-loops/05-game-loop.html">← 6.5 Read the next move</a><a class="next" href="02-traversal.html">7.2 Visit values without picking each one →</a></nav>

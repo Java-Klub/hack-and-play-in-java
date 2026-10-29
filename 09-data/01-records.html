@@ -9,27 +9,30 @@
 <h1>9.1 Give related data a shape</h1>
 <p>A space parcel has a name and a weight. Two unrelated variables can accidentally describe different parcels. A record gives the pair one shared shape, so a label can travel through the program as one value.</p>
 <h2>A type and one concrete parcel</h2>
-<pre><code class="language-java" data-source="P01_ParcelLabel.java">void main() {
-    Parcel parcel = new Parcel(&quot;Moon rock&quot;, 4);
-    IO.println(&quot;Item: &quot; + parcel.name());
-    IO.println(&quot;Weight: &quot; + parcel.weight());
+<pre><code class="language-java" data-source="P01_Example_ParcelLabel.java">/// # Worked example · 9.1 Give related data a shape
+/// Lesson: 01-records.html
+
+void main() {
+    Parcel parcel = new Parcel("Moon rock", 4);
+    IO.println("Item: " + parcel.name());
+    IO.println("Weight: " + parcel.weight());
 }
 
 record Parcel(String name, int weight) {
 }
 </code></pre>
-<p>Open 09-data/P01_ParcelLabel.java and run it. The record declaration describes a new type named Parcel. Its components are name, a String, and weight, an int. The empty braces are correct: Java supplies the basic construction and reading operations.</p>
+<p>Open 09-data/P01_Example_ParcelLabel.java and run it. The record declaration describes a new type named Parcel. Its components are name, a String, and weight, an int. The empty braces are correct: Java supplies the basic construction and reading operations.</p>
 <p>The expression new Parcel(&quot;Moon rock&quot;, 4) constructs one object with those component values, in declaration order. Parcel before the variable name says what kind of value parcel holds. Defining the record alone creates no parcel and prints nothing.</p>
 <p>An accessor reads a component: parcel.name() returns the name; parcel.weight() returns the number. These are method calls, so keep the parentheses. A record has no automatic operation for replacing a component. To describe changed data, construct another record.</p>
 <details><summary>Predict before changing it</summary><p>If the constructor receives &quot;Ice&quot; and 0, the label prints Item: Ice and Weight: 0. What changes if only the text becomes &quot;Hot ice&quot;? Only the Item line; the two components have separate roles.</p></details>
 <h2>Task: stop losing the cargo data</h2>
-<p>Open 09-data/P02_CargoLabel.java. It reads three answers but constructs an empty replacement cargo. Construct Cargo from the answers, then calculate total weight from its count and unitWeight accessors. Keep both printed lines and their wording.</p>
+<p>Open 09-data/P02_Task_CargoLabel.java. It reads three answers but constructs an empty replacement cargo. Construct Cargo from the answers, then calculate total weight from its count and unitWeight accessors. Keep both printed lines and their wording.</p>
 <p>For Star seeds, count 3 and unit weight 4, expect Star seeds: 3 pieces and Total weight: 12. A count of 0 must give total 0, even with unit weight 8. Use nonnegative whole numbers; input validation is not this task.</p>
 <details><summary>Hint 1: follow the values</summary><p>Match each constructor argument to one component in the declaration. Reusing the same type does not make the count and weight interchangeable.</p></details>
 <details><summary>Hint 2: check the units</summary><p>A unit weight is the weight of one piece. Multiplying it by the piece count gives the weight of the whole cargo. Read both numbers from cargo.</p></details>
 <p>Next, construct several objects of the same type and investigate which values belong to each one.</p>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>Dominosa</strong> · <code>09-data/P03_Dominosa.java</code><br>In Dominosa normalise pairKey for either order of the same pair. The record represents a domino value so a reversed duplicate cannot evade the check.</li>
+<li><strong>Dominosa</strong> · <code>09-data/P03_Task_Dominosa.java</code><br>In Dominosa normalise pairKey for either order of the same pair. The record represents a domino value so a reversed duplicate cannot evade the check.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="../08-grids/05-generations.html">← 8.5 Read the past; write the future</a><a class="next" href="02-objects.html">9.2 One description, several objects →</a></nav>

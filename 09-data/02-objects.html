@@ -9,26 +9,29 @@
 <h1>9.2 One description, several objects</h1>
 <p>A map needs both a starting point and an arrival point. They share the same shape but need not share their coordinates. Think of a type as a description and each constructed object as one concrete set of data.</p>
 <h2>Construction takes the current values</h2>
-<pre><code class="language-java" data-source="P04_MapSnapshots.java">void main() {
+<pre><code class="language-java" data-source="P04_Example_MapSnapshots.java">/// # Worked example · 9.2 One description, several objects
+/// Lesson: 02-objects.html
+
+void main() {
     int x = 2;
     Point first = new Point(x, 3);
     x = 8;
     Point second = new Point(x, 3);
     Point copy = new Point(2, 3);
-    IO.println(&quot;First: &quot; + first.x() + &quot;,&quot; + first.y());
-    IO.println(&quot;Second: &quot; + second.x() + &quot;,&quot; + second.y());
-    IO.println(&quot;Same values: &quot; + first.equals(copy));
+    IO.println("First: " + first.x() + "," + first.y());
+    IO.println("Second: " + second.x() + "," + second.y());
+    IO.println("Same values: " + first.equals(copy));
 }
 
 record Point(int x, int y) {
 }
 </code></pre>
-<p>Open 09-data/P04_MapSnapshots.java. The first constructor receives the current value of x, which is 2. Later assignment changes the local variable x to 8. It does not reach backwards into the Point already constructed. Its component remains 2.</p>
+<p>Open 09-data/P04_Example_MapSnapshots.java. The first constructor receives the current value of x, which is 2. Later assignment changes the local variable x to 8. It does not reach backwards into the Point already constructed. Its component remains 2.</p>
 <p>The next new Point uses 8 and 3. The declaration of Point is written once, but construction can happen many times with different arguments. This is the same value-passing principle you used with method parameters, now used to build data.</p>
 <p>Records supply equals for comparing component values. first.equals(copy) is true because both points have x equal to 2 and y equal to 3. This asks whether the data match, not whether you wrote the same variable name. For text components, record equality compares their content too.</p>
 <details><summary>Predict a new snapshot</summary><p>Set x to 2 again before constructing second. Both printed points are then 2,3. Changing x afterwards still changes neither point. What would first.equals(second) return? True, because their component values match.</p></details>
 <h2>Task: leave a checkpoint behind</h2>
-<p>Open 09-data/P05_Checkpoint.java. Preserve start and construct finish two columns to the right and one row up: add 2 to x and subtract 1 from y. Use start accessors so the new point is calculated from the saved position.</p>
+<p>Open 09-data/P05_Task_Checkpoint.java. Preserve start and construct finish two columns to the right and one row up: add 2 to x and subtract 1 from y. Use start accessors so the new point is calculated from the saved position.</p>
 <p>For input 2 and 3, Start must remain 2,3 and Finish must become 4,2. Back at start must be false. Also test -2 and 0: expect start -2,0 and finish 0,-1. Negative coordinates are allowed; do not clamp them.</p>
 <details><summary>Hint 1: a changed position needs new data</summary><p>Assigning start to finish does not calculate a movement. Construct a Point with the two calculated component values.</p></details>
 <details><summary>Hint 2: preserve the checkpoint</summary><p>Do not replace start while calculating finish. The two output lines let you check both the movement and preservation of the original.</p></details>

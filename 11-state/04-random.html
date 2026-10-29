@@ -9,11 +9,14 @@
 <h1>11.4 Chance proposes, a rule decides</h1>
 <p>A die makes a small battle uncertain. The random roll and the rule converting it into damage are different jobs. Keeping them separate lets you check the rule for every face instead of waiting for a lucky test run.</p>
 <h2>Ask one generator for the next value</h2>
-<pre><code class="language-java" data-source="P17_DiceDamage.java">void main() {
+<pre><code class="language-java" data-source="P17_Example_DiceDamage.java">/// # Worked example · 11.4 Chance proposes, a rule decides
+/// Lesson: 04-random.html
+
+void main() {
     Random random = new Random();
     int die = roll(random);
-    IO.println(&quot;Roll: &quot; + die);
-    IO.println(&quot;Damage: &quot; + damage(die));
+    IO.println("Roll: " + die);
+    IO.println("Damage: " + damage(die));
 }
 
 int roll(Random random) {
@@ -27,18 +30,18 @@ int damage(int die) {
     return die - 2;
 }
 </code></pre>
-<p>Open 11-state/P17_DiceDamage.java and run it several times. New Random() creates a pseudorandom generator: an object that produces a sequence of apparently random values. It keeps internal state, so the next request continues that sequence rather than repeating a fixed answer.</p>
+<p>Open 11-state/P17_Example_DiceDamage.java and run it several times. New Random() creates a pseudorandom generator: an object that produces a sequence of apparently random values. It keeps internal state, so the next request continues that sequence rather than repeating a fixed answer.</p>
 <p>NextInt(1, 7) includes the lower bound 1 and excludes the upper bound 7: the possible results are 1 through 6. Bounds matter. NextInt(1, 6) would never roll 6. Repeated rolls may be equal; randomness does not promise a different result every time.</p>
 <p>The generator is passed as a parameter to roll. The rule damage receives only the resulting int: faces 1 and 2 miss, higher faces deal face minus 2. This rule does not need Random, input or printing, so you can call it with deliberately chosen arguments.</p>
 <details><summary>Predict the rule, not the roll</summary><p>If Roll is 5, Damage must be 3. What damage belongs to 2? Zero. You cannot honestly predict the next roll from this screen alone, but you can predict the correct reaction to any given roll.</p></details>
 <h2>Task: roll a real pair</h2>
-<p>Open 11-state/P18_DoubleDice.java. Upgrade rollPair from one die to the sum of two separate six-sided rolls. Ask the supplied generator twice, store both face values, and return their sum. Do not create another generator inside the helper.</p>
+<p>Open 11-state/P18_Task_DoubleDice.java. Upgrade rollPair from one die to the sum of two separate six-sided rolls. Ask the supplied generator twice, store both face values, and return their sum. Do not create another generator inside the helper.</p>
 <p>Every result must lie from 2 to 12. Equal faces are allowed. A single uniform choice from 2 to 12 is a different experiment: with two dice, 7 has more combinations than 2. A short run need not display every possible sum.</p>
 <details><summary>Hint 1: count random requests</summary><p>Doubling one rolled face would produce only even totals. Two calls supply two successive samples, which can also be equal.</p></details>
 <details><summary>Hint 2: preserve the generator</summary><p>Receive the generator in the parameter and reuse it. The caller controls its lifetime; the helper only asks for the samples it needs.</p></details>
 <p>Next, give a generator a starting seed so a surprising sequence can be replayed exactly and shared as a reproducible puzzle.</p>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>ChaosGame</strong> · <code>11-state/P19_ChaosGame.java</code><br>ChaosGame never chooses the last vertex. Repair random-selection bounds; check one vertex and a rejected zero count.</li>
+<li><strong>ChaosGame</strong> · <code>11-state/P19_Task_ChaosGame.java</code><br>ChaosGame never chooses the last vertex. Repair random-selection bounds; check one vertex and a rejected zero count.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="03-invariants.html">← 11.3 Rejection must preserve state</a><a class="next" href="05-seeds.html">11.5 Same start, same experiment →</a></nav>

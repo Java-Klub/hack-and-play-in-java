@@ -9,15 +9,18 @@
 <h1>7.2 Visit values without picking each one</h1>
 <p>A robot team sends its power levels in one array. This time, you care about each robot's value rather than its place number. There is a shorter form for this kind of traversal.</p>
 <h2>One value after another</h2>
-<p>Open <code>07-arrays/P05_RobotPowers.java</code>. Add up the array's values before running it.</p>
-<pre><code class="language-java" data-source="P05_RobotPowers.java">void main() {
+<p>Open <code>07-arrays/P05_Example_RobotPowers.java</code>. Add up the array's values before running it.</p>
+<pre><code class="language-java" data-source="P05_Example_RobotPowers.java">/// # Worked example · 7.2 Visit values without picking each one
+/// Lesson: 02-traversal.html
+
+void main() {
     int[] powers = {2, 7, 4};
     int total = 0;
     for (int power : powers) {
-        IO.println(&quot;Power: &quot; + power);
+        IO.println("Power: " + power);
         total += power;
     }
-    IO.println(&quot;Total: &quot; + total);
+    IO.println("Total: " + total);
 }
 </code></pre>
 <p>An enhanced for loop, often called for-each, reads elements in order from start to end. In <code>for (int power : powers)</code>, powers means the whole array and power means the current value. You can read the colon as “for each power in powers”.</p>
@@ -25,16 +28,16 @@
 <p>The accumulator total works just as it did for the deliveries read from input. The difference is where values come from: they are already stored in memory. If you also needed each place number, you would use an ordinary for loop with an index and the array's length.</p>
 <details><summary>Prediction: append 0 to the array</summary><p>There is an extra Power: 0 line. The sum stays at 13. The number of elements visited and their sum are different things.</p></details>
 <h2>Task: choose robots for an expedition</h2>
-<p>Open <code>07-arrays/P06_ExpeditionPowers.java</code>. The array contains power levels 4, 5, 9 and 0. The player enters the minimum acceptable power. The program currently counts all the robots.</p>
+<p>Open <code>07-arrays/P06_Task_ExpeditionPowers.java</code>. The array contains power levels 4, 5, 9 and 0. The player enters the minimum acceptable power. The program currently counts all the robots.</p>
 <p>Change the traversal: Ready should be the number of robots whose power is at least the threshold. Power should be the sum of only those accepted power levels. For threshold 5, expect Ready: 2 and Power: 14. For 0, accept all four, with a sum of 18. For 10, nobody qualifies, and both results are 0.</p>
 <details><summary>Hint 1: one test for two results</summary><p>Change both the count and sum when the same condition passes. Decide using the current value, not the array length.</p></details>
 <details><summary>Hint 2: include the boundary</summary><p>A robot whose power exactly equals the threshold qualifies. First check threshold 5 and power 5 by hand.</p></details>
 <p>Next, you will change elements rather than only read them. You will need to distinguish a copy of the current value from an actual place in the array.</p>
 <details><summary>Traverse the letters of text too</summary><p>For our words made from A–Z, read a letter with <code>word.charAt(index)</code>. The first position is 0, and <code>word.length()</code> gives the number of positions. Unlike an array, length has parentheses here. The type <code>char</code> holds one text unit; write a letter in single quotes, such as <code>'A'</code>, while <code>"A"</code> is a String.</p><p><code>word.toCharArray()</code> supplies an array for <code>for (char letter : word.toCharArray())</code>. The operation <code>word.indexOf(letter)</code> returns the first matching position or -1. Zero therefore also means a match. To read backwards, start at length minus one and decrease the index while it is nonnegative. Empty text has no valid position.</p></details>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>KochSnowflakeCards</strong> · <code>07-arrays/P07_KochSnowflakeCards.java</code><br>KochSnowflakeCards misses one side. The outer snowflake loop must visit corner indices 0, 1 and 2 once; recursive edge is supplied.</li>
-<li><strong>Jotto</strong> · <code>07-arrays/P08_Jotto.java</code><br>Jotto forgets earlier matches. In matches keep a running count of all shared letters and compare words with one and several matches.</li>
-<li><strong>YatzyScorecard</strong> · <code>07-arrays/P09_YatzyScorecard.java</code><br>In YatzyScorecard sum filled categories; -1 means unfilled. Separately accumulate the first six for the supplied bonus starting at 63 points.</li>
+<li><strong>KochSnowflakeCards</strong> · <code>07-arrays/P07_Task_KochSnowflakeCards.java</code><br>KochSnowflakeCards misses one side. The outer snowflake loop must visit corner indices 0, 1 and 2 once; recursive edge is supplied.</li>
+<li><strong>Jotto</strong> · <code>07-arrays/P08_Task_Jotto.java</code><br>Jotto forgets earlier matches. In matches keep a running count of all shared letters and compare words with one and several matches.</li>
+<li><strong>YatzyScorecard</strong> · <code>07-arrays/P09_Task_YatzyScorecard.java</code><br>In YatzyScorecard sum filled categories; -1 means unfilled. Separately accumulate the first six for the supplied bonus starting at 63 points.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="01-arrays.html">← 7.1 Give values numbered places</a><a class="next" href="03-updates.html">7.3 Change the actual place →</a></nav>

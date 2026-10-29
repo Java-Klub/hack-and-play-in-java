@@ -3,49 +3,80 @@ import java.util.*;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-/// Chapter checks: java Check.java
-/// One game: java Check.java P03_DotsAndBoxes.java
-/// Tests call compact programs through reflection in this JVM.
+/// Game task checks for this chapter. Run short textbook tasks directly.
 class Check {
     int failed;
     int checked;
     String selected;
+    final ArrayList<String> available = new ArrayList<>();
     interface Test { void run() throws Exception; }
 
     void main(String[] args) {
         System.setProperty("java.awt.headless", "true");
-        if (args.length > 1) throw new IllegalArgumentException("Use: java Check.java [game filename]");
+        if (args.length > 1) {
+            IO.println("Supply at most one game filename. With no argument, all game tasks in this chapter are checked.");
+            System.exit(2);
+        }
         selected = args.length == 0 ? "" : Path.of(args[0]).getFileName().toString().replaceFirst("\\.java$", "");
-        run("P03_DotsAndBoxes", "07.03 DotsAndBoxes · F16", () -> P03_DotsAndBoxesTest.main(new String[0]));
-        run("P04_PegDrop", "07.04 PegDrop · F15", () -> P04_PegDropTest.main(new String[0]));
-        run("P07_KochSnowflakeCards", "07.07 KochSnowflakeCards · F11", () -> P07_KochSnowflakeCardsTest.main(new String[0]));
-        run("P08_Jotto", "07.08 Jotto · F12", () -> P08_JottoTest.main(new String[0]));
-        run("P09_YatzyScorecard", "07.09 YatzyScorecard · F12", () -> P09_YatzyScorecardTest.main(new String[0]));
-        run("P12_Chopsticks", "07.12 Chopsticks · F08", () -> P12_ChopsticksTest.main(new String[0]));
-        run("P13_WordleStyleWordHunt", "07.13 WordleStyleWordHunt · F12", () -> P13_WordleStyleWordHuntTest.main(new String[0]));
-        run("P16_Ghost", "07.16 Ghost · F10", () -> P16_GhostTest.main(new String[0]));
-        run("P19_Bridges", "07.19 Bridges · F20", () -> P19_BridgesTest.main(new String[0]));
-        run("P20_MagnetDominoes", "07.20 MagnetDominoes · F20", () -> P20_MagnetDominoesTest.main(new String[0]));
-        if (checked == 0) throw new IllegalArgumentException("Unknown game: " + selected);
-        IO.println(checked + " missions; " + failed + " mission goals remaining.");
+        run("P03_Task_DotsAndBoxes", () -> P03_Task_DotsAndBoxesTest.main(new String[0]));
+        run("P04_Task_PegDrop", () -> P04_Task_PegDropTest.main(new String[0]));
+        run("P07_Task_KochSnowflakeCards", () -> P07_Task_KochSnowflakeCardsTest.main(new String[0]));
+        run("P08_Task_Jotto", () -> P08_Task_JottoTest.main(new String[0]));
+        run("P09_Task_YatzyScorecard", () -> P09_Task_YatzyScorecardTest.main(new String[0]));
+        run("P12_Task_Chopsticks", () -> P12_Task_ChopsticksTest.main(new String[0]));
+        run("P13_Task_WordleStyleWordHunt", () -> P13_Task_WordleStyleWordHuntTest.main(new String[0]));
+        run("P16_Task_Ghost", () -> P16_Task_GhostTest.main(new String[0]));
+        run("P19_Task_Bridges", () -> P19_Task_BridgesTest.main(new String[0]));
+        run("P20_Task_MagnetDominoes", () -> P20_Task_MagnetDominoesTest.main(new String[0]));
+        if (checked == 0) {
+            IO.println("No game check is prepared here for this file: " + selected + ".java");
+            IO.println("Choose one of these files: " + String.join(", ", available));
+            System.exit(2);
+        }
+        IO.println("Checked: " + checked + "; complete: " + (checked - failed) + "; remaining: " + failed);
         if (failed > 0) System.exit(1);
     }
 
-    void run(String game, String label, Test test) {
+    void run(String game, Test test) {
+        available.add(game + ".java");
         if (!selected.isEmpty() && !selected.equals(game)) return;
         checked++;
         try {
             test.run();
-            IO.println("GREEN " + label);
+            IO.println("GREEN " + game + ".java");
         } catch (Throwable failure) {
             failed++;
-            IO.println("RED " + label + ": " + failure.getMessage());
+            IO.println("RED " + game + ".java");
+            String reason = failure.getMessage();
+            if (reason == null || reason.isBlank()) reason = "The check did not get the expected result.";
+            if (!(failure instanceof AssertionError)) reason = "The program stopped during the check: " + failure.getClass().getSimpleName() + ": " + reason;
+            IO.println("  " + reason.replace("\n", "\n  "));
+            Throwable cause = failure;
+            while (cause.getCause() != null && cause.getCause() != cause) cause = cause.getCause();
+            if (cause != failure) IO.println("  " + cause.getClass().getSimpleName() + ": " + show(cause.getMessage()));
+            for (var frame : cause.getStackTrace()) {
+                if (frame.getClassName().equals(game) || frame.getClassName().startsWith(game + "$")) {
+                    IO.println("  " + "Location in the program: " + frame.getFileName() + ":" + frame.getLineNumber());
+                    break;
+                }
+            }
         }
+    }
+
+    static String show(Object value) {
+        if (value != null && value.getClass().isArray()) {
+            int length = java.lang.reflect.Array.getLength(value);
+            var parts = new ArrayList<String>();
+            for (int i = 0; i < Math.min(length, 8); i++) parts.add(show(java.lang.reflect.Array.get(value, i)));
+            return parts + (length > 8 ? " … (" + length + " items" + ")" : "");
+        }
+        String text = String.valueOf(value).replace("\n", "\\n").replace("\r", "\\r");
+        return text.length() <= 180 ? text : text.substring(0, 177) + "…";
     }
 }
 
 @SuppressWarnings("unchecked")
-class P03_DotsAndBoxesTest {
+class P03_Task_DotsAndBoxesTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -55,25 +86,24 @@ class P03_DotsAndBoxesTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P03_DotsAndBoxes");
-        equal(new int[]{0, 2, 6, 7}, ((int[]) Reflect.call(g, "box", 0)), "07.03/F16: first box needs its four real edges");
-        equal(new int[]{1, 3, 7, 8}, ((int[]) Reflect.call(g, "box", 1)), "07.03/F16: neighbouring box shares one edge");
-        equal(new int[]{3, 5, 10, 11}, ((int[]) Reflect.call(g, "box", 3)), "07.03/F16: final box has different indices");
+        var g = Reflect.create("P03_Task_DotsAndBoxes");
+        equal(new int[]{0, 2, 6, 7}, ((int[]) Reflect.call(g, "box", 0)), "box(0) returned the wrong edge indices for the first box. Identify its top, bottom, left and right edges.");
+        equal(new int[]{1, 3, 7, 8}, ((int[]) Reflect.call(g, "box", 1)), "box(1) must describe the next box, sharing only its common edge with box 0.");
+        equal(new int[]{3, 5, 10, 11}, ((int[]) Reflect.call(g, "box", 3)), "box(3) returned the wrong edges for the bottom-right box. Calculate from the requested box number.");
         Reflect.call(g, "reset");
         for (String edge : new String[]{"1", "3", "7", "8"}) {
             Reflect.call(g, "command", edge);
         }
-        expect(((int[]) Reflect.get(g, "owners"))[0] != 0, "07.03/F16: closing a real box awards it");
-        System.out.println("PASS " + checks + " checks");
+        expect(((int[]) Reflect.get(g, "owners"))[0] != 0, "Playing edges 1, 3, 7 and 8 must claim the first box. Keep the scoring code using the four edges from box.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P04_PegDropTest {
+class P04_Task_PegDropTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -83,222 +113,216 @@ class P04_PegDropTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P04_PegDrop");
+        var g = Reflect.create("P04_Task_PegDrop");
         Reflect.call(g, "restart");
-        equal(100, ((int) Reflect.call(g, "scoreAt", 3)), "07.04/F15: return the score of the requested bin");
-        equal(10, ((int) Reflect.call(g, "scoreAt", 7)), "07.04/F15: final bin accepted");
+        equal(100, ((int) Reflect.call(g, "scoreAt", 3)), "scoreAt(3) must return 100, the value of that bin. Read the requested place in values.");
+        equal(10, ((int) Reflect.call(g, "scoreAt", 7)), "scoreAt(7) must return 10. The final valid bin must use its own value too.");
         int old = ((int) Reflect.get(g, "score"));
         Reflect.call(g, "scoreAt", 2);
-        equal(old, ((int) Reflect.get(g, "score")), "07.04/F15: score query does not award points");
+        equal(old, ((int) Reflect.get(g, "score")), "Calling scoreAt must not change the total score. Reading a bin value does not award its points.");
         boolean rejected = false;
         try {
             Reflect.call(g, "scoreAt", -1);
         } catch (IllegalArgumentException e) {
             rejected = true;
         }
-        expect(rejected, "07.04/F15: invalid index has an explicit contract");
-        System.out.println("PASS " + checks + " checks");
+        expect(rejected, "scoreAt(-1) must reject the invalid bin. Keep the supplied guard before reading values.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P07_KochSnowflakeCardsTest {
+class P07_Task_KochSnowflakeCardsTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("07.07 F11: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P07_KochSnowflakeCards");
+        var game = Reflect.create("P07_Task_KochSnowflakeCards");
         var image = new BufferedImage(540, 480, BufferedImage.TYPE_INT_ARGB);
         var pen = image.createGraphics();
-        check(((int) Reflect.call(game, "snowflake", pen, 0)) == 3, "the counted loop must draw all three base sides");
+        check(((int) Reflect.call(game, "snowflake", pen, 0)) == 3, "snowflake at level 0 must draw and count all three sides. Check where the side loop starts and ends.");
         boolean firstSide = false;
         for (int y = 215; y <= 221; y++) {
             for (int x = 168; x <= 172; x++) firstSide |= image.getRGB(x,y) != 0;
         }
-        check(firstSide, "the actual first edge must be painted, not merely counted");
-        check(((int) Reflect.call(game, "snowflake", pen, 1)) == 12, "three supplied four-segment edges give twelve segments");
+        check(firstSide, "The first side is still missing from the picture. Keep the call that actually draws each visited edge in snowflake.");
+        check(((int) Reflect.call(game, "snowflake", pen, 1)) == 12, "snowflake at level 1 must count 12 segments across its three sides. Keep the supplied edge builder.");
         pen.dispose();
-        System.out.println("PASS " + checks + " checks");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P08_JottoTest {
+class P08_Task_JottoTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("07.08 F12: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P08_Jotto");
+        var game = Reflect.create("P08_Task_Jotto");
         Reflect.set(game, "secret", "PLANT");
-        check(((int) Reflect.call(game, "matches", "PLANT")) == 5, "all five shared letters must accumulate");
-        check(((int) Reflect.call(game, "matches", "STONE")) == 2, "T and N are counted regardless of positions");
-        check(((int) Reflect.call(game, "matches", "BRICK")) == 0, "no shared letters leaves zero");
+        check(((int) Reflect.call(game, "matches", "PLANT")) == 5, "matches(\"PLANT\") must return 5 when the secret is PLANT. Count every shared letter.");
+        check(((int) Reflect.call(game, "matches", "STONE")) == 2, "matches(\"STONE\") must return 2 for secret PLANT: T and N match even in different positions.");
+        check(((int) Reflect.call(game, "matches", "BRICK")) == 0, "matches(\"BRICK\") must return 0 for secret PLANT. Do not add a point for an absent letter.");
         Reflect.call(game, "reset");
         Reflect.set(game, "secret", "PLANT");
         Reflect.call(game, "command", "STONE");
-        check(((java.util.List<java.lang.String>) Reflect.get(game, "history")).getFirst().contains("2 shared"), "the actual clue uses the repaired total");
-        System.out.println("PASS " + checks + " checks");
+        check(((java.util.List<java.lang.String>) Reflect.get(game, "history")).getFirst().contains("2 shared"), "The clue for STONE against PLANT must say 2 shared. Keep command using the result of matches.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P09_YatzyScorecardTest {
+class P09_Task_YatzyScorecardTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("07.09 F12: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P09_YatzyScorecard");
+        var game = Reflect.create("P09_Task_YatzyScorecard");
         Reflect.call(game, "reset");
         ((int[]) Reflect.get(game, "scores"))[0] = 1;
         ((int[]) Reflect.get(game, "scores"))[1] = 4;
         ((int[]) Reflect.get(game, "scores"))[2] = 9;
-        check(((int) Reflect.call(game, "total")) == 14, "filled categories must accumulate rather than replace the running sum");
+        check(((int) Reflect.call(game, "total")) == 14, "total must return 14 for filled scores 1, 4 and 9. Keep earlier categories in the running sum.");
         Reflect.call(game, "reset");
-        check(((int) Reflect.call(game, "total")) == 0, "unfilled negative entries contribute nothing");
+        check(((int) Reflect.call(game, "total")) == 0, "An empty scorecard must total 0. Skip the -1 values that mark unfilled categories.");
         Reflect.set(game, "scores", new int[]{3,6,9,12,15,18,-1,-1,-1,-1,-1,-1,-1});
-        check(((int) Reflect.call(game, "total")) == 98, "upper sum 63 adds the bonus exactly once");
+        check(((int) Reflect.call(game, "total")) == 98, "When the first six categories total 63, total must return 98 including one 35-point bonus.");
         ((int[]) Reflect.get(game, "scores"))[5] = 17;
-        check(((int) Reflect.call(game, "total")) == 62, "upper sum 62 earns no bonus");
-        System.out.println("PASS " + checks + " checks");
+        check(((int) Reflect.call(game, "total")) == 62, "When the first six categories total 62, total must return 62 without the bonus.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P12_ChopsticksTest {
+class P12_Task_ChopsticksTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("07.12 F08: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P12_Chopsticks");
+        var game = Reflect.create("P12_Task_Chopsticks");
         Reflect.call(game, "reset");
         ((int[][]) Reflect.get(game, "hands"))[0][0] = 0;
-        check(!((boolean) Reflect.call(game, "handsAlive", 0, 0)), "a dead attacking hand must be rejected");
+        check(!((boolean) Reflect.call(game, "handsAlive", 0, 0)), "handsAlive must refuse an attack from a hand with zero fingers. Check the attacking hand before allowing a strike.");
         ((int[][]) Reflect.get(game, "hands"))[0][0] = 1;
         ((int[][]) Reflect.get(game, "hands"))[1][1] = 0;
-        check(!((boolean) Reflect.call(game, "handsAlive", 0, 1)), "a dead target hand must be rejected");
-        check(((boolean) Reflect.call(game, "handsAlive", 1, 0)), "two living hands remain legal");
-        check(!((boolean) Reflect.call(game, "handsAlive", -1, 0)) && !((boolean) Reflect.call(game, "handsAlive", 0, 2)), "invalid indices are rejected before hand access");
+        check(!((boolean) Reflect.call(game, "handsAlive", 0, 1)), "handsAlive must refuse a target hand with zero fingers, even when the attacking hand is alive.");
+        check(((boolean) Reflect.call(game, "handsAlive", 1, 0)), "handsAlive must allow two existing hands with positive finger counts. Keep valid attacks available.");
+        check(!((boolean) Reflect.call(game, "handsAlive", -1, 0)) && !((boolean) Reflect.call(game, "handsAlive", 0, 2)), "handsAlive must refuse hand indices -1 and 2 before reading the hands array. Only internal indices 0 and 1 exist.");
         int player = ((int) Reflect.get(game, "player"));
         try { Reflect.call(game, "command", "1 2"); } catch (IllegalArgumentException expected) { }
-        check(((int) Reflect.get(game, "player")) == player && ((int[][]) Reflect.get(game, "hands"))[1][1] == 0, "rejected input leaves actual game state untouched");
-        check(!((boolean) Reflect.call(game, "handsAlive", 2, 0)) && !((boolean) Reflect.call(game, "handsAlive", 0, -1)), "both hand ranges must be guarded at both ends");
-        System.out.println("PASS " + checks + " checks");
+        check(((int) Reflect.get(game, "player")) == player && ((int[][]) Reflect.get(game, "hands"))[1][1] == 0, "The rejected strike 1 2 must not change the player or the knocked-out target hand. Guard before changing the game.");
+        check(!((boolean) Reflect.call(game, "handsAlive", 2, 0)) && !((boolean) Reflect.call(game, "handsAlive", 0, -1)), "Check both hand indices at both ends: handsAlive must refuse own index 2 and opposing index -1 too.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P13_WordleStyleWordHuntTest {
+class P13_Task_WordleStyleWordHuntTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("07.13 F12: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P13_WordleStyleWordHunt");
+        var game = Reflect.create("P13_Task_WordleStyleWordHunt");
         Reflect.set(game, "secret", "LEVEL");
         char[] marks = ".....".toCharArray();
         int[] counts = ((int[]) Reflect.call(game, "leftoverLetters", "ALLEY", marks));
-        check(counts['L'-'A'] == 2, "two unmatched L letters need an accumulated count of two");
-        check(((java.lang.String) Reflect.call(game, "grade", "ALLEY")).equals(".YYG."), "both guessed L letters receive the actual remaining matches");
-        check(((java.lang.String) Reflect.call(game, "grade", "LEVEL")).equals("GGGGG"), "exact matches stay green and consume no leftover count");
-        check(((java.lang.String) Reflect.call(game, "grade", "STONE")).equals("....Y"), "an absent letter cannot gain a false match");
-        System.out.println("PASS " + checks + " checks");
+        check(counts['L'-'A'] == 2, "For secret LEVEL, leftoverLetters must count both unmatched L letters. Keep previous occurrences in the same letter counter.");
+        check(((java.lang.String) Reflect.call(game, "grade", "ALLEY")).equals(".YYG."), "For secret LEVEL, grade(\"ALLEY\") must return \".YYG.\". Both L letters have remaining matches.");
+        check(((java.lang.String) Reflect.call(game, "grade", "LEVEL")).equals("GGGGG"), "grade(\"LEVEL\") must return GGGGG for secret LEVEL. Preserve exact-position matches before counting leftovers.");
+        check(((java.lang.String) Reflect.call(game, "grade", "STONE")).equals("....Y"), "For secret LEVEL, grade(\"STONE\") must return ....Y: only the final E is present elsewhere.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P16_GhostTest {
+class P16_Task_GhostTest {
     static int checks;
 
     static void check(boolean okay, String reason) {
         checks++;
         if (!okay) {
-            throw new AssertionError("07.16 F10: " + reason);
+            throw new AssertionError(reason);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        var game = Reflect.create("P16_Ghost");
-        check(((boolean) Reflect.call(game, "possiblePrefix", "RO")), "the search must reach dictionary entries beyond the first word");
-        check(((boolean) Reflect.call(game, "possiblePrefix", "GHO")), "the first matching word may return immediately");
-        check(!((boolean) Reflect.call(game, "possiblePrefix", "XY")), "a missing prefix terminates with false");
+        var game = Reflect.create("P16_Task_Ghost");
+        check(((boolean) Reflect.call(game, "possiblePrefix", "RO")), "possiblePrefix(\"RO\") must return true. Keep searching past the first word to reach the listed RO words.");
+        check(((boolean) Reflect.call(game, "possiblePrefix", "GHO")), "possiblePrefix(\"GHO\") must return true when it reaches GHOST. A matching word is enough.");
+        check(!((boolean) Reflect.call(game, "possiblePrefix", "XY")), "possiblePrefix(\"XY\") must finish and return false when no dictionary word starts that way.");
         Reflect.call(game, "reset");
         Reflect.call(game, "command", "R");
-        check(((java.lang.String) Reflect.get(game, "outcome")).isEmpty() && ((int) Reflect.get(game, "player")) == 2, "the actual legal R prefix must keep the game alive");
+        check(((java.lang.String) Reflect.get(game, "outcome")).isEmpty() && ((int) Reflect.get(game, "player")) == 2, "Entering R at the start is a legal prefix. The game must continue with player 2 rather than declare a loss.");
         Reflect.set(game, "words", new String[0]);
-        check(!((boolean) Reflect.call(game, "possiblePrefix", "A")), "an empty dictionary terminates without access");
-        System.out.println("PASS " + checks + " checks");
+        check(!((boolean) Reflect.call(game, "possiblePrefix", "A")), "With an empty word list, possiblePrefix must return false without trying to read a first word.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P19_BridgesTest {
+class P19_Task_BridgesTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
         if (!correct) throw new AssertionError(message);
     }
     static void equal(Object expected, Object actual, String message) {
-        expect(java.util.Objects.deepEquals(expected, actual), message + " | expected=" + expected + " actual=" + actual);
+        expect(java.util.Objects.deepEquals(expected, actual), message
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P19_Bridges");
+        var g = Reflect.create("P19_Task_Bridges");
         Reflect.call(g, "restart");
         Reflect.call(g, "choose", 145, 45);
-        equal(1, ((int[]) Reflect.get(g, "bridges"))[0], "07.19: a real click adds a bridge");
+        equal(1, ((int[]) Reflect.get(g, "bridges"))[0], "Clicking the first faint connection must add one bridge. Preserve the existing choose behaviour.");
         for (int n = 0; n < 6; n++) {
             Reflect.call(g, "key", java.awt.event.KeyEvent.VK_U, true);
-            equal(n % 2, ((int[]) Reflect.get(g, "bridges"))[0], "07.19: repeated U alternates both hypotheses");
+            equal(n % 2, ((int[]) Reflect.get(g, "bridges"))[0], "Each press of U must switch between the last two bridge arrangements, including repeated presses. Check undo.");
         }
         Reflect.call(g, "choose", 295, 45);
         Reflect.call(g, "undo");
-        equal(0, ((int[]) Reflect.get(g, "bridges"))[1], "07.19: a new real edit establishes the latest pair");
+        equal(0, ((int[]) Reflect.get(g, "bridges"))[1], "After a new bridge edit, undo must restore the state just before that edit. Replace the old saved pair.");
         Reflect.call(g, "undo");
-        equal(1, ((int[]) Reflect.get(g, "bridges"))[1], "07.19: the new pair also switches back");
+        equal(1, ((int[]) Reflect.get(g, "bridges"))[1], "Calling undo again must restore the new bridge edit. Keep both arrangements available for switching.");
         int[] saved = (int[]) Reflect.call(g, "snapshot");
         ((int[]) Reflect.get(g, "bridges"))[0] = 2;
-        equal(1, saved[0], "07.19: a saved hypothesis is independent of later edits");
+        equal(1, saved[0], "snapshot changed when the live bridges changed. Save an independent array of bridge counts.");
         Reflect.call(g, "restart");
         Reflect.call(g, "undo");
-        equal(new int[10], Reflect.get(g, "bridges"), "07.19: no previous choice after restart");
-        System.out.println("PASS " + checks + " checks");
+        equal(new int[10], Reflect.get(g, "bridges"), "After restart, undo must leave all bridge counts at zero. There is no previous edit to restore.");
     }
 }
 
 @SuppressWarnings("unchecked")
-class P20_MagnetDominoesTest {
+class P20_Task_MagnetDominoesTest {
     static int checks;
     static void expect(boolean correct, String message) {
         checks++;
@@ -308,24 +332,23 @@ class P20_MagnetDominoesTest {
     }
     static void equal(Object expected, Object actual, String message) {
         expect(java.util.Objects.deepEquals(expected, actual), message
-        + " | expected=" + java.util.Arrays.deepToString(new Object[]{expected})
-        + " actual=" + java.util.Arrays.deepToString(new Object[]{actual}));
+                + "\n    Expected: " + Check.show(expected)
+                + "\n    Found: " + Check.show(actual));
     }
     public static void main(String[] args) throws Exception {
-        var g = Reflect.create("P20_MagnetDominoes");
+        var g = Reflect.create("P20_Task_MagnetDominoes");
         Reflect.call(g, "restart");
         Reflect.call(g, "cycle", 0);
         Reflect.call(g, "undo");
-        equal(-1, ((int[]) Reflect.get(g, "state"))[0], "07.20/F20: undo restores undecided magnet");
+        equal(-1, ((int[]) Reflect.get(g, "state"))[0], "Undoing the first change must return that domino to its undecided state. Check the saved values from copyState.");
         Reflect.call(g, "cycle", 0);
         Reflect.call(g, "cycle", 1);
         Reflect.call(g, "undo");
-        equal(1, ((int[]) Reflect.get(g, "state"))[0], "07.20/F20: undo keeps earlier domino change");
-        equal(-1, ((int[]) Reflect.get(g, "state"))[1], "07.20/F20: latest change reverted");
+        equal(1, ((int[]) Reflect.get(g, "state"))[0], "Undo must preserve the earlier change to the first domino while reverting the latest change.");
+        equal(-1, ((int[]) Reflect.get(g, "state"))[1], "Undo must return the last changed domino to its previous undecided state.");
         int[] copy = ((int[]) Reflect.call(g, "copyState"));
         copy[0] = 0;
-        equal(1, ((int[]) Reflect.get(g, "state"))[0], "07.20/F20: saved state does not alias live poles");
-        System.out.println("PASS " + checks + " checks");
+        equal(1, ((int[]) Reflect.get(g, "state"))[0], "Changing the array returned by copyState must not change the live dominoes. The saved array must be independent.");
     }
 }
 

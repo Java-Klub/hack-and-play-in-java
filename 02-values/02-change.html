@@ -9,7 +9,7 @@
 <h1>2.2 Change a stored value</h1>
 <p>The starting number of lives is not the whole story of a game. After a crash, it should be smaller. A variable can hold different values over time.</p>
 <h2>Trace one change</h2>
-<p>Open <code>02-values/P03_Energy.java</code>:</p>
+<p>Open <code>02-values/P03_Example_Energy.java</code>:</p>
 <pre><code class="language-java">void main() {
     int energy = 5;
     IO.println(energy);
@@ -60,7 +60,7 @@
 </details>
 
 <h2>Task: pay to open a door</h2>
-<p>Open <code>02-values/P04_EnergyCounter.java</code>. It should print energy twice: before opening the door and afterwards. The door costs 3 units, but the supplied program leaves the value unchanged.</p>
+<p>Open <code>02-values/P04_Task_EnergyCounter.java</code>. It should print energy twice: before opening the door and afterwards. The door costs 3 units, but the supplied program leaves the value unchanged.</p>
 <p><strong>Change the assignment between the print calls so it subtracts 3 from the energy currently stored.</strong> With an initial value of 8, expect:</p>
 <pre><code class="language-text">8
 5
@@ -73,7 +73,7 @@
 </details>
 
 <h2>When several places read a value</h2>
-<p><code>02-values/P05_SharedSettings.java</code> has a setting before <code>main</code>:</p>
+<p><code>02-values/P05_Example_SharedSettings.java</code> has a setting before <code>main</code>:</p>
 <pre><code class="language-java">int goal = 6;
 
 void main() {
@@ -85,10 +85,10 @@ void main() {
 <p>A value written outside <code>main</code> like this can also be available to other actions in the same program. Games use this to share settings such as a target. We will explore its lifetime in more detail when writing our own methods. For this change, you only need to find the named value and follow where it is read.</p>
 <h2>Choose some game practice</h2>
 <ul>
-<li><code>02-values/P06_HigherOrLower.java</code>: find the shared target setting and shorten the card challenge. You search the program; hints in its file will gradually guide you.</li>
-<li><code>02-values/P07_SteppingFeet.java</code>: change the second assignment to bring both rectangles back into the picture. Here, the place to edit is already marked.</li>
+<li><code>02-values/P06_Task_HigherOrLower.java</code>: find the shared target setting and shorten the card challenge. Follow where the window text and the winning condition get their target number.</li>
+<li><code>02-values/P07_Task_SteppingFeet.java</code>: change the second assignment to bring both rectangles back into the picture. Here, the place to edit is already marked.</li>
 </ul>
-<p>Each task gives its own target value. To check HigherOrLower, open <code>02-values/Check.java</code>, set Program Arguments to <code>P06_HigherOrLower.java</code> and use Run File. For SteppingFeet, use <code>P07_SteppingFeet.java</code>. See the <a href="../00-setup/index.html#checks">setup lesson</a> for the property steps.</p>
+<p>Each task gives its own target value. To check HigherOrLower, open <code>02-values/Check.java</code>, set Program Arguments to <code>P06_Task_HigherOrLower.java</code> and use Run File. For SteppingFeet, use <code>P07_Task_SteppingFeet.java</code>. See the <a href="../00-setup/index.html#checks">setup lesson</a> for the property steps.</p>
 <p><strong>You have understood this lesson when you can explain how an assignment reads the old value before storing the new one, and correctly predict several assignments in a row.</strong></p>
 <p>Continue to <a href="03-calculations.html">Let the program calculate</a>.</p>
 </article>

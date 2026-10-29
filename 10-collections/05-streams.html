@@ -9,30 +9,33 @@
 <h1>10.5 Send data through a filter</h1>
 <p>Your backpack holds several kinds of loot, but a shop window should show only valuable items. A stream describes a sequence of processing steps: choose the elements you need, transform them, and collect the answers. The original collection can stay untouched.</p>
 <h2>Each operation has one small job</h2>
-<pre><code class="language-java" data-source="P28_SpellFilter.java">void main() {
-    List&lt;String&gt; words = List.of(&quot;sun&quot;, &quot;moon&quot;, &quot;star&quot;, &quot;a&quot;);
+<pre><code class="language-java" data-source="P28_Example_SpellFilter.java">/// # Worked example · 10.5 Send data through a filter
+/// Lesson: 05-streams.html
+
+void main() {
+    List&lt;String&gt; words = List.of("sun", "moon", "star", "a");
     List&lt;String&gt; loud = words.stream()
         .filter(word -&gt; word.length() &gt;= 4)
         .map(word -&gt; word.toUpperCase(Locale.ROOT))
         .toList();
-    IO.println(&quot;Selected: &quot; + loud);
-    IO.println(&quot;Original: &quot; + words);
+    IO.println("Selected: " + loud);
+    IO.println("Original: " + words);
 }
 </code></pre>
-<p>Open 10-collections/P28_SpellFilter.java. Stream starts processing the list’s elements. Filter receives a lambda that returns boolean: true keeps the current element, false rejects it. Here sun and a are rejected because they are shorter than four characters.</p>
+<p>Open 10-collections/P28_Example_SpellFilter.java. Stream starts processing the list’s elements. Filter receives a lambda that returns boolean: true keeps the current element, false rejects it. Here sun and a are rejected because they are shorter than four characters.</p>
 <p>Map receives another lambda, which returns the replacement value for each retained element. It transforms moon into MOON and star into STAR. This map operation is unrelated to the Map key-value container: one transforms elements, the other stores associations.</p>
 <p>ToList finishes the pipeline and collects the resulting values into an unmodifiable list. The line breaks do not end the expression; the dots continue it until the semicolon. Without a finishing operation, merely describing these steps would not perform this processing.</p>
 <p>The original list prints unchanged. These lambdas only read each element and return answers; they do not add to the source list. A stream is consumed once. If you need another calculation, start another stream from the collection rather than saving and reusing the old stream.</p>
 <details><summary>Predict another word</summary><p>Adding &quot;gate&quot; to the source produces GATE at the end of Selected. What about adding &quot;go&quot;? It remains only in Original, because filter rejects it before map is reached.</p></details>
 <h2>Task: turn useful loot into a name list</h2>
-<p>Open 10-collections/P29_LootFilter.java. Complete valuableNames: keep only Loot whose value is strictly greater than 0, then return their names in original order. Return a List&lt;String&gt;, not the records or one combined text. Do not change the input list.</p>
+<p>Open 10-collections/P29_Task_LootFilter.java. Complete valuableNames: keep only Loot whose value is strictly greater than 0, then return their names in original order. Return a List&lt;String&gt;, not the records or one combined text. Do not change the input list.</p>
 <p>Expect Names: [Gem, Coin], Empty: [] and Original size: 4. Stone at 0 must be excluded, as must Debt at -2. An empty input list should naturally give an empty output, without reading input or adding a special placeholder name.</p>
 <details><summary>Hint 1: separate selection and transformation</summary><p>The first lambda answers a question about value. The second returns a name. Filtering names before you read value loses information.</p></details>
 <details><summary>Hint 2: track the element type</summary><p>The stream initially carries Loot. After selecting, it still carries Loot. After mapping names, it carries Strings ready for toList.</p></details>
 <p>Next, move from unchanged data snapshots to objects whose own state changes during a game.</p>
 <details><summary>What do the double colons in the supplied conversion mean?</summary><p>Nonogram already supplies its final conversion. <code>Integer::intValue</code> is a method reference, a short form of behaviour equivalent to <code>value -&gt; value.intValue()</code>. <code>mapToInt</code> creates a stream of primitive int values, and <code>toArray()</code> turns them into an int[]. This puts the collected group lengths into a fixed array for display. Leave this part unchanged while repairing the final group.</p></details>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>Nonogram</strong> · <code>10-collections/P30_Nonogram.java</code><br>Nonogram forgets a black run at the end of a row. Complete runs without losing earlier groups; check empty and all-white rows.</li>
+<li><strong>Nonogram</strong> · <code>10-collections/P30_Task_Nonogram.java</code><br>Nonogram forgets a black run at the end of a row. Complete runs without losing earlier groups; check empty and all-white rows.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="04-ordering.html">← 10.4 Pass an ordering rule</a><a class="next" href="../11-state/01-state.html">11.1 An object remembers a change →</a></nav>

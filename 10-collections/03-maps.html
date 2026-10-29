@@ -9,34 +9,37 @@
 <h1>10.3 Each name has its own account</h1>
 <p>Several teams earn points in mixed order. A list of numbers loses the names, and parallel arrays need careful matching. A map associates each key with one value, so a team name can directly select that team’s running score.</p>
 <h2>Look up, calculate, store</h2>
-<pre><code class="language-java" data-source="P20_SignalCounts.java">void main() {
+<pre><code class="language-java" data-source="P20_Example_SignalCounts.java">/// # Worked example · 10.3 Each name has its own account
+/// Lesson: 03-maps.html
+
+void main() {
     Map&lt;String, Integer&gt; counts = new HashMap&lt;&gt;();
-    String[] signals = {&quot;Moon&quot;, &quot;Sun&quot;, &quot;Moon&quot;};
+    String[] signals = {"Moon", "Sun", "Moon"};
     for (String signal : signals) {
         int previous = counts.getOrDefault(signal, 0);
         counts.put(signal, previous + 1);
     }
-    IO.println(&quot;Moon: &quot; + counts.getOrDefault(&quot;Moon&quot;, 0));
-    IO.println(&quot;Sun: &quot; + counts.getOrDefault(&quot;Sun&quot;, 0));
-    IO.println(&quot;Star: &quot; + counts.getOrDefault(&quot;Star&quot;, 0));
-    IO.println(&quot;Names: &quot; + counts.size());
+    IO.println("Moon: " + counts.getOrDefault("Moon", 0));
+    IO.println("Sun: " + counts.getOrDefault("Sun", 0));
+    IO.println("Star: " + counts.getOrDefault("Star", 0));
+    IO.println("Names: " + counts.size());
 }
 </code></pre>
-<p>Open 10-collections/P20_SignalCounts.java. Map&lt;String, Integer&gt; has two type arguments: String keys and Integer values. Generic collections cannot use primitive int as a type argument. Integer is its object wrapper; Java automatically boxes an int when storing it and unboxes it for arithmetic. The same rule gives List&lt;Integer&gt; for a list of whole numbers; List&lt;int&gt; is not valid.</p>
+<p>Open 10-collections/P20_Example_SignalCounts.java. Map&lt;String, Integer&gt; has two type arguments: String keys and Integer values. Generic collections cannot use primitive int as a type argument. Integer is its object wrapper; Java automatically boxes an int when storing it and unboxes it for arithmetic. The same rule gives List&lt;Integer&gt; for a list of whole numbers; List&lt;int&gt; is not valid.</p>
 <p>GetOrDefault reads a key’s value or supplies the second argument when no mapping exists. It does not insert that default. Put stores one value under the key, replacing any previous value there. It does not automatically add to an existing number.</p>
 <p>Trace Moon: the first visit reads 0 and stores 1; the second reads 1 and stores 2. Sun gets a separate entry. Asking about Star returns 0 without changing size, which counts keys. HashMap does not guarantee a useful iteration order, so this example asks for specific names.</p>
 <details><summary>Predict a new signal</summary><p>One more Moon would give Moon: 3 and Names: 2. One Star would instead make Names: 3. Which operation creates that third entry? Put, not the earlier getOrDefault question.</p></details>
 <h2>Task: accumulate the team scores</h2>
-<p>Open 10-collections/P21_TeamScores.java. Complete award so repeated entries add points to the same team instead of overwriting its history. A new team starts from 0. Keep other teams unchanged, and preserve the prepared reading and query loop.</p>
+<p>Open 10-collections/P21_Task_TeamScores.java. Complete award so repeated entries add points to the same team instead of overwriting its history. A new team starts from 0. Keep other teams unchanged, and preserve the prepared reading and query loop.</p>
 <p>Enter Moon with 4, Sun with 2, Moon with 3, then an empty team name and query Moon. Expect Score: 7 and Teams: 2. No entries followed by a Star query gives 0 and 0. Awards 4 then -4 give score 0 but still one team.</p>
 <details><summary>Hint 1: writing is not adding</summary><p>Find the old value before calling put. Use a default that makes a first award work without a separate branch.</p></details>
 <details><summary>Hint 2: preserve the key</summary><p>Store the calculated total under the same name you looked up. Do not use the points as a key or remove zero-score teams.</p></details>
 <p>Next, describe a rule for ordering elements, rather than depending on whichever order a container happens to provide.</p>
 <details><summary>Further reading online</summary><p><a href="https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/util/Map.html">Java 26 API: Map</a></p></details>
 <section class="game-practice"><h2>Practise in a game</h2><ul>
-<li><strong>TruchetTileLab</strong> · <code>10-collections/P22_TruchetTileLab.java</code><br>In TruchetTileLab maintain LEFT/RIGHT counts. Override a preference only with a lead of at least two, increment only the chosen option, and leave invalid input unchanged.</li>
-<li><strong>MarkovMischief</strong> · <code>10-collections/P23_MarkovMischief.java</code><br>MarkovMischief forgets earlier followers of repeated words. Repair accumulation so the text need not get stuck in a two-word loop.</li>
-<li><strong>DungeonBlueprints</strong> · <code>10-collections/P24_DungeonBlueprints.java</code><br>In DungeonBlueprints enforce separate SMALL/LARGE quotas by area. Refusal increments nothing; area 42 still belongs to SMALL.</li>
+<li><strong>TruchetTileLab</strong> · <code>10-collections/P22_Task_TruchetTileLab.java</code><br>In TruchetTileLab maintain LEFT/RIGHT counts. Override a preference only with a lead of at least two, increment only the chosen option, and leave invalid input unchanged.</li>
+<li><strong>MarkovMischief</strong> · <code>10-collections/P23_Task_MarkovMischief.java</code><br>MarkovMischief forgets earlier followers of repeated words. Repair accumulation so the text need not get stuck in a two-word loop.</li>
+<li><strong>DungeonBlueprints</strong> · <code>10-collections/P24_Task_DungeonBlueprints.java</code><br>In DungeonBlueprints enforce separate SMALL/LARGE quotas by area. Refusal increments nothing; area 42 still belongs to SMALL.</li>
 </ul><p>The source also contains the task and controls. Check your selected game using Check.java in the same folder; the <a href="../00-setup/index.html#checks">setup lesson</a> explains how.</p></section>
 </article>
 <nav class="page-nav" aria-label="Previous and next lesson"><a href="02-sets.html">← 10.2 Remember a first visit</a><a class="next" href="04-ordering.html">10.4 Pass an ordering rule →</a></nav>

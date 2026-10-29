@@ -9,16 +9,19 @@
 <h1>5.4 How far does a name reach?</h1>
 <p>A helper claims it has reduced the drone's energy. After the call returns, main still sees the original number. Two identical names do not necessarily mean one shared variable.</p>
 <h2>A parameter belongs to one call</h2>
-<p>Open <code>05-methods/P12_ChargeCopy.java</code>. First, predict both numbers:</p>
-<pre><code class="language-java" data-source="P12_ChargeCopy.java">void main() {
+<p>Open <code>05-methods/P12_Example_ChargeCopy.java</code>. First, predict both numbers:</p>
+<pre><code class="language-java" data-source="P12_Example_ChargeCopy.java">/// # Worked example · 5.4 How far does a name reach?
+/// Lesson: 04-local-values.html
+
+void main() {
     int energy = 3;
     drain(energy);
-    IO.println(&quot;In main: &quot; + energy);
+    IO.println("In main: " + energy);
 }
 
 void drain(int energy) {
     energy = energy - 1;
-    IO.println(&quot;In drain: &quot; + energy);
+    IO.println("In drain: " + energy);
 }
 </code></pre><pre class="transcript"><code>In drain: 2
 In main: 3</code></pre>
@@ -32,7 +35,7 @@ In main: 3</code></pre>
 <p>Scope determines where a name can be used. Parameters are available inside their method's body. A variable created in main is not available inside drain. A variable created inside an if block stops being available when that block ends; you cannot read it later in the surrounding block.</p>
 <p>Change the name of drain's parameter and its two uses to charge. The output must stay the same. Renaming only the parameter without changing its uses would leave an unknown name.</p>
 <h2>Task: the med kit did not heal anything</h2>
-<p>Open <code>05-methods/P13_MedKit.java</code>. With health 4, heal produces a result, but main throws it away. The method also fails to prevent health from exceeding its maximum.</p>
+<p>Open <code>05-methods/P13_Task_MedKit.java</code>. With health 4, heal produces a result, but main throws it away. The method also fails to prevent health from exceeding its maximum.</p>
 <p><strong>Store the value returned by heal back into health in main. Inside heal, add a limit: the med kit adds 3, but the result must not exceed 10. Do not add any print statements to heal.</strong> Try starting health values from 0 to 10.</p>
 <pre class="transcript"><code>Health: <span class="typed">4</span>
 Health after kit: 7</code></pre>
@@ -42,7 +45,7 @@ Health after kit: 7</code></pre>
 <p>Assigning cleaned or different text to a parameter of type String does not overwrite the caller's variable either. Both names may originally refer to the same text, but assigning different text to one of them does not change the other. You need to return the cleaned text and use it. You have already seen this with strip, which did not change the original text.</p>
 <p>Our small methods have values inside their parentheses. In the supplied games, you will also see state outside methods, shared by their calls. This is not the same as a local parameter; you will return to it in more detail when working with objects and game state.</p>
 <h2>Add a reward for an SOS combination</h2>
-<p>In <code>05-methods/P14_SOS.java</code>, change gainedPoints. The parameter before is the total number of SOS lines before the move; after is the total number after it. For example, before 4 and after 6 means two new lines, not six.</p>
+<p>In <code>05-methods/P14_Task_SOS.java</code>, change gainedPoints. The parameter before is the total number of SOS lines before the move; after is the total number after it. For example, before 4 and after 6 means two new lines, not six.</p>
 <p>Store the number of new lines in a local variable. One new line gives one point; two or more give twice the number of new lines. No new line gives 0. The method only returns a reward: it does not change the board, the score, or the player. For (4, 6), expect 4; for (4, 5), 1; for (4, 4), 0. Select the check in <code>05-methods/Check.java</code>.</p>
 <p><strong>You can now distinguish local values with the same name and deliberately use the result of a helper method.</strong></p>
 </article>
