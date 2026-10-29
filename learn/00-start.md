@@ -1,105 +1,91 @@
 # Připrav si dílnu
 
-V této lekci poprvé spustíš připravený soubor a zjistíš, kde uvidíš výsledek. Zápis programu rozebereme v další lekci.
+V této lekci otevřeš kurz v NetBeans, spustíš první soubor a změníš jeho zprávu. Zápis programu rozebereme v další lekci.
 
 ## Co potřebuješ
 
-1. **JDK 26 nebo novější.** Obsahuje program `java`, který tvůj kód přeloží a spustí. Samotný editor Javu nenahrazuje. Pokud JDK ještě nemáš, před prací offline si jej nainstaluj; základní postup najdeš na oficiální stránce [Getting Started with Java](https://dev.java/learn/getting-started/).
-2. **Staženou složku celého kurzu.** V její hlavní složce leží `README.md`, `learn`, `L01` a další hry. ZIP nejprve rozbal. Jednotlivý náhled souboru na GitHubu ke spuštění celého kurzu nestačí.
-3. **Editor pro Java soubory.** Můžeš použít NetBeans, IntelliJ IDEA, VS Code nebo textový editor. Soubory v kurzu jsou běžné `.java` soubory, které umí spouštět přímo JDK.
+- **JDK 26 nebo novější** a NetBeans s podporou Java source file launcheru. JDK překládá a spouští kód. V NetBeans musí být pro spouštění těchto souborů vybrané toto JDK. Pokud prostředí ještě nemáš, připrav jej před prací offline; základ instalace JDK popisuje oficiální stránka [Getting Started with Java](https://dev.java/learn/getting-started/).
+- **Staženou a rozbalenou složku celého kurzu.** V její hlavní složce leží `README.md`, `learn` a složky se zdrojovými soubory. Samotný náhled souboru na GitHubu ke spuštění nestačí.
 
-První programy pouze vypisují text. Po vypsání skončí. Je v pořádku, když se neotevře žádné herní okno.
+## Přidej celou složku do Favorites
+
+1. V NetBeans zvol **Window → Favorites**.
+2. V okně Favorites klikni pravým tlačítkem do volného místa a zvol **Add to Favorites…**.
+3. Vyber hlavní složku rozbaleného kurzu, tu s `README.md`. Přidej ji a rozbal její strom.
+
+Favorites ukazuje skutečné soubory na disku. Úprava souboru v NetBeans mění právě tuto staženou kopii. Celou učebnici a všechny její programy tak najdeš v jednom stromu. Projekt zakládat nemusíš: Java source file launcher umí spouštět `.java` soubory přímo.
 
 <a id="run"></a>
-## První spuštění z terminálu
+## Spusť první program
 
-Terminal (terminál) je okno pro zadávání příkazů počítači. Může být samostatné nebo součástí editoru. Následující postup funguje i tehdy, když editor zatím nemá nastavené spouštění Javy.
-
-1. Otevři terminál **v hlavní složce rozbaleného kurzu**. Ve Windows lze v Průzkumníku kliknout do adresního řádku této složky, napsat `cmd` a potvrdit Enter. Na macOS lze u složky ve Finderu použít službu **New Terminal at Folder**; v Linuxu obvykle nabídku **Open in Terminal**.
-2. Ověř dostupnost Javy:
-
-   ```text
-   java --version
-   ```
-
-   Ve výpisu musí být verze 26 nebo vyšší. Pokud příkaz není nalezen nebo ukazuje starší verzi, vyřeš nejprve výběr či instalaci JDK. U editoru a terminálu mohou být vybrané různé JDK.
-
-3. Spusť připravený soubor:
-
-   ```text
-   java learn/examples/01/WakeUp.java
-   ```
-
-   Správný výsledek je:
+1. Ve Favorites rozbal `learn`, potom `examples` a `01`.
+2. Dvojklikem otevři **WakeUp.java**.
+3. Zvol **Run → Run File** (`Shift+F6`). Tato volba spouští otevřený soubor.
+4. V okně **Output** najdi:
 
    ```text
    ARCADE
    Power on
    ```
 
-   Potom se vrátí místo pro další příkaz. Program svoji práci dokončil.
+Když Output nevidíš, otevři **Window → Output**. Program vypsal dvě zprávy a skončil. Je v pořádku, že se neotevřelo žádné herní okno. Pozdější grafické programy otevřou vlastní okno.
 
-Pokud Java hlásí, že soubor nemůže najít, ověř složku terminálu. V ní mají být přímo adresáře `learn` a `L01`. Celý kurz můžeš mít v libovolně pojmenované složce.
+## Změň, ulož, spusť
 
-### Jak spustíš další soubory
+V otevřeném WakeUp změň text uvnitř uvozovek z `ARCADE` na `HELLO`. Zvol **File → Save** a znovu **Run → Run File**. První zpráva v Output má být HELLO. Potom můžeš původní text vrátit.
 
-Za `java` píšeš cestu k vybranému souboru z hlavní složky kurzu, včetně koncovky `.java`. Pro první krátký úkol tedy použiješ:
+Save uloží upravený text do souboru. Další spuštění načte tuto uloženou verzi. Již otevřené herní okno se samo nepřepíše: před novým spuštěním ho zavři.
 
-```text
-java learn/practice/01/SecretSignal.java
-```
+Další příklady i úkoly otevřeš stejným způsobem ve Favorites. Lekce vždy uvede cestu, například `learn/practice/01/SecretSignal.java`: postupně rozbalíš `learn`, `practice` a `01`, otevřeš soubor a použiješ Run File.
 
-U dalšího příkladu či úkolu změníš celou cestu podle souboru uvedeného v lekci. Terminál přitom zůstává v hlavní složce kurzu. V editoru se spouštěním Javy místo toho vybereš odpovídající soubor.
+Když si v lekci vytváříš vlastní soubor, zachovej koncovku `.java`, nikoli `.java.txt`. Jeho jméno potom vybereš v editoru stejně jako u připravených souborů.
 
-## Otevření a změna souboru
+<a id="checks"></a>
+## Ověř úkol přes Run File
 
-V editoru otevři soubor `learn/examples/01/WakeUp.java`. **Soubor má končit `.java`, nikoli `.java.txt`.** Pokud jej otevřeš odkazem v prohlížeči, uvidíš jeho text nebo se stáhne; pro úpravy jej otevři ve svém editoru.
+Krátké úkoly v učebnici mají přímo uvedený očekávaný výstup. Spustíš je a porovnáš výsledek. Pro větší programy je v jejich složce připravený soubor **Check.java**.
 
-Změň v uvozovkách `ARCADE` na `HELLO`, ulož a znovu spusť stejný soubor. První vypsaný řádek se má změnit na HELLO. Potom můžeš původní text vrátit.
+Až tě lekce pošle k první hře, ověříš ji takto:
 
-`Save` uloží upravený text do souboru. Další spuštění načte tuto uloženou verzi. Již otevřené herní okno se samo nepřepíše: před novým spuštěním ho zavři.
+1. Ve Favorites vyber **L01/Check.java**. Klikni na něj pravým tlačítkem a zvol **Properties**.
+2. V sekci **Run Single File** nastav **Program Arguments** na `M01_CafeWallLab.java`. Tím vybíráš jednu úlohu ke kontrole. Použij přesně jméno uvedené v lekci, včetně `.java`.
+3. Otevři Check.java a použij **Run → Run File**. Výsledek najdeš v Output.
 
-## Stejná práce v NetBeans
+Při kontrole další úlohy ve stejné složce změníš jen Program Arguments. NetBeans si tuto vlastnost pamatuje; samotný zdrojový kód Check.java neměň. **Prázdné Program Arguments spustí kontroly všech programů v této složce**, včetně těch, které jsi zatím neřešil.
 
-Pokud používáš NetBeans s JDK 26 nebo novějším, můžeš program spouštět přímo z editoru:
+- **GREEN**: ověřované případy zadání prošly.
+- **RED**: některý případ zatím nesouhlasí. Přečti zprávu za názvem programu.
+- **Compiler error**: chyba zápisu zabránila překladu kódu.
 
-1. Zvol **File → Open File…** a otevři `learn/examples/01/WakeUp.java` ze stažené složky kurzu. Projekt vytvářet nemusíš.
-2. Po úpravě zvol **File → Save**.
-3. Zvol **Run → Run File** (`Shift+F6`). Tato volba spouští vybraný soubor.
-4. Text najdeš v okně **Output**. Když ho nevidíš, otevři **Window → Output**. Grafické hry později otevřou vlastní okno.
-
-Další úkoly otevírej a spouštěj stejně. Pokud spouštění v editoru ještě nemáš nastavené, použij postup z terminálu výše. Pro kontrolu jediné hry použij terminálový příkaz v části [Jak později ověříš opravu hry](#checks).
+Na začátku může být úloha RED, přestože její program běží. Jejím cílem může být oprava nebo nové pravidlo. Pro další hraní zase otevři soubor daného programu a spusť Run File.
 
 <a id="errors"></a>
 ## Když se něco nepovede
 
-| Co vidíš | Co to znamená a co zkusit |
+| Co vidíš | Co zkusit |
 | --- | --- |
-| Příkaz `java` není nalezen. | Terminál nemá dostupné JDK. Ověř instalaci a nastavení podle stránky výše. |
-| Java nemůže najít `WakeUp.java`. | Ověř složku terminálu a cestu `learn/examples/01/WakeUp.java`. |
-| Hlášení obsahuje `error:` a jméno souboru s číslem řádku. | Compiler (překladač) nerozumí zapsanému programu. Začni prvním hlášením; zkontroluj uvozovky, závorky a středníky u označeného místa. |
-| Po úpravě pořád vidíš starý výsledek. | Ulož soubor a ověř, že spouštíš stejnou kopii, kterou upravuješ. Staré herní okno zavři. |
-| Po výpisu se nic dalšího neděje. | U prvních příkladů je to konec programu. Další příkaz zadáváš terminálu. |
+| V Output se objevil jiný program. | Otevři správný `.java` soubor a použij Run File. Ověř také, že upravuješ svou staženou kopii. |
+| Run File nejde použít nebo Java nerozumí `void main()` či `IO`. | Ověř, že má NetBeans pro spouštění souborů dostupné JDK 26 nebo novější. Výběr najdeš u souboru v Properties → Run Single File → JDK. |
+| Výpis obsahuje `error:` a číslo řádku. | Compiler (překladač) nerozumí zápisu. Začni prvním hlášením; zkontroluj uvozovky, závorky a středníky u označeného místa. |
+| Po změně stále vidíš starý výsledek. | Ulož soubor a spusť jej znovu. Původní herní okno nejprve zavři. |
+| Kontrola vypsala mnoho nesplněných úloh. | V Properties souboru Check.java nastav Program Arguments na jeden soubor podle aktuální lekce. |
 
-Na konci výpisu může být více hlášení vyvolaných jednou chybou. Oprav nejprve tu první a spusť soubor znovu. Příkaz Undo v editoru umí vrátit poslední změnu.
+Oprav nejprve první chybu ve výpisu a program spusť znovu. **Edit → Undo** umí vrátit poslední změnu.
 
-<a id="checks"></a>
-## Jak později ověříš opravu hry
+<details>
+<summary>Spouštění z terminálu, pokud ho chceš použít</summary>
 
-Malé úkoly v učebnici mají přímo uvedený očekávaný výstup. Porovnáš s ním vlastní spuštění. Hry mají navíc připravené funkční kontroly ve svém `Check.java`.
-
-Například pro první hru, ze stejné hlavní složky:
+Stejné soubory umí spustit přímo JDK i mimo NetBeans. Z terminálu v hlavní složce kurzu:
 
 ```text
+java learn/examples/01/WakeUp.java
 java L01/Check.java M01_CafeWallLab.java
 ```
 
-- **GREEN** znamená, že tato hra splnila ověřované případy zadání.
-- **RED** znamená, že některý ověřovaný případ zatím nesouhlasí. Přečti zprávu za názvem hry.
-- **Compiler error** znamená chybu zápisu, kvůli které se příslušný kód nepodařilo přeložit.
+Za `java` píšeš cestu k vybranému souboru včetně `.java`. Za cestou k Check.java je volitelně jméno jednoho kontrolovaného programu. Tuto možnost k průchodu učebnicí nepotřebuješ.
 
-Na začátku může být hra RED, přestože se spustí. Úkol po tobě chce opravu nebo nové pravidlo. `Check.java` při řešení neupravuj. Až přijdeš k první hře, lekce uvede právě její kontrolu.
+</details>
 
-**Můžeš pokračovat, když dokážeš spustit WakeUp, změnit první zprávu a po uložení vidět novou.**
+**Můžeš pokračovat, když dokážeš najít WakeUp ve Favorites, spustit ho a po uložení změny vidět novou zprávu.**
 
 Pokračuj na [Tvůj první program](01-first-program.md).

@@ -71,11 +71,7 @@ Teď otevři [CafeWallLab](../L01/M01_CafeWallLab.java) ve složce `L01`. Spušt
 
 Tady místo výpisu textu voláš připravené kreslení. `paintTiles(g);` žádá o dlaždice a `paintBackground(g);` o šedý nátěr. `g` je dodané kreslicí pero. Tyto akce fungují; rozhoduješ o jejich pořadí. Popis `Graphics2D g` v záhlaví jen říká, jaké pero připravená část dodává. Dnes ho měnit nemusíš.
 
-Zavři staré okno, ulož změnu a spusť soubor znovu. Výsledek má ukázat dlaždice na šedém pozadí. Opravu ověř z hlavní složky kurzu:
-
-```text
-java L01/Check.java M01_CafeWallLab.java
-```
+Zavři staré okno, ulož změnu a spusť soubor znovu přes Run File. Výsledek má ukázat dlaždice na šedém pozadí. Pro ověření vyber `L01/Check.java`, v jeho Properties → Run Single File nastav Program Arguments na `M01_CafeWallLab.java` a spusť Run File. Podrobný postup najdeš v [přípravě](00-start.md#checks).
 
 GREEN potvrzuje ověřované případy. Jestli dostaneš RED, přečti zprávu a vrať se ke dvěma kreslicím krokům.
 
