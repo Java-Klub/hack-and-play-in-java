@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 /// All level checks: `java Check.java`
 /// One game: `java Check.java M01_WordLadder.java`
 /// Checks call the test methods directly in this JVM.
+/// Games remain compact sources; the checks below access them through reflection.
 class Check {
     int failed;
     int checked;
@@ -49,6 +50,7 @@ class Check {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M01_WordLadderTest {
     static int checks;
     static final String[] CASES = {
@@ -94,15 +96,15 @@ class M01_WordLadderTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M01_WordLadder();
-            p.reset(); p.command("CORD"); p.command("CARD");
-            check(p.history.equals(List.of("COLD","CORD","CARD")),0,p.history);
-            var before = List.copyOf(p.history);
-            reject(() -> p.command("WARM"),1);
-            check(p.history.equals(before),1,p.history);
-            p.command("WARD"); p.command("WARM");
-            check(p.history.size()==5 && !p.outcome.isEmpty(),2,p.history);
-            p.reset(); check(p.history.equals(List.of("COLD")),2,p.history);
+            var p = Reflect.create("M01_WordLadder");
+            Reflect.call(p, "reset"); Reflect.call(p, "command", "CORD"); Reflect.call(p, "command", "CARD");
+            check(((java.util.List<java.lang.String>) Reflect.get(p, "history")).equals(List.of("COLD","CORD","CARD")),0,((java.util.List<java.lang.String>) Reflect.get(p, "history")));
+            var before = List.copyOf(((java.util.List<java.lang.String>) Reflect.get(p, "history")));
+            reject(() -> Reflect.call(p, "command", "WARM"),1);
+            check(((java.util.List<java.lang.String>) Reflect.get(p, "history")).equals(before),1,((java.util.List<java.lang.String>) Reflect.get(p, "history")));
+            Reflect.call(p, "command", "WARD"); Reflect.call(p, "command", "WARM");
+            check(((java.util.List<java.lang.String>) Reflect.get(p, "history")).size()==5 && !((java.lang.String) Reflect.get(p, "outcome")).isEmpty(),2,((java.util.List<java.lang.String>) Reflect.get(p, "history")));
+            Reflect.call(p, "reset"); check(((java.util.List<java.lang.String>) Reflect.get(p, "history")).equals(List.of("COLD")),2,((java.util.List<java.lang.String>) Reflect.get(p, "history")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -112,6 +114,7 @@ class M01_WordLadderTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M02_GapHopperTest {
     static int checks;
     static final String[] CASES = {
@@ -157,13 +160,13 @@ class M02_GapHopperTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M02_GapHopper();
-            p.restart(); var old = p.pipes.getFirst(); var next = p.pipes.getLast();
-            old.x = -60; next.x = 200; p.recyclePipes();
-            check(p.pipes.size()==2 && p.pipes.getFirst()==next && !p.pipes.contains(old),0,p.pipes.size());
-            check(p.pipes.getLast().x==460 && !p.pipes.getLast().scored,1,p.pipes.getLast().x);
-            var stable=List.copyOf(p.pipes);p.recyclePipes();check(p.pipes.equals(stable),1,p.pipes.size());
-            p.pipes.clear();p.recyclePipes();check(p.pipes.isEmpty(),2,p.pipes);
+            var p = Reflect.create("M02_GapHopper");
+            Reflect.call(p, "restart"); var old = ((java.util.List<Object>) Reflect.get(p, "pipes")).getFirst(); var next = ((java.util.List<Object>) Reflect.get(p, "pipes")).getLast();
+            Reflect.set(old, "x", -60); Reflect.set(next, "x", 200); Reflect.call(p, "recyclePipes");
+            check(((java.util.List<Object>) Reflect.get(p, "pipes")).size()==2 && ((java.util.List<Object>) Reflect.get(p, "pipes")).getFirst()==next && !((java.util.List<Object>) Reflect.get(p, "pipes")).contains(old),0,((java.util.List<Object>) Reflect.get(p, "pipes")).size());
+            check(((double) Reflect.get(((java.util.List<Object>) Reflect.get(p, "pipes")).getLast(), "x"))==460 && !((boolean) Reflect.get(((java.util.List<Object>) Reflect.get(p, "pipes")).getLast(), "scored")),1,((double) Reflect.get(((java.util.List<Object>) Reflect.get(p, "pipes")).getLast(), "x")));
+            var stable=List.copyOf(((java.util.List<Object>) Reflect.get(p, "pipes")));Reflect.call(p, "recyclePipes");check(((java.util.List<Object>) Reflect.get(p, "pipes")).equals(stable),1,((java.util.List<Object>) Reflect.get(p, "pipes")).size());
+            ((java.util.List<Object>) Reflect.get(p, "pipes")).clear();Reflect.call(p, "recyclePipes");check(((java.util.List<Object>) Reflect.get(p, "pipes")).isEmpty(),2,((java.util.List<Object>) Reflect.get(p, "pipes")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -173,6 +176,7 @@ class M02_GapHopperTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M03_FlipbookStudioTest {
     static int checks;
     static final String[] CASES = {
@@ -218,13 +222,13 @@ class M03_FlipbookStudioTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M03_FlipbookStudio();
-            p.restart();p.paintCell(2,3,1);p.paintCell(2,3,4);
-            check(p.undo() && p.frames[0][3][2]==1 && p.history.size()==1,0,p.frames[0][3][2]);
-            check(p.undo() && p.frames[0][3][2]==0 && p.history.isEmpty(),0,p.frames[0][3][2]);
-            check(!p.undo(),1,p.history);
-            p.edited=2;p.paintCell(1,4,3);p.edited=0;p.undo();check(p.frames[2][4][1]==0,2,p.frames[2][4][1]);
-            p.paintCell(0,0,2);p.restart();check(p.history.isEmpty()&&!p.undo(),2,p.history);
+            var p = Reflect.create("M03_FlipbookStudio");
+            Reflect.call(p, "restart");Reflect.call(p, "paintCell", 2, 3, 1);Reflect.call(p, "paintCell", 2, 3, 4);
+            check(((boolean) Reflect.call(p, "undo")) && ((int[][][]) Reflect.get(p, "frames"))[0][3][2]==1 && ((java.util.List<Object>) Reflect.get(p, "history")).size()==1,0,((int[][][]) Reflect.get(p, "frames"))[0][3][2]);
+            check(((boolean) Reflect.call(p, "undo")) && ((int[][][]) Reflect.get(p, "frames"))[0][3][2]==0 && ((java.util.List<Object>) Reflect.get(p, "history")).isEmpty(),0,((int[][][]) Reflect.get(p, "frames"))[0][3][2]);
+            check(!((boolean) Reflect.call(p, "undo")),1,((java.util.List<Object>) Reflect.get(p, "history")));
+            Reflect.set(p, "edited", 2);Reflect.call(p, "paintCell", 1, 4, 3);Reflect.set(p, "edited", 0);Reflect.call(p, "undo");check(((int[][][]) Reflect.get(p, "frames"))[2][4][1]==0,2,((int[][][]) Reflect.get(p, "frames"))[2][4][1]);
+            Reflect.call(p, "paintCell", 0, 0, 2);Reflect.call(p, "restart");check(((java.util.List<Object>) Reflect.get(p, "history")).isEmpty()&&!((boolean) Reflect.call(p, "undo")),2,((java.util.List<Object>) Reflect.get(p, "history")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -234,6 +238,7 @@ class M03_FlipbookStudioTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M04_VoronoiStainedGlassTest {
     static int checks;
     static final String[] CASES = {
@@ -279,13 +284,13 @@ class M04_VoronoiStainedGlassTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M04_VoronoiStainedGlass();
-            var seeds=p.seedList(new Random(42),3);
+            var p = Reflect.create("M04_VoronoiStainedGlass");
+            var seeds=((java.util.List<Object>) Reflect.call(p, "seedList", new Random(42), 3));
             check(seeds.size()==3,0,seeds.size());
-            var first=seeds.getFirst();check(first.x()>=0&&first.x()<400&&first.y()>=0&&first.y()<300,0,first);
+            var first=seeds.getFirst();check(((int) Reflect.call(first, "x"))>=0&&((int) Reflect.call(first, "x"))<400&&((int) Reflect.call(first, "y"))>=0&&((int) Reflect.call(first, "y"))<300,0,first);
             seeds.removeLast();check(seeds.size()==2,1,seeds.size());
-            check(p.seedList(new Random(42),0).isEmpty(),2,"empty");
-            reject(()->p.seedList(new Random(42),-1),2);
+            check(((java.util.List<Object>) Reflect.call(p, "seedList", new Random(42), 0)).isEmpty(),2,"empty");
+            reject(()->Reflect.call(p, "seedList", new Random(42), -1),2);
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -295,6 +300,7 @@ class M04_VoronoiStainedGlassTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M05_PhotoRemixLabTest {
     static int checks;
     static final String[] CASES = {
@@ -340,13 +346,13 @@ class M05_PhotoRemixLabTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M05_PhotoRemixLab();
-            p.countColour(0x123456);p.countColour(0x123456);p.countColour(0xABCDEF);
-            check(p.colourCounts.get(0x123456)==2&&p.colourCounts.get(0xABCDEF)==1,0,p.colourCounts);
-            p.source=new BufferedImage(2,1,BufferedImage.TYPE_INT_RGB);p.source.setRGB(0,0,0x112233);p.source.setRGB(1,0,0x112233);p.remix();
-            check(p.colourCounts.size()==1&&p.colourCounts.values().iterator().next()==2,1,p.colourCounts);
-            p.source=new BufferedImage(1,1,BufferedImage.TYPE_INT_RGB);p.source.setRGB(0,0,0xFFFFFF);p.remix();
-            check(p.colourCounts.size()==1&&p.colourCounts.values().iterator().next()==1,2,p.colourCounts);
+            var p = Reflect.create("M05_PhotoRemixLab");
+            Reflect.call(p, "countColour", 0x123456);Reflect.call(p, "countColour", 0x123456);Reflect.call(p, "countColour", 0xABCDEF);
+            check(((java.util.Map<java.lang.Integer, java.lang.Integer>) Reflect.get(p, "colourCounts")).get(0x123456)==2&&((java.util.Map<java.lang.Integer, java.lang.Integer>) Reflect.get(p, "colourCounts")).get(0xABCDEF)==1,0,((java.util.Map<java.lang.Integer, java.lang.Integer>) Reflect.get(p, "colourCounts")));
+            Reflect.set(p, "source", new BufferedImage(2,1,BufferedImage.TYPE_INT_RGB));((java.awt.image.BufferedImage) Reflect.get(p, "source")).setRGB(0,0,0x112233);((java.awt.image.BufferedImage) Reflect.get(p, "source")).setRGB(1,0,0x112233);Reflect.call(p, "remix");
+            check(((java.util.Map<java.lang.Integer, java.lang.Integer>) Reflect.get(p, "colourCounts")).size()==1&&((java.util.Map<java.lang.Integer, java.lang.Integer>) Reflect.get(p, "colourCounts")).values().iterator().next()==2,1,((java.util.Map<java.lang.Integer, java.lang.Integer>) Reflect.get(p, "colourCounts")));
+            Reflect.set(p, "source", new BufferedImage(1,1,BufferedImage.TYPE_INT_RGB));((java.awt.image.BufferedImage) Reflect.get(p, "source")).setRGB(0,0,0xFFFFFF);Reflect.call(p, "remix");
+            check(((java.util.Map<java.lang.Integer, java.lang.Integer>) Reflect.get(p, "colourCounts")).size()==1&&((java.util.Map<java.lang.Integer, java.lang.Integer>) Reflect.get(p, "colourCounts")).values().iterator().next()==1,2,((java.util.Map<java.lang.Integer, java.lang.Integer>) Reflect.get(p, "colourCounts")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -356,6 +362,7 @@ class M05_PhotoRemixLabTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M06_TruchetTileLabTest {
     static int checks;
     static final String[] CASES = {
@@ -401,11 +408,11 @@ class M06_TruchetTileLabTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M06_TruchetTileLab();
-            p.countOrientation("LEFT");p.countOrientation("RIGHT");p.countOrientation("LEFT");
-            check(p.orientationCounts.equals(Map.of("LEFT",2,"RIGHT",1)),0,p.orientationCounts);
-            p.render(42,4);check(p.orientationCounts.values().stream().mapToInt(Integer::intValue).sum()==16,1,p.orientationCounts);
-            p.render(42,2);check(p.orientationCounts.values().stream().mapToInt(Integer::intValue).sum()==4,2,p.orientationCounts);
+            var p = Reflect.create("M06_TruchetTileLab");
+            Reflect.call(p, "countOrientation", "LEFT");Reflect.call(p, "countOrientation", "RIGHT");Reflect.call(p, "countOrientation", "LEFT");
+            check(((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "orientationCounts")).equals(Map.of("LEFT",2,"RIGHT",1)),0,((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "orientationCounts")));
+            Reflect.call(p, "render", 42, 4);check(((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "orientationCounts")).values().stream().mapToInt(Integer::intValue).sum()==16,1,((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "orientationCounts")));
+            Reflect.call(p, "render", 42, 2);check(((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "orientationCounts")).values().stream().mapToInt(Integer::intValue).sum()==4,2,((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "orientationCounts")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -415,6 +422,7 @@ class M06_TruchetTileLabTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M07_MarkovMischiefTest {
     static int checks;
     static final String[] CASES = {
@@ -460,12 +468,12 @@ class M07_MarkovMischiefTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M07_MarkovMischief();
-            var links=p.train("moon cat moon dog moon cat");
+            var p = Reflect.create("M07_MarkovMischief");
+            var links=((java.util.Map<java.lang.String, java.util.List<java.lang.String>>) Reflect.call(p, "train", "moon cat moon dog moon cat"));
             check(links.get("moon").equals(List.of("cat","dog","cat")),0,links);
             check(links.containsKey("cat")&&links.get("cat").equals(List.of("moon")),1,links);
-            var single=p.train("solo");check(single.containsKey("solo")&&single.get("solo").isEmpty(),2,single);
-            reject(()->p.train("   "),2);
+            var single=((java.util.Map<java.lang.String, java.util.List<java.lang.String>>) Reflect.call(p, "train", "solo"));check(single.containsKey("solo")&&single.get("solo").isEmpty(),2,single);
+            reject(()->Reflect.call(p, "train", "   "),2);
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -475,6 +483,7 @@ class M07_MarkovMischiefTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M08_DungeonBlueprintsTest {
     static int checks;
     static final String[] CASES = {
@@ -520,12 +529,12 @@ class M08_DungeonBlueprintsTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M08_DungeonBlueprints();
-            p.countRoom(new M08_DungeonBlueprints.Room(1,1,6,7));p.countRoom(new M08_DungeonBlueprints.Room(1,1,4,4));p.countRoom(new M08_DungeonBlueprints.Room(1,1,7,7));
-            check(p.roomCounts.equals(Map.of("SMALL",2,"LARGE",1)),0,p.roomCounts);
-            p.generate(42,8);int total=p.roomCounts.values().stream().mapToInt(Integer::intValue).sum();
-            check(total>=2&&total<=8,1,p.roomCounts);
-            p.generate(42,2);check(p.roomCounts.values().stream().mapToInt(Integer::intValue).sum()==2,2,p.roomCounts);
+            var p = Reflect.create("M08_DungeonBlueprints");
+            Reflect.call(p, "countRoom", Reflect.create("M08_DungeonBlueprints$Room", 1, 1, 6, 7));Reflect.call(p, "countRoom", Reflect.create("M08_DungeonBlueprints$Room", 1, 1, 4, 4));Reflect.call(p, "countRoom", Reflect.create("M08_DungeonBlueprints$Room", 1, 1, 7, 7));
+            check(((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "roomCounts")).equals(Map.of("SMALL",2,"LARGE",1)),0,((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "roomCounts")));
+            Reflect.call(p, "generate", 42, 8);int total=((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "roomCounts")).values().stream().mapToInt(Integer::intValue).sum();
+            check(total>=2&&total<=8,1,((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "roomCounts")));
+            Reflect.call(p, "generate", 42, 2);check(((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "roomCounts")).values().stream().mapToInt(Integer::intValue).sum()==2,2,((java.util.Map<java.lang.String, java.lang.Integer>) Reflect.get(p, "roomCounts")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -535,6 +544,7 @@ class M08_DungeonBlueprintsTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M09_FractalTreeGardenTest {
     static int checks;
     static final String[] CASES = {
@@ -580,12 +590,12 @@ class M09_FractalTreeGardenTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M09_FractalTreeGarden();
-            check(p.readAngle("oops")==28,0,p.readAngle("oops"));
-            check(p.readAngle(" 10 ")==10&&p.readAngle("70")==70,1,"bounds");
-            reject(()->p.readAngle("9"),2);
-            reject(()->p.readAngle("71"),2);
-            reject(()->p.readAngle("NaN"),2);
+            var p = Reflect.create("M09_FractalTreeGarden");
+            check(((double) Reflect.call(p, "readAngle", "oops"))==28,0,((double) Reflect.call(p, "readAngle", "oops")));
+            check(((double) Reflect.call(p, "readAngle", " 10 "))==10&&((double) Reflect.call(p, "readAngle", "70"))==70,1,"bounds");
+            reject(()->Reflect.call(p, "readAngle", "9"),2);
+            reject(()->Reflect.call(p, "readAngle", "71"),2);
+            reject(()->Reflect.call(p, "readAngle", "NaN"),2);
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -595,6 +605,7 @@ class M09_FractalTreeGardenTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M10_ImageToASCIITest {
     static int checks;
     static final String[] CASES = {
@@ -640,11 +651,11 @@ class M10_ImageToASCIITest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M10_ImageToASCII();
-            check(p.readWidth("oops")==80,0,p.readWidth("oops"));
-            check(p.readWidth(" 4 ")==4&&p.readWidth("160")==160,1,"bounds");
-            reject(()->p.readWidth("3"),2);
-            reject(()->p.readWidth("161"),2);
+            var p = Reflect.create("M10_ImageToASCII");
+            check(((int) Reflect.call(p, "readWidth", "oops"))==80,0,((int) Reflect.call(p, "readWidth", "oops")));
+            check(((int) Reflect.call(p, "readWidth", " 4 "))==4&&((int) Reflect.call(p, "readWidth", "160"))==160,1,"bounds");
+            reject(()->Reflect.call(p, "readWidth", "3"),2);
+            reject(()->Reflect.call(p, "readWidth", "161"),2);
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -654,6 +665,7 @@ class M10_ImageToASCIITest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M11_MazePostcardsTest {
     static int checks;
     static final String[] CASES = {
@@ -699,11 +711,11 @@ class M11_MazePostcardsTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M11_MazePostcards();
-            check(p.readColumns("oops")==20,0,p.readColumns("oops"));
-            check(p.readColumns(" 2 ")==2&&p.readColumns("50")==50,1,"limits");
-            reject(()->p.readColumns("1"),2);reject(()->p.readColumns("51"),2);
-            var maze=p.generate(42,p.readColumns("oops"),2);check(maze[0].length==41,0,maze[0].length);
+            var p = Reflect.create("M11_MazePostcards");
+            check(((int) Reflect.call(p, "readColumns", "oops"))==20,0,((int) Reflect.call(p, "readColumns", "oops")));
+            check(((int) Reflect.call(p, "readColumns", " 2 "))==2&&((int) Reflect.call(p, "readColumns", "50"))==50,1,"limits");
+            reject(()->Reflect.call(p, "readColumns", "1"),2);reject(()->Reflect.call(p, "readColumns", "51"),2);
+            var maze=((boolean[][]) Reflect.call(p, "generate", 42, ((int) Reflect.call(p, "readColumns", "oops")), 2));check(maze[0].length==41,0,maze[0].length);
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
@@ -713,6 +725,7 @@ class M11_MazePostcardsTest {
     }
 }
 
+@SuppressWarnings("unchecked")
 class M12_TileStampStudioTest {
     static int checks;
     static final String[] CASES = {
@@ -758,17 +771,175 @@ class M12_TileStampStudioTest {
     }
     public static void main(String[] args) throws Exception {
         try {
-            var p = new M12_TileStampStudio();
-            check(p.applyRepeats(" 3 ")&&p.repeats==3,0,p.repeats);
-            check(!p.applyRepeats("banana")&&p.repeats==3,1,p.repeats);
-            check(!p.applyRepeats("0")&&!p.applyRepeats("13")&&p.repeats==3,1,p.repeats);
-            check(p.applyRepeats("1")&&p.render(p.repeats).getWidth()==48,2,p.repeats);
-            check(p.applyRepeats("12")&&p.render(p.repeats).getWidth()==576,2,p.repeats);
+            var p = Reflect.create("M12_TileStampStudio");
+            check(((boolean) Reflect.call(p, "applyRepeats", " 3 "))&&((int) Reflect.get(p, "repeats"))==3,0,((int) Reflect.get(p, "repeats")));
+            check(!((boolean) Reflect.call(p, "applyRepeats", "banana"))&&((int) Reflect.get(p, "repeats"))==3,1,((int) Reflect.get(p, "repeats")));
+            check(!((boolean) Reflect.call(p, "applyRepeats", "0"))&&!((boolean) Reflect.call(p, "applyRepeats", "13"))&&((int) Reflect.get(p, "repeats"))==3,1,((int) Reflect.get(p, "repeats")));
+            check(((boolean) Reflect.call(p, "applyRepeats", "1"))&&((java.awt.image.BufferedImage) Reflect.call(p, "render", ((int) Reflect.get(p, "repeats")))).getWidth()==48,2,((int) Reflect.get(p, "repeats")));
+            check(((boolean) Reflect.call(p, "applyRepeats", "12"))&&((java.awt.image.BufferedImage) Reflect.call(p, "render", ((int) Reflect.get(p, "repeats")))).getWidth()==576,2,((int) Reflect.get(p, "repeats")));
         } catch (AssertionError failure) {
             throw failure;
         } catch (Exception failure) {
             throw new AssertionError("MISSION I142: Unexpected failure while checking the active rule.", failure);
         }
         System.out.println("PASS " + checks + " checks");
+    }
+}
+
+// Prepared access to compact programs. Tests keep ordinary assertions, arrays and JDK collections.
+class Reflect {
+    static Class<?> type(String name) {
+        return switch (name) {
+            case "boolean" -> boolean.class;
+            case "byte" -> byte.class;
+            case "short" -> short.class;
+            case "char" -> char.class;
+            case "int" -> int.class;
+            case "long" -> long.class;
+            case "float" -> float.class;
+            case "double" -> double.class;
+            case "void" -> void.class;
+            default -> load(name);
+        };
+    }
+
+    private static Class<?> load(String name) {
+        try {
+            try {
+                return Class.forName(name);
+            } catch (ClassNotFoundException missing) {
+                int nested = name.indexOf('$');
+                if (nested < 0) throw missing;
+                Class.forName(name.substring(0, nested));
+                return Class.forName(name);
+            }
+        } catch (ClassNotFoundException failure) {
+            throw new IllegalStateException("Cannot find compact program type: " + name, failure);
+        }
+    }
+
+    static Object create(String name, Object... args) {
+        var matches = new ArrayList<Constructor<?>>();
+        for (var constructor : type(name).getDeclaredConstructors()) {
+            if (accepts(constructor.getParameterTypes(), args)) matches.add(constructor);
+        }
+        var constructor = one(matches, "constructor " + name);
+        try {
+            constructor.setAccessible(true);
+            return constructor.newInstance(args);
+        } catch (InvocationTargetException failure) {
+            throw Reflect.<RuntimeException>raise(failure.getCause());
+        } catch (ReflectiveOperationException failure) {
+            throw new IllegalStateException("Cannot construct " + name, failure);
+        }
+    }
+
+    static Object get(Object target, String name) {
+        try {
+            return field(target, name).get(target instanceof Class<?> ? null : target);
+        } catch (ReflectiveOperationException failure) {
+            throw new IllegalStateException("Cannot read field " + name, failure);
+        }
+    }
+
+    static Object set(Object target, String name, Object value) {
+        try {
+            var field = field(target, name);
+            Object receiver = target instanceof Class<?> ? null : target;
+            field.set(receiver, value);
+            return field.get(receiver);
+        } catch (ReflectiveOperationException failure) {
+            throw new IllegalStateException("Cannot write field " + name, failure);
+        }
+    }
+
+    private static Field field(Object target, String name) throws NoSuchFieldException {
+        Class<?> owner = target instanceof Class<?> type ? type : target.getClass();
+        for (var current = owner; current != null; current = current.getSuperclass()) {
+            try {
+                var field = current.getDeclaredField(name);
+                if (target instanceof Class<?> && !Modifier.isStatic(field.getModifiers())) {
+                    throw new IllegalStateException("An instance is required for field " + name);
+                }
+                field.setAccessible(true);
+                return field;
+            } catch (NoSuchFieldException missing) {
+                // Continue with inherited fields.
+            }
+        }
+        throw new NoSuchFieldException(owner.getName() + "." + name);
+    }
+
+    static Object call(Object target, String name, Object... args) {
+        Class<?> owner = target instanceof Class<?> type ? type : target.getClass();
+        var methods = new LinkedHashMap<String, Method>();
+        for (var current = owner; current != null; current = current.getSuperclass()) {
+            for (var method : current.getDeclaredMethods()) {
+                methods.putIfAbsent(method.getName() + Arrays.toString(method.getParameterTypes()), method);
+            }
+        }
+        for (var method : owner.getMethods()) {
+            methods.putIfAbsent(method.getName() + Arrays.toString(method.getParameterTypes()), method);
+        }
+        var matches = new ArrayList<Method>();
+        for (var method : methods.values()) {
+            if (!method.isBridge() && !method.isSynthetic()
+                    && method.getName().equals(name) && accepts(method.getParameterTypes(), args)
+                    && (!(target instanceof Class<?>) || Modifier.isStatic(method.getModifiers()))) {
+                matches.add(method);
+            }
+        }
+        var method = one(matches, "method " + owner.getName() + "." + name);
+        try {
+            method.setAccessible(true);
+            return method.invoke(target instanceof Class<?> ? null : target, args);
+        } catch (InvocationTargetException failure) {
+            throw Reflect.<RuntimeException>raise(failure.getCause());
+        } catch (ReflectiveOperationException failure) {
+            throw new IllegalStateException("Cannot call " + owner.getName() + "." + name, failure);
+        }
+    }
+
+    static Object array(String component, Object... values) {
+        Object result = Array.newInstance(type(component), values.length);
+        for (int index = 0; index < values.length; index++) Array.set(result, index, values[index]);
+        return result;
+    }
+
+    private static boolean accepts(Class<?>[] parameters, Object[] args) {
+        if (parameters.length != args.length) return false;
+        for (int index = 0; index < parameters.length; index++) {
+            Class<?> to = parameters[index];
+            Object value = args[index];
+            if (value == null) {
+                if (to.isPrimitive()) return false;
+            } else if (to.isPrimitive()) {
+                String targets = switch (value) {
+                    case Boolean ignored -> "boolean";
+                    case Byte ignored -> "byte short int long float double";
+                    case Short ignored -> "short int long float double";
+                    case Character ignored -> "char int long float double";
+                    case Integer ignored -> "int long float double";
+                    case Long ignored -> "long float double";
+                    case Float ignored -> "float double";
+                    case Double ignored -> "double";
+                    default -> "";
+                };
+                if (!Arrays.asList(targets.split(" ")).contains(to.getName())) return false;
+            } else if (!to.isInstance(value)) return false;
+        }
+        return true;
+    }
+
+    private static <T> T one(List<T> matches, String description) {
+        if (matches.size() != 1) {
+            throw new IllegalStateException((matches.isEmpty() ? "No compatible " : "Ambiguous ") + description);
+        }
+        return matches.getFirst();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Throwable> RuntimeException raise(Throwable failure) throws T {
+        throw (T) failure;
     }
 }
