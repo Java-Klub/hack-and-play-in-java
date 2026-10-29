@@ -19,16 +19,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Counted repetition: choose a for range by its number of passes. For count equal
 /// to one, the body must run once; for zero it must not run at all.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L04/M06_VirtualScribbler.java`
-/// - Check this mission: `java L04/Check.java M06_VirtualScribbler.java`
-///
-/// Run the play command above, press Space to start the pen and use the arrow keys to change the
-/// drawing; watch Steps, then use the check command to examine exact bursts of zero, one and four.
-/// After your repair: save the file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F11 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, press Space to start the pen and use the arrow keys to change the drawing;
+/// watch Steps, then run the checks to examine exact bursts of zero, one and four.
 void burst(int count) {
     if (count < 0 || count > 60) {
         return;

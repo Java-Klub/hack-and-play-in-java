@@ -9,16 +9,8 @@
 /// **Today you learn:** Invariants: some quantities must remain consistent after every move. Cards in
 /// hands and deck plus the cards represented by books must still account for the original deck.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L07/M07_GoFish.java`
-/// - Check this mission: `java L07/Check.java M07_GoFish.java`
-///
-/// Run the play command above and request a rank shown in your hand by typing its number from 2 to
-/// 14 and pressing Enter. After your repair: save the file, run the check command above, then play
-/// again.
-///
-/// Need an explanation? Learn · F25 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and request a rank shown in your hand by typing its number from 2 to 14 and
+/// pressing Enter.
 void collect(int who) {
     for (int rank = 2; rank <= 14; rank++) {
         if (Collections.frequency(hands.get(who), rank) == 4) {

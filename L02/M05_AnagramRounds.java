@@ -10,16 +10,8 @@
 /// can be cleaned at its edges and then normalized to the letter case expected by another part of the
 /// program.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L02/M05_AnagramRounds.java`
-/// - Check this mission: `java L02/Check.java M05_AnagramRounds.java`
-///
-/// Run the play command above and type silent in the first round, then try a mixed-case spelling
-/// after the repair to see whether it is judged the same way. After your repair: save the file, run
-/// the check command above, then play again.
-///
-/// Need an explanation? Learn · F05 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and type silent in the first round, then try a mixed-case spelling after the
+/// repair to see whether it is judged the same way.
 String normalize(String input) {
     return input.strip();
 }

@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Today you learn:** A Set removes equal values, not values that merely look equivalent to us. Give an
 /// undirected edge one consistent representation so record equality can recognise reversed input.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L11/M03_WireframeCube.java`
-/// - Check this mission: `java L11/Check.java M03_WireframeCube.java`
-///
-/// After the play command, use Pause/Run to stop the rotating cube, read Distinct edges and choose
-/// Reset angle to restore the view. After your repair: save the file, run the check command above,
-/// then play again.
-///
-/// Need an explanation? Recall · F23 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then use Pause/Run to stop the rotating cube, read Distinct edges and
+/// choose Reset angle to restore the view.
 Set<Edge> uniqueEdges(int[][] candidates) {
     Set<Edge> result = new LinkedHashSet<>();
     for (int[] pair : candidates) {
@@ -167,8 +159,6 @@ void showWindow() {
 
 record Edge(int a, int b) {}
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Restore the starting game state.
     reset(42);

@@ -9,16 +9,8 @@
 /// **Today you learn:** Traversal and search: examine candidate positions until a legal move is found.
 /// Only a fully unsuccessful search can justify returning false.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L05/M05_Reversi.java`
-/// - Check this mission: `java L05/Check.java M05_Reversi.java`
-///
-/// the play command, type 3 2 for an opening move and press Enter, then let the next player choose
-/// a legal row and column. After your repair: save the file, run the check command above, then play
-/// again.
-///
-/// Need an explanation? Learn · F17 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, type 3 2 for an opening move and press Enter, then let the next player
+/// choose a legal row and column.
 boolean hasMove(int who) {
     for (int r = 0; r < 1; r++) {
         for (int c = 0; c < 6; c++) {

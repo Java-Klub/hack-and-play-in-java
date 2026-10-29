@@ -16,15 +16,8 @@ import java.awt.geom.Line2D;
 /// **Today you learn:** Rendering turns model coordinates into visible marks. A circle’s top-left corner
 /// is offset from its centre, but x must still mean horizontal and y vertical.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L10/M04_Untangle.java`
-/// - Check this mission: `java L10/Check.java M04_Untangle.java`
-///
-/// After the play command, drag numbered nodes to uncross the web, or press R to scramble it again.
-/// After your repair: save the file, run the check command above, then play again.
-///
-/// Need an explanation? Learn · F29 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then drag numbered nodes to uncross the web, or press R to scramble it
+/// again.
 void drawNode(Graphics2D g, Point point, int label) {
     g.setColor(new Color(35, 55, 90));
     g.fillOval(point.y - 13, point.x - 13, 26, 26);
@@ -239,8 +232,6 @@ void showWindow() {
     panel.requestFocusInWindow();
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

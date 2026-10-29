@@ -10,16 +10,8 @@
 /// calls. goalRow(1) and goalRow(2) supply different who values to the same body; the returned row goes
 /// back to the move rule.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L03/M11_Hexapawn.java`
-/// - Check this mission: `java L03/Check.java M11_Hexapawn.java`
-///
-/// Run the play command above and enter 3 1 2 1; 1 2 2 1; 3 3 2 3; 2 1 3 1 as four separate moves
-/// to bring player 2 to the bottom. After your repair: save the file, run the check command above,
-/// then play again.
-///
-/// Need an explanation? Recall · F13 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and enter 3 1 2 1; 1 2 2 1; 3 3 2 3; 2 1 3 1 as four separate moves to bring
+/// player 2 to the bottom.
 int goalRow(int who) {
     return 0;
 }

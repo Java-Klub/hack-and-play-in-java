@@ -16,18 +16,10 @@ import javax.swing.*;
 /// order. Predict which colour is left on top. The definition itself waits until the supplied drawing
 /// code calls it.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L01/M02_MissingTriangle.java`
-/// - Check this mission: `java L01/Check.java M02_MissingTriangle.java`
-///
-/// Run the play command above, click a disc to rotate it and press O to reveal the outlines the
-/// program actually draws. After your repair: save the file, run the check command above, then play
-/// again.
+/// Run the program, click a disc to rotate it and press O to reveal the outlines the program
+/// actually draws.
 ///
 /// Lines starting with `///` are your guide; they do not run as Java instructions.
-///
-/// Need an explanation? Recall · F01 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void paintDisc(Graphics2D g, int i) {
     whiteBite(g, i);
     darkDisc(g, i);

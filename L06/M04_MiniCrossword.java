@@ -9,15 +9,8 @@
 /// **Today you learn:** Scope and state lifetime: a count describing one scan needs a fresh lifetime for
 /// that scan. Distinguish this temporary total from the solved clues stored between commands.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L06/M04_MiniCrossword.java`
-/// - Check this mission: `java L06/Check.java M04_MiniCrossword.java`
-///
-/// the play command, enter 1 CAT and press Enter for your first answer, then read the remaining
-/// numbered clues. After your repair: save the file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F14 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and enter 1 CAT and press Enter for your first answer, then read the
+/// remaining numbered clues.
 void command(String input) {
     require(outcome.isEmpty());
     String[] p = input.toUpperCase(Locale.ROOT).split("\\s+");

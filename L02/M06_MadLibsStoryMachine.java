@@ -9,16 +9,8 @@
 /// **Today you learn:** Whole-line text: reading a phrase is different from reading only its first word.
 /// Work on the returned String while preserving the spaces that belong inside the phrase.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L02/M06_MadLibsStoryMachine.java`
-/// - Check this mission: `java L02/Check.java M06_MadLibsStoryMachine.java`
-///
-/// Run the play command above and answer the name prompt with spaces around Red Fox, then supply
-/// the other three phrases and inspect the finished story. After your repair: save the file, run
-/// the check command above, then play again.
-///
-/// Need an explanation? Recall · F05 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and answer the name prompt with spaces around Red Fox, then supply the other
+/// three phrases and inspect the finished story.
 String cleanWord(String word) {
     return word;
 }

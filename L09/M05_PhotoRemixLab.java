@@ -16,16 +16,8 @@ import java.awt.image.BufferedImage;
 /// **Today you learn:** A Map associates each colour key with its current count. A repeated key needs an
 /// updated total; put replaces the old value rather than adding to it automatically.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L09/M05_PhotoRemixLab.java`
-/// - Check this mission: `java L09/Check.java M05_PhotoRemixLab.java`
-///
-/// After the play command, compare Pixels counted with the image total; Up/Down changes the poster
-/// threshold and R restores the demo. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Learn · F24 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then compare Pixels counted with the image total; Up/Down changes the
+/// poster threshold and R restores the demo.
 void countColour(int rgb) {
     colourCounts.put(rgb, 1);
 }
@@ -190,8 +182,6 @@ int countedPixels() {
     return total;
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

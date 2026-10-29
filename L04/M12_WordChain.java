@@ -9,16 +9,8 @@
 /// **Today you learn:** Accumulating a collection: the running result can be a list rather than a number.
 /// Create the empty list once, then keep earlier entries while later legal choices are discovered.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L04/M12_WordChain.java`
-/// - Check this mission: `java L04/Check.java M12_WordChain.java`
-///
-/// Run the play command above and compare the full Dictionary with the single next choice; after
-/// repair, enter APPLE and inspect the offered E continuations. After your repair: save the file,
-/// run the check command above, then play again.
-///
-/// Need an explanation? Recall · F12 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and compare the full Dictionary with the single next choice; after repair,
+/// enter APPLE and inspect the offered E continuations.
 List<String> choices() {
     var list = new ArrayList<String>();
     for (String w : words) {

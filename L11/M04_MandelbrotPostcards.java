@@ -15,16 +15,8 @@ import java.awt.image.BufferedImage;
 /// run. Here one drawn hue controls the palette: equal seeds should agree and different seeds should be
 /// able to differ.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L11/M04_MandelbrotPostcards.java`
-/// - Check this mission: `java L11/Check.java M04_MandelbrotPostcards.java`
-///
-/// After the play command, type a seed or press Enter for 42; inspect the Java picture, then close
-/// it and repeat the same seed or try 43 to compare. After your repair: save the file, run the
-/// check command above, then play again.
-///
-/// Need an explanation? Learn · F27 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then type a seed or press Enter for 42; inspect the Java picture, then
+/// close it and repeat the same seed or try 43 to compare.
 BufferedImage render(long seed, double span) {
     if (!Double.isFinite(span) || span <= 1.0E-5 || span > 6 || !Double.isFinite(centerX + centerY)) {
         throw new IllegalArgumentException("Span must be 0.00001..6.");
@@ -106,8 +98,6 @@ double centerX = -0.6;
 double centerY = 0;
 
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

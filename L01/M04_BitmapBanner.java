@@ -9,16 +9,8 @@
 /// **Today you learn:** Literals and output: the chosen text determines what another action prints.
 /// Spaces inside quotes are real characters too, even though their output can look empty.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L01/M04_BitmapBanner.java`
-/// - Check this mission: `java L01/Check.java M04_BitmapBanner.java`
-///
-/// Run the play command above and look in terminal output for the five-line sign; after repairing
-/// it, try reading it from farther away. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Recall · F02 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and look in terminal output for the five-line sign; after repairing it, try
+/// reading it from farther away.
 String bannerMessage() {
     return "     ";
 }

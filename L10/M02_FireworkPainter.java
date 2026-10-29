@@ -20,16 +20,8 @@ import javax.swing.Timer;
 /// **Today you learn:** A two-argument callback carries click coordinates into a later action. Creating
 /// the callback must leave particles alone; invoking it must use that particular click once.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L10/M02_FireworkPainter.java`
-/// - Check this mission: `java L10/Check.java M02_FireworkPainter.java`
-///
-/// After the play command, click the canvas to launch fireworks; Space pauses the motion and R
-/// clears and restarts the sky. After your repair: save the file, run the check command above, then
-/// play again.
-///
-/// Need an explanation? Recall · F28 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then click the canvas to launch fireworks; Space pauses the motion and R
+/// clears and restarts the sky.
 java.util.function.BiConsumer<Integer, Integer> burstAction() {
     return (x, y) -> {};
 }
@@ -219,8 +211,6 @@ void showWindow() {
 
 java.util.function.BiConsumer<Integer, Integer> burstCallback = burstAction();
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

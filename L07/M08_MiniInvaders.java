@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Invariants: one active shot has one lifetime and at most one scored hit. Updating
 /// enemy state and projectile state must preserve that relationship.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L07/M08_MiniInvaders.java`
-/// - Check this mission: `java L07/Check.java M08_MiniInvaders.java`
-///
-/// the play command, steer with Left and Right, and hold Space to fire again whenever the previous
-/// bullet has finished. After your repair: save the file, run the check command above, then play
-/// again.
-///
-/// Need an explanation? Recall · F25 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, steer with Left and Right, and hold Space to fire again whenever the
+/// previous bullet has finished.
 void step() {
     if (!state.equals("PLAY")) {
         return;

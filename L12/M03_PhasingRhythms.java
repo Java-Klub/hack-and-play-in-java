@@ -13,16 +13,8 @@
 /// values answer a time-to-sample question; the mixer combines their answers rather than knowing how each
 /// rhythm works.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L12/M03_PhasingRhythms.java`
-/// - Check this mission: `java L12/Check.java M03_PhasingRhythms.java`
-///
-/// After the play command, compare Play two voices with Play one voice in Java; listen for changing
-/// overlap, use Stop and replay after repairing mix. After your repair: save the file, run the
-/// check command above, then play again.
-///
-/// Need an explanation? Recall · F34 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then compare Play two voices with Play one voice in Java; listen for
+/// changing overlap, use Stop and replay after repairing mix.
 double mix(double time) {
     return 0.17 * first.sample(time);
 }
@@ -111,8 +103,6 @@ interface Voice { double sample(double time); }
 Voice first = time -> tap(time, 0.12);
 Voice second = time -> tap(time, 0.13);
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 volatile javax.sound.sampled.SourceDataLine playingLine;
 volatile int playbackVersion;
 

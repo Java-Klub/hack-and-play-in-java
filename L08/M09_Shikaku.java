@@ -16,16 +16,8 @@ import java.util.ArrayList;
 /// **Today you learn:** Copies and aliasing: copy the mutable container when its immutable elements are
 /// safe to share. Box records need not be duplicated just to preserve which boxes are present.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L08/M09_Shikaku.java`
-/// - Check this mission: `java L08/Check.java M09_Shikaku.java`
-///
-/// Run the play command above and drag a rectangle around one clue, then press U to try undoing it
-/// or right-click to remove a rectangle. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Recall · F20 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and drag a rectangle around one clue, then press U to try undoing it or
+/// right-click to remove a rectangle.
 ArrayList<Box> snapshot() {
     return boxes;
 }

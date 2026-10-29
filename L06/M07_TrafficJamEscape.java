@@ -9,16 +9,8 @@
 /// **Today you learn:** Pure contracts: separate asking whether a move fits from actually making the
 /// move. Repeated or unsuccessful probes must leave the board unchanged.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L06/M07_TrafficJamEscape.java`
-/// - Check this mission: `java L06/Check.java M07_TrafficJamEscape.java`
-///
-/// Run the play command above and request a car move by entering B 2, then use a car letter and
-/// signed step count to clear A’s exit. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Recall · F15 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and request a car move by entering B 2, then use a car letter and signed
+/// step count to clear A’s exit.
 boolean fits(int car, int x, int y) {
     xs[car] = x;
     ys[car] = y;

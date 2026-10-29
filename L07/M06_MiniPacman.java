@@ -18,16 +18,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Enum states: PLAY, CAUGHT, and WON are mutually exclusive outcomes. When several
 /// conditions hold together, the transition rule must choose which state wins.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L07/M06_MiniPacman.java`
-/// - Check this mission: `java L07/Check.java M06_MiniPacman.java`
-///
-/// Run the play command above and press an arrow key to start moving through the maze, steering
-/// toward dots while avoiding the ghost. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Recall · F21 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and press an arrow key to start moving through the maze, steering toward
+/// dots while avoiding the ghost.
 enum RoundState {
     PLAY, CAUGHT, WON
 }

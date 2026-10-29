@@ -19,16 +19,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Input and simulation time are separate. A key event proposes a direction; the
 /// next tick applies the proposal once, so reversal checks still refer to the last real movement.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L10/M14_Snake.java`
-/// - Check this mission: `java L10/Check.java M14_Snake.java`
-///
-/// After the play command, an arrow key starts the snake; use arrows toward food. A crash or full
-/// board ends the round; R resets and waits for your next arrow. After your repair: save the file,
-/// run the check command above, then play again.
-///
-/// Need an explanation? Recall · F30 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then an arrow key starts the snake; use arrows toward food. A crash or full
+/// board ends the round; R resets and waits for your next arrow.
 void turn(int x, int y) {
     if (turnQueued || lost || won || Math.abs(x) + Math.abs(y) != 1) return;
     if (x == -dx && y == -dy) return;
@@ -218,8 +210,6 @@ void showWindow() {
     timer.start();
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

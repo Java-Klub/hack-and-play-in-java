@@ -15,16 +15,8 @@ import java.awt.GridLayout;
 /// **Today you learn:** Protect a write with an early return: combine the reasons to reject, then perform
 /// one write only after none applies. Coordinate validation must happen before reading the clue table.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L03/M08_Sudoku.java`
-/// - Check this mission: `java L03/Check.java M08_Sudoku.java`
-///
-/// Run the play command above, choose 2 in the number selector and click the empty square
-/// immediately right of the top-left 1. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Recall · F08 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, choose 2 in the number selector and click the empty square immediately
+/// right of the top-left 1.
 boolean place(int row, int col, int value) {
     if (complete() || !valid(row, col, value) || clues[row][col] == 0) return false;
     board[row][col] = value;

@@ -15,16 +15,8 @@ import java.awt.GridLayout;
 /// **Today you learn:** Grid neighbours: a square cell can have up to eight neighbours. Separate bounds,
 /// the centre-cell exclusion, and the condition you want to count.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L08/M01_Minesweeper.java`
-/// - Check this mission: `java L08/Check.java M01_Minesweeper.java`
-///
-/// Run the play command above and click a square to reveal it, then use its number to choose nearby
-/// safe squares or place a flag in Flag mode. After your repair: save the file, run the check
-/// command above, then play again.
-///
-/// Need an explanation? Learn · F18 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and click a square to reveal it, then use its number to choose nearby safe
+/// squares or place a flag in Flag mode.
 int adjacent(int row, int col) {
     int count = 0;
     for (int r = row - 1; r <= row + 1; r++) {

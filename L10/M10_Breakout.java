@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Today you learn:** A lifecycle guard must describe when an update is permitted, including every stop
 /// state. One tick should not alter a game already marked won or over.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L10/M10_Breakout.java`
-/// - Check this mission: `java L10/Check.java M10_Breakout.java`
-///
-/// After the play command, read the board, then press Space or click to start; move the mouse to
+/// Run the program, then read the board, then press Space or click to start; move the mouse to
 /// aim the bat. Clear all 18 bricks before three misses; R resets and waits for another start.
-/// After your repair: save the file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F30 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
 void step() {
     if (state.equals("PAUSE")) return;
     double previousX = ballX, previousY = ballY;
@@ -228,8 +220,6 @@ void showWindow() {
     timer.start();
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

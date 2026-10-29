@@ -15,16 +15,8 @@ import java.awt.GridLayout;
 /// **Today you learn:** Arrays: related arrays describe the same numbered positions. Read the requested
 /// position without changing the rule that decides whether it is visible.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L05/M01_MemoryPairs.java`
-/// - Check this mission: `java L05/Check.java M01_MemoryPairs.java`
-///
-/// Run the play command above and click two covered cards; after a mismatch, clicking another
-/// covered card begins your next attempt. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Learn · F16 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and click two covered cards; after a mismatch, clicking another covered card
+/// begins your next attempt.
 int visible(int index) {
     return matched[index] || index == first || index == second ? cards[0] : 0;
 }

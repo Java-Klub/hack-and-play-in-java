@@ -17,16 +17,8 @@ import javax.swing.Timer;
 /// **Today you learn:** A mutable List can act as a stack: changes enter in time order and are undone in
 /// reverse time order. Each Edit stores enough old data to restore one pixel.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L09/M03_FlipbookStudio.java`
-/// - Check this mission: `java L09/Check.java M03_FlipbookStudio.java`
-///
-/// After the play command, paint two different cells and press Z to undo the latest one;
-/// right-click erases, 1–4 switches frames, Space plays the animation and R restarts. After your
-/// repair: save the file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F22 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then paint two different cells and press Z to undo the latest one;
+/// right-click erases, 1–4 switches frames, Space plays the animation and R restarts.
 boolean undo() {
     if (history.isEmpty()) return false;
     Edit edit = history.removeFirst();
@@ -252,8 +244,6 @@ void showWindow() {
 record Edit(int frame, int x, int y, int oldColour) {}
 List<Edit> history = new ArrayList<>();
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

@@ -16,16 +16,9 @@ import javax.imageio.ImageIO;
 /// and the destination are separate choices; saving must honour both rather than invent a neighbouring
 /// file.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L11/M09_PixelSortingGlitch.java`
-/// - Check this mission: `java L11/Check.java M09_PixelSortingGlitch.java`
-///
-/// the play command writes exports/pixel-sorted.png through saveSorted and loads that exact file
+/// The program writes exports/pixel-sorted.png through saveSorted and loads that exact file
 /// into a Java window. If the requested file is missing, read terminal output and repair its
-/// destination. After your repair: save the file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F32 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// destination.
 void saveSorted(Path path, BufferedImage input, int threshold) throws IOException {
     Files.createDirectories(path.toAbsolutePath().getParent());
     if (!ImageIO.write(sort(input, threshold), "png", path.resolveSibling("lost-pixels.png").toFile())) {
@@ -130,8 +123,6 @@ BufferedImage sort(BufferedImage input, int threshold) {
     return output;
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

@@ -17,16 +17,8 @@ import java.util.Arrays;
 /// **Today you learn:** Copies and aliasing: returning another reference to an array is not copying its
 /// values. A saved snapshot must survive later writes to the working state.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L08/M07_Bridges.java`
-/// - Check this mission: `java L08/Check.java M07_Bridges.java`
-///
-/// the play command, click a faint connection to change its bridge count, and press U to try
-/// undoing that edit. After your repair: save the file, run the check command above, then play
-/// again.
-///
-/// Need an explanation? Learn · F20 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, click a faint connection to change its bridge count, and press U to try
+/// undoing that edit.
 int[] snapshot() {
     return bridges;
 }

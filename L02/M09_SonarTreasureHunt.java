@@ -18,16 +18,8 @@ import javax.swing.*;
 /// row and the column must stay within their own lower and upper bounds; eight positions starting at zero
 /// end at seven.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L02/M09_SonarTreasureHunt.java`
-/// - Check this mission: `java L02/Check.java M09_SonarTreasureHunt.java`
-///
-/// The play command opens the sea. Click a square to probe it. Try the two outside-map buttons:
-/// neither should spend a probe. After fixing both bounds, New sea starts a treasure hunt. After
-/// your repair: save the file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F06 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// The program opens the sea. Click a square to probe it. Try the two outside-map buttons:
+/// neither should spend a probe. After fixing both bounds, New sea starts a treasure hunt.
 boolean insideSea(int row, int column) {
     return row >= 0 && row <= 8 && column >= 0 && column <= 8;
 }

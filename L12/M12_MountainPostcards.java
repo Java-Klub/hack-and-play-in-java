@@ -15,16 +15,8 @@ import java.awt.image.BufferedImage;
 /// Extracting ridge reversal gives the new option one responsibility and keeps generation independent
 /// from presentation.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L12/M12_MountainPostcards.java`
-/// - Check this mission: `java L12/Check.java M12_MountainPostcards.java`
-///
-/// After the play command, compare New rule with Original rule from the same seed; after the repair
-/// they should show the intended difference. Close the window before replaying. After your repair:
-/// save the file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F36 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then compare New rule with Original rule from the same seed; after the
+/// repair they should show the intended difference. Close the window before replaying.
 double[] reverseRidge(double[] heights) {
     return heights.clone();
 }
@@ -128,8 +120,6 @@ BufferedImage render(long seed, double roughness) {
 
 boolean mirrored = true;
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

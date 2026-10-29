@@ -14,16 +14,8 @@ import java.awt.image.BufferedImage;
 /// **Today you learn:** Random bounds have an exclusive upper end. Translate a count of legal candidates
 /// into the correct selection range without accidentally removing the last candidate.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L11/M05_ChaosGame.java`
-/// - Check this mission: `java L11/Check.java M05_ChaosGame.java`
-///
-/// After the play command, type a seed or press Enter for 42; inspect the Java picture, then close
-/// it and repeat the same seed or try 43 to compare. After your repair: save the file, run the
-/// check command above, then play again.
-///
-/// Need an explanation? Recall · F27 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then type a seed or press Enter for 42; inspect the Java picture, then
+/// close it and repeat the same seed or try 43 to compare.
 int chooseVertex(Random random, int count) {
     if (count < 1) throw new IllegalArgumentException("No legal vertices.");
     return random.nextInt(Math.max(1, count - 1));
@@ -103,8 +95,6 @@ BufferedImage render(long seed, double option) {
 }
 
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void showImages(String title, String[] captions, java.awt.image.BufferedImage[] images) {
     if (java.awt.GraphicsEnvironment.isHeadless()) return;
     javax.swing.SwingUtilities.invokeLater(() -> {

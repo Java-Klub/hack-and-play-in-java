@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Input can change both model data and lifecycle state. Here a valid interior tap
 /// starts motion; an out-of-bounds tap must not silently resume or change the water.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L10/M13_RippleTank.java`
-/// - Check this mission: `java L10/Check.java M13_RippleTank.java`
-///
-/// After the play command, click inside the water to make ripples, press Space to pause and R to
-/// restore a still tank. After your repair: save the file, run the check command above, then play
-/// again.
-///
-/// Need an explanation? Recall · F30 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then click inside the water to make ripples, press Space to pause and R to
+/// restore a still tank.
 void tap(int x, int y) {
     if (x > 0 && y > 0 && x < COLUMNS - 1 && y < ROWS - 1) {
         height[y][x] = Math.min(120, height[y][x] + 60);
@@ -205,8 +197,6 @@ void showWindow() {
     timer.start();
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

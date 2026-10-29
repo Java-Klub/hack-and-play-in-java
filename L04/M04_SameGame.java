@@ -10,16 +10,9 @@
 /// **Today you learn:** While until no work remains: the pending queue and the collected result answer
 /// different questions. Finding one cell does not mean there are no more cells waiting to be explored.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L04/M04_SameGame.java`
-/// - Check this mission: `java L04/Check.java M04_SameGame.java`
-///
-/// Run the play command above and look for two same-colour blocks that share an edge despite the
-/// early “No groups remain” message; after your repair, enter the row and column of a block in that
-/// group. After your repair: save the file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F10 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and look for two same-colour blocks that share an edge despite the early “No
+/// groups remain” message; after your repair, enter the row and column of a block in that
+/// group.
 List<int[]> group(int row, int col) {
     var result = new ArrayList<int[]>();
     if (row < 0 || row >= 5 || col < 0 || col >= 5 || board[row][col] == 0) {

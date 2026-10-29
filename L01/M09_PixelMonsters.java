@@ -14,16 +14,7 @@ import java.awt.image.BufferedImage;
 /// **Today you learn:** One named value, several readers: both eyes receive the same stored colour. A
 /// single deliberate change should therefore affect two places in the picture.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L01/M09_PixelMonsters.java`
-/// - Check this mission: `java L01/Check.java M09_PixelMonsters.java`
-///
-/// Run the play command above: the picture appears immediately in a Java window. After editing the
-/// source, close the window and run the play command again; the check command checks the
-/// calculation separately.
-///
-/// Need an explanation? Recall · F03 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program: the picture appears immediately in a Java window.
 int eyeColour = Color.BLACK.getRGB();
 
 // <editor-fold defaultstate="collapsed" desc="Recall · F03">

@@ -9,16 +9,8 @@
 /// **Today you learn:** Several guards in order: first establish that a place exists, then inspect
 /// whether it is usable. A rejected strike must not move fingers or pass the turn.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L03/M06_Chopsticks.java`
-/// - Check this mission: `java L03/Check.java M06_Chopsticks.java`
-///
-/// Run the play command above and enter 1 1 three times to knock out a hand, then try a fourth 1 1
-/// and watch whether an invalid strike changes the player. After your repair: save the file, run
-/// the check command above, then play again.
-///
-/// Need an explanation? Recall · F08 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and enter 1 1 three times to knock out a hand, then try a fourth 1 1 and
+/// watch whether an invalid strike changes the player.
 boolean handsAlive(int own, int opposing) {
     if (own < 0 || own >= 2 || opposing < 0 || opposing >= 2) {
         return false;

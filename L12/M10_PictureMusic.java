@@ -13,16 +13,9 @@
 /// caller’s job. pitchFrequency combines a familiar row-to-note rule with a semitone shift; zero remains
 /// the compatibility case.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L12/M10_PictureMusic.java`
-/// - Check this mission: `java L12/Check.java M10_PictureMusic.java`
-///
-/// After the play command, inspect the Java picture and compare Play shift 12 with Play original;
-/// Stop interrupts playback, and the repaired shift should change pitch while preserving rhythm.
-/// After your repair: save the file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F36 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then inspect the Java picture and compare Play shift 12 with Play original;
+/// Stop interrupts playback, and the repaired shift should change pitch while preserving
+/// rhythm.
 double pitchFrequency(int row, int shift) {
     if (row < 0 || row >= 12 || shift < -12 || shift > 12) throw new IllegalArgumentException("Row 0..11; transpose -12..12.");
     return 220 * Math.pow(2, (11 - row) / 12.0);
@@ -113,8 +106,6 @@ double[] signal(java.awt.image.BufferedImage image) {
 
 int transpose = 0;
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 volatile javax.sound.sampled.SourceDataLine playingLine;
 volatile int playbackVersion;
 

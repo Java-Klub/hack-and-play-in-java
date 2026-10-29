@@ -19,16 +19,8 @@ import java.util.Random;
 /// pass, the index advances and new neighbours may be added; compare with the current size rather than an
 /// assumed fixed number of passes.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L04/M03_Flood.java`
-/// - Check this mission: `java L04/Check.java M03_Flood.java`
-///
-/// Run the play command above and choose a colour by clicking its palette square or pressing 1–4;
-/// watch which connected cells change and use R to restore the board. After your repair: save the
-/// file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F10 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and choose a colour by clicking its palette square or pressing 1–4; watch
+/// which connected cells change and use R to restore the board.
 void spread(ArrayList<Point> queue, int old, int colour) {
     int index = 0;
     while (index < queue.size() && index < 1) {

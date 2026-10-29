@@ -19,16 +19,8 @@ import javax.swing.Timer;
 /// multiplication. Compare an exact whole-number ratio with a fractional ratio, then predict the retained
 /// speed of a ball arriving at speed 4.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L02/M03_BouncingBalls.java`
-/// - Check this mission: `java L02/Check.java M03_BouncingBalls.java`
-///
-/// Run the play command above, drag sideways to throw a ball at a wall and watch its rebound; Space
-/// pauses the room and R empties it. After your repair: save the file, run the check command above,
-/// then play again.
-///
-/// Need an explanation? Recall · F04 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, drag sideways to throw a ball at a wall and watch its rebound; Space pauses
+/// the room and R empties it.
 double bounceSpeed(double speed) {
     return Math.abs(speed) * (3 / 4);
 }

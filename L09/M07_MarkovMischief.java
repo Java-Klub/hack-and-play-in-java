@@ -10,16 +10,8 @@
 /// including repeated ones. Create a word’s collection deliberately, then preserve it across later
 /// occurrences.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L09/M07_MarkovMischief.java`
-/// - Check this mission: `java L09/Check.java M07_MarkovMischief.java`
-///
-/// After the play command, press Enter to remix the sample corpus moon cat moon dog moon cat, or
-/// type your own short phrase. After your repair: save the file, run the check command above, then
-/// play again.
-///
-/// Need an explanation? Recall · F24 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then press Enter to remix the sample corpus moon cat moon dog moon cat, or
+/// type your own short phrase.
 Map<String, List<String>> train(String text) {
     if (text.isBlank() || text.length() > 100000) {
         throw new IllegalArgumentException("Corpus size: 1..100000 characters.");
@@ -122,8 +114,6 @@ String generate(String text, long seed, int count) {
     return output.toString();
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
     String input = IO.readln("Corpus (blank moon cat moon dog moon cat, q quits): ");
     if (input == null || input.strip().equalsIgnoreCase("q")) return;

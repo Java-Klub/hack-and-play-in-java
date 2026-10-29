@@ -17,16 +17,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Pure contracts: reading a score and awarding a score are different
 /// responsibilities. scoreAt() must return the requested value without altering totals or physics.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L06/M06_PegDrop.java`
-/// - Check this mission: `java L06/Check.java M06_PegDrop.java`
-///
-/// Run the play command above and click above a bin to release a disc, then compare the landing
-/// bin’s label with the awarded points. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Recall · F15 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and click above a bin to release a disc, then compare the landing bin’s
+/// label with the awarded points.
 int scoreAt(int index) {
     // This supplied guard reports a bad index; exception handling comes in L09.
     if (index < 0 || index >= values.length) {

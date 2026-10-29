@@ -8,15 +8,8 @@
 /// **Today you learn:** Arrays: an int[] can describe a group of board positions. Translate one box
 /// number into the edge indices its caller needs.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L05/M03_DotsAndBoxes.java`
-/// - Check this mission: `java L05/Check.java M03_DotsAndBoxes.java`
-///
-/// the play command, then take turns typing an unclaimed edge number from 1 to 12 and pressing
-/// Enter. After your repair: save the file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F16 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then take turns typing an unclaimed edge number from 1 to 12 and pressing
+/// Enter.
 int[] box(int n) {
     return new int[]{0, 1, 6, 7};
 }

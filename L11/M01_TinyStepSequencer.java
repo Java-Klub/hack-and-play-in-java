@@ -15,16 +15,8 @@ import javax.swing.*;
 /// **Today you learn:** A Set answers whether a distinct value is present. A toggle has two paths: a
 /// previously absent Note becomes present, while an already present Note must stop belonging to the set.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L11/M01_TinyStepSequencer.java`
-/// - Check this mission: `java L11/Check.java M01_TinyStepSequencer.java`
-///
-/// After the play command, click note cells, choose BPM and click Play to hear four loops directly
-/// in Java; Stop interrupts, Restart brings the starting pattern back. After your repair: save the
-/// file, run the check command above, then play again.
-///
-/// Need an explanation? Learn · F23 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then click note cells, choose BPM and click Play to hear four loops
+/// directly in Java; Stop interrupts, Restart brings the starting pattern back.
 boolean toggle(int row, int step) {
     if (row < 0 || row >= 4 || step < 0 || step >= 8) return false;
     Note note = new Note(row, step);
@@ -178,8 +170,6 @@ void showWindow() {
     frame.setVisible(true);
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 volatile javax.sound.sampled.SourceDataLine playingLine;
 volatile int playbackVersion;
 

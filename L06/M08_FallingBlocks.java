@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Pure contracts: validation reads the board and a candidate position, then returns
 /// a boolean. Only its caller decides whether to commit the candidate.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L06/M08_FallingBlocks.java`
-/// - Check this mission: `java L06/Check.java M08_FallingBlocks.java`
-///
-/// the play command, steer the falling piece with Left and Right, and press Up to try a rotation
-/// near the stack or wall. After your repair: save the file, run the check command above, then play
-/// again.
-///
-/// Need an explanation? Recall · F15 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, steer the falling piece with Left and Right, and press Up to try a rotation
+/// near the stack or wall.
 boolean fits(int[][] cells, int x, int y) {
     px = x;
     py = y;

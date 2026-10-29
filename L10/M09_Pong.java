@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Today you learn:** A tick is conditional on the game’s lifecycle state. The winner marker decides
 /// whether one step may move paddles and ball; drawing should still be allowed after play ends.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L10/M09_Pong.java`
-/// - Check this mission: `java L10/Check.java M09_Pong.java`
-///
-/// After the play command, press Space or click to start; play the left paddle with W/S and the
-/// right with Up/Down. First to five wins; R resets and waits for another start. After your repair:
-/// save the file, run the check command above, then play again.
-///
-/// Need an explanation? Learn · F30 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then press Space or click to start; play the left paddle with W/S and the
+/// right with Up/Down. First to five wins; R resets and waits for another start.
 void step() {
     if (winner == -1) return;
     leftY = clampPaddle(leftY + (leftDown ? 5 : 0) - (leftUp ? 5 : 0));
@@ -227,8 +219,6 @@ void showWindow() {
     timer.start();
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

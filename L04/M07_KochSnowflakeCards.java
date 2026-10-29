@@ -14,16 +14,7 @@ import java.awt.image.BufferedImage;
 /// **Today you learn:** For ranges over positions: three stored corners have indices 0, 1 and 2. The
 /// loop’s initial value and stopping comparison together decide which sides exist in the picture.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L04/M07_KochSnowflakeCards.java`
-/// - Check this mission: `java L04/Check.java M07_KochSnowflakeCards.java`
-///
-/// Run the play command above: the picture appears immediately in a Java window. After editing the
-/// source, close the window and run the play command again; the check command checks the
-/// calculation separately.
-///
-/// Need an explanation? Recall · F11 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program: the picture appears immediately in a Java window.
 int snowflake(Graphics2D g, int level) {
     int[] xs = {270, 70, 470};
     int[] ys = {45, 390, 390};

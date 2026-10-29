@@ -12,16 +12,8 @@
 /// unmatched L discoveries must both contribute to the same counter; exact-position matches have already
 /// been set aside.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L04/M10_WordleStyleWordHunt.java`
-/// - Check this mission: `java L04/Check.java M10_WordleStyleWordHunt.java`
-///
-/// Run the play command above and enter ALLEY against the training word LEVEL; compare the printed
-/// clue with the two L letters that can both match elsewhere. After your repair: save the file, run
-/// the check command above, then play again.
-///
-/// Need an explanation? Recall · F12 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and enter ALLEY against the training word LEVEL; compare the printed clue
+/// with the two L letters that can both match elsewhere.
 int[] leftoverLetters(String guess, char[] result) {
     int[] counts = new int[26];
     for (int i = 0; i < 5; i++) {

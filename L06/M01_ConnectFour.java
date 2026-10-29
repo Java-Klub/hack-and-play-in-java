@@ -9,16 +9,8 @@
 /// **Today you learn:** Scope and state lifetime: a new local variable can hide a longer-lived field with
 /// the same name. Identify which moves belongs to the whole round.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L06/M01_ConnectFour.java`
-/// - Check this mission: `java L06/Check.java M01_ConnectFour.java`
-///
-/// the play command, type 4 and press Enter to drop a disc in the middle column, then alternate
-/// column choices with a friend. After your repair: save the file, run the check command above,
-/// then play again.
-///
-/// Need an explanation? Learn · F14 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, type 4 and press Enter to drop a disc in the middle column, then alternate
+/// column choices with a friend.
 void reset() {
     for (char[] row : board) {
         Arrays.fill(row, '.');

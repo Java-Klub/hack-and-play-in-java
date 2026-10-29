@@ -11,16 +11,8 @@
 /// separate accumulators are needed here because sum counts every category, while upper counts only the
 /// first six for a later bonus decision.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L04/M13_YatzyScorecard.java`
-/// - Check this mission: `java L04/Check.java M13_YatzyScorecard.java`
-///
-/// Run the play command above, enter bank 13, then bank another open category showing nonzero
-/// points and compare the printed total with both filled scores. After your repair: save the file,
-/// run the check command above, then play again.
-///
-/// Need an explanation? Recall · F12 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, enter bank 13, then bank another open category showing nonzero points and
+/// compare the printed total with both filled scores.
 int total() {
     int sum = 0;
     int upper = 0;

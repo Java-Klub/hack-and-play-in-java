@@ -20,16 +20,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Rendering should be a faithful snapshot, not another clock. The timer already
 /// owns movement; a paint request may arrive for reasons unrelated to a new simulation step.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L10/M05_SpringToy.java`
-/// - Check this mission: `java L10/Check.java M05_SpringToy.java`
-///
-/// After the play command, drag and release the weight, press Space to pause and use arrow keys to
-/// tune spring stiffness and damping. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Recall · F29 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then drag and release the weight, press Space to pause and use arrow keys
+/// to tune spring stiffness and damping.
 void draw(Graphics2D g) {
 // Supplied bounded update: one call means one model step; the active repair is described above.
     step();
@@ -260,8 +252,6 @@ void showWindow() {
     timer.start();
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();

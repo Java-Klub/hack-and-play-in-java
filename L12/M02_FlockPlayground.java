@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Composition lets the flock use an Avoidance role without owning its formula.
 /// Passing the actual distance matters: a replacement rule may react differently nearby and farther away.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L12/M02_FlockPlayground.java`
-/// - Check this mission: `java L12/Check.java M02_FlockPlayground.java`
-///
-/// After the play command, move the orange mouse obstacle into the birds’ path and use Pause/Run or
-/// New flock to compare their response. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Recall · F34 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then move the orange mouse obstacle into the birds’ path and use Pause/Run
+/// or New flock to compare their response.
 double obstaclePush(double distance) {
     return 0;
 }
@@ -223,8 +215,6 @@ void showWindow() {
 interface Avoidance { double strength(double distance); }
 Avoidance avoidance = distance -> distance > 0 && distance < 75 ? 0.2 : 0;
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Restore the starting game state.
     reset(42);

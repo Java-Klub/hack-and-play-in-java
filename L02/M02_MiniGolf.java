@@ -17,16 +17,8 @@ import javax.swing.Timer;
 /// intended ratio. Check a small positive example, a negative one and zero before judging the whole
 /// moving scene.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L02/M02_MiniGolf.java`
-/// - Check this mission: `java L02/Check.java M02_MiniGolf.java`
-///
-/// Run the play command above, pull backwards from the resting ball and release for a putt; let it
-/// stop before the next shot, or press R to restart. After your repair: save the file, run the
-/// check command above, then play again.
-///
-/// Need an explanation? Recall · F04 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, pull backwards from the resting ball and release for a putt; let it stop
+/// before the next shot, or press R to restart.
 double dragVelocity(double distance) {
     return distance / 125;
 }

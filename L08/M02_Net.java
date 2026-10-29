@@ -16,16 +16,8 @@ import java.util.ArrayList;
 /// **Today you learn:** Grid neighbours: adjacency alone is not connectivity. For a move in one
 /// direction, inspect both that outgoing port and the neighbour’s incoming side.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L08/M02_Net.java`
-/// - Check this mission: `java L08/Check.java M02_Net.java`
-///
-/// Run the play command above and click a tile to rotate its pipes, watching which tiles turn green
-/// as they connect to the source. After your repair: save the file, run the check command above,
-/// then play again.
-///
-/// Need an explanation? Recall · F18 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and click a tile to rotate its pipes, watching which tiles turn green as
+/// they connect to the source.
 boolean[][] connected() {
     boolean[][] reached = new boolean[4][4];
     var queue = new ArrayList<Point>();

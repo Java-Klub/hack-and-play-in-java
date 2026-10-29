@@ -9,16 +9,8 @@
 /// **Today you learn:** Bounds before access: a guard must accept the boundary that belongs to the game
 /// and reject the next value. It also protects the later row lookup from using a nonexistent row.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L03/M05_Chomp.java`
-/// - Check this mission: `java L03/Check.java M05_Chomp.java`
-///
-/// Run the play command above and enter 4 5 to bite the visible bottom-right piece, then try the
-/// same coordinates again after it is gone. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Recall · F08 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and enter 4 5 to bite the visible bottom-right piece, then try the same
+/// coordinates again after it is gone.
 boolean bite(int row, int column) {
     if (winner != 0 || row < 1 || row >= 4 || column < 1 || column > widths[row - 1]) {
         return false;

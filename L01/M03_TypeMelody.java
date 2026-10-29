@@ -14,15 +14,8 @@ import javax.sound.sampled.AudioSystem;
 /// **Today you learn:** Text literals: double quotes make their contents text data. For example, a quoted
 /// digit stays a character in the message; it does not become a calculation.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L01/M03_TypeMelody.java`
-/// - Check this mission: `java L01/Check.java M03_TypeMelody.java`
-///
-/// Run the play command above to open the Java player showing the message. Press Play / Replay;
-/// digits are silent rests, so the starter 1234 should be silent. Stop ends playback.
-///
-/// Need an explanation? Learn · F02 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program to open the Java player showing the message. Press Play / Replay; digits are
+/// silent rests, so the starter 1234 should be silent. Stop ends playback.
 String defaultMessage() {
     return "1234";
 }
@@ -67,10 +60,10 @@ String defaultMessage() {
 // </editor-fold>
 
 // <editor-fold defaultstate="expanded" desc="For this game">
-/// Java plays the sound directly; no file or separate player is needed. The panel shows the actual
-/// message. The starter digits are rests, not an audio failure. After editing defaultMessage, save,
-/// close the window and run the play command again. The new window loads the edited message; Play /
-/// Replay repeats the current window's message.
+/// Java plays the sound directly; no file or separate player is needed. The panel shows the
+/// actual message. The starter digits are rests, not an audio failure. After editing
+/// defaultMessage, save, close the window and run the program again. The new window loads the
+/// edited message; Play / Replay repeats the current window's message.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Hint 1 · a first clue">
@@ -82,7 +75,7 @@ String defaultMessage() {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Repair outline · reveals the direction">
-/// Use return "JAVA"; then close the player and run the play command again.
+/// Use return "JAVA"; then close the player and run the program again.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Finished game parts · explore when curious">

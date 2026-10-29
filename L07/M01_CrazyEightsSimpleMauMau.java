@@ -9,16 +9,8 @@
 /// **Today you learn:** Switch expressions: select one returned value from named cases and a fallback.
 /// The special case must not replace the ordinary rank-or-suit condition.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L07/M01_CrazyEightsSimpleMauMau.java`
-/// - Check this mission: `java L07/Check.java M01_CrazyEightsSimpleMauMau.java`
-///
-/// the play command, read your numbered hand, and enter p followed by a card index to play it,
-/// adding a suit number when playing an eight. After your repair: save the file, run the check
-/// command above, then play again.
-///
-/// Need an explanation? Learn · F09 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, read your numbered hand, and enter p followed by a card index to play it,
+/// adding a suit number when playing an eight.
 boolean legal(int card) {
     return switch (rank(card)) {
         case 1 -> true;

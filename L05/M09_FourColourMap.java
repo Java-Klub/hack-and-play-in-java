@@ -9,15 +9,8 @@
 /// **Today you learn:** Traversal and search: scan a list of relationships, not just a list of regions.
 /// Each border names the two colour entries to compare.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L05/M09_FourColourMap.java`
-/// - Check this mission: `java L05/Check.java M09_FourColourMap.java`
-///
-/// the play command, type B 2 to give region B colour 2, and continue colouring the other labelled
-/// regions. After your repair: save the file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F17 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, type B 2 to give region B colour 2, and continue colouring the other
+/// labelled regions.
 int conflicts() {
     int n = 0;
     for (int[] edge : new int[][]{adjacent[0]}) {

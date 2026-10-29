@@ -9,16 +9,8 @@
 /// **Today you learn:** Traversal and search: a path search depends on which neighbouring positions it is
 /// allowed to visit. Here the candidate graph is a hex board.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L05/M06_Hex.java`
-/// - Check this mission: `java L05/Check.java M06_Hex.java`
-///
-/// Run the play command above and take the upper-left hex by entering 1 1, then alternate
-/// row-and-column choices with a friend. After your repair: save the file, run the check command
-/// above, then play again.
-///
-/// Need an explanation? Recall · F17 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and take the upper-left hex by entering 1 1, then alternate row-and-column
+/// choices with a friend.
 boolean connected(int who) {
     boolean[][] seen = new boolean[5][5];
     var queue = new ArrayDeque<int[]>();

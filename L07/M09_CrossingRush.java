@@ -18,16 +18,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Invariants: every accepted position must keep the player’s full shape inside the
 /// field. The centre coordinate alone is not the whole collision shape.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L07/M09_CrossingRush.java`
-/// - Check this mission: `java L07/Check.java M09_CrossingRush.java`
-///
-/// Run the play command above and hop with the arrow keys between passing cars until you reach the
-/// green bank at the top. After your repair: save the file, run the check command above, then play
-/// again.
-///
-/// Need an explanation? Recall · F25 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and hop with the arrow keys between passing cars until you reach the green
+/// bank at the top.
 void hop(int dx, int dy) {
     if (lost || won) {
         return;

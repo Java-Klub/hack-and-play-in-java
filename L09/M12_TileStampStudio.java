@@ -15,16 +15,8 @@ import java.awt.image.BufferedImage;
 /// **Today you learn:** Parse and validate a candidate before committing it to shared state. Returning
 /// success should mean the requested setting was actually applied, not merely that parsing worked.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L09/M12_TileStampStudio.java`
-/// - Check this mission: `java L09/Check.java M12_TileStampStudio.java`
-///
-/// After the play command, click tile cells to switch ink on or off; enter 3 and click Repeats to
-/// change the pattern density. Clear resets the tile. After your repair: save the file, run the
-/// check command above, then play again.
-///
-/// Need an explanation? Recall · F31 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then click tile cells to switch ink on or off; enter 3 and click Repeats to
+/// change the pattern density. Clear resets the tile.
 boolean applyRepeats(String text) {
     try {
         int candidate = Integer.parseInt(text.strip());
@@ -197,8 +189,6 @@ void showWindow() {
 
 int repeats = 6;
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
     SwingUtilities.invokeLater(this::showWindow);
 }

@@ -13,16 +13,8 @@
 /// Different Wobble values must use their own centre and excursion, and time must still affect the
 /// result.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L12/M07_RetroSoundForge.java`
-/// - Check this mission: `java L12/Check.java M07_RetroSoundForge.java`
-///
-/// After the play command, compare the Java Play wobble, Play laser and Play jump buttons; Stop
-/// interrupts sound, and replay makes the wobble repair audible. After your repair: save the file,
-/// run the check command above, then play again.
-///
-/// Need an explanation? Recall · F35 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then compare the Java Play wobble, Play laser and Play jump buttons; Stop
+/// interrupts sound, and replay makes the wobble repair audible.
 double frequency(Sound sound, double t) {
     if (!Double.isFinite(t) || t < 0 || t > 1) throw new IllegalArgumentException("Time: 0..1.");
     return switch (sound) {
@@ -133,8 +125,6 @@ Sound chooseSound(String kind) {
     };
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 volatile javax.sound.sampled.SourceDataLine playingLine;
 volatile int playbackVersion;
 

@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Grid neighbours: parallel dx and dy arrays describe one cardinal step per
 /// direction. The same direction index must select matching horizontal and vertical offsets.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L08/M06_AntHighway.java`
-/// - Check this mission: `java L08/Check.java M06_AntHighway.java`
-///
-/// Run the play command above and click One step to inspect one ant move before using Run/Pause to
-/// grow a longer trail. After your repair: save the file, run the check command above, then play
-/// again.
-///
-/// Need an explanation? Recall · F18 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and click One step to inspect one ant move before using Run/Pause to grow a
+/// longer trail.
 void step() {
     direction = Math.floorMod(direction + (black[y][x] ? -1 : 1), 4);
     black[y][x] = !black[y][x];

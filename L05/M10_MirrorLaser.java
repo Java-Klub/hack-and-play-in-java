@@ -17,15 +17,8 @@ import java.util.HashSet;
 /// **Today you learn:** Records: bundle related values into one readable state. Moving creates a new ray
 /// value while the original position and direction remain available.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L05/M10_MirrorLaser.java`
-/// - Check this mission: `java L05/Check.java M10_MirrorLaser.java`
-///
-/// the play command, click a mirror to rotate it, and press Space to trace the beam through your
-/// arrangement. After your repair: save the file, run the check command above, then play again.
-///
-/// Need an explanation? Learn · F19 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, click a mirror to rotate it, and press Space to trace the beam through your
+/// arrangement.
 record RayState(int x, int y, int dx, int dy) {
     RayState advance() {
         return new RayState(x + dy, y + dx, dx, dy);

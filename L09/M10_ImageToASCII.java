@@ -14,16 +14,8 @@ import java.awt.image.BufferedImage;
 /// **Today you learn:** A narrow parsing boundary separates unrecognisable text from valid integers with
 /// invalid values. Only the expected conversion exception should select the fallback width.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L09/M10_ImageToASCII.java`
-/// - Check this mission: `java L09/Check.java M10_ImageToASCII.java`
-///
-/// After the play command, enter a width from 4 to 160 or try oops; inspect the labelled ASCII
-/// picture directly in terminal output and run the play command again to compare another width.
-/// After your repair: save the file, run the check command above, then play again.
-///
-/// Need an explanation? Recall · F31 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then enter a width from 4 to 160 or try oops; inspect the labelled ASCII
+/// picture directly in terminal output and run the program again to compare another width.
 int readWidth(String text) {
     try {
         int value = Integer.parseInt(text.strip());
@@ -74,8 +66,8 @@ int readWidth(String text) {
 /// ### What the prepared part already does
 ///
 /// main passes the typed width through readWidth, then convert samples the fixed demo through a
-/// prepared character ramp. The result appears only in terminal output; another the play command
-/// supplies another width.
+/// prepared character ramp. The result appears only in terminal output; running the program
+/// again lets you choose another width.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="For this game">
@@ -129,8 +121,6 @@ String convert(BufferedImage image, int width) {
     return result.toString();
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
     String input = IO.readln("Width 4..160 (blank/default 80, q quits): ");
     if (input == null || input.strip().equalsIgnoreCase("q")) return;

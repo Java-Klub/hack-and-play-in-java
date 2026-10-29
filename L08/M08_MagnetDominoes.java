@@ -16,16 +16,8 @@ import java.util.Arrays;
 /// **Today you learn:** Copies and aliasing: two names can share one mutable array. Copying the
 /// one-dimensional values is enough here because each domino state is an int.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L08/M08_MagnetDominoes.java`
-/// - Check this mission: `java L08/Check.java M08_MagnetDominoes.java`
-///
-/// the play command, click a domino to change its polarity, and press U to try restoring the
-/// previous selection. After your repair: save the file, run the check command above, then play
-/// again.
-///
-/// Need an explanation? Recall · F20 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, click a domino to change its polarity, and press U to try restoring the
+/// previous selection.
 int[] copyState() {
     return state;
 }

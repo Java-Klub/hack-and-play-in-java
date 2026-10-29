@@ -16,16 +16,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Invariants: fuel never becomes negative, and an empty tank gives no powered
 /// acceleration. Several held direction keys still belong to one simulation step.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L07/M10_SoftLanding.java`
-/// - Check this mission: `java L07/Check.java M10_SoftLanding.java`
-///
-/// the play command, press Up to begin braking the fall, and use Left and Right thrust to line up
-/// with the landing pad. After your repair: save the file, run the check command above, then play
-/// again.
-///
-/// Need an explanation? Recall · F25 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, press Up to begin braking the fall, and use Left and Right thrust to line
+/// up with the landing pad.
 void step() {
     if (!state.equals("FLYING")) {
         return;

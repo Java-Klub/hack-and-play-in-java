@@ -10,16 +10,8 @@
 /// return without applying the move. Check an empty destination separately from a destination with a top
 /// disc.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L03/M07_Hanoi.java`
-/// - Check this mission: `java L03/Check.java M07_Hanoi.java`
-///
-/// Run the play command above, enter A B and then A B again to inspect the forbidden
-/// larger-on-smaller move; r restores the original tower. After your repair: save the file, run the
-/// check command above, then play again.
-///
-/// Need an explanation? Recall · F08 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, enter A B and then A B again to inspect the forbidden larger-on-smaller
+/// move; r restores the original tower.
 boolean move(int from, int to) {
     if (won() || from < 0 || from > 2 || to < 0 || to > 2 || from == to || sizes[from] == 0) {
         return false;

@@ -9,16 +9,8 @@
 /// **Today you learn:** Writing functional checks: a result can have more than one observable part. State
 /// both the transformed row and its score, then choose cases that separate plausible mistakes.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L06/M12_Merge2048.java`
-/// - Check this mission: `java L06/Check.java M12_Merge2048.java`
-///
-/// Run the play command above and type A followed by Enter to slide left, then try other directions
-/// and use the check command to challenge your row examples. After your repair: save the file, run
-/// the check command above, then play again.
-///
-/// Need an explanation? Recall · F33 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and type A followed by Enter to slide left, then try other directions and
+/// run the checks to challenge your row examples.
 record MergeExample(int[] input, int[] expected, int score) {
 }
 
@@ -61,9 +53,9 @@ MergeExample[] learnerChecks() {
 ///
 /// ### What the prepared part already does
 ///
-/// merge() supplies the real row rule used by movement. Startup checks your examples against it;
-/// the check command tries five wrong variants, including one that merges only the first available
-/// pair.
+/// merge() supplies the real row rule used by movement. Startup checks your examples against
+/// it; the mission checks try five wrong variants, including one that merges only the first
+/// available pair.
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="For this game">

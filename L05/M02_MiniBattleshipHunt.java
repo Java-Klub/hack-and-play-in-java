@@ -9,16 +9,8 @@
 /// **Today you learn:** Arrays: nested arrays can hold several layouts and their coordinate pairs. Use
 /// the selected data’s size to control a traversal.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L05/M02_MiniBattleshipHunt.java`
-/// - Check this mission: `java L05/Check.java M02_MiniBattleshipHunt.java`
-///
-/// Run the play command above and fire your first shot by typing 1 1 and pressing Enter, then try
-/// other row-and-column pairs. After your repair: save the file, run the check command above, then
-/// play again.
-///
-/// Need an explanation? Recall · F16 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program and fire your first shot by typing 1 1 and pressing Enter, then try other
+/// row-and-column pairs.
 void layout(int n) {
     board = new int[6][6];
     int[][][] maps = {{{0, 0}, {0, 1}, {3, 2}, {3, 3}, {3, 4}}, {{1, 4}, {2, 4}, {5, 0}, {5, 1}, {5, 2}}, {{4, 0}, {4, 1}, {0, 5}, {1, 5}, {2, 5}}};

@@ -20,16 +20,8 @@ import javax.swing.Timer;
 /// **Today you learn:** Projection converts a model position and depth into a screen point. A smaller
 /// safe depth produces a larger offset; the conversion should use the supplied request consistently.
 ///
-/// From the course folder containing README.md:
-/// - Play: `java L10/M08_StarTunnel.java`
-/// - Check this mission: `java L10/Check.java M08_StarTunnel.java`
-///
-/// After the play command, click or drag to start and steer the star tunnel; Space pauses and R
-/// restores its starting view. After your repair: save the file, run the check command above, then
-/// play again.
-///
-/// Need an explanation? Recall · F29 explains the Java skill; Read this code explains these lines.
-/// Hints 1 and 2 open separately; Repair outline reveals the direction.
+/// Run the program, then click or drag to start and steer the star tunnel; Space pauses and R
+/// restores its starting view.
 Point2D.Double project(Star star, double depth) {
     double z = Math.max(5, depth + 100);
     return new Point2D.Double(centreX + star.x * 260 / z, centreY + star.y * 260 / z);
@@ -222,8 +214,6 @@ void showWindow() {
     timer.start();
 }
 
-/// Use the play command above to start the program. The check command checks the rule without
-/// opening a window. The supplied part supports only the main game or experiment described above.
 void main() {
 /// Supplied restart: restore the initial model before the UI uses it.
     restart();
